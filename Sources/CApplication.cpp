@@ -1,0 +1,1616 @@
+
+#include "CApplication.hpp"
+#include "CSong.hpp"
+#include "CSongTableModel.hpp"
+#include "CStaticPlayList.hpp"
+#include "CDynamicPlayList.hpp"
+#include "CDialogEditSong.hpp"
+#include "CListFolder.hpp"
+
+// Qt
+#include <QStandardItemModel>
+#include <QSettings>
+#include <QMessageBox>
+#include <QSqlError>
+#include <QSqlQuery>
+#include <QTimer>
+#include <QFileDialog>
+
+// FMOD
+#include <fmod/fmod.hpp>
+
+// TagLib
+#include <fileref.h>
+#include <tag.h>
+#include <flacfile.h>
+#include <xiphcomment.h>
+#include <tmap.h>
+
+// DEBUG
+#include <QtDebug>
+#include <QSqlDriver>
+
+
+CApplication::CApplication(void) :
+    QMainWindow          (),
+    m_uiWidget           (new Ui::TMediaPlayer()),
+    m_soundSystem        (NULL),
+    m_listModel          (NULL),
+    m_settings           (NULL),
+    m_timer              (NULL),
+    m_currentSong        (NULL),
+    m_currentSongIndex   (-1),
+    m_currentSongTable   (NULL),
+    m_library            (NULL),
+    m_displayedSongTable (NULL),
+    m_state              (Stopped),
+    m_isRepeat           (false),
+    m_isShuffle          (false),
+    m_isMute             (false),
+    m_volume             (50)
+{
+    // Chargement des paramètres de l'application
+    m_settings = new QSettings("Ted", "TMediaPlayer", this);
+
+
+    // Initialisation de l'interface graphique
+    m_uiWidget->setupUi(this);
+    
+    restoreGeometry(m_settings->value("Window/WindowGeometry").toByteArray());
+    restoreState(m_settings->value("Window/WindowState").toByteArray());
+
+    m_listModel = new QStandardItemModel(this);
+    m_uiWidget->treeView->setModel(m_listModel);
+    connect(m_uiWidget->treeView, SIGNAL(clicked(const QModelIndex&)), this, SLOT(selectPlayListFromTreeView(const QModelIndex&)));
+
+
+    // Initialisation de FMOD
+    if (!initSoundSystem())
+    {
+        QMessageBox::critical(this, QString(), tr("Failed to init sound system with FMOD."));
+        QCoreApplication::exit();
+    }
+
+
+    // Connexions des signaux et des slots
+
+    // Boutons
+    connect(m_uiWidget->btnPlay, SIGNAL(clicked()), this, SLOT(play()));
+    connect(m_uiWidget->btnPause, SIGNAL(clicked()), this, SLOT(pause()));
+    connect(m_uiWidget->btnStop, SIGNAL(clicked()), this, SLOT(stop()));
+
+    connect(m_uiWidget->btnPrevious, SIGNAL(clicked()), this, SLOT(previousSong()));
+    connect(m_uiWidget->btnNext, SIGNAL(clicked()), this, SLOT(nextSong()));
+
+    connect(m_uiWidget->btnRepeat, SIGNAL(toggled(bool)), this, SLOT(setRepeat(bool)));
+    connect(m_uiWidget->btnShuffle, SIGNAL(toggled(bool)), this, SLOT(setShuffle(bool)));
+    connect(m_uiWidget->btnMute, SIGNAL(toggled(bool)), this, SLOT(setMute(bool)));
+
+    // Sliders
+    connect(m_uiWidget->sliderVolume, SIGNAL(sliderMoved(int)), this, SLOT(setVolume(int)));
+    connect(m_uiWidget->sliderPosition, SIGNAL(sliderReleased()), this, SLOT(updatePosition()));
+
+    // Menus
+    connect(m_uiWidget->actionNewPlayList, SIGNAL(triggered()), this, SLOT(addPlayList()));
+    connect(m_uiWidget->actionNewDynamicPlayList, SIGNAL(triggered()), this, SLOT(addDynamicList()));
+    connect(m_uiWidget->actionAddFiles, SIGNAL(triggered()), this, SLOT(openDialogAddSongs()));
+    connect(m_uiWidget->actionAddFolder, SIGNAL(triggered()), this, SLOT(openDialogAddFolder()));
+    connect(m_uiWidget->actionInformations, SIGNAL(triggered()), this, SLOT(openDialogSongInfos()));
+    connect(m_uiWidget->actionOpenInExplorer, SIGNAL(triggered()), this, SLOT(openSongInExplorer()));
+
+    connect(m_uiWidget->actionSelectAll, SIGNAL(triggered()), this, SLOT(selectAll()));
+    connect(m_uiWidget->actionSelectNone, SIGNAL(triggered()), this, SLOT(selectNone()));
+
+    connect(m_uiWidget->actionPlay, SIGNAL(triggered()), this, SLOT(play()));
+    connect(m_uiWidget->actionPause, SIGNAL(triggered()), this, SLOT(pause()));
+    connect(m_uiWidget->actionStop, SIGNAL(triggered()), this, SLOT(stop()));
+
+    connect(m_uiWidget->actionPrevious, SIGNAL(triggered()), this, SLOT(previousSong()));
+    connect(m_uiWidget->actionNext, SIGNAL(triggered()), this, SLOT(nextSong()));
+
+    connect(m_uiWidget->actionRepeat, SIGNAL(triggered(bool)), this, SLOT(setRepeat(bool)));
+    connect(m_uiWidget->actionShuffle, SIGNAL(triggered(bool)), this, SLOT(setShuffle(bool)));
+
+
+    connect(this, SIGNAL(songPlayStart(CSong *)), this, SLOT(updateSongDescription(CSong *)));
+
+
+    // Chargement de la base de données
+    /// \todo Stocker les paramètres dans un fichier de configuration
+    m_dataBase = QSqlDatabase::addDatabase("QSQLITE");
+    m_dataBase.setHostName("localhost");
+    m_dataBase.setDatabaseName("library.sqlite");
+    m_dataBase.setUserName("root");
+    m_dataBase.setPassword("");
+
+    if (!m_dataBase.open())
+    {
+        QMessageBox::critical(this, QString(), tr("Failed to load database:\n\n").arg(m_dataBase.lastError().text()));
+        QCoreApplication::exit();
+    }
+
+    loadDatabase();
+
+    m_timer = new QTimer(this);
+    connect(m_timer, SIGNAL(timeout()), this, SLOT(update()));
+    m_timer->start(400);
+
+    displaySongTable(m_library);
+    updateSongDescription(NULL);
+}
+
+
+/**
+ * Libère les ressources utilisées par l'application.
+ */
+
+CApplication::~CApplication()
+{
+    m_timer->stop();
+
+    foreach (CListFolder * folder, m_folders)
+    {
+        delete folder;
+    }
+
+    foreach (CPlayList * playList, m_playLists)
+    {
+        delete playList;
+    }
+
+    m_library->deleteSongs();
+    delete m_library;
+
+    m_dataBase.close();
+
+    m_soundSystem->release();
+}
+
+
+CSong * CApplication::getCurrentSong(void) const
+{
+    return m_currentSong;
+}
+
+
+CSongTable * CApplication::getCurrentSongTable(void) const
+{
+    return m_currentSongTable;
+}
+
+
+CSongTable * CApplication::getLibrary(void) const
+{
+    return m_library;
+}
+
+
+CSongTable * CApplication::getDisplayedSongTable(void) const
+{
+    return m_displayedSongTable;
+}
+
+
+void CApplication::setDisplayedSongTable(CSongTable * songTable)
+{
+    m_displayedSongTable = (songTable ? songTable : m_library);
+}
+
+
+/**
+ * Retourne le pointeur sur un morceau à partir de son identifiant en base de données.
+ *
+ * \param id Identifiant du morceau.
+ * \return Pointeur sur le morceau, ou NULL si l'identifiant est invalide.
+ */
+
+CSong * CApplication::getSongFromId(int id) const
+{
+    foreach (CSong * song, m_library->getSongs())
+    {
+        if (song->getId() == id)
+        {
+            return song;
+        }
+    }
+
+    return NULL;
+}
+
+
+/**
+ * Indique si la lecture est en cours.
+ *
+ * \return Booléen.
+ */
+
+bool CApplication::isPlaying(void) const
+{
+    return (m_state == Playing);
+}
+
+
+/**
+ * Indique si la lecture est en pause.
+ *
+ * \return Booléen.
+ */
+
+bool CApplication::isPaused(void) const
+{
+    return (m_state == Paused);
+}
+
+
+bool CApplication::isStopped(void) const
+{
+    return (m_state == Stopped);
+}
+
+
+bool CApplication::isRepeat(void) const
+{
+    return m_isRepeat;
+}
+
+
+bool CApplication::isShuffle(void) const
+{
+    return m_isShuffle;
+}
+
+
+bool CApplication::isMute(void) const
+{
+    return m_isMute;
+}
+
+
+/**
+ * Donne le volume sonore.
+ *
+ * \return Volume sonore, entre 0 et 100.
+ */
+
+int CApplication::getVolume(void) const
+{
+    return m_volume;
+}
+
+
+/**
+ * Donne la position de lecture.
+ *
+ * \return Position de lecture, ou 0 si aucun morceau n'est en cours de lecture.
+ */
+
+int CApplication::getPosition(void) const
+{
+    return (m_currentSong ? m_currentSong->getPosition() : 0);
+}
+
+
+/**
+ * Récupère l'identifiant d'un artiste en base de données.
+ *
+ * \param name     Nom de l'artiste.
+ * \param nameSort Nom de l'artiste pour le tri.
+ * \return Identifiant de l'artiste, ou -1 en cas d'erreur.
+ */
+
+int CApplication::getArtistId(const QString& name, const QString& nameSort)
+{
+    Q_ASSERT(!name.isNull());
+    Q_ASSERT(!nameSort.isNull());
+
+    QSqlQuery query(m_dataBase);
+    query.prepare("SELECT artist_id FROM artist WHERE artist_name = ? AND artist_name_sort = ?");
+    query.bindValue(0, name);
+    query.bindValue(1, nameSort);
+
+    if (!query.exec())
+    {
+        QString error = query.lastError().text();
+        QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
+        return -1;
+    }
+
+    if (query.next())
+    {
+        return query.value(0).toInt();
+    }
+
+    query.prepare("INSERT INTO artist (artist_name, artist_name_sort) VALUES (?, ?)");
+    query.bindValue(0, name);
+    query.bindValue(1, nameSort);
+
+    if (!query.exec())
+    {
+        QString error = query.lastError().text();
+        QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
+        return -1;
+    }
+
+    return query.lastInsertId().toInt();
+}
+
+
+/**
+ * Récupère l'identifiant d'un album en base de données.
+ *
+ * \param title     Titre de l'album.
+ * \param titleSort Titre de l'album pour le tri.
+ * \return Identifiant de l'album, ou -1 en cas d'erreur.
+ */
+
+int CApplication::getAlbumId(const QString& title, const QString& titleSort)
+{
+    Q_ASSERT(!title.isNull());
+    Q_ASSERT(!titleSort.isNull());
+
+    QSqlQuery query(m_dataBase);
+    query.prepare("SELECT album_id FROM album WHERE album_title = ? AND album_title_sort = ?");
+    query.bindValue(0, title);
+    query.bindValue(1, titleSort);
+
+    if (!query.exec())
+    {
+        QString error = query.lastError().text();
+        QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
+        return -1;
+    }
+
+    if (query.next())
+    {
+        return query.value(0).toInt();
+    }
+
+    query.prepare("INSERT INTO album (album_title, album_title_sort) VALUES (?, ?)");
+    query.bindValue(0, title);
+    query.bindValue(1, titleSort);
+
+    if (!query.exec())
+    {
+        QString error = query.lastError().text();
+        QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
+        return -1;
+    }
+
+    return query.lastInsertId().toInt();
+}
+
+
+/**
+ * Récupère l'identifiant d'un genre en base de données.
+ *
+ * \param name Nom du genre.
+ * \return Identifiant du genre, ou -1 en cas d'erreur.
+ */
+
+int CApplication::getGenreId(const QString& name)
+{
+    Q_ASSERT(!name.isNull());
+
+    QSqlQuery query(m_dataBase);
+    query.prepare("SELECT genre_id FROM genre WHERE genre_name = ?");
+    query.bindValue(0, name);
+
+    if (!query.exec())
+    {
+        QString error = query.lastError().text();
+        QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
+        return -1;
+    }
+
+    if (query.next())
+    {
+        return query.value(0).toInt();
+    }
+
+    query.prepare("INSERT INTO genre (genre_name) VALUES (?)");
+    query.bindValue(0, name);
+
+    if (!query.exec())
+    {
+        QString error = query.lastError().text();
+        QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
+        return -1;
+    }
+
+    return query.lastInsertId().toInt();
+}
+
+
+void CApplication::play(void)
+{
+    qDebug() << "CApplication::play()";
+    if (m_currentSong)
+    {
+        Q_CHECK_PTR(m_currentSongTable);
+        Q_ASSERT(m_currentSongIndex >= 0);
+
+        if (m_state == Paused)
+        {
+            qDebug() << "CApplication::play() : chanson en pause";
+            emit songResumed(m_currentSong);
+            m_currentSong->play();
+        }
+
+        m_state = Playing;
+    }
+    else
+    {
+        m_state = Stopped;
+
+        qDebug() << "CApplication::play() : lancement du premier morceau";
+        m_currentSongTable = m_displayedSongTable;
+        // TODO: lire le morceau sélectionné dans la vue
+        m_currentSongIndex = m_currentSongTable->getNextSong(-1, m_isShuffle);
+        m_currentSong = m_currentSongTable->getSongForIndex(m_currentSongIndex);
+
+        if (!m_currentSong)
+        {
+            m_currentSongIndex = -1;
+            m_currentSongTable = NULL;
+            return;
+        }
+
+        if (m_currentSong->loadSound())
+        {
+            //m_currentSong->setVolume(m_volume);
+            //m_currentSong->setMute(m_isMute);
+            startPlay();
+            //m_currentSong->play();
+
+            //emit songPlayStart(m_currentSong);
+            //connect(m_currentSong, SIGNAL(playEnd()), this, SLOT(onPlayEnd()));
+        }
+        else
+        {
+            nextSong();
+        }
+    }
+}
+
+
+void CApplication::stop(void)
+{
+    if (m_currentSong)
+    {
+        m_currentSong->stop();
+        emit songStopped(m_currentSong);
+        updateSongDescription(NULL);
+        m_currentSong = NULL;
+    }
+
+    m_currentSongIndex = -1;
+    m_currentSongTable = NULL;
+    m_state = Stopped;
+}
+
+
+void CApplication::pause(void)
+{
+    if (m_currentSong)
+    {
+        m_currentSong->pause();
+        emit songPaused(m_currentSong);
+        m_state = Paused;
+    }
+}
+
+
+void CApplication::previousSong(void)
+{
+    if (m_currentSongTable)
+    {
+        m_currentSongIndex = m_currentSongTable->getPreviousSong(m_currentSongIndex, m_isShuffle);
+        m_currentSong = m_currentSongTable->getSongForIndex(m_currentSongIndex);
+
+        if (m_currentSong && m_currentSong->loadSound())
+        {
+            //m_currentSong->setVolume(m_volume);
+            //m_currentSong->setMute(m_isMute);
+            play();
+            //m_currentSong->play();
+
+            //emit songPlayStart(m_currentSong);
+            //connect(m_currentSong, SIGNAL(playEnd()), this, SLOT(onPlayEnd()));
+
+            //m_isPlaying = true;
+        }
+        else
+        {
+            m_currentSong = NULL;
+            m_currentSongIndex = -1;
+            m_currentSongTable = NULL;
+            m_state = Stopped;
+            updateSongDescription(NULL);
+        }
+    }
+}
+
+
+void CApplication::nextSong(void)
+{
+    qDebug() << "CApplication::nextSong()";
+
+    if (m_currentSong)
+    {
+        Q_CHECK_PTR(m_currentSongTable);
+        Q_ASSERT(m_currentSongIndex >= 0);
+
+        m_currentSong->stop();
+        updateSongDescription(NULL);
+
+        m_currentSongIndex = m_currentSongTable->getNextSong(m_currentSongIndex, m_isShuffle);
+        m_currentSong = m_currentSongTable->getSongForIndex(m_currentSongIndex);
+
+        // Répétition de la liste
+        if (!m_currentSong && m_isRepeat)
+        {
+            m_currentSongIndex = m_currentSongTable->getNextSong(-1, m_isShuffle);
+            m_currentSong = m_currentSongTable->getSongForIndex(m_currentSongIndex);
+        }
+
+        if (!m_currentSong)
+        {
+            m_currentSongIndex = -1;
+            m_currentSongTable = NULL;
+            m_state = Stopped;
+            return;
+        }
+
+        if (m_currentSong->loadSound())
+        {
+            //m_currentSong->setVolume(m_volume);
+            //m_currentSong->setMute(m_isMute);
+            startPlay();
+            //if (m_isPaused) m_currentSong->pause();
+            //m_currentSong->play();
+
+            //emit songPlayStart(m_currentSong);
+            //connect(m_currentSong, SIGNAL(playEnd()), this, SLOT(onPlayEnd()));
+
+            //m_isPlaying = true;
+        }
+        else
+        {
+            nextSong();
+        }
+    }
+    else
+    {
+        m_state = Stopped;
+    }
+}
+
+
+void CApplication::playSong(int pos)
+{
+    CSong * song = m_displayedSongTable->getSongForIndex(pos);
+
+    if (song)
+    {
+        if (m_currentSong)
+        {
+            Q_CHECK_PTR(m_currentSongTable);
+            Q_ASSERT(m_currentSongIndex >= 0);
+
+            m_currentSong->stop();
+            updateSongDescription(NULL);
+        }
+
+        m_currentSong = song;
+        m_currentSongIndex = pos;
+        m_currentSongTable = m_displayedSongTable;
+
+        if (m_currentSong->loadSound())
+        {
+            startPlay();
+        }
+        else
+        {
+            m_currentSong = NULL;
+            m_currentSongIndex = -1;
+            m_currentSongTable = NULL;
+        }
+    }
+}
+
+
+void CApplication::setRepeat(bool repeat)
+{
+    if (repeat != m_isRepeat)
+    {
+        m_isRepeat = repeat;
+        m_uiWidget->btnRepeat->setChecked(repeat);
+        m_uiWidget->actionRepeat->setChecked(repeat);
+    }
+}
+
+
+void CApplication::setShuffle(bool shuffle)
+{
+    if (shuffle != m_isShuffle)
+    {
+        m_isShuffle = shuffle;
+        m_uiWidget->btnShuffle->setChecked(shuffle);
+        m_uiWidget->actionShuffle->setChecked(shuffle);
+    }
+}
+
+
+void CApplication::setMute(bool mute)
+{
+    if (mute != m_isMute)
+    {
+        m_isMute = mute;
+
+        if (m_currentSong)
+        {
+            m_currentSong->setMute(mute);
+        }
+
+        m_uiWidget->btnMute->setChecked(mute);
+    }
+}
+
+
+void CApplication::setVolume(int volume)
+{
+    Q_ASSERT(volume >= 0 || volume <= 100);
+
+    if (volume != m_volume)
+    {
+        m_volume = volume;
+
+        if (m_currentSong)
+        {
+            m_currentSong->setVolume(volume);
+        }
+
+        m_uiWidget->sliderVolume->setValue(volume);
+    }
+}
+
+
+void CApplication::setPosition(int position)
+{
+    Q_ASSERT(position >= 0);
+
+    if (m_currentSong)
+    {
+        Q_ASSERT(m_currentSongIndex >= 0);
+        Q_CHECK_PTR(m_currentSongTable);
+
+        m_currentSong->setPosition(position);
+        const int songPosition = m_currentSong->getPosition();
+
+        if (songPosition >= 0)
+        {
+            m_uiWidget->sliderPosition->setValue(songPosition);
+            
+            QTime positionTime(0, 0);
+            positionTime = positionTime.addMSecs(songPosition);
+            m_uiWidget->lblPosition->setText(positionTime.toString("m:ss"));
+        }
+    }
+}
+
+
+void CApplication::openPlayList(CPlayList * playList)
+{
+    Q_CHECK_PTR(playList);
+
+    m_displayedSongTable = playList;
+    //TODO: maj vue
+}
+
+
+void CApplication::renamePlayList(CPlayList * playList)
+{
+    Q_CHECK_PTR(playList);
+
+    //TODO: open dialog rename Playlist
+    //TODO: maj DB
+}
+
+
+void CApplication::editDynamicPlayList(CDynamicPlayList * playList)
+{
+    if (!playList)
+    {
+        return;
+    }
+
+    //TODO: open dialog edit SmartPlaylist
+    //TODO: maj DB
+}
+
+
+void CApplication::addPlayList(CListFolder * folder)
+{
+    //TODO: open dialog new play List (name)
+    //TODO: maj DB
+    //TODO: maj vue gauche
+}
+
+
+void CApplication::addDynamicList(CListFolder * folder)
+{
+    //TODO: open dialog new smart play List
+    //TODO: maj DB
+    //TODO: maj vue gauche
+}
+
+
+/**
+ * Supprime une liste de lecture.
+ * Une boite de dialogue de confirmation est ouverte.
+ *
+ * \param playList Pointeur sur la liste de lecture à supprimer.
+ */
+
+void CApplication::deletePlayList(CPlayList * playList)
+{
+    Q_CHECK_PTR(playList);
+
+    //TODO: confirmation
+
+    if (m_currentSongTable == playList)
+    {
+        m_currentSongTable = NULL;
+    }
+
+    if (m_displayedSongTable == playList)
+    {
+        m_displayedSongTable = m_library;
+        //TODO: maj vue
+    }
+    
+    if (playList->getFolder())
+    {
+        //TODO: maj vue gauche
+        playList->setFolder(NULL);
+        delete playList;
+        //TODO: maj DB
+        return;
+    }
+
+    foreach (CPlayList * playListTmp, m_playLists)
+    {
+        if (playListTmp == playList)
+        {
+            //TODO: maj vue gauche
+            m_playLists.removeOne(playList);
+            delete playList;
+            //TODO: maj DB
+            return;
+        }
+    }
+}
+
+
+void CApplication::addListFolder(void)
+{
+    //TODO: open dialog new folder
+    //TODO: maj DB
+    //TODO: maj vue gauche
+}
+
+
+void CApplication::renameListFolder(CListFolder * folder)
+{
+    Q_CHECK_PTR(folder);
+
+    //TODO: open dialog rename folder
+    //TODO: maj DB
+    //TODO: maj vue gauche
+}
+
+
+/**
+ * Supprime un dossier de liste de lectures.
+ *
+ * \param folder Pointeur sur le dossier à supprimer.
+ */
+
+void CApplication::deleteListFolder(CListFolder * folder)
+{
+    Q_CHECK_PTR(folder);
+
+    //TODO: confirmation
+    //TODO: maj vue
+
+    foreach (CPlayList * playList, folder->getPlayLists())
+    {
+        playList->setFolder(nullptr);
+        m_playLists.append(playList);
+    }
+
+    m_folders.removeOne(folder);
+    delete folder;
+
+    //TODO: maj DB
+}
+
+
+/**
+ * Affiche une boite de dialogue pour sélectionner des fichiers à ajouter à la médiathèque.
+ */
+
+void CApplication::openDialogAddSongs(void)
+{
+    QStringList fileList = QFileDialog::getOpenFileNames(this, QString(), QString(), tr("Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)"));
+
+    //QSqlQuery query(m_dataBase);
+    //query.prepare("SELECT song_id FROM song WHERE song_filename=?");
+
+    foreach (QString fileName, fileList)
+    {
+        addSong(fileName);
+/*
+        query.bindValue(0, fileName);
+
+        if (!query.exec())
+        {
+            QString error = query.lastError().text();
+            QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
+        }
+
+        if (!query.next())
+        {
+            qDebug() << "Chargement du fichier " << fileName;
+
+            FMOD_RESULT res;
+            FMOD::Sound * sound;
+
+            // Chargement du son
+            res = m_soundSystem->createStream(qPrintable(fileName), FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, NULL, &sound);
+
+            if (res == FMOD_OK && sound)
+            {
+                FMOD_TAG tag;
+
+                CSong * song = new CSong(this);
+                song->m_isModified = true;
+
+                song->m_fileName = fileName;
+                song->m_bitRate  = 0;
+                song->m_fileType = CSong::TypeUnknown;
+                sound->getLength(reinterpret_cast<unsigned int *>(&(song->m_duration)), FMOD_TIMEUNIT_MS);
+                
+                sound->getTag("TITLE", 0, &tag);
+                song->m_title       = reinterpret_cast<char *>(tag.data);
+
+                sound->getTag("ARTIST", 0, &tag);
+                song->m_artistName  = reinterpret_cast<char *>(tag.data);
+                
+                sound->getTag("ALBUM", 0, &tag);
+                song->m_albumTitle  = reinterpret_cast<char *>(tag.data);
+
+                song->m_albumArtist = "";
+                song->m_composer    = "";
+                song->m_year        = 0;
+*/
+/*
+    int m_trackNumber;        ///< Numéro de piste.
+    int m_trackTotal;         ///< Nombre de piste sur l'album.
+    int m_discNumber;         ///< Numéro de disque.
+    int m_discTotal;          ///< Nombre de disque de l'album.
+    QString m_genre;          ///< Genre.
+    int m_rating;             ///< Note (entre 0 et 5).
+    QString m_comment;        ///< Commentaires.
+*/
+
+                //song->updateDatabase();
+                //m_library->addSong(song);
+
+                //...
+
+                //TODO: les ajouter...
+                //TODO: maj vue
+            //}
+        //}
+    }
+}
+
+
+/**
+ * Affiche une boite de dialogue pour ajouter un dossier à la médiathèque.
+ *
+ * \todo Implémentation
+ */
+
+void CApplication::openDialogAddFolder(void)
+{
+    QString folder = QFileDialog::getExistingDirectory(this);
+
+    if (folder.isEmpty())
+    {
+        return;
+    }
+
+    qDebug() << "folder = " << folder;
+
+    //TODO: liste des fichiers du dossier
+    //...
+}
+
+
+/**
+ * Affiche une boite de dialogue pour visualiser et éditer les informations du morceau sélectionné.
+ *
+ * \todo Implémentation
+ */
+
+void CApplication::openDialogSongInfos(void)
+{
+    Q_CHECK_PTR(m_displayedSongTable);
+
+    // Recherche du morceau sélectionné
+    QItemSelectionModel * selectionModel = m_displayedSongTable->selectionModel();
+    CSong * song = m_displayedSongTable->getSongForIndex(selectionModel->currentIndex().row());
+
+    if (song)
+    {
+        CDialogEditSong * dialog = new CDialogEditSong(song, this);
+        dialog->show();
+
+        //TODO...
+    }
+}
+
+
+/**
+ * Ajoute une chanson à la médiathèque.
+ * Le fichier doit être un son valide, et ne doit pas être déjà présent dans la médiathèque.
+ *
+ * \param fileName Fichier à charger.
+ */
+
+void CApplication::addSong(const QString& fileName)
+{
+    QSqlQuery query(m_dataBase);
+    query.prepare("SELECT song_id FROM song WHERE song_filename = ?");
+    query.bindValue(0, fileName);
+
+    if (!query.exec())
+    {
+        QString error = query.lastError().text();
+        QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
+    }
+
+    if (!query.next())
+    {
+        qDebug() << "Chargement du fichier " << fileName;
+
+        FMOD_RESULT res;
+        FMOD::Sound * sound;
+
+        // Chargement du son
+        res = m_soundSystem->createStream(qPrintable(fileName), FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, NULL, &sound);
+
+        if (res == FMOD_OK && sound)
+        {
+            FMOD_TAG tag;
+            FMOD_RESULT res;
+
+            CSong * song = new CSong(this);
+            song->m_isModified = true;
+
+            song->m_fileName = fileName;
+            song->m_fileSize = 0; // TODO
+            song->m_bitRate  = 0; // TODO
+
+            FMOD_SOUND_TYPE type;
+            FMOD_SOUND_FORMAT format;
+            int bits;
+            res = sound->getFormat(&type, &format, &(song->m_numChannels), &bits);
+
+            switch (type)
+            {
+                default:
+                    song->m_fileType = CSong::TypeUnknown;
+                    break;
+
+                case FMOD_SOUND_TYPE_MPEG:
+                    song->m_fileType = CSong::TypeMP3;
+                    break;
+
+                case FMOD_SOUND_TYPE_OGGVORBIS:
+                    song->m_fileType = CSong::TypeOGG;
+                    break;
+
+                case FMOD_SOUND_TYPE_FLAC:
+                    song->m_fileType = CSong::TypeFlac;
+                    break;
+            }
+
+            int numTags;
+            res = sound->getNumTags(&numTags, NULL);
+            qDebug() << "Nombre de tags = " << numTags;
+
+            for (int i = 0; i < numTags; ++i)
+            {
+                res = sound->getTag(NULL, i, &tag);
+                qDebug() << "Tag[" << i << "] : " << tag.name << " = " << (res == FMOD_OK ? reinterpret_cast<char *>(tag.data) : "?");
+            }
+
+            res = sound->getLength(reinterpret_cast<unsigned int *>(&(song->m_duration)), FMOD_TIMEUNIT_MS);
+
+            res = sound->getTag("TITLE", 0, &tag);
+            song->m_title       = (res == FMOD_OK ? reinterpret_cast<char *>(tag.data) : "");
+
+            res = sound->getTag("ARTIST", 0, &tag);
+            song->m_artistName  = (res == FMOD_OK ? reinterpret_cast<char *>(tag.data) : "");
+                
+            res = sound->getTag("ALBUM", 0, &tag);
+            song->m_albumTitle  = (res == FMOD_OK ? reinterpret_cast<char *>(tag.data) : "");
+            
+            //res = sound->getTag("ALBUMARTIST", 0, &tag);
+            //song->m_albumArtist = (res == FMOD_OK ? reinterpret_cast<char *>(tag.data) : "");
+                
+            //res = sound->getTag("COMPOSER", 0, &tag);
+            //song->m_composer    = (res == FMOD_OK ? reinterpret_cast<char *>(tag.data) : "");
+            
+            res = sound->getTag("YEAR", 0, &tag);
+            if (res == FMOD_OK)
+            {
+                QString yearString = reinterpret_cast<char *>(tag.data);
+                song->m_year = yearString.toInt();
+            }
+
+            song->m_trackNumber = 0;
+            song->m_trackTotal  = 0;
+            song->m_discNumber  = 0;
+            song->m_discTotal   = 0;
+
+            res = sound->getTag("GENRE", 0, &tag); // 17
+            song->m_genre       = "";
+
+            song->m_rating      = 0;
+            song->m_comments    = "";
+
+            sound->release();
+
+            TagLib::FileRef f(qPrintable(fileName));
+
+            switch (song->m_fileType)
+            {
+                case CSong::TypeMP3:
+                    break;
+
+                case CSong::TypeOGG:
+                    break;
+
+                case CSong::TypeFlac:
+                {
+                    TagLib::FLAC::File * file = dynamic_cast<TagLib::FLAC::File *>(f.file());
+
+                    if (!file)
+                    {
+                        qWarning() << "Le fichier n'est pas au format FLAC selon TagLib";
+                        break;
+                    }
+
+                    TagLib::Ogg::XiphComment * xiphComment = file->xiphComment(true);
+
+                    QString tagTitle = QString::fromUtf8(xiphComment->title().toCString(true));
+                    QString tagArtist = QString::fromUtf8(xiphComment->artist().toCString(true));
+                    QString tagAlbum = QString::fromUtf8(xiphComment->album().toCString(true));
+                    QString tagComments = QString::fromUtf8(xiphComment->comment().toCString(true));
+                    QString tagGenre = QString::fromUtf8(xiphComment->genre().toCString(true));
+
+                    int fieldCount = xiphComment->fieldCount();
+
+                    if (fieldCount > 0)
+                    {
+                        const TagLib::Ogg::FieldListMap& fieldList = xiphComment->fieldListMap();
+                        /*
+                        for (TagLib::Ogg::FieldListMap::ConstIterator it = fieldList.begin() ; it != fieldList.end(); ++it)
+                        {
+                            qDebug() << QString::fromUtf8(it->first.toCString(true));
+                            for (TagLib::StringList::ConstIterator it2 = it->second.begin(); it2 != it->second.end(); ++it2)
+                            {
+                                qDebug() << QString::fromUtf8(it2->toCString(true));
+                            }
+                        }
+                        */
+                    }
+/*
+virtual uint 	year () const
+virtual uint 	track () const 
+*/
+
+/*
+ID3v2::Tag * 	ID3v2Tag (bool create=false)
+ID3v1::Tag * 	ID3v1Tag (bool create=false)
+xiphComment (bool create=false)
+*/
+
+                    //...
+
+                    break;
+                }
+            }
+
+            song->updateDatabase();
+            m_library->addSong(song);
+
+            //...
+
+            //TODO: les ajouter...
+            //TODO: maj vue
+        }
+    }
+
+    //TODO: ouvrir fichier
+    //TODO: maj DB
+    //TODO: maj library
+    //TODO: maj vue
+}
+
+
+void CApplication::editSong(CSong * song)
+{
+    if (!song)
+    {
+        return;
+    }
+
+    //TODO: open dialog edit song
+    //TODO: appel song->set...
+    song->updateDatabase();
+    //TODO: MAJ vues
+
+    emit songModified(song);
+}
+
+
+void CApplication::removeSong(CSong * song)
+{
+    if (!song)
+    {
+        return;
+    }
+
+    //TODO: confirmation
+
+    if (m_currentSong == song)
+    {
+        stop();
+    }
+
+    //TODO: maj vue
+
+    m_library->m_songs.removeOne(song);
+
+    foreach (CListFolder * folder, m_folders)
+    {
+        foreach (CPlayList * playList, folder->getPlayLists())
+        {
+            CStaticPlayList * staticPlayList = dynamic_cast<CStaticPlayList *>(playList);
+
+            if (staticPlayList)
+            {
+                staticPlayList->removeSong(song);
+            }
+        }
+    }
+
+    foreach (CPlayList * playList, m_playLists)
+    {
+        CStaticPlayList * staticPlayList = dynamic_cast<CStaticPlayList *>(playList);
+
+        if (staticPlayList)
+        {
+            staticPlayList->removeSong(song);
+        }
+    }
+
+    //TODO: maj DB
+
+    emit songRemoved(song);
+
+    delete song;
+}
+
+
+/**
+ * Méthode appelée quand la lecture d'un morceau se termine.
+ */
+
+void CApplication::onPlayEnd(void)
+{
+    if (m_currentSong)
+    {
+        qDebug() << "CApplication::onPlayEnd()";
+        emit songPlayEnd(m_currentSong);
+        updateSongDescription(NULL);
+        //TODO: maj vue
+        //m_currentSong->addOnePlay();
+
+        if (m_isRepeat)
+        {
+            m_currentSong->setPosition(0);
+            play();
+        }
+        else
+        {
+            //Q_CHECK_PTR(m_displayedSongTable);
+
+            //m_currentSongIndex = m_displayedSongTable->getNextSong(m_currentSongIndex, m_isShuffle);
+            //m_currentSong = m_displayedSongTable->getSongForIndex(m_currentSongIndex);
+            nextSong();
+        }
+/*
+        if (m_currentSong)
+        {
+            m_currentSongTable = m_displayedSongTable;
+            m_isPlaying = true;
+
+            if (!m_currentSong->loadSound())
+            {
+                m_currentSong = NULL;
+                m_currentSongIndex = -1;
+                m_currentSongTable = NULL;
+
+                m_isPlaying = false;
+                m_isPaused = false;
+
+                return;
+            }
+
+            m_currentSong->setVolume(m_volume);
+            m_currentSong->setMute(m_isMute);
+            m_currentSong->play();
+
+            emit songPlayStart(m_currentSong);
+            connect(m_currentSong, SIGNAL(playEnd()), this, SLOT(onPlayEnd()));
+        }
+        else
+        {
+            m_currentSongTable = nullptr;
+            m_isPlaying = false;
+        }
+*/
+    }
+}
+
+
+void CApplication::updateSongDescription(CSong * song)
+{
+    if (song)
+    {
+        m_uiWidget->label->setText(song->getTitle() + " - " + song->getArtistName() + " - " + song->getAlbumTitle());
+        m_uiWidget->sliderPosition->setEnabled(true);
+
+        const int duration = song->getDuration();
+        if (duration >= 0)
+        {
+            m_uiWidget->sliderPosition->setRange(0, duration);
+
+            QTime durationTime(0, 0);
+            durationTime = durationTime.addMSecs(duration);
+            m_uiWidget->lblTime->setText(durationTime.toString("m:ss")); /// \todo Stocker dans les settings
+        }
+    }
+    else
+    {
+        m_uiWidget->label->setText(""); // "Pas de morceau en cours de lecture..."
+        m_uiWidget->sliderPosition->setEnabled(false);
+        m_uiWidget->sliderPosition->setRange(0, 1000);
+        m_uiWidget->lblPosition->setText("");
+        m_uiWidget->lblTime->setText("");
+    }
+
+    m_uiWidget->sliderPosition->setValue(0);
+}
+
+
+void CApplication::updatePosition(void)
+{
+    setPosition(m_uiWidget->sliderPosition->value());
+}
+
+
+void CApplication::update(void)
+{
+    if (m_currentSong)
+    {
+        Q_ASSERT(m_currentSongIndex >= 0);
+        Q_CHECK_PTR(m_currentSongTable);
+
+        qDebug() << "CApplication::update()";
+        const int position = m_currentSong->getPosition();
+
+        if (m_currentSong->isEnded()/* && m_state != Loading*/)
+        {
+            qDebug() << "m_currentSong->isEnded()";
+            m_currentSong->emitPlayEnd();
+            return;
+        }
+
+        if (position >= 0)
+        {
+            if (!m_uiWidget->sliderPosition->isSliderDown())
+            {
+                m_uiWidget->sliderPosition->setValue(position);
+            }
+
+            QTime positionTime(0, 0);
+            positionTime = positionTime.addMSecs(position);
+            m_uiWidget->lblPosition->setText(positionTime.toString("m:ss"));
+        }
+    }
+}
+
+
+void CApplication::selectPlayListFromTreeView(const QModelIndex& index)
+{
+    qDebug() << "Changement de liste...";
+
+    CSongTable * songTable = m_listModel->data(index, Qt::UserRole + 1).value<CSongTable *>();
+    displaySongTable(songTable);
+    //TODO...
+}
+
+
+void CApplication::displaySongTable(CSongTable * songTable)
+{
+    Q_CHECK_PTR(songTable);
+
+    if (songTable != m_displayedSongTable)
+    {
+        if (m_displayedSongTable)
+        {
+            m_displayedSongTable->hide();
+        }
+
+        m_displayedSongTable = songTable;
+        m_displayedSongTable->show();
+
+        //TODO...
+    }
+}
+
+
+bool CApplication::initSoundSystem(void)
+{
+    FMOD_RESULT res;
+    
+    res = FMOD::System_Create(&m_soundSystem);
+    if (res != FMOD_OK) return false;
+
+    unsigned int version;
+    res = m_soundSystem->getVersion(&version);
+    if (res != FMOD_OK) return false;
+
+    if (version < FMOD_VERSION)
+    {
+        QMessageBox::critical(this, QString(), tr("This program requires FMOD %1 or superior.").arg(FMOD_VERSION));
+        return false;
+    }
+
+    int numDrivers;
+    res = m_soundSystem->getNumDrivers(&numDrivers);
+    if (res != FMOD_OK) return false;
+
+    if (numDrivers == 0)
+    {
+        res = m_soundSystem->setOutput(FMOD_OUTPUTTYPE_NOSOUND);
+        if (res != FMOD_OK) return false;
+    }
+    else
+    {
+        FMOD_CAPS caps;
+        FMOD_SPEAKERMODE speakermode;
+        res = m_soundSystem->getDriverCaps(0, &caps, NULL, &speakermode);
+        if (res != FMOD_OK) return false;
+        
+        // Set the user selected speaker mode
+        res = m_soundSystem->setSpeakerMode(speakermode);
+        if (res != FMOD_OK) return false;
+
+        if (caps & FMOD_CAPS_HARDWARE_EMULATED)
+        {
+            res = m_soundSystem->setDSPBufferSize(1024, 10);
+            if (res != FMOD_OK) return false;
+        }
+
+        char name[256] = "";
+        res = m_soundSystem->getDriverInfo(0, name, 256, 0);
+        if (res != FMOD_OK) return false;
+
+        if (strstr(name, "SigmaTel"))
+        {
+            res = m_soundSystem->setSoftwareFormat(48000, FMOD_SOUND_FORMAT_PCMFLOAT, 0,0, FMOD_DSP_RESAMPLER_LINEAR);
+            if (res != FMOD_OK) return false;
+        }
+    }
+
+    res = m_soundSystem->init(100, FMOD_INIT_NORMAL, 0);
+    if (res == FMOD_ERR_OUTPUT_CREATEBUFFER)
+    {
+        res = m_soundSystem->setSpeakerMode(FMOD_SPEAKERMODE_STEREO);
+        if (res != FMOD_OK) return false;
+        res = m_soundSystem->init(2, FMOD_INIT_NORMAL, 0);
+    }
+
+    return (res == FMOD_OK);
+}
+
+
+void CApplication::loadDatabase(void)
+{
+    // Création de la librairie
+    m_library = new CSongTable();
+    m_uiWidget->splitter->addWidget(m_library);
+    connect(m_library, SIGNAL(songStarted(int)), this, SLOT(playSong(int)));
+
+
+    QStandardItem * libraryItem = new QStandardItem(tr("Library"));
+    libraryItem->setData(QVariant::fromValue(m_library));
+    m_listModel->appendRow(libraryItem);
+
+
+    // Liste des morceaux
+    QSqlQuery query(m_dataBase);
+    if (!query.exec(
+        "SELECT song_id, song_filename, song_filesize, song_bitrate, song_format, song_channels, "
+               "song_duration, song_creation, song_modification, song_title, song_title_sort, "
+               "song_artist.artist_name, song_artist.artist_name_sort, album_title, album_title_sort, "
+               "album_artist.artist_name, album_artist.artist_name_sort, song_composer, "
+               "song_composer_sort, song_year, song_track_number, song_track_total, song_disc_number, "
+               "song_disc_total, genre_name, song_rating, song_comments, song_lyrics, song_language "
+        "FROM song "
+        "NATURAL JOIN artist AS song_artist "
+        "NATURAL JOIN album "
+        "NATURAL JOIN genre "
+        "LEFT JOIN artist AS album_artist ON album_artist.artist_id = album_artist_id "))
+    {
+        QString error = query.lastError().text();
+        QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
+    }
+    
+    while (query.next())
+    {
+        CSong * song = new CSong(this);
+
+        song->m_id       = query.value(0).toInt();
+        song->m_fileName = query.value(1).toString();
+        song->m_fileSize = query.value(2).toInt();
+        song->m_bitRate  = query.value(3).toInt();
+
+        switch (query.value(4).toInt())
+        {
+            default:
+            case 0: song->m_fileType = CSong::TypeUnknown; break;
+            case 1: song->m_fileType = CSong::TypeMP3;     break;
+            case 2: song->m_fileType = CSong::TypeOGG;     break;
+            case 3: song->m_fileType = CSong::TypeFlac;    break;
+        }
+
+        song->m_numChannels  = query.value(5).toInt();
+        song->m_duration     = query.value(6).toInt();
+        song->m_creation     = query.value(7).toDateTime();
+        song->m_modification = query.value(8).toDateTime();
+
+        song->m_title           = query.value(9).toString();
+        song->m_titleSort       = query.value(10).toString();
+        song->m_artistName      = query.value(11).toString();
+        song->m_artistNameSort  = query.value(12).toString();
+        song->m_albumTitle      = query.value(13).toString();
+        song->m_albumTitleSort  = query.value(14).toString();
+        song->m_albumArtist     = query.value(15).toString();
+        song->m_albumArtistSort = query.value(16).toString();
+        song->m_composer        = query.value(17).toString();
+        song->m_composerSort    = query.value(18).toString();
+
+        song->m_year        = query.value(19).toInt();
+        song->m_trackNumber = query.value(20).toInt();
+        song->m_trackTotal  = query.value(21).toInt();
+        song->m_discNumber  = query.value(22).toInt();
+        song->m_discTotal   = query.value(23).toInt();
+        song->m_genre       = query.value(24).toString();
+        song->m_rating      = query.value(25).toInt();
+        song->m_comments    = query.value(26).toString();
+        song->m_lyrics      = query.value(27).toString();
+
+        const QString lang = query.value(28).toString();
+
+             if (lang == "FR") song->m_language = CSong::LangFrench;
+        else if (lang == "EN") song->m_language = CSong::LangEnglish;
+        else                   song->m_language = CSong::LangUnknown;
+
+        //TODO: liste des dates de lecture
+        //...
+
+        m_library->addSong(song);
+    }
+
+
+    // Création des listes de lecture statiques
+    if (!query.exec("SELECT playlist_id, playlist_name FROM playlist"))
+    {
+        QString error = query.lastError().text();
+        QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
+    }
+    
+    while (query.next())
+    {
+        CStaticPlayList * playList = new CStaticPlayList(query.value(1).toString());
+        m_uiWidget->splitter->addWidget(playList);
+        connect(playList, SIGNAL(songStarted(int)), this, SLOT(playSong(int)));
+        playList->hide();
+
+        // Liste des morceaux de la liste de lecture
+        QSqlQuery query2(m_dataBase);
+        query2.prepare("SELECT song_id FROM playlist_song WHERE playlist_id = ? ORDER BY song_position");
+        query2.bindValue(0, query.value(0).toInt());
+
+        if (!query2.exec())
+        {
+            QString error = query.lastError().text();
+            QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
+            delete playList;
+            continue;
+        }
+
+        while (query2.next())
+        {
+            playList->addSong(getSongFromId(query2.value(0).toInt()));
+        }
+
+        m_playLists.append(playList);
+
+        QStandardItem * playListItem = new QStandardItem(playList->getName());
+        playListItem->setData(QVariant::fromValue(reinterpret_cast<CSongTable *>(playList)));
+        m_listModel->appendRow(playListItem);
+    }
+    
+
+    // Création des listes de lecture dynamiques
+    if (!query.exec("SELECT dynamic_list_id, dynamic_list_name, dynamic_list_union FROM dynamic_list"))
+    {
+        QString error = query.lastError().text();
+        QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
+    }
+    
+    while (query.next())
+    {
+        //...
+    }
+}
+
+
+void CApplication::startPlay(void)
+{
+    qDebug() << "CApplication::startPlay()";
+
+    Q_CHECK_PTR(m_currentSong);
+    Q_CHECK_PTR(m_currentSongTable);
+    Q_ASSERT(m_currentSongIndex >= 0);
+
+    m_currentSong->play();
+    emit songPlayStart(m_currentSong);
+    connect(m_currentSong, SIGNAL(playEnd()), this, SLOT(onPlayEnd()));
+
+    updateSongDescription(m_currentSong);
+
+    m_state = Playing;
+}
+
+
+void CApplication::closeEvent(QCloseEvent * event)
+{
+    Q_CHECK_PTR(event);
+    Q_CHECK_PTR(m_settings);
+
+    m_settings->setValue("Window/WindowGeometry", saveGeometry());
+    m_settings->setValue("Window/WindowState", saveState());
+
+    QMainWindow::closeEvent(event);
+}
