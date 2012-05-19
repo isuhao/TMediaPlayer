@@ -15,6 +15,7 @@
 #include <QSqlQuery>
 #include <QTimer>
 #include <QFileDialog>
+#include <QProgressDialog>
 
 // FMOD
 #include <fmod/fmod.hpp>
@@ -75,8 +76,8 @@ CApplication::CApplication(void) :
     // Connexions des signaux et des slots
 
     // Boutons
-    connect(m_uiWidget->btnPlay, SIGNAL(clicked()), this, SLOT(play()));
-    connect(m_uiWidget->btnPause, SIGNAL(clicked()), this, SLOT(pause()));
+    connect(m_uiWidget->btnPlay, SIGNAL(clicked()), this, SLOT(togglePlay()));
+    //connect(m_uiWidget->btnPause, SIGNAL(clicked()), this, SLOT(pause()));
     connect(m_uiWidget->btnStop, SIGNAL(clicked()), this, SLOT(stop()));
 
     connect(m_uiWidget->btnPrevious, SIGNAL(clicked()), this, SLOT(previousSong()));
@@ -84,7 +85,7 @@ CApplication::CApplication(void) :
 
     connect(m_uiWidget->btnRepeat, SIGNAL(toggled(bool)), this, SLOT(setRepeat(bool)));
     connect(m_uiWidget->btnShuffle, SIGNAL(toggled(bool)), this, SLOT(setShuffle(bool)));
-    connect(m_uiWidget->btnMute, SIGNAL(toggled(bool)), this, SLOT(setMute(bool)));
+    connect(m_uiWidget->btnMute, SIGNAL(clicked()), this, SLOT(toggleMute()));
 
     // Sliders
     connect(m_uiWidget->sliderVolume, SIGNAL(sliderMoved(int)), this, SLOT(setVolume(int)));
@@ -116,12 +117,22 @@ CApplication::CApplication(void) :
 
 
     // Chargement de la base de données
-    /// \todo Stocker les paramètres dans un fichier de configuration
     m_dataBase = QSqlDatabase::addDatabase("QSQLITE");
-    m_dataBase.setHostName("localhost");
-    m_dataBase.setDatabaseName("library.sqlite");
-    m_dataBase.setUserName("root");
-    m_dataBase.setPassword("");
+
+    QString dbHostName = m_settings->value("Database/Host", QString("localhost")).toString();
+    QString dbBaseName = m_settings->value("Database/Base", QString("library.sqlite")).toString();
+    QString dbUserName = m_settings->value("Database/UserName", QString("root")).toString();
+    QString dbPassword = m_settings->value("Database/Password", QString("")).toString();
+
+    m_dataBase.setHostName(dbHostName);
+    m_dataBase.setDatabaseName(dbBaseName);
+    m_dataBase.setUserName(dbUserName);
+    m_dataBase.setPassword(dbPassword);
+
+    m_settings->setValue("Database/Host", dbHostName);
+    m_settings->setValue("Database/Base", dbBaseName);
+    m_settings->setValue("Database/UserName", dbUserName);
+    m_settings->setValue("Database/Password", dbPassword);
 
     if (!m_dataBase.open())
     {
@@ -167,29 +178,12 @@ CApplication::~CApplication()
 }
 
 
-CSong * CApplication::getCurrentSong(void) const
-{
-    return m_currentSong;
-}
-
-
-CSongTable * CApplication::getCurrentSongTable(void) const
-{
-    return m_currentSongTable;
-}
-
-
-CSongTable * CApplication::getLibrary(void) const
-{
-    return m_library;
-}
-
-
-CSongTable * CApplication::getDisplayedSongTable(void) const
-{
-    return m_displayedSongTable;
-}
-
+/**
+ * Change la liste de morceaux à afficher.
+ * Si \a songTable est invalide, la médiathèque est affichée.
+ *
+ * \param songTable Liste de morceaux à afficher.
+ */
 
 void CApplication::setDisplayedSongTable(CSongTable * songTable)
 {
@@ -219,34 +213,12 @@ CSong * CApplication::getSongFromId(int id) const
 
 
 /**
- * Indique si la lecture est en cours.
+ * Indique si la répétition est active.
+ *
+ * \todo Définir le fonctionnement de la répétition.
  *
  * \return Booléen.
  */
-
-bool CApplication::isPlaying(void) const
-{
-    return (m_state == Playing);
-}
-
-
-/**
- * Indique si la lecture est en pause.
- *
- * \return Booléen.
- */
-
-bool CApplication::isPaused(void) const
-{
-    return (m_state == Paused);
-}
-
-
-bool CApplication::isStopped(void) const
-{
-    return (m_state == Stopped);
-}
-
 
 bool CApplication::isRepeat(void) const
 {
@@ -254,11 +226,23 @@ bool CApplication::isRepeat(void) const
 }
 
 
+/**
+ * Indique si la lecture aléatoire est active.
+ *
+ * \return Booléen.
+ */
+
 bool CApplication::isShuffle(void) const
 {
     return m_isShuffle;
 }
 
+
+/**
+ * Indique si le son est coupé.
+ *
+ * \return Booléen.
+ */
 
 bool CApplication::isMute(void) const
 {
@@ -421,6 +405,10 @@ int CApplication::getGenreId(const QString& name)
 }
 
 
+/**
+ * Démarre la lecture du morceau sélectionné.
+ */
+
 void CApplication::play(void)
 {
     qDebug() << "CApplication::play()";
@@ -473,6 +461,10 @@ void CApplication::play(void)
 }
 
 
+/**
+ * Arrête la lecture.
+ */
+
 void CApplication::stop(void)
 {
     if (m_currentSong)
@@ -486,8 +478,13 @@ void CApplication::stop(void)
     m_currentSongIndex = -1;
     m_currentSongTable = NULL;
     m_state = Stopped;
+    m_uiWidget->btnPlay->setIcon(QPixmap(":/icons/play"));
 }
 
+
+/**
+ * Met la lecture en pause.
+ */
 
 void CApplication::pause(void)
 {
@@ -496,6 +493,21 @@ void CApplication::pause(void)
         m_currentSong->pause();
         emit songPaused(m_currentSong);
         m_state = Paused;
+    }
+}
+
+
+void CApplication::togglePlay(void)
+{
+    if (m_state != Playing)
+    {
+        m_uiWidget->btnPlay->setIcon(QPixmap(":/icons/pause"));
+        play();
+    }
+    else
+    {
+        m_uiWidget->btnPlay->setIcon(QPixmap(":/icons/play"));
+        pause();
     }
 }
 
@@ -607,10 +619,12 @@ void CApplication::playSong(int pos)
 
         if (m_currentSong->loadSound())
         {
+            m_uiWidget->btnPlay->setIcon(QPixmap(":/icons/pause"));
             startPlay();
         }
         else
         {
+            m_uiWidget->btnPlay->setIcon(QPixmap(":/icons/play"));
             m_currentSong = NULL;
             m_currentSongIndex = -1;
             m_currentSongTable = NULL;
@@ -652,8 +666,14 @@ void CApplication::setMute(bool mute)
             m_currentSong->setMute(mute);
         }
 
-        m_uiWidget->btnMute->setChecked(mute);
+        m_uiWidget->btnMute->setIcon(QPixmap(mute ? ":/icons/muet" : ":/icons/volume"));
     }
+}
+
+
+void CApplication::toggleMute(void)
+{
+    setMute(!m_isMute);
 }
 
 
@@ -699,6 +719,7 @@ void CApplication::setPosition(int position)
 }
 
 
+/// \todo Supprimer
 void CApplication::openPlayList(CPlayList * playList)
 {
     Q_CHECK_PTR(playList);
@@ -756,7 +777,11 @@ void CApplication::deletePlayList(CPlayList * playList)
 {
     Q_CHECK_PTR(playList);
 
-    //TODO: confirmation
+    // Confirmation
+    if (QMessageBox::question(this, QString(), tr("Are you sure you want to delete this playlist?"), QMessageBox::Yes | QMessageBox::No) == QMessageBox::No)
+    {
+        return;
+    }
 
     if (m_currentSongTable == playList)
     {
@@ -844,83 +869,15 @@ void CApplication::openDialogAddSongs(void)
 {
     QStringList fileList = QFileDialog::getOpenFileNames(this, QString(), QString(), tr("Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)"));
 
-    //QSqlQuery query(m_dataBase);
-    //query.prepare("SELECT song_id FROM song WHERE song_filename=?");
-
     foreach (QString fileName, fileList)
     {
         addSong(fileName);
-/*
-        query.bindValue(0, fileName);
-
-        if (!query.exec())
-        {
-            QString error = query.lastError().text();
-            QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
-        }
-
-        if (!query.next())
-        {
-            qDebug() << "Chargement du fichier " << fileName;
-
-            FMOD_RESULT res;
-            FMOD::Sound * sound;
-
-            // Chargement du son
-            res = m_soundSystem->createStream(qPrintable(fileName), FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, NULL, &sound);
-
-            if (res == FMOD_OK && sound)
-            {
-                FMOD_TAG tag;
-
-                CSong * song = new CSong(this);
-                song->m_isModified = true;
-
-                song->m_fileName = fileName;
-                song->m_bitRate  = 0;
-                song->m_fileType = CSong::TypeUnknown;
-                sound->getLength(reinterpret_cast<unsigned int *>(&(song->m_duration)), FMOD_TIMEUNIT_MS);
-                
-                sound->getTag("TITLE", 0, &tag);
-                song->m_title       = reinterpret_cast<char *>(tag.data);
-
-                sound->getTag("ARTIST", 0, &tag);
-                song->m_artistName  = reinterpret_cast<char *>(tag.data);
-                
-                sound->getTag("ALBUM", 0, &tag);
-                song->m_albumTitle  = reinterpret_cast<char *>(tag.data);
-
-                song->m_albumArtist = "";
-                song->m_composer    = "";
-                song->m_year        = 0;
-*/
-/*
-    int m_trackNumber;        ///< Numéro de piste.
-    int m_trackTotal;         ///< Nombre de piste sur l'album.
-    int m_discNumber;         ///< Numéro de disque.
-    int m_discTotal;          ///< Nombre de disque de l'album.
-    QString m_genre;          ///< Genre.
-    int m_rating;             ///< Note (entre 0 et 5).
-    QString m_comment;        ///< Commentaires.
-*/
-
-                //song->updateDatabase();
-                //m_library->addSong(song);
-
-                //...
-
-                //TODO: les ajouter...
-                //TODO: maj vue
-            //}
-        //}
     }
 }
 
 
 /**
  * Affiche une boite de dialogue pour ajouter un dossier à la médiathèque.
- *
- * \todo Implémentation
  */
 
 void CApplication::openDialogAddFolder(void)
@@ -932,17 +889,35 @@ void CApplication::openDialogAddFolder(void)
         return;
     }
 
-    qDebug() << "folder = " << folder;
+    QStringList fileList = addFolder(folder);
 
-    //TODO: liste des fichiers du dossier
-    //...
+    if (!fileList.isEmpty())
+    {
+        QProgressDialog progress(tr("Add files..."), tr("Abort"), 0, fileList.size(), this);
+        int i = 0;
+
+        foreach (QString fileName, fileList)
+        {
+            progress.setValue(i++);
+            addSong(fileName);
+            qApp->processEvents();
+
+            if (progress.wasCanceled())
+            {
+                return;
+            }
+        }
+    }
 }
 
 
 /**
  * Affiche une boite de dialogue pour visualiser et éditer les informations du morceau sélectionné.
  *
- * \todo Implémentation
+ * \todo Afficher les informations de plusieurs morceaux.
+ * \todo Afficher toutes les informations.
+ * \todo Mettre-à-jour la base de données.
+ * \todo Mettre-à-jour les tags du fichier.
  */
 
 void CApplication::openDialogSongInfos(void)
@@ -1153,6 +1128,32 @@ xiphComment (bool create=false)
 }
 
 
+/**
+ * Liste les morceaux contenus dans un répertoire.
+ *
+ * \param pathName Nom du répertoire à parcourir récursivement.
+ * \return Liste des fichiers du répertoire.
+ */
+
+QStringList CApplication::addFolder(const QString& pathName)
+{
+    QStringList fileList;
+    QDir dir(pathName);
+
+    foreach (QString fileName, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name))
+    {
+        fileList.append(addFolder(dir.absoluteFilePath(fileName)));
+    }
+
+    foreach (QString fileName, dir.entryList(QDir::Files | QDir::Readable, QDir::Name))
+    {
+        fileList.append(dir.absoluteFilePath(fileName));
+    }
+
+    return fileList;
+}
+
+
 void CApplication::editSong(CSong * song)
 {
     if (!song)
@@ -1280,6 +1281,12 @@ void CApplication::onPlayEnd(void)
 }
 
 
+/**
+ * Met à jour les informations sur le morceau en cours de lecture.
+ *
+ * \param song Morceau à utiliser, ou NULL pour n'afficher aucune information.
+ */
+
 void CApplication::updateSongDescription(CSong * song)
 {
     if (song)
@@ -1302,8 +1309,8 @@ void CApplication::updateSongDescription(CSong * song)
         m_uiWidget->label->setText(""); // "Pas de morceau en cours de lecture..."
         m_uiWidget->sliderPosition->setEnabled(false);
         m_uiWidget->sliderPosition->setRange(0, 1000);
-        m_uiWidget->lblPosition->setText("");
-        m_uiWidget->lblTime->setText("");
+        m_uiWidget->lblPosition->setText("0:00");
+        m_uiWidget->lblTime->setText("0:00");
     }
 
     m_uiWidget->sliderPosition->setValue(0);

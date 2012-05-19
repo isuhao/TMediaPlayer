@@ -615,36 +615,44 @@ void CSong::updateDatabase(void)
         else
         {
             query.prepare("UPDATE song SET "
-                              "song_title = ?, "
-                              "artist_id = ?, "
-                              "album_id = ?, "
-                              "album_artist_id = ?, "
-                              "song_composer = ?, "
-                              "song_year = ?, "
-                              "song_track_number = ?, "
-                              "song_track_total = ?, "
-                              "song_disc_number = ?, "
-                              "song_disc_total = ?, "
-                              "genre_id = ?, "
-                              "song_rating = ?, "
-                              "song_comment = ? "
+                              "song_title         = ?,"
+                              "song_title_sort    = ?,"
+                              "artist_id          = ?,"
+                              "album_id           = ?,"
+                              "album_artist_id    = ?,"
+                              "song_composer      = ?,"
+                              "song_composer_sort = ?,"
+                              "song_year          = ?,"
+                              "song_track_number  = ?,"
+                              "song_track_total   = ?,"
+                              "song_disc_number   = ?,"
+                              "song_disc_total    = ?,"
+                              "genre_id           = ?,"
+                              "song_rating        = ?,"
+                              "song_comments      = ?,"
+                              "song_lyrics        = ?,"
+                              "song_language      = ? "
                           "WHERE song_id = ?");
 
-            query.bindValue(0, m_title);
-            query.bindValue(1, artistId);
-            query.bindValue(2, albumId);
-            query.bindValue(3, albumArtistId);
-            query.bindValue(4, m_composer);
-            query.bindValue(5, m_year);
-            query.bindValue(6, m_trackNumber);
-            query.bindValue(7, m_trackTotal);
-            query.bindValue(8, m_discNumber);
-            query.bindValue(9, m_discTotal);
-            query.bindValue(10, m_genre);
-            query.bindValue(11, m_rating);
-            query.bindValue(12, m_comments);
+            query.bindValue( 0, m_title);
+            query.bindValue( 1, m_titleSort);
+            query.bindValue( 2, artistId);
+            query.bindValue( 3, albumId);
+            query.bindValue( 4, albumArtistId);
+            query.bindValue( 5, m_composer);
+            query.bindValue( 6, m_composerSort);
+            query.bindValue( 7, m_year);
+            query.bindValue( 8, m_trackNumber);
+            query.bindValue( 9, m_trackTotal);
+            query.bindValue(10, m_discNumber);
+            query.bindValue(11, m_discTotal);
+            query.bindValue(12, m_genre);
+            query.bindValue(13, m_rating);
+            query.bindValue(14, m_comments);
+            query.bindValue(15, m_lyrics);
+            query.bindValue(16, m_language);
 
-            query.bindValue(13, m_id);
+            query.bindValue(17, m_id);
 
             if (!query.exec())
             {
@@ -668,7 +676,34 @@ void CSong::updateDatabase(void)
 
 void CSong::emitPlayEnd(void)
 {
-    //TODO: maj compteur
-    //TODO: incrémenter compteur de lecture et maj date last play
+    const QDateTime currentTime = QDateTime::currentDateTime();
+
+    QSqlQuery query(m_application->getDataBase());
+    query.prepare("UPDATE song SET "
+                      "song_play_count = song_play_count + 1,"
+                      "song_play_time  = ? "
+                  "WHERE song_id = ?");
+
+    query.bindValue(0, currentTime);
+    query.bindValue(1, m_id);
+
+    if (!query.exec())
+    {
+        QString error = query.lastError().text();
+        QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
+        return;
+    }
+
+    query.prepare("INSERT INTO play (song_id, play_time) VALUES (?, ?)");
+    query.bindValue(0, m_id);
+    query.bindValue(1, currentTime);
+
+    if (!query.exec())
+    {
+        QString error = query.lastError().text();
+        QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
+        return;
+    }
+
     emit playEnd();
 }

@@ -55,11 +55,11 @@ public:
     inline QString getAlbumTitle(void) const;
     inline QString getAlbumArtist(void) const;
     inline QString getComposer(void) const;
-    inline QString getTitleSort(void) const;
-    inline QString getArtistNameSort(void) const;
-    inline QString getAlbumTitleSort(void) const;
-    inline QString getAlbumArtistSort(void) const;
-    inline QString getComposerSort(void) const;
+    inline QString getTitleSort(bool empty = true) const;
+    inline QString getArtistNameSort(bool empty = true) const;
+    inline QString getAlbumTitleSort(bool empty = true) const;
+    inline QString getAlbumArtistSort(bool empty = true) const;
+    inline QString getComposerSort(bool empty = true) const;
     inline int getYear(void) const;
     inline int getTrackNumber(void) const;
     inline int getTrackTotal(void) const;
@@ -272,32 +272,37 @@ inline QString CSong::getComposer(void) const
 }
 
 
-inline QString CSong::getTitleSort(void) const
+inline QString CSong::getTitleSort(bool empty) const
 {
+    if (!empty && m_titleSort.isEmpty()) return m_title;
     return m_titleSort;
 }
 
 
-inline QString CSong::getArtistNameSort(void) const
+inline QString CSong::getArtistNameSort(bool empty) const
 {
+    if (!empty && m_artistNameSort.isEmpty()) return m_artistName;
     return m_artistNameSort;
 }
 
 
-inline QString CSong::getAlbumTitleSort(void) const
+inline QString CSong::getAlbumTitleSort(bool empty) const
 {
+    if (!empty && m_albumTitleSort.isEmpty()) return m_albumTitle;
     return m_albumTitleSort;
 }
 
 
-inline QString CSong::getAlbumArtistSort(void) const
+inline QString CSong::getAlbumArtistSort(bool empty) const
 {
+    if (!empty && m_albumArtistSort.isEmpty()) return m_albumArtist;
     return m_albumArtistSort;
 }
 
 
-inline QString CSong::getComposerSort(void) const
+inline QString CSong::getComposerSort(bool empty) const
 {
+    if (!empty && m_composerSort.isEmpty()) return m_composer;
     return m_composerSort;
 }
 

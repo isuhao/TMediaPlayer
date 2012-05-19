@@ -1,4 +1,12 @@
 <RCC>
-    <qresource prefix="TMediaPlayer">
+    <qresource prefix="/icons">
+        <file alias="muet">Resources/icon_muet.png</file>
+        <file alias="next">Resources/icon_next.png</file>
+        <file alias="pause">Resources/icon_pause.png</file>
+        <file alias="play">Resources/icon_play.png</file>
+        <file alias="preferences">Resources/icon_preferences.png</file>
+        <file alias="previous">Resources/icon_previous.png</file>
+        <file alias="stop">Resources/icon_stop.png</file>
+        <file alias="volume">Resources/icon_volume.png</file>
     </qresource>
 </RCC>

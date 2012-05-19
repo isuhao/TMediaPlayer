@@ -46,7 +46,7 @@ public:
 
     inline QList<CSong *> getSongs(void) const;
     inline int getNumSongs(void) const;
-    inline CSong * getSongForIndex(int pos) const;
+    CSong * getSongForIndex(int pos) const;
     int getPreviousSong(int pos, bool shuffle) const;
     int getNextSong(int pos, bool shuffle) const;
     int getTotalDuration(void) const;
@@ -106,12 +106,6 @@ inline QList<CSong *> CSongTable::getSongs(void) const
 inline int CSongTable::getNumSongs(void) const
 {
     return m_songs.size();
-}
-
-
-inline CSong * CSongTable::getSongForIndex(int pos) const
-{
-    return (pos < 0 ? NULL : m_songs.at(pos));
 }
 
 

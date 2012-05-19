@@ -67,6 +67,12 @@ void CStaticPlayList::removeSong(int pos)
 }
 
 
+/**
+ * Enlève les doublons de la liste.
+ *
+ * \todo Implémentation.
+ */
+
 void CStaticPlayList::removeDuplicateSongs(void)
 {
     //TODO...

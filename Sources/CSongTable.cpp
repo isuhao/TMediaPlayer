@@ -4,6 +4,8 @@
 #include "CSong.hpp"
 #include <QStringList>
 #include <QMouseEvent>
+#include <QHeaderView>
+
 #include <QtDebug>
 
 
@@ -19,17 +21,28 @@ CSongTable::CSongTable(QWidget * parent) :
     sizePolicy.setVerticalStretch(0);
     sizePolicy.setHeightForWidth(this->sizePolicy().hasHeightForWidth());
     setSizePolicy(sizePolicy);
+
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setAlternatingRowColors(true);
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setSortingEnabled(true);
+    setShowGrid(false);
+
+    verticalHeader()->hide();
+    verticalHeader()->setDefaultSectionSize(19);
 }
 
 
 CSongTable::~CSongTable()
 {
 
+}
+
+
+CSong * CSongTable::getSongForIndex(int pos) const
+{
+    return (pos < 0 ? NULL : m_model->getSong(pos));
 }
 
 
@@ -140,6 +153,8 @@ void CSongTable::addSong(CSong * song, int pos)
 /**
  * Enlève une chanson de la liste.
  * Toutes les occurences de \a song sont enlevées de la liste.
+ *
+ * \todo Mettre à jour le modèle.
  *
  * \param song Pointeur sur la chanson à enlever.
  */

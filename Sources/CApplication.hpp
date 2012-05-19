@@ -43,16 +43,16 @@ public:
     CApplication(void);
     ~CApplication();
 
-    CSong * getCurrentSong(void) const;
-    CSongTable * getCurrentSongTable(void) const;
-    CSongTable * getLibrary(void) const;
-    CSongTable * getDisplayedSongTable(void) const;
+    inline CSong * getCurrentSong(void) const;
+    inline CSongTable * getCurrentSongTable(void) const;
+    inline CSongTable * getLibrary(void) const;
+    inline CSongTable * getDisplayedSongTable(void) const;
     void setDisplayedSongTable(CSongTable * songTable);
     CSong * getSongFromId(int id) const;
 
-    bool isPlaying(void) const;
-    bool isPaused(void) const;
-    bool isStopped(void) const;
+    inline bool isPlaying(void) const;
+    inline bool isPaused(void) const;
+    inline bool isStopped(void) const;
     bool isRepeat(void) const;
     bool isShuffle(void) const;
     bool isMute(void) const;
@@ -78,6 +78,7 @@ public slots:
     void play(void);
     void stop(void);
     void pause(void);
+    void togglePlay(void);
 
     void previousSong(void);
     void nextSong(void);
@@ -86,6 +87,7 @@ public slots:
     void setRepeat(bool repeat);
     void setShuffle(bool shuffle);
     void setMute(bool mute);
+    void toggleMute(void);
     void setVolume(int volume);
 
     void setPosition(int position);
@@ -105,7 +107,6 @@ public slots:
     void openDialogAddFolder(void);
     void openDialogSongInfos(void);
 
-    void addSong(const QString& fileName);
     void editSong(CSong * song);
     void removeSong(CSong * song);
 
@@ -131,6 +132,9 @@ protected slots:
     void selectPlayListFromTreeView(const QModelIndex& index);
 
 protected:
+
+    void addSong(const QString& fileName);
+    QStringList addFolder(const QString& pathName);
 
     void displaySongTable(CSongTable * songTable);
     bool initSoundSystem(void);
@@ -160,5 +164,89 @@ private:
     QList<CListFolder *> m_folders;     ///< Liste des dossiers de listes de lecture.
     QList<CPlayList *> m_playLists;     ///< Liste des listes de lectures sans dossier.
 };
+
+
+/**
+ * Retourne la chanson actuellement lue.
+ *
+ * \return Chanson en cours de lecture, ou NULL.
+ */
+
+inline CSong * CApplication::getCurrentSong(void) const
+{
+    return m_currentSong;
+}
+
+
+/**
+ * Retourne la liste de morceaux actuellement lue.
+ *
+ * \return Liste de morceaux en cours de lecture, ou NULL.
+ */
+
+inline CSongTable * CApplication::getCurrentSongTable(void) const
+{
+    return m_currentSongTable;
+}
+
+
+/**
+ * Retourne le médiathèque.
+ *
+ * \return Médiathèque, qui contient l'ensemble des morceaux.
+ */
+
+inline CSongTable * CApplication::getLibrary(void) const
+{
+    return m_library;
+}
+
+
+/**
+ * Retourne la liste de morceaux actuellement affichée.
+ *
+ * \return Liste de morceaux affichée.
+ */
+
+inline CSongTable * CApplication::getDisplayedSongTable(void) const
+{
+    return m_displayedSongTable;
+}
+
+
+/**
+ * Indique si la lecture est en cours.
+ *
+ * \return Booléen.
+ */
+
+inline bool CApplication::isPlaying(void) const
+{
+    return (m_state == Playing);
+}
+
+
+/**
+ * Indique si la lecture est en pause.
+ *
+ * \return Booléen.
+ */
+
+inline bool CApplication::isPaused(void) const
+{
+    return (m_state == Paused);
+}
+
+
+/**
+ * Indique si la lecture est stoppée.
+ *
+ * \return Booléen.
+ */
+
+inline bool CApplication::isStopped(void) const
+{
+    return (m_state == Stopped);
+}
 
 #endif

@@ -1,7 +1,7 @@
 
 #include "CSongTableModel.hpp"
-#include "CSong.hpp"
 #include <QMouseEvent>
+
 #include <QtDebug>
 
 
@@ -42,36 +42,11 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
     {
         switch(index.column())
         {
-            case 0:
-            {
-                QString title = m_data.at(index.row())->getTitleSort();
-                return (title.isEmpty() ? m_data.at(index.row())->getTitle() : title);
-            }
-
-            case 1:
-            {
-                QString name = m_data.at(index.row())->getArtistNameSort();
-                return (name.isEmpty() ? m_data.at(index.row())->getArtistName() : name);
-            }
-
-            case 2:
-            {
-                QString title = m_data.at(index.row())->getAlbumTitleSort();
-                return (title.isEmpty() ? m_data.at(index.row())->getAlbumTitle() : title);
-            }
-
-            case 3:
-            {
-                QString name = m_data.at(index.row())->getAlbumArtistSort();
-                return (name.isEmpty() ? m_data.at(index.row())->getAlbumArtist() : name);
-            }
-
-            // Compositeur
-            case 4:
-            {
-                QString composer = m_data.at(index.row())->getComposerSort();
-                return (composer.isEmpty() ? m_data.at(index.row())->getComposer() : composer);
-            }
+            case 0: return m_data.at(index.row())->getTitle();
+            case 1: return m_data.at(index.row())->getArtistName();
+            case 2: return m_data.at(index.row())->getAlbumTitle();
+            case 3: return m_data.at(index.row())->getAlbumArtist();
+            case 4: return m_data.at(index.row())->getComposer();
 
             // Année
             case 5:
@@ -195,31 +170,46 @@ QVariant CSongTableModel::headerData(int section, Qt::Orientation orientation, i
     return QVariant::Invalid;
 }
 
-/*
+
 void CSongTableModel::sort(int column, Qt::SortOrder order)
 {
-    if(order == Qt::AscendingOrder)
+    if (order == Qt::AscendingOrder)
     {
         switch(column)
         {
-            case 0: qSort(m_data.begin(), m_data.end(), cmpMessageLevelAsc   ); break;
-            case 1: qSort(m_data.begin(), m_data.end(), cmpMessageDateTimeAsc); break;
-            case 2: qSort(m_data.begin(), m_data.end(), cmpMessageTextAsc    ); break;
+
+            case  0: qSort(m_data.begin(), m_data.end(), cmpSongTitleAsc      ); break;
+            case  1: qSort(m_data.begin(), m_data.end(), cmpSongArtistAsc     ); break;
+            case  2: qSort(m_data.begin(), m_data.end(), cmpSongAlbumAsc      ); break;
+            case  3: qSort(m_data.begin(), m_data.end(), cmpSongAlbumArtistAsc); break;
+            case  4: qSort(m_data.begin(), m_data.end(), cmpSongComposerAsc   ); break;
+            case  5: qSort(m_data.begin(), m_data.end(), cmpSongYearAsc       ); break;
+            case  6: qSort(m_data.begin(), m_data.end(), cmpSongTrackAsc      ); break;
+            case  7: qSort(m_data.begin(), m_data.end(), cmpSongDiscAsc       ); break;
+            //case  8: qSort(m_data.begin(), m_data.end(),                 return QString(tr("Genre"));
+            //case  9: qSort(m_data.begin(), m_data.end(),                 return QString(tr("Rating"));
+            //case 10: qSort(m_data.begin(), m_data.end(),                 return QString(tr("Comments"));
+            //case 11: qSort(m_data.begin(), m_data.end(),                 return QString(tr("Plays"));
+            //case 12: qSort(m_data.begin(), m_data.end(),                 return QString(tr("Last played"));
+            //case 13: qSort(m_data.begin(), m_data.end(),                 return QString(tr("File name"));
+            //case 14: qSort(m_data.begin(), m_data.end(),                 return QString(tr("Bit rate"));
+            //case 15: qSort(m_data.begin(), m_data.end(),                 return QString(tr("Format"));
+            //case 16: qSort(m_data.begin(), m_data.end(),                 return QString(tr("Duration"));
+
         }
     }
     else
     {
         switch(column)
         {
-            case 0: qSort(m_data.begin(), m_data.end(), cmpMessageLevelDesc   ); break;
-            case 1: qSort(m_data.begin(), m_data.end(), cmpMessageDateTimeDesc); break;
-            case 2: qSort(m_data.begin(), m_data.end(), cmpMessageTextDesc    ); break;
+            //case 0: qSort(m_data.begin(), m_data.end(), cmpMessageLevelDesc   ); break;
+            //case 1: qSort(m_data.begin(), m_data.end(), cmpMessageDateTimeDesc); break;
+            //case 2: qSort(m_data.begin(), m_data.end(), cmpMessageTextDesc    ); break;
         }
     }
 
-    layoutChanged();
+    emit layoutChanged();
 }
-*/
 
 
 void CSongTableModel::insertRow(CSong * song, int pos)
@@ -257,8 +247,14 @@ CSong * CSongTableModel::getSong(const QModelIndex& index) const
 {
     if (index.isValid())
     {
-        return m_data.at(index.row());
+        return getSong(index.row());
     }
 
     return NULL;
+}
+
+
+CSong * CSongTableModel::getSong(int row) const
+{
+    return m_data.at(row);
 }
