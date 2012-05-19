@@ -19,7 +19,7 @@ public:
     CSongTableModel(const QList<CSong *>& data = QList<CSong *>(), QObject * parent = NULL);
 
     void setData(const QList<CSong *>& data);
-    inline const QList<CSong *>& getData() const { return m_data; };
+    QList<CSong *> getData() const;
 
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
     int columnCount(const QModelIndex& parent = QModelIndex()) const;
@@ -36,15 +36,28 @@ public:
 
 private:
 
-    static inline bool cmpSongTitleAsc(CSong * song1, CSong * song2)
+    struct TSongItem
     {
-        return (song1->getTitleSort(false) < song2->getTitleSort(false));
+        int pos;
+        CSong * song;
+
+        inline TSongItem(int ppos, CSong * psong) : pos(ppos), song(psong) { }
+    };
+
+    static inline bool cmpSongPositionAsc(const TSongItem& song1, const TSongItem& song2)
+    {
+        return (song1.pos < song2.pos);
     }
 
-    static inline bool cmpSongArtistAsc(CSong * song1, CSong * song2)
+    static inline bool cmpSongTitleAsc(const TSongItem& song1, const TSongItem& song2)
     {
-        const QString artist1 = song1->getAlbumTitleSort(false);
-        const QString artist2 = song2->getAlbumTitleSort(false);
+        return (song1.song->getTitleSort(false) < song2.song->getTitleSort(false));
+    }
+
+    static inline bool cmpSongArtistAsc(const TSongItem& song1, const TSongItem& song2)
+    {
+        const QString artist1 = song1.song->getAlbumTitleSort(false);
+        const QString artist2 = song2.song->getAlbumTitleSort(false);
 
         if (artist1 < artist2) return true;
         if (artist1 > artist2) return false;
@@ -52,10 +65,10 @@ private:
         return cmpSongAlbumAsc(song1, song2);
     }
 
-    static inline bool cmpSongAlbumAsc(CSong * song1, CSong * song2)
+    static inline bool cmpSongAlbumAsc(const TSongItem& song1, const TSongItem& song2)
     {
-        const QString album1 = song1->getAlbumTitleSort(false);
-        const QString album2 = song2->getAlbumTitleSort(false);
+        const QString album1 = song1.song->getAlbumTitleSort(false);
+        const QString album2 = song2.song->getAlbumTitleSort(false);
 
         if (album1 < album2) return true;
         if (album1 > album2) return false;
@@ -63,10 +76,10 @@ private:
         return cmpSongDiscAsc(song1, song2);
     }
 
-    static inline bool cmpSongAlbumArtistAsc(CSong * song1, CSong * song2)
+    static inline bool cmpSongAlbumArtistAsc(const TSongItem& song1, const TSongItem& song2)
     {
-        const QString artist1 = song1->getAlbumArtistSort(false);
-        const QString artist2 = song2->getAlbumArtistSort(false);
+        const QString artist1 = song1.song->getAlbumArtistSort(false);
+        const QString artist2 = song2.song->getAlbumArtistSort(false);
 
         if (artist1 < artist2) return true;
         if (artist1 > artist2) return false;
@@ -74,15 +87,15 @@ private:
         return cmpSongAlbumAsc(song1, song2);
     }
 
-    static inline bool cmpSongComposerAsc(CSong * song1, CSong * song2)
+    static inline bool cmpSongComposerAsc(const TSongItem& song1, const TSongItem& song2)
     {
-        return (song1->getComposerSort(false) < song2->getComposerSort(false));
+        return (song1.song->getComposerSort(false) < song2.song->getComposerSort(false));
     }
 
-    static inline bool cmpSongYearAsc(CSong * song1, CSong * song2)
+    static inline bool cmpSongYearAsc(const TSongItem& song1, const TSongItem& song2)
     {
-        const int year1 = song1->getYear();
-        const int year2 = song2->getYear();
+        const int year1 = song1.song->getYear();
+        const int year2 = song2.song->getYear();
 
         if (year1 < year2) return true;
         if (year1 > year2) return false;
@@ -90,15 +103,15 @@ private:
         return cmpSongArtistAsc(song1, song2);
     }
 
-    static inline bool cmpSongTrackAsc(CSong * song1, CSong * song2)
+    static inline bool cmpSongTrackAsc(const TSongItem& song1, const TSongItem& song2)
     {
-        return (song1->getTrackNumber() < song2->getTrackNumber());
+        return (song1.song->getTrackNumber() < song2.song->getTrackNumber());
     }
 
-    static inline bool cmpSongDiscAsc(CSong * song1, CSong * song2)
+    static inline bool cmpSongDiscAsc(const TSongItem& song1, const TSongItem& song2)
     {
-        const int disc1 = song1->getDiscNumber();
-        const int disc2 = song2->getDiscNumber();
+        const int disc1 = song1.song->getDiscNumber();
+        const int disc2 = song2.song->getDiscNumber();
 
         if (disc1 < disc2) return true;
         if (disc1 > disc2) return false;
@@ -106,7 +119,52 @@ private:
         return cmpSongTrackAsc(song1, song2);
     }
 
-    QList<CSong *> m_data;
+    static inline bool cmpSongGenreAsc(const TSongItem& song1, const TSongItem& song2)
+    {
+        return (song1.song->getGenre() < song2.song->getGenre());
+    }
+
+    static inline bool cmpSongRatingAsc(const TSongItem& song1, const TSongItem& song2)
+    {
+        return (song1.song->getRating() < song2.song->getRating());
+    }
+
+    static inline bool cmpSongCommentsAsc(const TSongItem& song1, const TSongItem& song2)
+    {
+        return (song1.song->getComments() < song2.song->getComments());
+    }
+
+    static inline bool cmpSongPlayCountAsc(const TSongItem& song1, const TSongItem& song2)
+    {
+        return (song1.song->getNumPlays() < song2.song->getNumPlays());
+    }
+
+    static inline bool cmpSongLastPlayedAsc(const TSongItem& song1, const TSongItem& song2)
+    {
+        return (song1.song->getLastPlay() < song2.song->getLastPlay());
+    }
+
+    static inline bool cmpSongFileNameAsc(const TSongItem& song1, const TSongItem& song2)
+    {
+        return (song1.song->getFileName() < song2.song->getFileName());
+    }
+
+    static inline bool cmpSongBitRateAsc(const TSongItem& song1, const TSongItem& song2)
+    {
+        return (song1.song->getBitRate() < song2.song->getBitRate());
+    }
+
+    static inline bool cmpSongFormatAsc(const TSongItem& song1, const TSongItem& song2)
+    {
+        return (song1.song->getFileType() < song2.song->getFileType());
+    }
+
+    static inline bool cmpSongDurationAsc(const TSongItem& song1, const TSongItem& song2)
+    {
+        return (song1.song->getDuration() < song2.song->getDuration());
+    }
+
+    QList<TSongItem> m_data;
 };
 
 #endif // FILE_CSONGTABLEMODEL
