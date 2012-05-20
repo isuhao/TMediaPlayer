@@ -4,7 +4,6 @@
 - Créer la fenêtre Liste de lecture dynamique.
 - Implémenter le glisser-déposer vers les listes statiques.
 - Implémenter le glisser-déposer au sein d'une liste statique.
-- Sauvegarder et recharger la disposition des colonnes d'une liste.
 - Lire les métadonnées d'un morceau au chargement.
 - Ecrire les métadonnées d'un morceau.
 - Menu contextuel pour les listes de lecture.

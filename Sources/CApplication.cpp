@@ -5,6 +5,7 @@
 #include "CStaticPlayList.hpp"
 #include "CDynamicPlayList.hpp"
 #include "CListFolder.hpp"
+#include "CPlayListView.hpp"
 #include "CDialogEditSong.hpp"
 #include "CDialogEditSongs.hpp"
 #include "CDialogEditStaticPlayList.hpp"
@@ -40,6 +41,7 @@ CApplication::CApplication(void) :
     m_uiWidget           (new Ui::TMediaPlayer()),
     m_soundSystem        (NULL),
     m_listModel          (NULL),
+    m_playListView       (NULL),
     m_settings           (NULL),
     m_timer              (NULL),
     m_currentSong        (NULL),
@@ -63,9 +65,15 @@ CApplication::CApplication(void) :
     restoreGeometry(m_settings->value("Window/WindowGeometry").toByteArray());
     restoreState(m_settings->value("Window/WindowState").toByteArray());
 
+    m_playListView = new CPlayListView(this);
+    m_uiWidget->splitter->addWidget(m_playListView);
+    
+    int treeWidth = m_settings->value("Window/PlayListViewWidth", 200).toInt();
+    m_uiWidget->splitter->setSizes(QList<int>() << treeWidth);
+
     m_listModel = new QStandardItemModel(this);
-    m_uiWidget->treeView->setModel(m_listModel);
-    connect(m_uiWidget->treeView, SIGNAL(clicked(const QModelIndex&)), this, SLOT(selectPlayListFromTreeView(const QModelIndex&)));
+    m_playListView->setModel(m_listModel);
+    connect(m_playListView, SIGNAL(clicked(const QModelIndex&)), this, SLOT(selectPlayListFromTreeView(const QModelIndex&)));
 
 
     // Initialisation de FMOD
@@ -102,8 +110,8 @@ CApplication::CApplication(void) :
     connect(m_uiWidget->actionInformations, SIGNAL(triggered()), this, SLOT(openDialogSongInfos()));
     connect(m_uiWidget->actionOpenInExplorer, SIGNAL(triggered()), this, SLOT(openSongInExplorer()));
 
-    //connect(m_uiWidget->actionSelectAll, SIGNAL(triggered()), this, SLOT(selectAll()));
-    //connect(m_uiWidget->actionSelectNone, SIGNAL(triggered()), this, SLOT(selectNone()));
+    connect(m_uiWidget->actionSelectAll, SIGNAL(triggered()), this, SLOT(selectAll()));
+    connect(m_uiWidget->actionSelectNone, SIGNAL(triggered()), this, SLOT(selectNone()));
     //connect(m_uiWidget->actionPreferences, SIGNAL(triggered()), this, SLOT(openDialogPreferences()));
 
     connect(m_uiWidget->actionPlay, SIGNAL(triggered()), this, SLOT(play()));
@@ -162,6 +170,10 @@ CApplication::CApplication(void) :
 CApplication::~CApplication()
 {
     m_timer->stop();
+
+    // Largeur de la vue pour les listes de lecture
+    int treeWidth = m_uiWidget->splitter->sizes()[0];
+    m_settings->setValue("Window/PlayListViewWidth", treeWidth);
 
     foreach (CListFolder * folder, m_folders)
     {
@@ -407,6 +419,20 @@ int CApplication::getGenreId(const QString& name)
     }
 
     return query.lastInsertId().toInt();
+}
+
+
+void CApplication::selectAll(void)
+{
+    Q_CHECK_PTR(m_displayedSongTable);
+    m_displayedSongTable->selectAll();
+}
+
+    
+void CApplication::selectNone(void)
+{
+    Q_CHECK_PTR(m_displayedSongTable);
+    m_displayedSongTable->clearSelection();
 }
 
 
@@ -1546,7 +1572,7 @@ void CApplication::loadDatabase(void)
     QStandardItem * libraryItem = new QStandardItem(tr("Library"));
     libraryItem->setData(QVariant::fromValue(m_library));
     m_listModel->appendRow(libraryItem);
-    m_uiWidget->treeView->setCurrentIndex(libraryItem->index());
+    m_playListView->setCurrentIndex(libraryItem->index());
 
 
     // Liste des morceaux

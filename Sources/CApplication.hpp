@@ -12,6 +12,7 @@ class CSong;
 class CSongTable;
 class CListFolder;
 class CPlayList;
+class CPlayListView;
 class CDynamicPlayList;
 class QStandardItemModel;
 class QSettings;
@@ -77,6 +78,9 @@ public:
     }
 
 public slots:
+
+    void selectAll(void);
+    void selectNone(void);
 
     void play(void);
     void stop(void);
@@ -151,7 +155,8 @@ private:
 
     Ui::TMediaPlayer * m_uiWidget;
     FMOD::System * m_soundSystem;
-    QStandardItemModel * m_listModel;
+    QStandardItemModel * m_listModel;  ///< Modèle pour afficher les listes de lecture.
+    CPlayListView * m_playListView;    ///< Vue pour afficher les listes de lecture.
     QSqlDatabase m_dataBase;           ///< Base de données.
     QSettings * m_settings;            ///< Paramètres de l'application.
     QTimer * m_timer;                  ///< Timer pour mettre à jour l'affichage.

@@ -316,17 +316,6 @@
       <property name="childrenCollapsible">
        <bool>false</bool>
       </property>
-      <widget class="QTreeView" name="treeView">
-       <property name="editTriggers">
-        <set>QAbstractItemView::NoEditTriggers</set>
-       </property>
-       <property name="uniformRowHeights">
-        <bool>true</bool>
-       </property>
-       <attribute name="headerVisible">
-        <bool>false</bool>
-       </attribute>
-      </widget>
      </widget>
     </item>
    </layout>
@@ -486,7 +475,6 @@
   <tabstop>btnShuffle</tabstop>
   <tabstop>btnMute</tabstop>
   <tabstop>sliderVolume</tabstop>
-  <tabstop>treeView</tabstop>
  </tabstops>
  <resources>
   <include location="../TMediaPlayer.qrc"/>
