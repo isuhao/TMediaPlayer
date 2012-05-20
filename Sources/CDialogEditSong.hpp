@@ -3,10 +3,8 @@
 #define FILE_CDIALOG_EDIT_SONG
 
 #include <QDialog>
+#include "CSongTableModel.hpp"
 #include "ui_DialogEditSong.h"
-
-
-class CSong;
 
 
 class CDialogEditSong : public QDialog
@@ -15,7 +13,7 @@ class CDialogEditSong : public QDialog
 
 public:
 
-    CDialogEditSong(CSong * song, QWidget * parent = NULL);
+    CDialogEditSong(CSongTableModel::TSongItem * songItem, QWidget * parent = NULL);
     ~CDialogEditSong();
 
     //...
@@ -23,7 +21,7 @@ public:
 private:
     
     Ui::DialogEditSong * m_uiWidget;
-    CSong * m_song;
+    CSongTableModel::TSongItem * m_songItem;
 };
 
 #endif // FILE_CDIALOG_EDIT_SONG

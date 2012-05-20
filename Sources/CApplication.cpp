@@ -4,8 +4,11 @@
 #include "CSongTableModel.hpp"
 #include "CStaticPlayList.hpp"
 #include "CDynamicPlayList.hpp"
-#include "CDialogEditSong.hpp"
 #include "CListFolder.hpp"
+#include "CDialogEditSong.hpp"
+#include "CDialogEditSongs.hpp"
+#include "CDialogEditStaticPlayList.hpp"
+#include "CDialogEditDynamicList.hpp"
 
 // Qt
 #include <QStandardItemModel>
@@ -92,15 +95,16 @@ CApplication::CApplication(void) :
     connect(m_uiWidget->sliderPosition, SIGNAL(sliderReleased()), this, SLOT(updatePosition()));
 
     // Menus
-    connect(m_uiWidget->actionNewPlayList, SIGNAL(triggered()), this, SLOT(addPlayList()));
-    connect(m_uiWidget->actionNewDynamicPlayList, SIGNAL(triggered()), this, SLOT(addDynamicList()));
+    connect(m_uiWidget->actionNewPlayList, SIGNAL(triggered()), this, SLOT(openDialogAddStaticPlayList()));
+    connect(m_uiWidget->actionNewDynamicPlayList, SIGNAL(triggered()), this, SLOT(openDialogAddDynamicList()));
     connect(m_uiWidget->actionAddFiles, SIGNAL(triggered()), this, SLOT(openDialogAddSongs()));
     connect(m_uiWidget->actionAddFolder, SIGNAL(triggered()), this, SLOT(openDialogAddFolder()));
     connect(m_uiWidget->actionInformations, SIGNAL(triggered()), this, SLOT(openDialogSongInfos()));
     connect(m_uiWidget->actionOpenInExplorer, SIGNAL(triggered()), this, SLOT(openSongInExplorer()));
 
-    connect(m_uiWidget->actionSelectAll, SIGNAL(triggered()), this, SLOT(selectAll()));
-    connect(m_uiWidget->actionSelectNone, SIGNAL(triggered()), this, SLOT(selectNone()));
+    //connect(m_uiWidget->actionSelectAll, SIGNAL(triggered()), this, SLOT(selectAll()));
+    //connect(m_uiWidget->actionSelectNone, SIGNAL(triggered()), this, SLOT(selectNone()));
+    //connect(m_uiWidget->actionPreferences, SIGNAL(triggered()), this, SLOT(openDialogPreferences()));
 
     connect(m_uiWidget->actionPlay, SIGNAL(triggered()), this, SLOT(play()));
     connect(m_uiWidget->actionPause, SIGNAL(triggered()), this, SLOT(pause()));
@@ -136,7 +140,7 @@ CApplication::CApplication(void) :
 
     if (!m_dataBase.open())
     {
-        QMessageBox::critical(this, QString(), tr("Failed to load database:\n\n").arg(m_dataBase.lastError().text()));
+        QMessageBox::critical(this, QString(), tr("Failed to load database."));
         QCoreApplication::exit();
     }
 
@@ -420,6 +424,7 @@ void CApplication::play(void)
         if (m_state == Paused)
         {
             qDebug() << "CApplication::play() : chanson en pause";
+            m_uiWidget->btnPlay->setIcon(QPixmap(":/icons/pause"));
             emit songResumed(m_currentSong);
             m_currentSong->play();
         }
@@ -432,9 +437,20 @@ void CApplication::play(void)
 
         qDebug() << "CApplication::play() : lancement du premier morceau";
         m_currentSongTable = m_displayedSongTable;
-        // TODO: lire le morceau sélectionné dans la vue
-        m_currentSongIndex = m_currentSongTable->getNextSong(-1, m_isShuffle);
-        m_currentSong = m_currentSongTable->getSongForIndex(m_currentSongIndex);
+
+        // Recherche du morceau sélectionné
+        QItemSelectionModel * selectionModel = m_displayedSongTable->selectionModel();
+        m_currentSongIndex = selectionModel->currentIndex().row();
+        CSongTableModel::TSongItem * songItem = m_displayedSongTable->getSongItemForIndex(m_currentSongIndex);
+        m_currentSong = (songItem ? songItem->song : NULL);
+
+        // Lecture du premier morceau de la liste
+        if (!m_currentSong)
+        {
+            m_currentSongIndex = m_currentSongTable->getNextSong(-1, m_isShuffle);
+            CSongTableModel::TSongItem * songItem = m_displayedSongTable->getSongItemForIndex(m_currentSongIndex);
+            m_currentSong = (songItem ? songItem->song : NULL);
+        }
 
         if (!m_currentSong)
         {
@@ -445,13 +461,7 @@ void CApplication::play(void)
 
         if (m_currentSong->loadSound())
         {
-            //m_currentSong->setVolume(m_volume);
-            //m_currentSong->setMute(m_isMute);
             startPlay();
-            //m_currentSong->play();
-
-            //emit songPlayStart(m_currentSong);
-            //connect(m_currentSong, SIGNAL(playEnd()), this, SLOT(onPlayEnd()));
         }
         else
         {
@@ -490,6 +500,7 @@ void CApplication::pause(void)
 {
     if (m_currentSong)
     {
+        m_uiWidget->btnPlay->setIcon(QPixmap(":/icons/play"));
         m_currentSong->pause();
         emit songPaused(m_currentSong);
         m_state = Paused;
@@ -501,12 +512,10 @@ void CApplication::togglePlay(void)
 {
     if (m_state != Playing)
     {
-        m_uiWidget->btnPlay->setIcon(QPixmap(":/icons/pause"));
         play();
     }
     else
     {
-        m_uiWidget->btnPlay->setIcon(QPixmap(":/icons/play"));
         pause();
     }
 }
@@ -517,19 +526,12 @@ void CApplication::previousSong(void)
     if (m_currentSongTable)
     {
         m_currentSongIndex = m_currentSongTable->getPreviousSong(m_currentSongIndex, m_isShuffle);
-        m_currentSong = m_currentSongTable->getSongForIndex(m_currentSongIndex);
+        CSongTableModel::TSongItem * songItem = m_displayedSongTable->getSongItemForIndex(m_currentSongIndex);
+        m_currentSong = (songItem ? songItem->song : NULL);
 
         if (m_currentSong && m_currentSong->loadSound())
         {
-            //m_currentSong->setVolume(m_volume);
-            //m_currentSong->setMute(m_isMute);
             play();
-            //m_currentSong->play();
-
-            //emit songPlayStart(m_currentSong);
-            //connect(m_currentSong, SIGNAL(playEnd()), this, SLOT(onPlayEnd()));
-
-            //m_isPlaying = true;
         }
         else
         {
@@ -556,13 +558,15 @@ void CApplication::nextSong(void)
         updateSongDescription(NULL);
 
         m_currentSongIndex = m_currentSongTable->getNextSong(m_currentSongIndex, m_isShuffle);
-        m_currentSong = m_currentSongTable->getSongForIndex(m_currentSongIndex);
+        CSongTableModel::TSongItem * songItem = m_displayedSongTable->getSongItemForIndex(m_currentSongIndex);
+        m_currentSong = (songItem ? songItem->song : NULL);
 
         // Répétition de la liste
         if (!m_currentSong && m_isRepeat)
         {
             m_currentSongIndex = m_currentSongTable->getNextSong(-1, m_isShuffle);
-            m_currentSong = m_currentSongTable->getSongForIndex(m_currentSongIndex);
+            CSongTableModel::TSongItem * songItem = m_displayedSongTable->getSongItemForIndex(m_currentSongIndex);
+            m_currentSong = (songItem ? songItem->song : NULL);
         }
 
         if (!m_currentSong)
@@ -575,16 +579,7 @@ void CApplication::nextSong(void)
 
         if (m_currentSong->loadSound())
         {
-            //m_currentSong->setVolume(m_volume);
-            //m_currentSong->setMute(m_isMute);
             startPlay();
-            //if (m_isPaused) m_currentSong->pause();
-            //m_currentSong->play();
-
-            //emit songPlayStart(m_currentSong);
-            //connect(m_currentSong, SIGNAL(playEnd()), this, SLOT(onPlayEnd()));
-
-            //m_isPlaying = true;
         }
         else
         {
@@ -600,7 +595,8 @@ void CApplication::nextSong(void)
 
 void CApplication::playSong(int pos)
 {
-    CSong * song = m_displayedSongTable->getSongForIndex(pos);
+    CSongTableModel::TSongItem * songItem = m_displayedSongTable->getSongItemForIndex(pos);
+    CSong * song = (songItem ? songItem->song : NULL);
 
     if (song)
     {
@@ -747,22 +743,6 @@ void CApplication::editDynamicPlayList(CDynamicPlayList * playList)
 
     //TODO: open dialog edit SmartPlaylist
     //TODO: maj DB
-}
-
-
-void CApplication::addPlayList(CListFolder * folder)
-{
-    //TODO: open dialog new play List (name)
-    //TODO: maj DB
-    //TODO: maj vue gauche
-}
-
-
-void CApplication::addDynamicList(CListFolder * folder)
-{
-    //TODO: open dialog new smart play List
-    //TODO: maj DB
-    //TODO: maj vue gauche
 }
 
 
@@ -914,7 +894,6 @@ void CApplication::openDialogAddFolder(void)
 /**
  * Affiche une boite de dialogue pour visualiser et éditer les informations du morceau sélectionné.
  *
- * \todo Afficher les informations de plusieurs morceaux.
  * \todo Afficher toutes les informations.
  * \todo Mettre-à-jour la base de données.
  * \todo Mettre-à-jour les tags du fichier.
@@ -924,17 +903,107 @@ void CApplication::openDialogSongInfos(void)
 {
     Q_CHECK_PTR(m_displayedSongTable);
 
-    // Recherche du morceau sélectionné
     QItemSelectionModel * selectionModel = m_displayedSongTable->selectionModel();
-    CSong * song = m_displayedSongTable->getSongForIndex(selectionModel->currentIndex().row());
 
-    if (song)
+    // Liste des morceaux sélectionnés
+    QModelIndexList indexList = selectionModel->selectedRows();
+
+    if (indexList.size() > 1)
     {
-        CDialogEditSong * dialog = new CDialogEditSong(song, this);
+        QList<CSongTableModel::TSongItem *> songItemList;
+
+        foreach (QModelIndex index, indexList)
+        {
+            CSongTableModel::TSongItem * songItem = m_displayedSongTable->getSongItemForIndex(index.row());
+            if (songItem) songItemList.append(songItem);
+        }
+
+        qDebug() << songItemList;
+
+        CDialogEditSongs * dialog = new CDialogEditSongs(songItemList, this);
         dialog->show();
 
-        //TODO...
+        //...
+
+        return;
     }
+    
+    // Recherche du morceau sélectionné
+    CSongTableModel::TSongItem * songItem = m_displayedSongTable->getSongItemForIndex(selectionModel->currentIndex().row());
+
+    if (songItem)
+    {
+        CDialogEditSong * dialog = new CDialogEditSong(songItem, this);
+        dialog->show();
+
+        //...
+    }
+}
+
+
+/**
+ * Affiche la boite de dialogue pour crée une nouvelle liste de lecture statique.
+ *
+ * \param folder Pointeur sur le dossier où créer la liste.
+ */
+
+void CApplication::openDialogAddStaticPlayList(CListFolder * folder)
+{
+    qDebug() << "Nouvelle liste de lecture...";
+
+    CDialogEditStaticPlayList * dialog = new CDialogEditStaticPlayList(NULL, this);
+    dialog->show();
+
+    //...
+}
+
+
+/**
+ * Affiche la boite de dialogue pour crée une nouvelle liste de lecture dynamique.
+ *
+ * \param folder Pointeur sur le dossier où créer la liste.
+ */
+
+void CApplication::openDialogAddDynamicList(CListFolder * folder)
+{
+    qDebug() << "Nouvelle liste de lecture dynamique...";
+
+    CDialogEditDynamicList * dialog = new CDialogEditDynamicList(NULL, this);
+    dialog->show();
+
+    //...
+}
+
+
+/**
+ * Ajoute une liste de lecture à la vue.
+ *
+ * \param playList Pointeur sur la liste de lecture à ajouter.
+ */
+
+void CApplication::addPlayList(CPlayList * playList)
+{
+    Q_CHECK_PTR(playList);
+
+    m_playLists.append(playList);
+
+    m_uiWidget->splitter->addWidget(playList);
+    connect(playList, SIGNAL(songStarted(int)), this, SLOT(playSong(int)));
+    playList->hide();
+
+    QStandardItem * playListItem = new QStandardItem(playList->getName());
+
+    if (qobject_cast<CDynamicPlayList *>(playList))
+    {
+        playListItem->setIcon(QPixmap(":/icons/dynamic_list"));
+    }
+    else
+    {
+        playListItem->setIcon(QPixmap(":/icons/playlist"));
+    }
+
+    playListItem->setData(QVariant::fromValue(reinterpret_cast<CSongTable *>(playList)));
+    m_listModel->appendRow(playListItem);
 }
 
 
@@ -1147,7 +1216,7 @@ QStringList CApplication::addFolder(const QString& pathName)
 
     foreach (QString fileName, dir.entryList(QDir::Files | QDir::Readable, QDir::Name))
     {
-        fileList.append(dir.absoluteFilePath(fileName));
+        fileList.append(QDir::toNativeSeparators(dir.absoluteFilePath(fileName)));
     }
 
     return fileList;
@@ -1453,7 +1522,7 @@ bool CApplication::initSoundSystem(void)
 void CApplication::loadDatabase(void)
 {
     // Création de la librairie
-    m_library = new CSongTable();
+    m_library = new CSongTable(this);
     m_uiWidget->splitter->addWidget(m_library);
     connect(m_library, SIGNAL(songStarted(int)), this, SLOT(playSong(int)));
 
@@ -1461,6 +1530,7 @@ void CApplication::loadDatabase(void)
     QStandardItem * libraryItem = new QStandardItem(tr("Library"));
     libraryItem->setData(QVariant::fromValue(m_library));
     m_listModel->appendRow(libraryItem);
+    m_uiWidget->treeView->setCurrentIndex(libraryItem->index());
 
 
     // Liste des morceaux
@@ -1540,7 +1610,7 @@ void CApplication::loadDatabase(void)
 
 
     // Création des listes de lecture statiques
-    if (!query.exec("SELECT playlist_id, playlist_name FROM playlist"))
+    if (!query.exec("SELECT playlist_id, playlist_name FROM playlist ORDER BY list_position"))
     {
         QString error = query.lastError().text();
         QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
@@ -1548,10 +1618,7 @@ void CApplication::loadDatabase(void)
     
     while (query.next())
     {
-        CStaticPlayList * playList = new CStaticPlayList(query.value(1).toString());
-        m_uiWidget->splitter->addWidget(playList);
-        connect(playList, SIGNAL(songStarted(int)), this, SLOT(playSong(int)));
-        playList->hide();
+        CStaticPlayList * playList = new CStaticPlayList(this, query.value(1).toString());
 
         // Liste des morceaux de la liste de lecture
         QSqlQuery query2(m_dataBase);
@@ -1571,11 +1638,7 @@ void CApplication::loadDatabase(void)
             playList->addSong(getSongFromId(query2.value(0).toInt()));
         }
 
-        m_playLists.append(playList);
-
-        QStandardItem * playListItem = new QStandardItem(playList->getName());
-        playListItem->setData(QVariant::fromValue(reinterpret_cast<CSongTable *>(playList)));
-        m_listModel->appendRow(playListItem);
+        addPlayList(playList);
     }
     
 
@@ -1601,6 +1664,7 @@ void CApplication::startPlay(void)
     Q_CHECK_PTR(m_currentSongTable);
     Q_ASSERT(m_currentSongIndex >= 0);
 
+    m_uiWidget->btnPlay->setIcon(QPixmap(":/icons/pause"));
     m_currentSong->play();
     emit songPlayStart(m_currentSong);
     connect(m_currentSong, SIGNAL(playEnd()), this, SLOT(onPlayEnd()));

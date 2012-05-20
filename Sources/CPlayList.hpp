@@ -19,7 +19,7 @@ class CPlayList : public CSongTable
 
 public:
 
-    CPlayList(const QString& name = QString());
+    CPlayList(CApplication * application, const QString& name = QString());
     virtual ~CPlayList() = 0;
 
     inline QString getName(void) const;
@@ -36,9 +36,13 @@ signals:
     void folderChanged(CListFolder * oldFolder, CListFolder * newFolder); ///< Signal émis lorsque le dossier contenant la liste change.
     void listModified(); ///< Signal émis lorsque le contenu de la liste change.
 
-private:
+protected:
 
     QString m_name;         ///< Nom de la liste de lecture.
+    int m_position;
+
+private:
+
     CListFolder * m_folder; ///< Dossier contenant la liste.
     bool m_folderChanging;
 };

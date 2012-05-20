@@ -5,11 +5,14 @@
 #include <QObject>
 #include <QVariant>
 #include <QList>
+#include <QVector>
 #include <QTableView>
+#include "CSongTableModel.hpp"
 
 
 class CSong;
-class CSongTableModel;
+class CApplication;
+class QMenu;
 
 
 class CSongTable : public QTableView
@@ -22,31 +25,45 @@ public:
 
     enum TColumnType
     {
-        Title,
-        Artist,
-        Album,
-        AlbumArtist,
-        Composer,
-        Year,
-        TrackNumber,
-        DiscNumber,
-        Genre,
-        Rating,
-        Comments,
-        PlayCount,
-        LastPlayTime,
-        FileName,
-        BitRate,
-        Format,
-        Duration
+        ColInvalid      = -1,
+
+        ColPosition     =  0,
+        ColTitle        =  1,
+        ColArtist       =  2,
+        ColAlbum        =  3,
+        ColAlbumArtist  =  4,
+        ColComposer     =  5,
+        ColYear         =  6,
+        ColTrackNumber  =  7,
+        ColDiscNumber   =  8,
+        ColGenre        =  9,
+        ColRating       = 10,
+        ColComments     = 11,
+        ColPlayCount    = 12,
+        ColLastPlayTime = 13,
+        ColFileName     = 14,
+        ColBitRate      = 15,
+        ColFormat       = 16,
+        ColDuration     = 17,
+
+        ColNumber       = 18  ///< Nombre de types de colonnes.
     };
 
-    CSongTable(QWidget * parent = NULL);
+    struct TColumn
+    {
+        TColumnType type;
+        int width;
+        int position;
+
+        inline TColumn() : type(ColInvalid), width(0), position(-1) { }
+    };
+
+    CSongTable(CApplication * application);
     ~CSongTable();
 
     inline QList<CSong *> getSongs(void) const;
     inline int getNumSongs(void) const;
-    CSong * getSongForIndex(int pos) const;
+    CSongTableModel::TSongItem * getSongItemForIndex(int pos) const;
     int getPreviousSong(int pos, bool shuffle) const;
     int getNextSong(int pos, bool shuffle) const;
     int getTotalDuration(void) const;
@@ -57,6 +74,13 @@ signals:
 
     void songSelected(int pos); ///< Signal émis quand un morceau est sélectionné.
     void songStarted(int pos);  ///< Signal émis quand un morceau est lancé (double-clic).
+    void columnChanged(void);   ///< Signal émis lorsque les colonnes sont modifiées.
+    
+protected slots:
+
+    void columnMoved(int logicalIndex, int oldVisualIndex, int newVisualIndex);
+    void sectionResized(int logicalIndex, int oldSize, int newSize);
+    virtual void openCustomMenuProject(const QPoint& point);
 
 protected:
 
@@ -64,22 +88,17 @@ protected:
     void removeSong(CSong * song);
     void removeSong(int pos);
 
-    virtual void mousePressEvent(QMouseEvent * event);
-    virtual void mouseDoubleClickEvent(QMouseEvent * event);
-    virtual void openCustomMenuProject(const QPoint& point);
+    //virtual void mousePressEvent(QMouseEvent * event);
+    //virtual void mouseDoubleClickEvent(QMouseEvent * event);
+
+    CSongTableModel * m_model; ///< Modèle utilisé pour afficher les morceaux.
+    QMenu * m_menu;
+    CApplication * m_application;
 
 private:
 
-    struct TColumn
-    {
-        TColumnType type;
-        int width;
-    };
-    
-    CSongTableModel * m_model; ///< Modèle utilisé pour afficher les morceaux.
-    QList<CSong *> m_songs;    ///< Liste des chansons.
-    QList<TColumn> m_columns;  ///< Liste des colonnes affichées.
-    QList<TColumnType> m_sort; ///< Liste des critères de tri des colonnes.
+    QList<CSong *> m_songs;     ///< Liste des chansons.
+    QVector<TColumn> m_columns; ///< Liste des colonnes affichées.
 };
 
 Q_DECLARE_METATYPE(CSongTable *)

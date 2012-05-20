@@ -8,5 +8,7 @@
         <file alias="previous">Resources/icon_previous.png</file>
         <file alias="stop">Resources/icon_stop.png</file>
         <file alias="volume">Resources/icon_volume.png</file>
+        <file alias="dynamic_list">Resources/icon_dynamic_list.png</file>
+        <file alias="playlist">Resources/icon_playlist.png</file>
     </qresource>
 </RCC>

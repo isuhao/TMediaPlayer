@@ -40,6 +40,8 @@ public:
     CSong(CApplication * application);
     ~CSong();
 
+    //void loadFromFile(const QString& fileName);
+
     inline int getId(void) const;
     inline QString getFileName(void) const;
     inline int getFileSize(void) const;

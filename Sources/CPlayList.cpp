@@ -3,8 +3,10 @@
 #include "CListFolder.hpp"
 
 
-CPlayList::CPlayList(const QString& name) :
+CPlayList::CPlayList(CApplication * application, const QString& name) :
+    CSongTable       (application),
     m_name           (name),
+    m_position       (0),
     m_folder         (NULL),
     m_folderChanging (false)
 {

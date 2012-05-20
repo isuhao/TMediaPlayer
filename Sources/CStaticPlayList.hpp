@@ -13,9 +13,11 @@ class CStaticPlayList : public CPlayList
 {
     Q_OBJECT
 
+    friend class CDialogEditStaticPlayList;
+
 public:
 
-    CStaticPlayList(const QString& name = QString());
+    CStaticPlayList(CApplication * application, const QString& name = QString());
     ~CStaticPlayList();
 
 public slots:
@@ -30,6 +32,14 @@ signals:
     void songAdded(CSong * song);   ///< Signal émis lorsqu'une chanson est ajoutée à la liste.
     void songRemoved(CSong * song); ///< Signal émis lorsqu'une chanson est enlevée de la liste.
     void songMoved(CSong * song);   ///< Signal émis lorsqu'une chanson est déplacée dans la liste.
+
+protected slots:
+
+    bool updateDatabase(void);
+
+private:
+
+    int m_id; ///< Identifiant de la liste en base de données.
 };
 
 #endif

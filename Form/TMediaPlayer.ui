@@ -20,7 +20,7 @@
    <string>TMediaPlayer</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,1,0">
+   <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,1">
     <property name="margin">
      <number>0</number>
     </property>
@@ -362,6 +362,8 @@
     </property>
     <addaction name="actionSelectAll"/>
     <addaction name="actionSelectNone"/>
+    <addaction name="separator"/>
+    <addaction name="actionPreferences"/>
    </widget>
    <widget class="QMenu" name="menuControls">
     <property name="title">
@@ -467,6 +469,11 @@
    </property>
    <property name="text">
     <string>Repeat</string>
+   </property>
+  </action>
+  <action name="actionPreferences">
+   <property name="text">
+    <string>Preferences...</string>
    </property>
   </action>
  </widget>

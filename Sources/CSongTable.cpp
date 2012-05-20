@@ -2,19 +2,36 @@
 #include "CSongTable.hpp"
 #include "CSongTableModel.hpp"
 #include "CSong.hpp"
+#include "CApplication.hpp"
 #include <QStringList>
 #include <QMouseEvent>
 #include <QHeaderView>
+#include <QMenu>
 
 #include <QtDebug>
 
 
-CSongTable::CSongTable(QWidget * parent) :
-    QTableView (parent),
-    m_model    (NULL)
+CSongTable::CSongTable(CApplication * application) :
+    QTableView    (application),
+    m_model       (NULL),
+    m_menu        (NULL),
+    m_application (application)
 {
+    Q_CHECK_PTR(application);
+
     m_model = new CSongTableModel();
     setModel(m_model);
+
+    // Menu contextuel
+    m_menu = new QMenu(this);
+    m_menu->addAction(tr("Informations"), m_application, SLOT(openDialogSongInfos()));
+    m_menu->addAction(tr("Show in explorer"));
+    m_menu->addAction(tr("Remove"));
+    m_menu->addAction(tr("Playlists..."));
+    m_menu->addAction(tr("Add to playlist..."));
+
+    setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(openCustomMenuProject(const QPoint&)));
 
     QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     sizePolicy.setHorizontalStretch(1);
@@ -29,8 +46,43 @@ CSongTable::CSongTable(QWidget * parent) :
     setSortingEnabled(true);
     setShowGrid(false);
 
+    // Glisser-déposer
+    setDragEnabled(true);
+
+    // Modification des colonnes
+    horizontalHeader()->setMovable(true);
+    horizontalHeader()->hideSection(0);
+    connect(horizontalHeader(), SIGNAL(sectionMoved(int, int, int)), this, SLOT(columnMoved(int, int, int)));
+    connect(horizontalHeader(), SIGNAL(sectionResized(int, int, int)), this, SLOT(sectionResized(int, int, int)));
+
     verticalHeader()->hide();
     verticalHeader()->setDefaultSectionSize(19);
+
+    m_columns.resize(ColNumber);
+    m_columns[ 0].type = ColPosition;
+    m_columns[ 1].type = ColTitle;
+    m_columns[ 2].type = ColArtist;
+    m_columns[ 3].type = ColAlbum;
+    m_columns[ 4].type = ColAlbumArtist;
+    m_columns[ 5].type = ColComposer;
+    m_columns[ 6].type = ColYear;
+    m_columns[ 7].type = ColTrackNumber;
+    m_columns[ 8].type = ColDiscNumber;
+    m_columns[ 9].type = ColGenre;
+    m_columns[10].type = ColRating;
+    m_columns[11].type = ColComments;
+    m_columns[12].type = ColPlayCount;
+    m_columns[13].type = ColLastPlayTime;
+    m_columns[14].type = ColFileName;
+    m_columns[15].type = ColBitRate;
+    m_columns[16].type = ColFormat;
+    m_columns[17].type = ColDuration;
+
+    for (int i = 0; i < ColNumber; ++i)
+    {
+        m_columns[i].width = verticalHeader()->defaultSectionSize();
+        m_columns[i].position = i;
+    }
 }
 
 
@@ -40,9 +92,9 @@ CSongTable::~CSongTable()
 }
 
 
-CSong * CSongTable::getSongForIndex(int pos) const
+CSongTableModel::TSongItem * CSongTable::getSongItemForIndex(int pos) const
 {
-    return (pos < 0 ? NULL : m_model->getSong(pos));
+    return (pos < 0 ? NULL : m_model->getSongItem(pos));
 }
 
 
@@ -137,6 +189,8 @@ void CSongTable::addSong(CSong * song, int pos)
 {
     Q_CHECK_PTR(song);
 
+    pos = qBound(-1, pos, m_songs.size() - 1);
+
     if (pos < 0)
     {
         m_songs.append(song);
@@ -181,7 +235,7 @@ void CSongTable::removeSong(int pos)
     m_model->removeRow(pos);
 }
 
-
+/*
 void CSongTable::mousePressEvent(QMouseEvent * event)
 {
     Q_CHECK_PTR(event);
@@ -248,11 +302,59 @@ void CSongTable::mouseDoubleClickEvent(QMouseEvent * event)
 
     QTableView::mouseDoubleClickEvent(event);
 }
+*/
+
+void CSongTable::columnMoved(int logicalIndex, int oldVisualIndex, int newVisualIndex)
+{
+    qDebug() << "columnMoved("<<logicalIndex<<""<<oldVisualIndex<<""<<newVisualIndex<<")";
+
+    if (oldVisualIndex < newVisualIndex)
+    {
+        for (int i = 0; i < ColNumber; ++i)
+        {
+            if (m_columns[i].position > oldVisualIndex && m_columns[i].position <= newVisualIndex)
+            {
+                --(m_columns[i].position);
+            }
+        }
+    }
+    else
+    {
+        for (int i = 0; i < ColNumber; ++i)
+        {
+            if (m_columns[i].position >= oldVisualIndex && m_columns[i].position < newVisualIndex)
+            {
+                ++(m_columns[i].position);
+            }
+        }
+    }
+
+    m_columns[logicalIndex].position = newVisualIndex;
+    emit columnChanged();
+}
+
+
+void CSongTable::sectionResized(int logicalIndex, int oldSize, int newSize)
+{
+    qDebug() << "sectionResized("<<logicalIndex<<""<<oldSize<<""<<newSize<<")";
+    m_columns[logicalIndex].width = newSize;
+    emit columnChanged();
+}
 
 
 /// \todo Implémentation.
-void CSongTable::openCustomMenuProject(const QPoint& myQPoint)
+void CSongTable::openCustomMenuProject(const QPoint& point)
 {
+    qDebug() << "CSongTable::openCustomMenuProject()";
+
+    QModelIndex index = indexAt(point);
+
+    if (index.isValid())
+    {
+        m_menu->show();
+        m_menu->move(mapToGlobal(point));
+    }
+
     //...
     //this->myCustomMenu->show();
     //this->myCustomMenu->move(this->mapToGlobal(myQPoint));
