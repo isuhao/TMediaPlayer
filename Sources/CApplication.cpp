@@ -170,6 +170,7 @@ CApplication::~CApplication()
 
     foreach (CPlayList * playList, m_playLists)
     {
+        playList->updateDatabase();
         delete playList;
     }
 
@@ -1521,11 +1522,26 @@ bool CApplication::initSoundSystem(void)
 
 void CApplication::loadDatabase(void)
 {
+    QSqlQuery query(m_dataBase);
+
+
     // Création de la librairie
     m_library = new CSongTable(this);
+    m_library->m_idPlayList = 0;
     m_uiWidget->splitter->addWidget(m_library);
     connect(m_library, SIGNAL(songStarted(int)), this, SLOT(playSong(int)));
 
+    if (!query.exec("SELECT list_columns FROM playlist WHERE playlist_id = 0"))
+    {
+        QString error = query.lastError().text();
+        QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
+    }
+
+    if (query.next())
+    {
+        m_library->m_idPlayList = 0;
+        m_library->initColumns(query.value(0).toString());
+    }
 
     QStandardItem * libraryItem = new QStandardItem(tr("Library"));
     libraryItem->setData(QVariant::fromValue(m_library));
@@ -1534,7 +1550,6 @@ void CApplication::loadDatabase(void)
 
 
     // Liste des morceaux
-    QSqlQuery query(m_dataBase);
     if (!query.exec(
         "SELECT song_id, song_filename, song_filesize, song_bitrate, song_format, song_channels, "
                "song_duration, song_creation, song_modification, song_title, song_title_sort, "
@@ -1609,8 +1624,24 @@ void CApplication::loadDatabase(void)
     }
 
 
+    // Création des dossiers
+    if (!query.exec("SELECT folder_id, folder_name FROM folder ORDER BY folder_position"))
+    {
+        QString error = query.lastError().text();
+        QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
+    }
+    
+    while (query.next())
+    {
+        //CListFolder * folder = new CListFolder();
+        //folder->m_id   = query.value(0).toInt();
+        //folder->m_name = query.value(1).toString();
+        //...
+    }
+
+
     // Création des listes de lecture statiques
-    if (!query.exec("SELECT playlist_id, playlist_name FROM playlist ORDER BY list_position"))
+    if (!query.exec("SELECT static_list_id, playlist_name, list_columns, playlist_id FROM static_list NATURAL JOIN playlist ORDER BY list_position"))
     {
         QString error = query.lastError().text();
         QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
@@ -1619,10 +1650,13 @@ void CApplication::loadDatabase(void)
     while (query.next())
     {
         CStaticPlayList * playList = new CStaticPlayList(this, query.value(1).toString());
+        playList->m_id = query.value(0).toInt();
+        playList->m_idPlayList = query.value(3).toInt();
+        playList->initColumns(query.value(2).toString());
 
         // Liste des morceaux de la liste de lecture
         QSqlQuery query2(m_dataBase);
-        query2.prepare("SELECT song_id FROM playlist_song WHERE playlist_id = ? ORDER BY song_position");
+        query2.prepare("SELECT song_id FROM static_list_song WHERE static_list_id = ? ORDER BY song_position");
         query2.bindValue(0, query.value(0).toInt());
 
         if (!query2.exec())
@@ -1643,7 +1677,7 @@ void CApplication::loadDatabase(void)
     
 
     // Création des listes de lecture dynamiques
-    if (!query.exec("SELECT dynamic_list_id, dynamic_list_name, dynamic_list_union FROM dynamic_list"))
+    if (!query.exec("SELECT dynamic_list_id, playlist_name, dynamic_list_union FROM dynamic_list NATURAL JOIN playlist ORDER BY list_position"))
     {
         QString error = query.lastError().text();
         QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
@@ -1674,6 +1708,13 @@ void CApplication::startPlay(void)
     m_state = Playing;
 }
 
+
+/**
+ * Méthode appelée lors de la fermeture de la fenêtre.
+ * Sauvegarde l'état de la fenêtre.
+ *
+ * \param event Évènement de fermeture.
+ */
 
 void CApplication::closeEvent(QCloseEvent * event)
 {

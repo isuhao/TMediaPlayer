@@ -26,6 +26,7 @@ public:
     inline QString getName(void) const;
     inline QList<CPlayList *> getPlayLists(void) const;
     inline int getNumPlayLists(void) const;
+    bool isModified(void) const;
 
 public slots:
 
@@ -35,10 +36,18 @@ public slots:
 
 private:
 
-    QString m_name;
-    QList<CPlayList *> m_playLists;
+    int m_id;                       ///< Identifiant du dossier en base de données.
+    QString m_name;                 ///< Nom du dossier.
+    bool m_isModified;              ///< Indique si le dossier a été modifié.
+    QList<CPlayList *> m_playLists; ///< Liste des listes de lecture du dossier (l'ordre est le même que l'affichage).
 };
 
+
+/**
+ * Retourne le nom du dossier.
+ *
+ * \return Nom du dossier.
+ */
 
 inline QString CListFolder::getName(void) const
 {

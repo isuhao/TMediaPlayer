@@ -17,6 +17,9 @@ class CPlayList : public CSongTable
 {
     Q_OBJECT
 
+    friend class CApplication;
+    friend class CListFolder;
+
 public:
 
     CPlayList(CApplication * application, const QString& name = QString());
@@ -24,6 +27,7 @@ public:
 
     inline QString getName(void) const;
     inline CListFolder * getFolder(void) const;
+    virtual bool isModified(void) const;
 
 public slots:
 
@@ -38,13 +42,16 @@ signals:
 
 protected:
 
-    QString m_name;         ///< Nom de la liste de lecture.
-    int m_position;
+    virtual bool updateDatabase(void);
+
+    QString m_name;            ///< Nom de la liste de lecture.
+    int m_position;            ///< Position de la liste dans le dossier.
 
 private:
 
-    CListFolder * m_folder; ///< Dossier contenant la liste.
-    bool m_folderChanging;
+    CListFolder * m_folder;    ///< Dossier contenant la liste.
+    bool m_isPlayListModified; ///< Indique si la liste de lecture a été modifiée.
+    bool m_folderChanging;     ///< Indique si le dossier est en train d'être changé.
 };
 
 

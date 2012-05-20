@@ -4,11 +4,12 @@
 
 
 CPlayList::CPlayList(CApplication * application, const QString& name) :
-    CSongTable       (application),
-    m_name           (name),
-    m_position       (0),
-    m_folder         (NULL),
-    m_folderChanging (false)
+    CSongTable           (application),
+    m_name               (name),
+    m_position           (0),
+    m_folder             (NULL),
+    m_isPlayListModified (false),
+    m_folderChanging     (false)
 {
 
 }
@@ -17,6 +18,12 @@ CPlayList::CPlayList(CApplication * application, const QString& name) :
 CPlayList::~CPlayList()
 {
 
+}
+
+
+bool CPlayList::isModified(void) const
+{
+    return (m_isPlayListModified || CSongTable::isModified());
 }
 
 
@@ -33,6 +40,7 @@ void CPlayList::setName(const QString& name)
     if (oldName != name)
     {
         m_name = name;
+        m_isPlayListModified = true;
         emit nameChanged(oldName, name);
     }
 }
@@ -58,6 +66,7 @@ void CPlayList::setFolder(CListFolder * folder)
     if (oldFolder != folder)
     {
         m_folder = folder;
+        m_isPlayListModified = true;
 
         if (oldFolder) oldFolder->removePlayList(this);
         if (folder) folder->addPlayList(this);
@@ -66,4 +75,17 @@ void CPlayList::setFolder(CListFolder * folder)
     }
 
     m_folderChanging = false;
+}
+
+
+/// \todo Implémentation.
+bool CPlayList::updateDatabase(void)
+{
+    if (m_isPlayListModified)
+    {
+        //...
+        m_isPlayListModified = false;
+    }
+
+    return CSongTable::updateDatabase();
 }

@@ -8,11 +8,15 @@
 
 
 CStaticPlayList::CStaticPlayList(CApplication * application, const QString& name) :
-    CPlayList (application, name),
-    m_id      (-1)
+    CPlayList              (application, name),
+    m_id                   (-1),
+    m_isStaticListModified (false)
 {
     m_model->setCanDrop(true);
-    horizontalHeader()->showSection(0); // Position
+
+    // Colonne "Position"
+    m_columns[0].visible = true;
+    horizontalHeader()->showSection(0);
 
     // Glisser-déposer
     setDropIndicatorShown(true);
@@ -23,6 +27,12 @@ CStaticPlayList::CStaticPlayList(CApplication * application, const QString& name
 CStaticPlayList::~CStaticPlayList()
 {
 
+}
+
+
+bool CStaticPlayList::isModified(void) const
+{
+    return (m_isStaticListModified || CPlayList::isModified());
 }
 
 
@@ -38,6 +48,9 @@ CStaticPlayList::~CStaticPlayList()
 void CStaticPlayList::addSong(CSong * song, int pos)
 {
     Q_CHECK_PTR(song);
+
+    m_isStaticListModified = true; // Hum...
+    //...
     CSongTable::addSong(song, pos);
     emit songAdded(song);
 }
@@ -58,6 +71,8 @@ void CStaticPlayList::removeSong(CSong * song)
 
     if (hasSong(song))
     {
+        m_isStaticListModified = true; // Hum...
+        //TODO...
         CSongTable::removeSong(song);
         emit songRemoved(song);
         emit listModified();
@@ -80,6 +95,7 @@ void CStaticPlayList::removeSong(int pos)
 
     if (song)
     {
+        m_isStaticListModified = true; // Hum...
         //TODO...
         CSongTable::removeSong(pos);
         emit songRemoved(song->song);
@@ -126,11 +142,24 @@ bool CStaticPlayList::updateDatabase(void)
         }
 
         // Insertion
-        query.prepare("INSERT INTO playlist (playlist_name, folder_id, list_position) VALUES (?, ?, ?)");
+        query.prepare("INSERT INTO playlist (playlist_name, folder_id, list_position, list_columns) VALUES (?, ?, ?, ?)");
 
         query.bindValue(0, m_name);
         query.bindValue(1, 0);
         query.bindValue(2, m_position);
+        query.bindValue(3, "1:100;2:100;3:100"); // Disposition par défaut \todo => settings
+
+        if (!query.exec())
+        {
+            QString error = query.lastError().text();
+            QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
+            return false;
+        }
+
+        m_idPlayList = query.lastInsertId().toInt();
+
+        query.prepare("INSERT INTO static_list (playlist_id) VALUES (?)");
+        query.bindValue(0, m_idPlayList);
 
         if (!query.exec())
         {
@@ -140,14 +169,15 @@ bool CStaticPlayList::updateDatabase(void)
         }
 
         m_id = query.lastInsertId().toInt();
+        m_isStaticListModified = false;
     }
     // Mise à jour
-    else
+    else if (m_isStaticListModified)
     {
         query.prepare("UPDATE playlist SET playlist_name = ? WHERE playlist_id = ?");
 
         query.bindValue(0, m_name);
-        query.bindValue(1, m_id);
+        query.bindValue(1, m_idPlayList);
 
         if (!query.exec())
         {
@@ -155,7 +185,9 @@ bool CStaticPlayList::updateDatabase(void)
             QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
             return false;
         }
+
+        m_isStaticListModified = false;
     }
 
-    return true;
+    return CPlayList::updateDatabase();
 }

@@ -6,16 +6,23 @@
 #include <QStringList>
 #include <QMouseEvent>
 #include <QHeaderView>
+#include <QSqlQuery>
+#include <QSqlError>
 #include <QMenu>
 
 #include <QtDebug>
 
 
 CSongTable::CSongTable(CApplication * application) :
-    QTableView    (application),
-    m_model       (NULL),
-    m_menu        (NULL),
-    m_application (application)
+    QTableView       (application),
+    m_model          (NULL),
+    m_menu           (NULL),
+    m_application    (application),
+    m_idPlayList     (-1),
+    m_columnSort     (ColArtist),
+    m_isModified     (false),
+    m_sortOrder      (Qt::AscendingOrder),
+    m_isColumnMoving (false)
 {
     Q_CHECK_PTR(application);
 
@@ -51,38 +58,13 @@ CSongTable::CSongTable(CApplication * application) :
 
     // Modification des colonnes
     horizontalHeader()->setMovable(true);
-    horizontalHeader()->hideSection(0);
     connect(horizontalHeader(), SIGNAL(sectionMoved(int, int, int)), this, SLOT(columnMoved(int, int, int)));
     connect(horizontalHeader(), SIGNAL(sectionResized(int, int, int)), this, SLOT(sectionResized(int, int, int)));
 
     verticalHeader()->hide();
     verticalHeader()->setDefaultSectionSize(19);
 
-    m_columns.resize(ColNumber);
-    m_columns[ 0].type = ColPosition;
-    m_columns[ 1].type = ColTitle;
-    m_columns[ 2].type = ColArtist;
-    m_columns[ 3].type = ColAlbum;
-    m_columns[ 4].type = ColAlbumArtist;
-    m_columns[ 5].type = ColComposer;
-    m_columns[ 6].type = ColYear;
-    m_columns[ 7].type = ColTrackNumber;
-    m_columns[ 8].type = ColDiscNumber;
-    m_columns[ 9].type = ColGenre;
-    m_columns[10].type = ColRating;
-    m_columns[11].type = ColComments;
-    m_columns[12].type = ColPlayCount;
-    m_columns[13].type = ColLastPlayTime;
-    m_columns[14].type = ColFileName;
-    m_columns[15].type = ColBitRate;
-    m_columns[16].type = ColFormat;
-    m_columns[17].type = ColDuration;
-
-    for (int i = 0; i < ColNumber; ++i)
-    {
-        m_columns[i].width = verticalHeader()->defaultSectionSize();
-        m_columns[i].position = i;
-    }
+    initColumns("");
 }
 
 
@@ -235,6 +217,200 @@ void CSongTable::removeSong(int pos)
     m_model->removeRow(pos);
 }
 
+
+/**
+ * Initialiser la disposition des colonnes de la table.
+ *
+ * Le format de la chaine est le suivant :
+ * Les informations de chaque colonne sont placées dans leur ordre d'affichage, avec un point-virgule comme séparateur.
+ * Pour une colonne, on trouve le type de colonne (entier défini dans l'énumération TColumnType), suivant éventuellement
+ * d'un signe plus ou moins pour le classement ascendant ou descendant, suivi du signe deux-point, suivi de la
+ * largeur de la colonnes en pixels.
+ *
+ * Par exemple : "1:100;2:100;6+:40", ce qui signifie "Titre" (100px), "Artist" (100px), "Année" (40px), classé par
+ * année ascendante.
+ *
+ * \todo Implémentation.
+ *
+ * \param str Chaine de caractères contenant la disposition des colonnes.
+ */
+
+void CSongTable::initColumns(const QString& str)
+{
+    bool isValid = false;
+
+    for (int i = 0; i < ColNumber; ++i)
+    {
+        m_columns[i].pos     = -1;
+        m_columns[i].width   = horizontalHeader()->defaultSectionSize();
+        m_columns[i].visible = false;
+    }
+
+    if (!str.isEmpty())
+    {
+        isValid = true;
+        m_columnSort = ColArtist;
+        m_sortOrder = Qt::AscendingOrder;
+        int colPosition = 0;
+
+        QStringList columnList = str.split(';', QString::SkipEmptyParts);
+    
+        foreach (QString columnInfos, columnList)
+        {
+            QStringList columnInfosPart = columnInfos.split(':');
+
+            if (columnInfosPart.size() != 2)
+            {
+                isValid = false;
+                break;
+            }
+
+            columnInfosPart[0] = columnInfosPart[0].trimmed();
+            QRegExp regExp("([0-9]{1,2})([-+])?");
+
+            if (regExp.indexIn(columnInfosPart[0]) != 0)
+            {
+                isValid = false;
+                break;
+            }
+
+            int colType = regExp.capturedTexts()[1].toInt();
+            if (colType < 0 || colType >= ColNumber)
+            {
+                isValid = false;
+                break;
+            }
+
+            if (regExp.capturedTexts()[2] == "+")
+            {
+                m_columnSort = colType;
+                m_sortOrder = Qt::AscendingOrder;
+            }
+            else if (regExp.capturedTexts()[2] == "-")
+            {
+                m_columnSort = colType;
+                m_sortOrder = Qt::DescendingOrder;
+            }
+
+            QStringList list = regExp.capturedTexts();
+
+            bool ok;
+            int width = columnInfosPart[1].toInt(&ok);
+
+            if (!ok)
+            {
+                isValid = false;
+                break;
+            }
+
+            // Largeur par défaut
+            if (width < 0) width = horizontalHeader()->defaultSectionSize();
+
+            m_columns[colType].pos     = colPosition++;
+            m_columns[colType].width   = width;
+            m_columns[colType].visible = true;
+        }
+
+        for (int i = 0; i < ColNumber; ++i)
+        {
+            if (!m_columns[i].visible)
+            {
+                m_columns[i].pos = colPosition++;
+            }
+        }
+    }
+
+    // Disposition par défaut
+    if (!isValid)
+    {
+        for (int i = 0; i < ColNumber; ++i)
+        {
+            m_columns[i].pos     = i;
+            m_columns[i].width   = horizontalHeader()->defaultSectionSize();
+            m_columns[i].visible = true;
+        }
+
+        m_columns[0].visible = false;
+        m_columnSort = ColArtist;
+        m_sortOrder = Qt::AscendingOrder;
+    }
+
+    qDebug() << "Modification des colonnes :";
+    
+    m_isColumnMoving = true;
+
+    for (int i = 0; i < ColNumber; ++i)
+    {
+        // Affichage ou masquage de la colonne
+        if (m_columns[i].visible)
+        {
+            horizontalHeader()->showSection(i);
+        }
+        else
+        {
+            horizontalHeader()->hideSection(i);
+        }
+
+        // Déplacement de la colonne
+        int visualIndex = horizontalHeader()->visualIndex(i);
+        horizontalHeader()->moveSection(visualIndex, m_columns[i].pos);
+
+        // Redimensionnement
+        horizontalHeader()->resizeSection(i, m_columns[i].width);
+    }
+
+    m_isColumnMoving = false;
+
+    sortByColumn(m_columnSort, m_sortOrder);
+
+    //horizontalHeader()->hideSection(0);
+}
+
+
+void CSongTable::showColumn(int col, bool show)
+{
+    Q_ASSERT(col >= 0 && col < ColNumber);
+    m_columns[col].visible = show;
+    //TODO: update DB
+}
+
+
+QString CSongTable::getColumnsInfos(void) const
+{
+    QString str;
+    int currentPos = 0;
+
+    for (int i = 0; i < ColNumber && currentPos < ColNumber; ++i)
+    {
+        if (m_columns[i].pos == currentPos && m_columns[i].visible)
+        {
+            if (currentPos > 0) str += ";";
+
+            if (m_columnSort == i)
+            {
+                if (m_sortOrder == Qt::AscendingOrder)
+                {
+                    str += QString("%1+:%2").arg(i).arg(m_columns[i].width);
+                }
+                else
+                {
+                    str += QString("%1-:%2").arg(i).arg(m_columns[i].width);
+                }
+            }
+            else
+            {
+                str += QString("%1:%2").arg(i).arg(m_columns[i].width);
+            }
+
+            ++currentPos;
+            i = 0;
+        }
+    }
+    
+    return str;
+}
+
+
 /*
 void CSongTable::mousePressEvent(QMouseEvent * event)
 {
@@ -308,28 +484,34 @@ void CSongTable::columnMoved(int logicalIndex, int oldVisualIndex, int newVisual
 {
     qDebug() << "columnMoved("<<logicalIndex<<""<<oldVisualIndex<<""<<newVisualIndex<<")";
 
-    if (oldVisualIndex < newVisualIndex)
+    if (!m_isColumnMoving)
     {
-        for (int i = 0; i < ColNumber; ++i)
+        if (oldVisualIndex < newVisualIndex)
         {
-            if (m_columns[i].position > oldVisualIndex && m_columns[i].position <= newVisualIndex)
+            for (int i = 0; i < ColNumber; ++i)
             {
-                --(m_columns[i].position);
+                if (m_columns[i].pos > oldVisualIndex && m_columns[i].pos <= newVisualIndex)
+                {
+                    --(m_columns[i].pos);
+                }
             }
         }
-    }
-    else
-    {
-        for (int i = 0; i < ColNumber; ++i)
+        else
         {
-            if (m_columns[i].position >= oldVisualIndex && m_columns[i].position < newVisualIndex)
+            for (int i = 0; i < ColNumber; ++i)
             {
-                ++(m_columns[i].position);
+                if (m_columns[i].pos >= newVisualIndex && m_columns[i].pos < oldVisualIndex)
+                {
+                    ++(m_columns[i].pos);
+                }
             }
         }
+
+        m_columns[logicalIndex].pos = newVisualIndex;
+
+        m_isModified = true;
     }
 
-    m_columns[logicalIndex].position = newVisualIndex;
     emit columnChanged();
 }
 
@@ -337,8 +519,46 @@ void CSongTable::columnMoved(int logicalIndex, int oldVisualIndex, int newVisual
 void CSongTable::sectionResized(int logicalIndex, int oldSize, int newSize)
 {
     qDebug() << "sectionResized("<<logicalIndex<<""<<oldSize<<""<<newSize<<")";
+
     m_columns[logicalIndex].width = newSize;
+
+    m_isModified = true;
     emit columnChanged();
+}
+
+
+bool CSongTable::updateDatabase(void)
+{
+    if (m_isModified)
+    {
+        if (m_idPlayList < 0)
+        {
+            qWarning() << "CSongTable::updateDatabase() : id négatif";
+            return false;
+        }
+
+        QSqlQuery query(m_application->getDataBase());
+
+        query.prepare("UPDATE playlist SET list_columns = ? WHERE playlist_id = ?");
+        query.bindValue(0, getColumnsInfos());
+        query.bindValue(1, m_idPlayList);
+
+        if (!query.exec())
+        {
+            qWarning() << "CSongTable::updateDatabase() : Erreur SQL";
+            return false;
+        }
+
+        m_isModified = false;
+    }
+
+    return true;
+}
+
+
+bool CSongTable::isModified(void) const
+{
+    return m_isModified;
 }
 
 

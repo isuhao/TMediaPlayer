@@ -5,7 +5,6 @@
 #include <QObject>
 #include <QVariant>
 #include <QList>
-#include <QVector>
 #include <QTableView>
 #include "CSongTableModel.hpp"
 
@@ -20,6 +19,7 @@ class CSongTable : public QTableView
     Q_OBJECT
 
     friend class CApplication;
+    friend class CListFolder;
 
 public:
 
@@ -51,11 +51,12 @@ public:
 
     struct TColumn
     {
-        TColumnType type;
-        int width;
-        int position;
+        int pos;      ///< Position de la colonne.
+        int width;    ///< Largeur de la colonne en pixels.
+        bool visible; ///< Indique si la colonne est visible ou pas.
 
-        inline TColumn() : type(ColInvalid), width(0), position(-1) { }
+        inline TColumn(int ppos = -1, int pwidth = -1, bool pvisible = true) :
+            pos(ppos), width(pwidth), visible(pvisible) { }
     };
 
     CSongTable(CApplication * application);
@@ -69,6 +70,7 @@ public:
     int getTotalDuration(void) const;
     void deleteSongs(void);
     inline bool hasSong(CSong * song) const;
+    virtual bool isModified(void) const;
     
 signals:
 
@@ -87,18 +89,29 @@ protected:
     void addSong(CSong * song, int pos = -1);
     void removeSong(CSong * song);
     void removeSong(int pos);
+    void initColumns(const QString& str);
+    void showColumn(int col, bool show = true);
+    QString getColumnsInfos(void) const;
+    virtual bool updateDatabase(void);
+
+    //void loadFromDatabase(int id);
 
     //virtual void mousePressEvent(QMouseEvent * event);
     //virtual void mouseDoubleClickEvent(QMouseEvent * event);
 
-    CSongTableModel * m_model; ///< Modèle utilisé pour afficher les morceaux.
-    QMenu * m_menu;
-    CApplication * m_application;
+    CSongTableModel * m_model;    ///< Modèle utilisé pour afficher les morceaux.
+    QMenu * m_menu;               ///< Menu contextuel.
+    CApplication * m_application; ///< Pointeur sur l'application.
+    TColumn m_columns[ColNumber]; ///< Liste des colonnes.
+    int m_idPlayList;             ///< Identifiant de la liste de lecture en base de données.
 
 private:
-
-    QList<CSong *> m_songs;     ///< Liste des chansons.
-    QVector<TColumn> m_columns; ///< Liste des colonnes affichées.
+    
+    bool m_isModified;            ///< Indique si les informations de la liste ont été modifiées.
+    QList<CSong *> m_songs;       ///< Liste des chansons.
+    int m_columnSort;             ///< Numéro de la colonne triée.
+    Qt::SortOrder m_sortOrder;    ///< Ordre de tri.
+    bool m_isColumnMoving;        ///< Indique si les colonnes sont en cours de positionnement.
 };
 
 Q_DECLARE_METATYPE(CSongTable *)
