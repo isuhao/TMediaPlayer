@@ -4,6 +4,7 @@
 
 #include <QAbstractTableModel>
 #include <QList>
+#include <QStringList>
 #include "CSong.hpp"
 
 
@@ -36,7 +37,11 @@ public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
     void sort(int column, Qt::SortOrder order);
+
+    // Glisser-déposer
     Qt::ItemFlags flags(const QModelIndex& index) const;
+    QStringList mimeTypes(void) const;
+    QMimeData * mimeData(const QModelIndexList& indexes) const;
     bool dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex& parent);
 
     void insertRow(CSong * song, int pos = -1);

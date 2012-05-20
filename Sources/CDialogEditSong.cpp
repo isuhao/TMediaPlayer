@@ -52,7 +52,7 @@ CDialogEditSong::CDialogEditSong(CSongTableModel::TSongItem * songItem, QWidget 
     else
     {
         // Moins de 1 Kio
-        m_uiWidget->valueFileSize->setText(tr("%1 octets").arg(fileSize));
+        m_uiWidget->valueFileSize->setText(tr("%1 bytes").arg(fileSize));
     }
 
     m_uiWidget->valueCreation->setText(m_songItem->song->getCreationDate().toString());
@@ -64,7 +64,7 @@ CDialogEditSong::CDialogEditSong(CSongTableModel::TSongItem * songItem, QWidget 
     {
         default:
         case CSong::TypeUnknown:
-            m_uiWidget->valueFormat->setText(tr("Inconnu"));
+            m_uiWidget->valueFormat->setText(tr("Unknown"));
             break;
 
         case CSong::TypeMP3:
@@ -76,7 +76,7 @@ CDialogEditSong::CDialogEditSong(CSongTableModel::TSongItem * songItem, QWidget 
             break;
 
         case CSong::TypeFlac:
-            m_uiWidget->valueFormat->setText(tr("Inconnu"));
+            m_uiWidget->valueFormat->setText(tr("Flac"));
             break;
     }
 

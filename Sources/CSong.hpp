@@ -5,6 +5,7 @@
 #include <QList>
 #include <QDateTime>
 #include <QString>
+#include <QVariant>
 #include <fmod/fmod.hpp>
 
 
@@ -164,6 +165,8 @@ private:
     bool m_isModified;            ///< Indique si les données ont été modifiées.
     QList<QDateTime> m_plays;     ///< Liste des dates de lecture.
 };
+
+Q_DECLARE_METATYPE(CSong *)
 
 
 /**

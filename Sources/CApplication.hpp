@@ -155,7 +155,7 @@ private:
 
     Ui::TMediaPlayer * m_uiWidget;
     FMOD::System * m_soundSystem;
-    QStandardItemModel * m_listModel;  ///< Modèle pour afficher les listes de lecture.
+    //QStandardItemModel * m_listModel;  ///< Modèle pour afficher les listes de lecture.
     CPlayListView * m_playListView;    ///< Vue pour afficher les listes de lecture.
     QSqlDatabase m_dataBase;           ///< Base de données.
     QSettings * m_settings;            ///< Paramètres de l'application.

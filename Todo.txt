@@ -1,14 +1,22 @@
 
-- Griser les boutons indisponibles suivant l'état (lecture, pause, etc.).
-- Créer la fenêtre Préférences.
 - Créer la fenêtre Liste de lecture dynamique.
-- Implémenter le glisser-déposer vers les listes statiques.
-- Implémenter le glisser-déposer au sein d'une liste statique.
+- Implémenter la méthode update pour les listes de lecture dynamiques.
+
 - Lire les métadonnées d'un morceau au chargement.
-- Ecrire les métadonnées d'un morceau.
+- Écrire les métadonnées d'un morceau.
+- Terminer la boite de dialogue Edit Song.
+- Terminer la boite de dialogue Edit Songs.
+
 - Menu contextuel pour les listes de lecture.
-- Implémenter Select All et Select None.
 - Implémenter Ajouter morceau(x) à une liste statique.
 - Implémenter Suppression d'un morceau.
-- Intégrer Last.fm.
+
 - Gérer les dossiers de listes de lecture.
+
+- Implémenter le glisser-déposer au sein d'une liste statique.
+- Afficher le nombre de morceaux sur l'image lors du glissement.
+
+- Intégrer Last.fm.
+
+- Créer la fenêtre Préférences.
+- Griser les boutons indisponibles suivant l'état (lecture, pause, etc.).

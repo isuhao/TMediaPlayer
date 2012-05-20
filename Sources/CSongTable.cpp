@@ -173,7 +173,7 @@ void CSongTable::addSong(CSong * song, int pos)
 {
     Q_CHECK_PTR(song);
 
-    pos = qBound(-1, pos, m_songs.size() - 1);
+    pos = qBound(-1, pos, m_songs.size());
 
     if (pos < 0)
     {
@@ -617,6 +617,66 @@ bool CSongTable::updateDatabase(void)
 }
 
 
+void CSongTable::mousePressEvent(QMouseEvent * event)
+{
+    //m_pressedPosition = event->globalPos();
+    QAbstractItemView::mousePressEvent(event);
+}
+
+
+void CSongTable::startDrag(Qt::DropActions supportedActions)
+{
+    QModelIndexList indexes = selectedIndexes();
+    for (int i = indexes.count() - 1 ; i >= 0; --i)
+    {
+        if (!(m_model->flags(indexes.at(i)) & Qt::ItemIsDragEnabled))
+        {
+            indexes.removeAt(i);
+        }
+    }
+
+    if (indexes.count() > 0)
+    {
+        QMimeData * data = m_model->mimeData(indexes);
+        if (!data) return;
+
+        //QRect rect;
+        //QPixmap pixmap = d->renderToPixmap(indexes, &rect);
+        //QPixmap pixmap(":/icons/play");//TODO: afficher le nombre d'éléments...
+        QPixmap pixmap = QPixmap(":/icons/song").scaledToHeight(32);
+        //rect.adjust(horizontalOffset(), verticalOffset(), 0, 0);
+
+        QDrag * drag = new QDrag(this);
+        drag->setPixmap(pixmap);
+        drag->setMimeData(data);
+
+        //drag->setDragCursor(QPixmap(":/icons/play"), Qt::CopyAction);
+
+        // Curseur...
+        //drag->setDragCursor(const QPixmap& cursor, Qt::DropAction action);
+        //CopyAction, MoveAction or LinkAction. All other values of DropAction
+
+        //drag->setHotSpot(m_pressedPosition - rect.topLeft());
+        drag->setHotSpot(QPoint(16, 16)); // Décalage vers le haut à gauche.
+
+        Qt::DropAction defaultDropAction0 = Qt::IgnoreAction;
+        Qt::DropAction defaultDropAction = this->defaultDropAction();
+
+        if (defaultDropAction != Qt::IgnoreAction && (supportedActions & defaultDropAction))
+            defaultDropAction0 = defaultDropAction;
+        else if (supportedActions & Qt::CopyAction && dragDropMode() != QAbstractItemView::InternalMove)
+            defaultDropAction0 = Qt::CopyAction;
+
+        drag->exec(supportedActions, defaultDropAction);
+
+        //if (drag->exec(supportedActions, defaultDropAction) == Qt::MoveAction)
+        //    d->clearOrRemove();
+    }
+
+    //QAbstractItemView::startDrag(supportedActions);
+}
+
+
 bool CSongTable::isModified(void) const
 {
     return m_isModified;
@@ -635,8 +695,4 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
         m_menu->move(mapToGlobal(point));
         m_menu->show();
     }
-
-    //...
-    //this->myCustomMenu->show();
-    //this->myCustomMenu->move(this->mapToGlobal(myQPoint));
 }

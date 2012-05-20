@@ -77,7 +77,7 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
     {
         switch(index.column())
         {
-            case 0: return m_data.at(index.row())->pos;
+            case 0: return m_data.at(index.row())->pos + 1;
             case 1: return m_data.at(index.row())->song->getTitle();
             case 2: return m_data.at(index.row())->song->getArtistName();
             case 3: return m_data.at(index.row())->song->getAlbumTitle();
@@ -281,6 +281,46 @@ Qt::ItemFlags CSongTableModel::flags(const QModelIndex& index) const
 }
 
 
+QStringList CSongTableModel::mimeTypes(void) const
+{
+    QStringList types;
+    types << "application/x-ted-media-songs";
+    return types;
+}
+
+
+QMimeData * CSongTableModel::mimeData(const QModelIndexList& indexes) const
+{
+    QByteArray encodedData;
+    QDataStream stream(&encodedData, QIODevice::WriteOnly);
+
+    QList<int> rows;
+
+    foreach (QModelIndex index, indexes)
+    {
+        if (index.isValid() && !rows.contains(index.row()))
+        {
+            rows.append(index.row());
+        }
+    }
+
+    qSort(rows);
+
+    stream << rows.size();
+
+    foreach (int row, rows)
+    {
+        stream << m_data[row]->song->getId();
+    }
+
+    qDebug() << "CSongTableModel::mimeData()...";
+    
+    QMimeData * mimeData = new QMimeData();
+    mimeData->setData("application/x-ted-media-songs", encodedData);
+    return mimeData;
+}
+
+
 bool CSongTableModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex& parent)
 {
     if (action == Qt::IgnoreAction)
@@ -288,10 +328,20 @@ bool CSongTableModel::dropMimeData(const QMimeData * data, Qt::DropAction action
         return true;
     }
 
-    if (!data->hasFormat("application/ted.media.song"))
+    if (!m_canDrop)
     {
         return false;
     }
+
+    if (!data->hasFormat("application/x-ted-media-songs"))
+    {
+        return false;
+    }
+
+    qDebug() << "CSongTableModel::dropMimeData()";
+    //...
+
+    return false;
 }
 
 

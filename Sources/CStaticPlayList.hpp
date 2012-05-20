@@ -26,7 +26,8 @@ public:
 
 public slots:
 
-    virtual void addSong(CSong * song, int pos = -1);
+    virtual void addSong(CSong * song, int pos = -1); // Dupliquer (public/privée)
+    virtual void addSongs(const QList<CSong *>& songs); // Dupliquer (public/privée)
     virtual void removeSong(CSong * song);
     virtual void removeSong(int pos);
     virtual void removeDuplicateSongs(void);

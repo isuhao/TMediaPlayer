@@ -53,6 +53,76 @@ void CStaticPlayList::addSong(CSong * song, int pos)
 
 
 /**
+ * Ajoute plusieurs morceaux à la liste de lecture.
+ *
+ * \todo Vérifier les doublons.
+ * \todo Ne faire qu'une seule requête.
+ *
+ * \param songs Liste des morceaux à ajouter.
+ */
+
+void CStaticPlayList::addSongs(const QList<CSong *>& songs)
+{
+    Q_ASSERT(m_id > 0);
+
+    if (songs.isEmpty())
+    {
+        return;
+    }
+
+    m_isStaticListModified = true; // Hum...
+
+    foreach (CSong * song, songs)
+    {
+        Q_CHECK_PTR(song);
+
+        if (hasSong(song))
+        {
+            //...
+        }
+
+        QSqlQuery query(m_application->getDataBase());
+
+        query.prepare("SELECT MAX(song_position) FROM static_list_song WHERE static_list_id = ?");
+        query.bindValue(0, m_id);
+
+        if (!query.exec())
+        {
+            QString error = query.lastError().text();
+            QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
+            return;
+        }
+
+        if (!query.next())
+        {
+            QString error = query.lastError().text();
+            QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
+            return;
+        }
+
+        int songPosition = query.value(0).toInt() + 1;
+
+        query.prepare("INSERT INTO static_list_song (static_list_id, song_id, song_position) VALUES (?, ?, ?)");
+        query.bindValue(0, m_id);
+        query.bindValue(1, song->getId());
+        query.bindValue(2, songPosition);
+
+        if (!query.exec())
+        {
+            QString error = query.lastError().text();
+            QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
+            return;
+        }
+
+        CSongTable::addSong(song, songPosition);
+        emit songAdded(song);
+    }
+
+    sortByColumn(m_columnSort, m_sortOrder);
+}
+
+
+/**
  * Enlève une chanson de la liste.
  * Toutes les occurences de \a song sont enlevées de la liste.
  *

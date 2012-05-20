@@ -40,7 +40,7 @@ CApplication::CApplication(void) :
     QMainWindow          (),
     m_uiWidget           (new Ui::TMediaPlayer()),
     m_soundSystem        (NULL),
-    m_listModel          (NULL),
+    //m_listModel          (NULL),
     m_playListView       (NULL),
     m_settings           (NULL),
     m_timer              (NULL),
@@ -71,8 +71,8 @@ CApplication::CApplication(void) :
     int treeWidth = m_settings->value("Window/PlayListViewWidth", 200).toInt();
     m_uiWidget->splitter->setSizes(QList<int>() << treeWidth);
 
-    m_listModel = new QStandardItemModel(this);
-    m_playListView->setModel(m_listModel);
+    //m_listModel = new QStandardItemModel(this);
+    //m_playListView->setModel(m_listModel);
     connect(m_playListView, SIGNAL(clicked(const QModelIndex&)), this, SLOT(selectPlayListFromTreeView(const QModelIndex&)));
 
 
@@ -123,6 +123,8 @@ CApplication::CApplication(void) :
 
     connect(m_uiWidget->actionRepeat, SIGNAL(triggered(bool)), this, SLOT(setRepeat(bool)));
     connect(m_uiWidget->actionShuffle, SIGNAL(triggered(bool)), this, SLOT(setShuffle(bool)));
+
+    connect(m_uiWidget->actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 
 
     connect(this, SIGNAL(songPlayStart(CSong *)), this, SLOT(updateSongDescription(CSong *)));
@@ -185,7 +187,8 @@ CApplication::~CApplication()
         playList->updateDatabase();
         delete playList;
     }
-
+    
+    m_library->updateDatabase();
     m_library->deleteSongs();
     delete m_library;
 
@@ -1017,7 +1020,7 @@ void CApplication::addPlayList(CPlayList * playList)
     m_uiWidget->splitter->addWidget(playList);
     connect(playList, SIGNAL(songStarted(int)), this, SLOT(playSong(int)));
     playList->hide();
-
+/*
     QStandardItem * playListItem = new QStandardItem(playList->getName());
 
     if (qobject_cast<CDynamicPlayList *>(playList))
@@ -1028,9 +1031,10 @@ void CApplication::addPlayList(CPlayList * playList)
     {
         playListItem->setIcon(QPixmap(":/icons/playlist"));
     }
-
-    playListItem->setData(QVariant::fromValue(reinterpret_cast<CSongTable *>(playList)));
-    m_listModel->appendRow(playListItem);
+*/
+    //playListItem->setData(QVariant::fromValue(reinterpret_cast<CSongTable *>(playList)));
+    m_playListView->addSongTable(playList);
+    //m_listModel->appendRow(playListItem);
 }
 
 
@@ -1455,8 +1459,10 @@ void CApplication::selectPlayListFromTreeView(const QModelIndex& index)
 {
     qDebug() << "Changement de liste...";
 
-    CSongTable * songTable = m_listModel->data(index, Qt::UserRole + 1).value<CSongTable *>();
+    //CSongTable * songTable = m_listModel->data(index, Qt::UserRole + 1).value<CSongTable *>();
+    CSongTable * songTable = m_playListView->getSongTable(index);
     displaySongTable(songTable);
+
     //TODO...
 }
 
@@ -1569,10 +1575,7 @@ void CApplication::loadDatabase(void)
         m_library->initColumns(query.value(0).toString());
     }
 
-    QStandardItem * libraryItem = new QStandardItem(tr("Library"));
-    libraryItem->setData(QVariant::fromValue(m_library));
-    m_listModel->appendRow(libraryItem);
-    m_playListView->setCurrentIndex(libraryItem->index());
+    m_playListView->setCurrentIndex(m_playListView->addSongTable(m_library));
 
 
     // Liste des morceaux
@@ -1682,7 +1685,7 @@ void CApplication::loadDatabase(void)
 
         // Liste des morceaux de la liste de lecture
         QSqlQuery query2(m_dataBase);
-        query2.prepare("SELECT song_id FROM static_list_song WHERE static_list_id = ? ORDER BY song_position");
+        query2.prepare("SELECT song_id, song_position FROM static_list_song WHERE static_list_id = ? ORDER BY song_position");
         query2.bindValue(0, query.value(0).toInt());
 
         if (!query2.exec())
@@ -1695,7 +1698,7 @@ void CApplication::loadDatabase(void)
 
         while (query2.next())
         {
-            playList->addSong(getSongFromId(query2.value(0).toInt()));
+            playList->addSong(getSongFromId(query2.value(0).toInt()), query2.value(1).toInt());
         }
 
         addPlayList(playList);

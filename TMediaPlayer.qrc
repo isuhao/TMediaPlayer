@@ -10,5 +10,6 @@
         <file alias="volume">Resources/icon_volume.png</file>
         <file alias="dynamic_list">Resources/icon_dynamic_list.png</file>
         <file alias="playlist">Resources/icon_playlist.png</file>
+        <file alias="song">Resources/icon_song.png</file>
     </qresource>
 </RCC>

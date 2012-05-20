@@ -96,6 +96,8 @@ protected:
     virtual void initColumns(const QString& str);
     QString getColumnsInfos(void) const;
     virtual bool updateDatabase(void);
+    virtual void mousePressEvent(QMouseEvent * event);
+    virtual void startDrag(Qt::DropActions supportedActions);
 
     //void loadFromDatabase(int id);
 
@@ -107,14 +109,15 @@ protected:
     CApplication * m_application; ///< Pointeur sur l'application.
     TColumn m_columns[ColNumber]; ///< Liste des colonnes.
     int m_idPlayList;             ///< Identifiant de la liste de lecture en base de données.
+    int m_columnSort;             ///< Numéro de la colonne triée.
+    Qt::SortOrder m_sortOrder;    ///< Ordre de tri.
 
 private:
     
     bool m_isModified;            ///< Indique si les informations de la liste ont été modifiées.
     QList<CSong *> m_songs;       ///< Liste des chansons.
-    int m_columnSort;             ///< Numéro de la colonne triée.
-    Qt::SortOrder m_sortOrder;    ///< Ordre de tri.
     bool m_isColumnMoving;        ///< Indique si les colonnes sont en cours de positionnement.
+    QPoint m_pressedPosition;
 };
 
 Q_DECLARE_METATYPE(CSongTable *)
