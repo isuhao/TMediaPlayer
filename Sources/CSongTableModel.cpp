@@ -26,6 +26,8 @@ void CSongTableModel::setCanDrop(bool canDrop)
 
 void CSongTableModel::setData(const QList<CSong *>& data)
 {
+    emit layoutAboutToBeChanged();
+
     m_data.clear();
     int i = 0;
 
@@ -33,6 +35,8 @@ void CSongTableModel::setData(const QList<CSong *>& data)
     {
         m_data.append(new TSongItem(i++, song));
     }
+
+    emit layoutChanged();
 }
 
 
@@ -206,6 +210,8 @@ QVariant CSongTableModel::headerData(int section, Qt::Orientation orientation, i
 
 void CSongTableModel::sort(int column, Qt::SortOrder order)
 {
+    emit layoutAboutToBeChanged();
+
     if (order == Qt::AscendingOrder)
     {
         switch(column)
@@ -293,6 +299,8 @@ void CSongTableModel::insertRow(CSong * song, int pos)
 {
     Q_CHECK_PTR(song);
 
+    emit layoutAboutToBeChanged();
+
     if (pos < 0)
     {
         m_data.append(new TSongItem(pos, song));
@@ -308,14 +316,20 @@ void CSongTableModel::insertRow(CSong * song, int pos)
 
 void CSongTableModel::removeRow(int pos)
 {
+    emit layoutAboutToBeChanged();
+
     Q_ASSERT(pos >= 0 && pos < m_data.size());
 
     delete m_data.takeAt(pos);
+
+    emit layoutChanged();
 }
 
 
 void CSongTableModel::clear(void)
 {
+    emit layoutAboutToBeChanged();
+
     foreach (TSongItem * songItem, m_data)
     {
         delete songItem;

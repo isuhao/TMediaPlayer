@@ -14,10 +14,6 @@ CStaticPlayList::CStaticPlayList(CApplication * application, const QString& name
 {
     m_model->setCanDrop(true);
 
-    // Colonne "Position"
-    m_columns[0].visible = true;
-    horizontalHeader()->showSection(0);
-
     // Glisser-déposer
     setDropIndicatorShown(true);
     setAcceptDrops(true);
@@ -190,4 +186,13 @@ bool CStaticPlayList::updateDatabase(void)
     }
 
     return CPlayList::updateDatabase();
+}
+
+
+void CStaticPlayList::initColumns(const QString& str)
+{
+    CSongTable::initColumns(str);
+
+    // Colonne "Position"
+    showColumn(0);
 }

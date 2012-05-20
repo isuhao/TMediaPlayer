@@ -3,6 +3,7 @@
 #include "CSongTableModel.hpp"
 #include "CSong.hpp"
 #include "CApplication.hpp"
+#include "CSongTableHeader.hpp"
 #include <QStringList>
 #include <QMouseEvent>
 #include <QHeaderView>
@@ -25,9 +26,6 @@ CSongTable::CSongTable(CApplication * application) :
     m_isColumnMoving (false)
 {
     Q_CHECK_PTR(application);
-
-    m_model = new CSongTableModel();
-    setModel(m_model);
 
     // Menu contextuel
     m_menu = new QMenu(this);
@@ -57,12 +55,16 @@ CSongTable::CSongTable(CApplication * application) :
     setDragEnabled(true);
 
     // Modification des colonnes
-    horizontalHeader()->setMovable(true);
-    connect(horizontalHeader(), SIGNAL(sectionMoved(int, int, int)), this, SLOT(columnMoved(int, int, int)));
-    connect(horizontalHeader(), SIGNAL(sectionResized(int, int, int)), this, SLOT(sectionResized(int, int, int)));
+    CSongTableHeader * header = new CSongTableHeader(this);
+    setHorizontalHeader(header);
+    header->setMovable(true);
+    connect(header, SIGNAL(columnShown(int, bool)), this, SLOT(showColumn(int, bool)));
 
     verticalHeader()->hide();
-    verticalHeader()->setDefaultSectionSize(19);
+    verticalHeader()->setDefaultSectionSize(19); /// \todo => paramètres
+
+    m_model = new CSongTableModel();
+    setModel(m_model);
 
     initColumns("");
 }
@@ -338,25 +340,53 @@ void CSongTable::initColumns(const QString& str)
     qDebug() << "Modification des colonnes :";
     
     m_isColumnMoving = true;
+    CSongTableHeader * header = qobject_cast<CSongTableHeader *>(horizontalHeader());
 
     for (int i = 0; i < ColNumber; ++i)
     {
         // Affichage ou masquage de la colonne
         if (m_columns[i].visible)
         {
-            horizontalHeader()->showSection(i);
+            header->showSection(i);
         }
         else
         {
-            horizontalHeader()->hideSection(i);
+            header->hideSection(i);
+        }
+
+        switch (i)
+        {
+            default:
+                qWarning() << "CSongTable::initColumns() : Invalid column index";
+                break;
+
+            case  0: break;
+            case  1: header->m_actColTitle       ->setChecked(m_columns[i].visible); break;
+            case  2: header->m_actColArtist      ->setChecked(m_columns[i].visible); break;
+            case  3: header->m_actColAlbum       ->setChecked(m_columns[i].visible); break;
+            case  4: header->m_actColAlbumArtist ->setChecked(m_columns[i].visible); break;
+            case  5: header->m_actColComposer    ->setChecked(m_columns[i].visible); break;
+            case  6: header->m_actColYear        ->setChecked(m_columns[i].visible); break;
+            case  7: header->m_actColTrackNumber ->setChecked(m_columns[i].visible); break;
+            case  8: header->m_actColDiscNumber  ->setChecked(m_columns[i].visible); break;
+            case  9: header->m_actColGenre       ->setChecked(m_columns[i].visible); break;
+            case 10: header->m_actColRating      ->setChecked(m_columns[i].visible); break;
+            case 11: header->m_actColComments    ->setChecked(m_columns[i].visible); break;
+            case 12: header->m_actColPlayCount   ->setChecked(m_columns[i].visible); break;
+            case 13: header->m_actColLastPlayTime->setChecked(m_columns[i].visible); break;
+            case 14: header->m_actColFileName    ->setChecked(m_columns[i].visible); break;
+            case 15: header->m_actColBitRate     ->setChecked(m_columns[i].visible); break;
+            case 16: header->m_actColFormat      ->setChecked(m_columns[i].visible); break;
+            case 17: header->m_actColDuration    ->setChecked(m_columns[i].visible); break;
         }
 
         // Déplacement de la colonne
-        int visualIndex = horizontalHeader()->visualIndex(i);
-        horizontalHeader()->moveSection(visualIndex, m_columns[i].pos);
+        int visualIndex = header->visualIndex(i);
+        header->moveSection(visualIndex, m_columns[i].pos);
 
         // Redimensionnement
-        horizontalHeader()->resizeSection(i, m_columns[i].width);
+        if (m_columns[i].width <= 0) m_columns[i].width = header->defaultSectionSize();
+        header->resizeSection(i, m_columns[i].width);
     }
 
     m_isColumnMoving = false;
@@ -370,8 +400,35 @@ void CSongTable::initColumns(const QString& str)
 void CSongTable::showColumn(int col, bool show)
 {
     Q_ASSERT(col >= 0 && col < ColNumber);
-    m_columns[col].visible = show;
-    //TODO: update DB
+
+    if ( m_columns[col].visible != show)
+    {
+        m_columns[col].visible = show;
+
+        if (show)
+        {
+            horizontalHeader()->showSection(col);
+
+            int numColumns = -1;
+            for (int i = 0; i < ColNumber; ++i)
+            {
+                if (m_columns[i].visible)
+                {
+                    ++numColumns;
+                }
+            }
+        
+            // Déplacement de la colonne
+            int visualIndex = horizontalHeader()->visualIndex(col);
+            horizontalHeader()->moveSection(visualIndex, numColumns);
+        }
+        else
+        {
+            horizontalHeader()->hideSection(col);
+        }
+
+        m_isModified = true;
+    }
 }
 
 
@@ -513,17 +570,21 @@ void CSongTable::columnMoved(int logicalIndex, int oldVisualIndex, int newVisual
     }
 
     emit columnChanged();
+
+    QTableView::columnMoved(logicalIndex, oldVisualIndex, newVisualIndex);
 }
 
 
-void CSongTable::sectionResized(int logicalIndex, int oldSize, int newSize)
+void CSongTable::columnResized(int logicalIndex, int oldSize, int newSize)
 {
-    qDebug() << "sectionResized("<<logicalIndex<<""<<oldSize<<""<<newSize<<")";
+    qDebug() << "columnResized("<<logicalIndex<<""<<oldSize<<""<<newSize<<")";
 
     m_columns[logicalIndex].width = newSize;
 
     m_isModified = true;
     emit columnChanged();
+
+    QTableView::columnResized(logicalIndex, oldSize, newSize);
 }
 
 
@@ -571,8 +632,8 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
 
     if (index.isValid())
     {
-        m_menu->show();
         m_menu->move(mapToGlobal(point));
+        m_menu->show();
     }
 
     //...

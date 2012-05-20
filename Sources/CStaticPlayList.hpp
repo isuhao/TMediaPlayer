@@ -41,6 +41,10 @@ protected slots:
 
     virtual bool updateDatabase(void);
 
+protected:
+
+    virtual void initColumns(const QString& str);
+
 private:
 
     int m_id;                    ///< Identifiant de la liste en base de données.

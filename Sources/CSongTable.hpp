@@ -45,6 +45,9 @@ public:
         ColBitRate      = 15,
         ColFormat       = 16,
         ColDuration     = 17,
+        /// \todo Ajouter "Taux d'échantillonnage"
+        /// \todo Ajouter "Canaux"
+        /// \todo Ajouter "Paroles"
 
         ColNumber       = 18  ///< Nombre de types de colonnes.
     };
@@ -80,17 +83,17 @@ signals:
     
 protected slots:
 
-    void columnMoved(int logicalIndex, int oldVisualIndex, int newVisualIndex);
-    void sectionResized(int logicalIndex, int oldSize, int newSize);
+    virtual void columnMoved(int logicalIndex, int oldVisualIndex, int newVisualIndex);
+    virtual void columnResized(int logicalIndex, int oldSize, int newSize);
     virtual void openCustomMenuProject(const QPoint& point);
+    void showColumn(int col, bool show = true);
 
 protected:
 
     void addSong(CSong * song, int pos = -1);
     void removeSong(CSong * song);
     void removeSong(int pos);
-    void initColumns(const QString& str);
-    void showColumn(int col, bool show = true);
+    virtual void initColumns(const QString& str);
     QString getColumnsInfos(void) const;
     virtual bool updateDatabase(void);
 
