@@ -17,6 +17,8 @@ CSong::CSong(CApplication * application) :
     m_fileName        (""),
     m_fileSize        (0),
     m_bitRate         (0),
+    m_sampleRate      (0),
+    m_encoder         (""),
     m_fileType        (TypeUnknown),
     m_numChannels     (0),
     m_duration        (0),
@@ -540,6 +542,8 @@ void CSong::updateDatabase(void)
                               "song_filename, "
                               "song_filesize, "
                               "song_bitrate, "
+                              "song_sample_rate, "
+                              "song_encoder, "
                               "song_format, "
                               "song_channels, "
                               "song_duration, "
@@ -564,43 +568,47 @@ void CSong::updateDatabase(void)
                               "song_language, "
                               "song_play_count, "
                               "song_play_time"
-                          ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                          ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
             query.bindValue( 0, m_fileName);
             query.bindValue( 1, m_fileSize);
             query.bindValue( 2, m_bitRate);
-            query.bindValue( 3, m_fileType);
-            query.bindValue( 4, m_numChannels);
-            query.bindValue( 5, m_duration);
-            query.bindValue( 6, m_creation);
-            query.bindValue( 7, m_modification);
-            query.bindValue( 8, m_title);
-            query.bindValue( 9, m_titleSort);
-            query.bindValue(10, artistId);
-            query.bindValue(11, albumId);
-            query.bindValue(12, albumArtistId);
-            query.bindValue(13, m_composer);
-            query.bindValue(14, m_composerSort);
-            query.bindValue(15, m_year);
-            query.bindValue(16, m_trackNumber);
-            query.bindValue(17, m_trackTotal);
-            query.bindValue(18, m_discNumber);
-            query.bindValue(19, m_discTotal);
-            query.bindValue(20, genreId);
-            query.bindValue(21, m_rating);
-            query.bindValue(22, m_comments);
-            query.bindValue(23, m_lyrics);
+            query.bindValue( 3, m_sampleRate);
+            query.bindValue( 4, m_encoder);
+            query.bindValue( 5, m_fileType);
+            query.bindValue( 6, m_numChannels);
+            query.bindValue( 7, m_duration);
+            query.bindValue( 8, m_creation);
+            query.bindValue( 9, m_modification);
+            query.bindValue(10, m_title);
+            query.bindValue(11, m_titleSort);
+            query.bindValue(12, artistId);
+            query.bindValue(13, albumId);
+            query.bindValue(14, albumArtistId);
+            query.bindValue(15, m_composer);
+            query.bindValue(16, m_composerSort);
+            query.bindValue(17, m_year);
+            query.bindValue(18, m_trackNumber);
+            query.bindValue(19, m_trackTotal);
+            query.bindValue(20, m_discNumber);
+            query.bindValue(21, m_discTotal);
+            query.bindValue(22, genreId);
+            query.bindValue(23, m_rating);
+            query.bindValue(24, m_comments);
+            query.bindValue(25, m_lyrics);
 
             switch (m_language)
             {
                 default:
-                case LangUnknown: query.bindValue(24, "00"); break;
-                case LangEnglish: query.bindValue(24, "EN"); break;
-                case LangFrench:  query.bindValue(24, "FR"); break;
+                case LangUnknown: query.bindValue(26, "00"); break;
+                case LangEnglish: query.bindValue(26, "EN"); break;
+                case LangFrench:  query.bindValue(26, "FR"); break;
+                case LangGerman:  query.bindValue(26, "DE"); break;
+                case LangItalian:  query.bindValue(26, "IT"); break;
             }
 
-            query.bindValue(25, 0);
-            query.bindValue(26, "");
+            query.bindValue(27, 0);
+            query.bindValue(28, "");
 
             if (!query.exec())
             {

@@ -262,6 +262,7 @@ void CSongTableModel::sort(int column, Qt::SortOrder order)
     }
 
     emit layoutChanged();
+    emit columnSorted(column, order);
 }
 
 

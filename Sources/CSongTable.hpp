@@ -71,10 +71,16 @@ public:
     int getPreviousSong(int pos, bool shuffle) const;
     int getNextSong(int pos, bool shuffle) const;
     int getTotalDuration(void) const;
-    void deleteSongs(void);
     inline bool hasSong(CSong * song) const;
     virtual bool isModified(void) const;
     
+public slots:
+
+    virtual void addSong(CSong * song, int pos = -1);
+    virtual void addSongs(const QList<CSong *>& songs);
+    virtual void removeSong(CSong * song);
+    virtual void removeSong(int pos);
+
 signals:
 
     void songSelected(int pos); ///< Signal émis quand un morceau est sélectionné.
@@ -86,31 +92,33 @@ protected slots:
     virtual void columnMoved(int logicalIndex, int oldVisualIndex, int newVisualIndex);
     virtual void columnResized(int logicalIndex, int oldSize, int newSize);
     virtual void openCustomMenuProject(const QPoint& point);
-    void showColumn(int col, bool show = true);
+    void showColumn(int column, bool show = true);
+    void sortColumn(int column, Qt::SortOrder order);
 
 protected:
 
-    void addSong(CSong * song, int pos = -1);
-    void removeSong(CSong * song);
-    void removeSong(int pos);
+    void addSongToTable(CSong * song, int pos = -1);
+    void addSongsToTable(const QList<CSong *>& songs);
+    void removeSongFromTable(CSong * song);
+    void removeSongFromTable(int pos);
+    void deleteSongs(void);
+
     virtual void initColumns(const QString& str);
     QString getColumnsInfos(void) const;
     virtual bool updateDatabase(void);
-    virtual void mousePressEvent(QMouseEvent * event);
     virtual void startDrag(Qt::DropActions supportedActions);
 
     //void loadFromDatabase(int id);
 
-    //virtual void mousePressEvent(QMouseEvent * event);
     //virtual void mouseDoubleClickEvent(QMouseEvent * event);
 
     CSongTableModel * m_model;    ///< Modèle utilisé pour afficher les morceaux.
-    QMenu * m_menu;               ///< Menu contextuel.
     CApplication * m_application; ///< Pointeur sur l'application.
     TColumn m_columns[ColNumber]; ///< Liste des colonnes.
     int m_idPlayList;             ///< Identifiant de la liste de lecture en base de données.
     int m_columnSort;             ///< Numéro de la colonne triée.
     Qt::SortOrder m_sortOrder;    ///< Ordre de tri.
+    bool m_automaticSort;         ///< Indique si le tri est automatique lorsqu'on modifie la table.
 
 private:
     

@@ -220,6 +220,11 @@ void CApplication::setDisplayedSongTable(CSongTable * songTable)
 
 CSong * CApplication::getSongFromId(int id) const
 {
+    if (id <= 0)
+    {
+        return NULL;
+    }
+
     foreach (CSong * song, m_library->getSongs())
     {
         if (song->getId() == id)
@@ -229,6 +234,46 @@ CSong * CApplication::getSongFromId(int id) const
     }
 
     return NULL;
+}
+
+
+/**
+ * Retourne la liste des listes de lecture contenant un morceau.
+ *
+ * \todo Chercher dans les dossiers.
+ *
+ * \param song Morceau à rechercher.
+ * \return Liste des listes de lecture.
+ */
+
+QList<CPlayList *> CApplication::getPlayListsWithSong(CSong * song) const
+{
+    Q_CHECK_PTR(song);
+
+    QList<CPlayList *> playLists;
+
+    foreach (CPlayList * playList, m_playLists)
+    {
+        if (playList->hasSong(song))
+        {
+            playLists.append(playList);
+        }
+    }
+
+    return playLists;
+}
+
+
+QList<CPlayList *> CApplication::getAllPlayLists(void) const
+{
+    QList<CPlayList *> playLists;
+
+    foreach (CPlayList * playList, m_playLists)
+    {
+        playLists.append(playList);
+    }
+
+    return playLists;
 }
 
 
@@ -963,7 +1008,7 @@ void CApplication::openDialogSongInfos(void)
 
     if (songItem)
     {
-        CDialogEditSong * dialog = new CDialogEditSong(songItem, this);
+        CDialogEditSong * dialog = new CDialogEditSong(songItem, m_displayedSongTable);
         dialog->show();
 
         //...
@@ -1644,12 +1689,14 @@ void CApplication::loadDatabase(void)
 
              if (lang == "FR") song->m_language = CSong::LangFrench;
         else if (lang == "EN") song->m_language = CSong::LangEnglish;
+        else if (lang == "DE") song->m_language = CSong::LangGerman;
+        else if (lang == "IT") song->m_language = CSong::LangItalian;
         else                   song->m_language = CSong::LangUnknown;
 
         //TODO: liste des dates de lecture
         //...
 
-        m_library->addSong(song);
+        m_library->addSongToTable(song);
     }
 
 

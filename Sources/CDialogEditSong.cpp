@@ -1,20 +1,153 @@
 
 #include "CDialogEditSong.hpp"
-
+#include "CSongTable.hpp"
 #include <QStandardItemModel>
 
+#include <QtDebug>
 
-CDialogEditSong::CDialogEditSong(CSongTableModel::TSongItem * songItem, QWidget * parent) :
-    QDialog    (parent),
-    m_uiWidget (new Ui::DialogEditSong()),
-    m_songItem (songItem)
+
+CDialogEditSong::CDialogEditSong(CSongTableModel::TSongItem * songItem, CSongTable * songTable) :
+    QDialog     (songTable),
+    m_uiWidget  (new Ui::DialogEditSong()),
+    m_songTable (songTable),
+    m_songItem  (songItem)
 {
     Q_CHECK_PTR(songItem);
+    Q_CHECK_PTR(songTable);
 
     setAttribute(Qt::WA_DeleteOnClose);
     m_uiWidget->setupUi(this);
 
 
+    // Liste des langues
+    /// \todo Déplacer dans une fonction
+    m_uiWidget->editLanguage->addItem(tr("Unknown"), CSong::LangUnknown);
+    m_uiWidget->editLanguage->addItem(tr("English"), CSong::LangEnglish);
+    m_uiWidget->editLanguage->addItem(tr("French") , CSong::LangFrench );
+    m_uiWidget->editLanguage->addItem(tr("German") , CSong::LangGerman );
+    m_uiWidget->editLanguage->addItem(tr("Italian"), CSong::LangItalian);
+
+
+    // Liste des genres
+    /// \todo Déplacer dans une fonction
+    /// \todo Gérer tous les genres de base
+    /// \todo Trier la liste
+    /// \todo Ajouter tous les genres utilisés dans la médiathèque
+    QStringList genreList;
+    genreList << tr("Classical");
+    genreList << tr("Reggae");
+    genreList << tr("Rock");
+    m_uiWidget->editGenre->addItems(genreList);
+
+
+    // Synchronisation des champs avec tri
+    connect(m_uiWidget->editTitle, SIGNAL(textEdited(const QString&)), m_uiWidget->editTitle_2, SLOT(setText(const QString&)));
+    connect(m_uiWidget->editTitle_2, SIGNAL(textEdited(const QString&)), m_uiWidget->editTitle, SLOT(setText(const QString&)));
+
+    connect(m_uiWidget->editArtist, SIGNAL(textEdited(const QString&)), m_uiWidget->editArtist_2, SLOT(setText(const QString&)));
+    connect(m_uiWidget->editArtist_2, SIGNAL(textEdited(const QString&)), m_uiWidget->editArtist, SLOT(setText(const QString&)));
+
+    connect(m_uiWidget->editAlbum, SIGNAL(textEdited(const QString&)), m_uiWidget->editAlbum_2, SLOT(setText(const QString&)));
+    connect(m_uiWidget->editAlbum_2, SIGNAL(textEdited(const QString&)), m_uiWidget->editAlbum, SLOT(setText(const QString&)));
+
+    connect(m_uiWidget->editAlbumArtist, SIGNAL(textEdited(const QString&)), m_uiWidget->editAlbumArtist_2, SLOT(setText(const QString&)));
+    connect(m_uiWidget->editAlbumArtist_2, SIGNAL(textEdited(const QString&)), m_uiWidget->editAlbumArtist, SLOT(setText(const QString&)));
+
+    connect(m_uiWidget->editComposer, SIGNAL(textEdited(const QString&)), m_uiWidget->editComposer_2, SLOT(setText(const QString&)));
+    connect(m_uiWidget->editComposer_2, SIGNAL(textEdited(const QString&)), m_uiWidget->editComposer, SLOT(setText(const QString&)));
+
+
+    // Connexions des signaux des boutons
+    QPushButton * btnSave = m_uiWidget->buttonBox->addButton(tr("Save"), QDialogButtonBox::AcceptRole);
+    QPushButton * btnCancel = m_uiWidget->buttonBox->addButton(tr("Cancel"), QDialogButtonBox::RejectRole);
+    QPushButton * btnApply = m_uiWidget->buttonBox->addButton(tr("Apply"), QDialogButtonBox::ApplyRole);
+
+    connect(m_uiWidget->btnPrevious, SIGNAL(clicked()), this, SLOT(previousSong()));
+    connect(m_uiWidget->btnNext, SIGNAL(clicked()), this, SLOT(nextSong()));
+
+    connect(btnSave, SIGNAL(clicked()), this, SLOT(save()));
+    connect(btnCancel, SIGNAL(clicked()), this, SLOT(close()));
+    connect(btnApply, SIGNAL(clicked()), this, SLOT(apply()));
+
+    updateInfos();
+}
+
+
+CDialogEditSong::~CDialogEditSong()
+{
+    delete m_uiWidget;
+}
+
+
+/**
+ * Affiche les informations du morceau précédent dans la liste.
+ *
+ * \todo Implémentation.
+ */
+
+void CDialogEditSong::previousSong(void)
+{
+    //m_songItem = m_songTable->getPreviousSong(m_songItem);
+    updateInfos();
+}
+
+
+/**
+ * Affiche les informations du morceau suivant dans la liste.
+ *
+ * \todo Implémentation.
+ */
+
+void CDialogEditSong::nextSong(void)
+{
+    //m_songItem = m_songTable->getNextSong(m_songItem);
+    updateInfos();
+}
+
+
+/// \todo Implémentation
+void CDialogEditSong::apply(void)
+{
+    qDebug() << "CDialogEditSong::apply";
+
+    m_songItem->song->setTitle(m_uiWidget->editTitle->text());
+    m_songItem->song->setArtistName(m_uiWidget->editArtist->text());
+    m_songItem->song->setAlbumTitle(m_uiWidget->editAlbum->text());
+    m_songItem->song->setAlbumArtist(m_uiWidget->editAlbumArtist->text());
+    m_songItem->song->setComposer(m_uiWidget->editComposer->text());
+
+    m_songItem->song->setTitleSort(m_uiWidget->editTitleSort->text());
+    m_songItem->song->setArtistNameSort(m_uiWidget->editArtistSort->text());
+    m_songItem->song->setAlbumTitleSort(m_uiWidget->editAlbumSort->text());
+    m_songItem->song->setAlbumArtistSort(m_uiWidget->editAlbumArtistSort->text());
+    m_songItem->song->setComposerSort(m_uiWidget->editComposerSort->text());
+
+    m_songItem->song->setYear(m_uiWidget->editYear->text().toInt());
+    m_songItem->song->setTrackNumber(m_uiWidget->editTrackNumber->text().toInt());
+    m_songItem->song->setTrackTotal(m_uiWidget->editTrackTotal->text().toInt());
+    m_songItem->song->setDiscNumber(m_uiWidget->editDiscNumber->text().toInt());
+    m_songItem->song->setDiscTotal(m_uiWidget->editDiscTotal->text().toInt());
+    m_songItem->song->setComments(m_uiWidget->editComments->toPlainText());
+    m_songItem->song->setGenre(m_uiWidget->editGenre->currentText());
+    m_songItem->song->setRating(m_uiWidget->editRating->value());
+    m_songItem->song->setLyrics(m_uiWidget->editLyrics->toPlainText());
+    m_songItem->song->setLanguage(CSong::LangFromInt(m_uiWidget->editLanguage->itemData(m_uiWidget->editLanguage->currentIndex()).toInt()));
+
+    m_songItem->song->updateDatabase();
+}
+
+
+void CDialogEditSong::save(void)
+{
+    qDebug() << "CDialogEditSong::save";
+    apply();
+    close();
+}
+
+
+/// \todo Implémentation complète.
+void CDialogEditSong::updateInfos()
+{
     // Résumé
 
     const int duration = m_songItem->song->getDuration();
@@ -81,27 +214,11 @@ CDialogEditSong::CDialogEditSong(CSongTableModel::TSongItem * songItem, QWidget 
     }
 
     m_uiWidget->valueChannels->setText(QString::number(m_songItem->song->getNumChannels()));
-    m_uiWidget->valueFrequency->setText("?");
-
-    //...
-
+    m_uiWidget->valueSampleRate->setText(tr("%1 kHz").arg(m_songItem->song->getSampleRate()));
+    m_uiWidget->valueEncodedWith->setText(m_songItem->song->getEncoder());
+    
 
     // Informations et tri
-
-    connect(m_uiWidget->editTitle, SIGNAL(textEdited(const QString&)), m_uiWidget->editTitle_2, SLOT(setText(const QString&)));
-    connect(m_uiWidget->editTitle_2, SIGNAL(textEdited(const QString&)), m_uiWidget->editTitle, SLOT(setText(const QString&)));
-
-    connect(m_uiWidget->editArtist, SIGNAL(textEdited(const QString&)), m_uiWidget->editArtist_2, SLOT(setText(const QString&)));
-    connect(m_uiWidget->editArtist_2, SIGNAL(textEdited(const QString&)), m_uiWidget->editArtist, SLOT(setText(const QString&)));
-
-    connect(m_uiWidget->editAlbum, SIGNAL(textEdited(const QString&)), m_uiWidget->editAlbum_2, SLOT(setText(const QString&)));
-    connect(m_uiWidget->editAlbum_2, SIGNAL(textEdited(const QString&)), m_uiWidget->editAlbum, SLOT(setText(const QString&)));
-
-    connect(m_uiWidget->editAlbumArtist, SIGNAL(textEdited(const QString&)), m_uiWidget->editAlbumArtist_2, SLOT(setText(const QString&)));
-    connect(m_uiWidget->editAlbumArtist_2, SIGNAL(textEdited(const QString&)), m_uiWidget->editAlbumArtist, SLOT(setText(const QString&)));
-
-    connect(m_uiWidget->editComposer, SIGNAL(textEdited(const QString&)), m_uiWidget->editComposer_2, SLOT(setText(const QString&)));
-    connect(m_uiWidget->editComposer_2, SIGNAL(textEdited(const QString&)), m_uiWidget->editComposer, SLOT(setText(const QString&)));
 
     m_uiWidget->editTitle->setText(m_songItem->song->getTitle());
     m_uiWidget->editTitle_2->setText(m_songItem->song->getTitle());
@@ -140,10 +257,15 @@ CDialogEditSong::CDialogEditSong(CSongTableModel::TSongItem * songItem, QWidget 
 
     m_uiWidget->editComments->setText(m_songItem->song->getComments());
     
-    //Genre...
+    QStringList genreList;
+    genreList << m_songItem->song->getGenre();
+    m_uiWidget->editGenre->addItems(genreList);
+
     m_uiWidget->editRating->setValue(m_songItem->song->getRating());
         
     // Paroles
+    m_uiWidget->editLyrics->setText(m_songItem->song->getLyrics());
+    m_uiWidget->editLanguage->setCurrentIndex(0);
     // Langue
 
     //...
@@ -163,10 +285,4 @@ CDialogEditSong::CDialogEditSong(CSongTableModel::TSongItem * songItem, QWidget 
     // Lectures
 
     //...
-}
-
-
-CDialogEditSong::~CDialogEditSong()
-{
-    delete m_uiWidget;
 }

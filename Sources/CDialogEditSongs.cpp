@@ -14,6 +14,16 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableModel::TSongItem *> songItemL
     setAttribute(Qt::WA_DeleteOnClose);
     m_uiWidget->setupUi(this);
 
+
+    // Liste des langues
+    /// \todo Déplacer dans une fonction
+    m_uiWidget->editLanguage->addItem(tr("Unknown"), CSong::LangUnknown);
+    m_uiWidget->editLanguage->addItem(tr("English"), CSong::LangEnglish);
+    m_uiWidget->editLanguage->addItem(tr("French") , CSong::LangFrench );
+    m_uiWidget->editLanguage->addItem(tr("German") , CSong::LangGerman );
+    m_uiWidget->editLanguage->addItem(tr("Italian"), CSong::LangItalian);
+
+
     QString songTitle;       bool songTitleSim       = true;
     QString songTitleSort;   bool songTitleSortSim   = true;
     QString songArtist;      bool songArtistSim      = true;

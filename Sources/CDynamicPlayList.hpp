@@ -28,6 +28,7 @@ public slots:
 protected slots:
 
     bool updateDatabase(void);
+    //virtual void openCustomMenuProject(const QPoint& point);
 
 signals:
 

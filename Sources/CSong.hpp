@@ -20,6 +20,7 @@ class CSong : public QObject
     Q_OBJECT
 
     friend class CApplication;
+    friend class CDialogEditSong;
 
 public:
 
@@ -35,7 +36,9 @@ public:
     {
         LangUnknown = 0,
         LangEnglish = 1,
-        LangFrench  = 2
+        LangFrench  = 2,
+        LangGerman  = 3,
+        LangItalian = 4
     };
 
     CSong(CApplication * application);
@@ -47,6 +50,8 @@ public:
     inline QString getFileName(void) const;
     inline int getFileSize(void) const;
     inline int getBitRate(void) const;
+    inline int getSampleRate(void) const;
+    inline QString getEncoder(void) const;
     inline TFileType getFileType(void) const;
     inline int getNumChannels(void) const;
     inline int getDuration(void) const;
@@ -79,6 +84,19 @@ public:
 
     inline int getNumPlays(void) const;
     inline QDateTime getLastPlay(void) const;
+
+    static inline TLanguage LangFromInt(int lang)
+    {
+        switch (lang)
+        {
+            case 1: return LangEnglish;
+            case 2: return LangFrench;
+            case 3: return LangGerman;
+            case 4: return LangItalian;
+
+            default: return LangUnknown;
+        }
+    }
 
 public slots:
 
@@ -134,6 +152,8 @@ private:
     QString m_fileName;           ///< Fichier audio.
     int m_fileSize;               ///< Taille du fichier en octets.
     int m_bitRate;                ///< Débit binaire.
+    int m_sampleRate;             ///< Taux d'échantillonnage.
+    QString m_encoder;            ///< Encodeur.
     TFileType m_fileType;         ///< Format de fichier.
     int m_numChannels;            ///< Nombre de canaux.
     int m_duration;               ///< Durée de la chanson en millisecondes.
@@ -187,15 +207,45 @@ inline QString CSong::getFileName(void) const
 }
 
 
+/**
+ * Retourne la taille du fichier contenant le morceau.
+ *
+ * \return Taille du fichier en octets.
+ */
+
 inline int CSong::getFileSize(void) const
 {
     return m_fileSize;
 }
 
 
+/**
+ * Retourne le débit du morceau.
+ *
+ * \return Débit binaire.
+ */
+
 inline int CSong::getBitRate(void) const
 {
     return m_bitRate;
+}
+
+
+/**
+ * Retourne le taux d'échantillonnage du morceau.
+ *
+ * \return Taux d'échantillonnage.
+ */
+
+inline int CSong::getSampleRate(void) const
+{
+    return m_sampleRate;
+}
+
+
+inline QString CSong::getEncoder(void) const
+{
+    return m_encoder;
 }
 
 

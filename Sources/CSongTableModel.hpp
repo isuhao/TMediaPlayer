@@ -51,6 +51,10 @@ public:
     TSongItem * getSongItem(const QModelIndex& index) const;
     TSongItem * getSongItem(int row) const;
 
+signals:
+
+    void columnSorted(int column, Qt::SortOrder order); ///< Signal émis lorsqu'une colonne est triée.
+
 private:
 
     static inline bool cmpSongPositionAsc(TSongItem * song1, TSongItem * song2)

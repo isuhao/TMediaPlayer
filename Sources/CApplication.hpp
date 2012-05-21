@@ -53,6 +53,8 @@ public:
     inline CSongTable * getDisplayedSongTable(void) const;
     void setDisplayedSongTable(CSongTable * songTable);
     CSong * getSongFromId(int id) const;
+    QList<CPlayList *> getPlayListsWithSong(CSong * song) const;
+    QList<CPlayList *> getAllPlayLists(void) const;
 
     inline bool isPlaying(void) const;
     inline bool isPaused(void) const;

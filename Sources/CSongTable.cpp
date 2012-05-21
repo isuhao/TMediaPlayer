@@ -3,6 +3,7 @@
 #include "CSongTableModel.hpp"
 #include "CSong.hpp"
 #include "CApplication.hpp"
+#include "CPlayList.hpp"
 #include "CSongTableHeader.hpp"
 #include <QStringList>
 #include <QMouseEvent>
@@ -15,25 +16,20 @@
 
 
 CSongTable::CSongTable(CApplication * application) :
-    QTableView       (application),
-    m_model          (NULL),
-    m_menu           (NULL),
-    m_application    (application),
-    m_idPlayList     (-1),
-    m_columnSort     (ColArtist),
-    m_isModified     (false),
-    m_sortOrder      (Qt::AscendingOrder),
-    m_isColumnMoving (false)
+    QTableView        (application),
+    m_model           (NULL),
+    m_application     (application),
+    m_idPlayList      (-1),
+    m_columnSort      (ColArtist),
+    m_isModified      (false),
+    m_sortOrder       (Qt::AscendingOrder),
+    m_isColumnMoving  (false),
+    m_automaticSort   (true)
 {
     Q_CHECK_PTR(application);
 
-    // Menu contextuel
-    m_menu = new QMenu(this);
-    m_menu->addAction(tr("Informations"), m_application, SLOT(openDialogSongInfos()));
-    m_menu->addAction(tr("Show in explorer"));
-    m_menu->addAction(tr("Remove"));
-    m_menu->addAction(tr("Playlists..."));
-    m_menu->addAction(tr("Add to playlist..."));
+    m_model = new CSongTableModel();
+    setModel(m_model);
 
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(openCustomMenuProject(const QPoint&)));
@@ -59,12 +55,10 @@ CSongTable::CSongTable(CApplication * application) :
     setHorizontalHeader(header);
     header->setMovable(true);
     connect(header, SIGNAL(columnShown(int, bool)), this, SLOT(showColumn(int, bool)));
+    connect(m_model, SIGNAL(columnSorted(int, Qt::SortOrder)), this, SLOT(sortColumn(int, Qt::SortOrder)));
 
     verticalHeader()->hide();
     verticalHeader()->setDefaultSectionSize(19); /// \todo => paramètres
-
-    m_model = new CSongTableModel();
-    setModel(m_model);
 
     initColumns("");
 }
@@ -76,11 +70,26 @@ CSongTable::~CSongTable()
 }
 
 
+/**
+ * Retourne le pointeur sur l'item à une ligne donnée.
+ *
+ * \param pos Numéro de la ligne (à partir de 0).
+ * \return Pointeur sur l'item, ou NULL.
+ */
+
 CSongTableModel::TSongItem * CSongTable::getSongItemForIndex(int pos) const
 {
     return (pos < 0 ? NULL : m_model->getSongItem(pos));
 }
 
+
+/**
+ * Chercher la position du morceau précédant un autre morceau.
+ *
+ * \param pos     Position du morceau actuel.
+ * \param shuffle Indique si la lecture est aléatoire.
+ * \return Position du morceau précédant.
+ */
 
 int CSongTable::getPreviousSong(int pos, bool shuffle) const
 {
@@ -113,6 +122,14 @@ int CSongTable::getPreviousSong(int pos, bool shuffle) const
 }
 
 
+/**
+ * Chercher la position du morceau suivant un autre morceau.
+ *
+ * \param pos     Position du morceau actuel.
+ * \param shuffle Indique si la lecture est aléatoire.
+ * \return Position du morceau suivant.
+ */
+
 int CSongTable::getNextSong(int pos, bool shuffle) const
 {
     Q_ASSERT(pos == -1 || (pos >= 0 && pos < m_songs.size()));
@@ -144,6 +161,12 @@ int CSongTable::getNextSong(int pos, bool shuffle) const
 }
 
 
+/**
+ * Calcule la durée totale des morceaux présents dans la liste.
+ *
+ * \return Durée totale en millisecondes.
+ */
+
 int CSongTable::getTotalDuration(void) const
 {
     int duration = 0;
@@ -157,34 +180,50 @@ int CSongTable::getTotalDuration(void) const
 }
 
 
-void CSongTable::deleteSongs(void)
-{
-    foreach (CSong * song, m_songs)
-    {
-        delete song;
-    }
+/**
+ * Ajoute un morceau à la table.
+ * Si le morceau est déjà présent, il est quand même ajouté.
+ *
+ * \param song Morceau à ajouter.
+ * \param pos  Position où placer le morceau. Si négatif, le morceau est ajouté à la fin de la liste.
+ */
 
-    m_songs.clear();
-    m_model->clear();
-}
-
-
-void CSongTable::addSong(CSong * song, int pos)
+void CSongTable::addSongToTable(CSong * song, int pos)
 {
     Q_CHECK_PTR(song);
 
     pos = qBound(-1, pos, m_songs.size());
 
-    if (pos < 0)
+    m_songs.insert(pos, song);
+    m_model->insertRow(song, pos);
+
+    if (m_automaticSort)
     {
-        m_songs.append(song);
+        sortByColumn(m_columnSort, m_sortOrder);
     }
-    else
+}
+
+
+/**
+ * Ajoute plusieurs morceaux à la table.
+ * Si l'un des morceaux est déjà présent, il est quand même ajouté.
+ *
+ * \param songs Liste des morceaux à ajouter.
+ */
+
+void CSongTable::addSongsToTable(const QList<CSong *>& songs)
+{
+    foreach (CSong * song, songs)
     {
-        m_songs.insert(pos, song);
+        Q_CHECK_PTR(song);
+        m_songs.append(song);
+        m_model->insertRow(song);
     }
 
-    m_model->insertRow(song, pos);
+    if (m_automaticSort)
+    {
+        sortByColumn(m_columnSort, m_sortOrder);
+    }
 }
 
 
@@ -197,11 +236,16 @@ void CSongTable::addSong(CSong * song, int pos)
  * \param song Pointeur sur la chanson à enlever.
  */
 
-void CSongTable::removeSong(CSong * song)
+void CSongTable::removeSongFromTable(CSong * song)
 {
     Q_CHECK_PTR(song);
 
     m_songs.removeAll(song);
+
+    if (m_automaticSort)
+    {
+        sortByColumn(m_columnSort, m_sortOrder);
+    }
 }
 
 
@@ -211,12 +255,38 @@ void CSongTable::removeSong(CSong * song)
  * \param pos Position de la chanson dans la liste (à partir de 0).
  */
 
-void CSongTable::removeSong(int pos)
+void CSongTable::removeSongFromTable(int pos)
 {
     Q_ASSERT(pos >= 0 && pos < m_songs.size());
 
     m_songs.removeAt(pos);
     m_model->removeRow(pos);
+
+    if (m_automaticSort)
+    {
+        sortByColumn(m_columnSort, m_sortOrder);
+    }
+}
+
+
+/**
+ * Supprime tous les morceaux de la table.
+ */
+
+void CSongTable::deleteSongs(void)
+{
+    foreach (CSong * song, m_songs)
+    {
+        delete song;
+    }
+
+    m_songs.clear();
+    m_model->clear();
+
+    if (m_automaticSort)
+    {
+        sortByColumn(m_columnSort, m_sortOrder);
+    }
 }
 
 
@@ -397,17 +467,17 @@ void CSongTable::initColumns(const QString& str)
 }
 
 
-void CSongTable::showColumn(int col, bool show)
+void CSongTable::showColumn(int column, bool show)
 {
-    Q_ASSERT(col >= 0 && col < ColNumber);
+    Q_ASSERT(column >= 0 && column < ColNumber);
 
-    if ( m_columns[col].visible != show)
+    if (m_columns[column].visible != show)
     {
-        m_columns[col].visible = show;
+        m_columns[column].visible = show;
 
         if (show)
         {
-            horizontalHeader()->showSection(col);
+            horizontalHeader()->showSection(column);
 
             int numColumns = -1;
             for (int i = 0; i < ColNumber; ++i)
@@ -419,13 +489,27 @@ void CSongTable::showColumn(int col, bool show)
             }
         
             // Déplacement de la colonne
-            int visualIndex = horizontalHeader()->visualIndex(col);
+            int visualIndex = horizontalHeader()->visualIndex(column);
             horizontalHeader()->moveSection(visualIndex, numColumns);
         }
         else
         {
-            horizontalHeader()->hideSection(col);
+            horizontalHeader()->hideSection(column);
         }
+
+        m_isModified = true;
+    }
+}
+
+
+void CSongTable::sortColumn(int column, Qt::SortOrder order)
+{
+    Q_ASSERT(column >= 0 && column < ColNumber);
+
+    if (m_columnSort != column || m_sortOrder != order)
+    {
+        m_columnSort = column;
+        m_sortOrder = order;
 
         m_isModified = true;
     }
@@ -460,7 +544,7 @@ QString CSongTable::getColumnsInfos(void) const
             }
 
             ++currentPos;
-            i = 0;
+            i = -1;
         }
     }
     
@@ -617,13 +701,6 @@ bool CSongTable::updateDatabase(void)
 }
 
 
-void CSongTable::mousePressEvent(QMouseEvent * event)
-{
-    //m_pressedPosition = event->globalPos();
-    QAbstractItemView::mousePressEvent(event);
-}
-
-
 void CSongTable::startDrag(Qt::DropActions supportedActions)
 {
     QModelIndexList indexes = selectedIndexes();
@@ -683,6 +760,30 @@ bool CSongTable::isModified(void) const
 }
 
 
+void CSongTable::addSong(CSong * song, int pos)
+{
+    addSongToTable(song, pos);
+}
+
+
+void CSongTable::addSongs(const QList<CSong *>& songs)
+{
+    addSongsToTable(songs);
+}
+
+
+void CSongTable::removeSong(CSong * song)
+{
+    removeSongFromTable(song);
+}
+
+
+void CSongTable::removeSong(int pos)
+{
+    removeSongFromTable(pos);
+}
+
+
 /// \todo Implémentation.
 void CSongTable::openCustomMenuProject(const QPoint& point)
 {
@@ -692,7 +793,56 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
 
     if (index.isValid())
     {
-        m_menu->move(mapToGlobal(point));
-        m_menu->show();
+        bool severalSongs = (selectionModel()->selectedRows().size() > 1);
+
+        // Menu contextuel
+        QMenu * menu = new QMenu(this);
+        menu->setAttribute(Qt::WA_DeleteOnClose);
+
+        menu->addAction(tr("Informations"), m_application, SLOT(openDialogSongInfos()));
+        if (!severalSongs) menu->addAction(tr("Show in explorer"), m_application, SLOT(openSongInExplorer()));
+        menu->addSeparator();
+        menu->addAction(tr("Remove from library"));
+        menu->addSeparator();
+
+        if (!severalSongs)
+        {
+            // Listes de lecture contenant le morceau
+            QMenu * menuPlayList = menu->addMenu(tr("Playlists"));
+            menuPlayList->addAction(tr("Library"));
+
+            QList<CPlayList *> playLists = m_application->getPlayListsWithSong(m_model->getSongItem(index)->song);
+
+            if (playLists.size() > 0)
+            {
+                menuPlayList->addSeparator();
+
+                foreach (CPlayList * playList, playLists)
+                {
+                    menuPlayList->addAction(playList->getName());
+                }
+            }
+        }
+
+        // Toutes les listes de lecture
+        //TODO: gérer les dossiers
+        QMenu * menuAddToPlayList = menu->addMenu(tr("Add to playlist"));
+        QList<CPlayList *> playLists = m_application->getAllPlayLists();
+
+        if (playLists.isEmpty())
+        {
+            QAction * actionNoPlayList = menuAddToPlayList->addAction(tr("There are no playlist"));
+            actionNoPlayList->setEnabled(false);
+        }
+        else
+        {
+            foreach (CPlayList * playList, playLists)
+            {
+                menuAddToPlayList->addAction(playList->getName());
+            }
+        }
+
+        menu->move(mapToGlobal(point));
+        menu->show();
     }
 }

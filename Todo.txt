@@ -14,9 +14,19 @@
 - Gérer les dossiers de listes de lecture.
 
 - Implémenter le glisser-déposer au sein d'une liste statique.
+- Implémenter le glisser-déposer pour créer une nouvelle liste de lecture.
 - Afficher le nombre de morceaux sur l'image lors du glissement.
 
 - Intégrer Last.fm.
 
 - Créer la fenêtre Préférences.
 - Griser les boutons indisponibles suivant l'état (lecture, pause, etc.).
+- Bug fin de liste : le bouton pause reste.
+
+- Ajouter la métadonnée "Battements par minute".
+- Ajouter l'information "Fait partie d'une compilation".
+- Ajouter l'option "Ne pas lire en mode aléatoire".
+- Ajouter l'option "Morceau désactivé".
+- Ajouter l'option "Volume du morceau".
+
+- Afficher les lectures dans la boite de dialogue Edit Song.

@@ -2,12 +2,15 @@
 <ui version="4.0">
  <class>DialogEditSong</class>
  <widget class="QDialog" name="DialogEditSong">
+  <property name="windowModality">
+   <enum>Qt::WindowModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>600</width>
-    <height>448</height>
+    <height>447</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -135,9 +138,9 @@
           </widget>
          </item>
          <item row="8" column="0">
-          <widget class="QLabel" name="lblFrequency">
+          <widget class="QLabel" name="lblSampleRate">
            <property name="text">
-            <string>Frequency:</string>
+            <string>Sample rate:</string>
            </property>
           </widget>
          </item>
@@ -233,7 +236,7 @@
           </widget>
          </item>
          <item row="8" column="1">
-          <widget class="QLabel" name="valueFrequency">
+          <widget class="QLabel" name="valueSampleRate">
            <property name="text">
             <string notr="true">-</string>
            </property>
@@ -800,23 +803,7 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QComboBox" name="editLanguage">
-         <item>
-          <property name="text">
-           <string>Unknown</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>French</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>English</string>
-          </property>
-         </item>
-        </widget>
+        <widget class="QComboBox" name="editLanguage"/>
        </item>
       </layout>
      </widget>
@@ -872,7 +859,7 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
+      <set>QDialogButtonBox::NoButton</set>
      </property>
     </widget>
    </item>
@@ -891,7 +878,7 @@
       </size>
      </property>
      <property name="text">
-      <string>&lt;</string>
+      <string notr="true">◄</string>
      </property>
     </widget>
    </item>
@@ -910,7 +897,7 @@
       </size>
      </property>
      <property name="text">
-      <string>&gt;</string>
+      <string notr="true">►</string>
      </property>
     </widget>
    </item>
@@ -947,38 +934,5 @@
   <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources/>
- <connections>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>DialogEditSong</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>257</x>
-     <y>542</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>DialogEditSong</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>325</x>
-     <y>542</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

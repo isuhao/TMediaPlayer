@@ -103,7 +103,7 @@ void CPlayListView::dragMoveEvent(QDragMoveEvent * event)
     event->setDropAction(Qt::CopyAction);
 
     QPoint point = event->pos();
-    qDebug() << point << indexAt(point).row();
+    //qDebug() << point << indexAt(point).row();
 
     QModelIndex index = indexAt(point);
 

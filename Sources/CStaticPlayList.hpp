@@ -26,11 +26,11 @@ public:
 
 public slots:
 
-    virtual void addSong(CSong * song, int pos = -1); // Dupliquer (public/privée)
-    virtual void addSongs(const QList<CSong *>& songs); // Dupliquer (public/privée)
-    virtual void removeSong(CSong * song);
-    virtual void removeSong(int pos);
-    virtual void removeDuplicateSongs(void);
+    void addSong(CSong * song, int pos = -1);
+    void addSongs(const QList<CSong *>& songs);
+    void removeSong(CSong * song);
+    void removeSong(int pos);
+    void removeDuplicateSongs(void);
 
 signals:
 
@@ -41,6 +41,7 @@ signals:
 protected slots:
 
     virtual bool updateDatabase(void);
+    //virtual void openCustomMenuProject(const QPoint& point);
 
 protected:
 
