@@ -73,7 +73,7 @@
         </widget>
        </item>
        <item>
-        <layout class="QGridLayout" name="gridLayout_4">
+        <layout class="QGridLayout" name="gridLayout_4" columnstretch="0,1" columnminimumwidth="150,0">
          <item row="2" column="0">
           <widget class="QLabel" name="lblCreation">
            <property name="text">
@@ -854,14 +854,7 @@
     </widget>
    </item>
    <item row="1" column="2">
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::NoButton</set>
-     </property>
-    </widget>
+    <widget class="QDialogButtonBox" name="buttonBox"/>
    </item>
    <item row="1" column="0">
     <widget class="QPushButton" name="btnPrevious">

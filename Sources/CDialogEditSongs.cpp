@@ -1,10 +1,10 @@
 
 #include "CDialogEditSongs.hpp"
-
 #include <QStandardItemModel>
+#include <QPushButton>
 
 
-CDialogEditSongs::CDialogEditSongs(QList<CSongTableModel::TSongItem *> songItemList, QWidget * parent) :
+CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget * parent) :
     QDialog        (parent),
     m_uiWidget     (new Ui::DialogEditSongs()),
     m_songItemList (songItemList)
@@ -23,43 +23,61 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableModel::TSongItem *> songItemL
     m_uiWidget->editLanguage->addItem(tr("German") , CSong::LangGerman );
     m_uiWidget->editLanguage->addItem(tr("Italian"), CSong::LangItalian);
 
+    
+    // Recherche des données similaires pour tous les éléments
+    QString songTitle;           bool songTitleSim           = true;
+    QString songTitleSort;       bool songTitleSortSim       = true;
+    QString songArtist;          bool songArtistSim          = true;
+    QString songArtistSort;      bool songArtistSortSim      = true;
+    QString songAlbum;           bool songAlbumSim           = true;
+    QString songAlbumSort;       bool songAlbumSortSim       = true;
+    QString songAlbumArtist;     bool songAlbumArtistSim     = true;
+    QString songAlbumArtistSort; bool songAlbumArtistSortSim = true;
+    QString songComposer;        bool songComposerSim        = true;
+    QString songComposerSort;    bool songComposerSortSim    = true;
 
-    QString songTitle;       bool songTitleSim       = true;
-    QString songTitleSort;   bool songTitleSortSim   = true;
-    QString songArtist;      bool songArtistSim      = true;
-    QString songAlbum;       bool songAlbumSim       = true;
-    QString songAlbumArtist; bool songAlbumArtistSim = true;
-    QString songComposer;    bool songComposerSim    = true;
+    int songYear; bool songYearSim = true;
     //...
 
     bool first = true;
 
-    // Recherche des données similaires pour tous les éléments
-    foreach (CSongTableModel::TSongItem * songItem, m_songItemList)
+    foreach (CSongTableItem * songItem, m_songItemList)
     {
         Q_CHECK_PTR(songItem);
-        Q_CHECK_PTR(songItem->song);
+        CSong * song = songItem->getSong();
 
         if (first)
         {
-            songTitle       = songItem->song->getTitle();
-            songTitleSort   = songItem->song->getTitleSort();
-            songArtist      = songItem->song->getArtistName();
-            songAlbum       = songItem->song->getAlbumTitle();
-            songAlbumArtist = songItem->song->getAlbumArtist();
-            songComposer    = songItem->song->getComposer();
+            songTitle           = song->getTitle();
+            songTitleSort       = song->getTitleSort();
+            songArtist          = song->getArtistName();
+            songArtistSort      = song->getArtistNameSort();
+            songAlbum           = song->getAlbumTitle();
+            songAlbumSort       = song->getAlbumTitleSort();
+            songAlbumArtist     = song->getAlbumArtist();
+            songAlbumArtistSort = song->getAlbumArtistSort();
+            songComposer        = song->getComposer();
+            songComposerSort    = song->getComposerSort();
+
+            songYear = song->getYear();
             //...
 
             first = false;
         }
         else
         {
-            if (songTitleSim       && songItem->song->getTitle()       != songTitle      ) { songTitleSim       = false; songTitle      .clear(); }
-            if (songTitleSortSim   && songItem->song->getTitleSort()   != songTitleSort  ) { songTitleSortSim   = false; songTitleSort  .clear(); }
-            if (songArtistSim      && songItem->song->getArtistName()  != songArtist     ) { songArtistSim      = false; songArtist     .clear(); }
-            if (songAlbumSim       && songItem->song->getAlbumTitle()  != songAlbum      ) { songAlbumSim       = false; songAlbum      .clear(); }
-            if (songAlbumArtistSim && songItem->song->getAlbumArtist() != songAlbumArtist) { songAlbumArtistSim = false; songAlbumArtist.clear(); }
-            if (songComposerSim    && songItem->song->getComposer()    != songComposer   ) { songComposerSim    = false; songComposer   .clear(); }
+            if (songTitleSim           && song->getTitle()           != songTitle          ) { songTitleSim           = false; songTitle          .clear(); }
+            if (songTitleSortSim       && song->getTitleSort()       != songTitleSort      ) { songTitleSortSim       = false; songTitleSort      .clear(); }
+            if (songArtistSim          && song->getArtistName()      != songArtist         ) { songArtistSim          = false; songArtist         .clear(); }
+            if (songArtistSortSim      && song->getArtistNameSort()  != songArtistSort     ) { songArtistSortSim      = false; songArtistSort     .clear(); }
+            if (songAlbumSim           && song->getAlbumTitle()      != songAlbum          ) { songAlbumSim           = false; songAlbum          .clear(); }
+            if (songAlbumSortSim       && song->getAlbumTitleSort()  != songAlbumSort      ) { songAlbumSortSim       = false; songAlbumSort      .clear(); }
+            if (songAlbumArtistSim     && song->getAlbumArtist()     != songAlbumArtist    ) { songAlbumArtistSim     = false; songAlbumArtist    .clear(); }
+            if (songAlbumArtistSortSim && song->getAlbumArtistSort() != songAlbumArtistSort) { songAlbumArtistSortSim = false; songAlbumArtistSort.clear(); }
+            if (songComposerSim        && song->getComposer()        != songComposer       ) { songComposerSim        = false; songComposer       .clear(); }
+            if (songComposerSortSim    && song->getComposerSort()    != songComposerSort   ) { songComposerSortSim    = false; songComposerSort   .clear(); }
+
+            if (songYearSim && song->getYear() != songYear ) { songYearSim = false; songYear = 0; }
             //...
         }
     }
@@ -91,23 +109,22 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableModel::TSongItem *> songItemL
     
     m_uiWidget->editArtist->setText(songArtistSim ? songArtist : notSimText);
     m_uiWidget->editArtist_2->setText(songArtistSim ? songArtist : notSimText);
-    //m_uiWidget->editArtistSort->setText(m_songItem->song->getArtistNameSort());
+    m_uiWidget->editArtistSort->setText(songArtistSortSim ? songArtistSort : notSimText);
 
     m_uiWidget->editAlbum->setText(songAlbumSim ? songAlbum : notSimText);
     m_uiWidget->editAlbum_2->setText(songAlbumSim ? songAlbum : notSimText);
-    //m_uiWidget->editAlbumSort->setText(m_songItem->song->getAlbumTitleSort());
+    m_uiWidget->editAlbumSort->setText(songAlbumSortSim ? songAlbumSort : notSimText);
 
     m_uiWidget->editAlbumArtist->setText(songAlbumArtistSim ? songAlbumArtist : notSimText);
     m_uiWidget->editAlbumArtist_2->setText(songAlbumArtistSim ? songAlbumArtist : notSimText);
-    //m_uiWidget->editAlbumArtistSort->setText(m_songItem->song->getAlbumArtistSort());
+    m_uiWidget->editAlbumArtistSort->setText(songAlbumArtistSortSim ? songAlbumArtistSort : notSimText);
 
     m_uiWidget->editComposer->setText(songComposerSim ? songComposer : notSimText);
     m_uiWidget->editComposer_2->setText(songComposerSim ? songComposer : notSimText);
-    //m_uiWidget->editComposerSort->setText(m_songItem->song->getComposerSort());
-/*
-    const int year = m_songItem->song->getYear();
-    m_uiWidget->editYear->setText(year > 0 ? QString::number(year) : "");
+    m_uiWidget->editComposerSort->setText(songComposerSortSim ? songComposerSort : notSimText);
 
+    m_uiWidget->editYear->setText(songYearSim ? QString::number(songYear) : notSimText);
+/*
     const int trackNumber = m_songItem->song->getTrackNumber();
     m_uiWidget->editTrackNumber->setText(trackNumber > 0 ? QString::number(trackNumber) : "");
 
@@ -129,6 +146,16 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableModel::TSongItem *> songItemL
     // Langue
 
     //...
+
+
+    // Connexions des signaux des boutons
+    QPushButton * btnSave = m_uiWidget->buttonBox->addButton(tr("Save"), QDialogButtonBox::AcceptRole);
+    QPushButton * btnCancel = m_uiWidget->buttonBox->addButton(tr("Cancel"), QDialogButtonBox::RejectRole);
+    QPushButton * btnApply = m_uiWidget->buttonBox->addButton(tr("Apply"), QDialogButtonBox::ApplyRole);
+
+    connect(btnSave, SIGNAL(clicked()), this, SLOT(save()));
+    connect(btnCancel, SIGNAL(clicked()), this, SLOT(close()));
+    connect(btnApply, SIGNAL(clicked()), this, SLOT(apply()));
 }
 
 

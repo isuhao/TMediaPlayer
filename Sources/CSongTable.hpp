@@ -45,11 +45,11 @@ public:
         ColBitRate      = 15,
         ColFormat       = 16,
         ColDuration     = 17,
-        /// \todo Ajouter "Taux d'échantillonnage"
+        ColSampleRate   = 18,
         /// \todo Ajouter "Canaux"
         /// \todo Ajouter "Paroles"
 
-        ColNumber       = 18  ///< Nombre de types de colonnes.
+        ColNumber       = 19  ///< Nombre de types de colonnes.
     };
 
     struct TColumn
@@ -65,11 +65,15 @@ public:
     CSongTable(CApplication * application);
     ~CSongTable();
 
-    inline QList<CSong *> getSongs(void) const;
+    QList<CSong *> getSongs(void) const;
     inline int getNumSongs(void) const;
-    CSongTableModel::TSongItem * getSongItemForIndex(int pos) const;
-    int getPreviousSong(int pos, bool shuffle) const;
-    int getNextSong(int pos, bool shuffle) const;
+    //CSongTableItem * getSongItemForIndex(int pos) const;
+    CSongTableItem * getSongItemForRow(int row) const;
+    int getRowForSongItem(CSongTableItem * songItem) const;
+    CSongTableItem * getSelectedSongItem(void) const;
+    QList<CSongTableItem *> getSelectedSongItems(void) const;
+    CSongTableItem * getPreviousSong(CSongTableItem * songItem, bool shuffle) const;
+    CSongTableItem * getNextSong(CSongTableItem * songItem, bool shuffle) const;
     int getTotalDuration(void) const;
     inline bool hasSong(CSong * song) const;
     virtual bool isModified(void) const;
@@ -83,9 +87,9 @@ public slots:
 
 signals:
 
-    void songSelected(int pos); ///< Signal émis quand un morceau est sélectionné.
-    void songStarted(int pos);  ///< Signal émis quand un morceau est lancé (double-clic).
-    void columnChanged(void);   ///< Signal émis lorsque les colonnes sont modifiées.
+    void songSelected(CSongTableItem *); ///< Signal émis quand un morceau est sélectionné.
+    void songStarted(CSongTableItem *);  ///< Signal émis quand un morceau est lancé (double-clic).
+    void columnChanged(void);            ///< Signal émis lorsque les colonnes sont modifiées.
     
 protected slots:
 
@@ -100,7 +104,8 @@ protected:
     void addSongToTable(CSong * song, int pos = -1);
     void addSongsToTable(const QList<CSong *>& songs);
     void removeSongFromTable(CSong * song);
-    void removeSongFromTable(int pos);
+    void removeSongFromTable(int row);
+    void removeAllSongsFromTable(void);
     void deleteSongs(void);
 
     virtual void initColumns(const QString& str);
@@ -110,6 +115,7 @@ protected:
 
     //void loadFromDatabase(int id);
 
+    virtual void keyPressEvent(QKeyEvent * event);
     //virtual void mouseDoubleClickEvent(QMouseEvent * event);
 
     CSongTableModel * m_model;    ///< Modèle utilisé pour afficher les morceaux.
@@ -123,24 +129,12 @@ protected:
 private:
     
     bool m_isModified;            ///< Indique si les informations de la liste ont été modifiées.
-    QList<CSong *> m_songs;       ///< Liste des chansons.
+    //QList<CSong *> m_songs;       ///< Liste des chansons. \todo Supprimer (déjà dans le modèle) ?
     bool m_isColumnMoving;        ///< Indique si les colonnes sont en cours de positionnement.
     QPoint m_pressedPosition;
 };
 
 Q_DECLARE_METATYPE(CSongTable *)
-
-
-/**
- * Retourne la liste des morceaux de la liste.
- *
- * \return Liste des morceaux.
- */
-
-inline QList<CSong *> CSongTable::getSongs(void) const
-{
-    return m_songs;
-}
 
 
 /**
@@ -151,7 +145,7 @@ inline QList<CSong *> CSongTable::getSongs(void) const
 
 inline int CSongTable::getNumSongs(void) const
 {
-    return m_songs.size();
+    return m_model->getNumSongs();
 }
 
 
@@ -164,8 +158,7 @@ inline int CSongTable::getNumSongs(void) const
 
 inline bool CSongTable::hasSong(CSong * song) const
 {
-    if (!song) return false;
-    return m_songs.contains(song);
+    return m_model->hasSong(song);
 }
 
 #endif

@@ -207,9 +207,9 @@ void CSong::setAlbumArtistSort(const QString& albumArtist)
 
 void CSong::setComposerSort(const QString& composer)
 {
-    if (m_composer != composer)
+    if (m_composerSort != composer)
     {
-        m_composer = composer;
+        m_composerSort = composer;
         m_isModified = true;
         emit songModified();
     }
@@ -424,6 +424,7 @@ bool CSong::loadSound(void)
             // Mise à jour de la durée du morceau
             if (m_duration != length)
             {
+                qWarning() << "La durée du morceau doit être mise à jour.";
                 m_duration = length;
 
                 QSqlQuery query(m_application->getDataBase());
@@ -444,7 +445,7 @@ bool CSong::loadSound(void)
         }
     }
 
-    qWarning() << "Echec du chargement du son " << m_fileName;
+    qWarning() << "Échec du chargement du morceau " << m_fileName;
     
     m_sound = NULL;
     m_channel = NULL;
@@ -604,7 +605,7 @@ void CSong::updateDatabase(void)
                 case LangEnglish: query.bindValue(26, "EN"); break;
                 case LangFrench:  query.bindValue(26, "FR"); break;
                 case LangGerman:  query.bindValue(26, "DE"); break;
-                case LangItalian:  query.bindValue(26, "IT"); break;
+                case LangItalian: query.bindValue(26, "IT"); break;
             }
 
             query.bindValue(27, 0);
@@ -654,7 +655,7 @@ void CSong::updateDatabase(void)
             query.bindValue( 9, m_trackTotal);
             query.bindValue(10, m_discNumber);
             query.bindValue(11, m_discTotal);
-            query.bindValue(12, m_genre);
+            query.bindValue(12, genreId);
             query.bindValue(13, m_rating);
             query.bindValue(14, m_comments);
             query.bindValue(15, m_lyrics);
@@ -712,6 +713,8 @@ void CSong::emitPlayEnd(void)
         QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
         return;
     }
+
+    m_plays.append(currentTime);
 
     emit playEnd();
 }

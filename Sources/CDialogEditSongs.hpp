@@ -13,7 +13,7 @@ class CDialogEditSongs : public QDialog
 
 public:
 
-    CDialogEditSongs(QList<CSongTableModel::TSongItem *> songItemList, QWidget * parent = NULL);
+    CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget * parent = NULL);
     ~CDialogEditSongs();
 
     //...
@@ -21,7 +21,7 @@ public:
 private:
     
     Ui::DialogEditSongs * m_uiWidget;
-    QList<CSongTableModel::TSongItem *> m_songItemList;
+    QList<CSongTableItem *> m_songItemList;
 };
 
 #endif // FILE_CDIALOG_EDIT_SONGS

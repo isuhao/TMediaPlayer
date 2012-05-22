@@ -21,7 +21,7 @@ public:
 
 protected slots:
 
-    void onSave(void);
+    void save(void);
 
 private:
     

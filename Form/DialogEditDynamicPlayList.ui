@@ -27,17 +27,7 @@
     <widget class="QLineEdit" name="editName"/>
    </item>
    <item row="3" column="0" colspan="2">
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
-     </property>
-     <property name="centerButtons">
-      <bool>false</bool>
-     </property>
-    </widget>
+    <widget class="QDialogButtonBox" name="buttonBox"/>
    </item>
    <item row="0" column="0">
     <widget class="QLabel" name="lblName">

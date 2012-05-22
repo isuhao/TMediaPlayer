@@ -5,6 +5,7 @@
 #include <QMainWindow>
 #include <QList>
 #include <QSqlDatabase>
+#include "CSongTableModel.hpp"
 #include "ui_TMediaPlayer.h"
 
 
@@ -91,7 +92,7 @@ public slots:
 
     void previousSong(void);
     void nextSong(void);
-    void playSong(int pos);
+    void playSong(CSongTableItem * songItem);
 
     void setRepeat(bool repeat);
     void setShuffle(bool shuffle);
@@ -118,6 +119,8 @@ public slots:
 
     void editSong(CSong * song);
     void removeSong(CSong * song);
+
+    void openSongInExplorer(void);
 
 signals:
 
@@ -151,29 +154,28 @@ protected:
     void loadDatabase(void);
     void startPlay(void);
 
+    virtual void keyPressEvent(QKeyEvent * event);
     virtual void closeEvent(QCloseEvent * event);
 
 private:
 
     Ui::TMediaPlayer * m_uiWidget;
     FMOD::System * m_soundSystem;
-    //QStandardItemModel * m_listModel;  ///< Modèle pour afficher les listes de lecture.
-    CPlayListView * m_playListView;    ///< Vue pour afficher les listes de lecture.
-    QSqlDatabase m_dataBase;           ///< Base de données.
-    QSettings * m_settings;            ///< Paramètres de l'application.
-    QTimer * m_timer;                  ///< Timer pour mettre à jour l'affichage.
-    CSong * m_currentSong;             ///< Pointeur sur le morceau en cours de lecture. \todo Utiliser un TSongItem instead
-    int m_currentSongIndex;            ///< Indice du morceau en cours de lecture dans la liste. \todo Utiliser un TSongItem instead
-    CSongTable * m_currentSongTable;   ///< Liste de morceaux contenant le morceau en cours de lecture.
-    CSongTable * m_library;            ///< Librairie (liste de tous les morceaux).
-    CSongTable * m_displayedSongTable; ///< Liste de morceaux affichée.
-    State m_state;                     ///< État de lecture.
-    bool m_isRepeat;                   ///< Indique si la répétition est activée.
-    bool m_isShuffle;                  ///< Indique si la lecture aléatoire est activée.
-    bool m_isMute;                     ///< Indique si le son est coupé.
-    int m_volume;                      ///< Volume sonore (entre 0 et 100).
-    QList<CListFolder *> m_folders;    ///< Liste des dossiers de listes de lecture.
-    QList<CPlayList *> m_playLists;    ///< Liste des listes de lectures sans dossier.
+    CPlayListView * m_playListView;     ///< Vue pour afficher les listes de lecture.
+    QSqlDatabase m_dataBase;            ///< Base de données.
+    QSettings * m_settings;             ///< Paramètres de l'application.
+    QTimer * m_timer;                   ///< Timer pour mettre à jour l'affichage.
+    CSongTableItem * m_currentSongItem; ///< Pointeur sur l'item en cours de lecture.
+    CSongTable * m_currentSongTable;    ///< Liste de morceaux contenant le morceau en cours de lecture. \todo Fusion avec le précédent param.
+    CSongTable * m_library;             ///< Librairie (liste de tous les morceaux).
+    CSongTable * m_displayedSongTable;  ///< Liste de morceaux affichée.
+    State m_state;                      ///< État de lecture.
+    bool m_isRepeat;                    ///< Indique si la répétition est activée.
+    bool m_isShuffle;                   ///< Indique si la lecture aléatoire est activée.
+    bool m_isMute;                      ///< Indique si le son est coupé.
+    int m_volume;                       ///< Volume sonore (entre 0 et 100).
+    QList<CListFolder *> m_folders;     ///< Liste des dossiers de listes de lecture.
+    QList<CPlayList *> m_playLists;     ///< Liste des listes de lectures sans dossier.
 };
 
 
@@ -185,7 +187,7 @@ private:
 
 inline CSong * CApplication::getCurrentSong(void) const
 {
-    return m_currentSong;
+    return (m_currentSongItem ? m_currentSongItem->getSong() : NULL);
 }
 
 

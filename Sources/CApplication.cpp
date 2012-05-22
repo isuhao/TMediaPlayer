@@ -15,11 +15,14 @@
 #include <QStandardItemModel>
 #include <QSettings>
 #include <QMessageBox>
+#include <QKeyEvent>
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QTimer>
 #include <QFileDialog>
 #include <QProgressDialog>
+#include <QDesktopServices>
+#include <QUrl>
 
 // FMOD
 #include <fmod/fmod.hpp>
@@ -40,12 +43,10 @@ CApplication::CApplication(void) :
     QMainWindow          (),
     m_uiWidget           (new Ui::TMediaPlayer()),
     m_soundSystem        (NULL),
-    //m_listModel          (NULL),
     m_playListView       (NULL),
     m_settings           (NULL),
     m_timer              (NULL),
-    m_currentSong        (NULL),
-    m_currentSongIndex   (-1),
+    m_currentSongItem    (NULL),
     m_currentSongTable   (NULL),
     m_library            (NULL),
     m_displayedSongTable (NULL),
@@ -335,7 +336,7 @@ int CApplication::getVolume(void) const
 
 int CApplication::getPosition(void) const
 {
-    return (m_currentSong ? m_currentSong->getPosition() : 0);
+    return (m_currentSongItem ? m_currentSongItem->getSong()->getPosition() : 0);
 }
 
 
@@ -491,17 +492,17 @@ void CApplication::selectNone(void)
 void CApplication::play(void)
 {
     qDebug() << "CApplication::play()";
-    if (m_currentSong)
+
+    if (m_currentSongItem)
     {
         Q_CHECK_PTR(m_currentSongTable);
-        Q_ASSERT(m_currentSongIndex >= 0);
 
         if (m_state == Paused)
         {
             qDebug() << "CApplication::play() : chanson en pause";
             m_uiWidget->btnPlay->setIcon(QPixmap(":/icons/pause"));
-            emit songResumed(m_currentSong);
-            m_currentSong->play();
+            emit songResumed(m_currentSongItem->getSong());
+            m_currentSongItem->getSong()->play();
         }
 
         m_state = Playing;
@@ -514,27 +515,21 @@ void CApplication::play(void)
         m_currentSongTable = m_displayedSongTable;
 
         // Recherche du morceau sélectionné
-        QItemSelectionModel * selectionModel = m_displayedSongTable->selectionModel();
-        m_currentSongIndex = selectionModel->currentIndex().row();
-        CSongTableModel::TSongItem * songItem = m_displayedSongTable->getSongItemForIndex(m_currentSongIndex);
-        m_currentSong = (songItem ? songItem->song : NULL);
+        m_currentSongItem = m_currentSongTable->getSelectedSongItem();
 
         // Lecture du premier morceau de la liste
-        if (!m_currentSong)
+        if (!m_currentSongItem)
         {
-            m_currentSongIndex = m_currentSongTable->getNextSong(-1, m_isShuffle);
-            CSongTableModel::TSongItem * songItem = m_displayedSongTable->getSongItemForIndex(m_currentSongIndex);
-            m_currentSong = (songItem ? songItem->song : NULL);
+            m_currentSongItem = m_currentSongTable->getNextSong(NULL, m_isShuffle);
         }
 
-        if (!m_currentSong)
+        if (!m_currentSongItem)
         {
-            m_currentSongIndex = -1;
             m_currentSongTable = NULL;
             return;
         }
 
-        if (m_currentSong->loadSound())
+        if (m_currentSongItem->getSong()->loadSound())
         {
             startPlay();
         }
@@ -552,15 +547,14 @@ void CApplication::play(void)
 
 void CApplication::stop(void)
 {
-    if (m_currentSong)
+    if (m_currentSongItem)
     {
-        m_currentSong->stop();
-        emit songStopped(m_currentSong);
+        m_currentSongItem->getSong()->stop();
+        emit songStopped(m_currentSongItem->getSong());
         updateSongDescription(NULL);
-        m_currentSong = NULL;
+        m_currentSongItem = NULL;
     }
 
-    m_currentSongIndex = -1;
     m_currentSongTable = NULL;
     m_state = Stopped;
     m_uiWidget->btnPlay->setIcon(QPixmap(":/icons/play"));
@@ -573,11 +567,11 @@ void CApplication::stop(void)
 
 void CApplication::pause(void)
 {
-    if (m_currentSong)
+    if (m_currentSongItem)
     {
         m_uiWidget->btnPlay->setIcon(QPixmap(":/icons/play"));
-        m_currentSong->pause();
-        emit songPaused(m_currentSong);
+        m_currentSongItem->getSong()->pause();
+        emit songPaused(m_currentSongItem->getSong());
         m_state = Paused;
     }
 }
@@ -600,18 +594,15 @@ void CApplication::previousSong(void)
 {
     if (m_currentSongTable)
     {
-        m_currentSongIndex = m_currentSongTable->getPreviousSong(m_currentSongIndex, m_isShuffle);
-        CSongTableModel::TSongItem * songItem = m_displayedSongTable->getSongItemForIndex(m_currentSongIndex);
-        m_currentSong = (songItem ? songItem->song : NULL);
+        m_currentSongItem = m_currentSongTable->getPreviousSong(m_currentSongItem, m_isShuffle);
 
-        if (m_currentSong && m_currentSong->loadSound())
+        if (m_currentSongItem && m_currentSongItem->getSong()->loadSound())
         {
             play();
         }
         else
         {
-            m_currentSong = NULL;
-            m_currentSongIndex = -1;
+            m_currentSongItem = NULL;
             m_currentSongTable = NULL;
             m_state = Stopped;
             updateSongDescription(NULL);
@@ -624,35 +615,30 @@ void CApplication::nextSong(void)
 {
     qDebug() << "CApplication::nextSong()";
 
-    if (m_currentSong)
+    if (m_currentSongItem)
     {
         Q_CHECK_PTR(m_currentSongTable);
-        Q_ASSERT(m_currentSongIndex >= 0);
 
-        m_currentSong->stop();
+        m_currentSongItem->getSong()->stop();
         updateSongDescription(NULL);
+        m_uiWidget->btnPlay->setIcon(QPixmap(":/icons/play"));
 
-        m_currentSongIndex = m_currentSongTable->getNextSong(m_currentSongIndex, m_isShuffle);
-        CSongTableModel::TSongItem * songItem = m_displayedSongTable->getSongItemForIndex(m_currentSongIndex);
-        m_currentSong = (songItem ? songItem->song : NULL);
+        m_currentSongItem = m_currentSongTable->getNextSong(m_currentSongItem, m_isShuffle);
 
         // Répétition de la liste
-        if (!m_currentSong && m_isRepeat)
+        if (!m_currentSongItem && m_isRepeat)
         {
-            m_currentSongIndex = m_currentSongTable->getNextSong(-1, m_isShuffle);
-            CSongTableModel::TSongItem * songItem = m_displayedSongTable->getSongItemForIndex(m_currentSongIndex);
-            m_currentSong = (songItem ? songItem->song : NULL);
+            m_currentSongItem = m_currentSongTable->getNextSong(NULL, m_isShuffle);
         }
 
-        if (!m_currentSong)
+        if (!m_currentSongItem)
         {
-            m_currentSongIndex = -1;
             m_currentSongTable = NULL;
             m_state = Stopped;
             return;
         }
 
-        if (m_currentSong->loadSound())
+        if (m_currentSongItem->getSong()->loadSound())
         {
             startPlay();
         }
@@ -668,38 +654,31 @@ void CApplication::nextSong(void)
 }
 
 
-void CApplication::playSong(int pos)
+void CApplication::playSong(CSongTableItem * songItem)
 {
-    CSongTableModel::TSongItem * songItem = m_displayedSongTable->getSongItemForIndex(pos);
-    CSong * song = (songItem ? songItem->song : NULL);
+    Q_CHECK_PTR(songItem);
 
-    if (song)
+    if (m_currentSongItem)
     {
-        if (m_currentSong)
-        {
-            Q_CHECK_PTR(m_currentSongTable);
-            Q_ASSERT(m_currentSongIndex >= 0);
+        Q_CHECK_PTR(m_currentSongTable);
 
-            m_currentSong->stop();
-            updateSongDescription(NULL);
-        }
+        m_currentSongItem->getSong()->stop();
+        updateSongDescription(NULL);
+    }
 
-        m_currentSong = song;
-        m_currentSongIndex = pos;
-        m_currentSongTable = m_displayedSongTable;
+    m_currentSongItem = songItem;
+    m_currentSongTable = m_displayedSongTable;
 
-        if (m_currentSong->loadSound())
-        {
-            m_uiWidget->btnPlay->setIcon(QPixmap(":/icons/pause"));
-            startPlay();
-        }
-        else
-        {
-            m_uiWidget->btnPlay->setIcon(QPixmap(":/icons/play"));
-            m_currentSong = NULL;
-            m_currentSongIndex = -1;
-            m_currentSongTable = NULL;
-        }
+    if (m_currentSongItem->getSong()->loadSound())
+    {
+        m_uiWidget->btnPlay->setIcon(QPixmap(":/icons/pause"));
+        startPlay();
+    }
+    else
+    {
+        m_uiWidget->btnPlay->setIcon(QPixmap(":/icons/play"));
+        m_currentSongItem = NULL;
+        m_currentSongTable = NULL;
     }
 }
 
@@ -732,9 +711,9 @@ void CApplication::setMute(bool mute)
     {
         m_isMute = mute;
 
-        if (m_currentSong)
+        if (m_currentSongItem)
         {
-            m_currentSong->setMute(mute);
+            m_currentSongItem->getSong()->setMute(mute);
         }
 
         m_uiWidget->btnMute->setIcon(QPixmap(mute ? ":/icons/muet" : ":/icons/volume"));
@@ -756,9 +735,9 @@ void CApplication::setVolume(int volume)
     {
         m_volume = volume;
 
-        if (m_currentSong)
+        if (m_currentSongItem)
         {
-            m_currentSong->setVolume(volume);
+            m_currentSongItem->getSong()->setVolume(volume);
         }
 
         m_uiWidget->sliderVolume->setValue(volume);
@@ -770,13 +749,12 @@ void CApplication::setPosition(int position)
 {
     Q_ASSERT(position >= 0);
 
-    if (m_currentSong)
+    if (m_currentSongItem)
     {
-        Q_ASSERT(m_currentSongIndex >= 0);
         Q_CHECK_PTR(m_currentSongTable);
 
-        m_currentSong->setPosition(position);
-        const int songPosition = m_currentSong->getPosition();
+        m_currentSongItem->getSong()->setPosition(position);
+        const int songPosition = m_currentSongItem->getSong()->getPosition();
 
         if (songPosition >= 0)
         {
@@ -978,22 +956,12 @@ void CApplication::openDialogSongInfos(void)
 {
     Q_CHECK_PTR(m_displayedSongTable);
 
-    QItemSelectionModel * selectionModel = m_displayedSongTable->selectionModel();
-
     // Liste des morceaux sélectionnés
-    QModelIndexList indexList = selectionModel->selectedRows();
+    QList<CSongTableItem *> songItemList = m_displayedSongTable->getSelectedSongItems();
 
-    if (indexList.size() > 1)
+    if (songItemList.size() > 1)
     {
-        QList<CSongTableModel::TSongItem *> songItemList;
-
-        foreach (QModelIndex index, indexList)
-        {
-            CSongTableModel::TSongItem * songItem = m_displayedSongTable->getSongItemForIndex(index.row());
-            if (songItem) songItemList.append(songItem);
-        }
-
-        qDebug() << songItemList;
+qDebug() << songItemList;
 
         CDialogEditSongs * dialog = new CDialogEditSongs(songItemList, this);
         dialog->show();
@@ -1004,7 +972,7 @@ void CApplication::openDialogSongInfos(void)
     }
     
     // Recherche du morceau sélectionné
-    CSongTableModel::TSongItem * songItem = m_displayedSongTable->getSongItemForIndex(selectionModel->currentIndex().row());
+    CSongTableItem * songItem = m_displayedSongTable->getSelectedSongItem();
 
     if (songItem)
     {
@@ -1063,7 +1031,7 @@ void CApplication::addPlayList(CPlayList * playList)
     m_playLists.append(playList);
 
     m_uiWidget->splitter->addWidget(playList);
-    connect(playList, SIGNAL(songStarted(int)), this, SLOT(playSong(int)));
+    connect(playList, SIGNAL(songStarted(CSongTableItem *)), this, SLOT(playSong(CSongTableItem *)));
     playList->hide();
 /*
     QStandardItem * playListItem = new QStandardItem(playList->getName());
@@ -1324,14 +1292,14 @@ void CApplication::removeSong(CSong * song)
 
     //TODO: confirmation
 
-    if (m_currentSong == song)
+    if (m_currentSongItem->getSong() == song)
     {
         stop();
     }
 
     //TODO: maj vue
 
-    m_library->m_songs.removeOne(song);
+    m_library->removeSong(song);
 
     foreach (CListFolder * folder, m_folders)
     {
@@ -1364,23 +1332,42 @@ void CApplication::removeSong(CSong * song)
 }
 
 
+void CApplication::openSongInExplorer(void)
+{
+    // Recherche du morceau sélectionné
+    CSongTableItem * songItem = m_displayedSongTable->getSelectedSongItem();
+
+    if (!songItem)
+    {
+        songItem = m_currentSongItem;
+    }
+
+    if (songItem)
+    {
+        QDir songDir(songItem->getSong()->getFileName());
+        songDir.cdUp();
+        QDesktopServices::openUrl(QUrl::fromLocalFile(songDir.absolutePath()));
+    }
+}
+
+
 /**
  * Méthode appelée quand la lecture d'un morceau se termine.
  */
 
 void CApplication::onPlayEnd(void)
 {
-    if (m_currentSong)
+    if (m_currentSongItem)
     {
         qDebug() << "CApplication::onPlayEnd()";
-        emit songPlayEnd(m_currentSong);
+        emit songPlayEnd(m_currentSongItem->getSong());
         updateSongDescription(NULL);
         //TODO: maj vue
         //m_currentSong->addOnePlay();
 
         if (m_isRepeat)
         {
-            m_currentSong->setPosition(0);
+            m_currentSongItem->getSong()->setPosition(0);
             play();
         }
         else
@@ -1391,6 +1378,8 @@ void CApplication::onPlayEnd(void)
             //m_currentSong = m_displayedSongTable->getSongForIndex(m_currentSongIndex);
             nextSong();
         }
+
+        m_library->update();
 /*
         if (m_currentSong)
         {
@@ -1470,18 +1459,17 @@ void CApplication::updatePosition(void)
 
 void CApplication::update(void)
 {
-    if (m_currentSong)
+    if (m_currentSongItem)
     {
-        Q_ASSERT(m_currentSongIndex >= 0);
         Q_CHECK_PTR(m_currentSongTable);
 
         qDebug() << "CApplication::update()";
-        const int position = m_currentSong->getPosition();
+        const int position = m_currentSongItem->getSong()->getPosition();
 
-        if (m_currentSong->isEnded()/* && m_state != Loading*/)
+        if (m_currentSongItem->getSong()->isEnded()/* && m_state != Loading*/)
         {
             qDebug() << "m_currentSong->isEnded()";
-            m_currentSong->emitPlayEnd();
+            m_currentSongItem->getSong()->emitPlayEnd();
             return;
         }
 
@@ -1645,10 +1633,12 @@ void CApplication::loadDatabase(void)
     {
         CSong * song = new CSong(this);
 
-        song->m_id       = query.value(0).toInt();
-        song->m_fileName = query.value(1).toString();
-        song->m_fileSize = query.value(2).toInt();
-        song->m_bitRate  = query.value(3).toInt();
+        song->m_id         = query.value(0).toInt();
+        song->m_fileName   = query.value(1).toString();
+        song->m_fileSize   = query.value(2).toInt();
+        song->m_bitRate    = query.value(3).toInt();
+        song->m_sampleRate = 0; // TODO
+        song->m_encoder    = ""; // TODO
 
         switch (query.value(4).toInt())
         {
@@ -1693,8 +1683,22 @@ void CApplication::loadDatabase(void)
         else if (lang == "IT") song->m_language = CSong::LangItalian;
         else                   song->m_language = CSong::LangUnknown;
 
-        //TODO: liste des dates de lecture
-        //...
+        // Lectures
+        QSqlQuery query2(m_dataBase);
+
+        query2.prepare("SELECT play_time FROM play WHERE song_id = ? ORDER BY play_time DESC");
+        query2.bindValue(0, song->m_id);
+
+        if (!query2.exec())
+        {
+            QString error = query2.lastError().text();
+            QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
+        }
+    
+        while (query2.next())
+        {
+            song->m_plays.append(query2.value(0).toDateTime());
+        }
 
         m_library->addSongToTable(song);
     }
@@ -1733,7 +1737,7 @@ void CApplication::loadDatabase(void)
         // Liste des morceaux de la liste de lecture
         QSqlQuery query2(m_dataBase);
         query2.prepare("SELECT song_id, song_position FROM static_list_song WHERE static_list_id = ? ORDER BY song_position");
-        query2.bindValue(0, query.value(0).toInt());
+        query2.bindValue(0, playList->m_id);
 
         if (!query2.exec())
         {
@@ -1745,7 +1749,7 @@ void CApplication::loadDatabase(void)
 
         while (query2.next())
         {
-            playList->addSong(getSongFromId(query2.value(0).toInt()), query2.value(1).toInt());
+            playList->addSongToTable(getSongFromId(query2.value(0).toInt()), query2.value(1).toInt());
         }
 
         addPlayList(playList);
@@ -1770,18 +1774,23 @@ void CApplication::startPlay(void)
 {
     qDebug() << "CApplication::startPlay()";
 
-    Q_CHECK_PTR(m_currentSong);
+    Q_CHECK_PTR(m_currentSongItem);
     Q_CHECK_PTR(m_currentSongTable);
-    Q_ASSERT(m_currentSongIndex >= 0);
 
     m_uiWidget->btnPlay->setIcon(QPixmap(":/icons/pause"));
-    m_currentSong->play();
-    emit songPlayStart(m_currentSong);
-    connect(m_currentSong, SIGNAL(playEnd()), this, SLOT(onPlayEnd()));
+    m_currentSongItem->getSong()->play();
+    emit songPlayStart(m_currentSongItem->getSong());
+    connect(m_currentSongItem->getSong(), SIGNAL(playEnd()), this, SLOT(onPlayEnd()));
 
-    updateSongDescription(m_currentSong);
+    updateSongDescription(m_currentSongItem->getSong());
 
     m_state = Playing;
+}
+
+
+void CApplication::keyPressEvent(QKeyEvent * event)
+{
+    qDebug() << event->key();
 }
 
 

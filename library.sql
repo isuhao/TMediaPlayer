@@ -198,6 +198,6 @@ INSERT INTO genre (genre_id, genre_name) VALUES ( 93, "Psychedelic Rock");
 INSERT INTO genre (genre_id, genre_name) VALUES ( 94, "Symphonic Rock");
 
 CREATE TABLE play (
-    song_id INTEGER PRIMARY KEY  NOT NULL ,
+    song_id INTEGER NOT NULL ,
     play_time DATETIME NOT NULL 
 );

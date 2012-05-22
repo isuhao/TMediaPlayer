@@ -67,6 +67,7 @@ private:
     QAction * m_actColBitRate;
     QAction * m_actColFormat;
     QAction * m_actColDuration;
+    QAction * m_actColSampleRate;
 };
 
 #endif // FILE_CSONG_TABLE_HEADER

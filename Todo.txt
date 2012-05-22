@@ -1,10 +1,22 @@
 
-- Créer la fenêtre Liste de lecture dynamique.
-- Implémenter la méthode update pour les listes de lecture dynamiques.
+- Listes de lecture dynamiques :
+  - Créer la boite de dialogue d'édition.
+  - Créer le widget représentant un critère.
+  - Créer la ou les classes pour manipuler un critère.
+  - Chargement des listes.
+  - Modification d'une liste.
+  - Mise à jour des morceaux.
 
 - Lire les métadonnées d'un morceau au chargement.
 - Écrire les métadonnées d'un morceau.
+
 - Terminer la boite de dialogue Edit Song.
+  - Affichage et modification des métadonnées.
+  - Affichage et modification des illustrations. (?)
+  - Afficher l'illustration principale dans l'onglet Résumé.
+  - Mieux gérer les genres.
+  - Mieux gérer les langues des paroles.
+
 - Terminer la boite de dialogue Edit Songs.
 
 - Menu contextuel pour les listes de lecture.
@@ -15,18 +27,24 @@
 
 - Implémenter le glisser-déposer au sein d'une liste statique.
 - Implémenter le glisser-déposer pour créer une nouvelle liste de lecture.
-- Afficher le nombre de morceaux sur l'image lors du glissement.
 
 - Intégrer Last.fm.
 
 - Créer la fenêtre Préférences.
+
 - Griser les boutons indisponibles suivant l'état (lecture, pause, etc.).
+- Afficher les informations sur la liste affichée (durée, nombre de morceaux).
+- Indiquer le morceau en cours de lecture dans la liste.
+- Bouton pour sélectionner le morceau en cours de lecture.
 - Bug fin de liste : le bouton pause reste.
+
+- Menu contextuel dans les listes : afficher le morceaux dans la playlist.
+- Menu contextuel dans les listes : ajouter le/les morceaux à une liste.
+- Menu contextuel dans les listes : enlever d'une liste.
+- Menu contextuel dans les listes : enlever de la library.
 
 - Ajouter la métadonnée "Battements par minute".
 - Ajouter l'information "Fait partie d'une compilation".
 - Ajouter l'option "Ne pas lire en mode aléatoire".
 - Ajouter l'option "Morceau désactivé".
 - Ajouter l'option "Volume du morceau".
-
-- Afficher les lectures dans la boite de dialogue Edit Song.

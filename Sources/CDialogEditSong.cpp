@@ -6,7 +6,7 @@
 #include <QtDebug>
 
 
-CDialogEditSong::CDialogEditSong(CSongTableModel::TSongItem * songItem, CSongTable * songTable) :
+CDialogEditSong::CDialogEditSong(CSongTableItem * songItem, CSongTable * songTable) :
     QDialog     (songTable),
     m_uiWidget  (new Ui::DialogEditSong()),
     m_songTable (songTable),
@@ -87,8 +87,13 @@ CDialogEditSong::~CDialogEditSong()
 
 void CDialogEditSong::previousSong(void)
 {
-    //m_songItem = m_songTable->getPreviousSong(m_songItem);
-    updateInfos();
+    CSongTableItem * songItem = m_songTable->getPreviousSong(m_songItem, false);
+
+    if (songItem)
+    {
+        m_songItem = songItem;
+        updateInfos();
+    }
 }
 
 
@@ -100,46 +105,61 @@ void CDialogEditSong::previousSong(void)
 
 void CDialogEditSong::nextSong(void)
 {
-    //m_songItem = m_songTable->getNextSong(m_songItem);
-    updateInfos();
+    CSongTableItem * songItem = m_songTable->getNextSong(m_songItem, false);
+
+    if (songItem)
+    {
+        m_songItem = songItem;
+        updateInfos();
+    }
 }
 
 
-/// \todo Implémentation
+/**
+ * Enregistre les modifications effectuées sur le morceau.
+ *
+ * \todo Implémentation.
+ */
+
 void CDialogEditSong::apply(void)
 {
     qDebug() << "CDialogEditSong::apply";
 
-    m_songItem->song->setTitle(m_uiWidget->editTitle->text());
-    m_songItem->song->setArtistName(m_uiWidget->editArtist->text());
-    m_songItem->song->setAlbumTitle(m_uiWidget->editAlbum->text());
-    m_songItem->song->setAlbumArtist(m_uiWidget->editAlbumArtist->text());
-    m_songItem->song->setComposer(m_uiWidget->editComposer->text());
+    CSong * song = m_songItem->getSong();
 
-    m_songItem->song->setTitleSort(m_uiWidget->editTitleSort->text());
-    m_songItem->song->setArtistNameSort(m_uiWidget->editArtistSort->text());
-    m_songItem->song->setAlbumTitleSort(m_uiWidget->editAlbumSort->text());
-    m_songItem->song->setAlbumArtistSort(m_uiWidget->editAlbumArtistSort->text());
-    m_songItem->song->setComposerSort(m_uiWidget->editComposerSort->text());
+    song->setTitle(m_uiWidget->editTitle->text());
+    song->setArtistName(m_uiWidget->editArtist->text());
+    song->setAlbumTitle(m_uiWidget->editAlbum->text());
+    song->setAlbumArtist(m_uiWidget->editAlbumArtist->text());
+    song->setComposer(m_uiWidget->editComposer->text());
 
-    m_songItem->song->setYear(m_uiWidget->editYear->text().toInt());
-    m_songItem->song->setTrackNumber(m_uiWidget->editTrackNumber->text().toInt());
-    m_songItem->song->setTrackTotal(m_uiWidget->editTrackTotal->text().toInt());
-    m_songItem->song->setDiscNumber(m_uiWidget->editDiscNumber->text().toInt());
-    m_songItem->song->setDiscTotal(m_uiWidget->editDiscTotal->text().toInt());
-    m_songItem->song->setComments(m_uiWidget->editComments->toPlainText());
-    m_songItem->song->setGenre(m_uiWidget->editGenre->currentText());
-    m_songItem->song->setRating(m_uiWidget->editRating->value());
-    m_songItem->song->setLyrics(m_uiWidget->editLyrics->toPlainText());
-    m_songItem->song->setLanguage(CSong::LangFromInt(m_uiWidget->editLanguage->itemData(m_uiWidget->editLanguage->currentIndex()).toInt()));
+    song->setTitleSort(m_uiWidget->editTitleSort->text());
+    song->setArtistNameSort(m_uiWidget->editArtistSort->text());
+    song->setAlbumTitleSort(m_uiWidget->editAlbumSort->text());
+    song->setAlbumArtistSort(m_uiWidget->editAlbumArtistSort->text());
+    song->setComposerSort(m_uiWidget->editComposerSort->text());
 
-    m_songItem->song->updateDatabase();
+    song->setYear(m_uiWidget->editYear->text().toInt());
+    song->setTrackNumber(m_uiWidget->editTrackNumber->text().toInt());
+    song->setTrackTotal(m_uiWidget->editTrackTotal->text().toInt());
+    song->setDiscNumber(m_uiWidget->editDiscNumber->text().toInt());
+    song->setDiscTotal(m_uiWidget->editDiscTotal->text().toInt());
+    song->setComments(m_uiWidget->editComments->toPlainText());
+    song->setGenre(m_uiWidget->editGenre->currentText());
+    song->setRating(m_uiWidget->editRating->value());
+    song->setLyrics(m_uiWidget->editLyrics->toPlainText());
+    song->setLanguage(CSong::LangFromInt(m_uiWidget->editLanguage->itemData(m_uiWidget->editLanguage->currentIndex()).toInt()));
+
+    song->updateDatabase();
 }
 
 
+/**
+ * Enregistre les modifications effectuées sur le morceau et ferme la boite de dialogue.
+ */
+
 void CDialogEditSong::save(void)
 {
-    qDebug() << "CDialogEditSong::save";
     apply();
     close();
 }
@@ -148,19 +168,21 @@ void CDialogEditSong::save(void)
 /// \todo Implémentation complète.
 void CDialogEditSong::updateInfos()
 {
+    CSong * song = m_songItem->getSong();
+
     // Résumé
 
-    const int duration = m_songItem->song->getDuration();
+    const int duration = song->getDuration();
     QTime durationTime(0, 0);
     durationTime = durationTime.addMSecs(duration);
 
-    m_uiWidget->valueTitle->setText(m_songItem->song->getTitle() + QString(" (%1)").arg(durationTime.toString("m:ss"))); /// \todo Stocker dans les settings
-    m_uiWidget->valueArtist->setText(m_songItem->song->getArtistName());
-    m_uiWidget->valueAlbum->setText(m_songItem->song->getAlbumTitle());
+    m_uiWidget->valueTitle->setText(song->getTitle() + QString(" (%1)").arg(durationTime.toString("m:ss"))); /// \todo Stocker dans les settings
+    m_uiWidget->valueArtist->setText(song->getArtistName());
+    m_uiWidget->valueAlbum->setText(song->getAlbumTitle());
 
-    m_uiWidget->valueFileName->setText(m_songItem->song->getFileName());
+    m_uiWidget->valueFileName->setText(song->getFileName());
 
-    int fileSize = m_songItem->song->getFileSize();
+    int fileSize = song->getFileSize();
 
     if (fileSize >= 1024)
     {
@@ -188,12 +210,12 @@ void CDialogEditSong::updateInfos()
         m_uiWidget->valueFileSize->setText(tr("%1 bytes").arg(fileSize));
     }
 
-    m_uiWidget->valueCreation->setText(m_songItem->song->getCreationDate().toString());
-    m_uiWidget->valueModification->setText(m_songItem->song->getModificationDate().toString());
+    m_uiWidget->valueCreation->setText(song->getCreationDate().toString());
+    m_uiWidget->valueModification->setText(song->getModificationDate().toString());
 
-    m_uiWidget->valueBitRate->setText(tr("%1 kbit/s").arg(m_songItem->song->getBitRate()));
+    m_uiWidget->valueBitRate->setText(tr("%1 kbit/s").arg(song->getBitRate()));
 
-    switch (m_songItem->song->getFileType())
+    switch (song->getFileType())
     {
         default:
         case CSong::TypeUnknown:
@@ -213,62 +235,66 @@ void CDialogEditSong::updateInfos()
             break;
     }
 
-    m_uiWidget->valueChannels->setText(QString::number(m_songItem->song->getNumChannels()));
-    m_uiWidget->valueSampleRate->setText(tr("%1 kHz").arg(m_songItem->song->getSampleRate()));
-    m_uiWidget->valueEncodedWith->setText(m_songItem->song->getEncoder());
+    m_uiWidget->valueChannels->setText(QString::number(song->getNumChannels()));
+    m_uiWidget->valueSampleRate->setText(tr("%1 kHz").arg(song->getSampleRate()));
+    m_uiWidget->valueEncodedWith->setText(song->getEncoder());
     
 
     // Informations et tri
 
-    m_uiWidget->editTitle->setText(m_songItem->song->getTitle());
-    m_uiWidget->editTitle_2->setText(m_songItem->song->getTitle());
-    m_uiWidget->editTitleSort->setText(m_songItem->song->getTitleSort());
+    m_uiWidget->editTitle->setText(song->getTitle());
+    m_uiWidget->editTitle_2->setText(song->getTitle());
+    m_uiWidget->editTitleSort->setText(song->getTitleSort());
 
-    m_uiWidget->editArtist->setText(m_songItem->song->getArtistName());
-    m_uiWidget->editArtist_2->setText(m_songItem->song->getArtistName());
-    m_uiWidget->editArtistSort->setText(m_songItem->song->getArtistNameSort());
+    m_uiWidget->editArtist->setText(song->getArtistName());
+    m_uiWidget->editArtist_2->setText(song->getArtistName());
+    m_uiWidget->editArtistSort->setText(song->getArtistNameSort());
 
-    m_uiWidget->editAlbum->setText(m_songItem->song->getAlbumTitle());
-    m_uiWidget->editAlbum_2->setText(m_songItem->song->getAlbumTitle());
-    m_uiWidget->editAlbumSort->setText(m_songItem->song->getAlbumTitleSort());
+    m_uiWidget->editAlbum->setText(song->getAlbumTitle());
+    m_uiWidget->editAlbum_2->setText(song->getAlbumTitle());
+    m_uiWidget->editAlbumSort->setText(song->getAlbumTitleSort());
 
-    m_uiWidget->editAlbumArtist->setText(m_songItem->song->getAlbumArtist());
-    m_uiWidget->editAlbumArtist_2->setText(m_songItem->song->getAlbumArtist());
-    m_uiWidget->editAlbumArtistSort->setText(m_songItem->song->getAlbumArtistSort());
+    m_uiWidget->editAlbumArtist->setText(song->getAlbumArtist());
+    m_uiWidget->editAlbumArtist_2->setText(song->getAlbumArtist());
+    m_uiWidget->editAlbumArtistSort->setText(song->getAlbumArtistSort());
 
-    m_uiWidget->editComposer->setText(m_songItem->song->getComposer());
-    m_uiWidget->editComposer_2->setText(m_songItem->song->getComposer());
-    m_uiWidget->editComposerSort->setText(m_songItem->song->getComposerSort());
+    m_uiWidget->editComposer->setText(song->getComposer());
+    m_uiWidget->editComposer_2->setText(song->getComposer());
+    m_uiWidget->editComposerSort->setText(song->getComposerSort());
 
-    const int year = m_songItem->song->getYear();
+    const int year = song->getYear();
     m_uiWidget->editYear->setText(year > 0 ? QString::number(year) : "");
 
-    const int trackNumber = m_songItem->song->getTrackNumber();
+    const int trackNumber = song->getTrackNumber();
     m_uiWidget->editTrackNumber->setText(trackNumber > 0 ? QString::number(trackNumber) : "");
 
-    const int trackTotal = m_songItem->song->getTrackTotal();
+    const int trackTotal = song->getTrackTotal();
     m_uiWidget->editTrackTotal->setText(trackTotal > 0 ? QString::number(trackTotal) : "");
 
-    const int discNumber = m_songItem->song->getDiscNumber();
+    const int discNumber = song->getDiscNumber();
     m_uiWidget->editDiscNumber->setText(discNumber > 0 ? QString::number(discNumber) : "");
 
-    const int discTotal = m_songItem->song->getDiscTotal();
+    const int discTotal = song->getDiscTotal();
     m_uiWidget->editDiscTotal->setText(discTotal > 0 ? QString::number(discTotal) : "");
 
-    m_uiWidget->editComments->setText(m_songItem->song->getComments());
-    
-    QStringList genreList;
-    genreList << m_songItem->song->getGenre();
-    m_uiWidget->editGenre->addItems(genreList);
+    m_uiWidget->editComments->setText(song->getComments());
 
-    m_uiWidget->editRating->setValue(m_songItem->song->getRating());
-        
+    int genreIndex = m_uiWidget->editGenre->findText(song->getGenre());
+    if (genreIndex < 0)
+    {
+        m_uiWidget->editGenre->addItem(song->getGenre());
+        genreIndex = m_uiWidget->editGenre->findText(song->getGenre());
+    }
+
+    m_uiWidget->editGenre->setCurrentIndex(genreIndex);
+
+    m_uiWidget->editRating->setValue(song->getRating());
+
+
     // Paroles
-    m_uiWidget->editLyrics->setText(m_songItem->song->getLyrics());
-    m_uiWidget->editLanguage->setCurrentIndex(0);
-    // Langue
 
-    //...
+    m_uiWidget->editLyrics->setText(song->getLyrics());
+    m_uiWidget->editLanguage->setCurrentIndex(song->getLanguage());
 
 
     // Métadonnées
@@ -281,8 +307,17 @@ void CDialogEditSong::updateInfos()
 
     m_uiWidget->tableMetaData->setModel(modelMetaData);
 
+    //...
+
 
     // Lectures
 
-    //...
+    QStandardItemModel * model = new QStandardItemModel();
+    m_uiWidget->listPlayings->setModel(model);
+
+    foreach (QDateTime playTime, song->m_plays)
+    {
+        QStandardItem * item = new QStandardItem(playTime.toString());
+        model->appendRow(item);
+    }
 }

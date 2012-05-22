@@ -16,7 +16,7 @@ class CDialogEditSong : public QDialog
 
 public:
 
-    CDialogEditSong(CSongTableModel::TSongItem * songItem, CSongTable * songTable);
+    CDialogEditSong(CSongTableItem * songItem, CSongTable * songTable);
     ~CDialogEditSong();
 
 protected slots:
@@ -32,7 +32,7 @@ private:
     
     Ui::DialogEditSong * m_uiWidget;
     CSongTable * m_songTable;
-    CSongTableModel::TSongItem * m_songItem;
+    CSongTableItem * m_songItem;
 };
 
 #endif // FILE_CDIALOG_EDIT_SONG

@@ -20,9 +20,16 @@ CDynamicPlayList::~CDynamicPlayList()
 }
 
 
+/// \todo Implémentation
 void CDynamicPlayList::update(void)
 {
-    //TODO: update
+
+/*
+    QList<CSong *> songs = m_mainCriteria->getSongs();
+
+    m_model->setSongs(songs);
+*/
+
 }
 
 

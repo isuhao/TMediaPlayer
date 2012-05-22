@@ -11,26 +11,61 @@
 class QMouseEvent;
 
 
+class CSongTableItem
+{
+    friend class CSongTableModel;
+
+public:
+
+    CSongTableItem(void);
+
+    inline int getPosition(void) const;
+    inline CSong * getSong(void) const;
+    inline bool isValid(void) const;
+
+private:
+
+    CSongTableItem(int position, CSong * song);
+
+    int m_position; ///< Position dans la liste.
+    CSong * m_song; ///< Pointeur sur le morceau.
+};
+
+
+inline int CSongTableItem::getPosition(void) const
+{
+    return m_position;
+}
+
+
+inline CSong * CSongTableItem::getSong(void) const
+{
+    return m_song;
+}
+
+
+inline bool CSongTableItem::isValid(void) const
+{
+    return (m_position >= 0 && m_song);
+}
+
+
 class CSongTableModel : public QAbstractTableModel
 {
     Q_OBJECT
 
+    friend class CSongTable;
+
 public:
-
-    struct TSongItem
-    {
-        int pos;
-        CSong * song;
-
-        inline TSongItem(int ppos, CSong * psong) : pos(ppos), song(psong) { }
-    };
 
     CSongTableModel(const QList<CSong *>& data = QList<CSong *>(), QObject * parent = NULL);
 
     void setCanDrop(bool canDrop);
 
-    void setData(const QList<CSong *>& data);
-    QList<CSong *> getData() const;
+    void setSongs(const QList<CSong *>& data);
+    QList<CSong *> getSongs(void) const;
+    inline int getNumSongs(void) const;
+    bool hasSong(CSong * song) const;
 
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
     int columnCount(const QModelIndex& parent = QModelIndex()) const;
@@ -45,11 +80,14 @@ public:
     bool dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex& parent);
 
     void insertRow(CSong * song, int pos = -1);
-    void removeRow(int pos);
+    void removeRow(int row);
     void clear(void);
 
-    TSongItem * getSongItem(const QModelIndex& index) const;
-    TSongItem * getSongItem(int row) const;
+    CSongTableItem * getSongItem(const QModelIndex& index) const;
+    CSongTableItem * getSongItem(int row) const;
+    int getRowForSongItem(CSongTableItem * songItem) const;
+    CSongTableItem * getPreviousSong(CSongTableItem * songItem, bool shuffle) const;
+    CSongTableItem * getNextSong(CSongTableItem * songItem, bool shuffle) const;
 
 signals:
 
@@ -57,30 +95,30 @@ signals:
 
 private:
 
-    static inline bool cmpSongPositionAsc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongPositionAsc(CSongTableItem * song1, CSongTableItem * song2)
     {
-        return (song1->pos < song2->pos);
+        return (song1->getPosition() < song2->getPosition());
     }
 
-    static inline bool cmpSongPositionDesc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongPositionDesc(CSongTableItem * song1, CSongTableItem * song2)
     {
         return cmpSongPositionAsc(song2, song1);
     }
 
-    static inline bool cmpSongTitleAsc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongTitleAsc(CSongTableItem * song1, CSongTableItem * song2)
     {
-        return (song1->song->getTitleSort(false) < song2->song->getTitleSort(false));
+        return (song1->getSong()->getTitleSort(false) < song2->getSong()->getTitleSort(false));
     }
 
-    static inline bool cmpSongTitleDesc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongTitleDesc(CSongTableItem * song1, CSongTableItem * song2)
     {
         return cmpSongTitleAsc(song2, song1);
     }
 
-    static inline bool cmpSongArtistAsc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongArtistAsc(CSongTableItem * song1, CSongTableItem * song2)
     {
-        const QString artist1 = song1->song->getArtistNameSort(false);
-        const QString artist2 = song2->song->getArtistNameSort(false);
+        const QString artist1 = song1->getSong()->getArtistNameSort(false);
+        const QString artist2 = song2->getSong()->getArtistNameSort(false);
 
         if (artist1 < artist2) return true;
         if (artist1 > artist2) return false;
@@ -88,15 +126,15 @@ private:
         return cmpSongAlbumAsc(song1, song2);
     }
 
-    static inline bool cmpSongArtistDesc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongArtistDesc(CSongTableItem * song1, CSongTableItem * song2)
     {
         return cmpSongArtistAsc(song2, song1);
     }
 
-    static inline bool cmpSongAlbumAsc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongAlbumAsc(CSongTableItem * song1, CSongTableItem * song2)
     {
-        const QString album1 = song1->song->getAlbumTitleSort(false);
-        const QString album2 = song2->song->getAlbumTitleSort(false);
+        const QString album1 = song1->getSong()->getAlbumTitleSort(false);
+        const QString album2 = song2->getSong()->getAlbumTitleSort(false);
 
         if (album1 < album2) return true;
         if (album1 > album2) return false;
@@ -104,15 +142,15 @@ private:
         return cmpSongDiscAsc(song1, song2);
     }
 
-    static inline bool cmpSongAlbumDesc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongAlbumDesc(CSongTableItem * song1, CSongTableItem * song2)
     {
         return cmpSongAlbumAsc(song2, song1);
     }
 
-    static inline bool cmpSongAlbumArtistAsc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongAlbumArtistAsc(CSongTableItem * song1, CSongTableItem * song2)
     {
-        const QString artist1 = song1->song->getAlbumArtistSort(false);
-        const QString artist2 = song2->song->getAlbumArtistSort(false);
+        const QString artist1 = song1->getSong()->getAlbumArtistSort(false);
+        const QString artist2 = song2->getSong()->getAlbumArtistSort(false);
 
         if (artist1 < artist2) return true;
         if (artist1 > artist2) return false;
@@ -120,25 +158,25 @@ private:
         return cmpSongAlbumAsc(song1, song2);
     }
 
-    static inline bool cmpSongAlbumArtistDesc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongAlbumArtistDesc(CSongTableItem * song1, CSongTableItem * song2)
     {
         return cmpSongAlbumArtistAsc(song2, song1);
     }
 
-    static inline bool cmpSongComposerAsc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongComposerAsc(CSongTableItem * song1, CSongTableItem * song2)
     {
-        return (song1->song->getComposerSort(false) < song2->song->getComposerSort(false));
+        return (song1->getSong()->getComposerSort(false) < song2->getSong()->getComposerSort(false));
     }
 
-    static inline bool cmpSongComposerDesc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongComposerDesc(CSongTableItem * song1, CSongTableItem * song2)
     {
         return cmpSongComposerAsc(song2, song1);
     }
 
-    static inline bool cmpSongYearAsc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongYearAsc(CSongTableItem * song1, CSongTableItem * song2)
     {
-        const int year1 = song1->song->getYear();
-        const int year2 = song2->song->getYear();
+        const int year1 = song1->getSong()->getYear();
+        const int year2 = song2->getSong()->getYear();
 
         if (year1 < year2) return true;
         if (year1 > year2) return false;
@@ -146,25 +184,25 @@ private:
         return cmpSongArtistAsc(song1, song2);
     }
 
-    static inline bool cmpSongYearDesc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongYearDesc(CSongTableItem * song1, CSongTableItem * song2)
     {
         return cmpSongYearAsc(song2, song1);
     }
 
-    static inline bool cmpSongTrackAsc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongTrackAsc(CSongTableItem * song1, CSongTableItem * song2)
     {
-        return (song1->song->getTrackNumber() < song2->song->getTrackNumber());
+        return (song1->getSong()->getTrackNumber() < song2->getSong()->getTrackNumber());
     }
 
-    static inline bool cmpSongTrackDesc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongTrackDesc(CSongTableItem * song1, CSongTableItem * song2)
     {
         return cmpSongTrackAsc(song2, song1);
     }
 
-    static inline bool cmpSongDiscAsc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongDiscAsc(CSongTableItem * song1, CSongTableItem * song2)
     {
-        const int disc1 = song1->song->getDiscNumber();
-        const int disc2 = song2->song->getDiscNumber();
+        const int disc1 = song1->getSong()->getDiscNumber();
+        const int disc2 = song2->getSong()->getDiscNumber();
 
         if (disc1 < disc2) return true;
         if (disc1 > disc2) return false;
@@ -172,103 +210,119 @@ private:
         return cmpSongTrackAsc(song1, song2);
     }
 
-    static inline bool cmpSongDiscDesc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongDiscDesc(CSongTableItem * song1, CSongTableItem * song2)
     {
         return cmpSongDiscAsc(song2, song1);
     }
 
-    static inline bool cmpSongGenreAsc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongGenreAsc(CSongTableItem * song1, CSongTableItem * song2)
     {
-        return (song1->song->getGenre() < song2->song->getGenre());
+        return (song1->getSong()->getGenre() < song2->getSong()->getGenre());
     }
 
-    static inline bool cmpSongGenreDesc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongGenreDesc(CSongTableItem * song1, CSongTableItem * song2)
     {
         return cmpSongGenreAsc(song2, song1);
     }
 
-    static inline bool cmpSongRatingAsc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongRatingAsc(CSongTableItem * song1, CSongTableItem * song2)
     {
-        return (song1->song->getRating() < song2->song->getRating());
+        return (song1->getSong()->getRating() < song2->getSong()->getRating());
     }
 
-    static inline bool cmpSongRatingDesc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongRatingDesc(CSongTableItem * song1, CSongTableItem * song2)
     {
         return cmpSongRatingAsc(song2, song1);
     }
 
-    static inline bool cmpSongCommentsAsc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongCommentsAsc(CSongTableItem * song1, CSongTableItem * song2)
     {
-        return (song1->song->getComments() < song2->song->getComments());
+        return (song1->getSong()->getComments() < song2->getSong()->getComments());
     }
 
-    static inline bool cmpSongCommentsDesc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongCommentsDesc(CSongTableItem * song1, CSongTableItem * song2)
     {
         return cmpSongCommentsAsc(song2, song1);
     }
 
-    static inline bool cmpSongPlayCountAsc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongPlayCountAsc(CSongTableItem * song1, CSongTableItem * song2)
     {
-        return (song1->song->getNumPlays() < song2->song->getNumPlays());
+        return (song1->getSong()->getNumPlays() < song2->getSong()->getNumPlays());
     }
 
-    static inline bool cmpSongPlayCountDesc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongPlayCountDesc(CSongTableItem * song1, CSongTableItem * song2)
     {
         return cmpSongPlayCountAsc(song2, song1);
     }
 
-    static inline bool cmpSongLastPlayedAsc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongLastPlayedAsc(CSongTableItem * song1, CSongTableItem * song2)
     {
-        return (song1->song->getLastPlay() < song2->song->getLastPlay());
+        return (song1->getSong()->getLastPlay() < song2->getSong()->getLastPlay());
     }
 
-    static inline bool cmpSongLastPlayedDesc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongLastPlayedDesc(CSongTableItem * song1, CSongTableItem * song2)
     {
         return cmpSongLastPlayedAsc(song2, song1);
     }
 
-    static inline bool cmpSongFileNameAsc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongFileNameAsc(CSongTableItem * song1, CSongTableItem * song2)
     {
-        return (song1->song->getFileName() < song2->song->getFileName());
+        return (song1->getSong()->getFileName() < song2->getSong()->getFileName());
     }
 
-    static inline bool cmpSongFileNameDesc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongFileNameDesc(CSongTableItem * song1, CSongTableItem * song2)
     {
         return cmpSongFileNameAsc(song2, song1);
     }
 
-    static inline bool cmpSongBitRateAsc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongBitRateAsc(CSongTableItem * song1, CSongTableItem * song2)
     {
-        return (song1->song->getBitRate() < song2->song->getBitRate());
+        return (song1->getSong()->getBitRate() < song2->getSong()->getBitRate());
     }
 
-    static inline bool cmpSongBitRateDesc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongBitRateDesc(CSongTableItem * song1, CSongTableItem * song2)
     {
         return cmpSongBitRateAsc(song2, song1);
     }
 
-    static inline bool cmpSongFormatAsc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongFormatAsc(CSongTableItem * song1, CSongTableItem * song2)
     {
-        return (song1->song->getFileType() < song2->song->getFileType());
+        return (song1->getSong()->getFileType() < song2->getSong()->getFileType());
     }
 
-    static inline bool cmpSongFormatDesc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongFormatDesc(CSongTableItem * song1, CSongTableItem * song2)
     {
         return cmpSongFormatAsc(song2, song1);
     }
 
-    static inline bool cmpSongDurationAsc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongDurationAsc(CSongTableItem * song1, CSongTableItem * song2)
     {
-        return (song1->song->getDuration() < song2->song->getDuration());
+        return (song1->getSong()->getDuration() < song2->getSong()->getDuration());
     }
 
-    static inline bool cmpSongDurationDesc(TSongItem * song1, TSongItem * song2)
+    static inline bool cmpSongDurationDesc(CSongTableItem * song1, CSongTableItem * song2)
     {
         return cmpSongDurationAsc(song2, song1);
     }
 
+    static inline bool cmpSongSampleRateAsc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return (song1->getSong()->getSampleRate() < song2->getSong()->getSampleRate());
+    }
+
+    static inline bool cmpSongSampleRateDesc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return cmpSongSampleRateAsc(song2, song1);
+    }
+
     bool m_canDrop;
-    QList<TSongItem *> m_data;
+    QList<CSongTableItem *> m_data;
 };
+
+
+inline int CSongTableModel::getNumSongs(void) const
+{
+    return m_data.size();
+}
 
 #endif // FILE_CSONGTABLEMODEL

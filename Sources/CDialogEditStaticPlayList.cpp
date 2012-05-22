@@ -4,6 +4,7 @@
 #include "CApplication.hpp"
 #include <QStandardItemModel>
 #include <QMessageBox>
+#include <QPushButton>
 
 
 CDialogEditStaticPlayList::CDialogEditStaticPlayList(CStaticPlayList * playList, CApplication * application) :
@@ -24,8 +25,13 @@ CDialogEditStaticPlayList::CDialogEditStaticPlayList(CStaticPlayList * playList,
 
     m_uiWidget->editName->setText(m_playList->getName());
 
-    connect(m_uiWidget->buttonBox, SIGNAL(accepted()), this, SLOT(onSave()));
-    connect(m_uiWidget->buttonBox, SIGNAL(rejected()), this, SLOT(close()));
+
+    // Connexions des signaux des boutons
+    QPushButton * btnSave = m_uiWidget->buttonBox->addButton(tr("Save"), QDialogButtonBox::AcceptRole);
+    QPushButton * btnCancel = m_uiWidget->buttonBox->addButton(tr("Cancel"), QDialogButtonBox::RejectRole);
+
+    connect(btnSave, SIGNAL(clicked()), this, SLOT(save()));
+    connect(btnCancel, SIGNAL(clicked()), this, SLOT(close()));
 }
 
 
@@ -36,7 +42,7 @@ CDialogEditStaticPlayList::~CDialogEditStaticPlayList()
 
 
 /// \todo Implémentation
-void CDialogEditStaticPlayList::onSave(void)
+void CDialogEditStaticPlayList::save(void)
 {
     QString name = m_uiWidget->editName->text();
 

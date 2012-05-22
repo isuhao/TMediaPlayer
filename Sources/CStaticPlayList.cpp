@@ -37,7 +37,7 @@ bool CStaticPlayList::isModified(void) const
 /**
  * Ajoute une chanson à la liste.
  *
- * \todo MAJ base
+ * \todo Implémentation
  *
  * \param song Pointeur sur la chanson à ajouter.
  * \param pos  Position où ajouter la chanson. Si négatif, la chanson est ajoutée à la fin de la liste.
@@ -47,8 +47,8 @@ void CStaticPlayList::addSong(CSong * song, int pos)
 {
     Q_CHECK_PTR(song);
 
-    m_isStaticListModified = true; // Hum...
     //...
+
     CSongTable::addSongToTable(song, pos);
     emit songAdded(song);
 }
@@ -57,8 +57,6 @@ void CStaticPlayList::addSong(CSong * song, int pos)
 /**
  * Ajoute plusieurs morceaux à la liste de lecture.
  * Si certains morceaux sont déjà présents dans la liste, une confirmation est demandée.
- *
- * \todo Ne faire qu'une seule requête.
  *
  * \param songs Liste des morceaux à ajouter.
  */
@@ -168,7 +166,10 @@ void CStaticPlayList::addSongs(const QList<CSong *>& songs)
         
         CSongTable::addSongToTable(song, songPosition + songNum);
         emit songAdded(song);
+        ++songNum;
     }
+
+    emit listModified();
 
     m_automaticSort = true;
     sortByColumn(m_columnSort, m_sortOrder);
@@ -204,20 +205,20 @@ void CStaticPlayList::removeSong(CSong * song)
  *
  * \todo MAJ base
  *
- * \param pos Position de la chanson dans la liste (à partir de 0).
+ * \param row Position de la chanson dans la liste (à partir de 0).
  */
 
-void CStaticPlayList::removeSong(int pos)
+void CStaticPlayList::removeSong(int row)
 {
-    Q_ASSERT(pos >= 0 && pos < getNumSongs());
-    CSongTableModel::TSongItem * song = getSongItemForIndex(pos);
+    Q_ASSERT(row >= 0 && row < getNumSongs());
+    CSongTableItem * songItem = getSongItemForRow(row);
 
-    if (song)
+    if (songItem)
     {
         m_isStaticListModified = true; // Hum...
         //TODO...
-        CSongTable::removeSongFromTable(pos);
-        emit songRemoved(song->song);
+        CSongTable::removeSongFromTable(row);
+        emit songRemoved(songItem->getSong());
         emit listModified();
     }
 }
@@ -227,13 +228,49 @@ void CStaticPlayList::removeSong(int pos)
  * Enlève les doublons de la liste.
  *
  * \todo MAJ base
- *
+ * \todo MAJ vue
  * \todo Implémentation.
  */
 
 void CStaticPlayList::removeDuplicateSongs(void)
 {
-    //TODO...
+    qDebug() << "CStaticPlayList::removeDuplicateSongs()";
+
+    QList<CSong *> songs = getSongs();
+    QList<CSong *> songsNew;
+
+    foreach (CSong * song, songs)
+    {
+        if (songsNew.contains(song))
+        {
+            emit songRemoved(song);
+        }
+        else
+        {
+            songsNew.append(song);
+        }
+    }
+
+    // Aucun doublon
+    if (songs.size() == songsNew.size())
+    {
+        return;
+    }
+
+    removeAllSongsFromTable();
+    //addSongsToTable(songsNew);
+
+    QSqlQuery query(m_application->getDataBase());
+    query.prepare("DELETE FROM static_list_song WHERE static_list_id = ?");
+    query.bindValue(0, m_id);
+
+    if (!query.exec())
+    {
+        QString error = query.lastError().text();
+        QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
+    }
+
+    addSongs(songsNew);
 }
 
 
@@ -323,4 +360,72 @@ void CStaticPlayList::initColumns(const QString& str)
 
     // Colonne "Position"
     showColumn(0);
+}
+
+
+/// \todo Implémentation.
+void CStaticPlayList::openCustomMenuProject(const QPoint& point)
+{
+    qDebug() << "CStaticPlayList::openCustomMenuProject()";
+
+    QModelIndex index = indexAt(point);
+
+    if (index.isValid())
+    {
+        bool severalSongs = (selectionModel()->selectedRows().size() > 1);
+
+        // Menu contextuel
+        QMenu * menu = new QMenu(this);
+        menu->setAttribute(Qt::WA_DeleteOnClose);
+
+        menu->addAction(tr("Informations"), m_application, SLOT(openDialogSongInfos()));
+        if (!severalSongs) menu->addAction(tr("Show in explorer"), m_application, SLOT(openSongInExplorer()));
+        menu->addSeparator();
+        menu->addAction(tr("Remove from playlist"));
+        menu->addAction(tr("Remove from library"));
+        menu->addSeparator();
+
+        if (!severalSongs)
+        {
+            // Listes de lecture contenant le morceau
+            QMenu * menuPlayList = menu->addMenu(tr("Playlists"));
+            menuPlayList->addAction(tr("Library"));
+
+            QList<CPlayList *> playLists = m_application->getPlayListsWithSong(m_model->getSongItem(index)->getSong());
+
+            if (playLists.size() > 0)
+            {
+                menuPlayList->addSeparator();
+
+                foreach (CPlayList * playList, playLists)
+                {
+                    menuPlayList->addAction(playList->getName());
+                }
+            }
+        }
+
+        // Toutes les listes de lecture
+        //TODO: gérer les dossiers
+        QMenu * menuAddToPlayList = menu->addMenu(tr("Add to playlist"));
+        QList<CPlayList *> playLists = m_application->getAllPlayLists();
+
+        if (playLists.isEmpty())
+        {
+            QAction * actionNoPlayList = menuAddToPlayList->addAction(tr("There are no playlist"));
+            actionNoPlayList->setEnabled(false);
+        }
+        else
+        {
+            foreach (CPlayList * playList, playLists)
+            {
+                menuAddToPlayList->addAction(playList->getName());
+            }
+        }
+
+        menu->addSeparator();
+        menu->addAction(tr("Supprimer les doublons"), this, SLOT(removeDuplicateSongs()));
+
+        menu->move(mapToGlobal(point));
+        menu->show();
+    }
 }

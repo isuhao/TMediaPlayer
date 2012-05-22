@@ -11,6 +11,8 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QMenu>
+#include <QPainter>
+#include <QMessageBox>
 
 #include <QtDebug>
 
@@ -71,93 +73,90 @@ CSongTable::~CSongTable()
 
 
 /**
+ * Retourne la liste des morceaux de la liste.
+ *
+ * \return Liste des morceaux.
+ */
+
+QList<CSong *> CSongTable::getSongs(void) const
+{
+    return m_model->getSongs();
+}
+
+
+/**
  * Retourne le pointeur sur l'item à une ligne donnée.
  *
  * \param pos Numéro de la ligne (à partir de 0).
  * \return Pointeur sur l'item, ou NULL.
  */
-
-CSongTableModel::TSongItem * CSongTable::getSongItemForIndex(int pos) const
+/*
+CSongTableItem * CSongTable::getSongItemForIndex(int pos) const
 {
     return (pos < 0 ? NULL : m_model->getSongItem(pos));
 }
+*/
 
-
-/**
- * Chercher la position du morceau précédant un autre morceau.
- *
- * \param pos     Position du morceau actuel.
- * \param shuffle Indique si la lecture est aléatoire.
- * \return Position du morceau précédant.
- */
-
-int CSongTable::getPreviousSong(int pos, bool shuffle) const
+CSongTableItem * CSongTable::getSongItemForRow(int row) const
 {
-    Q_ASSERT(pos == -1 || (pos >= 0 && pos < m_songs.size()));
+    return m_model->getSongItem(row);
+}
 
-    if (pos < 0)
+
+int CSongTable::getRowForSongItem(CSongTableItem * songItem) const
+{
+    Q_CHECK_PTR(songItem);
+    return m_model->getRowForSongItem(songItem);
+}
+
+
+CSongTableItem * CSongTable::getSelectedSongItem(void) const
+{
+    QItemSelectionModel * selection = selectionModel();
+    return m_model->getSongItem(selection->currentIndex());
+}
+
+
+QList<CSongTableItem *> CSongTable::getSelectedSongItems(void) const
+{
+    QList<CSongTableItem *> songItemList;
+    QModelIndexList indexList = selectionModel()->selectedRows();
+
+    foreach (QModelIndex index, indexList)
     {
-        if (shuffle)
-        {
-            //TODO...
-            return -1;
-        }
-        else
-        {
-            return -1;
-        }
+        CSongTableItem * songItem = m_model->getSongItem(index);
+        if (songItem) songItemList.append(songItem);
     }
-    else
-    {
-        if (shuffle)
-        {
-            //TODO...
-            return -1;
-        }
-        else
-        {
-            return (pos > 0 ? pos - 1 : -1);
-        }
-    }
+
+    return songItemList;
 }
 
 
 /**
- * Chercher la position du morceau suivant un autre morceau.
+ * Chercher le morceau précédant un autre morceau.
  *
- * \param pos     Position du morceau actuel.
- * \param shuffle Indique si la lecture est aléatoire.
- * \return Position du morceau suivant.
+ * \param songItem Morceau actuel, ou NULL.
+ * \param shuffle  Indique si la lecture est aléatoire.
+ * \return Morceau précédant, ou NULL.
  */
 
-int CSongTable::getNextSong(int pos, bool shuffle) const
+CSongTableItem * CSongTable::getPreviousSong(CSongTableItem * songItem, bool shuffle) const
 {
-    Q_ASSERT(pos == -1 || (pos >= 0 && pos < m_songs.size()));
+    return m_model->getPreviousSong(songItem, shuffle);
+}
 
-    if (pos < 0)
-    {
-        if (shuffle)
-        {
-            //TODO...
-            return -1;
-        }
-        else
-        {
-            return (m_songs.size() > 0 ? 0 : -1);
-        }
-    }
-    else
-    {
-        if (shuffle)
-        {
-            //TODO...
-            return -1;
-        }
-        else
-        {
-            return (pos == m_songs.size() - 1 ? -1 : pos + 1);
-        }
-    }
+
+/**
+ * Chercher le morceau suivant un autre morceau.
+ *
+ * \param songItem Morceau actuel, ou NULL.
+ * \param shuffle  Indique si la lecture est aléatoire.
+ * \return Morceau suivant, ou NULL.
+ */
+
+CSongTableItem * CSongTable::getNextSong(CSongTableItem * songItem, bool shuffle) const
+{
+    return m_model->getNextSong(songItem, shuffle);
 }
 
 
@@ -171,9 +170,9 @@ int CSongTable::getTotalDuration(void) const
 {
     int duration = 0;
 
-    foreach (CSong * song, m_songs)
+    foreach (CSongTableItem * songItem, m_model->m_data)
     {
-        duration += song->getDuration();
+        duration += songItem->getSong()->getDuration();
     }
 
     return duration;
@@ -192,9 +191,6 @@ void CSongTable::addSongToTable(CSong * song, int pos)
 {
     Q_CHECK_PTR(song);
 
-    pos = qBound(-1, pos, m_songs.size());
-
-    m_songs.insert(pos, song);
     m_model->insertRow(song, pos);
 
     if (m_automaticSort)
@@ -216,7 +212,6 @@ void CSongTable::addSongsToTable(const QList<CSong *>& songs)
     foreach (CSong * song, songs)
     {
         Q_CHECK_PTR(song);
-        m_songs.append(song);
         m_model->insertRow(song);
     }
 
@@ -240,7 +235,14 @@ void CSongTable::removeSongFromTable(CSong * song)
 {
     Q_CHECK_PTR(song);
 
-    m_songs.removeAll(song);
+    foreach (CSongTableItem * songItem, m_model->m_data)
+    {
+        if (songItem->getSong() == song)
+        {
+            int row = getRowForSongItem(songItem);
+            m_model->removeRow(row);
+        }
+    }
 
     if (m_automaticSort)
     {
@@ -252,20 +254,25 @@ void CSongTable::removeSongFromTable(CSong * song)
 /**
  * Enlève une chanson de la liste.
  *
- * \param pos Position de la chanson dans la liste (à partir de 0).
+ * \param row Position de la chanson dans la liste (à partir de 0).
  */
 
-void CSongTable::removeSongFromTable(int pos)
+void CSongTable::removeSongFromTable(int row)
 {
-    Q_ASSERT(pos >= 0 && pos < m_songs.size());
+    Q_ASSERT(row >= 0 && row < m_model->m_data.size());
 
-    m_songs.removeAt(pos);
-    m_model->removeRow(pos);
+    m_model->removeRow(row);
 
     if (m_automaticSort)
     {
         sortByColumn(m_columnSort, m_sortOrder);
     }
+}
+
+
+void CSongTable::removeAllSongsFromTable(void)
+{
+    m_model->clear();
 }
 
 
@@ -275,18 +282,12 @@ void CSongTable::removeSongFromTable(int pos)
 
 void CSongTable::deleteSongs(void)
 {
-    foreach (CSong * song, m_songs)
+    foreach (CSongTableItem * songItem, m_model->m_data)
     {
-        delete song;
+        delete songItem->getSong();
     }
 
-    m_songs.clear();
-    m_model->clear();
-
-    if (m_automaticSort)
-    {
-        sortByColumn(m_columnSort, m_sortOrder);
-    }
+    removeAllSongsFromTable();
 }
 
 
@@ -448,6 +449,7 @@ void CSongTable::initColumns(const QString& str)
             case 15: header->m_actColBitRate     ->setChecked(m_columns[i].visible); break;
             case 16: header->m_actColFormat      ->setChecked(m_columns[i].visible); break;
             case 17: header->m_actColDuration    ->setChecked(m_columns[i].visible); break;
+            case 18: header->m_actColSampleRate  ->setChecked(m_columns[i].visible); break;
         }
 
         // Déplacement de la colonne
@@ -546,6 +548,11 @@ QString CSongTable::getColumnsInfos(void) const
             ++currentPos;
             i = -1;
         }
+    }
+
+    if (str.isEmpty())
+    {
+        str = "1:100;2+:100;3:100"; // Valeur par défaut, \todo dans SETTINGS
     }
     
     return str;
@@ -682,19 +689,23 @@ bool CSongTable::updateDatabase(void)
             return false;
         }
 
+        QString colInfos = getColumnsInfos();
+
         QSqlQuery query(m_application->getDataBase());
 
         query.prepare("UPDATE playlist SET list_columns = ? WHERE playlist_id = ?");
-        query.bindValue(0, getColumnsInfos());
+        query.bindValue(0, colInfos);
         query.bindValue(1, m_idPlayList);
 
         if (!query.exec())
         {
-            qWarning() << "CSongTable::updateDatabase() : Erreur SQL";
+            QString error = query.lastError().text();
+            QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
             return false;
         }
 
         m_isModified = false;
+        initColumns(colInfos);
     }
 
     return true;
@@ -704,8 +715,15 @@ bool CSongTable::updateDatabase(void)
 void CSongTable::startDrag(Qt::DropActions supportedActions)
 {
     QModelIndexList indexes = selectedIndexes();
+    QList<int> rows;
+
     for (int i = indexes.count() - 1 ; i >= 0; --i)
     {
+        if (!rows.contains(indexes.at(i).row()))
+        {
+            rows.append(indexes.at(i).row());
+        }
+
         if (!(m_model->flags(indexes.at(i)) & Qt::ItemIsDragEnabled))
         {
             indexes.removeAt(i);
@@ -719,8 +737,16 @@ void CSongTable::startDrag(Qt::DropActions supportedActions)
 
         //QRect rect;
         //QPixmap pixmap = d->renderToPixmap(indexes, &rect);
-        //QPixmap pixmap(":/icons/play");//TODO: afficher le nombre d'éléments...
-        QPixmap pixmap = QPixmap(":/icons/song").scaledToHeight(32);
+
+        //QPixmap pixmap = QPixmap(":/icons/song").scaledToHeight(32);
+        QPixmap pixmap(64, 32);
+        pixmap.fill(QColor(0, 0, 0, 0));
+        {
+            QPainter painter(&pixmap);
+            painter.drawImage(QRect(QPoint(0, 0), QPoint(32, 32)), QImage(":/icons/song"));
+            painter.drawText(QPoint(34, 26), QString::number(rows.size()));
+        }
+
         //rect.adjust(horizontalOffset(), verticalOffset(), 0, 0);
 
         QDrag * drag = new QDrag(this);
@@ -751,6 +777,39 @@ void CSongTable::startDrag(Qt::DropActions supportedActions)
     }
 
     //QAbstractItemView::startDrag(supportedActions);
+}
+
+
+/**
+ * Gestion des touches du clavier.
+ * Les touches Entrée et Supprimer sont gérées.
+ *
+ * \todo Gérer la touche Supprimer.
+ *
+ * \param event Évènement du clavier.
+ */
+
+void CSongTable::keyPressEvent(QKeyEvent * event)
+{
+    Q_CHECK_PTR(event);
+
+    if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
+    {
+        event->accept();
+        m_application->play();
+        return;
+    }
+
+    if (event->key() == Qt::Key_Delete)
+    {
+        //delete
+        event->accept();
+        return;
+    }
+
+    //...
+
+    return QTableView::keyPressEvent(event);
 }
 
 
@@ -811,7 +870,7 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
             QMenu * menuPlayList = menu->addMenu(tr("Playlists"));
             menuPlayList->addAction(tr("Library"));
 
-            QList<CPlayList *> playLists = m_application->getPlayListsWithSong(m_model->getSongItem(index)->song);
+            QList<CPlayList *> playLists = m_application->getPlayListsWithSong(m_model->getSongItem(index)->getSong());
 
             if (playLists.size() > 0)
             {

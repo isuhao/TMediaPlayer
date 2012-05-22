@@ -26,7 +26,8 @@ CSongTableHeader::CSongTableHeader(QWidget * parent) :
     m_actColFileName     (NULL),
     m_actColBitRate      (NULL),
     m_actColFormat       (NULL),
-    m_actColDuration     (NULL)
+    m_actColDuration     (NULL),
+    m_actColSampleRate   (NULL)
 {
     setClickable(true);
     setMovable(true);
@@ -52,6 +53,7 @@ CSongTableHeader::CSongTableHeader(QWidget * parent) :
     m_actColBitRate      = m_contextMenu->addAction(tr("Bit rate"    ), this, SLOT(showColBitRate     (bool))); m_actColBitRate     ->setCheckable(true);
     m_actColFormat       = m_contextMenu->addAction(tr("Format"      ), this, SLOT(showColFormat      (bool))); m_actColFormat      ->setCheckable(true);
     m_actColDuration     = m_contextMenu->addAction(tr("Duration"    ), this, SLOT(showColDuration    (bool))); m_actColDuration    ->setCheckable(true);
+    m_actColSampleRate   = m_contextMenu->addAction(tr("Sample rate" ), this, SLOT(showColSampleRate  (bool))); m_actColSampleRate  ->setCheckable(true);
 }
 
 
