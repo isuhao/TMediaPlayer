@@ -1780,7 +1780,7 @@ void CApplication::startPlay(void)
     m_uiWidget->btnPlay->setIcon(QPixmap(":/icons/pause"));
     m_currentSongItem->getSong()->play();
     emit songPlayStart(m_currentSongItem->getSong());
-    connect(m_currentSongItem->getSong(), SIGNAL(playEnd()), this, SLOT(onPlayEnd()));
+    connect(m_currentSongItem->getSong(), SIGNAL(playEnd()), this, SLOT(onPlayEnd()), Qt::UniqueConnection);
 
     updateSongDescription(m_currentSongItem->getSong());
 

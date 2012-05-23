@@ -1,6 +1,7 @@
 
 #include "CDialogEditDynamicList.hpp"
 #include "CDynamicPlayList.hpp"
+#include "CWidgetMultiCriterion.hpp"
 #include "CApplication.hpp"
 #include <QStandardItemModel>
 #include <QMessageBox>
@@ -24,6 +25,10 @@ CDialogEditDynamicList::CDialogEditDynamicList(CDynamicPlayList * playList, CApp
 
     setAttribute(Qt::WA_DeleteOnClose);
     m_uiWidget->setupUi(this);
+
+    CWidgetMultiCriterion * widgetCriterion = new CWidgetMultiCriterion(this);
+    //m_uiWidget->scrollArea->setWidget(widgetCriterion);
+    m_uiWidget->verticalLayout->insertWidget(1, widgetCriterion);
 
     if (m_playList)
     {

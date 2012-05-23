@@ -1,8 +1,5 @@
 
 - Listes de lecture dynamiques :
-  - Créer la boite de dialogue d'édition.
-  - Créer le widget représentant un critère.
-  - Créer la ou les classes pour manipuler un critère.
   - Chargement des listes.
   - Modification d'une liste.
   - Mise à jour des morceaux.

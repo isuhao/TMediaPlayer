@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>WidgetCriteria</class>
+ <widget class="QWidget" name="WidgetCriteria">
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string notr="true"/>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <item row="7" column="1">
+    <widget class="QFrame" name="frame">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetMinimumSize</enum>
+      </property>
+      <property name="margin">
+       <number>2</number>
+      </property>
+      <item>
+       <widget class="QComboBox" name="listType">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maxVisibleItems">
+         <number>20</number>
+        </property>
+        <property name="insertPolicy">
+         <enum>QComboBox::NoInsert</enum>
+        </property>
+        <item>
+         <property name="text">
+          <string>Title</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Artist</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Album</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Album artist</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Composer</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Genre</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Comments</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Lyrics</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Encoded with</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>File name</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Year</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Track</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Disc</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Bit rate</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Sample rate</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Play count</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Channels</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Rating</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>File size</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Duration</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Last played</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Added</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Modified</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Language</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Playlist</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Format</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QComboBox" name="listConditionString">
+          <property name="minimumSize">
+           <size>
+            <width>150</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>150</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <item>
+           <property name="text">
+            <string>is</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>is not</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>contains</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>does not contains</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>starts with</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>ends with</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="listConditionNumber">
+          <property name="minimumSize">
+           <size>
+            <width>150</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>150</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <item>
+           <property name="text">
+            <string>is</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>is not</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>is less than</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>is greater than</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>is between</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="listConditionTime">
+          <property name="minimumSize">
+           <size>
+            <width>150</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>150</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <item>
+           <property name="text">
+            <string>is</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>is not</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>is less than</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>is greater than</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>is between</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="listConditionDate">
+          <property name="minimumSize">
+           <size>
+            <width>150</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>150</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <item>
+           <property name="text">
+            <string>is</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>is not</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>is before</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>is after</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>is in the last</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>is not in the last</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>is between</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="listConditionBoolean">
+          <property name="minimumSize">
+           <size>
+            <width>150</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>150</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <item>
+           <property name="text">
+            <string>is</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>is not</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QLineEdit" name="editValue1String"/>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="editValue1Number">
+          <property name="maximum">
+           <number>2000000000</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTimeEdit" name="editValue1Time">
+          <property name="displayFormat">
+           <string>mm:ss</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDateTimeEdit" name="editValue1Date">
+          <property name="maximumDateTime">
+           <datetime>
+            <hour>23</hour>
+            <minute>59</minute>
+            <second>59</second>
+            <year>2100</year>
+            <month>12</month>
+            <day>31</day>
+           </datetime>
+          </property>
+          <property name="minimumDateTime">
+           <datetime>
+            <hour>0</hour>
+            <minute>0</minute>
+            <second>0</second>
+            <year>1900</year>
+            <month>1</month>
+            <day>1</day>
+           </datetime>
+          </property>
+          <property name="maximumDate">
+           <date>
+            <year>2100</year>
+            <month>12</month>
+            <day>31</day>
+           </date>
+          </property>
+          <property name="minimumDate">
+           <date>
+            <year>1900</year>
+            <month>1</month>
+            <day>1</day>
+           </date>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="listPlayList"/>
+        </item>
+        <item>
+         <widget class="QComboBox" name="listLanguage"/>
+        </item>
+        <item>
+         <widget class="QComboBox" name="listFormat"/>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QLabel" name="lblBetween">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string notr="true">and</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QSpinBox" name="editValue2Number">
+          <property name="maximum">
+           <number>2000000000</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTimeEdit" name="editValue2Time">
+          <property name="displayFormat">
+           <string>mm:ss</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDateTimeEdit" name="editValue2Date">
+          <property name="maximumDateTime">
+           <datetime>
+            <hour>23</hour>
+            <minute>59</minute>
+            <second>59</second>
+            <year>2100</year>
+            <month>12</month>
+            <day>31</day>
+           </datetime>
+          </property>
+          <property name="minimumDateTime">
+           <datetime>
+            <hour>0</hour>
+            <minute>0</minute>
+            <second>0</second>
+            <year>1900</year>
+            <month>1</month>
+            <day>1</day>
+           </datetime>
+          </property>
+          <property name="maximumDate">
+           <date>
+            <year>2100</year>
+            <month>12</month>
+            <day>31</day>
+           </date>
+          </property>
+          <property name="minimumDate">
+           <date>
+            <year>1900</year>
+            <month>1</month>
+            <day>1</day>
+           </date>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
