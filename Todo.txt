@@ -1,3 +1,14 @@
++ Gérer sous-titre
++ Gérer le parolier
+
++ Préférences :
+   + Ecrire la durée du morceau dans les tags (TLEN)
+   + Ecrire le nombre de lectures (PCNT+POPM)
+   + Ecrire la note (POPM)
+   + Option "Déterminer automatiquement les valeurs pour le tri"
+
++ Déplacer "Métadonnées" de "Edit song" vers une autre vue.
+   -> Lire les métadonnées à l'ouverture de cette vue.
 
 - Listes de lecture dynamiques :
   - Chargement des listes.
@@ -9,7 +20,7 @@
 
 - Terminer la boite de dialogue Edit Song.
   - Affichage et modification des métadonnées.
-  - Affichage et modification des illustrations. (?)
+  - Affichage et modification des illustrations.
   - Afficher l'illustration principale dans l'onglet Résumé.
   - Mieux gérer les genres.
   - Mieux gérer les langues des paroles.
@@ -33,7 +44,8 @@
 - Afficher les informations sur la liste affichée (durée, nombre de morceaux).
 - Indiquer le morceau en cours de lecture dans la liste.
 - Bouton pour sélectionner le morceau en cours de lecture.
-- Bug fin de liste : le bouton pause reste.
+- Bug morceau précédent : le morceau courant reste en lecture.
+- Implémenter la lecture aléaroire.
 
 - Menu contextuel dans les listes : afficher le morceaux dans la playlist.
 - Menu contextuel dans les listes : ajouter le/les morceaux à une liste.
