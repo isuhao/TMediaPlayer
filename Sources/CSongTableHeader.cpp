@@ -159,3 +159,9 @@ void CSongTableHeader::showColDuration(bool show)
 {
     emit columnShown(CSongTable::ColDuration, show);
 }
+
+
+void CSongTableHeader::showColSampleRate(bool show)
+{
+    emit columnShown(CSongTable::ColSampleRate, show);
+}

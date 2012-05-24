@@ -9,7 +9,7 @@ class CCriteriaNumber : public ICriteria
 {
 public:
 
-    CCriteriaNumber(void);
+    CCriteriaNumber(QObject * parent = NULL);
     ~CCriteriaNumber();
 };
 

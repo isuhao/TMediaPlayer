@@ -19,10 +19,11 @@ CSong::CSong(CApplication * application) :
     m_bitRate         (0),
     m_sampleRate      (0),
     m_encoder         (""),
-    m_fileType        (TypeUnknown),
+    m_format          (FormatUnknown),
     m_numChannels     (0),
     m_duration        (0),
     m_title           (""),
+    m_subTitle        (""),
     m_artistName      (""),  
     m_albumTitle      (""),
     m_albumArtist     (""),
@@ -105,6 +106,23 @@ void CSong::setTitle(const QString& title)
     if (m_title != title)
     {
         m_title = title;
+        m_isModified = true;
+        emit songModified();
+    }
+}
+
+
+/**
+ * Modifie le sous-titre du morceau.
+ *
+ * \param subTitle Nouveau sous-titre du morceau.
+ */
+
+void CSong::setSubTitle(const QString& subTitle)
+{
+    if (m_subTitle != subTitle)
+    {
+        m_subTitle = subTitle;
         m_isModified = true;
         emit songModified();
     }
@@ -552,6 +570,7 @@ void CSong::updateDatabase(void)
                               "song_modification, "
                               "song_title, "
                               "song_title_sort, "
+                            //"song_subtitle, "
                               "artist_id, "
                               "album_id, "
                               "album_artist_id, "
@@ -570,46 +589,49 @@ void CSong::updateDatabase(void)
                               "song_play_count, "
                               "song_play_time"
                           ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                          //") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-            query.bindValue( 0, m_fileName);
-            query.bindValue( 1, m_fileSize);
-            query.bindValue( 2, m_bitRate);
-            query.bindValue( 3, m_sampleRate);
-            query.bindValue( 4, m_encoder);
-            query.bindValue( 5, m_fileType);
-            query.bindValue( 6, m_numChannels);
-            query.bindValue( 7, m_duration);
-            query.bindValue( 8, m_creation);
-            query.bindValue( 9, m_modification);
-            query.bindValue(10, m_title);
-            query.bindValue(11, m_titleSort);
-            query.bindValue(12, artistId);
-            query.bindValue(13, albumId);
-            query.bindValue(14, albumArtistId);
-            query.bindValue(15, m_composer);
-            query.bindValue(16, m_composerSort);
-            query.bindValue(17, m_year);
-            query.bindValue(18, m_trackNumber);
-            query.bindValue(19, m_trackTotal);
-            query.bindValue(20, m_discNumber);
-            query.bindValue(21, m_discTotal);
-            query.bindValue(22, genreId);
-            query.bindValue(23, m_rating);
-            query.bindValue(24, m_comments);
-            query.bindValue(25, m_lyrics);
+            int numValue = 0;
+            query.bindValue(numValue++, m_fileName);
+            query.bindValue(numValue++, m_fileSize);
+            query.bindValue(numValue++, m_bitRate);
+            query.bindValue(numValue++, m_sampleRate);
+            query.bindValue(numValue++, m_encoder);
+            query.bindValue(numValue++, m_format);
+            query.bindValue(numValue++, m_numChannels);
+            query.bindValue(numValue++, m_duration);
+            query.bindValue(numValue++, m_creation);
+            query.bindValue(numValue++, m_modification);
+            query.bindValue(numValue++, m_title);
+            query.bindValue(numValue++, m_titleSort);
+          //query.bindValue(numValue++, m_subTitle);
+            query.bindValue(numValue++, artistId);
+            query.bindValue(numValue++, albumId);
+            query.bindValue(numValue++, albumArtistId);
+            query.bindValue(numValue++, m_composer);
+            query.bindValue(numValue++, m_composerSort);
+            query.bindValue(numValue++, m_year);
+            query.bindValue(numValue++, m_trackNumber);
+            query.bindValue(numValue++, m_trackTotal);
+            query.bindValue(numValue++, m_discNumber);
+            query.bindValue(numValue++, m_discTotal);
+            query.bindValue(numValue++, genreId);
+            query.bindValue(numValue++, m_rating);
+            query.bindValue(numValue++, m_comments);
+            query.bindValue(numValue++, m_lyrics);
 
             switch (m_language)
             {
                 default:
-                case LangUnknown: query.bindValue(26, "00"); break;
-                case LangEnglish: query.bindValue(26, "EN"); break;
-                case LangFrench:  query.bindValue(26, "FR"); break;
-                case LangGerman:  query.bindValue(26, "DE"); break;
-                case LangItalian: query.bindValue(26, "IT"); break;
+                case LangUnknown: query.bindValue(numValue++, "00"); break;
+                case LangEnglish: query.bindValue(numValue++, "EN"); break;
+                case LangFrench:  query.bindValue(numValue++, "FR"); break;
+                case LangGerman:  query.bindValue(numValue++, "DE"); break;
+                case LangItalian: query.bindValue(numValue++, "IT"); break;
             }
 
-            query.bindValue(27, 0);
-            query.bindValue(28, "");
+            query.bindValue(numValue++, 0);
+            query.bindValue(numValue++, "");
 
             if (!query.exec())
             {
@@ -626,6 +648,7 @@ void CSong::updateDatabase(void)
             query.prepare("UPDATE song SET "
                               "song_title         = ?,"
                               "song_title_sort    = ?,"
+                            //"song_subtitle      = ?,"
                               "artist_id          = ?,"
                               "album_id           = ?,"
                               "album_artist_id    = ?,"
@@ -642,26 +665,28 @@ void CSong::updateDatabase(void)
                               "song_lyrics        = ?,"
                               "song_language      = ? "
                           "WHERE song_id = ?");
+            
+            int numValue = 0;
+            query.bindValue(numValue++, m_title);
+            query.bindValue(numValue++, m_titleSort);
+          //query.bindValue(numValue++, m_subTitle);
+            query.bindValue(numValue++, artistId);
+            query.bindValue(numValue++, albumId);
+            query.bindValue(numValue++, albumArtistId);
+            query.bindValue(numValue++, m_composer);
+            query.bindValue(numValue++, m_composerSort);
+            query.bindValue(numValue++, m_year);
+            query.bindValue(numValue++, m_trackNumber);
+            query.bindValue(numValue++, m_trackTotal);
+            query.bindValue(numValue++, m_discNumber);
+            query.bindValue(numValue++, m_discTotal);
+            query.bindValue(numValue++, genreId);
+            query.bindValue(numValue++, m_rating);
+            query.bindValue(numValue++, m_comments);
+            query.bindValue(numValue++, m_lyrics);
+            query.bindValue(numValue++, m_language);
 
-            query.bindValue( 0, m_title);
-            query.bindValue( 1, m_titleSort);
-            query.bindValue( 2, artistId);
-            query.bindValue( 3, albumId);
-            query.bindValue( 4, albumArtistId);
-            query.bindValue( 5, m_composer);
-            query.bindValue( 6, m_composerSort);
-            query.bindValue( 7, m_year);
-            query.bindValue( 8, m_trackNumber);
-            query.bindValue( 9, m_trackTotal);
-            query.bindValue(10, m_discNumber);
-            query.bindValue(11, m_discTotal);
-            query.bindValue(12, genreId);
-            query.bindValue(13, m_rating);
-            query.bindValue(14, m_comments);
-            query.bindValue(15, m_lyrics);
-            query.bindValue(16, m_language);
-
-            query.bindValue(17, m_id);
+            query.bindValue(numValue++, m_id);
 
             if (!query.exec())
             {
@@ -678,9 +703,6 @@ void CSong::updateDatabase(void)
 
 /**
  * Méthode appelée quand la lecture du morceau est terminée.
- *
- * \todo Incrémenter le compteur de lecture.
- * \todo Ajouter une entrée dans la liste des écoutes.
  */
 
 void CSong::emitPlayEnd(void)

@@ -423,7 +423,7 @@ void CStaticPlayList::openCustomMenuProject(const QPoint& point)
         }
 
         menu->addSeparator();
-        menu->addAction(tr("Supprimer les doublons"), this, SLOT(removeDuplicateSongs()));
+        menu->addAction(tr("Remove duplicates"), this, SLOT(removeDuplicateSongs()));
 
         menu->move(mapToGlobal(point));
         menu->show();

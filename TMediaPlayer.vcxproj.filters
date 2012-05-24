@@ -220,6 +220,9 @@
     <ClCompile Include="GeneratedFiles\Release\moc_CWidgetCriteria.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\CCriteriaNumber.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Sources\CApplication.hpp">
@@ -303,6 +306,9 @@
     <CustomBuild Include="Sources\IWidgetCriteria.hpp">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="Form\DialogPreferences.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_DialogEditDynamicPlayList.h">
@@ -331,6 +337,9 @@
     </ClInclude>
     <ClInclude Include="Sources\CMultiCriterion.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_DialogPreferences.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

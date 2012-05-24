@@ -1100,19 +1100,19 @@ void CApplication::addSong(const QString& fileName)
             switch (type)
             {
                 default:
-                    song->m_fileType = CSong::TypeUnknown;
+                    song->m_format = CSong::FormatUnknown;
                     break;
 
                 case FMOD_SOUND_TYPE_MPEG:
-                    song->m_fileType = CSong::TypeMP3;
+                    song->m_format = CSong::FormatMP3;
                     break;
 
                 case FMOD_SOUND_TYPE_OGGVORBIS:
-                    song->m_fileType = CSong::TypeOGG;
+                    song->m_format = CSong::FormatOGG;
                     break;
 
                 case FMOD_SOUND_TYPE_FLAC:
-                    song->m_fileType = CSong::TypeFlac;
+                    song->m_format = CSong::FormatFLAC;
                     break;
             }
 
@@ -1133,16 +1133,10 @@ void CApplication::addSong(const QString& fileName)
 
             res = sound->getTag("ARTIST", 0, &tag);
             song->m_artistName  = (res == FMOD_OK ? reinterpret_cast<char *>(tag.data) : "");
-                
+
             res = sound->getTag("ALBUM", 0, &tag);
             song->m_albumTitle  = (res == FMOD_OK ? reinterpret_cast<char *>(tag.data) : "");
-            
-            //res = sound->getTag("ALBUMARTIST", 0, &tag);
-            //song->m_albumArtist = (res == FMOD_OK ? reinterpret_cast<char *>(tag.data) : "");
-                
-            //res = sound->getTag("COMPOSER", 0, &tag);
-            //song->m_composer    = (res == FMOD_OK ? reinterpret_cast<char *>(tag.data) : "");
-            
+
             res = sound->getTag("YEAR", 0, &tag);
             if (res == FMOD_OK)
             {
@@ -1155,7 +1149,7 @@ void CApplication::addSong(const QString& fileName)
             song->m_discNumber  = 0;
             song->m_discTotal   = 0;
 
-            res = sound->getTag("GENRE", 0, &tag); // 17
+            res = sound->getTag("GENRE", 0, &tag);
             song->m_genre       = "";
 
             song->m_rating      = 0;
@@ -1165,15 +1159,15 @@ void CApplication::addSong(const QString& fileName)
 
             TagLib::FileRef f(qPrintable(fileName));
 
-            switch (song->m_fileType)
+            switch (song->m_format)
             {
-                case CSong::TypeMP3:
+                case CSong::FormatMP3:
                     break;
 
-                case CSong::TypeOGG:
+                case CSong::FormatOGG:
                     break;
 
-                case CSong::TypeFlac:
+                case CSong::FormatFLAC:
                 {
                     TagLib::FLAC::File * file = dynamic_cast<TagLib::FLAC::File *>(f.file());
 
@@ -1594,7 +1588,7 @@ void CApplication::loadDatabase(void)
     m_library = new CSongTable(this);
     m_library->m_idPlayList = 0;
     m_uiWidget->splitter->addWidget(m_library);
-    connect(m_library, SIGNAL(songStarted(int)), this, SLOT(playSong(int)));
+    connect(m_library, SIGNAL(songStarted(CSongTableItem *)), this, SLOT(playSong(CSongTableItem *)));
 
     if (!query.exec("SELECT list_columns FROM playlist WHERE playlist_id = 0"))
     {
@@ -1633,22 +1627,13 @@ void CApplication::loadDatabase(void)
     {
         CSong * song = new CSong(this);
 
-        song->m_id         = query.value(0).toInt();
-        song->m_fileName   = query.value(1).toString();
-        song->m_fileSize   = query.value(2).toInt();
-        song->m_bitRate    = query.value(3).toInt();
-        song->m_sampleRate = 0; // TODO
-        song->m_encoder    = ""; // TODO
-
-        switch (query.value(4).toInt())
-        {
-            default:
-            case 0: song->m_fileType = CSong::TypeUnknown; break;
-            case 1: song->m_fileType = CSong::TypeMP3;     break;
-            case 2: song->m_fileType = CSong::TypeOGG;     break;
-            case 3: song->m_fileType = CSong::TypeFlac;    break;
-        }
-
+        song->m_id           = query.value(0).toInt();
+        song->m_fileName     = query.value(1).toString();
+        song->m_fileSize     = query.value(2).toInt();
+        song->m_bitRate      = query.value(3).toInt();
+        song->m_sampleRate   = 0; // TODO
+        song->m_encoder      = ""; // TODO
+        song->m_format       = CSong::getFormatFromInteger(query.value(4).toInt());
         song->m_numChannels  = query.value(5).toInt();
         song->m_duration     = query.value(6).toInt();
         song->m_creation     = query.value(7).toDateTime();

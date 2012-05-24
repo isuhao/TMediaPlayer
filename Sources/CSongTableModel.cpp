@@ -106,7 +106,7 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
 
     if (role == Qt::DisplayRole)
     {
-        switch(index.column())
+        switch (index.column())
         {
             case 0: return m_data.at(index.row())->getPosition();
             case 1: return m_data.at(index.row())->getSong()->getTitle();
@@ -177,13 +177,14 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
             // Format
             case 16:
             {
-                switch (m_data.at(index.row())->getSong()->getFileType())
+                switch (m_data.at(index.row())->getSong()->getFormat())
                 {
+                    /// \todo Utiliser la fonction statique
                     default:
-                    case CSong::TypeUnknown: return tr("Unknown");
-                    case CSong::TypeMP3:     return tr("MP3");
-                    case CSong::TypeOGG:     return tr("OGG Vorbis");
-                    case CSong::TypeFlac:    return tr("FLAC");
+                    case CSong::FormatUnknown: return tr("Unknown");
+                    case CSong::FormatMP3:     return tr("MP3");
+                    case CSong::FormatOGG:     return tr("OGG Vorbis");
+                    case CSong::FormatFLAC:    return tr("FLAC");
                 }
             }
 

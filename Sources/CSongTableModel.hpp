@@ -287,7 +287,7 @@ private:
 
     static inline bool cmpSongFormatAsc(CSongTableItem * song1, CSongTableItem * song2)
     {
-        return (song1->getSong()->getFileType() < song2->getSong()->getFileType());
+        return (song1->getSong()->getFormat() < song2->getSong()->getFormat());
     }
 
     static inline bool cmpSongFormatDesc(CSongTableItem * song1, CSongTableItem * song2)

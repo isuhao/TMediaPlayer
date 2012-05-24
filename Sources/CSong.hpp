@@ -6,6 +6,7 @@
 #include <QDateTime>
 #include <QString>
 #include <QVariant>
+#include <QStringList>
 #include <fmod/fmod.hpp>
 
 
@@ -24,13 +25,17 @@ class CSong : public QObject
 
 public:
 
-    enum TFileType
+    enum TFormat
     {
-        TypeUnknown = 0,
-        TypeMP3     = 1,
-        TypeOGG     = 2,
-        TypeFlac    = 3
+        FormatUnknown = 0,
+        FormatMP3     = 1,
+        FormatOGG     = 2,
+        FormatFLAC    = 3
     };
+
+    static inline TFormat getFormatFromInteger(int format);
+    static inline QString getFormatName(TFormat format);
+    static inline QStringList getFormatList(void);
 
     enum TLanguage
     {
@@ -40,6 +45,12 @@ public:
         LangGerman  = 3,
         LangItalian = 4
     };
+
+    static inline TLanguage getLanguageFromInteger(int language);
+    static inline QStringList getLanguageList(void);
+    static inline TLanguage getLanguageFromISO2Code(const QString& code);
+    static inline TLanguage getLanguageFromISO3Code(const QString& code);
+
 
     CSong(CApplication * application);
     ~CSong();
@@ -52,13 +63,14 @@ public:
     inline int getBitRate(void) const;
     inline int getSampleRate(void) const;
     inline QString getEncoder(void) const;
-    inline TFileType getFileType(void) const;
+    inline TFormat getFormat(void) const;
     inline int getNumChannels(void) const;
     inline int getDuration(void) const;
     inline QDateTime getCreationDate(void) const;
     inline QDateTime getModificationDate(void) const;
 
     inline QString getTitle(void) const;
+    inline QString getSubTitle(void) const;
     inline QString getArtistName(void) const;
     inline QString getAlbumTitle(void) const;
     inline QString getAlbumArtist(void) const;
@@ -101,6 +113,7 @@ public:
 public slots:
 
     void setTitle(const QString& title);
+    void setSubTitle(const QString& subTitle);
     void setArtistName(const QString& artistName);
     void setAlbumTitle(const QString& albumTitle);
     void setAlbumArtist(const QString& albumArtist);
@@ -154,7 +167,7 @@ private:
     int m_bitRate;                ///< Débit binaire.
     int m_sampleRate;             ///< Taux d'échantillonnage.
     QString m_encoder;            ///< Encodeur.
-    TFileType m_fileType;         ///< Format de fichier.
+    TFormat m_format;             ///< Format de fichier.
     int m_numChannels;            ///< Nombre de canaux.
     int m_duration;               ///< Durée de la chanson en millisecondes.
     QDateTime m_creation;         ///< Date de création (ajout à la médiathèque).
@@ -162,6 +175,7 @@ private:
 
     // Informations modifiables
     QString m_title;              ///< Titre de la chanson.
+    QString m_subTitle;           ///< Sous-titre de la chanson.
     QString m_artistName;         ///< Artiste de la chanson.
     QString m_albumTitle;         ///< Titre de l'album.
     QString m_albumArtist;        ///< Artiste de l'album.
@@ -187,6 +201,97 @@ private:
 };
 
 Q_DECLARE_METATYPE(CSong *)
+
+
+inline CSong::TFormat CSong::getFormatFromInteger(int format)
+{
+    switch (format)
+    {
+        default:
+        case 0: return FormatUnknown;
+        case 1: return FormatMP3;
+        case 2: return FormatOGG;
+        case 3: return FormatFLAC;
+    }
+}
+
+
+inline QString CSong::getFormatName(CSong::TFormat format)
+{
+    switch (format)
+    {
+        default:
+        case FormatUnknown: return tr("Unknown", "Unknown format");
+        case FormatMP3:     return tr("MP3");
+        case FormatOGG:     return tr("Ogg Vorbis");
+        case FormatFLAC:    return tr("FLAC");
+    }
+}
+
+
+inline QStringList CSong::getFormatList(void)
+{
+    QStringList formatList;
+
+    formatList << getFormatName(FormatMP3);
+    formatList << getFormatName(FormatOGG);
+    formatList << getFormatName(FormatFLAC);
+
+    return formatList;
+}
+
+
+inline CSong::TLanguage CSong::getLanguageFromInteger(int language)
+{
+    switch (language)
+    {
+        default:
+        case 0: return LangUnknown;
+        case 1: return LangEnglish;
+        case 2: return LangFrench;
+        case 3: return LangGerman;
+        case 4: return LangItalian;
+    }
+}
+
+
+inline QStringList CSong::getLanguageList(void)
+{
+    QStringList langList;
+
+    langList << tr("English");
+    langList << tr("French");
+    langList << tr("German");
+    langList << tr("Italian");
+
+    return langList;
+}
+
+
+inline CSong::TLanguage CSong::getLanguageFromISO2Code(const QString& code)
+{
+    Q_ASSERT(code.size() == 2);
+
+    if (code == "EN") return LangEnglish;
+    if (code == "FR") return LangFrench;
+    if (code == "DE") return LangGerman;
+    if (code == "IT") return LangItalian;
+
+    return LangUnknown;
+}
+
+
+inline CSong::TLanguage CSong::getLanguageFromISO3Code(const QString& code)
+{
+    Q_ASSERT(code.size() == 3);
+
+    if (code == "ENG") return LangEnglish;
+    if (code == "FRA") return LangFrench;
+    if (code == "DEU") return LangGerman;
+    if (code == "ITA") return LangItalian;
+
+    return LangUnknown;
+}
 
 
 /**
@@ -249,9 +354,9 @@ inline QString CSong::getEncoder(void) const
 }
 
 
-inline CSong::TFileType CSong::getFileType(void) const
+inline CSong::TFormat CSong::getFormat(void) const
 {
-    return m_fileType;
+    return m_format;
 }
 
 
@@ -300,6 +405,12 @@ inline QDateTime CSong::getModificationDate(void) const
 inline QString CSong::getTitle(void) const
 {
     return m_title;
+}
+
+
+inline QString CSong::getSubTitle(void) const
+{
+    return m_subTitle;
 }
 
 

@@ -46,8 +46,9 @@ public:
         ColFormat       = 16,
         ColDuration     = 17,
         ColSampleRate   = 18,
-        /// \todo Ajouter "Canaux"
-        /// \todo Ajouter "Paroles"
+        /// \todo Ajouter "Channels"
+        /// \todo Ajouter "Lyrics"
+        /// \todo Ajouter "Language"
 
         ColNumber       = 19  ///< Nombre de types de colonnes.
     };

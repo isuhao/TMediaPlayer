@@ -46,6 +46,7 @@ protected slots:
     void showColBitRate     (bool show = true);
     void showColFormat      (bool show = true);
     void showColDuration    (bool show = true);
+    void showColSampleRate  (bool show = true);
 
 private:
 

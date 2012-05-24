@@ -20,12 +20,7 @@ CDialogEditSong::CDialogEditSong(CSongTableItem * songItem, CSongTable * songTab
 
 
     // Liste des langues
-    /// \todo Déplacer dans une fonction
-    m_uiWidget->editLanguage->addItem(tr("Unknown"), CSong::LangUnknown);
-    m_uiWidget->editLanguage->addItem(tr("English"), CSong::LangEnglish);
-    m_uiWidget->editLanguage->addItem(tr("French") , CSong::LangFrench );
-    m_uiWidget->editLanguage->addItem(tr("German") , CSong::LangGerman );
-    m_uiWidget->editLanguage->addItem(tr("Italian"), CSong::LangItalian);
+    m_uiWidget->editLanguage->addItems(CSong::getLanguageList());
 
 
     // Liste des genres
@@ -165,7 +160,12 @@ void CDialogEditSong::save(void)
 }
 
 
-/// \todo Implémentation complète.
+/**
+ * Met à jour la boite de dialogue avec les informations du morceau.
+ *
+ * \todo Afficher les illustrations.
+ */
+
 void CDialogEditSong::updateInfos()
 {
     CSong * song = m_songItem->getSong();
@@ -214,27 +214,7 @@ void CDialogEditSong::updateInfos()
     m_uiWidget->valueModification->setText(song->getModificationDate().toString());
 
     m_uiWidget->valueBitRate->setText(tr("%1 kbit/s").arg(song->getBitRate()));
-
-    switch (song->getFileType())
-    {
-        default:
-        case CSong::TypeUnknown:
-            m_uiWidget->valueFormat->setText(tr("Unknown"));
-            break;
-
-        case CSong::TypeMP3:
-            m_uiWidget->valueFormat->setText(tr("MP3"));
-            break;
-
-        case CSong::TypeOGG:
-            m_uiWidget->valueFormat->setText(tr("OGG Vorbis"));
-            break;
-
-        case CSong::TypeFlac:
-            m_uiWidget->valueFormat->setText(tr("Flac"));
-            break;
-    }
-
+    m_uiWidget->valueFormat->setText(CSong::getFormatName(song->getFormat()));
     m_uiWidget->valueChannels->setText(QString::number(song->getNumChannels()));
     m_uiWidget->valueSampleRate->setText(tr("%1 kHz").arg(song->getSampleRate()));
     m_uiWidget->valueEncodedWith->setText(song->getEncoder());
@@ -245,6 +225,8 @@ void CDialogEditSong::updateInfos()
     m_uiWidget->editTitle->setText(song->getTitle());
     m_uiWidget->editTitle_2->setText(song->getTitle());
     m_uiWidget->editTitleSort->setText(song->getTitleSort());
+
+    //m_uiWidget->editSubTitle->setText(song->getSubTitle());
 
     m_uiWidget->editArtist->setText(song->getArtistName());
     m_uiWidget->editArtist_2->setText(song->getArtistName());
@@ -295,19 +277,6 @@ void CDialogEditSong::updateInfos()
 
     m_uiWidget->editLyrics->setText(song->getLyrics());
     m_uiWidget->editLanguage->setCurrentIndex(song->getLanguage());
-
-
-    // Métadonnées
-
-    QStandardItemModel * modelMetaData = new QStandardItemModel();
-
-    QStringList headerList;
-    headerList << tr("Tag") << tr("Value");
-    modelMetaData->setHorizontalHeaderLabels(headerList);
-
-    m_uiWidget->tableMetaData->setModel(modelMetaData);
-
-    //...
 
 
     // Lectures

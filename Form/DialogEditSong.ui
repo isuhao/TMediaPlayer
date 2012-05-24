@@ -10,12 +10,12 @@
     <x>0</x>
     <y>0</y>
     <width>600</width>
-    <height>447</height>
+    <height>450</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>600</width>
+    <width>500</width>
     <height>400</height>
    </size>
   </property>
@@ -267,7 +267,34 @@
        <property name="verticalSpacing">
         <number>3</number>
        </property>
-       <item row="5" column="4">
+       <item row="6" column="2">
+        <widget class="QLabel" name="lblTrackSeparator">
+         <property name="text">
+          <string>/</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="2">
+        <widget class="QLabel" name="lblDiscSeparator">
+         <property name="text">
+          <string>/</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="QLineEdit" name="editTrackNumber">
+         <property name="maximumSize">
+          <size>
+           <width>35</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="3">
         <widget class="QLineEdit" name="editTrackTotal">
          <property name="maximumSize">
           <size>
@@ -280,7 +307,7 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="2" colspan="3">
+       <item row="5" column="1" colspan="3">
         <widget class="QLabel" name="lblTrackNumber">
          <property name="font">
           <font>
@@ -297,7 +324,7 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
+       <item row="3" column="0">
         <widget class="QLabel" name="lblArtist">
          <property name="font">
           <font>
@@ -314,7 +341,7 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
+       <item row="5" column="0">
         <widget class="QLabel" name="lblAlbum">
          <property name="font">
           <font>
@@ -331,7 +358,7 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="1">
+       <item row="7" column="0">
         <widget class="QLabel" name="lblAlbumArtist">
          <property name="font">
           <font>
@@ -348,14 +375,14 @@
          </property>
         </widget>
        </item>
-       <item row="14" column="1">
+       <item row="16" column="0">
         <widget class="QComboBox" name="editGenre">
          <property name="editable">
           <bool>true</bool>
          </property>
         </widget>
        </item>
-       <item row="7" column="2">
+       <item row="8" column="1">
         <widget class="QLineEdit" name="editDiscNumber">
          <property name="maximumSize">
           <size>
@@ -368,7 +395,7 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="2" colspan="3">
+       <item row="3" column="1" colspan="3">
         <widget class="QLabel" name="lblYear">
          <property name="font">
           <font>
@@ -385,70 +412,23 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="1">
+       <item row="6" column="0">
         <widget class="QLineEdit" name="editAlbum"/>
        </item>
-       <item row="7" column="1">
+       <item row="8" column="0">
         <widget class="QLineEdit" name="editAlbumArtist"/>
        </item>
-       <item row="5" column="2">
-        <widget class="QLineEdit" name="editTrackNumber">
-         <property name="maximumSize">
-          <size>
-           <width>35</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="3">
-        <widget class="QLabel" name="lblDiscSeparator">
-         <property name="text">
-          <string>/</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="3">
-        <widget class="QLabel" name="lblTrackSeparator">
-         <property name="text">
-          <string>/</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1" colspan="4">
-        <widget class="QLabel" name="lblTitle">
-         <property name="font">
-          <font>
-           <pointsize>7</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Title</string>
-         </property>
-         <property name="buddy">
-          <cstring>editTitle</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1" colspan="4">
-        <widget class="QLineEdit" name="editTitle"/>
-       </item>
-       <item row="3" column="1">
+       <item row="4" column="0">
         <widget class="QLineEdit" name="editArtist"/>
        </item>
-       <item row="3" column="2" colspan="3">
+       <item row="4" column="1" colspan="3">
         <widget class="QLineEdit" name="editYear">
          <property name="text">
           <string/>
          </property>
         </widget>
        </item>
-       <item row="7" column="4">
+       <item row="8" column="3">
         <widget class="QLineEdit" name="editDiscTotal">
          <property name="maximumSize">
           <size>
@@ -461,7 +441,7 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="2" colspan="3">
+       <item row="7" column="1" colspan="3">
         <widget class="QLabel" name="lblDiscNumber">
          <property name="font">
           <font>
@@ -478,10 +458,10 @@
          </property>
         </widget>
        </item>
-       <item row="10" column="1" colspan="4">
+       <item row="12" column="0" colspan="5">
         <widget class="QLineEdit" name="editComposer"/>
        </item>
-       <item row="8" column="1" colspan="4">
+       <item row="11" column="0" colspan="5">
         <widget class="QLabel" name="lblComposer">
          <property name="font">
           <font>
@@ -498,7 +478,7 @@
          </property>
         </widget>
        </item>
-       <item row="13" column="1">
+       <item row="15" column="0">
         <widget class="QLabel" name="lblGenre">
          <property name="font">
           <font>
@@ -515,10 +495,10 @@
          </property>
         </widget>
        </item>
-       <item row="12" column="1" colspan="4">
+       <item row="14" column="0" colspan="5">
         <widget class="QTextEdit" name="editComments"/>
        </item>
-       <item row="11" column="1" colspan="4">
+       <item row="13" column="0" colspan="5">
         <widget class="QLabel" name="lblComments">
          <property name="font">
           <font>
@@ -535,7 +515,7 @@
          </property>
         </widget>
        </item>
-       <item row="13" column="2" colspan="3">
+       <item row="15" column="1" colspan="3">
         <widget class="QLabel" name="lblRating">
          <property name="font">
           <font>
@@ -552,12 +532,93 @@
          </property>
         </widget>
        </item>
-       <item row="14" column="2" colspan="3">
+       <item row="16" column="1" colspan="3">
         <widget class="QSpinBox" name="editRating">
          <property name="maximum">
           <number>5</number>
          </property>
         </widget>
+       </item>
+       <item row="0" column="0" colspan="5">
+        <layout class="QGridLayout" name="gridLayout_10" columnstretch="4,3">
+         <property name="horizontalSpacing">
+          <number>6</number>
+         </property>
+         <property name="verticalSpacing">
+          <number>3</number>
+         </property>
+         <item row="0" column="1">
+          <widget class="QLabel" name="lblSubTitle">
+           <property name="font">
+            <font>
+             <pointsize>7</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Subtitle</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLineEdit" name="editTitle"/>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="lblTitle">
+           <property name="font">
+            <font>
+             <pointsize>7</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Title</string>
+           </property>
+           <property name="buddy">
+            <cstring>editTitle</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="lineEdit"/>
+         </item>
+        </layout>
+       </item>
+       <item row="9" column="1" colspan="3">
+        <widget class="QLabel" name="lblBPM">
+         <property name="font">
+          <font>
+           <pointsize>7</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>BPM</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="0">
+        <widget class="QLabel" name="lblGrouping">
+         <property name="font">
+          <font>
+           <pointsize>7</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Grouping</string>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="0">
+        <widget class="QLineEdit" name="editGrouping"/>
+       </item>
+       <item row="10" column="1" colspan="3">
+        <widget class="QLineEdit" name="editBPM"/>
        </item>
       </layout>
      </widget>
@@ -824,23 +885,6 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tabMetaData">
-      <attribute name="title">
-       <string>Metadata</string>
-      </attribute>
-      <layout class="QGridLayout" name="gridLayout_3">
-       <item row="0" column="0">
-        <widget class="QTableView" name="tableMetaData">
-         <attribute name="horizontalHeaderStretchLastSection">
-          <bool>true</bool>
-         </attribute>
-         <attribute name="verticalHeaderVisible">
-          <bool>false</bool>
-         </attribute>
-        </widget>
-       </item>
-      </layout>
-     </widget>
      <widget class="QWidget" name="tabPlayings">
       <attribute name="title">
        <string>Playings</string>
@@ -898,7 +942,6 @@
  </widget>
  <tabstops>
   <tabstop>tabWidget</tabstop>
-  <tabstop>editTitle</tabstop>
   <tabstop>editArtist</tabstop>
   <tabstop>editYear</tabstop>
   <tabstop>editAlbum</tabstop>
@@ -923,7 +966,6 @@
   <tabstop>editComposerSort</tabstop>
   <tabstop>editLanguage</tabstop>
   <tabstop>editLyrics</tabstop>
-  <tabstop>tableMetaData</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources/>
