@@ -58,7 +58,8 @@ class CSongTableModel : public QAbstractTableModel
 
 public:
 
-    CSongTableModel(const QList<CSong *>& data = QList<CSong *>(), QObject * parent = NULL);
+    CSongTableModel(const QList<CSong *>& data = QList<CSong *>(), QWidget * parent = NULL);
+    CSongTableModel(QWidget * parent);
 
     void setCanDrop(bool canDrop);
 
@@ -97,7 +98,13 @@ private:
 
     static inline bool cmpSongPositionAsc(CSongTableItem * song1, CSongTableItem * song2)
     {
-        return (song1->getPosition() < song2->getPosition());
+        int pos1 = song1->getPosition();
+        int pos2 = song2->getPosition();
+
+        if (pos1 < pos2) return true;
+        if (pos1 > pos2) return false;
+
+        return cmpSongArtistAsc(song2, song1);
     }
 
     static inline bool cmpSongPositionDesc(CSongTableItem * song1, CSongTableItem * song2)
@@ -313,6 +320,26 @@ private:
     static inline bool cmpSongSampleRateDesc(CSongTableItem * song1, CSongTableItem * song2)
     {
         return cmpSongSampleRateAsc(song2, song1);
+    }
+
+    static inline bool cmpSongCreationDateAsc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return (song1->getSong()->getCreationDate() < song2->getSong()->getCreationDate());
+    }
+
+    static inline bool cmpSongCreationDateDesc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return cmpSongCreationDateAsc(song2, song1);
+    }
+
+    static inline bool cmpSongModificationDateAsc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return (song1->getSong()->getModificationDate() < song2->getSong()->getModificationDate());
+    }
+
+    static inline bool cmpSongModificationDateDesc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return cmpSongModificationDateAsc(song2, song1);
     }
 
     bool m_canDrop;

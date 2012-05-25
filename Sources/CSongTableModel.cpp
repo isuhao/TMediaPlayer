@@ -22,7 +22,7 @@ CSongTableItem::CSongTableItem(int position, CSong * song) :
 }
 
 
-CSongTableModel::CSongTableModel(const QList<CSong *>& data, QObject * parent) :
+CSongTableModel::CSongTableModel(const QList<CSong *>& data, QWidget * parent) :
     QAbstractTableModel (parent),
     m_canDrop           (false)
 {
@@ -32,6 +32,14 @@ CSongTableModel::CSongTableModel(const QList<CSong *>& data, QObject * parent) :
     {
         m_data.append(new CSongTableItem(++i, song));
     }
+}
+
+
+CSongTableModel::CSongTableModel(QWidget * parent) :
+    QAbstractTableModel (parent),
+    m_canDrop           (false)
+{
+
 }
 
 
@@ -108,22 +116,22 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
     {
         switch (index.column())
         {
-            case 0: return m_data.at(index.row())->getPosition();
-            case 1: return m_data.at(index.row())->getSong()->getTitle();
-            case 2: return m_data.at(index.row())->getSong()->getArtistName();
-            case 3: return m_data.at(index.row())->getSong()->getAlbumTitle();
-            case 4: return m_data.at(index.row())->getSong()->getAlbumArtist();
-            case 5: return m_data.at(index.row())->getSong()->getComposer();
+            case CSongTable::ColPosition   : return m_data.at(index.row())->getPosition();
+            case CSongTable::ColTitle      : return m_data.at(index.row())->getSong()->getTitle();
+            case CSongTable::ColArtist     : return m_data.at(index.row())->getSong()->getArtistName();
+            case CSongTable::ColAlbum      : return m_data.at(index.row())->getSong()->getAlbumTitle();
+            case CSongTable::ColAlbumArtist: return m_data.at(index.row())->getSong()->getAlbumArtist();
+            case CSongTable::ColComposer   : return m_data.at(index.row())->getSong()->getComposer();
 
             // Année
-            case 6:
+            case CSongTable::ColYear:
             {
                 int year = m_data.at(index.row())->getSong()->getYear();
                 return (year > 0 ? year : QVariant(QString()));
             }
 
             // Numéro de piste
-            case 7:
+            case CSongTable::ColTrackNumber:
             {
                 const int trackNumber = m_data.at(index.row())->getSong()->getTrackNumber();
 
@@ -136,7 +144,7 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
 
                 if (trackTotal >= trackNumber)
                 {
-                    return QString("%1/%1").arg(trackNumber).arg(trackTotal);
+                    return QString("%1/%2").arg(trackNumber).arg(trackTotal);
                 }
                 else
                 {
@@ -145,7 +153,7 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
             }
 
             // Numéro de disque
-            case 8:
+            case CSongTable::ColDiscNumber:
             {
                 const int discNumber = m_data.at(index.row())->getSong()->getDiscNumber();
 
@@ -158,7 +166,7 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
 
                 if (discTotal >= discNumber)
                 {
-                    return QString("%1/%1").arg(discNumber).arg(discTotal);
+                    return QString("%1/%2").arg(discNumber).arg(discTotal);
                 }
                 else
                 {
@@ -166,30 +174,17 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
                 }
             }
 
-            case  9: return m_data.at(index.row())->getSong()->getGenre();
-            case 10: return m_data.at(index.row())->getSong()->getRating();
-            case 11: return m_data.at(index.row())->getSong()->getComments();
-            case 12: return m_data.at(index.row())->getSong()->getNumPlays();
-            case 13: return m_data.at(index.row())->getSong()->getLastPlay();
-            case 14: return m_data.at(index.row())->getSong()->getFileName();
-            case 15: return m_data.at(index.row())->getSong()->getBitRate();
-
-            // Format
-            case 16:
-            {
-                switch (m_data.at(index.row())->getSong()->getFormat())
-                {
-                    /// \todo Utiliser la fonction statique
-                    default:
-                    case CSong::FormatUnknown: return tr("Unknown");
-                    case CSong::FormatMP3:     return tr("MP3");
-                    case CSong::FormatOGG:     return tr("OGG Vorbis");
-                    case CSong::FormatFLAC:    return tr("FLAC");
-                }
-            }
+            case CSongTable::ColGenre       : return m_data.at(index.row())->getSong()->getGenre();
+            case CSongTable::ColRating      : return m_data.at(index.row())->getSong()->getRating();
+            case CSongTable::ColComments    : return m_data.at(index.row())->getSong()->getComments();
+            case CSongTable::ColPlayCount   : return m_data.at(index.row())->getSong()->getNumPlays();
+            case CSongTable::ColLastPlayTime: return m_data.at(index.row())->getSong()->getLastPlay();
+            case CSongTable::ColFileName    : return m_data.at(index.row())->getSong()->getFileName();
+            case CSongTable::ColBitRate     : return m_data.at(index.row())->getSong()->getBitRate();
+            case CSongTable::ColFormat      : return CSong::getFormatName(m_data.at(index.row())->getSong()->getFormat());
 
             // Durée
-            case 17:
+            case CSongTable::ColDuration:
             {
                 int duration = m_data.at(index.row())->getSong()->getDuration();
 
@@ -198,10 +193,14 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
                 return durationTime.toString("m:ss"); /// \todo Stocker le format dans les paramètres.
             }
 
-            // Taux d'échantillonnage
-            case 18:
+            case CSongTable::ColSampleRate:
                 return m_data.at(index.row())->getSong()->getSampleRate();
-                break;
+
+            case CSongTable::ColCreationDate:
+                return m_data.at(index.row())->getSong()->getCreationDate();
+
+            case CSongTable::ColModificationDate:
+                return m_data.at(index.row())->getSong()->getModificationDate();
         }
     }
 
@@ -218,27 +217,11 @@ QVariant CSongTableModel::headerData(int section, Qt::Orientation orientation, i
 
     if (orientation == Qt::Horizontal)
     {
-        switch(section)
+        CSongTable::TColumnType columnType = CSongTable::getColumnTypeFromInteger(section);
+
+        if (columnType != CSongTable::ColInvalid)
         {
-            case  0: return QString(tr("#"));
-            case  1: return QString(tr("Title"));
-            case  2: return QString(tr("Artist"));
-            case  3: return QString(tr("Album"));
-            case  4: return QString(tr("Album artist"));
-            case  5: return QString(tr("Composer"));
-            case  6: return QString(tr("Year"));
-            case  7: return QString(tr("Track"));
-            case  8: return QString(tr("Disc"));
-            case  9: return QString(tr("Genre"));
-            case 10: return QString(tr("Rating"));
-            case 11: return QString(tr("Comments"));
-            case 12: return QString(tr("Plays"));
-            case 13: return QString(tr("Last played"));
-            case 14: return QString(tr("File name"));
-            case 15: return QString(tr("Bit rate"));
-            case 16: return QString(tr("Format"));
-            case 17: return QString(tr("Duration"));
-            case 18: return QString(tr("Sample rate"));
+            return CSongTable::getColumnTypeName(columnType);
         }
     }
 
@@ -254,50 +237,54 @@ void CSongTableModel::sort(int column, Qt::SortOrder order)
     {
         switch(column)
         {
-            case  0: qSort(m_data.begin(), m_data.end(), cmpSongPositionAsc   ); break;
-            case  1: qSort(m_data.begin(), m_data.end(), cmpSongTitleAsc      ); break;
-            case  2: qSort(m_data.begin(), m_data.end(), cmpSongArtistAsc     ); break;
-            case  3: qSort(m_data.begin(), m_data.end(), cmpSongAlbumAsc      ); break;
-            case  4: qSort(m_data.begin(), m_data.end(), cmpSongAlbumArtistAsc); break;
-            case  5: qSort(m_data.begin(), m_data.end(), cmpSongComposerAsc   ); break;
-            case  6: qSort(m_data.begin(), m_data.end(), cmpSongYearAsc       ); break;
-            case  7: qSort(m_data.begin(), m_data.end(), cmpSongTrackAsc      ); break;
-            case  8: qSort(m_data.begin(), m_data.end(), cmpSongDiscAsc       ); break;
-            case  9: qSort(m_data.begin(), m_data.end(), cmpSongGenreAsc      ); break;
-            case 10: qSort(m_data.begin(), m_data.end(), cmpSongRatingAsc     ); break;
-            case 11: qSort(m_data.begin(), m_data.end(), cmpSongCommentsAsc   ); break;
-            case 12: qSort(m_data.begin(), m_data.end(), cmpSongPlayCountAsc  ); break;
-            case 13: qSort(m_data.begin(), m_data.end(), cmpSongLastPlayedAsc ); break;
-            case 14: qSort(m_data.begin(), m_data.end(), cmpSongFileNameAsc   ); break;
-            case 15: qSort(m_data.begin(), m_data.end(), cmpSongBitRateAsc    ); break;
-            case 16: qSort(m_data.begin(), m_data.end(), cmpSongFormatAsc     ); break;
-            case 17: qSort(m_data.begin(), m_data.end(), cmpSongDurationAsc   ); break;
-            case 18: qSort(m_data.begin(), m_data.end(), cmpSongSampleRateAsc ); break;
+            case CSongTable::ColPosition        : qSort(m_data.begin(), m_data.end(), cmpSongPositionAsc        ); break;
+            case CSongTable::ColTitle           : qSort(m_data.begin(), m_data.end(), cmpSongTitleAsc           ); break;
+            case CSongTable::ColArtist          : qSort(m_data.begin(), m_data.end(), cmpSongArtistAsc          ); break;
+            case CSongTable::ColAlbum           : qSort(m_data.begin(), m_data.end(), cmpSongAlbumAsc           ); break;
+            case CSongTable::ColAlbumArtist     : qSort(m_data.begin(), m_data.end(), cmpSongAlbumArtistAsc     ); break;
+            case CSongTable::ColComposer        : qSort(m_data.begin(), m_data.end(), cmpSongComposerAsc        ); break;
+            case CSongTable::ColYear            : qSort(m_data.begin(), m_data.end(), cmpSongYearAsc            ); break;
+            case CSongTable::ColTrackNumber     : qSort(m_data.begin(), m_data.end(), cmpSongTrackAsc           ); break;
+            case CSongTable::ColDiscNumber      : qSort(m_data.begin(), m_data.end(), cmpSongDiscAsc            ); break;
+            case CSongTable::ColGenre           : qSort(m_data.begin(), m_data.end(), cmpSongGenreAsc           ); break;
+            case CSongTable::ColRating          : qSort(m_data.begin(), m_data.end(), cmpSongRatingAsc          ); break;
+            case CSongTable::ColComments        : qSort(m_data.begin(), m_data.end(), cmpSongCommentsAsc        ); break;
+            case CSongTable::ColPlayCount       : qSort(m_data.begin(), m_data.end(), cmpSongPlayCountAsc       ); break;
+            case CSongTable::ColLastPlayTime    : qSort(m_data.begin(), m_data.end(), cmpSongLastPlayedAsc      ); break;
+            case CSongTable::ColFileName        : qSort(m_data.begin(), m_data.end(), cmpSongFileNameAsc        ); break;
+            case CSongTable::ColBitRate         : qSort(m_data.begin(), m_data.end(), cmpSongBitRateAsc         ); break;
+            case CSongTable::ColFormat          : qSort(m_data.begin(), m_data.end(), cmpSongFormatAsc          ); break;
+            case CSongTable::ColDuration        : qSort(m_data.begin(), m_data.end(), cmpSongDurationAsc        ); break;
+            case CSongTable::ColSampleRate      : qSort(m_data.begin(), m_data.end(), cmpSongSampleRateAsc      ); break;
+            case CSongTable::ColCreationDate    : qSort(m_data.begin(), m_data.end(), cmpSongCreationDateAsc    ); break;
+            case CSongTable::ColModificationDate: qSort(m_data.begin(), m_data.end(), cmpSongModificationDateAsc); break;
         }
     }
     else
     {
         switch(column)
         {
-            case  0: qSort(m_data.begin(), m_data.end(), cmpSongPositionDesc   ); break;
-            case  1: qSort(m_data.begin(), m_data.end(), cmpSongTitleDesc      ); break;
-            case  2: qSort(m_data.begin(), m_data.end(), cmpSongArtistDesc     ); break;
-            case  3: qSort(m_data.begin(), m_data.end(), cmpSongAlbumDesc      ); break;
-            case  4: qSort(m_data.begin(), m_data.end(), cmpSongAlbumArtistDesc); break;
-            case  5: qSort(m_data.begin(), m_data.end(), cmpSongComposerDesc   ); break;
-            case  6: qSort(m_data.begin(), m_data.end(), cmpSongYearDesc       ); break;
-            case  7: qSort(m_data.begin(), m_data.end(), cmpSongTrackDesc      ); break;
-            case  8: qSort(m_data.begin(), m_data.end(), cmpSongDiscDesc       ); break;
-            case  9: qSort(m_data.begin(), m_data.end(), cmpSongGenreDesc      ); break;
-            case 10: qSort(m_data.begin(), m_data.end(), cmpSongRatingDesc     ); break;
-            case 11: qSort(m_data.begin(), m_data.end(), cmpSongCommentsDesc   ); break;
-            case 12: qSort(m_data.begin(), m_data.end(), cmpSongPlayCountDesc  ); break;
-            case 13: qSort(m_data.begin(), m_data.end(), cmpSongLastPlayedDesc ); break;
-            case 14: qSort(m_data.begin(), m_data.end(), cmpSongFileNameDesc   ); break;
-            case 15: qSort(m_data.begin(), m_data.end(), cmpSongBitRateDesc    ); break;
-            case 16: qSort(m_data.begin(), m_data.end(), cmpSongFormatDesc     ); break;
-            case 17: qSort(m_data.begin(), m_data.end(), cmpSongDurationDesc   ); break;
-            case 18: qSort(m_data.begin(), m_data.end(), cmpSongSampleRateDesc ); break;
+            case CSongTable::ColPosition        : qSort(m_data.begin(), m_data.end(), cmpSongPositionDesc        ); break;
+            case CSongTable::ColTitle           : qSort(m_data.begin(), m_data.end(), cmpSongTitleDesc           ); break;
+            case CSongTable::ColArtist          : qSort(m_data.begin(), m_data.end(), cmpSongArtistDesc          ); break;
+            case CSongTable::ColAlbum           : qSort(m_data.begin(), m_data.end(), cmpSongAlbumDesc           ); break;
+            case CSongTable::ColAlbumArtist     : qSort(m_data.begin(), m_data.end(), cmpSongAlbumArtistDesc     ); break;
+            case CSongTable::ColComposer        : qSort(m_data.begin(), m_data.end(), cmpSongComposerDesc        ); break;
+            case CSongTable::ColYear            : qSort(m_data.begin(), m_data.end(), cmpSongYearDesc            ); break;
+            case CSongTable::ColTrackNumber     : qSort(m_data.begin(), m_data.end(), cmpSongTrackDesc           ); break;
+            case CSongTable::ColDiscNumber      : qSort(m_data.begin(), m_data.end(), cmpSongDiscDesc            ); break;
+            case CSongTable::ColGenre           : qSort(m_data.begin(), m_data.end(), cmpSongGenreDesc           ); break;
+            case CSongTable::ColRating          : qSort(m_data.begin(), m_data.end(), cmpSongRatingDesc          ); break;
+            case CSongTable::ColComments        : qSort(m_data.begin(), m_data.end(), cmpSongCommentsDesc        ); break;
+            case CSongTable::ColPlayCount       : qSort(m_data.begin(), m_data.end(), cmpSongPlayCountDesc       ); break;
+            case CSongTable::ColLastPlayTime    : qSort(m_data.begin(), m_data.end(), cmpSongLastPlayedDesc      ); break;
+            case CSongTable::ColFileName        : qSort(m_data.begin(), m_data.end(), cmpSongFileNameDesc        ); break;
+            case CSongTable::ColBitRate         : qSort(m_data.begin(), m_data.end(), cmpSongBitRateDesc         ); break;
+            case CSongTable::ColFormat          : qSort(m_data.begin(), m_data.end(), cmpSongFormatDesc          ); break;
+            case CSongTable::ColDuration        : qSort(m_data.begin(), m_data.end(), cmpSongDurationDesc        ); break;
+            case CSongTable::ColSampleRate      : qSort(m_data.begin(), m_data.end(), cmpSongSampleRateDesc      ); break;
+            case CSongTable::ColCreationDate    : qSort(m_data.begin(), m_data.end(), cmpSongCreationDateDesc    ); break;
+            case CSongTable::ColModificationDate: qSort(m_data.begin(), m_data.end(), cmpSongModificationDateDesc); break;
         }
     }
 
@@ -456,14 +443,22 @@ int CSongTableModel::getRowForSongItem(CSongTableItem * songItem) const
 }
 
 
-/// \todo Implémentation.
+/**
+ * Cherche le morceau situé avant un autre dans la liste.
+ *
+ * \todo Implémenter la lecture aléatoire.
+ *
+ * \param songItem Item actuel.
+ * \param shuffle  Indique si la lecture aléatoire est activée.
+ * \return Item précédent.
+ */
+
 CSongTableItem * CSongTableModel::getPreviousSong(CSongTableItem * songItem, bool shuffle) const
 {
-    //...
-    return NULL;
-/*
     if (songItem)
     {
+        const int row = getRowForSongItem(songItem);
+
         if (shuffle)
         {
             //TODO...
@@ -471,7 +466,7 @@ CSongTableItem * CSongTableModel::getPreviousSong(CSongTableItem * songItem, boo
         }
         else
         {
-            return (pos > 0 ? pos - 1 : NULL);
+            return (row <= 0 ? NULL : m_data.at(row - 1));
         }
     }
     else
@@ -486,11 +481,19 @@ CSongTableItem * CSongTableModel::getPreviousSong(CSongTableItem * songItem, boo
             return NULL;
         }
     }
-*/
 }
 
 
-/// \todo Implémentation.
+/**
+ * Cherche le morceau situé après un autre dans la liste.
+ *
+ * \todo Implémenter la lecture aléatoire.
+ *
+ * \param songItem Item actuel.
+ * \param shuffle  Indique si la lecture aléatoire est activée.
+ * \return Item suivant.
+ */
+
 CSongTableItem * CSongTableModel::getNextSong(CSongTableItem * songItem, bool shuffle) const
 {
     if (songItem)

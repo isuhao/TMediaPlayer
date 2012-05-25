@@ -16,7 +16,10 @@ public:
     CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget * parent = NULL);
     ~CDialogEditSongs();
 
-    //...
+protected slots:
+
+    void apply(void);
+    void save(void);
 
 private:
     

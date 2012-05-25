@@ -55,7 +55,7 @@ bool CDynamicPlayList::updateDatabase(void)
         if (!query.exec())
         {
             QString error = query.lastError().text();
-            QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
+            QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
             return false;
         }
 
@@ -74,7 +74,7 @@ bool CDynamicPlayList::updateDatabase(void)
         if (!query.exec())
         {
             QString error = query.lastError().text();
-            QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
+            QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
             return false;
         }
 
@@ -88,7 +88,7 @@ bool CDynamicPlayList::updateDatabase(void)
         if (!query.exec())
         {
             QString error = query.lastError().text();
-            QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
+            QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
             return false;
         }
 
@@ -103,14 +103,14 @@ bool CDynamicPlayList::updateDatabase(void)
         if (!query.exec())
         {
             QString error = query.lastError().text();
-            QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
+            QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
             return false;
         }
 
         if (!query.next())
         {
             QString error = query.lastError().text();
-            QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
+            QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
             return false;
         }
 
@@ -124,7 +124,7 @@ bool CDynamicPlayList::updateDatabase(void)
         if (!query.exec())
         {
             QString error = query.lastError().text();
-            QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
+            QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
             return false;
         }
     }

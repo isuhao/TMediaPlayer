@@ -285,7 +285,7 @@
         <widget class="QLineEdit" name="editTrackNumber">
          <property name="maximumSize">
           <size>
-           <width>35</width>
+           <width>36</width>
            <height>16777215</height>
           </size>
          </property>
@@ -298,7 +298,7 @@
         <widget class="QLineEdit" name="editTrackTotal">
          <property name="maximumSize">
           <size>
-           <width>35</width>
+           <width>36</width>
            <height>16777215</height>
           </size>
          </property>
@@ -386,7 +386,7 @@
         <widget class="QLineEdit" name="editDiscNumber">
          <property name="maximumSize">
           <size>
-           <width>35</width>
+           <width>36</width>
            <height>16777215</height>
           </size>
          </property>
@@ -432,7 +432,7 @@
         <widget class="QLineEdit" name="editDiscTotal">
          <property name="maximumSize">
           <size>
-           <width>35</width>
+           <width>36</width>
            <height>16777215</height>
           </size>
          </property>
@@ -582,7 +582,7 @@
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QLineEdit" name="lineEdit"/>
+          <widget class="QLineEdit" name="editSubTitle"/>
          </item>
         </layout>
        </item>

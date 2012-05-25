@@ -1,5 +1,3 @@
-+ Gérer sous-titre
-+ Gérer le parolier
 
 + Préférences :
    + Ecrire la durée du morceau dans les tags (TLEN)
@@ -16,6 +14,9 @@
   - Mise à jour des morceaux.
 
 - Lire les métadonnées d'un morceau au chargement.
+  - Si le genre est un nombre, utiliser les genres de ID3v1.
+  - L'année n'est pas chargée. (MP3)
+  - La taille du fichier n'est pas calculée.
 - Écrire les métadonnées d'un morceau.
 
 - Terminer la boite de dialogue Edit Song.
@@ -53,6 +54,8 @@
 - Menu contextuel dans les listes : enlever de la library.
 
 - Ajouter la métadonnée "Battements par minute".
+- Ajouter la métadonnée "Parolier".
+- Gérer la métadonnée "Sous-titre".
 - Ajouter l'information "Fait partie d'une compilation".
 - Ajouter l'option "Ne pas lire en mode aléatoire".
 - Ajouter l'option "Morceau désactivé".

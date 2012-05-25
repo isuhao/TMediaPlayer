@@ -15,6 +15,8 @@ int main(int argc, char * argv[])
     app.installTranslator(&translator);
 
     CApplication lecteur;
+    lecteur.initWindow();
     lecteur.show();
+
     return app.exec();
 }

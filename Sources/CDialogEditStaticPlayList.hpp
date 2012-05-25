@@ -26,8 +26,8 @@ protected slots:
 private:
     
     Ui::DialogEditStaticPlayList * m_uiWidget;
-    CApplication * m_application;
     CStaticPlayList * m_playList;
+    CApplication * m_application;
 };
 
 #endif // FILE_CDIALOG_EDIT_STATIC_PLAYLIST

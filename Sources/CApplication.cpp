@@ -40,7 +40,7 @@
 
 
 CApplication::CApplication(void) :
-    QMainWindow          (),
+    QMainWindow          (NULL),
     m_uiWidget           (new Ui::TMediaPlayer()),
     m_soundSystem        (NULL),
     m_playListView       (NULL),
@@ -62,27 +62,9 @@ CApplication::CApplication(void) :
 
     // Initialisation de l'interface graphique
     m_uiWidget->setupUi(this);
-    
+
     restoreGeometry(m_settings->value("Window/WindowGeometry").toByteArray());
     restoreState(m_settings->value("Window/WindowState").toByteArray());
-
-    m_playListView = new CPlayListView(this);
-    m_uiWidget->splitter->addWidget(m_playListView);
-    
-    int treeWidth = m_settings->value("Window/PlayListViewWidth", 200).toInt();
-    m_uiWidget->splitter->setSizes(QList<int>() << treeWidth);
-
-    //m_listModel = new QStandardItemModel(this);
-    //m_playListView->setModel(m_listModel);
-    connect(m_playListView, SIGNAL(clicked(const QModelIndex&)), this, SLOT(selectPlayListFromTreeView(const QModelIndex&)));
-
-
-    // Initialisation de FMOD
-    if (!initSoundSystem())
-    {
-        QMessageBox::critical(this, QString(), tr("Failed to init sound system with FMOD."));
-        QCoreApplication::exit();
-    }
 
 
     // Connexions des signaux et des slots
@@ -129,40 +111,6 @@ CApplication::CApplication(void) :
 
 
     connect(this, SIGNAL(songPlayStart(CSong *)), this, SLOT(updateSongDescription(CSong *)));
-
-
-    // Chargement de la base de données
-    m_dataBase = QSqlDatabase::addDatabase("QSQLITE");
-
-    QString dbHostName = m_settings->value("Database/Host", QString("localhost")).toString();
-    QString dbBaseName = m_settings->value("Database/Base", QString("library.sqlite")).toString();
-    QString dbUserName = m_settings->value("Database/UserName", QString("root")).toString();
-    QString dbPassword = m_settings->value("Database/Password", QString("")).toString();
-
-    m_dataBase.setHostName(dbHostName);
-    m_dataBase.setDatabaseName(dbBaseName);
-    m_dataBase.setUserName(dbUserName);
-    m_dataBase.setPassword(dbPassword);
-
-    m_settings->setValue("Database/Host", dbHostName);
-    m_settings->setValue("Database/Base", dbBaseName);
-    m_settings->setValue("Database/UserName", dbUserName);
-    m_settings->setValue("Database/Password", dbPassword);
-
-    if (!m_dataBase.open())
-    {
-        QMessageBox::critical(this, QString(), tr("Failed to load database."));
-        QCoreApplication::exit();
-    }
-
-    loadDatabase();
-
-    m_timer = new QTimer(this);
-    connect(m_timer, SIGNAL(timeout()), this, SLOT(update()));
-    m_timer->start(400);
-
-    displaySongTable(m_library);
-    updateSongDescription(NULL);
 }
 
 
@@ -172,6 +120,8 @@ CApplication::CApplication(void) :
 
 CApplication::~CApplication()
 {
+    qDebug() << "CApplication::~CApplication()";
+
     m_timer->stop();
 
     // Largeur de la vue pour les listes de lecture
@@ -188,7 +138,7 @@ CApplication::~CApplication()
         playList->updateDatabase();
         delete playList;
     }
-    
+
     m_library->updateDatabase();
     m_library->deleteSongs();
     delete m_library;
@@ -196,6 +146,69 @@ CApplication::~CApplication()
     m_dataBase.close();
 
     m_soundSystem->release();
+}
+
+
+void CApplication::initWindow(void)
+{
+    static bool init = false;
+
+    if (!init)
+    {
+        m_playListView = new CPlayListView(this);
+        m_uiWidget->splitter->addWidget(m_playListView);
+
+        int treeWidth = m_settings->value("Window/PlayListViewWidth", 200).toInt();
+        m_uiWidget->splitter->setSizes(QList<int>() << treeWidth);
+
+        //m_listModel = new QStandardItemModel(this);
+        //m_playListView->setModel(m_listModel);
+        connect(m_playListView, SIGNAL(clicked(const QModelIndex&)), this, SLOT(selectPlayListFromTreeView(const QModelIndex&)));
+
+
+        // Initialisation de FMOD
+        if (!initSoundSystem())
+        {
+            QMessageBox::critical(this, QString(), tr("Failed to init sound system with FMOD."));
+            QCoreApplication::exit();
+        }
+
+
+        // Chargement de la base de données
+        m_dataBase = QSqlDatabase::addDatabase("QSQLITE");
+
+        QString dbHostName = m_settings->value("Database/Host", QString("localhost")).toString();
+        QString dbBaseName = m_settings->value("Database/Base", QString("library.sqlite")).toString();
+        QString dbUserName = m_settings->value("Database/UserName", QString("root")).toString();
+        QString dbPassword = m_settings->value("Database/Password", QString("")).toString();
+
+        m_dataBase.setHostName(dbHostName);
+        m_dataBase.setDatabaseName(dbBaseName);
+        m_dataBase.setUserName(dbUserName);
+        m_dataBase.setPassword(dbPassword);
+
+        m_settings->setValue("Database/Host", dbHostName);
+        m_settings->setValue("Database/Base", dbBaseName);
+        m_settings->setValue("Database/UserName", dbUserName);
+        m_settings->setValue("Database/Password", dbPassword);
+
+        if (!m_dataBase.open())
+        {
+            QMessageBox::critical(this, QString(), tr("Failed to load database."));
+            QCoreApplication::exit();
+        }
+
+        loadDatabase();
+
+        m_timer = new QTimer(this);
+        connect(m_timer, SIGNAL(timeout()), this, SLOT(update()));
+        m_timer->start(400);
+
+        displaySongTable(m_library);
+        updateSongDescription(NULL);
+
+        init = true;
+    }
 }
 
 
@@ -477,7 +490,7 @@ void CApplication::selectAll(void)
     m_displayedSongTable->selectAll();
 }
 
-    
+
 void CApplication::selectNone(void)
 {
     Q_CHECK_PTR(m_displayedSongTable);
@@ -759,7 +772,7 @@ void CApplication::setPosition(int position)
         if (songPosition >= 0)
         {
             m_uiWidget->sliderPosition->setValue(songPosition);
-            
+
             QTime positionTime(0, 0);
             positionTime = positionTime.addMSecs(songPosition);
             m_uiWidget->lblPosition->setText(positionTime.toString("m:ss"));
@@ -826,7 +839,7 @@ void CApplication::deletePlayList(CPlayList * playList)
         m_displayedSongTable = m_library;
         //TODO: maj vue
     }
-    
+
     if (playList->getFolder())
     {
         //TODO: maj vue gauche
@@ -970,7 +983,7 @@ qDebug() << songItemList;
 
         return;
     }
-    
+
     // Recherche du morceau sélectionné
     CSongTableItem * songItem = m_displayedSongTable->getSelectedSongItem();
 
@@ -1060,150 +1073,159 @@ void CApplication::addPlayList(CPlayList * playList)
 
 void CApplication::addSong(const QString& fileName)
 {
-    QSqlQuery query(m_dataBase);
-    query.prepare("SELECT song_id FROM song WHERE song_filename = ?");
-    query.bindValue(0, fileName);
+    qDebug() << "Chargement du fichier " << fileName;
 
-    if (!query.exec())
+    CSong * song = CSong::loadFromFile(this, fileName);
+    if (song)
     {
-        QString error = query.lastError().text();
-        QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
+        m_library->addSong(song);
+        return;
     }
 
-    if (!query.next())
+qDebug() << "Erreur";
+return;
+
+    //---------- OLD ------------------------------------
+
+    // On vérifie que le fichier n'est pas déjà dans la médiathèque
+    if (CSong::getId(this, fileName) >= 0)
     {
-        qDebug() << "Chargement du fichier " << fileName;
+        qDebug() << "Fichier déjà présent dans la médiathèque.";
+        return;
+    }
 
-        FMOD_RESULT res;
-        FMOD::Sound * sound;
+    FMOD_RESULT res;
+    FMOD::Sound * sound;
 
-        // Chargement du son
-        res = m_soundSystem->createStream(qPrintable(fileName), FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, NULL, &sound);
+    // Chargement du son
+    res = m_soundSystem->createStream(qPrintable(fileName), FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, NULL, &sound);
 
-        if (res == FMOD_OK && sound)
+    if (res == FMOD_OK && sound)
+    {
+        qDebug() << "Erreur lors du chargement du son avec FMOD";
+        return;
+    }
+
+    song = new CSong(this);
+    song->m_isModified = true;
+
+    song->m_fileName = fileName;
+    song->m_fileSize = 0; // TODO
+    song->m_bitRate  = 0; // TODO
+
+    FMOD_SOUND_TYPE type;
+    FMOD_SOUND_FORMAT format;
+    int bits;
+    res = sound->getFormat(&type, &format, &(song->m_numChannels), &bits);
+
+    switch (type)
+    {
+        default:
+            song->m_format = CSong::FormatUnknown;
+            break;
+
+        case FMOD_SOUND_TYPE_MPEG:
+            song->m_format = CSong::FormatMP3;
+            break;
+
+        case FMOD_SOUND_TYPE_OGGVORBIS:
+            song->m_format = CSong::FormatOGG;
+            break;
+
+        case FMOD_SOUND_TYPE_FLAC:
+            song->m_format = CSong::FormatFLAC;
+            break;
+    }
+
+    FMOD_TAG tag;
+    int numTags;
+    res = sound->getNumTags(&numTags, NULL);
+    qDebug() << "Nombre de tags = " << numTags;
+
+    for (int i = 0; i < numTags; ++i)
+    {
+        res = sound->getTag(NULL, i, &tag);
+        qDebug() << "Tag[" << i << "] : " << tag.name << " = " << (res == FMOD_OK ? reinterpret_cast<char *>(tag.data) : "?");
+    }
+
+    res = sound->getLength(reinterpret_cast<unsigned int *>(&(song->m_duration)), FMOD_TIMEUNIT_MS);
+
+    res = sound->getTag("TITLE", 0, &tag);
+    song->m_title       = (res == FMOD_OK ? reinterpret_cast<char *>(tag.data) : "");
+
+    res = sound->getTag("ARTIST", 0, &tag);
+    song->m_artistName  = (res == FMOD_OK ? reinterpret_cast<char *>(tag.data) : "");
+
+    res = sound->getTag("ALBUM", 0, &tag);
+    song->m_albumTitle  = (res == FMOD_OK ? reinterpret_cast<char *>(tag.data) : "");
+
+    res = sound->getTag("YEAR", 0, &tag);
+    if (res == FMOD_OK)
+    {
+        QString yearString = reinterpret_cast<char *>(tag.data);
+        song->m_year = yearString.toInt();
+    }
+
+    song->m_trackNumber = 0;
+    song->m_trackTotal  = 0;
+    song->m_discNumber  = 0;
+    song->m_discTotal   = 0;
+
+    res = sound->getTag("GENRE", 0, &tag);
+    song->m_genre       = "";
+
+    song->m_rating      = 0;
+    song->m_comments    = "";
+
+    sound->release();
+
+    TagLib::FileRef f(qPrintable(fileName));
+
+    switch (song->m_format)
+    {
+        case CSong::FormatMP3:
+            break;
+
+        case CSong::FormatOGG:
+            break;
+
+        case CSong::FormatFLAC:
         {
-            FMOD_TAG tag;
-            FMOD_RESULT res;
+            TagLib::FLAC::File * file = dynamic_cast<TagLib::FLAC::File *>(f.file());
 
-            CSong * song = new CSong(this);
-            song->m_isModified = true;
-
-            song->m_fileName = fileName;
-            song->m_fileSize = 0; // TODO
-            song->m_bitRate  = 0; // TODO
-
-            FMOD_SOUND_TYPE type;
-            FMOD_SOUND_FORMAT format;
-            int bits;
-            res = sound->getFormat(&type, &format, &(song->m_numChannels), &bits);
-
-            switch (type)
+            if (!file)
             {
-                default:
-                    song->m_format = CSong::FormatUnknown;
-                    break;
-
-                case FMOD_SOUND_TYPE_MPEG:
-                    song->m_format = CSong::FormatMP3;
-                    break;
-
-                case FMOD_SOUND_TYPE_OGGVORBIS:
-                    song->m_format = CSong::FormatOGG;
-                    break;
-
-                case FMOD_SOUND_TYPE_FLAC:
-                    song->m_format = CSong::FormatFLAC;
-                    break;
+                qWarning() << "Le fichier n'est pas au format FLAC selon TagLib";
+                break;
             }
 
-            int numTags;
-            res = sound->getNumTags(&numTags, NULL);
-            qDebug() << "Nombre de tags = " << numTags;
+            TagLib::Ogg::XiphComment * xiphComment = file->xiphComment(true);
 
-            for (int i = 0; i < numTags; ++i)
+            QString tagTitle = QString::fromUtf8(xiphComment->title().toCString(true));
+            QString tagArtist = QString::fromUtf8(xiphComment->artist().toCString(true));
+            QString tagAlbum = QString::fromUtf8(xiphComment->album().toCString(true));
+            QString tagComments = QString::fromUtf8(xiphComment->comment().toCString(true));
+            QString tagGenre = QString::fromUtf8(xiphComment->genre().toCString(true));
+
+            int fieldCount = xiphComment->fieldCount();
+
+            if (fieldCount > 0)
             {
-                res = sound->getTag(NULL, i, &tag);
-                qDebug() << "Tag[" << i << "] : " << tag.name << " = " << (res == FMOD_OK ? reinterpret_cast<char *>(tag.data) : "?");
-            }
-
-            res = sound->getLength(reinterpret_cast<unsigned int *>(&(song->m_duration)), FMOD_TIMEUNIT_MS);
-
-            res = sound->getTag("TITLE", 0, &tag);
-            song->m_title       = (res == FMOD_OK ? reinterpret_cast<char *>(tag.data) : "");
-
-            res = sound->getTag("ARTIST", 0, &tag);
-            song->m_artistName  = (res == FMOD_OK ? reinterpret_cast<char *>(tag.data) : "");
-
-            res = sound->getTag("ALBUM", 0, &tag);
-            song->m_albumTitle  = (res == FMOD_OK ? reinterpret_cast<char *>(tag.data) : "");
-
-            res = sound->getTag("YEAR", 0, &tag);
-            if (res == FMOD_OK)
-            {
-                QString yearString = reinterpret_cast<char *>(tag.data);
-                song->m_year = yearString.toInt();
-            }
-
-            song->m_trackNumber = 0;
-            song->m_trackTotal  = 0;
-            song->m_discNumber  = 0;
-            song->m_discTotal   = 0;
-
-            res = sound->getTag("GENRE", 0, &tag);
-            song->m_genre       = "";
-
-            song->m_rating      = 0;
-            song->m_comments    = "";
-
-            sound->release();
-
-            TagLib::FileRef f(qPrintable(fileName));
-
-            switch (song->m_format)
-            {
-                case CSong::FormatMP3:
-                    break;
-
-                case CSong::FormatOGG:
-                    break;
-
-                case CSong::FormatFLAC:
+                const TagLib::Ogg::FieldListMap& fieldList = xiphComment->fieldListMap();
+                /*
+                for (TagLib::Ogg::FieldListMap::ConstIterator it = fieldList.begin() ; it != fieldList.end(); ++it)
                 {
-                    TagLib::FLAC::File * file = dynamic_cast<TagLib::FLAC::File *>(f.file());
-
-                    if (!file)
+                    qDebug() << QString::fromUtf8(it->first.toCString(true));
+                    for (TagLib::StringList::ConstIterator it2 = it->second.begin(); it2 != it->second.end(); ++it2)
                     {
-                        qWarning() << "Le fichier n'est pas au format FLAC selon TagLib";
-                        break;
+                        qDebug() << QString::fromUtf8(it2->toCString(true));
                     }
-
-                    TagLib::Ogg::XiphComment * xiphComment = file->xiphComment(true);
-
-                    QString tagTitle = QString::fromUtf8(xiphComment->title().toCString(true));
-                    QString tagArtist = QString::fromUtf8(xiphComment->artist().toCString(true));
-                    QString tagAlbum = QString::fromUtf8(xiphComment->album().toCString(true));
-                    QString tagComments = QString::fromUtf8(xiphComment->comment().toCString(true));
-                    QString tagGenre = QString::fromUtf8(xiphComment->genre().toCString(true));
-
-                    int fieldCount = xiphComment->fieldCount();
-
-                    if (fieldCount > 0)
-                    {
-                        const TagLib::Ogg::FieldListMap& fieldList = xiphComment->fieldListMap();
-                        /*
-                        for (TagLib::Ogg::FieldListMap::ConstIterator it = fieldList.begin() ; it != fieldList.end(); ++it)
-                        {
-                            qDebug() << QString::fromUtf8(it->first.toCString(true));
-                            for (TagLib::StringList::ConstIterator it2 = it->second.begin(); it2 != it->second.end(); ++it2)
-                            {
-                                qDebug() << QString::fromUtf8(it2->toCString(true));
-                            }
-                        }
-                        */
-                    }
+                }
+                */
+            }
 /*
 virtual uint 	year () const
-virtual uint 	track () const 
+virtual uint 	track () const
 */
 
 /*
@@ -1212,22 +1234,20 @@ ID3v1::Tag * 	ID3v1Tag (bool create=false)
 xiphComment (bool create=false)
 */
 
-                    //...
-
-                    break;
-                }
-            }
-
-            song->updateDatabase();
-            m_library->addSong(song);
-
             //...
 
-            //TODO: les ajouter...
-            //TODO: maj vue
+            break;
         }
     }
 
+    song->updateDatabase();
+    m_library->addSong(song);
+
+    //-------------------------------------------------
+
+    //...
+
+    //TODO: les ajouter...
     //TODO: ouvrir fichier
     //TODO: maj DB
     //TODO: maj library
@@ -1261,39 +1281,36 @@ QStringList CApplication::addFolder(const QString& pathName)
 }
 
 
-void CApplication::editSong(CSong * song)
+void CApplication::editSong(CSongTableItem * songItem)
 {
-    if (!song)
+    if (!songItem)
     {
         return;
     }
 
-    //TODO: open dialog edit song
-    //TODO: appel song->set...
-    song->updateDatabase();
-    //TODO: MAJ vues
-
-    emit songModified(song);
+    CDialogEditSong * dialog = new CDialogEditSong(songItem, m_displayedSongTable);
+    dialog->show();
 }
 
 
-void CApplication::removeSong(CSong * song)
+void CApplication::removeSong(CSongTableItem * songItem)
 {
-    if (!song)
+    if (!songItem)
     {
         return;
     }
 
     //TODO: confirmation
 
-    if (m_currentSongItem->getSong() == song)
+    if (m_currentSongItem == songItem)
     {
         stop();
+        m_currentSongItem = NULL;
     }
 
     //TODO: maj vue
 
-    m_library->removeSong(song);
+    m_library->removeSong(songItem->getSong());
 
     foreach (CListFolder * folder, m_folders)
     {
@@ -1303,7 +1320,7 @@ void CApplication::removeSong(CSong * song)
 
             if (staticPlayList)
             {
-                staticPlayList->removeSong(song);
+                staticPlayList->removeSong(songItem->getSong());
             }
         }
     }
@@ -1314,15 +1331,15 @@ void CApplication::removeSong(CSong * song)
 
         if (staticPlayList)
         {
-            staticPlayList->removeSong(song);
+            staticPlayList->removeSong(songItem->getSong());
         }
     }
 
     //TODO: maj DB
 
-    emit songRemoved(song);
+    emit songRemoved(songItem->getSong());
 
-    delete song;
+    delete songItem->getSong();
 }
 
 
@@ -1489,10 +1506,16 @@ void CApplication::selectPlayListFromTreeView(const QModelIndex& index)
     //CSongTable * songTable = m_listModel->data(index, Qt::UserRole + 1).value<CSongTable *>();
     CSongTable * songTable = m_playListView->getSongTable(index);
     displaySongTable(songTable);
-
-    //TODO...
 }
 
+
+/**
+ * Change la liste affichée.
+ *
+ * \todo Mettre à jour la barre d'état.
+ *
+ * \param songTable Liste de morceaux à afficher.
+ */
 
 void CApplication::displaySongTable(CSongTable * songTable)
 {
@@ -1508,15 +1531,24 @@ void CApplication::displaySongTable(CSongTable * songTable)
         m_displayedSongTable = songTable;
         m_displayedSongTable->show();
 
-        //TODO...
+        // Barre d'état
+        QTime duration(0, 0);
+        duration = duration.addMSecs(m_displayedSongTable->getTotalDuration());
+        statusBar()->addWidget(new QLabel(tr("%1 song(s), %2").arg(m_displayedSongTable->getNumSongs()).arg(duration.toString())));
     }
 }
 
 
+/**
+ * Initialise FMOD.
+ *
+ * \return Booléen indiquant le succès ou l'échec du chargement.
+ */
+
 bool CApplication::initSoundSystem(void)
 {
     FMOD_RESULT res;
-    
+
     res = FMOD::System_Create(&m_soundSystem);
     if (res != FMOD_OK) return false;
 
@@ -1545,7 +1577,7 @@ bool CApplication::initSoundSystem(void)
         FMOD_SPEAKERMODE speakermode;
         res = m_soundSystem->getDriverCaps(0, &caps, NULL, &speakermode);
         if (res != FMOD_OK) return false;
-        
+
         // Set the user selected speaker mode
         res = m_soundSystem->setSpeakerMode(speakermode);
         if (res != FMOD_OK) return false;
@@ -1579,6 +1611,12 @@ bool CApplication::initSoundSystem(void)
 }
 
 
+/**
+ * Charge la base de données.
+ *
+ * \todo Utiliser les méthodes dédiées dans les classes CSongTable et CListFolder.
+ */
+
 void CApplication::loadDatabase(void)
 {
     QSqlQuery query(m_dataBase);
@@ -1606,87 +1644,8 @@ void CApplication::loadDatabase(void)
 
 
     // Liste des morceaux
-    if (!query.exec(
-        "SELECT song_id, song_filename, song_filesize, song_bitrate, song_format, song_channels, "
-               "song_duration, song_creation, song_modification, song_title, song_title_sort, "
-               "song_artist.artist_name, song_artist.artist_name_sort, album_title, album_title_sort, "
-               "album_artist.artist_name, album_artist.artist_name_sort, song_composer, "
-               "song_composer_sort, song_year, song_track_number, song_track_total, song_disc_number, "
-               "song_disc_total, genre_name, song_rating, song_comments, song_lyrics, song_language "
-        "FROM song "
-        "NATURAL JOIN artist AS song_artist "
-        "NATURAL JOIN album "
-        "NATURAL JOIN genre "
-        "LEFT JOIN artist AS album_artist ON album_artist.artist_id = album_artist_id "))
-    {
-        QString error = query.lastError().text();
-        QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
-    }
-    
-    while (query.next())
-    {
-        CSong * song = new CSong(this);
-
-        song->m_id           = query.value(0).toInt();
-        song->m_fileName     = query.value(1).toString();
-        song->m_fileSize     = query.value(2).toInt();
-        song->m_bitRate      = query.value(3).toInt();
-        song->m_sampleRate   = 0; // TODO
-        song->m_encoder      = ""; // TODO
-        song->m_format       = CSong::getFormatFromInteger(query.value(4).toInt());
-        song->m_numChannels  = query.value(5).toInt();
-        song->m_duration     = query.value(6).toInt();
-        song->m_creation     = query.value(7).toDateTime();
-        song->m_modification = query.value(8).toDateTime();
-
-        song->m_title           = query.value(9).toString();
-        song->m_titleSort       = query.value(10).toString();
-        song->m_artistName      = query.value(11).toString();
-        song->m_artistNameSort  = query.value(12).toString();
-        song->m_albumTitle      = query.value(13).toString();
-        song->m_albumTitleSort  = query.value(14).toString();
-        song->m_albumArtist     = query.value(15).toString();
-        song->m_albumArtistSort = query.value(16).toString();
-        song->m_composer        = query.value(17).toString();
-        song->m_composerSort    = query.value(18).toString();
-
-        song->m_year        = query.value(19).toInt();
-        song->m_trackNumber = query.value(20).toInt();
-        song->m_trackTotal  = query.value(21).toInt();
-        song->m_discNumber  = query.value(22).toInt();
-        song->m_discTotal   = query.value(23).toInt();
-        song->m_genre       = query.value(24).toString();
-        song->m_rating      = query.value(25).toInt();
-        song->m_comments    = query.value(26).toString();
-        song->m_lyrics      = query.value(27).toString();
-
-        const QString lang = query.value(28).toString();
-
-             if (lang == "FR") song->m_language = CSong::LangFrench;
-        else if (lang == "EN") song->m_language = CSong::LangEnglish;
-        else if (lang == "DE") song->m_language = CSong::LangGerman;
-        else if (lang == "IT") song->m_language = CSong::LangItalian;
-        else                   song->m_language = CSong::LangUnknown;
-
-        // Lectures
-        QSqlQuery query2(m_dataBase);
-
-        query2.prepare("SELECT play_time FROM play WHERE song_id = ? ORDER BY play_time DESC");
-        query2.bindValue(0, song->m_id);
-
-        if (!query2.exec())
-        {
-            QString error = query2.lastError().text();
-            QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
-        }
-    
-        while (query2.next())
-        {
-            song->m_plays.append(query2.value(0).toDateTime());
-        }
-
-        m_library->addSongToTable(song);
-    }
+    QList<CSong *> songList = CSong::loadAllSongsFromDatabase(this);
+    m_library->addSongsToTable(songList);
 
 
     // Création des dossiers
@@ -1695,7 +1654,7 @@ void CApplication::loadDatabase(void)
         QString error = query.lastError().text();
         QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
     }
-    
+
     while (query.next())
     {
         //CListFolder * folder = new CListFolder();
@@ -1711,7 +1670,7 @@ void CApplication::loadDatabase(void)
         QString error = query.lastError().text();
         QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
     }
-    
+
     while (query.next())
     {
         CStaticPlayList * playList = new CStaticPlayList(this, query.value(1).toString());
@@ -1739,7 +1698,7 @@ void CApplication::loadDatabase(void)
 
         addPlayList(playList);
     }
-    
+
 
     // Création des listes de lecture dynamiques
     if (!query.exec("SELECT dynamic_list_id, playlist_name, dynamic_list_union FROM dynamic_list NATURAL JOIN playlist ORDER BY list_position"))
@@ -1747,7 +1706,7 @@ void CApplication::loadDatabase(void)
         QString error = query.lastError().text();
         QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
     }
-    
+
     while (query.next())
     {
         //...
@@ -1776,6 +1735,7 @@ void CApplication::startPlay(void)
 void CApplication::keyPressEvent(QKeyEvent * event)
 {
     qDebug() << event->key();
+    event->accept();
 }
 
 

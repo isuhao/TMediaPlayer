@@ -10,12 +10,12 @@
     <x>0</x>
     <y>0</y>
     <width>600</width>
-    <height>400</height>
+    <height>450</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>600</width>
+    <width>500</width>
     <height>400</height>
    </size>
   </property>
@@ -36,21 +36,21 @@
        <property name="verticalSpacing">
         <number>3</number>
        </property>
-       <item row="10" column="0">
+       <item row="13" column="0">
         <widget class="QCheckBox" name="chComposer">
          <property name="text">
           <string notr="true"/>
          </property>
         </widget>
        </item>
-       <item row="12" column="0">
+       <item row="15" column="0">
         <widget class="QCheckBox" name="chComments">
          <property name="text">
           <string notr="true"/>
          </property>
         </widget>
        </item>
-       <item row="5" column="6">
+       <item row="6" column="6">
         <widget class="QLineEdit" name="editTrackTotal">
          <property name="maximumSize">
           <size>
@@ -63,7 +63,7 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="3" colspan="4">
+       <item row="5" column="3" colspan="4">
         <widget class="QLabel" name="lblTrackNumber">
          <property name="font">
           <font>
@@ -80,7 +80,7 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
+       <item row="3" column="1">
         <widget class="QLabel" name="lblArtist">
          <property name="font">
           <font>
@@ -97,7 +97,7 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
+       <item row="5" column="1">
         <widget class="QLabel" name="lblAlbum">
          <property name="font">
           <font>
@@ -114,7 +114,7 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="1">
+       <item row="7" column="1">
         <widget class="QLabel" name="lblAlbumArtist">
          <property name="font">
           <font>
@@ -131,14 +131,14 @@
          </property>
         </widget>
        </item>
-       <item row="14" column="1">
+       <item row="17" column="1">
         <widget class="QComboBox" name="editGenre">
          <property name="editable">
           <bool>true</bool>
          </property>
         </widget>
        </item>
-       <item row="7" column="3">
+       <item row="8" column="3">
         <widget class="QLineEdit" name="editDiscNumber">
          <property name="maximumSize">
           <size>
@@ -151,7 +151,7 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="3" colspan="4">
+       <item row="3" column="3" colspan="4">
         <widget class="QLabel" name="lblYear">
          <property name="font">
           <font>
@@ -168,13 +168,13 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="1">
+       <item row="6" column="1">
         <widget class="QLineEdit" name="editAlbum"/>
        </item>
-       <item row="7" column="1">
+       <item row="8" column="1">
         <widget class="QLineEdit" name="editAlbumArtist"/>
        </item>
-       <item row="5" column="3">
+       <item row="6" column="3">
         <widget class="QLineEdit" name="editTrackNumber">
          <property name="maximumSize">
           <size>
@@ -187,51 +187,31 @@
          </property>
         </widget>
        </item>
-       <item row="7" column="4">
+       <item row="8" column="4">
         <widget class="QLabel" name="lblDiscSeparator">
          <property name="text">
           <string>/</string>
          </property>
         </widget>
        </item>
-       <item row="5" column="4">
+       <item row="6" column="4">
         <widget class="QLabel" name="lblTrackSeparator">
          <property name="text">
           <string>/</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="1" colspan="6">
-        <widget class="QLabel" name="lblTitle">
-         <property name="font">
-          <font>
-           <pointsize>7</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Title</string>
-         </property>
-         <property name="buddy">
-          <cstring>editTitle</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1" colspan="6">
-        <widget class="QLineEdit" name="editTitle"/>
-       </item>
-       <item row="3" column="1">
+       <item row="4" column="1">
         <widget class="QLineEdit" name="editArtist"/>
        </item>
-       <item row="3" column="3" colspan="4">
+       <item row="4" column="3" colspan="4">
         <widget class="QLineEdit" name="editYear">
          <property name="text">
           <string/>
          </property>
         </widget>
        </item>
-       <item row="7" column="6">
+       <item row="8" column="6">
         <widget class="QLineEdit" name="editDiscTotal">
          <property name="maximumSize">
           <size>
@@ -244,7 +224,7 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="3" colspan="4">
+       <item row="7" column="3" colspan="4">
         <widget class="QLabel" name="lblDiscNumber">
          <property name="font">
           <font>
@@ -261,10 +241,10 @@
          </property>
         </widget>
        </item>
-       <item row="10" column="1" colspan="6">
+       <item row="13" column="1" colspan="6">
         <widget class="QLineEdit" name="editComposer"/>
        </item>
-       <item row="8" column="1" colspan="6">
+       <item row="11" column="1" colspan="6">
         <widget class="QLabel" name="lblComposer">
          <property name="font">
           <font>
@@ -281,7 +261,7 @@
          </property>
         </widget>
        </item>
-       <item row="13" column="1">
+       <item row="16" column="1">
         <widget class="QLabel" name="lblGenre">
          <property name="font">
           <font>
@@ -298,10 +278,10 @@
          </property>
         </widget>
        </item>
-       <item row="12" column="1" colspan="6">
+       <item row="15" column="1" colspan="6">
         <widget class="QTextEdit" name="editComments"/>
        </item>
-       <item row="11" column="1" colspan="6">
+       <item row="14" column="1" colspan="6">
         <widget class="QLabel" name="lblComments">
          <property name="font">
           <font>
@@ -318,7 +298,7 @@
          </property>
         </widget>
        </item>
-       <item row="13" column="3" colspan="4">
+       <item row="16" column="3" colspan="4">
         <widget class="QLabel" name="lblRating">
          <property name="font">
           <font>
@@ -335,87 +315,189 @@
          </property>
         </widget>
        </item>
-       <item row="14" column="3" colspan="4">
+       <item row="17" column="3" colspan="4">
         <widget class="QSpinBox" name="editRating">
          <property name="maximum">
           <number>5</number>
          </property>
         </widget>
        </item>
-       <item row="7" column="0">
+       <item row="8" column="0">
         <widget class="QCheckBox" name="chAlbumArtist">
          <property name="text">
           <string notr="true"/>
          </property>
         </widget>
        </item>
-       <item row="3" column="2">
+       <item row="4" column="2">
         <widget class="QCheckBox" name="chYear">
          <property name="text">
           <string notr="true"/>
          </property>
         </widget>
        </item>
-       <item row="14" column="0">
+       <item row="17" column="0">
         <widget class="QCheckBox" name="chGenre">
          <property name="text">
           <string notr="true"/>
          </property>
         </widget>
        </item>
-       <item row="5" column="2">
+       <item row="6" column="2">
         <widget class="QCheckBox" name="chTrackNumber">
          <property name="text">
           <string notr="true"/>
          </property>
         </widget>
        </item>
-       <item row="7" column="2">
+       <item row="8" column="2">
         <widget class="QCheckBox" name="chDiscNumber">
          <property name="text">
           <string notr="true"/>
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QCheckBox" name="chTitle">
-         <property name="text">
-          <string notr="true"/>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
+       <item row="4" column="0">
         <widget class="QCheckBox" name="chArtist">
          <property name="text">
           <string notr="true"/>
          </property>
         </widget>
        </item>
-       <item row="5" column="0">
+       <item row="6" column="0">
         <widget class="QCheckBox" name="chAlbum">
          <property name="text">
           <string notr="true"/>
          </property>
         </widget>
        </item>
-       <item row="5" column="5">
+       <item row="6" column="5">
         <widget class="QCheckBox" name="chTrackTotal">
          <property name="text">
           <string notr="true"/>
          </property>
         </widget>
        </item>
-       <item row="7" column="5">
+       <item row="8" column="5">
         <widget class="QCheckBox" name="chDiscTotal">
          <property name="text">
           <string notr="true"/>
          </property>
         </widget>
        </item>
-       <item row="14" column="2">
+       <item row="17" column="2">
         <widget class="QCheckBox" name="chRating">
          <property name="text">
           <string notr="true"/>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="7">
+        <layout class="QGridLayout" name="gridLayout_3" columnstretch="0,4,0,3">
+         <property name="horizontalSpacing">
+          <number>6</number>
+         </property>
+         <property name="verticalSpacing">
+          <number>3</number>
+         </property>
+         <item row="0" column="1">
+          <widget class="QLabel" name="lblTitle">
+           <property name="font">
+            <font>
+             <pointsize>7</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Title</string>
+           </property>
+           <property name="buddy">
+            <cstring>editTitle</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="editTitle"/>
+         </item>
+         <item row="1" column="2">
+          <widget class="QCheckBox" name="chSubTitle">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="3">
+          <widget class="QLineEdit" name="editSubTitle"/>
+         </item>
+         <item row="1" column="0">
+          <widget class="QCheckBox" name="chTitle">
+           <property name="text">
+            <string notr="true"/>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QLabel" name="label">
+           <property name="font">
+            <font>
+             <pointsize>7</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Subtitle</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="9" column="1">
+        <widget class="QLabel" name="lblGrouping">
+         <property name="font">
+          <font>
+           <pointsize>7</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Grouping</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="3" colspan="4">
+        <widget class="QLabel" name="lblBPM">
+         <property name="font">
+          <font>
+           <pointsize>7</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>BPM</string>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="3" colspan="4">
+        <widget class="QLineEdit" name="editBPM"/>
+       </item>
+       <item row="10" column="1">
+        <widget class="QLineEdit" name="editGrouping"/>
+       </item>
+       <item row="10" column="0">
+        <widget class="QCheckBox" name="chGrouping">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="2">
+        <widget class="QCheckBox" name="chBPM">
+         <property name="text">
+          <string/>
          </property>
         </widget>
        </item>
@@ -793,33 +875,7 @@
         </widget>
        </item>
        <item row="0" column="2">
-        <widget class="QComboBox" name="editLanguage">
-         <item>
-          <property name="text">
-           <string>Unknown</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>French</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>English</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>German</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Italian</string>
-          </property>
-         </item>
-        </widget>
+        <widget class="QComboBox" name="editLanguage"/>
        </item>
        <item row="0" column="0">
         <widget class="QCheckBox" name="chLanguage">
@@ -858,7 +914,6 @@
  </widget>
  <tabstops>
   <tabstop>tabWidget</tabstop>
-  <tabstop>editTitle</tabstop>
   <tabstop>editArtist</tabstop>
   <tabstop>editYear</tabstop>
   <tabstop>editAlbum</tabstop>

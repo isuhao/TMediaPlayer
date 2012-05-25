@@ -18,7 +18,7 @@ CPlayListModel::CPlayListModel(CApplication * application) :
 
 CPlayListModel::~CPlayListModel()
 {
-
+    qDebug() << "CPlayListModel::~CPlayListModel()";
 }
 
 

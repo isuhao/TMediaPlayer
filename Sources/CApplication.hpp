@@ -5,6 +5,7 @@
 #include <QMainWindow>
 #include <QList>
 #include <QSqlDatabase>
+#include <QMutexLocker>
 #include "CSongTableModel.hpp"
 #include "ui_TMediaPlayer.h"
 
@@ -47,6 +48,8 @@ public:
 
     CApplication(void);
     ~CApplication();
+
+    void initWindow(void);
 
     inline CSong * getCurrentSong(void) const;
     inline CSongTable * getCurrentSongTable(void) const;
@@ -117,8 +120,8 @@ public slots:
     void openDialogAddStaticPlayList(CListFolder * folder = NULL);
     void openDialogAddDynamicList(CListFolder * folder = NULL);
 
-    void editSong(CSong * song);
-    void removeSong(CSong * song);
+    void editSong(CSongTableItem * songItem);
+    void removeSong(CSongTableItem * songItem);
 
     void openSongInExplorer(void);
 
@@ -159,8 +162,8 @@ protected:
 
 private:
 
-    Ui::TMediaPlayer * m_uiWidget;
-    FMOD::System * m_soundSystem;
+    Ui::TMediaPlayer * m_uiWidget;      ///< Widget représentant la fenêtre principale.
+    FMOD::System * m_soundSystem;       ///< Système de son de FMOD.
     CPlayListView * m_playListView;     ///< Vue pour afficher les listes de lecture.
     QSqlDatabase m_dataBase;            ///< Base de données.
     QSettings * m_settings;             ///< Paramètres de l'application.

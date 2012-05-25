@@ -11,15 +11,14 @@
 /**
  * Constructeur de la boite de dialogue d'édition des listes de lecture dynamiques.
  *
- * \param playList    Pointeur sur la liste à modifier, ou NULL pour une nouvelle liste.
- * \param application Pointeur sur l'application.
+ * \param playList Pointeur sur la liste à modifier, ou NULL pour une nouvelle liste.
  */
 
 CDialogEditDynamicList::CDialogEditDynamicList(CDynamicPlayList * playList, CApplication * application) :
     QDialog       (application),
     m_uiWidget    (new Ui::DialogEditDynamicPlayList()),
-    m_application (application),
-    m_playList    (playList)
+    m_playList    (playList),
+    m_application (application)
 {
     Q_CHECK_PTR(application);
 

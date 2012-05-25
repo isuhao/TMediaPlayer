@@ -19,6 +19,8 @@ CPlayListView::CPlayListView(CApplication * application) :
     m_menuPlaylist (NULL),
     m_menuDefault  (NULL)
 {
+    Q_CHECK_PTR(application);
+
     header()->setVisible(false);
     setUniformRowHeights(true);
     setEditTriggers(QAbstractItemView::NoEditTriggers);

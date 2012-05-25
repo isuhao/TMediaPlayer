@@ -24,7 +24,7 @@ public:
 
 private:
 
-    CApplication * m_application; ///< Pointeur sur l'application.
+    CApplication * m_application;
 };
 
 #endif // FILE_CPLAYLIST_MODEL

@@ -10,8 +10,8 @@
 CDialogEditStaticPlayList::CDialogEditStaticPlayList(CStaticPlayList * playList, CApplication * application) :
     QDialog       (application),
     m_uiWidget    (new Ui::DialogEditStaticPlayList()),
-    m_application (application),
-    m_playList    (playList)
+    m_playList    (playList),
+    m_application (application)
 {
     Q_CHECK_PTR(application);
 

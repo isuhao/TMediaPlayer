@@ -24,7 +24,7 @@ CStaticPlayList::CStaticPlayList(CApplication * application, const QString& name
 
 CStaticPlayList::~CStaticPlayList()
 {
-
+    qDebug() << "CStaticPlayList::~CStaticPlayList()";
 }
 
 
@@ -106,7 +106,7 @@ void CStaticPlayList::addSongs(const QList<CSong *>& songs)
     if (!query.exec() || !query.next())
     {
         QString error = query.lastError().text();
-        QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
+        QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
         return;
     }
 
@@ -149,7 +149,7 @@ void CStaticPlayList::addSongs(const QList<CSong *>& songs)
     if (!query.execBatch())
     {
         QString error = query.lastError().text();
-        QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
+        QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
         return;
     }
 
@@ -267,7 +267,7 @@ void CStaticPlayList::removeDuplicateSongs(void)
     if (!query.exec())
     {
         QString error = query.lastError().text();
-        QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
+        QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
     }
 
     addSongs(songsNew);
@@ -293,7 +293,7 @@ bool CStaticPlayList::updateDatabase(void)
         if (!query.exec())
         {
             QString error = query.lastError().text();
-            QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
+            QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
             return false;
         }
 
@@ -313,7 +313,7 @@ bool CStaticPlayList::updateDatabase(void)
         if (!query.exec())
         {
             QString error = query.lastError().text();
-            QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
+            QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
             return false;
         }
 
@@ -325,7 +325,7 @@ bool CStaticPlayList::updateDatabase(void)
         if (!query.exec())
         {
             QString error = query.lastError().text();
-            QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
+            QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
             return false;
         }
 
@@ -343,7 +343,7 @@ bool CStaticPlayList::updateDatabase(void)
         if (!query.exec())
         {
             QString error = query.lastError().text();
-            QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
+            QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
             return false;
         }
 

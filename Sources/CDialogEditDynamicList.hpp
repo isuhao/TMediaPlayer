@@ -26,8 +26,8 @@ protected slots:
 private:
     
     Ui::DialogEditDynamicPlayList * m_uiWidget;
-    CApplication * m_application;
     CDynamicPlayList * m_playList;
+    CApplication * m_application;
 };
 
 #endif // FILE_CDIALOG_EDIT_DYNAMIC_LIST

@@ -23,35 +23,55 @@ class CSongTable : public QTableView
 
 public:
 
+    /**
+     * Liste des colonnes affichables.
+     *
+     * Procédure pour ajouter un type de colonne (par exemple "ColBidule") :
+     * - Ajouter la valeur "ColBidule" dans l'énumération TColumnType.
+     * - Incrémenter la valeur de ColNumber dans l'énumération TColumnType.
+     * - Modifier la méthode CSongTable::getColumnTypeFromInteger.
+     * - Modifier la méthode CSongTable::getColumnTypeName.
+     * - Modifier la méthode CSongTableModel::data pour afficher les données.
+     * - Modifier la méthode CSongTableModel::sort pour trier les données.
+     * - Dans la liste des slots de CSongTableHeader, ajouter la ligne T_CREATE_SLOT(ColBidule).
+     * - Dans le constructeur de CSongTableHeader, ajouter la ligne T_CREATE_ACTION(ColBidule).
+     */
+
     enum TColumnType
     {
-        ColInvalid      = -1,
+        ColInvalid          = -1,
 
-        ColPosition     =  0,
-        ColTitle        =  1,
-        ColArtist       =  2,
-        ColAlbum        =  3,
-        ColAlbumArtist  =  4,
-        ColComposer     =  5,
-        ColYear         =  6,
-        ColTrackNumber  =  7,
-        ColDiscNumber   =  8,
-        ColGenre        =  9,
-        ColRating       = 10,
-        ColComments     = 11,
-        ColPlayCount    = 12,
-        ColLastPlayTime = 13,
-        ColFileName     = 14,
-        ColBitRate      = 15,
-        ColFormat       = 16,
-        ColDuration     = 17,
-        ColSampleRate   = 18,
+        ColPosition         =  0, ///< #.
+        ColTitle            =  1, ///< Titre.
+        ColArtist           =  2, ///< Artiste.
+        ColAlbum            =  3, ///< Album.
+        ColAlbumArtist      =  4, ///< Artiste de l'album.
+        ColComposer         =  5, ///< Compositeur.
+        ColYear             =  6, ///< Année.
+        ColTrackNumber      =  7, ///< Piste.
+        ColDiscNumber       =  8, ///< Disque.
+        ColGenre            =  9, ///< Genre.
+        ColRating           = 10, ///< Note.
+        ColComments         = 11, ///< Commentaires.
+        ColPlayCount        = 12, ///< Lectures.
+        ColLastPlayTime     = 13, ///< Dernière lecture.
+        ColFileName         = 14, ///< Fichier.
+        ColBitRate          = 15, ///< Débit.
+        ColFormat           = 16, ///< Format.
+        ColDuration         = 17, ///< Durée.
+        ColSampleRate       = 18, ///< Taux d'échantillonnage.
+        ColCreationDate     = 19, ///< Date de création.
+        ColModificationDate = 20, ///< Date de modification.
         /// \todo Ajouter "Channels"
         /// \todo Ajouter "Lyrics"
         /// \todo Ajouter "Language"
+        /// \todo Ajouter "File size"
 
-        ColNumber       = 19  ///< Nombre de types de colonnes.
+        ColNumber           = 21  ///< Nombre de types de colonnes.
     };
+
+    static inline TColumnType getColumnTypeFromInteger(int column);
+    static inline QString getColumnTypeName(TColumnType column);
 
     struct TColumn
     {
@@ -63,12 +83,12 @@ public:
             pos(ppos), width(pwidth), visible(pvisible) { }
     };
 
-    CSongTable(CApplication * application);
+
+    explicit CSongTable(CApplication * application);
     ~CSongTable();
 
     QList<CSong *> getSongs(void) const;
     inline int getNumSongs(void) const;
-    //CSongTableItem * getSongItemForIndex(int pos) const;
     CSongTableItem * getSongItemForRow(int row) const;
     int getRowForSongItem(CSongTableItem * songItem) const;
     CSongTableItem * getSelectedSongItem(void) const;
@@ -119,9 +139,9 @@ protected:
     virtual void keyPressEvent(QKeyEvent * event);
     //virtual void mouseDoubleClickEvent(QMouseEvent * event);
 
+    CApplication * m_application;
     CSongTableModel * m_model;    ///< Modèle utilisé pour afficher les morceaux.
-    CApplication * m_application; ///< Pointeur sur l'application.
-    TColumn m_columns[ColNumber]; ///< Liste des colonnes.
+  //TColumn m_columns[ColNumber]; ///< Liste des colonnes.
     int m_idPlayList;             ///< Identifiant de la liste de lecture en base de données.
     int m_columnSort;             ///< Numéro de la colonne triée.
     Qt::SortOrder m_sortOrder;    ///< Ordre de tri.
@@ -130,12 +150,72 @@ protected:
 private:
     
     bool m_isModified;            ///< Indique si les informations de la liste ont été modifiées.
-    //QList<CSong *> m_songs;       ///< Liste des chansons. \todo Supprimer (déjà dans le modèle) ?
-    bool m_isColumnMoving;        ///< Indique si les colonnes sont en cours de positionnement.
+  //QList<CSong *> m_songs;       ///< Liste des chansons. \todo Supprimer (déjà dans le modèle) ?
+  //bool m_isColumnMoving;        ///< Indique si les colonnes sont en cours de positionnement.
     QPoint m_pressedPosition;
 };
 
 Q_DECLARE_METATYPE(CSongTable *)
+
+
+inline CSongTable::TColumnType CSongTable::getColumnTypeFromInteger(int column)
+{
+    switch (column)
+    {
+        default: return ColInvalid         ;
+        case  0: return ColPosition        ;
+        case  1: return ColTitle           ;
+        case  2: return ColArtist          ;
+        case  3: return ColAlbum           ;
+        case  4: return ColAlbumArtist     ;
+        case  5: return ColComposer        ;
+        case  6: return ColYear            ;
+        case  7: return ColTrackNumber     ;
+        case  8: return ColDiscNumber      ;
+        case  9: return ColGenre           ;
+        case 10: return ColRating          ;
+        case 11: return ColComments        ;
+        case 12: return ColPlayCount       ;
+        case 13: return ColLastPlayTime    ;
+        case 14: return ColFileName        ;
+        case 15: return ColBitRate         ;
+        case 16: return ColFormat          ;
+        case 17: return ColDuration        ;
+        case 18: return ColSampleRate      ;
+        case 19: return ColCreationDate    ;
+        case 20: return ColModificationDate;
+    }
+}
+
+
+inline QString CSongTable::getColumnTypeName(CSongTable::TColumnType column)
+{
+    switch (column)
+    {
+        default:
+        case ColPosition        : return tr("#");
+        case ColTitle           : return tr("Title");
+        case ColArtist          : return tr("Artist");
+        case ColAlbum           : return tr("Album");
+        case ColAlbumArtist     : return tr("Album artist");
+        case ColComposer        : return tr("Composer");
+        case ColYear            : return tr("Year");
+        case ColTrackNumber     : return tr("Track");
+        case ColDiscNumber      : return tr("Disc");
+        case ColGenre           : return tr("Genre");
+        case ColRating          : return tr("Rating");
+        case ColComments        : return tr("Comments");
+        case ColPlayCount       : return tr("Plays");
+        case ColLastPlayTime    : return tr("Last played");
+        case ColFileName        : return tr("File name");
+        case ColBitRate         : return tr("Bit rate");
+        case ColFormat          : return tr("Format");
+        case ColDuration        : return tr("Duration");
+        case ColSampleRate      : return tr("Sample rate");
+        case ColCreationDate    : return tr("Creation date");
+        case ColModificationDate: return tr("Modification date");
+    }
+}
 
 
 /**

@@ -15,13 +15,24 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
     m_uiWidget->setupUi(this);
 
 
+    connect(m_uiWidget->editTitle, SIGNAL(textEdited(const QString&)), m_uiWidget->editTitle_2, SLOT(setText(const QString&)));
+    connect(m_uiWidget->editTitle_2, SIGNAL(textEdited(const QString&)), m_uiWidget->editTitle, SLOT(setText(const QString&)));
+
+    connect(m_uiWidget->editArtist, SIGNAL(textEdited(const QString&)), m_uiWidget->editArtist_2, SLOT(setText(const QString&)));
+    connect(m_uiWidget->editArtist_2, SIGNAL(textEdited(const QString&)), m_uiWidget->editArtist, SLOT(setText(const QString&)));
+
+    connect(m_uiWidget->editAlbum, SIGNAL(textEdited(const QString&)), m_uiWidget->editAlbum_2, SLOT(setText(const QString&)));
+    connect(m_uiWidget->editAlbum_2, SIGNAL(textEdited(const QString&)), m_uiWidget->editAlbum, SLOT(setText(const QString&)));
+
+    connect(m_uiWidget->editAlbumArtist, SIGNAL(textEdited(const QString&)), m_uiWidget->editAlbumArtist_2, SLOT(setText(const QString&)));
+    connect(m_uiWidget->editAlbumArtist_2, SIGNAL(textEdited(const QString&)), m_uiWidget->editAlbumArtist, SLOT(setText(const QString&)));
+
+    connect(m_uiWidget->editComposer, SIGNAL(textEdited(const QString&)), m_uiWidget->editComposer_2, SLOT(setText(const QString&)));
+    connect(m_uiWidget->editComposer_2, SIGNAL(textEdited(const QString&)), m_uiWidget->editComposer, SLOT(setText(const QString&)));
+
+
     // Liste des langues
-    /// \todo Déplacer dans une fonction
-    m_uiWidget->editLanguage->addItem(tr("Unknown"), CSong::LangUnknown);
-    m_uiWidget->editLanguage->addItem(tr("English"), CSong::LangEnglish);
-    m_uiWidget->editLanguage->addItem(tr("French") , CSong::LangFrench );
-    m_uiWidget->editLanguage->addItem(tr("German") , CSong::LangGerman );
-    m_uiWidget->editLanguage->addItem(tr("Italian"), CSong::LangItalian);
+    m_uiWidget->editLanguage->addItems(CSong::getLanguageList());
 
     
     // Recherche des données similaires pour tous les éléments
@@ -82,33 +93,36 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
         }
     }
 
-    const QString notSimText = tr("<Different values>");
-
-
-    connect(m_uiWidget->editTitle, SIGNAL(textEdited(const QString&)), m_uiWidget->editTitle_2, SLOT(setText(const QString&)));
-    connect(m_uiWidget->editTitle_2, SIGNAL(textEdited(const QString&)), m_uiWidget->editTitle, SLOT(setText(const QString&)));
-
-    connect(m_uiWidget->editArtist, SIGNAL(textEdited(const QString&)), m_uiWidget->editArtist_2, SLOT(setText(const QString&)));
-    connect(m_uiWidget->editArtist_2, SIGNAL(textEdited(const QString&)), m_uiWidget->editArtist, SLOT(setText(const QString&)));
-
-    connect(m_uiWidget->editAlbum, SIGNAL(textEdited(const QString&)), m_uiWidget->editAlbum_2, SLOT(setText(const QString&)));
-    connect(m_uiWidget->editAlbum_2, SIGNAL(textEdited(const QString&)), m_uiWidget->editAlbum, SLOT(setText(const QString&)));
-
-    connect(m_uiWidget->editAlbumArtist, SIGNAL(textEdited(const QString&)), m_uiWidget->editAlbumArtist_2, SLOT(setText(const QString&)));
-    connect(m_uiWidget->editAlbumArtist_2, SIGNAL(textEdited(const QString&)), m_uiWidget->editAlbumArtist, SLOT(setText(const QString&)));
-
-    connect(m_uiWidget->editComposer, SIGNAL(textEdited(const QString&)), m_uiWidget->editComposer_2, SLOT(setText(const QString&)));
-    connect(m_uiWidget->editComposer_2, SIGNAL(textEdited(const QString&)), m_uiWidget->editComposer, SLOT(setText(const QString&)));
-    
+    const QString notSimText = tr("Different values");
+   
 
     // Informations et tri
 
-    m_uiWidget->editTitle->setText(songTitleSim ? songTitle : notSimText);
-    m_uiWidget->editTitle_2->setText(songTitleSim ? songTitle : notSimText);
-    m_uiWidget->editTitleSort->setText(songTitleSortSim ? songTitleSort : notSimText);
-    
-    m_uiWidget->editArtist->setText(songArtistSim ? songArtist : notSimText);
-    m_uiWidget->editArtist_2->setText(songArtistSim ? songArtist : notSimText);
+    m_uiWidget->editTitle->setText(songTitle);
+    m_uiWidget->editTitle_2->setText(songTitle);
+
+    if (!songTitleSim)
+    {
+        m_uiWidget->editTitle->setPlaceholderText(notSimText);
+        m_uiWidget->editTitle_2->setPlaceholderText(notSimText);
+    }
+
+    m_uiWidget->editTitleSort->setText(songTitleSort);
+
+    if (!songTitleSortSim)
+    {
+        m_uiWidget->editTitleSort->setPlaceholderText(notSimText);
+    }
+
+    m_uiWidget->editArtist->setText(songArtist);
+    m_uiWidget->editArtist_2->setText(songArtist);
+
+    if (!songArtistSim)
+    {
+        m_uiWidget->editArtist->setPlaceholderText(notSimText);
+        m_uiWidget->editArtist_2->setPlaceholderText(notSimText);
+    }
+
     m_uiWidget->editArtistSort->setText(songArtistSortSim ? songArtistSort : notSimText);
 
     m_uiWidget->editAlbum->setText(songAlbumSim ? songAlbum : notSimText);
@@ -162,4 +176,27 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
 CDialogEditSongs::~CDialogEditSongs()
 {
     delete m_uiWidget;
+}
+
+
+/**
+ * Enregistre les modifications effectuées sur les morceaux.
+ *
+ * \todo Implémentation.
+ */
+
+void CDialogEditSongs::apply(void)
+{
+    //...
+}
+
+
+/**
+ * Enregistre les modifications effectuées sur les morceaux et ferme la boite de dialogue.
+ */
+
+void CDialogEditSongs::save(void)
+{
+    apply();
+    close();
 }

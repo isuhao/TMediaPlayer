@@ -18,19 +18,19 @@
 
 
 CSongTable::CSongTable(CApplication * application) :
-    QTableView        (application),
-    m_model           (NULL),
-    m_application     (application),
-    m_idPlayList      (-1),
-    m_columnSort      (ColArtist),
-    m_isModified      (false),
-    m_sortOrder       (Qt::AscendingOrder),
-    m_isColumnMoving  (false),
-    m_automaticSort   (true)
+    QTableView       (application),
+    m_application    (application),
+    m_model          (NULL),
+    m_idPlayList     (-1),
+    m_columnSort     (ColArtist),
+    m_isModified     (false),
+    m_sortOrder      (Qt::AscendingOrder),
+    m_isColumnMoving (false),
+    m_automaticSort  (true)
 {
     Q_CHECK_PTR(application);
 
-    m_model = new CSongTableModel();
+    m_model = new CSongTableModel(this);
     setModel(m_model);
 
     setContextMenuPolicy(Qt::CustomContextMenu);
@@ -68,7 +68,7 @@ CSongTable::CSongTable(CApplication * application) :
 
 CSongTable::~CSongTable()
 {
-
+    qDebug() << "CSongTable::~CSongTable()";
 }
 
 
@@ -312,11 +312,11 @@ void CSongTable::initColumns(const QString& str)
 {
     bool isValid = false;
 
-    for (int i = 0; i < ColNumber; ++i)
+    for (int col = 0; col < ColNumber; ++col)
     {
-        m_columns[i].pos     = -1;
-        m_columns[i].width   = horizontalHeader()->defaultSectionSize();
-        m_columns[i].visible = false;
+        m_columns[col].pos     = -1;
+        m_columns[col].width   = horizontalHeader()->defaultSectionSize();
+        m_columns[col].visible = false;
     }
 
     if (!str.isEmpty())
@@ -384,11 +384,11 @@ void CSongTable::initColumns(const QString& str)
             m_columns[colType].visible = true;
         }
 
-        for (int i = 0; i < ColNumber; ++i)
+        for (int col = 0; col < ColNumber; ++col)
         {
-            if (!m_columns[i].visible)
+            if (!m_columns[col].visible)
             {
-                m_columns[i].pos = colPosition++;
+                m_columns[col].pos = colPosition++;
             }
         }
     }
@@ -396,11 +396,11 @@ void CSongTable::initColumns(const QString& str)
     // Disposition par défaut
     if (!isValid)
     {
-        for (int i = 0; i < ColNumber; ++i)
+        for (int col = 0; col < ColNumber; ++col)
         {
-            m_columns[i].pos     = i;
-            m_columns[i].width   = horizontalHeader()->defaultSectionSize();
-            m_columns[i].visible = true;
+            m_columns[col].pos     = col;
+            m_columns[col].width   = horizontalHeader()->defaultSectionSize();
+            m_columns[col].visible = true;
         }
 
         m_columns[0].visible = false;
@@ -413,52 +413,59 @@ void CSongTable::initColumns(const QString& str)
     m_isColumnMoving = true;
     CSongTableHeader * header = qobject_cast<CSongTableHeader *>(horizontalHeader());
 
-    for (int i = 0; i < ColNumber; ++i)
+    for (int col = 0; col < ColNumber; ++col)
     {
         // Affichage ou masquage de la colonne
-        if (m_columns[i].visible)
+        if (m_columns[col].visible)
         {
-            header->showSection(i);
+            header->showSection(col);
         }
         else
         {
-            header->hideSection(i);
+            header->hideSection(col);
         }
 
-        switch (i)
+        if (col > 0 && col < ColNumber)
+        {
+            header->m_actionShowCol[col]->setChecked(m_columns[col].visible);
+        }
+/*
+        switch (col)
         {
             default:
                 qWarning() << "CSongTable::initColumns() : Invalid column index";
                 break;
 
-            case  0: break;
-            case  1: header->m_actColTitle       ->setChecked(m_columns[i].visible); break;
-            case  2: header->m_actColArtist      ->setChecked(m_columns[i].visible); break;
-            case  3: header->m_actColAlbum       ->setChecked(m_columns[i].visible); break;
-            case  4: header->m_actColAlbumArtist ->setChecked(m_columns[i].visible); break;
-            case  5: header->m_actColComposer    ->setChecked(m_columns[i].visible); break;
-            case  6: header->m_actColYear        ->setChecked(m_columns[i].visible); break;
-            case  7: header->m_actColTrackNumber ->setChecked(m_columns[i].visible); break;
-            case  8: header->m_actColDiscNumber  ->setChecked(m_columns[i].visible); break;
-            case  9: header->m_actColGenre       ->setChecked(m_columns[i].visible); break;
-            case 10: header->m_actColRating      ->setChecked(m_columns[i].visible); break;
-            case 11: header->m_actColComments    ->setChecked(m_columns[i].visible); break;
-            case 12: header->m_actColPlayCount   ->setChecked(m_columns[i].visible); break;
-            case 13: header->m_actColLastPlayTime->setChecked(m_columns[i].visible); break;
-            case 14: header->m_actColFileName    ->setChecked(m_columns[i].visible); break;
-            case 15: header->m_actColBitRate     ->setChecked(m_columns[i].visible); break;
-            case 16: header->m_actColFormat      ->setChecked(m_columns[i].visible); break;
-            case 17: header->m_actColDuration    ->setChecked(m_columns[i].visible); break;
-            case 18: header->m_actColSampleRate  ->setChecked(m_columns[i].visible); break;
+            case ColPosition        : break;
+            case ColTitle           : header->m_actColTitle           ->setChecked(m_columns[col].visible); break;
+            case ColArtist          : header->m_actColArtist          ->setChecked(m_columns[col].visible); break;
+            case ColAlbum           : header->m_actColAlbum           ->setChecked(m_columns[col].visible); break;
+            case ColAlbumArtist     : header->m_actColAlbumArtist     ->setChecked(m_columns[col].visible); break;
+            case ColComposer        : header->m_actColComposer        ->setChecked(m_columns[col].visible); break;
+            case ColYear            : header->m_actColYear            ->setChecked(m_columns[col].visible); break;
+            case ColTrackNumber     : header->m_actColTrackNumber     ->setChecked(m_columns[col].visible); break;
+            case ColDiscNumber      : header->m_actColDiscNumber      ->setChecked(m_columns[col].visible); break;
+            case ColGenre           : header->m_actColGenre           ->setChecked(m_columns[col].visible); break;
+            case ColRating          : header->m_actColRating          ->setChecked(m_columns[col].visible); break;
+            case ColComments        : header->m_actColComments        ->setChecked(m_columns[col].visible); break;
+            case ColPlayCount       : header->m_actColPlayCount       ->setChecked(m_columns[col].visible); break;
+            case ColLastPlayTime    : header->m_actColLastPlayTime    ->setChecked(m_columns[col].visible); break;
+            case ColFileName        : header->m_actColFileName        ->setChecked(m_columns[col].visible); break;
+            case ColBitRate         : header->m_actColBitRate         ->setChecked(m_columns[col].visible); break;
+            case ColFormat          : header->m_actColFormat          ->setChecked(m_columns[col].visible); break;
+            case ColDuration        : header->m_actColDuration        ->setChecked(m_columns[col].visible); break;
+            case ColSampleRate      : header->m_actColSampleRate      ->setChecked(m_columns[col].visible); break;
+            case ColCreationDate    : header->m_actColCreationDate    ->setChecked(m_columns[col].visible); break;
+            case ColModificationDate: header->m_actColModificationDate->setChecked(m_columns[col].visible); break;
         }
-
+*/
         // Déplacement de la colonne
-        int visualIndex = header->visualIndex(i);
-        header->moveSection(visualIndex, m_columns[i].pos);
+        int visualIndex = header->visualIndex(col);
+        header->moveSection(visualIndex, m_columns[col].pos);
 
         // Redimensionnement
-        if (m_columns[i].width <= 0) m_columns[i].width = header->defaultSectionSize();
-        header->resizeSection(i, m_columns[i].width);
+        if (m_columns[col].width <= 0) m_columns[col].width = header->defaultSectionSize();
+        header->resizeSection(col, m_columns[col].width);
     }
 
     m_isColumnMoving = false;
@@ -477,27 +484,32 @@ void CSongTable::showColumn(int column, bool show)
     {
         m_columns[column].visible = show;
 
+        int numColumns;
+
         if (show)
         {
+            numColumns = -1;
             horizontalHeader()->showSection(column);
 
-            int numColumns = -1;
-            for (int i = 0; i < ColNumber; ++i)
-            {
-                if (m_columns[i].visible)
-                {
-                    ++numColumns;
-                }
-            }
-        
-            // Déplacement de la colonne
-            int visualIndex = horizontalHeader()->visualIndex(column);
-            horizontalHeader()->moveSection(visualIndex, numColumns);
         }
         else
         {
+            numColumns = 0;
             horizontalHeader()->hideSection(column);
         }
+
+        for (int i = 0; i < ColNumber; ++i)
+        {
+            if (m_columns[i].visible)
+            {
+                ++numColumns;
+            }
+        }
+
+        int visualIndex = horizontalHeader()->visualIndex(column);
+
+        // Déplacement de la colonne
+        horizontalHeader()->moveSection(visualIndex, numColumns);
 
         m_isModified = true;
     }
@@ -700,7 +712,7 @@ bool CSongTable::updateDatabase(void)
         if (!query.exec())
         {
             QString error = query.lastError().text();
-            QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
+            QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
             return false;
         }
 

@@ -112,8 +112,6 @@ void CDialogEditSong::nextSong(void)
 
 /**
  * Enregistre les modifications effectuées sur le morceau.
- *
- * \todo Implémentation.
  */
 
 void CDialogEditSong::apply(void)
@@ -121,8 +119,10 @@ void CDialogEditSong::apply(void)
     qDebug() << "CDialogEditSong::apply";
 
     CSong * song = m_songItem->getSong();
+    song->startMultiModification();
 
     song->setTitle(m_uiWidget->editTitle->text());
+    song->setSubTitle(m_uiWidget->editSubTitle->text());
     song->setArtistName(m_uiWidget->editArtist->text());
     song->setAlbumTitle(m_uiWidget->editAlbum->text());
     song->setAlbumArtist(m_uiWidget->editAlbumArtist->text());
@@ -143,8 +143,9 @@ void CDialogEditSong::apply(void)
     song->setGenre(m_uiWidget->editGenre->currentText());
     song->setRating(m_uiWidget->editRating->value());
     song->setLyrics(m_uiWidget->editLyrics->toPlainText());
-    song->setLanguage(CSong::LangFromInt(m_uiWidget->editLanguage->itemData(m_uiWidget->editLanguage->currentIndex()).toInt()));
+    song->setLanguage(CSong::getLanguageFromInteger(m_uiWidget->editLanguage->currentIndex()));
 
+    song->writeTags();
     song->updateDatabase();
 }
 

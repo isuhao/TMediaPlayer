@@ -22,7 +22,7 @@ class CPlayList : public CSongTable
 
 public:
 
-    CPlayList(CApplication * application, const QString& name = QString());
+    explicit CPlayList(CApplication * application, const QString& name = QString());
     virtual ~CPlayList() = 0;
 
     inline QString getName(void) const;

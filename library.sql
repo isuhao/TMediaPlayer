@@ -90,6 +90,8 @@ CREATE TABLE album (
     UNIQUE (album_title, album_title_sort)
 );
 
+INSERT INTO album (album_id, album_title, album_title_sort) VALUES (0, "", "");
+
 CREATE TABLE artist (
     artist_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     artist_name VARCHAR NOT NULL,
@@ -97,10 +99,14 @@ CREATE TABLE artist (
     UNIQUE (artist_name, artist_name_sort)
 );
 
+INSERT INTO artist (artist_id, artist_name, artist_name_sort) VALUES (0, "", "");
+
 CREATE TABLE genre (
     genre_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     genre_name VARCHAR NOT NULL UNIQUE
 );
+
+INSERT INTO genre (genre_id, genre_name) VALUES (0, "");
 
 CREATE TABLE play (
     song_id INTEGER NOT NULL ,

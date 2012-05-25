@@ -29,10 +29,10 @@ protected slots:
 
 private:
     
-    CPlayListModel * m_model;     ///< Modèle utilisé pour afficher les listes de lecture.
-    CApplication * m_application; ///< Pointeur sur l'application;
-    QMenu * m_menuPlaylist;       ///< Menu contextuel pour les listes de lecture.
-    QMenu * m_menuDefault;        ///< Menu contextuel par défaut.
+    CApplication * m_application;
+    CPlayListModel * m_model; ///< Modèle utilisé pour afficher les listes de lecture.
+    QMenu * m_menuPlaylist;   ///< Menu contextuel pour les listes de lecture.
+    QMenu * m_menuDefault;    ///< Menu contextuel par défaut.
 };
 
 #endif // FILE_CPLAYLIST_VIEW

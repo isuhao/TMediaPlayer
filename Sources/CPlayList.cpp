@@ -2,6 +2,8 @@
 #include "CPlayList.hpp"
 #include "CListFolder.hpp"
 
+#include <QtDebug>
+
 
 CPlayList::CPlayList(CApplication * application, const QString& name) :
     CSongTable           (application),
@@ -17,7 +19,7 @@ CPlayList::CPlayList(CApplication * application, const QString& name) :
 
 CPlayList::~CPlayList()
 {
-
+    qDebug() << "CPlayList::~CPlayList()";
 }
 
 
