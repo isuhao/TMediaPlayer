@@ -39,7 +39,7 @@
        <item row="0" column="0">
         <widget class="QCheckBox" name="editShowStopBtn">
          <property name="text">
-          <string>Show &quot;Stop&quot; button</string>
+          <string>Show &quot;Stop&quot; button.</string>
          </property>
          <property name="checked">
           <bool>true</bool>
@@ -148,7 +148,7 @@
      </widget>
      <widget class="QWidget" name="tabMetaData">
       <attribute name="title">
-       <string>Métadonnées</string>
+       <string>Metadata</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>

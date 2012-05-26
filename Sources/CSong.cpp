@@ -40,12 +40,12 @@ CSong::CSong(CApplication * application) :
     m_fileSize          (0),
     m_bitRate           (0),
     m_sampleRate        (0),
-    m_encoder           (""),
     m_format            (FormatUnknown),
     m_numChannels       (0),
     m_duration          (0),
     m_title             (""),
     m_subTitle          (""),
+    m_grouping          (""),
     m_artistName        (""),
     m_albumTitle        (""),
     m_albumArtist       (""),
@@ -63,6 +63,7 @@ CSong::CSong(CApplication * application) :
     m_genre             (""),
     m_rating            (0),
     m_comments          (""),
+    m_bpm               (0),
     m_lyrics            (""),
     m_isModified        (false)
 {
@@ -90,12 +91,12 @@ CSong::CSong(const QString& fileName, CApplication * application) :
     m_fileSize          (0),
     m_bitRate           (0),
     m_sampleRate        (0),
-    m_encoder           (""),
     m_format            (FormatUnknown),
     m_numChannels       (0),
     m_duration          (0),
     m_title             (""),
     m_subTitle          (""),
+    m_grouping          (""),
     m_artistName        (""),
     m_albumTitle        (""),
     m_albumArtist       (""),
@@ -113,6 +114,7 @@ CSong::CSong(const QString& fileName, CApplication * application) :
     m_genre             (""),
     m_rating            (0),
     m_comments          (""),
+    m_bpm               (0),
     m_lyrics            (""),
     m_isModified        (false)
 {
@@ -166,7 +168,6 @@ void CSong::loadFromDatabase(void)
                       " song_filesize,"
                       " song_bitrate,"
                       " song_sample_rate,"
-                      " song_encoder,"
                       " song_format,"
                       " song_channels, "
                       " song_duration,"
@@ -178,7 +179,8 @@ void CSong::loadFromDatabase(void)
                       " song_artist.artist_name_sort,"
                       " album_title,"
                       " album_title_sort,"
-                    //" album_subtitle,"
+                      " album_subtitle,"
+                      " album_grouping,"
                       " album_artist.artist_name,"
                       " album_artist.artist_name_sort,"
                       " song_composer,"
@@ -221,7 +223,6 @@ void CSong::loadFromDatabase(void)
     m_fileSize        = query.value(numValue++).toInt();
     m_bitRate         = query.value(numValue++).toInt();
     m_sampleRate      = query.value(numValue++).toInt();
-    m_encoder         = query.value(numValue++).toString();
     m_format          = getFormatFromInteger(query.value(numValue++).toInt());
     m_numChannels     = query.value(numValue++).toInt();
     m_duration        = query.value(numValue++).toInt();
@@ -230,7 +231,8 @@ void CSong::loadFromDatabase(void)
 
     m_title           = query.value(numValue++).toString();
     m_titleSort       = query.value(numValue++).toString();
-  //m_subTitle        = query.value(numValue++).toString();
+    m_subTitle        = query.value(numValue++).toString();
+    m_grouping        = query.value(numValue++).toString();
     m_artistName      = query.value(numValue++).toString();
     m_artistNameSort  = query.value(numValue++).toString();
     m_albumTitle      = query.value(numValue++).toString();
@@ -507,21 +509,33 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
                 return NULL;
             }
 
+            song->m_fileSize = file.length();
+
             // Propriétés du morceau
             //TODO: Récupérer la version de MPEG : file.audioProperties()->version();
             //TODO: Récupérer le mode stéréo : file.audioProperties()->channelMode();
             song->m_bitRate     = file.audioProperties()->bitrate();
             song->m_sampleRate  = file.audioProperties()->sampleRate();
             song->m_numChannels = file.audioProperties()->channels();
-            //m_fileSize
-            //m_encoder
 
             TagLib::ID3v2::Tag * tagID3v2 = file.ID3v2Tag(true);
             TagLib::ID3v1::Tag * tagID3v1 = file.ID3v1Tag(true);
             TagLib::APE::Tag * tagAPE = file.APETag(false);
 
             TagLib::ID3v2::FrameList tagID3v2List;
+/*
+            // DEBUG
+            TagLib::ID3v2::FrameListMap tagMap = tagID3v2->frameListMap();
+            for (TagLib::ID3v2::FrameListMap::ConstIterator it = tagMap.begin(); it != tagMap.end(); ++it)
+            {
+                QString tagKey = QByteArray(it->first.data(), it->first.size());
 
+                for (TagLib::ID3v2::FrameList::ConstIterator it2 = it->second.begin(); it2 != it->second.end(); ++it2)
+                {
+                    qDebug() << tagKey << ":" << (*it2)->toString().toCString(true);
+                }
+            }
+*/
             // Titre
             tagID3v2List = tagID3v2->frameList("TIT2");
             if (tagID3v2List.isEmpty())
@@ -683,6 +697,19 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
                 }
             }
 
+            // Regroupement
+            tagID3v2List = tagID3v2->frameList("TIT1");
+            if (tagID3v2List.isEmpty())
+            {
+                //TODO: APE
+            }
+            else
+            {
+                if (tagID3v2List.size() > 1)
+                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TIT1";
+                song->m_grouping = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
+            }
+
             // Numéro de piste
             tagID3v2List = tagID3v2->frameList("TRCK");
             if (tagID3v2List.isEmpty())
@@ -778,10 +805,7 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
             }
             else
             {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TCON";
-                song->m_genre = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
-                //TODO: si le genre est un numéro, utiliser la table ID3v1
+                song->m_genre = QString::fromUtf8(tagID3v2->genre().toCString(true));
             }
 
             // Commentaires
@@ -808,6 +832,23 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
                 {
                     song->m_comments = QString::fromUtf8(frame->text().toCString(true));
                 }
+            }
+
+            // BPM
+            tagID3v2List = tagID3v2->frameList("TBPM");
+            if (tagID3v2List.isEmpty())
+            {
+                //TODO: APE
+            }
+            else
+            {
+                if (tagID3v2List.size() > 1)
+                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TBPM";
+                QString str = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
+
+                bool ok;
+                song->m_bpm = str.toInt(&ok);
+                if (!ok) qWarning() << "CSong::loadFromFile() : ID3v2 : tag TBPM invalide";
             }
 
             // Paroles
@@ -915,7 +956,6 @@ QList<CSong *> CSong::loadAllSongsFromDatabase(CApplication * application)
                         " song_filesize,"
                         " song_bitrate,"
                         " song_sample_rate,"
-                        " song_encoder,"
                         " song_format,"
                         " song_channels,"
                         " song_duration,"
@@ -923,7 +963,8 @@ QList<CSong *> CSong::loadAllSongsFromDatabase(CApplication * application)
                         " song_modification,"
                         " song_title,"
                         " song_title_sort,"
-                      //" song_subtitle,"
+                        " song_subtitle,"
+                        " song_grouping,"
                         " song_artist.artist_name,"
                         " song_artist.artist_name_sort,"
                         " album_title,"
@@ -940,6 +981,7 @@ QList<CSong *> CSong::loadAllSongsFromDatabase(CApplication * application)
                         " genre_name,"
                         " song_rating,"
                         " song_comments,"
+                        " song_bpm,"
                         " song_lyrics,"
                         " song_language"
                     " FROM song"
@@ -964,7 +1006,6 @@ QList<CSong *> CSong::loadAllSongsFromDatabase(CApplication * application)
         song->m_fileSize        = query.value(numValue++).toInt();
         song->m_bitRate         = query.value(numValue++).toInt();
         song->m_sampleRate      = query.value(numValue++).toInt();
-        song->m_encoder         = query.value(numValue++).toString();
         song->m_format          = CSong::getFormatFromInteger(query.value(numValue++).toInt());
         song->m_numChannels     = query.value(numValue++).toInt();
         song->m_duration        = query.value(numValue++).toInt();
@@ -973,7 +1014,8 @@ QList<CSong *> CSong::loadAllSongsFromDatabase(CApplication * application)
 
         song->m_title           = query.value(numValue++).toString();
         song->m_titleSort       = query.value(numValue++).toString();
-      //song->m_subTitle        = query.value(numValue++).toString();
+        song->m_subTitle        = query.value(numValue++).toString();
+        song->m_grouping        = query.value(numValue++).toString();
         song->m_artistName      = query.value(numValue++).toString();
         song->m_artistNameSort  = query.value(numValue++).toString();
         song->m_albumTitle      = query.value(numValue++).toString();
@@ -990,6 +1032,7 @@ QList<CSong *> CSong::loadAllSongsFromDatabase(CApplication * application)
         song->m_genre           = query.value(numValue++).toString();
         song->m_rating          = query.value(numValue++).toInt();
         song->m_comments        = query.value(numValue++).toString();
+        song->m_bpm             = query.value(numValue++).toInt();
         song->m_lyrics          = query.value(numValue++).toString();
         song->m_language        = getLanguageForISO2Code(query.value(numValue++).toString());
 
@@ -1016,6 +1059,44 @@ QList<CSong *> CSong::loadAllSongsFromDatabase(CApplication * application)
     }
 
     return songList;
+}
+
+
+/**
+ * Convertit un nombre d'octets en chaine de caractères plus compréhensible.
+ *
+ * \param fileSize Nombre d'octets.
+ * \return Chaine de caractère utilisant les préfixes binaires (Kio, Mio, Gio, pour
+ *         respectivement 1024, 1024*1024, et 1024*1024*1024 octets).
+ */
+
+QString CSong::getFileSize(int fileSize)
+{
+    Q_ASSERT(fileSize >= 0);
+
+    if (fileSize >= 1024)
+    {
+        if (fileSize >= 1024 * 1024)
+        {
+            if (fileSize >= 1024 * 1024 * 1024)
+            {
+                // Plus de 1 Gio, inutile d'aller plus loin...
+                float fileSizeDisplay = static_cast<float>(static_cast<int>(static_cast<float>(10 * fileSize) / (1024*1024*1024))) / 10;
+                return tr("%1 Gio").arg(fileSizeDisplay);
+            }
+
+            // Moins de 1 Gio
+            float fileSizeDisplay = static_cast<float>(static_cast<int>(static_cast<float>(10 * fileSize) / (1024*1024))) / 10;
+            return tr("%1 Mio").arg(fileSizeDisplay);
+        }
+
+        // Moins de 1 Mio
+        float fileSizeDisplay = static_cast<float>(static_cast<int>(static_cast<float>(10 * fileSize) / 1024)) / 10;
+        return tr("%1 Kio").arg(fileSizeDisplay);
+    }
+
+    // Moins de 1 Kio
+    return tr("%n byte(s)", "", fileSize);
 }
 
 
@@ -1053,6 +1134,17 @@ void CSong::setSubTitle(const QString& subTitle)
 }
 
 
+void CSong::setGrouping(const QString& grouping)
+{
+    if (m_grouping != grouping)
+    {
+        m_grouping = grouping;
+        m_isModified = true;
+        if (!m_multiModification) emit songModified();
+    }
+}
+
+
 /**
  * Modifie le nom de l'artiste du morceau.
  *
@@ -1070,6 +1162,12 @@ void CSong::setArtistName(const QString& artistName)
 }
 
 
+/**
+ * Modifie le titre de l'album du morceau.
+ *
+ * \param albumTitle Nouveau titre de l'album.
+ */
+
 void CSong::setAlbumTitle(const QString& albumTitle)
 {
     if (m_albumTitle != albumTitle)
@@ -1081,6 +1179,12 @@ void CSong::setAlbumTitle(const QString& albumTitle)
 }
 
 
+/**
+ * Modifie l'artiste de l'album du morceau.
+ *
+ * \param albumArtist Artiste de l'album.
+ */
+
 void CSong::setAlbumArtist(const QString& albumArtist)
 {
     if (m_albumArtist != albumArtist)
@@ -1091,6 +1195,12 @@ void CSong::setAlbumArtist(const QString& albumArtist)
     }
 }
 
+
+/**
+ * Modifie le compositeur du morceau.
+ *
+ * \param composer Nouveau compositeur.
+ */
 
 void CSong::setComposer(const QString& composer)
 {
@@ -1264,6 +1374,17 @@ void CSong::setComments(const QString& comments)
     if (m_comments != comments)
     {
         m_comments = comments;
+        m_isModified = true;
+        if (!m_multiModification) emit songModified();
+    }
+}
+
+
+void CSong::setBPM(int bpm)
+{
+    if (m_bpm != bpm)
+    {
+        m_bpm = bpm;
         m_isModified = true;
         if (!m_multiModification) emit songModified();
     }
@@ -1525,7 +1646,6 @@ void CSong::updateDatabase(void)
                               "song_filesize, "
                               "song_bitrate, "
                               "song_sample_rate, "
-                              "song_encoder, "
                               "song_format, "
                               "song_channels, "
                               "song_duration, "
@@ -1534,6 +1654,7 @@ void CSong::updateDatabase(void)
                               "song_title, "
                               "song_title_sort, "
                               "song_subtitle, "
+                              "song_grouping, "
                               "artist_id, "
                               "album_id, "
                               "album_artist_id, "
@@ -1547,18 +1668,18 @@ void CSong::updateDatabase(void)
                               "genre_id, "
                               "song_rating, "
                               "song_comments, "
+                              "song_bpm, "
                               "song_lyrics, "
                               "song_language, "
                               "song_play_count, "
                               "song_play_time"
-                          ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                          ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
             int numValue = 0;
             query.bindValue(numValue++, m_fileName);
             query.bindValue(numValue++, m_fileSize);
             query.bindValue(numValue++, m_bitRate);
             query.bindValue(numValue++, m_sampleRate);
-            query.bindValue(numValue++, m_encoder);
             query.bindValue(numValue++, m_format);
             query.bindValue(numValue++, m_numChannels);
             query.bindValue(numValue++, m_duration);
@@ -1567,6 +1688,7 @@ void CSong::updateDatabase(void)
             query.bindValue(numValue++, m_title);
             query.bindValue(numValue++, m_titleSort);
             query.bindValue(numValue++, m_subTitle);
+            query.bindValue(numValue++, m_grouping);
             query.bindValue(numValue++, artistId);
             query.bindValue(numValue++, albumId);
             query.bindValue(numValue++, albumArtistId);
@@ -1580,6 +1702,7 @@ void CSong::updateDatabase(void)
             query.bindValue(numValue++, genreId);
             query.bindValue(numValue++, m_rating);
             query.bindValue(numValue++, m_comments);
+            query.bindValue(numValue++, m_bpm);
             query.bindValue(numValue++, m_lyrics);
             query.bindValue(numValue++, getISO2CodeForLanguage(m_language));
             query.bindValue(numValue++, 0);  // Play count
@@ -1602,6 +1725,7 @@ void CSong::updateDatabase(void)
                               "song_title         = ?,"
                               "song_title_sort    = ?,"
                               "song_subtitle      = ?,"
+                              "song_grouping      = ?,"
                               "artist_id          = ?,"
                               "album_id           = ?,"
                               "album_artist_id    = ?,"
@@ -1615,6 +1739,7 @@ void CSong::updateDatabase(void)
                               "genre_id           = ?,"
                               "song_rating        = ?,"
                               "song_comments      = ?,"
+                              "song_bpm           = ?,"
                               "song_lyrics        = ?,"
                               "song_language      = ? "
                           "WHERE song_id = ?");
@@ -1625,6 +1750,7 @@ void CSong::updateDatabase(void)
             query.bindValue(numValue++, m_title);
             query.bindValue(numValue++, m_titleSort);
             query.bindValue(numValue++, m_subTitle);
+            query.bindValue(numValue++, m_grouping);
             query.bindValue(numValue++, artistId);
             query.bindValue(numValue++, albumId);
             query.bindValue(numValue++, albumArtistId);
@@ -1638,6 +1764,7 @@ void CSong::updateDatabase(void)
             query.bindValue(numValue++, genreId);
             query.bindValue(numValue++, m_rating);
             query.bindValue(numValue++, m_comments);
+            query.bindValue(numValue++, m_bpm);
             query.bindValue(numValue++, m_lyrics);
             query.bindValue(numValue++, getISO2CodeForLanguage(m_language));
 

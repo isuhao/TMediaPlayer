@@ -116,7 +116,13 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
     {
         switch (index.column())
         {
-            case CSongTable::ColPosition   : return m_data.at(index.row())->getPosition();
+            case CSongTable::ColPosition:
+                if (m_canDrop)
+                {
+                    return m_data.at(index.row())->getPosition();
+                }
+                break;
+
             case CSongTable::ColTitle      : return m_data.at(index.row())->getSong()->getTitle();
             case CSongTable::ColArtist     : return m_data.at(index.row())->getSong()->getArtistName();
             case CSongTable::ColAlbum      : return m_data.at(index.row())->getSong()->getAlbumTitle();
@@ -180,8 +186,14 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
             case CSongTable::ColPlayCount   : return m_data.at(index.row())->getSong()->getNumPlays();
             case CSongTable::ColLastPlayTime: return m_data.at(index.row())->getSong()->getLastPlay();
             case CSongTable::ColFileName    : return m_data.at(index.row())->getSong()->getFileName();
-            case CSongTable::ColBitRate     : return m_data.at(index.row())->getSong()->getBitRate();
-            case CSongTable::ColFormat      : return CSong::getFormatName(m_data.at(index.row())->getSong()->getFormat());
+
+            // Débit
+            case CSongTable::ColBitRate:
+                return QString("%1 kbit/s").arg(m_data.at(index.row())->getSong()->getBitRate());
+
+            // Format
+            case CSongTable::ColFormat:
+                return CSong::getFormatName(m_data.at(index.row())->getSong()->getFormat());
 
             // Durée
             case CSongTable::ColDuration:
@@ -193,14 +205,42 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
                 return durationTime.toString("m:ss"); /// \todo Stocker le format dans les paramètres.
             }
 
+            // Taux d'échantillonnage
             case CSongTable::ColSampleRate:
-                return m_data.at(index.row())->getSong()->getSampleRate();
+                return QString("%1 Hz").arg(m_data.at(index.row())->getSong()->getSampleRate());
 
+            // Date de création
             case CSongTable::ColCreationDate:
                 return m_data.at(index.row())->getSong()->getCreationDate();
 
+            // Date de modification
             case CSongTable::ColModificationDate:
                 return m_data.at(index.row())->getSong()->getModificationDate();
+
+            // Nombre de canaux
+            case CSongTable::ColChannels:
+                return m_data.at(index.row())->getSong()->getNumChannels();
+
+            // Taille du fichier
+            case CSongTable::ColFileSize:
+                return CSong::getFileSize(m_data.at(index.row())->getSong()->getFileSize());
+        }
+    }
+    else if (role == Qt::TextAlignmentRole)
+    {
+        switch (index.column())
+        {
+            default:
+                return Qt::AlignLeft;
+
+            case CSongTable::ColTrackNumber:
+            case CSongTable::ColDiscNumber:
+            case CSongTable::ColPlayCount:
+            case CSongTable::ColBitRate:
+            case CSongTable::ColDuration:
+            case CSongTable::ColSampleRate:
+            case CSongTable::ColFileSize:
+                return Qt::AlignRight;
         }
     }
 
@@ -258,6 +298,8 @@ void CSongTableModel::sort(int column, Qt::SortOrder order)
             case CSongTable::ColSampleRate      : qSort(m_data.begin(), m_data.end(), cmpSongSampleRateAsc      ); break;
             case CSongTable::ColCreationDate    : qSort(m_data.begin(), m_data.end(), cmpSongCreationDateAsc    ); break;
             case CSongTable::ColModificationDate: qSort(m_data.begin(), m_data.end(), cmpSongModificationDateAsc); break;
+            case CSongTable::ColChannels        : qSort(m_data.begin(), m_data.end(), cmpSongChannelsAsc        ); break;
+            case CSongTable::ColFileSize        : qSort(m_data.begin(), m_data.end(), cmpSongFileSizeAsc        ); break;
         }
     }
     else
@@ -285,6 +327,8 @@ void CSongTableModel::sort(int column, Qt::SortOrder order)
             case CSongTable::ColSampleRate      : qSort(m_data.begin(), m_data.end(), cmpSongSampleRateDesc      ); break;
             case CSongTable::ColCreationDate    : qSort(m_data.begin(), m_data.end(), cmpSongCreationDateDesc    ); break;
             case CSongTable::ColModificationDate: qSort(m_data.begin(), m_data.end(), cmpSongModificationDateDesc); break;
+            case CSongTable::ColChannels        : qSort(m_data.begin(), m_data.end(), cmpSongChannelsDesc        ); break;
+            case CSongTable::ColFileSize        : qSort(m_data.begin(), m_data.end(), cmpSongFileSizeDesc        ); break;
         }
     }
 

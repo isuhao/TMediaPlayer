@@ -1,12 +1,7 @@
 
-+ Préférences :
-   + Ecrire la durée du morceau dans les tags (TLEN)
-   + Ecrire le nombre de lectures (PCNT+POPM)
-   + Ecrire la note (POPM)
-   + Option "Déterminer automatiquement les valeurs pour le tri"
-
-+ Déplacer "Métadonnées" de "Edit song" vers une autre vue.
-   -> Lire les métadonnées à l'ouverture de cette vue.
+--------------------------------------------------
+  Importance élevée
+--------------------------------------------------
 
 - Listes de lecture dynamiques :
   - Chargement des listes.
@@ -14,49 +9,68 @@
   - Mise à jour des morceaux.
 
 - Lire les métadonnées d'un morceau au chargement.
-  - Si le genre est un nombre, utiliser les genres de ID3v1.
-  - L'année n'est pas chargée. (MP3)
-  - La taille du fichier n'est pas calculée.
+  - MP3 : lire les tags APE.
+  - FLAC.
+  - Ogg Vorbis.
 - Écrire les métadonnées d'un morceau.
 
-- Terminer la boite de dialogue Edit Song.
-  - Affichage et modification des métadonnées.
-  - Affichage et modification des illustrations.
-  - Afficher l'illustration principale dans l'onglet Résumé.
-  - Mieux gérer les genres.
-  - Mieux gérer les langues des paroles.
+- Intégrer Last.fm.
 
 - Terminer la boite de dialogue Edit Songs.
+
+- Menu contextuel dans les listes : ajouter le/les morceaux à une liste.
+- Menu contextuel dans les listes : enlever d'une liste.
+- Menu contextuel dans les listes : enlever de la médiathèque.
+
+- Implémenter le glisser-déposer au sein d'une liste statique.
 
 - Menu contextuel pour les listes de lecture.
 - Implémenter Ajouter morceau(x) à une liste statique.
 - Implémenter Suppression d'un morceau.
 
+- Implémenter la lecture aléatoire.
+
+- Import depuis iTunes / SongBird.
+
+--------------------------------------------------
+  Importance moyenne
+--------------------------------------------------
+
+- Boite de dialogue Edit Song(s) : Mieux gérer les genres.
+
 - Gérer les dossiers de listes de lecture.
 
-- Implémenter le glisser-déposer au sein d'une liste statique.
-- Implémenter le glisser-déposer pour créer une nouvelle liste de lecture.
+- Ajouter l'information "Fait partie d'une compilation".
+- Ajouter l'option "Ne pas lire en mode aléatoire".
+- Ajouter l'option "Morceau désactivé".
 
-- Intégrer Last.fm.
+- Implémenter le glisser-déposer pour créer une nouvelle liste de lecture.
 
 - Créer la fenêtre Préférences.
 
 - Griser les boutons indisponibles suivant l'état (lecture, pause, etc.).
-- Afficher les informations sur la liste affichée (durée, nombre de morceaux).
+
 - Indiquer le morceau en cours de lecture dans la liste.
-- Bouton pour sélectionner le morceau en cours de lecture.
-- Bug morceau précédent : le morceau courant reste en lecture.
-- Implémenter la lecture aléaroire.
 
-- Menu contextuel dans les listes : afficher le morceaux dans la playlist.
-- Menu contextuel dans les listes : ajouter le/les morceaux à une liste.
-- Menu contextuel dans les listes : enlever d'une liste.
-- Menu contextuel dans les listes : enlever de la library.
+--------------------------------------------------
+  Importance faible
+--------------------------------------------------
 
-- Ajouter la métadonnée "Battements par minute".
+- Fenêtre Préférences :
+  - Écrire la durée du morceau dans les tags (TLEN)
+  - Écrire le nombre de lectures (PCNT+POPM)
+  - Écrire la note (POPM)
+  - Option "Déterminer automatiquement les valeurs pour le tri".
+  - Option "Illustrations : image dans le dossier".
+
+- Créer la boite de dialogue Édition des métadonnées.
+  -> Lire les métadonnées à l'ouverture de cette vue.
+
+- Boite de dialogue Edit Song : Affichage et modification des illustrations.
+- Boite de dialogue Edit Song : Afficher l'illustration principale dans l'onglet Résumé.
+- Moteur de recherche dans la liste de lecture.
+- Égaliseur.
+- Recherche automatique des paroles.
+- Recherche automatique des illustrations.
 - Ajouter la métadonnée "Parolier".
-- Gérer la métadonnée "Sous-titre".
-- Ajouter l'information "Fait partie d'une compilation".
-- Ajouter l'option "Ne pas lire en mode aléatoire".
-- Ajouter l'option "Morceau désactivé".
 - Ajouter l'option "Volume du morceau".

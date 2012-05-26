@@ -2,6 +2,7 @@
 #include "CStaticPlayList.hpp"
 #include "CApplication.hpp"
 #include "CSongTableModel.hpp"
+#include "CDynamicPlayList.hpp"
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QMessageBox>
@@ -308,7 +309,7 @@ bool CStaticPlayList::updateDatabase(void)
         query.bindValue(0, m_name);
         query.bindValue(1, 0);
         query.bindValue(2, m_position);
-        query.bindValue(3, "1:100;2:100;3:100"); // Disposition par défaut \todo => settings
+        query.bindValue(3, "0:40;1:100;2:100;3:100"); // Disposition par défaut \todo => settings
 
         if (!query.exec())
         {
@@ -354,15 +355,6 @@ bool CStaticPlayList::updateDatabase(void)
 }
 
 
-void CStaticPlayList::initColumns(const QString& str)
-{
-    CSongTable::initColumns(str);
-
-    // Colonne "Position"
-    showColumn(0);
-}
-
-
 /// \todo Implémentation.
 void CStaticPlayList::openCustomMenuProject(const QPoint& point)
 {
@@ -387,9 +379,13 @@ void CStaticPlayList::openCustomMenuProject(const QPoint& point)
 
         if (!severalSongs)
         {
+            m_selectedItem = m_model->getSongItem(index);
+
             // Listes de lecture contenant le morceau
             QMenu * menuPlayList = menu->addMenu(tr("Playlists"));
-            menuPlayList->addAction(tr("Library"));
+            CSongTable * library = m_application->getLibrary();
+            m_actionGoToSongTable[library] = menuPlayList->addAction(QPixmap(":/icons/library"), tr("Library"));
+            connect(m_actionGoToSongTable[library], SIGNAL(triggered()), this, SLOT(goToSongTable()));
 
             QList<CPlayList *> playLists = m_application->getPlayListsWithSong(m_model->getSongItem(index)->getSong());
 
@@ -399,7 +395,17 @@ void CStaticPlayList::openCustomMenuProject(const QPoint& point)
 
                 foreach (CPlayList * playList, playLists)
                 {
-                    menuPlayList->addAction(playList->getName());
+                    m_actionGoToSongTable[playList] = menuPlayList->addAction(playList->getName());
+                    connect(m_actionGoToSongTable[playList], SIGNAL(triggered()), this, SLOT(goToSongTable()));
+
+                    if (qobject_cast<CDynamicPlayList *>(playList))
+                    {
+                        m_actionGoToSongTable[playList]->setIcon(QPixmap(":/icons/dynamic_list"));
+                    }
+                    else if (qobject_cast<CStaticPlayList *>(playList))
+                    {
+                        m_actionGoToSongTable[playList]->setIcon(QPixmap(":/icons/playlist"));
+                    }
                 }
             }
         }

@@ -68,7 +68,6 @@ public:
     inline int getFileSize(void) const;
     inline int getBitRate(void) const;
     inline int getSampleRate(void) const;
-    inline QString getEncoder(void) const;
     inline TFormat getFormat(void) const;
     inline int getNumChannels(void) const;
     inline int getDuration(void) const;
@@ -77,6 +76,7 @@ public:
 
     inline QString getTitle(void) const;
     inline QString getSubTitle(void) const;
+    inline QString getGrouping(void) const;
     inline QString getArtistName(void) const;
     inline QString getAlbumTitle(void) const;
     inline QString getAlbumArtist(void) const;
@@ -94,6 +94,7 @@ public:
     inline QString getGenre(void) const;
     inline int getRating(void) const;
     inline QString getComments(void) const;
+    inline int getBPM(void) const;
     inline QString getLyrics(void) const;
     inline TLanguage getLanguage(void) const;
 
@@ -107,10 +108,13 @@ public:
     static CSong * loadFromFile(CApplication * application, const QString& fileName);
     static QList<CSong *> loadAllSongsFromDatabase(CApplication * application);
 
+    static QString getFileSize(int fileSize);
+
 public slots:
 
     void setTitle(const QString& title);
     void setSubTitle(const QString& subTitle);
+    void setGrouping(const QString& grouping);
     void setArtistName(const QString& artistName);
     void setAlbumTitle(const QString& albumTitle);
     void setAlbumArtist(const QString& albumArtist);
@@ -128,6 +132,7 @@ public slots:
     void setGenre(const QString& genre);
     void setRating(int rating);
     void setComments(const QString& comments);
+    void setBPM(int bpm);
     void setLyrics(const QString& lyrics);
     void setLanguage(TLanguage language);
 
@@ -171,7 +176,6 @@ private:
     int m_fileSize;               ///< Taille du fichier en octets.
     int m_bitRate;                ///< Débit binaire.
     int m_sampleRate;             ///< Taux d'échantillonnage.
-    QString m_encoder;            ///< Encodeur.
     TFormat m_format;             ///< Format de fichier.
     int m_numChannels;            ///< Nombre de canaux.
     int m_duration;               ///< Durée du morceau en millisecondes.
@@ -181,6 +185,7 @@ private:
     // Informations modifiables
     QString m_title;              ///< Titre du morceau.
     QString m_subTitle;           ///< Sous-titre du morceau.
+    QString m_grouping;           ///< Regroupement.
     QString m_artistName;         ///< Artiste du morceau.
     QString m_albumTitle;         ///< Titre de l'album.
     QString m_albumArtist;        ///< Artiste de l'album.
@@ -198,6 +203,7 @@ private:
     QString m_genre;              ///< Genre.
     int m_rating;                 ///< Note (entre 0 et 5).
     QString m_comments;           ///< Commentaires.
+    int m_bpm;                    ///< Battements par minute.
     QString m_lyrics;             ///< Paroles.
     TLanguage m_language;         ///< Langue des paroles.
 
@@ -398,12 +404,6 @@ inline int CSong::getSampleRate(void) const
 }
 
 
-inline QString CSong::getEncoder(void) const
-{
-    return m_encoder;
-}
-
-
 inline CSong::TFormat CSong::getFormat(void) const
 {
     return m_format;
@@ -479,6 +479,12 @@ inline QString CSong::getTitle(void) const
 inline QString CSong::getSubTitle(void) const
 {
     return m_subTitle;
+}
+
+
+inline QString CSong::getGrouping(void) const
+{
+    return m_grouping;
 }
 
 
@@ -586,6 +592,12 @@ inline int CSong::getRating(void) const
 inline QString CSong::getComments(void) const
 {
     return m_comments;
+}
+
+
+inline int CSong::getBPM(void) const
+{
+    return m_bpm;
 }
 
 

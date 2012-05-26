@@ -123,6 +123,7 @@ void CDialogEditSong::apply(void)
 
     song->setTitle(m_uiWidget->editTitle->text());
     song->setSubTitle(m_uiWidget->editSubTitle->text());
+    song->setGrouping(m_uiWidget->editGrouping->text());
     song->setArtistName(m_uiWidget->editArtist->text());
     song->setAlbumTitle(m_uiWidget->editAlbum->text());
     song->setAlbumArtist(m_uiWidget->editAlbumArtist->text());
@@ -134,6 +135,7 @@ void CDialogEditSong::apply(void)
     song->setAlbumArtistSort(m_uiWidget->editAlbumArtistSort->text());
     song->setComposerSort(m_uiWidget->editComposerSort->text());
 
+    song->setBPM(m_uiWidget->editBPM->text().toInt());
     song->setYear(m_uiWidget->editYear->text().toInt());
     song->setTrackNumber(m_uiWidget->editTrackNumber->text().toInt());
     song->setTrackTotal(m_uiWidget->editTrackTotal->text().toInt());
@@ -165,11 +167,24 @@ void CDialogEditSong::save(void)
  * Met à jour la boite de dialogue avec les informations du morceau.
  *
  * \todo Afficher les illustrations.
+ * \todo Modifier le titre de la fenêtre.
  */
 
 void CDialogEditSong::updateInfos()
 {
     CSong * song = m_songItem->getSong();
+
+    const QString songTitle = song->getTitle();
+    const QString songArtist = song->getArtistName();
+
+    if (songArtist.isEmpty())
+    {
+        setWindowTitle(tr("Song infos") + " - " + songTitle);
+    }
+    else
+    {
+        setWindowTitle(tr("Song infos") + " - " + songTitle + " - " + songArtist);
+    }
 
     // Résumé
 
@@ -177,40 +192,12 @@ void CDialogEditSong::updateInfos()
     QTime durationTime(0, 0);
     durationTime = durationTime.addMSecs(duration);
 
-    m_uiWidget->valueTitle->setText(song->getTitle() + QString(" (%1)").arg(durationTime.toString("m:ss"))); /// \todo Stocker dans les settings
-    m_uiWidget->valueArtist->setText(song->getArtistName());
+    m_uiWidget->valueTitle->setText(songTitle + QString(" (%1)").arg(durationTime.toString("m:ss"))); /// \todo Stocker dans les settings
+    m_uiWidget->valueArtist->setText(songArtist);
     m_uiWidget->valueAlbum->setText(song->getAlbumTitle());
 
     m_uiWidget->valueFileName->setText(song->getFileName());
-
-    int fileSize = song->getFileSize();
-
-    if (fileSize >= 1024)
-    {
-        if (fileSize >= 1024 * 1024)
-        {
-            if (fileSize >= 1024 * 1024 * 1024)
-            {
-                m_uiWidget->valueFileSize->setText(tr("%1 Gio").arg(fileSize / (1024*1024*1024)));
-            }
-            else
-            {
-                // Moins de 1 Gio
-                m_uiWidget->valueFileSize->setText(tr("%1 Mio").arg(fileSize / (1024*1024)));
-            }
-        }
-        else
-        {
-            // Moins de 1 Mio
-            m_uiWidget->valueFileSize->setText(tr("%1 Kio").arg(fileSize / 1024));
-        }
-    }
-    else
-    {
-        // Moins de 1 Kio
-        m_uiWidget->valueFileSize->setText(tr("%1 bytes").arg(fileSize));
-    }
-
+    m_uiWidget->valueFileSize->setText(CSong::getFileSize(song->getFileSize()));
     m_uiWidget->valueCreation->setText(song->getCreationDate().toString());
     m_uiWidget->valueModification->setText(song->getModificationDate().toString());
 
@@ -218,19 +205,21 @@ void CDialogEditSong::updateInfos()
     m_uiWidget->valueFormat->setText(CSong::getFormatName(song->getFormat()));
     m_uiWidget->valueChannels->setText(QString::number(song->getNumChannels()));
     m_uiWidget->valueSampleRate->setText(tr("%1 kHz").arg(song->getSampleRate()));
-    m_uiWidget->valueEncodedWith->setText(song->getEncoder());
+
+    m_uiWidget->valueLastPlayTime->setText(song->getLastPlay().toString());
+    m_uiWidget->valuePlayCount->setText(QString::number(song->getNumPlays()));
     
 
     // Informations et tri
 
-    m_uiWidget->editTitle->setText(song->getTitle());
-    m_uiWidget->editTitle_2->setText(song->getTitle());
+    m_uiWidget->editTitle->setText(songTitle);
+    m_uiWidget->editTitle_2->setText(songTitle);
     m_uiWidget->editTitleSort->setText(song->getTitleSort());
 
-    //m_uiWidget->editSubTitle->setText(song->getSubTitle());
+    m_uiWidget->editSubTitle->setText(song->getSubTitle());
 
-    m_uiWidget->editArtist->setText(song->getArtistName());
-    m_uiWidget->editArtist_2->setText(song->getArtistName());
+    m_uiWidget->editArtist->setText(songArtist);
+    m_uiWidget->editArtist_2->setText(songArtist);
     m_uiWidget->editArtistSort->setText(song->getArtistNameSort());
 
     m_uiWidget->editAlbum->setText(song->getAlbumTitle());
@@ -240,6 +229,10 @@ void CDialogEditSong::updateInfos()
     m_uiWidget->editAlbumArtist->setText(song->getAlbumArtist());
     m_uiWidget->editAlbumArtist_2->setText(song->getAlbumArtist());
     m_uiWidget->editAlbumArtistSort->setText(song->getAlbumArtistSort());
+
+    m_uiWidget->editGrouping->setText(song->getGrouping());
+    const int bpm = song->getBPM();
+    m_uiWidget->editBPM->setText(bpm > 0 ? QString::number(bpm) : "");
 
     m_uiWidget->editComposer->setText(song->getComposer());
     m_uiWidget->editComposer_2->setText(song->getComposer());

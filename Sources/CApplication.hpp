@@ -123,6 +123,9 @@ public slots:
     void editSong(CSongTableItem * songItem);
     void removeSong(CSongTableItem * songItem);
 
+    void selectCurrentSong(void);
+    void selectSong(CSongTable * songTable, CSongTableItem * songItem);
+
     void openSongInExplorer(void);
 
 signals:
@@ -168,6 +171,7 @@ private:
     QSqlDatabase m_dataBase;            ///< Base de données.
     QSettings * m_settings;             ///< Paramètres de l'application.
     QTimer * m_timer;                   ///< Timer pour mettre à jour l'affichage.
+    QLabel * m_listInfos;               ///< Label pour afficher les informations sur la liste affichée.
     CSongTableItem * m_currentSongItem; ///< Pointeur sur l'item en cours de lecture.
     CSongTable * m_currentSongTable;    ///< Liste de morceaux contenant le morceau en cours de lecture. \todo Fusion avec le précédent param.
     CSongTable * m_library;             ///< Librairie (liste de tous les morceaux).

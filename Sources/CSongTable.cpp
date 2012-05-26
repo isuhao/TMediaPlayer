@@ -5,6 +5,8 @@
 #include "CApplication.hpp"
 #include "CPlayList.hpp"
 #include "CSongTableHeader.hpp"
+#include "CStaticPlayList.hpp"
+#include "CDynamicPlayList.hpp"
 #include <QStringList>
 #include <QMouseEvent>
 #include <QHeaderView>
@@ -26,6 +28,7 @@ CSongTable::CSongTable(CApplication * application) :
     m_isModified     (false),
     m_sortOrder      (Qt::AscendingOrder),
     m_isColumnMoving (false),
+    m_selectedItem   (NULL),
     m_automaticSort  (true)
 {
     Q_CHECK_PTR(application);
@@ -84,18 +87,32 @@ QList<CSong *> CSongTable::getSongs(void) const
 }
 
 
+/// \todo Implémentation.
+CSongTableItem * CSongTable::getFirstSongItem(CSong * song) const
+{
+    if (!song)
+    {
+        return NULL;
+    }
+
+    foreach (CSongTableItem * songItem, m_model->m_data)
+    {
+        if (songItem->getSong() == song)
+        {
+            return songItem;
+        }
+    }
+
+    return NULL;
+}
+
+
 /**
  * Retourne le pointeur sur l'item à une ligne donnée.
  *
  * \param pos Numéro de la ligne (à partir de 0).
  * \return Pointeur sur l'item, ou NULL.
  */
-/*
-CSongTableItem * CSongTable::getSongItemForIndex(int pos) const
-{
-    return (pos < 0 ? NULL : m_model->getSongItem(pos));
-}
-*/
 
 CSongTableItem * CSongTable::getSongItemForRow(int row) const
 {
@@ -408,13 +425,32 @@ void CSongTable::initColumns(const QString& str)
         m_sortOrder = Qt::AscendingOrder;
     }
 
+    // La colonne 0 est toujours visible, c'est elle qui contient l'indicateur de lecture, et la position du
+    // morceau pour les listes statiques. De plus, cela garantie qu'il y a toujours au moins une colonne
+    // d'affichée, sans quoi on pourrait faire disparaitre les données et le header en masquant toutes les colonnes.
+    m_columns[0].visible = true;
+
     qDebug() << "Modification des colonnes :";
     
     m_isColumnMoving = true;
     CSongTableHeader * header = qobject_cast<CSongTableHeader *>(horizontalHeader());
+        
+    QString debugStr1 = "";
+    QString debugStr2 = "";
+    for (int col = 0; col < ColNumber; ++col)
+    {
+        debugStr1 += QString::number(horizontalHeader()->visualIndex(col)) + ',';
+        debugStr2 += QString::number(m_columns[col].pos) + ',';
+    }
+    qDebug() << "Colonnes Qt (avant) :" << debugStr1;
+    qDebug() << "Colonnes TT (avant) :" << debugStr2;
 
     for (int col = 0; col < ColNumber; ++col)
     {
+        // Redimensionnement
+        if (m_columns[col].width <= 0) m_columns[col].width = header->defaultSectionSize();
+        header->resizeSection(col, m_columns[col].width);
+
         // Affichage ou masquage de la colonne
         if (m_columns[col].visible)
         {
@@ -460,13 +496,31 @@ void CSongTable::initColumns(const QString& str)
         }
 */
         // Déplacement de la colonne
-        int visualIndex = header->visualIndex(col);
-        header->moveSection(visualIndex, m_columns[col].pos);
+        int logical = -1;
+        for (int j = 0; j < ColNumber; ++j)
+        {
+            if (m_columns[j].pos == col)
+            {
+                logical = j;
+                break;
+            }
+        }
 
-        // Redimensionnement
-        if (m_columns[col].width <= 0) m_columns[col].width = header->defaultSectionSize();
-        header->resizeSection(col, m_columns[col].width);
+        //int visualIndex = header->visualIndex(col);
+        //header->moveSection(visualIndex, m_columns[col].pos);
+        int visualIndex = header->visualIndex(logical);
+        header->moveSection(visualIndex, col);
     }
+        
+    debugStr1 = "";
+    debugStr2 = "";
+    for (int col = 0; col < ColNumber; ++col)
+    {
+        debugStr1 += QString::number(horizontalHeader()->visualIndex(col)) + ',';
+        debugStr2 += QString::number(m_columns[col].pos) + ',';
+    }
+    qDebug() << "Colonnes Qt (apres) :" << debugStr1;
+    qDebug() << "Colonnes TT (apres) :" << debugStr2;
 
     m_isColumnMoving = false;
 
@@ -475,6 +529,13 @@ void CSongTable::initColumns(const QString& str)
     //horizontalHeader()->hideSection(0);
 }
 
+
+/**
+ * Affiche ou masque une colonne.
+ *
+ * \param column Numéro de la colonne.
+ * \param show   Indique si la colonne doit être affiché ou masqué.
+ */
 
 void CSongTable::showColumn(int column, bool show)
 {
@@ -497,24 +558,48 @@ void CSongTable::showColumn(int column, bool show)
             numColumns = 0;
             horizontalHeader()->hideSection(column);
         }
-
-        for (int i = 0; i < ColNumber; ++i)
+        
+        QString debugStr1 = "";
+        QString debugStr2 = "";
+        for (int col = 0; col < ColNumber; ++col)
         {
-            if (m_columns[i].visible)
+            if (m_columns[col].visible)
             {
                 ++numColumns;
             }
+            
+            debugStr1 += QString::number(horizontalHeader()->visualIndex(col)) + ',';
+            debugStr2 += QString::number(m_columns[col].pos) + ',';
         }
+        qDebug() << "Colonnes Qt (avant) :" << debugStr1;
+        qDebug() << "Colonnes TT (avant) :" << debugStr2;
 
         int visualIndex = horizontalHeader()->visualIndex(column);
 
         // Déplacement de la colonne
         horizontalHeader()->moveSection(visualIndex, numColumns);
 
+        debugStr1 = "";
+        debugStr2 = "";
+        for (int col = 0; col < ColNumber; ++col)
+        {
+            debugStr1 += QString::number(horizontalHeader()->visualIndex(col)) + ',';
+            debugStr2 += QString::number(m_columns[col].pos) + ',';
+        }
+        qDebug() << "Colonnes Qt (apres) :" << debugStr1;
+        qDebug() << "Colonnes TT (apres) :" << debugStr2;
+
         m_isModified = true;
     }
 }
 
+
+/**
+ * Tri la table selon une colonne.
+ *
+ * \param column Numéro de la colonne.
+ * \param order  Ordre croissant ou décroissant.
+ */
 
 void CSongTable::sortColumn(int column, Qt::SortOrder order)
 {
@@ -526,6 +611,24 @@ void CSongTable::sortColumn(int column, Qt::SortOrder order)
         m_sortOrder = order;
 
         m_isModified = true;
+    }
+}
+
+
+void CSongTable::goToSongTable(void)
+{
+    qDebug() << "CSongTable::goToSongTable";
+
+    QAction * action = qobject_cast<QAction *>(sender());
+
+    if (action)
+    {
+        CSongTable * songTable = m_actionGoToSongTable.key(action);
+
+        if (songTable)
+        {
+            m_application->selectSong(songTable, songTable->getFirstSongItem(m_selectedItem->getSong()));
+        }
     }
 }
 
@@ -611,32 +714,6 @@ void CSongTable::mousePressEvent(QMouseEvent * event)
     //TODO
 
     QTableView::mousePressEvent(event);
-}
-
-
-void CSongTable::mouseDoubleClickEvent(QMouseEvent * event)
-{
-    Q_CHECK_PTR(event);
-
-    if (event->button() == Qt::LeftButton) 
-    {
-        QPoint pt = event->pos();
-        QModelIndex index = this->indexAt(pt);
-
-        if (index.isValid())
-        {
-            qDebug() << "Double-clic sur la table";
-            selectRow(index.row());
-            emit songStarted(index.row());
-
-        }
-        else
-        {
-            qDebug() << "Double-clic en dehors de la table";
-        }
-    }
-
-    QTableView::mouseDoubleClickEvent(event);
 }
 */
 
@@ -825,6 +902,32 @@ void CSongTable::keyPressEvent(QKeyEvent * event)
 }
 
 
+void CSongTable::mouseDoubleClickEvent(QMouseEvent * event)
+{
+    Q_CHECK_PTR(event);
+
+    if (event->button() == Qt::LeftButton) 
+    {
+        QPoint pt = event->pos();
+        QModelIndex index = indexAt(pt);
+
+        if (index.isValid())
+        {
+            qDebug() << "Double-clic sur un item...";
+            selectRow(index.row());
+            emit songStarted(m_model->getSongItem(index));
+            event->accept();
+        }
+        else
+        {
+            qDebug() << "Double-clic en dehors de la table";
+        }
+    }
+
+    QTableView::mouseDoubleClickEvent(event);
+}
+
+
 bool CSongTable::isModified(void) const
 {
     return m_isModified;
@@ -855,12 +958,22 @@ void CSongTable::removeSong(int pos)
 }
 
 
+void CSongTable::selectSongItem(CSongTableItem * songItem)
+{
+    Q_CHECK_PTR(songItem);
+
+    selectionModel()->clearSelection();
+    selectionModel()->setCurrentIndex(m_model->index(m_model->getRowForSongItem(songItem), 0), QItemSelectionModel::Select | QItemSelectionModel::Rows);
+}
+
+
 /// \todo Implémentation.
 void CSongTable::openCustomMenuProject(const QPoint& point)
 {
     qDebug() << "CSongTable::openCustomMenuProject()";
 
     QModelIndex index = indexAt(point);
+    m_selectedItem = NULL;
 
     if (index.isValid())
     {
@@ -878,11 +991,15 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
 
         if (!severalSongs)
         {
+            m_selectedItem = m_model->getSongItem(index);
+
             // Listes de lecture contenant le morceau
             QMenu * menuPlayList = menu->addMenu(tr("Playlists"));
-            menuPlayList->addAction(tr("Library"));
+            CSongTable * library = m_application->getLibrary();
+            m_actionGoToSongTable[library] = menuPlayList->addAction(QPixmap(":/icons/library"), tr("Library"));
+            connect(m_actionGoToSongTable[library], SIGNAL(triggered()), this, SLOT(goToSongTable()));
 
-            QList<CPlayList *> playLists = m_application->getPlayListsWithSong(m_model->getSongItem(index)->getSong());
+            QList<CPlayList *> playLists = m_application->getPlayListsWithSong(m_selectedItem->getSong());
 
             if (playLists.size() > 0)
             {
@@ -890,7 +1007,17 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
 
                 foreach (CPlayList * playList, playLists)
                 {
-                    menuPlayList->addAction(playList->getName());
+                    m_actionGoToSongTable[playList] = menuPlayList->addAction(playList->getName());
+                    connect(m_actionGoToSongTable[playList], SIGNAL(triggered()), this, SLOT(goToSongTable()));
+
+                    if (qobject_cast<CDynamicPlayList *>(playList))
+                    {
+                        m_actionGoToSongTable[playList]->setIcon(QPixmap(":/icons/dynamic_list"));
+                    }
+                    else if (qobject_cast<CStaticPlayList *>(playList))
+                    {
+                        m_actionGoToSongTable[playList]->setIcon(QPixmap(":/icons/playlist"));
+                    }
                 }
             }
         }
@@ -909,7 +1036,16 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
         {
             foreach (CPlayList * playList, playLists)
             {
-                menuAddToPlayList->addAction(playList->getName());
+                QAction * actionPlayList = menuAddToPlayList->addAction(playList->getName());
+
+                if (qobject_cast<CDynamicPlayList *>(playList))
+                {
+                    actionPlayList->setIcon(QPixmap(":/icons/dynamic_list"));
+                }
+                else if (qobject_cast<CStaticPlayList *>(playList))
+                {
+                    actionPlayList->setIcon(QPixmap(":/icons/playlist"));
+                }
             }
         }
 

@@ -43,10 +43,6 @@ protected slots:
     virtual bool updateDatabase(void);
     virtual void openCustomMenuProject(const QPoint& point);
 
-protected:
-
-    virtual void initColumns(const QString& str);
-
 private:
 
     int m_id;                    ///< Identifiant de la liste en base de données.

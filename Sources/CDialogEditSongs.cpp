@@ -15,20 +15,36 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
     m_uiWidget->setupUi(this);
 
 
+    // Synchronisation des champs
     connect(m_uiWidget->editTitle, SIGNAL(textEdited(const QString&)), m_uiWidget->editTitle_2, SLOT(setText(const QString&)));
     connect(m_uiWidget->editTitle_2, SIGNAL(textEdited(const QString&)), m_uiWidget->editTitle, SLOT(setText(const QString&)));
+
+    connect(m_uiWidget->chTitle, SIGNAL(toggled(bool)), m_uiWidget->chTitle_2, SLOT(setChecked(bool)));
+    connect(m_uiWidget->chTitle_2, SIGNAL(toggled(bool)), m_uiWidget->chTitle, SLOT(setChecked(bool)));
 
     connect(m_uiWidget->editArtist, SIGNAL(textEdited(const QString&)), m_uiWidget->editArtist_2, SLOT(setText(const QString&)));
     connect(m_uiWidget->editArtist_2, SIGNAL(textEdited(const QString&)), m_uiWidget->editArtist, SLOT(setText(const QString&)));
 
+    connect(m_uiWidget->chArtist, SIGNAL(toggled(bool)), m_uiWidget->chArtist_2, SLOT(setChecked(bool)));
+    connect(m_uiWidget->chArtist_2, SIGNAL(toggled(bool)), m_uiWidget->chArtist, SLOT(setChecked(bool)));
+
     connect(m_uiWidget->editAlbum, SIGNAL(textEdited(const QString&)), m_uiWidget->editAlbum_2, SLOT(setText(const QString&)));
     connect(m_uiWidget->editAlbum_2, SIGNAL(textEdited(const QString&)), m_uiWidget->editAlbum, SLOT(setText(const QString&)));
+
+    connect(m_uiWidget->chAlbum, SIGNAL(toggled(bool)), m_uiWidget->chAlbum_2, SLOT(setChecked(bool)));
+    connect(m_uiWidget->chAlbum_2, SIGNAL(toggled(bool)), m_uiWidget->chAlbum, SLOT(setChecked(bool)));
 
     connect(m_uiWidget->editAlbumArtist, SIGNAL(textEdited(const QString&)), m_uiWidget->editAlbumArtist_2, SLOT(setText(const QString&)));
     connect(m_uiWidget->editAlbumArtist_2, SIGNAL(textEdited(const QString&)), m_uiWidget->editAlbumArtist, SLOT(setText(const QString&)));
 
+    connect(m_uiWidget->chAlbumArtist, SIGNAL(toggled(bool)), m_uiWidget->chAlbumArtist_2, SLOT(setChecked(bool)));
+    connect(m_uiWidget->chAlbumArtist_2, SIGNAL(toggled(bool)), m_uiWidget->chAlbumArtist, SLOT(setChecked(bool)));
+
     connect(m_uiWidget->editComposer, SIGNAL(textEdited(const QString&)), m_uiWidget->editComposer_2, SLOT(setText(const QString&)));
     connect(m_uiWidget->editComposer_2, SIGNAL(textEdited(const QString&)), m_uiWidget->editComposer, SLOT(setText(const QString&)));
+
+    connect(m_uiWidget->chComposer, SIGNAL(toggled(bool)), m_uiWidget->chComposer_2, SLOT(setChecked(bool)));
+    connect(m_uiWidget->chComposer_2, SIGNAL(toggled(bool)), m_uiWidget->chComposer, SLOT(setChecked(bool)));
 
 
     // Liste des langues
@@ -96,8 +112,7 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
     const QString notSimText = tr("Different values");
    
 
-    // Informations et tri
-
+    // Titre
     m_uiWidget->editTitle->setText(songTitle);
     m_uiWidget->editTitle_2->setText(songTitle);
 
@@ -107,6 +122,7 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
         m_uiWidget->editTitle_2->setPlaceholderText(notSimText);
     }
 
+    // Titre pour le tri
     m_uiWidget->editTitleSort->setText(songTitleSort);
 
     if (!songTitleSortSim)
@@ -114,6 +130,7 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
         m_uiWidget->editTitleSort->setPlaceholderText(notSimText);
     }
 
+    // Artiste
     m_uiWidget->editArtist->setText(songArtist);
     m_uiWidget->editArtist_2->setText(songArtist);
 
@@ -123,21 +140,76 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
         m_uiWidget->editArtist_2->setPlaceholderText(notSimText);
     }
 
-    m_uiWidget->editArtistSort->setText(songArtistSortSim ? songArtistSort : notSimText);
+    // Artiste pour le tri
+    m_uiWidget->editArtistSort->setText(songArtistSort);
 
-    m_uiWidget->editAlbum->setText(songAlbumSim ? songAlbum : notSimText);
-    m_uiWidget->editAlbum_2->setText(songAlbumSim ? songAlbum : notSimText);
-    m_uiWidget->editAlbumSort->setText(songAlbumSortSim ? songAlbumSort : notSimText);
+    if (!songArtistSortSim)
+    {
+        m_uiWidget->editArtistSort->setPlaceholderText(notSimText);
+    }
 
-    m_uiWidget->editAlbumArtist->setText(songAlbumArtistSim ? songAlbumArtist : notSimText);
-    m_uiWidget->editAlbumArtist_2->setText(songAlbumArtistSim ? songAlbumArtist : notSimText);
-    m_uiWidget->editAlbumArtistSort->setText(songAlbumArtistSortSim ? songAlbumArtistSort : notSimText);
+    // Album
+    m_uiWidget->editAlbum->setText(songAlbum);
+    m_uiWidget->editAlbum_2->setText(songAlbum);
 
-    m_uiWidget->editComposer->setText(songComposerSim ? songComposer : notSimText);
-    m_uiWidget->editComposer_2->setText(songComposerSim ? songComposer : notSimText);
-    m_uiWidget->editComposerSort->setText(songComposerSortSim ? songComposerSort : notSimText);
+    if (!songAlbumSim)
+    {
+        m_uiWidget->editAlbum->setPlaceholderText(notSimText);
+        m_uiWidget->editAlbum_2->setPlaceholderText(notSimText);
+    }
 
-    m_uiWidget->editYear->setText(songYearSim ? QString::number(songYear) : notSimText);
+    // Album pour le tri
+    m_uiWidget->editAlbumSort->setText(songAlbumSort);
+
+    if (!songAlbumSortSim)
+    {
+        m_uiWidget->editAlbumSort->setPlaceholderText(notSimText);
+    }
+
+    // Artiste de l'album
+    m_uiWidget->editAlbumArtist->setText(songAlbumArtist);
+    m_uiWidget->editAlbumArtist_2->setText(songAlbumArtist);
+
+    if (!songAlbumArtistSim)
+    {
+        m_uiWidget->editAlbumArtist->setPlaceholderText(notSimText);
+        m_uiWidget->editAlbumArtist_2->setPlaceholderText(notSimText);
+    }
+
+    // Artiste de l'album pour le tri
+    m_uiWidget->editAlbumArtistSort->setText(songAlbumArtistSort);
+
+    if (!songAlbumArtistSortSim)
+    {
+        m_uiWidget->editAlbumArtistSort->setPlaceholderText(notSimText);
+    }
+
+    // Compositeur
+    m_uiWidget->editComposer->setText(songComposer);
+    m_uiWidget->editComposer_2->setText(songComposer);
+
+    if (!songComposerSim)
+    {
+        m_uiWidget->editComposer->setPlaceholderText(notSimText);
+        m_uiWidget->editComposer_2->setPlaceholderText(notSimText);
+    }
+
+    // Compositeur pour le tri
+    m_uiWidget->editComposerSort->setText(songComposerSort);
+
+    if (!songComposerSortSim)
+    {
+        m_uiWidget->editComposerSort->setPlaceholderText(notSimText);
+    }
+
+    // Année
+    m_uiWidget->editYear->setText(QString::number(songYear));
+
+    if (!songYearSim)
+    {
+        m_uiWidget->editYear->setPlaceholderText(notSimText);
+    }
+
 /*
     const int trackNumber = m_songItem->song->getTrackNumber();
     m_uiWidget->editTrackNumber->setText(trackNumber > 0 ? QString::number(trackNumber) : "");

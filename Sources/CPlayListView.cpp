@@ -76,8 +76,7 @@ QModelIndex CPlayListView::addSongTable(CSongTable * songTable)
     }
     else
     {
-        playListItem = new QStandardItem(tr("Library"));
-        //playListItem->setIcon(QPixmap(":/icons/library"));
+        playListItem = new QStandardItem(QPixmap(":/icons/library"), tr("Library"));
     }
 
     playListItem->setData(QVariant::fromValue(songTable));
@@ -89,6 +88,26 @@ QModelIndex CPlayListView::addSongTable(CSongTable * songTable)
 CSongTable * CPlayListView::getSongTable(const QModelIndex& index) const
 {
     return m_model->data(index, Qt::UserRole + 1).value<CSongTable *>();
+}
+
+
+QModelIndex CPlayListView::getModelIndex(CSongTable * songTable) const
+{
+    if (!songTable)
+    {
+        return QModelIndex();
+    }
+
+    for (int row = 0; row < m_model->rowCount(); ++row)
+    {
+        const QStandardItem * item = m_model->item(row);
+        if (item && item->data(Qt::UserRole + 1).value<CSongTable *>() == songTable)
+        {
+            return m_model->indexFromItem(item);
+        }
+    }
+
+    return QModelIndex();
 }
 
 

@@ -114,7 +114,10 @@ private:
 
     static inline bool cmpSongTitleAsc(CSongTableItem * song1, CSongTableItem * song2)
     {
-        return (song1->getSong()->getTitleSort(false) < song2->getSong()->getTitleSort(false));
+        const QString title1 = song1->getSong()->getTitleSort(false);
+        const QString title2 = song2->getSong()->getTitleSort(false);
+
+        return QString::compare(title1, title2, Qt::CaseInsensitive);
     }
 
     static inline bool cmpSongTitleDesc(CSongTableItem * song1, CSongTableItem * song2)
@@ -127,8 +130,10 @@ private:
         const QString artist1 = song1->getSong()->getArtistNameSort(false);
         const QString artist2 = song2->getSong()->getArtistNameSort(false);
 
-        if (artist1 < artist2) return true;
-        if (artist1 > artist2) return false;
+        int cmp = QString::compare(artist1, artist2, Qt::CaseInsensitive);
+
+        if (cmp < 0) return true;
+        if (cmp > 0) return false;
 
         return cmpSongAlbumAsc(song1, song2);
     }
@@ -143,8 +148,10 @@ private:
         const QString album1 = song1->getSong()->getAlbumTitleSort(false);
         const QString album2 = song2->getSong()->getAlbumTitleSort(false);
 
-        if (album1 < album2) return true;
-        if (album1 > album2) return false;
+        int cmp = QString::compare(album1, album2, Qt::CaseInsensitive);
+
+        if (cmp < 0) return true;
+        if (cmp > 0) return false;
 
         return cmpSongDiscAsc(song1, song2);
     }
@@ -159,8 +166,10 @@ private:
         const QString artist1 = song1->getSong()->getAlbumArtistSort(false);
         const QString artist2 = song2->getSong()->getAlbumArtistSort(false);
 
-        if (artist1 < artist2) return true;
-        if (artist1 > artist2) return false;
+        int cmp = QString::compare(artist1, artist2, Qt::CaseInsensitive);
+
+        if (cmp < 0) return true;
+        if (cmp > 0) return false;
 
         return cmpSongAlbumAsc(song1, song2);
     }
@@ -341,6 +350,27 @@ private:
     {
         return cmpSongModificationDateAsc(song2, song1);
     }
+
+    static inline bool cmpSongChannelsAsc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return (song1->getSong()->getNumChannels() < song2->getSong()->getNumChannels());
+    }
+
+    static inline bool cmpSongChannelsDesc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return cmpSongChannelsAsc(song2, song1);
+    }
+
+    static inline bool cmpSongFileSizeAsc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return (song1->getSong()->getFileSize() < song2->getSong()->getFileSize());
+    }
+
+    static inline bool cmpSongFileSizeDesc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return cmpSongFileSizeAsc(song2, song1);
+    }
+
 
     bool m_canDrop;
     QList<CSongTableItem *> m_data;

@@ -40,7 +40,6 @@ CSongTableHeader::CSongTableHeader(QWidget * parent) :
 {
     setClickable(true);
     setMovable(true);
-    setHighlightSections(true);
     setContextMenuPolicy(Qt::DefaultContextMenu);
 
     m_contextMenu = new QMenu(this);
@@ -66,6 +65,8 @@ CSongTableHeader::CSongTableHeader(QWidget * parent) :
     T_CREATE_ACTION(ColSampleRate      );
     T_CREATE_ACTION(ColCreationDate    );
     T_CREATE_ACTION(ColModificationDate);
+    T_CREATE_ACTION(ColChannels        );
+    T_CREATE_ACTION(ColFileSize        );
 
 /*
     m_actColTitle            = m_contextMenu->addAction(tr("Title"            ), this, SLOT(showColTitle           (bool))); m_actColTitle           ->setCheckable(true);

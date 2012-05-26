@@ -21,10 +21,14 @@ public:
 
     QModelIndex addSongTable(CSongTable * songTable);
     CSongTable * getSongTable(const QModelIndex& index) const;
+    QModelIndex getModelIndex(CSongTable * songTable) const;
+
+protected:
+
+    virtual void dragMoveEvent(QDragMoveEvent * event);
 
 protected slots:
 
-    virtual void dragMoveEvent(QDragMoveEvent * event);
     virtual void openCustomMenuProject(const QPoint& point);
 
 private:
