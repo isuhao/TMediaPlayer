@@ -66,10 +66,10 @@ public:
         ColModificationDate = 20, ///< Date de modification.
         ColChannels         = 21, ///< Canaux.
         ColFileSize         = 22, ///< Taille du fichier.
-        /// \todo Ajouter "Lyrics"
-        /// \todo Ajouter "Language"
+        ColLyrics           = 23, ///< Paroles.
+        ColLanguage         = 24, ///< Langue.
 
-        ColNumber           = 23  ///< Nombre de types de colonnes.
+        ColNumber           = 25  ///< Nombre de types de colonnes.
     };
 
     static inline TColumnType getColumnTypeFromInteger(int column);
@@ -191,6 +191,8 @@ inline CSongTable::TColumnType CSongTable::getColumnTypeFromInteger(int column)
         case 20: return ColModificationDate;
         case 21: return ColChannels        ;
         case 22: return ColFileSize        ;
+        case 23: return ColLyrics          ;
+        case 24: return ColLanguage        ;
     }
 }
 
@@ -223,6 +225,8 @@ inline QString CSongTable::getColumnTypeName(CSongTable::TColumnType column)
         case ColModificationDate: return tr("Modification date");
         case ColChannels        : return tr("Channels"         );
         case ColFileSize        : return tr("File size"        );
+        case ColLyrics          : return tr("Lyrics"           );
+        case ColLanguage        : return tr("Language"         );
     }
 }
 

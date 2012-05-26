@@ -224,6 +224,14 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
             // Taille du fichier
             case CSongTable::ColFileSize:
                 return CSong::getFileSize(m_data.at(index.row())->getSong()->getFileSize());
+
+            // Paroles
+            case CSongTable::ColLyrics:
+                return m_data.at(index.row())->getSong()->getLyrics();
+
+            // Langue
+            case CSongTable::ColLanguage:
+                return CSong::getLanguageName(m_data.at(index.row())->getSong()->getLanguage());
         }
     }
     else if (role == Qt::TextAlignmentRole)
@@ -275,7 +283,7 @@ void CSongTableModel::sort(int column, Qt::SortOrder order)
 
     if (order == Qt::AscendingOrder)
     {
-        switch(column)
+        switch (column)
         {
             case CSongTable::ColPosition        : qSort(m_data.begin(), m_data.end(), cmpSongPositionAsc        ); break;
             case CSongTable::ColTitle           : qSort(m_data.begin(), m_data.end(), cmpSongTitleAsc           ); break;
@@ -300,11 +308,13 @@ void CSongTableModel::sort(int column, Qt::SortOrder order)
             case CSongTable::ColModificationDate: qSort(m_data.begin(), m_data.end(), cmpSongModificationDateAsc); break;
             case CSongTable::ColChannels        : qSort(m_data.begin(), m_data.end(), cmpSongChannelsAsc        ); break;
             case CSongTable::ColFileSize        : qSort(m_data.begin(), m_data.end(), cmpSongFileSizeAsc        ); break;
+            case CSongTable::ColLyrics          : qSort(m_data.begin(), m_data.end(), cmpSongLyricsAsc          ); break;
+            case CSongTable::ColLanguage        : qSort(m_data.begin(), m_data.end(), cmpSongLanguageAsc        ); break;
         }
     }
     else
     {
-        switch(column)
+        switch (column)
         {
             case CSongTable::ColPosition        : qSort(m_data.begin(), m_data.end(), cmpSongPositionDesc        ); break;
             case CSongTable::ColTitle           : qSort(m_data.begin(), m_data.end(), cmpSongTitleDesc           ); break;
@@ -329,6 +339,8 @@ void CSongTableModel::sort(int column, Qt::SortOrder order)
             case CSongTable::ColModificationDate: qSort(m_data.begin(), m_data.end(), cmpSongModificationDateDesc); break;
             case CSongTable::ColChannels        : qSort(m_data.begin(), m_data.end(), cmpSongChannelsDesc        ); break;
             case CSongTable::ColFileSize        : qSort(m_data.begin(), m_data.end(), cmpSongFileSizeDesc        ); break;
+            case CSongTable::ColLyrics          : qSort(m_data.begin(), m_data.end(), cmpSongLyricsDesc          ); break;
+            case CSongTable::ColLanguage        : qSort(m_data.begin(), m_data.end(), cmpSongLanguageDesc        ); break;
         }
     }
 

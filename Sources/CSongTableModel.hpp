@@ -371,6 +371,26 @@ private:
         return cmpSongFileSizeAsc(song2, song1);
     }
 
+    static inline bool cmpSongLyricsAsc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return (song1->getSong()->getLyrics() < song2->getSong()->getLyrics());
+    }
+
+    static inline bool cmpSongLyricsDesc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return cmpSongLyricsAsc(song2, song1);
+    }
+
+    static inline bool cmpSongLanguageAsc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return (CSong::getLanguageName(song1->getSong()->getLanguage()) < CSong::getLanguageName(song2->getSong()->getLanguage()));
+    }
+
+    static inline bool cmpSongLanguageDesc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return cmpSongLyricsAsc(song2, song1);
+    }
+
 
     bool m_canDrop;
     QList<CSongTableItem *> m_data;

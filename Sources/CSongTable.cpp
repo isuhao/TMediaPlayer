@@ -87,7 +87,6 @@ QList<CSong *> CSongTable::getSongs(void) const
 }
 
 
-/// \todo Implémentation.
 CSongTableItem * CSongTable::getFirstSongItem(CSong * song) const
 {
     if (!song)
@@ -319,8 +318,6 @@ void CSongTable::deleteSongs(void)
  *
  * Par exemple : "1:100;2:100;6+:40", ce qui signifie "Titre" (100px), "Artist" (100px), "Année" (40px), classé par
  * année ascendante.
- *
- * \todo Implémentation.
  *
  * \param str Chaine de caractères contenant la disposition des colonnes.
  */

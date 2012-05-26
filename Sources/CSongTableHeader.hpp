@@ -56,6 +56,8 @@ protected slots:
     inline void showColModificationDate(bool show = true) { emit columnShown(CSongTable::ColModificationDate, show); }
     inline void showColChannels        (bool show = true) { emit columnShown(CSongTable::ColChannels        , show); }
     inline void showColFileSize        (bool show = true) { emit columnShown(CSongTable::ColFileSize        , show); }
+    inline void showColLyrics          (bool show = true) { emit columnShown(CSongTable::ColLyrics          , show); }
+    inline void showColLanguage        (bool show = true) { emit columnShown(CSongTable::ColLanguage        , show); }
 
 /*
     T_CREATE_SLOT(ColTitle)
@@ -80,6 +82,8 @@ protected slots:
     T_CREATE_SLOT(ColModificationDate)
     T_CREATE_SLOT(ColChannels)
     T_CREATE_SLOT(ColFileSize)
+    T_CREATE_SLOT(ColLyrics)
+    T_CREATE_SLOT(ColLanguage)
 */
 
 /*

@@ -12,8 +12,6 @@
 
 /**
  * Représente un morceau pouvant être joué.
- * \todo Gérer les paroles.
- * \todo Gérer les critères de tri.
  */
 
 class CSong : public QObject

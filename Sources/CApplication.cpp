@@ -1411,8 +1411,6 @@ void CApplication::selectPlayListFromTreeView(const QModelIndex& index)
 /**
  * Change la liste affichée.
  *
- * \todo Mettre à jour la barre d'état.
- *
  * \param songTable Liste de morceaux à afficher.
  */
 

@@ -67,6 +67,8 @@ CSongTableHeader::CSongTableHeader(QWidget * parent) :
     T_CREATE_ACTION(ColModificationDate);
     T_CREATE_ACTION(ColChannels        );
     T_CREATE_ACTION(ColFileSize        );
+    T_CREATE_ACTION(ColLyrics          );
+    T_CREATE_ACTION(ColLanguage        );
 
 /*
     m_actColTitle            = m_contextMenu->addAction(tr("Title"            ), this, SLOT(showColTitle           (bool))); m_actColTitle           ->setCheckable(true);
