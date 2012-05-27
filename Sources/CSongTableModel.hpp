@@ -1,6 +1,6 @@
 
-#ifndef FILE_CSONGTABLEMODEL
-#define FILE_CSONGTABLEMODEL
+#ifndef FILE_C_SONG_TABLE_MODEL
+#define FILE_C_SONG_TABLE_MODEL
 
 #include <QAbstractTableModel>
 #include <QList>
@@ -117,7 +117,7 @@ private:
         const QString title1 = song1->getSong()->getTitleSort(false);
         const QString title2 = song2->getSong()->getTitleSort(false);
 
-        return QString::compare(title1, title2, Qt::CaseInsensitive);
+        return (QString::compare(title1, title2, Qt::CaseInsensitive) < 0);
     }
 
     static inline bool cmpSongTitleDesc(CSongTableItem * song1, CSongTableItem * song2)
@@ -402,4 +402,4 @@ inline int CSongTableModel::getNumSongs(void) const
     return m_data.size();
 }
 
-#endif // FILE_CSONGTABLEMODEL
+#endif // FILE_C_SONG_TABLE_MODEL

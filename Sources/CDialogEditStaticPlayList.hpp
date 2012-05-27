@@ -1,6 +1,6 @@
 
-#ifndef FILE_CDIALOG_EDIT_STATIC_PLAYLIST
-#define FILE_CDIALOG_EDIT_STATIC_PLAYLIST
+#ifndef FILE_C_DIALOG_EDIT_STATIC_PLAYLIST
+#define FILE_C_DIALOG_EDIT_STATIC_PLAYLIST
 
 #include <QDialog>
 #include "ui_DialogEditStaticPlayList.h"
@@ -30,4 +30,4 @@ private:
     CApplication * m_application;
 };
 
-#endif // FILE_CDIALOG_EDIT_STATIC_PLAYLIST
+#endif // FILE_C_DIALOG_EDIT_STATIC_PLAYLIST

@@ -1,6 +1,6 @@
 
-#ifndef FILE_CSONGTABLE
-#define FILE_CSONGTABLE
+#ifndef FILE_C_SONG_TABLE
+#define FILE_C_SONG_TABLE
 
 #include <QObject>
 #include <QVariant>
@@ -101,6 +101,8 @@ public:
     int getTotalDuration(void) const;
     inline bool hasSong(CSong * song) const;
     virtual bool isModified(void) const;
+
+    inline int getIdPlayList(void) const;
     
 public slots:
 
@@ -255,4 +257,10 @@ inline bool CSongTable::hasSong(CSong * song) const
     return m_model->hasSong(song);
 }
 
-#endif
+
+inline int CSongTable::getIdPlayList(void) const
+{
+    return m_idPlayList;
+}
+
+#endif // FILE_C_SONG_TABLE

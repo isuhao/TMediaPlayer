@@ -1,6 +1,6 @@
 
-#ifndef FILE_CSONG_TABLE_HEADER
-#define FILE_CSONG_TABLE_HEADER
+#ifndef FILE_C_SONG_TABLE_HEADER
+#define FILE_C_SONG_TABLE_HEADER
 
 #include <QHeaderView>
 #include "CSongTable.hpp"
@@ -136,4 +136,4 @@ private:
 */
 };
 
-#endif // FILE_CSONG_TABLE_HEADER
+#endif // FILE_C_SONG_TABLE_HEADER

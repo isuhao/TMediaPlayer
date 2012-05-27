@@ -1,6 +1,6 @@
 
-#ifndef FILE_CWIDGETCRITERIA
-#define FILE_CWIDGETCRITERIA
+#ifndef FILE_C_WIDGET_CRITERIA
+#define FILE_C_WIDGET_CRITERIA
 
 #include "IWidgetCriteria.hpp"
 #include "ui_WidgetCriteria.h"
@@ -12,8 +12,10 @@ class CWidgetCriteria : public IWidgetCriteria
 
 public:
 
-    CWidgetCriteria(QWidget * parent = NULL);
+    explicit CWidgetCriteria(QWidget * parent = NULL);
     ~CWidgetCriteria();
+
+    virtual ICriteria * getCriteria(void);
 
 protected slots:
 
@@ -29,4 +31,4 @@ private:
     Ui::WidgetCriteria * m_uiWidget;
 };
 
-#endif // FILE_CWIDGETCRITERIA
+#endif // FILE_C_WIDGET_CRITERIA

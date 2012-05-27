@@ -1,6 +1,6 @@
 
-#ifndef FILE_CDIALOG_EDIT_SONG
-#define FILE_CDIALOG_EDIT_SONG
+#ifndef FILE_C_DIALOG_EDIT_SONG
+#define FILE_C_DIALOG_EDIT_SONG
 
 #include <QDialog>
 #include "CSongTableModel.hpp"
@@ -35,4 +35,4 @@ private:
     CSongTableItem * m_songItem;
 };
 
-#endif // FILE_CDIALOG_EDIT_SONG
+#endif // FILE_C_DIALOG_EDIT_SONG

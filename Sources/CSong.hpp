@@ -1,6 +1,6 @@
 
-#ifndef FILE_CSONG
-#define FILE_CSONG
+#ifndef FILE_C_SONG
+#define FILE_C_SONG
 
 #include <QList>
 #include <QDateTime>
@@ -622,4 +622,4 @@ inline QDateTime CSong::getLastPlay(void) const
     return (m_plays.isEmpty() ? QDateTime() : m_plays.last());
 }
 
-#endif
+#endif // FILE_C_SONG

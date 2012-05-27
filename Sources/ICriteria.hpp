@@ -1,6 +1,6 @@
 
-#ifndef FILE_ICRITERIA
-#define FILE_ICRITERIA
+#ifndef FILE_I_CRITERIA
+#define FILE_I_CRITERIA
 
 #include <QObject>
 #include <QList>
@@ -9,11 +9,16 @@
 
 class CSong;
 class CDynamicPlayList;
+class CApplication;
 
 
 class ICriteria : public QObject
 {
     Q_OBJECT
+
+    friend class CDynamicPlayList;
+    friend class CWidgetCriteria;
+    friend class CMultiCriterion; /// La méthode ICriteria::setPlayList est innaccessible depuis CMultiCriterion::setPlayList !
 
 public:
 
@@ -44,8 +49,7 @@ public:
         TypeGenre               = 0x0206,
         TypeComments            = 0x0207,
         TypeLyrics              = 0x0208,
-        TypeEncodedWith         = 0x0209,
-        TypeFileName            = 0x020A,
+        TypeFileName            = 0x0209,
 
         // Number
         TypeMaskNumber          = 0x03,
@@ -117,14 +121,15 @@ public:
         CondDateBetween         = 0x0507
     };
 
-    ICriteria(QObject * parent = NULL);
+
+    explicit ICriteria(QObject * parent = NULL);
     ~ICriteria();
 
+    inline int getId(void) const;
     inline int getType(void) const;
     inline int getCondition(void) const;
     inline QVariant getValue1(void) const;
     inline QVariant getValue2(void) const;
-    inline int getId(void) const;
     inline CDynamicPlayList * getPlayList(void) const;
 
     virtual bool matchCriteria(CSong * song) const = 0;
@@ -140,11 +145,22 @@ protected:
     QVariant m_value1; ///< Valeur 1.
     QVariant m_value2; ///< Valeur 2.
 
+    virtual void setPlayList(CDynamicPlayList * playList);
+    virtual void insertIntoDatabase(CApplication * application);
+
 private:
 
-    int m_id;          ///< Identifiant en base de données.
-    CDynamicPlayList * m_playList;
+    int m_id;                      ///< Identifiant du critère en base de données.
+    int m_position;                ///< Position du critère.
+    ICriteria * m_parent;          ///< Pointeur sur le critère parent.
+    CDynamicPlayList * m_playList; ///< Pointeur sur la liste de lecture dynamique.
 };
+
+
+inline int ICriteria::getId(void) const
+{
+    return m_id;
+}
 
 
 inline int ICriteria::getType(void) const
@@ -171,15 +187,9 @@ inline QVariant ICriteria::getValue2(void) const
 }
 
 
-inline int ICriteria::getId(void) const
-{
-    return m_id;
-}
-
-
 inline CDynamicPlayList * ICriteria::getPlayList(void) const
 {
     return m_playList;
 }
 
-#endif // FILE_ICRITERIA
+#endif // FILE_I_CRITERIA

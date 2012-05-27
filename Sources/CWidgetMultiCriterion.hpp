@@ -1,6 +1,6 @@
 
-#ifndef FILE_CWIDGETMULTICRITERION
-#define FILE_CWIDGETMULTICRITERION
+#ifndef FILE_C_WIDGET_MULTI_CRITERION
+#define FILE_C_WIDGET_MULTI_CRITERION
 
 #include <QList>
 #include <QMap>
@@ -18,8 +18,10 @@ class CWidgetMultiCriterion : public IWidgetCriteria
 
 public:
 
-    CWidgetMultiCriterion(QWidget * parent = NULL);
+    explicit CWidgetMultiCriterion(QWidget * parent = NULL);
     ~CWidgetMultiCriterion();
+
+    virtual ICriteria * getCriteria(void);
 
 protected slots:
 
@@ -37,4 +39,4 @@ private:
     QMap<QPushButton *, int> m_btnRemove;
 };
 
-#endif // FILE_CWIDGETMULTICRITERION
+#endif // FILE_C_WIDGET_MULTI_CRITERION

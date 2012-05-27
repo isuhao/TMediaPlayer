@@ -206,8 +206,7 @@ void CSong::loadFromDatabase(void)
 
     if (!query.exec())
     {
-        QString error = query.lastError().text();
-        QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
+        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return;
     }
 
@@ -258,8 +257,7 @@ void CSong::loadFromDatabase(void)
 
     if (!query.exec())
     {
-        QString error = query.lastError().text();
-        QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
+        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return;
     }
 
@@ -404,8 +402,7 @@ int CSong::getId(CApplication * application, const QString& fileName)
 
     if (!query.exec())
     {
-        QString error = query.lastError().text();
-        QMessageBox::warning(application, QString(), tr("Database error:\n%1").arg(error));
+        application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return -1;
     }
 
@@ -990,8 +987,7 @@ QList<CSong *> CSong::loadAllSongsFromDatabase(CApplication * application)
                     " NATURAL JOIN genre"
                     " LEFT JOIN artist AS album_artist ON album_artist.artist_id = album_artist_id"))
     {
-        QString error = query.lastError().text();
-        QMessageBox::warning(application, QString(), tr("Database error:\n%1").arg(error));
+        application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return songList;
     }
 
@@ -1044,8 +1040,7 @@ QList<CSong *> CSong::loadAllSongsFromDatabase(CApplication * application)
 
         if (!query2.exec())
         {
-            QString error = query2.lastError().text();
-            QMessageBox::warning(application, QString(), tr("Database error:\n%1").arg(error));
+            application->showDatabaseError(query2.lastError().text(), query2.lastQuery(), __FILE__, __LINE__);
         }
         else
         {
@@ -1541,8 +1536,7 @@ bool CSong::loadSound(void)
 
                 if (!query.exec())
                 {
-                    QString error = query.lastError().text();
-                    QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
+                    m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 }
             }
 
@@ -1710,8 +1704,7 @@ void CSong::updateDatabase(void)
 
             if (!query.exec())
             {
-                QString error = query.lastError().text();
-                QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
+                m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return;
             }
 
@@ -1772,8 +1765,7 @@ void CSong::updateDatabase(void)
 
             if (!query.exec())
             {
-                QString error = query.lastError().text();
-                QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
+                m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return;
             }
         }
@@ -1808,8 +1800,7 @@ void CSong::emitPlayEnd(void)
 
     if (!query.exec())
     {
-        QString error = query.lastError().text();
-        QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
+        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return;
     }
 
@@ -1819,8 +1810,7 @@ void CSong::emitPlayEnd(void)
 
     if (!query.exec())
     {
-        QString error = query.lastError().text();
-        QMessageBox::warning(m_application, QString(), tr("Database error:\n%1").arg(error));
+        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return;
     }
 

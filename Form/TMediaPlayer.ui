@@ -231,7 +231,7 @@
          <property name="margin">
           <number>0</number>
          </property>
-         <item row="1" column="2">
+         <item row="2" column="2">
           <widget class="QLabel" name="lblTime">
            <property name="font">
             <font>
@@ -246,7 +246,7 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="1">
+         <item row="2" column="1">
           <widget class="QSlider" name="sliderPosition">
            <property name="maximum">
             <number>1000</number>
@@ -268,7 +268,7 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="0">
+         <item row="2" column="0">
           <widget class="QLabel" name="lblPosition">
            <property name="font">
             <font>
@@ -283,20 +283,22 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
-          <widget class="QLabel" name="label">
+         <item row="0" column="1" alignment="Qt::AlignHCenter">
+          <widget class="QToolButton" name="songInfos">
            <property name="font">
             <font>
              <weight>75</weight>
              <bold>true</bold>
-             <strikeout>false</strikeout>
             </font>
            </property>
            <property name="text">
             <string notr="true">Title - Artist - Album</string>
            </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextOnly</enum>
+           </property>
+           <property name="autoRaise">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -468,6 +470,10 @@
    </property>
   </action>
   <action name="actionPreferences">
+   <property name="icon">
+    <iconset resource="../TMediaPlayer.qrc">
+     <normaloff>:/icons/preferences</normaloff>:/icons/preferences</iconset>
+   </property>
    <property name="text">
     <string>Preferences...</string>
    </property>

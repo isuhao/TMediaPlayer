@@ -1,6 +1,6 @@
 
-#ifndef FILE_CAPPLICATION
-#define FILE_CAPPLICATION
+#ifndef FILE_C_APPLICATION
+#define FILE_C_APPLICATION
 
 #include <QMainWindow>
 #include <QList>
@@ -50,8 +50,9 @@ public:
     ~CApplication();
 
     void initWindow(void);
+    void showDatabaseError(const QString& msg, const QString& query, const QString& fileName, int line);
 
-    inline CSong * getCurrentSong(void) const;
+    inline CSongTableItem * getCurrentSongItem(void) const;
     inline CSongTable * getCurrentSongTable(void) const;
     inline CSongTable * getLibrary(void) const;
     inline CSongTable * getDisplayedSongTable(void) const;
@@ -105,14 +106,14 @@ public slots:
 
     void setPosition(int position);
 
-    void openPlayList(CPlayList * playList);
-    void renamePlayList(CPlayList * playList);
-    void editDynamicPlayList(CDynamicPlayList * playList);
-    void deletePlayList(CPlayList * playList);
+    //void openPlayList(CPlayList * playList);
+    //void renamePlayList(CPlayList * playList);
+    //void editDynamicPlayList(CDynamicPlayList * playList);
+    //void deletePlayList(CPlayList * playList);
 
-    void addListFolder(void);
-    void renameListFolder(CListFolder * folder);
-    void deleteListFolder(CListFolder * folder);
+    //void addListFolder(void);
+    //void renameListFolder(CListFolder * folder);
+    //void deleteListFolder(CListFolder * folder);
 
     void openDialogAddSongs(void);
     void openDialogAddFolder(void);
@@ -120,8 +121,8 @@ public slots:
     void openDialogAddStaticPlayList(CListFolder * folder = NULL);
     void openDialogAddDynamicList(CListFolder * folder = NULL);
 
-    void editSong(CSongTableItem * songItem);
-    void removeSong(CSongTableItem * songItem);
+    //void editSong(CSongTableItem * songItem);
+    //void removeSong(CSongTableItem * songItem);
 
     void selectCurrentSong(void);
     void selectSong(CSongTable * songTable, CSongTableItem * songItem);
@@ -130,21 +131,29 @@ public slots:
 
 signals:
 
-    void songAdded(CSong * song);
-    void songModified(CSong * song);
-    void songRemoved(CSong * song);
-    void songPlayStart(CSong * song);
-    void songPlayEnd(CSong * song);
-    void songPaused(CSong * song);
-    void songResumed(CSong * song);
-    void songStopped(CSong * song);
-    void listAdded(CPlayList * playList);
-    void listRemoved(CPlayList * playList);
+    // Signaux sur les morceaux
+    //void songAdded(CSong * song);             ///< Signal émis lorsqu'un morceau est ajouté à la médiathèque.
+    //void songModified(CSong * song);          ///< Signal émis lorsque les informations d'un morceau sont modifiées.
+    //void songRemoved(CSong * song);           ///< Signal émis lorsqu'un morceau est retiré de la médiathèque.
+    void songPlayStart(CSong * song);         ///< Signal émis lorsque la lecture d'un morceau démarre.
+    void songPlayEnd(CSong * song);           ///< Signal émis lorsque la lecture d'un morceau se termine.
+    void songPaused(CSong * song);            ///< Signal émis lorsque la lecture est mise en pause.
+    void songResumed(CSong * song);           ///< Signal émis lorsque la lecture est relancée.
+    void songStopped(CSong * song);           ///< Signal émis lorsque la lecture est stoppée.
+
+    // Signaux sur les listes de lecture
+    //void listAdded(CPlayList * playList);     ///< Signal émis lorsqu'une liste est créée.
+    //void listRemoved(CPlayList * playList);   ///< Signal émis lorsqu'une liste est supprimée.
+
+    // Signaux sur les dossiers
+    //void folderAdded(CListFolder * folder);   ///< Signal émis lorsqu'un dossier est crée.
+    //void folderRemoved(CListFolder * folder); ///< Signal émis lorsqu'un dossier est supprimé.
 
 protected slots:
 
     void onPlayEnd(void);
     void updateSongDescription(CSong * song);
+    void updateListInformations(void);
     void updatePosition(void);
     void update(void);
     void selectPlayListFromTreeView(const QModelIndex& index);
@@ -192,9 +201,9 @@ private:
  * \return Chanson en cours de lecture, ou NULL.
  */
 
-inline CSong * CApplication::getCurrentSong(void) const
+inline CSongTableItem * CApplication::getCurrentSongItem(void) const
 {
-    return (m_currentSongItem ? m_currentSongItem->getSong() : NULL);
+    return m_currentSongItem;
 }
 
 
@@ -269,4 +278,4 @@ inline bool CApplication::isStopped(void) const
     return (m_state == Stopped);
 }
 
-#endif
+#endif // FILE_C_APPLICATION

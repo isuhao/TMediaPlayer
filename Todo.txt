@@ -4,11 +4,13 @@
 --------------------------------------------------
 
 - Listes de lecture dynamiques :
-  - Chargement des listes.
+  - Chargement des listes. (OK)
   - Modification d'une liste.
-  - Mise à jour des morceaux.
+  - Mise à jour des morceaux. (à terminer)
+  - Vérifier que les champs ne sont pas vides.
+  - Si un multi-critères ne contient qu'un enfant, on peut remonter celui-ci au niveau supérieur.
 
-- Lire les métadonnées d'un morceau au chargement.
+- Lire les métadonnées d'un morceau au chargement. (à terminer)
   - MP3 : lire les tags APE.
   - FLAC.
   - Ogg Vorbis.
@@ -16,10 +18,9 @@
 
 - Intégrer Last.fm.
 
-- Terminer la boite de dialogue Edit Songs.
+- Terminer la boite de dialogue Edit Songs. (à terminer)
 
 - Menu contextuel dans les listes : ajouter le/les morceaux à une liste.
-- Menu contextuel dans les listes : enlever d'une liste.
 - Menu contextuel dans les listes : enlever de la médiathèque.
 
 - Implémenter le glisser-déposer au sein d'une liste statique.
@@ -31,6 +32,8 @@
 - Implémenter la lecture aléatoire.
 
 - Import depuis iTunes / SongBird.
+
+- Optimisation : exécuter les requêtes SQL dans un thread séparé.
 
 --------------------------------------------------
   Importance moyenne
@@ -46,7 +49,7 @@
 
 - Implémenter le glisser-déposer pour créer une nouvelle liste de lecture.
 
-- Créer la fenêtre Préférences.
+- Créer la fenêtre Préférences. (à terminer)
 
 - Griser les boutons indisponibles suivant l'état (lecture, pause, etc.).
 

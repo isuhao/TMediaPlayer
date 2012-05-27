@@ -1,6 +1,6 @@
 
-#ifndef FILE_CPLAYLIST_MODEL
-#define FILE_CPLAYLIST_MODEL
+#ifndef FILE_C_PLAYLIST_MODEL
+#define FILE_C_PLAYLIST_MODEL
 
 #include <QStandardItemModel>
 #include <QStringList>
@@ -27,4 +27,4 @@ private:
     CApplication * m_application;
 };
 
-#endif // FILE_CPLAYLIST_MODEL
+#endif // FILE_C_PLAYLIST_MODEL

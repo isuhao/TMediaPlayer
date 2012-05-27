@@ -6,6 +6,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QMessageBox>
+#include <QKeyEvent>
 
 #include <QtDebug>
 
@@ -60,9 +61,10 @@ void CStaticPlayList::addSong(CSong * song, int pos)
  * Si certains morceaux sont déjà présents dans la liste, une confirmation est demandée.
  *
  * \param songs Liste des morceaux à ajouter.
+ * \param confirm Indique si on doit demander une confirmation 
  */
 
-void CStaticPlayList::addSongs(const QList<CSong *>& songs)
+void CStaticPlayList::addSongs(const QList<CSong *>& songs, bool confirm)
 {
     Q_ASSERT(m_id > 0);
 
@@ -71,30 +73,34 @@ void CStaticPlayList::addSongs(const QList<CSong *>& songs)
         return;
     }
 
-    // Recherche des doublons
-    bool hasDuplicate = false;
-    foreach (CSong * song, songs)
-    {
-        if (hasSong(song))
-        {
-            hasDuplicate = true;
-            break;
-        }
-    }
-
     bool skipDuplicate = false;
 
-    if (hasDuplicate)
+    if (confirm)
     {
-        QMessageBox::StandardButton ret = QMessageBox::question(this, QString(), tr("There had duplicates being added to the playlist.\nWould you like to add them?"), QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
-
-        if (ret == QMessageBox::No)
+        // Recherche des doublons
+        bool hasDuplicate = false;
+        foreach (CSong * song, songs)
         {
-            skipDuplicate = true;
+            if (hasSong(song))
+            {
+                hasDuplicate = true;
+                break;
+            }
         }
-        else if (ret == QMessageBox::Cancel)
+
+        if (hasDuplicate)
         {
-            return;
+            /// \todo Créer la boite de dialogue à la main pour gérer les boutons en français
+            QMessageBox::StandardButton ret = QMessageBox::question(this, QString(), tr("There had duplicates being added to the playlist.\nWould you like to add them?"), QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+
+            if (ret == QMessageBox::No)
+            {
+                skipDuplicate = true;
+            }
+            else if (ret == QMessageBox::Cancel)
+            {
+                return;
+            }
         }
     }
     
@@ -106,8 +112,7 @@ void CStaticPlayList::addSongs(const QList<CSong *>& songs)
 
     if (!query.exec() || !query.next())
     {
-        QString error = query.lastError().text();
-        QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
+        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return;
     }
 
@@ -149,8 +154,7 @@ void CStaticPlayList::addSongs(const QList<CSong *>& songs)
 
     if (!query.execBatch())
     {
-        QString error = query.lastError().text();
-        QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
+        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return;
     }
 
@@ -185,7 +189,7 @@ void CStaticPlayList::addSongs(const QList<CSong *>& songs)
  *
  * \param song Pointeur sur la chanson à enlever.
  */
-
+/*
 void CStaticPlayList::removeSong(CSong * song)
 {
     Q_CHECK_PTR(song);
@@ -199,7 +203,7 @@ void CStaticPlayList::removeSong(CSong * song)
         emit listModified();
     }
 }
-
+*/
 
 /**
  * Enlève une chanson de la liste.
@@ -208,7 +212,7 @@ void CStaticPlayList::removeSong(CSong * song)
  *
  * \param row Position de la chanson dans la liste (à partir de 0).
  */
-
+/*
 void CStaticPlayList::removeSong(int row)
 {
     Q_ASSERT(row >= 0 && row < getNumSongs());
@@ -223,14 +227,77 @@ void CStaticPlayList::removeSong(int row)
         emit listModified();
     }
 }
+*/
+
+/**
+ * Retire les morceaux sélectionnés de la liste.
+ * Affiche une confirmation, qui pourra par la suite être désactivée.
+ *
+ * \todo Afficher la confirmation.
+ * \todo Lister les morceaux sélectionnés.
+ * \todo Enlever les morceaux sélectionnés de la liste.
+ * \todo Mettre à jour la base de données (recalculer les positions).
+ */
+
+void CStaticPlayList::removeSongs(void)
+{
+    qDebug() << "CStaticPlayList::removeSongs()";
+
+    // Liste des morceaux sélectionnés
+    QModelIndexList indexList = selectionModel()->selectedRows();
+
+    if (indexList.isEmpty())
+    {
+        return;
+    }
+
+    // Confirmation
+    if (QMessageBox::question(this, QString(), tr("Are you sure you want to remove the selected songs from the list?"), tr("Remove"), tr("Cancel"), 0, 1) == 1)
+    {
+        return;
+    }
+
+    QList<CSongTableItem *> songItemList;
+
+    foreach (QModelIndex index, indexList)
+    {
+        CSongTableItem * songItem = m_model->getSongItem(index);
+
+        if (m_application->getCurrentSongItem() == songItem)
+        {
+            m_application->stop();
+        }
+
+        emit songRemoved(songItem->getSong());
+        songItemList.append(songItem);
+    }
+
+    foreach (CSongTableItem * songItem, songItemList)
+    {
+        m_model->removeRow(m_model->getRowForSongItem(songItem));
+    }
+
+    QList<CSong *> songs = getSongs();
+
+    removeAllSongsFromTable();
+
+    QSqlQuery query(m_application->getDataBase());
+    query.prepare("DELETE FROM static_list_song WHERE static_list_id = ?");
+    query.bindValue(0, m_id);
+
+    if (!query.exec())
+    {
+        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+    }
+
+    addSongs(songs, false);
+}
 
 
 /**
  * Enlève les doublons de la liste.
  *
- * \todo MAJ base
- * \todo MAJ vue
- * \todo Implémentation.
+ * \todo Tester complètement.
  */
 
 void CStaticPlayList::removeDuplicateSongs(void)
@@ -267,11 +334,10 @@ void CStaticPlayList::removeDuplicateSongs(void)
 
     if (!query.exec())
     {
-        QString error = query.lastError().text();
-        QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
+        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
     }
 
-    addSongs(songsNew);
+    addSongs(songsNew, false);
 }
 
 
@@ -293,8 +359,7 @@ bool CStaticPlayList::updateDatabase(void)
 
         if (!query.exec())
         {
-            QString error = query.lastError().text();
-            QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
+            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
 
@@ -313,8 +378,7 @@ bool CStaticPlayList::updateDatabase(void)
 
         if (!query.exec())
         {
-            QString error = query.lastError().text();
-            QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
+            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
 
@@ -325,8 +389,7 @@ bool CStaticPlayList::updateDatabase(void)
 
         if (!query.exec())
         {
-            QString error = query.lastError().text();
-            QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
+            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
 
@@ -343,8 +406,7 @@ bool CStaticPlayList::updateDatabase(void)
 
         if (!query.exec())
         {
-            QString error = query.lastError().text();
-            QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
+            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
 
@@ -373,7 +435,7 @@ void CStaticPlayList::openCustomMenuProject(const QPoint& point)
         menu->addAction(tr("Informations"), m_application, SLOT(openDialogSongInfos()));
         if (!severalSongs) menu->addAction(tr("Show in explorer"), m_application, SLOT(openSongInExplorer()));
         menu->addSeparator();
-        menu->addAction(tr("Remove from playlist"));
+        menu->addAction(tr("Remove from playlist"), this, SLOT(removeSongs()));
         menu->addAction(tr("Remove from library"));
         menu->addSeparator();
 
@@ -382,12 +444,13 @@ void CStaticPlayList::openCustomMenuProject(const QPoint& point)
             m_selectedItem = m_model->getSongItem(index);
 
             // Listes de lecture contenant le morceau
+            //TODO: gérer les dossiers
             QMenu * menuPlayList = menu->addMenu(tr("Playlists"));
             CSongTable * library = m_application->getLibrary();
             m_actionGoToSongTable[library] = menuPlayList->addAction(QPixmap(":/icons/library"), tr("Library"));
             connect(m_actionGoToSongTable[library], SIGNAL(triggered()), this, SLOT(goToSongTable()));
 
-            QList<CPlayList *> playLists = m_application->getPlayListsWithSong(m_model->getSongItem(index)->getSong());
+            QList<CPlayList *> playLists = m_application->getPlayListsWithSong(m_selectedItem->getSong());
 
             if (playLists.size() > 0)
             {
@@ -410,7 +473,7 @@ void CStaticPlayList::openCustomMenuProject(const QPoint& point)
             }
         }
 
-        // Toutes les listes de lecture
+        // Ajouter à la liste de lecture
         //TODO: gérer les dossiers
         QMenu * menuAddToPlayList = menu->addMenu(tr("Add to playlist"));
         QList<CPlayList *> playLists = m_application->getAllPlayLists();
@@ -424,7 +487,10 @@ void CStaticPlayList::openCustomMenuProject(const QPoint& point)
         {
             foreach (CPlayList * playList, playLists)
             {
-                menuAddToPlayList->addAction(playList->getName());
+                if (qobject_cast<CStaticPlayList *>(playList))
+                {
+                    menuAddToPlayList->addAction(QPixmap(":/icons/playlist"), playList->getName());
+                }
             }
         }
 
@@ -434,4 +500,30 @@ void CStaticPlayList::openCustomMenuProject(const QPoint& point)
         menu->move(mapToGlobal(point));
         menu->show();
     }
+}
+
+
+/**
+ * Gestion des touches du clavier.
+ * Les touches Entrée et Supprimer sont gérées.
+ *
+ * \todo Gérer la touche Supprimer.
+ *
+ * \param event Évènement du clavier.
+ */
+
+void CStaticPlayList::keyPressEvent(QKeyEvent * event)
+{
+    Q_CHECK_PTR(event);
+
+    if (event->key() == Qt::Key_Delete)
+    {
+        event->accept();
+        removeSongs();
+        return;
+    }
+
+    //...
+
+    return CPlayList::keyPressEvent(event);
 }

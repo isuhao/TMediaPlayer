@@ -785,8 +785,7 @@ bool CSongTable::updateDatabase(void)
 
         if (!query.exec())
         {
-            QString error = query.lastError().text();
-            QMessageBox::warning(this, QString(), tr("Database error:\n%1").arg(error));
+            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
 
@@ -991,6 +990,7 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
             m_selectedItem = m_model->getSongItem(index);
 
             // Listes de lecture contenant le morceau
+            //TODO: gérer les dossiers
             QMenu * menuPlayList = menu->addMenu(tr("Playlists"));
             CSongTable * library = m_application->getLibrary();
             m_actionGoToSongTable[library] = menuPlayList->addAction(QPixmap(":/icons/library"), tr("Library"));
@@ -1019,7 +1019,7 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
             }
         }
 
-        // Toutes les listes de lecture
+        // Ajouter à la liste de lecture
         //TODO: gérer les dossiers
         QMenu * menuAddToPlayList = menu->addMenu(tr("Add to playlist"));
         QList<CPlayList *> playLists = m_application->getAllPlayLists();
@@ -1033,15 +1033,9 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
         {
             foreach (CPlayList * playList, playLists)
             {
-                QAction * actionPlayList = menuAddToPlayList->addAction(playList->getName());
-
-                if (qobject_cast<CDynamicPlayList *>(playList))
+                if (qobject_cast<CStaticPlayList *>(playList))
                 {
-                    actionPlayList->setIcon(QPixmap(":/icons/dynamic_list"));
-                }
-                else if (qobject_cast<CStaticPlayList *>(playList))
-                {
-                    actionPlayList->setIcon(QPixmap(":/icons/playlist"));
+                    menuAddToPlayList->addAction(QPixmap(":/icons/playlist"), playList->getName());
                 }
             }
         }

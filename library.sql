@@ -14,26 +14,27 @@ CREATE TABLE playlist (
     UNIQUE (folder_id, list_position)
 );
 
-INSERT INTO "playlist" (playlist_id, playlist_name, folder_id, list_position, list_columns)
+INSERT INTO playlist (playlist_id, playlist_name, folder_id, list_position, list_columns)
 VALUES (0, "Library", 0, 0, "1:100;17:50;2+:100;3:100;9:60");
 
 CREATE TABLE dynamic_list (
-    "dynamic_list_id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    "dynamic_list_union" BOOL NOT NULL,
-    "playlist_id" INTEGER NOT NULL,
-    UNIQUE ("playlist_id")
+    dynamic_list_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    criteria_id INTEGER NOT NULL,
+    playlist_id INTEGER NOT NULL,
+    UNIQUE (playlist_id)
 );
 
 CREATE TABLE criteria (
+    criteria_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     dynamic_list_id INTEGER NOT NULL,
     criteria_parent INTEGER NOT NULL,
     criteria_position INTEGER NOT NULL,
-    criteria_union BOOL NOT NULL,
+    criteria_union INTEGER NOT NULL,
     criteria_type INTEGER NOT NULL,
     criteria_condition INTEGER NOT NULL,
-    criteria_value1 VARCHAR NOT NULL,
-    criteria_value2 VARCHAR NOT NULL,
-    PRIMARY KEY (criteria_parent, criteria_position)
+    criteria_value1 VARCHAR,
+    criteria_value2 VARCHAR,
+    UNIQUE (dynamic_list_id, criteria_parent, criteria_position)
 );
 
 CREATE TABLE static_list (
@@ -113,3 +114,10 @@ CREATE TABLE play (
     song_id INTEGER NOT NULL ,
     play_time DATETIME NOT NULL 
 );
+
+
+CREATE VIEW albums AS SELECT DISTINCT(album_title) FROM album NATURAL JOIN song WHERE song_id IS NOT NULL;
+
+CREATE VIEW artists AS SELECT DISTINCT(artist_name) FROM artist NATURAL JOIN song WHERE song_id IS NOT NULL;
+
+CREATE VIEW genres AS SELECT DISTINCT(genre_name) FROM genre NATURAL JOIN song WHERE song_id IS NOT NULL;

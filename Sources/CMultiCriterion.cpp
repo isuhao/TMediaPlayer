@@ -1,5 +1,11 @@
 
 #include "CMultiCriterion.hpp"
+#include "CApplication.hpp"
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QMessageBox>
+
+#include <QtDebug>
 
 
 CMultiCriterion::CMultiCriterion(QObject * parent) :
@@ -12,7 +18,7 @@ CMultiCriterion::CMultiCriterion(QObject * parent) :
 
 CMultiCriterion::~CMultiCriterion()
 {
-
+    qDebug() << "CMultiCriterion::~CMultiCriterion()";
 }
 
 
@@ -22,6 +28,12 @@ void CMultiCriterion::setMultiCriterionType(TMultiCriterionType type)
 }
 
 
+/**
+ * Ajoute un sous-critère.
+ *
+ * \param child Sous-critère à ajouter.
+ */
+
 void CMultiCriterion::addChild(ICriteria * child)
 {
     Q_CHECK_PTR(child);
@@ -29,6 +41,8 @@ void CMultiCriterion::addChild(ICriteria * child)
     if (!m_children.contains(child))
     {
         m_children.append(child);
+        child->setParent(this);
+        child->m_parent = this;
     }
 }
 
@@ -105,6 +119,47 @@ QList<CSong *> CMultiCriterion::getSongs(const QList<CSong *>& from, const QList
 
     return songList;
 }
+
+
+void CMultiCriterion::setPlayList(CDynamicPlayList * playList)
+{
+    Q_CHECK_PTR(playList);
+
+    foreach (ICriteria * criteria, m_children)
+    {
+        criteria->setPlayList(playList);
+    }
+
+    ICriteria::setPlayList(playList);
+}
+
+
+void CMultiCriterion::insertIntoDatabase(CApplication * application)
+{
+    Q_CHECK_PTR(application);
+    qDebug() << "CMultiCriterion::insertIntoDatabase()";
+
+    // Insertion du critère
+    ICriteria::insertIntoDatabase(application);
+
+    // Modification du type
+    QSqlQuery query(application->getDataBase());
+
+    query.prepare("UPDATE criteria SET criteria_union = ? WHERE criteria_id = ?");
+    query.bindValue(0, m_multi_type);
+    query.bindValue(1, m_id);
+
+    if (!query.exec())
+    {
+        application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+    }
+
+    foreach (ICriteria * criteria, m_children)
+    {
+        criteria->insertIntoDatabase(application);
+    }
+}
+
 
 /*
 QList<int> CMultiCriterion::getValidTypes(void) const

@@ -1,12 +1,26 @@
 
 #include "CWidgetCriteria.hpp"
+#include "CCriteria.hpp"
+#include "CSong.hpp"
 
+#include <QtDebug>
+
+
+/**
+ * Construit le widget.
+ *
+ * \todo Remplir la liste des types de critères dans le code.
+ *
+ * \param parent Widget parent.
+ */
 
 CWidgetCriteria::CWidgetCriteria(QWidget * parent) :
     IWidgetCriteria (parent),
     m_uiWidget      (new Ui::WidgetCriteria())
 {
     m_uiWidget->setupUi(this);
+
+    //TODO: remplir la liste de type ici !
 
     changeType(0);
 
@@ -19,9 +33,71 @@ CWidgetCriteria::CWidgetCriteria(QWidget * parent) :
 }
 
 
+/**
+ * Détruit le widget.
+ */
+
 CWidgetCriteria::~CWidgetCriteria()
 {
+    qDebug() << "CWidgetCriteria::~CWidgetCriteria()";
     delete m_uiWidget;
+}
+
+
+/**
+ * Retourne le critère définis par le widget.
+ *
+ * \todo Gérer le critère "Playlist".
+ *
+ * \return Pointeur sur le critère.
+ */
+
+ICriteria * CWidgetCriteria::getCriteria(void)
+{
+    qDebug() << "CWidgetCriteria::getCriteria()";
+
+    CCriteria * criteria = new CCriteria(this);
+    criteria->m_type      = m_type;
+    criteria->m_condition = m_condition;
+
+    if ((m_type >> 8) == ICriteria::TypeMaskBoolean)
+    {
+        if (m_type == ICriteria::TypeLanguage)
+        {
+            criteria->m_value1 = CSong::getISO2CodeForLanguage(CSong::getLanguageFromInteger(m_uiWidget->listLanguage->currentIndex()));
+        }
+        else if (m_type == ICriteria::TypePlayList)
+        {
+            //TODO...
+            //criteria->m_value1 = 
+        }
+        else if (m_type == ICriteria::TypeFormat)
+        {
+            criteria->m_value1 = m_uiWidget->listFormat->currentIndex();
+        }
+    }
+    else if ((m_type >> 8) == ICriteria::TypeMaskString)
+    {
+        criteria->m_value1 = m_uiWidget->editValue1String->text();
+    }
+    else if ((m_type >> 8) == ICriteria::TypeMaskNumber)
+    {
+        criteria->m_value1 = m_uiWidget->editValue1Number->text();
+        criteria->m_value2 = m_uiWidget->editValue2Number->text();
+    }
+    else if ((m_type >> 8) == ICriteria::TypeMaskTime)
+    {
+        criteria->m_value1 = m_uiWidget->editValue1Time->date();
+        criteria->m_value2 = m_uiWidget->editValue2Time->date();
+    }
+    else if ((m_type >> 8) == ICriteria::TypeMaskDate)
+    {
+        criteria->m_value1 = m_uiWidget->editValue1Date->date();
+        criteria->m_value2 = m_uiWidget->editValue2Date->date();
+        //criteria->m_value2 = m_uiWidget->listDateUnit->currentIndex();
+    }
+
+    return criteria;
 }
 
 
@@ -38,24 +114,23 @@ void CWidgetCriteria::changeType(int num)
         case  5: m_type = ICriteria::TypeGenre;        break;
         case  6: m_type = ICriteria::TypeComments;     break;
         case  7: m_type = ICriteria::TypeLyrics;       break;
-        case  8: m_type = ICriteria::TypeEncodedWith;  break;
-        case  9: m_type = ICriteria::TypeFileName;     break;
-        case 10: m_type = ICriteria::TypeYear;         break;
-        case 11: m_type = ICriteria::TypeTrackNumber;  break;
-        case 12: m_type = ICriteria::TypeDiscNumber;   break;
-        case 13: m_type = ICriteria::TypeBitRate;      break;
-        case 14: m_type = ICriteria::TypeSampleRate;   break;
-        case 15: m_type = ICriteria::TypePlayCount;    break;
-        case 16: m_type = ICriteria::TypeChannels;     break;
-        case 17: m_type = ICriteria::TypeRating;       break;
-        case 18: m_type = ICriteria::TypeFileSize;     break;
-        case 19: m_type = ICriteria::TypeDuration;     break;
-        case 20: m_type = ICriteria::TypeLastPlayTime; break;
-        case 21: m_type = ICriteria::TypeAdded;        break;
-        case 22: m_type = ICriteria::TypeModified;     break;
-        case 23: m_type = ICriteria::TypeLanguage;     break;
-        case 24: m_type = ICriteria::TypePlayList;     break;
-        case 25: m_type = ICriteria::TypeFormat;       break;
+        case  8: m_type = ICriteria::TypeFileName;     break;
+        case  9: m_type = ICriteria::TypeYear;         break;
+        case 10: m_type = ICriteria::TypeTrackNumber;  break;
+        case 11: m_type = ICriteria::TypeDiscNumber;   break;
+        case 12: m_type = ICriteria::TypeBitRate;      break;
+        case 13: m_type = ICriteria::TypeSampleRate;   break;
+        case 14: m_type = ICriteria::TypePlayCount;    break;
+        case 15: m_type = ICriteria::TypeChannels;     break;
+        case 16: m_type = ICriteria::TypeRating;       break;
+        case 17: m_type = ICriteria::TypeFileSize;     break;
+        case 18: m_type = ICriteria::TypeDuration;     break;
+        case 19: m_type = ICriteria::TypeLastPlayTime; break;
+        case 20: m_type = ICriteria::TypeAdded;        break;
+        case 21: m_type = ICriteria::TypeModified;     break;
+        case 22: m_type = ICriteria::TypeLanguage;     break;
+        case 23: m_type = ICriteria::TypePlayList;     break;
+        case 24: m_type = ICriteria::TypeFormat;       break;
     }
 
     if ((m_type >> 8) == ICriteria::TypeMaskBoolean)
@@ -131,6 +206,7 @@ void CWidgetCriteria::changeConditionBoolean(int num)
     m_uiWidget->editValue2Number->hide();
     m_uiWidget->editValue2Time->hide();
     m_uiWidget->editValue2Date->hide();
+    m_uiWidget->listDateUnit->hide();
     m_uiWidget->lblBetween->hide();
 
     m_uiWidget->listFormat->setVisible(m_type == ICriteria::TypeFormat);
@@ -163,6 +239,7 @@ void CWidgetCriteria::changeConditionString(int num)
     m_uiWidget->editValue2Number->hide();
     m_uiWidget->editValue2Time->hide();
     m_uiWidget->editValue2Date->hide();
+    m_uiWidget->listDateUnit->hide();
     m_uiWidget->lblBetween->hide();
 
     m_uiWidget->listFormat->hide();
@@ -195,6 +272,7 @@ void CWidgetCriteria::changeConditionNumber(int num)
     m_uiWidget->editValue2Number->setVisible(m_condition == ICriteria::CondNumberBetween);
     m_uiWidget->editValue2Time->hide();
     m_uiWidget->editValue2Date->hide();
+    m_uiWidget->listDateUnit->hide();
     m_uiWidget->lblBetween->setVisible(m_condition == ICriteria::CondNumberBetween);
 
     m_uiWidget->listFormat->hide();
@@ -227,6 +305,7 @@ void CWidgetCriteria::changeConditionTime(int num)
     m_uiWidget->editValue2Number->hide();
     m_uiWidget->editValue2Time->setVisible(m_condition == ICriteria::CondTimeBetween);
     m_uiWidget->editValue2Date->hide();
+    m_uiWidget->listDateUnit->hide();
     m_uiWidget->lblBetween->setVisible(m_condition == ICriteria::CondTimeBetween);
 
     m_uiWidget->listFormat->hide();
@@ -255,12 +334,13 @@ void CWidgetCriteria::changeConditionDate(int num)
     }
 
     m_uiWidget->editValue1String->hide();
-    m_uiWidget->editValue1Number->hide();
+    m_uiWidget->editValue1Number->setVisible(m_condition == ICriteria::CondDateInLast || m_condition == ICriteria::CondDateNotInLast);
     m_uiWidget->editValue1Time->hide();
-    m_uiWidget->editValue1Date->show();
+    m_uiWidget->editValue1Date->setVisible(m_condition != ICriteria::CondDateInLast && m_condition != ICriteria::CondDateNotInLast);
     m_uiWidget->editValue2Number->hide();
     m_uiWidget->editValue2Time->hide();
     m_uiWidget->editValue2Date->setVisible(m_condition == ICriteria::CondDateBetween);
+    m_uiWidget->listDateUnit->setVisible(m_condition == ICriteria::CondDateInLast || m_condition == ICriteria::CondDateNotInLast);
     m_uiWidget->lblBetween->setVisible(m_condition == ICriteria::CondDateBetween);
 
     m_uiWidget->listFormat->hide();

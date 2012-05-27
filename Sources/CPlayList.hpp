@@ -1,6 +1,6 @@
 
-#ifndef FILE_CPLAYLIST
-#define FILE_CPLAYLIST
+#ifndef FILE_C_PLAYLIST
+#define FILE_C_PLAYLIST
 
 #include <QString>
 #include "CSongTable.hpp"
@@ -66,4 +66,4 @@ inline CListFolder * CPlayList::getFolder(void) const
     return m_folder;
 }
 
-#endif
+#endif // FILE_C_PLAYLIST

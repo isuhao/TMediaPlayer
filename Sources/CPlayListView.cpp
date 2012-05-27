@@ -35,7 +35,7 @@ CPlayListView::CPlayListView(CApplication * application) :
 
     // Menus contextuels
     m_menuPlaylist = new QMenu(this);
-    m_menuPlaylist->addAction(tr("Open"));
+    //m_menuPlaylist->addAction(tr("Open"));
     m_menuPlaylist->addAction(tr("Edit..."));
     m_menuPlaylist->addAction(tr("Remove"));
 
@@ -64,10 +64,12 @@ QModelIndex CPlayListView::addSongTable(CSongTable * songTable)
     if (playList)
     {
         playListItem = new QStandardItem(playList->getName());
+        CDynamicPlayList * dynamicList = qobject_cast<CDynamicPlayList *>(playList);
 
-        if (qobject_cast<CDynamicPlayList *>(playList))
+        if (dynamicList)
         {
             playListItem->setIcon(QPixmap(":/icons/dynamic_list"));
+            dynamicList->update();
         }
         else if (qobject_cast<CStaticPlayList *>(playList))
         {

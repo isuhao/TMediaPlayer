@@ -1,6 +1,6 @@
 
-#ifndef FILE_CLISTFOLDER
-#define FILE_CLISTFOLDER
+#ifndef FILE_C_LIST_FOLDER
+#define FILE_C_LIST_FOLDER
 
 #include <QObject>
 #include <QString>
@@ -66,4 +66,4 @@ inline int CListFolder::getNumPlayLists(void) const
     return m_playLists.size();
 }
 
-#endif
+#endif // FILE_C_LIST_FOLDER

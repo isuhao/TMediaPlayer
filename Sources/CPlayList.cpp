@@ -8,7 +8,7 @@
 CPlayList::CPlayList(CApplication * application, const QString& name) :
     CSongTable           (application),
     m_name               (name),
-    m_position           (0),
+    m_position           (1),
     m_folder             (NULL),
     m_isPlayListModified (false),
     m_folderChanging     (false)

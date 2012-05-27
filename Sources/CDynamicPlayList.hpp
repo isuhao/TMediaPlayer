@@ -1,8 +1,11 @@
 
-#ifndef FILE_CDYNAMICPLAYLIST
-#define FILE_CDYNAMICPLAYLIST
+#ifndef FILE_C_DYNAMIC_PLAYLIST
+#define FILE_C_DYNAMIC_PLAYLIST
 
 #include "CPlayList.hpp"
+
+
+class ICriteria;
 
 
 /**
@@ -15,11 +18,14 @@ class CDynamicPlayList : public CPlayList
     Q_OBJECT
 
     friend class CDialogEditDynamicList;
+    friend class CApplication;
 
 public:
 
-    CDynamicPlayList(CApplication * application);
+    explicit CDynamicPlayList(CApplication * application, const QString& name = QString());
     ~CDynamicPlayList();
+
+    inline int getId(void) const;
 
 public slots:
 
@@ -27,18 +33,30 @@ public slots:
 
 protected slots:
 
-    bool updateDatabase(void);
     //virtual void openCustomMenuProject(const QPoint& point);
 
 signals:
 
-    void listUpdated(); ///< Signal émis lorsque la liste a été mise à jour.
+    void listUpdated(void); ///< Signal émis lorsque la liste a été mise à jour.
+
+protected:
+    
+    bool updateDatabase(void);
+    void loadFromDatabase(void);
+    void setCriteria(ICriteria * criteria);
 
 private:
     
     int m_id; ///< Identifiant de la liste en base de données.
+    ICriteria * m_mainCriteria;
     //QList<critères>
     //conditions de maj
 };
 
-#endif
+
+inline int CDynamicPlayList::getId(void) const
+{
+    return m_id;
+}
+
+#endif // FILE_C_DYNAMIC_PLAYLIST

@@ -11,28 +11,31 @@
 /**
  * Constructeur de la boite de dialogue d'édition des listes de lecture dynamiques.
  *
- * \param playList Pointeur sur la liste à modifier, ou NULL pour une nouvelle liste.
+ * \param playList    Pointeur sur la liste à modifier, ou NULL pour une nouvelle liste.
+ * \param application Pointeur sur l'application.
  */
 
 CDialogEditDynamicList::CDialogEditDynamicList(CDynamicPlayList * playList, CApplication * application) :
-    QDialog       (application),
-    m_uiWidget    (new Ui::DialogEditDynamicPlayList()),
-    m_playList    (playList),
-    m_application (application)
+    QDialog           (application),
+    m_uiWidget        (new Ui::DialogEditDynamicPlayList()),
+    m_widgetCriterion (NULL),
+    m_playList        (playList),
+    m_application     (application)
 {
     Q_CHECK_PTR(application);
 
     setAttribute(Qt::WA_DeleteOnClose);
     m_uiWidget->setupUi(this);
 
-    CWidgetMultiCriterion * widgetCriterion = new CWidgetMultiCriterion(this);
-    //m_uiWidget->scrollArea->setWidget(widgetCriterion);
-    m_uiWidget->verticalLayout->insertWidget(1, widgetCriterion);
-
-    if (m_playList)
+    if (!m_playList)
     {
-        m_uiWidget->editName->setText(m_playList->getName());
+        m_playList = new CDynamicPlayList(m_application);
     }
+
+    m_widgetCriterion = new CWidgetMultiCriterion(this);
+    m_uiWidget->verticalLayout->insertWidget(1, m_widgetCriterion);
+
+    m_uiWidget->editName->setText(m_playList->getName());
 
     // Connexions des signaux des boutons
     QPushButton * btnSave = m_uiWidget->buttonBox->addButton(tr("Save"), QDialogButtonBox::AcceptRole);
@@ -43,13 +46,29 @@ CDialogEditDynamicList::CDialogEditDynamicList(CDynamicPlayList * playList, CApp
 }
 
 
+/**
+ * Détruit le widget.
+ */
+
 CDialogEditDynamicList::~CDialogEditDynamicList()
 {
     delete m_uiWidget;
 }
 
 
-/// \todo Implémentation
+void CDialogEditDynamicList::resizeWindow(void)
+{
+        setMinimumSize(0, 0);
+        resize(size().width(), 1);
+}
+
+
+/**
+ * Enregistre les paramètres de la liste de lecture dynamique.
+ *
+ * \todo Implémentation.
+ */
+
 void CDialogEditDynamicList::save(void)
 {
     QString name = m_uiWidget->editName->text();
@@ -60,18 +79,11 @@ void CDialogEditDynamicList::save(void)
         return;
     }
 
-    if (!m_playList)
-    {
-        m_playList = new CDynamicPlayList(m_application);
-    }
-
     m_playList->setName(name);
-    //...
+    m_playList->setCriteria(m_widgetCriterion->getCriteria());
 
     if (!m_playList->updateDatabase())
     {
-        delete m_playList;
-        m_playList = NULL;
         return;
     }
 

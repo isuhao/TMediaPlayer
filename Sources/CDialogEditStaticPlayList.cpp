@@ -6,6 +6,8 @@
 #include <QMessageBox>
 #include <QPushButton>
 
+#include <QtDebug>
+
 
 CDialogEditStaticPlayList::CDialogEditStaticPlayList(CStaticPlayList * playList, CApplication * application) :
     QDialog       (application),
@@ -35,8 +37,13 @@ CDialogEditStaticPlayList::CDialogEditStaticPlayList(CStaticPlayList * playList,
 }
 
 
+/**
+ * Détruit le widget.
+ */
+
 CDialogEditStaticPlayList::~CDialogEditStaticPlayList()
 {
+    qDebug() << "CDialogEditStaticPlayList::~CDialogEditStaticPlayList()";
     delete m_uiWidget;
 }
 

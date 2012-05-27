@@ -7,6 +7,7 @@
 int main(int argc, char * argv[])
 {
     QApplication app(argc, argv);
+    app.setWindowIcon(QPixmap(":/icons/TMediaPlayer"));
 
     // Internationnalisation
     QString locale = QLocale::system().name();

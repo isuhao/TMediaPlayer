@@ -1,22 +1,31 @@
 
-#ifndef FILE_CMULTICRITERION
-#define FILE_CMULTICRITERION
+#ifndef FILE_C_MULTI_CRITERION
+#define FILE_C_MULTI_CRITERION
 
 #include "ICriteria.hpp"
 #include <QList>
 
 
+/**
+ * Critère contenant des sous-critères.
+ */
+
 class CMultiCriterion : public ICriteria
 {
+    Q_OBJECT
+
 public:
 
     enum TMultiCriterionType
     {
-        Union,       ///< N'importe quel critère.
-        Intersection ///< Tous les critères.
+        Union        = 0, ///< N'importe quel critère.
+        Intersection = 1  ///< Tous les critères.
     };
 
-    CMultiCriterion(QObject * parent = NULL);
+    static inline TMultiCriterionType getMultiCriterionTypeFromInteger(int type);
+
+
+    explicit CMultiCriterion(QObject * parent = NULL);
     ~CMultiCriterion();
 
     inline TMultiCriterionType getMultiCriterionType(void) const;
@@ -31,11 +40,27 @@ public:
     //virtual QList<int> getValidTypes(void) const;
     //virtual bool isValidType(int type) const;
 
+protected:
+
+    virtual void setPlayList(CDynamicPlayList * playList);
+    virtual void insertIntoDatabase(CApplication * application);
+
 private:
 
     TMultiCriterionType m_multi_type;
     QList<ICriteria *> m_children;
 };
+
+
+inline CMultiCriterion::TMultiCriterionType CMultiCriterion::getMultiCriterionTypeFromInteger(int type)
+{
+    switch (type)
+    {
+        default: return Intersection;
+        case 0:  return Union;
+        case 1:  return Intersection;
+    }
+}
 
 
 inline CMultiCriterion::TMultiCriterionType CMultiCriterion::getMultiCriterionType(void) const
@@ -55,4 +80,4 @@ inline int CMultiCriterion::getNumChildren(void) const
     return m_children.size();
 }
 
-#endif // FILE_CMULTICRITERION
+#endif // FILE_C_MULTI_CRITERION

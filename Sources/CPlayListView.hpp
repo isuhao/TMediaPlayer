@@ -1,6 +1,6 @@
 
-#ifndef FILE_CPLAYLIST_VIEW
-#define FILE_CPLAYLIST_VIEW
+#ifndef FILE_C_PLAYLIST_VIEW
+#define FILE_C_PLAYLIST_VIEW
 
 #include <QTreeView>
 
@@ -39,4 +39,4 @@ private:
     QMenu * m_menuDefault;    ///< Menu contextuel par défaut.
 };
 
-#endif // FILE_CPLAYLIST_VIEW
+#endif // FILE_C_PLAYLIST_VIEW

@@ -1,6 +1,6 @@
 
-#ifndef FILE_CSTATICPLAYLIST
-#define FILE_CSTATICPLAYLIST
+#ifndef FILE_C_STATIC_PLAYLIST
+#define FILE_C_STATIC_PLAYLIST
 
 #include <QString>
 #include "CPlayList.hpp"
@@ -27,9 +27,10 @@ public:
 public slots:
 
     void addSong(CSong * song, int pos = -1);
-    void addSongs(const QList<CSong *>& songs);
-    void removeSong(CSong * song);
-    void removeSong(int row);
+    void addSongs(const QList<CSong *>& songs, bool confirm = true);
+    //void removeSong(CSong * song);
+    //void removeSong(int row);
+    void removeSongs(void);
     void removeDuplicateSongs(void);
 
 signals:
@@ -43,10 +44,14 @@ protected slots:
     virtual bool updateDatabase(void);
     virtual void openCustomMenuProject(const QPoint& point);
 
+protected:
+
+    virtual void keyPressEvent(QKeyEvent * event);
+
 private:
 
     int m_id;                    ///< Identifiant de la liste en base de données.
     bool m_isStaticListModified; ///< Indique si la liste a été modifiée.
 };
 
-#endif
+#endif // FILE_C_STATIC_PLAYLIST
