@@ -235,6 +235,15 @@
     <ClCompile Include="GeneratedFiles\Release\moc_CCriteria.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\CDialogPreferences.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_CDialogPreferences.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_CDialogPreferences.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Sources\CApplication.hpp">
@@ -325,6 +334,9 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="Sources\CCriteria.hpp">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Sources\CDialogPreferences.hpp">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

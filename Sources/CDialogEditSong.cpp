@@ -68,6 +68,10 @@ CDialogEditSong::CDialogEditSong(CSongTableItem * songItem, CSongTable * songTab
 }
 
 
+/**
+ * Détruit la boite de dialogue.
+ */
+
 CDialogEditSong::~CDialogEditSong()
 {
     delete m_uiWidget;
@@ -88,6 +92,10 @@ void CDialogEditSong::previousSong(void)
     {
         m_songItem = songItem;
         updateInfos();
+
+        songItem = m_songTable->getPreviousSong(m_songItem, false);
+        m_uiWidget->btnPrevious->setEnabled(songItem);
+        m_uiWidget->btnNext->setEnabled(true);
     }
 }
 
@@ -106,6 +114,10 @@ void CDialogEditSong::nextSong(void)
     {
         m_songItem = songItem;
         updateInfos();
+
+        songItem = m_songTable->getNextSong(m_songItem, false);
+        m_uiWidget->btnPrevious->setEnabled(true);
+        m_uiWidget->btnNext->setEnabled(songItem);
     }
 }
 

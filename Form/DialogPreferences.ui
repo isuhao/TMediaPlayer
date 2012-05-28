@@ -37,7 +37,7 @@
         <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
        </property>
        <item row="0" column="0">
-        <widget class="QCheckBox" name="editShowStopBtn">
+        <widget class="QCheckBox" name="editShowButtonStop">
          <property name="text">
           <string>Show &quot;Stop&quot; button.</string>
          </property>

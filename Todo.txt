@@ -39,9 +39,6 @@
 
 - Import depuis iTunes / SongBird.
 
-- Optimisation : exécuter les requêtes SQL dans un thread séparé.
-  - Utiliser des transactions.
-
 --------------------------------------------------
   Importance moyenne
 --------------------------------------------------
@@ -60,6 +57,9 @@
 - Griser les boutons indisponibles suivant l'état (lecture, pause, etc.).
 
 - Indiquer le morceau en cours de lecture dans la liste.
+
+- Optimisation : exécuter les requêtes SQL dans un thread séparé.
+  - Utiliser des transactions.
 
 --------------------------------------------------
   Importance faible

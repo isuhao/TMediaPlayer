@@ -111,6 +111,7 @@ public slots:
     virtual void removeSong(CSong * song);
     virtual void removeSong(int pos);
     void selectSongItem(CSongTableItem * songItem);
+    void playSelectedSong(void);
 
 signals:
 

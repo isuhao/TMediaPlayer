@@ -52,6 +52,11 @@ public:
     void initWindow(void);
     void showDatabaseError(const QString& msg, const QString& query, const QString& fileName, int line);
 
+    // Préférences
+    void setRowHeight(int height);
+    int getRowHeight(void) const;
+    void showButtonStop(bool show = true);
+
     inline CSongTableItem * getCurrentSongItem(void) const;
     inline CSongTable * getCurrentSongTable(void) const;
     inline CSongTable * getLibrary(void) const;
@@ -115,6 +120,7 @@ public slots:
     //void renameListFolder(CListFolder * folder);
     //void deleteListFolder(CListFolder * folder);
 
+    void openDialogPreferences(void);
     void openDialogAddSongs(void);
     void openDialogAddFolder(void);
     void openDialogSongInfos(void);

@@ -415,7 +415,12 @@ bool CStaticPlayList::updateDatabase(void)
 }
 
 
-/// \todo Implémentation.
+/**
+ * Affiche le menu contextuel.
+ *
+ * \param point Position du clic.
+ */
+
 void CStaticPlayList::openCustomMenuProject(const QPoint& point)
 {
     qDebug() << "CStaticPlayList::openCustomMenuProject()";
@@ -426,21 +431,32 @@ void CStaticPlayList::openCustomMenuProject(const QPoint& point)
     {
         bool severalSongs = (selectionModel()->selectedRows().size() > 1);
 
+        if (!severalSongs)
+        {
+            m_selectedItem = m_model->getSongItem(index);
+        }
+
         // Menu contextuel
         QMenu * menu = new QMenu(this);
         menu->setAttribute(Qt::WA_DeleteOnClose);
+        
+        if (!severalSongs)
+        {
+            menu->addAction(tr("Play")); // TODO...
+            menu->addSeparator();
+        }
 
         menu->addAction(tr("Informations"), m_application, SLOT(openDialogSongInfos()));
         if (!severalSongs) menu->addAction(tr("Show in explorer"), m_application, SLOT(openSongInExplorer()));
         menu->addSeparator();
         menu->addAction(tr("Remove from playlist"), this, SLOT(removeSongs()));
-        menu->addAction(tr("Remove from library"));
+        menu->addAction(tr("Remove from library")); //TODO
+        menu->addAction(tr("Check selection")); //TODO
+        menu->addAction(tr("Uncheck selection")); //TODO
         menu->addSeparator();
 
         if (!severalSongs)
         {
-            m_selectedItem = m_model->getSongItem(index);
-
             // Listes de lecture contenant le morceau
             //TODO: gérer les dossiers
             QMenu * menuPlayList = menu->addMenu(tr("Playlists"));

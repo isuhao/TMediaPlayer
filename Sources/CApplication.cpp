@@ -10,6 +10,7 @@
 #include "CDialogEditSongs.hpp"
 #include "CDialogEditStaticPlayList.hpp"
 #include "CDialogEditDynamicList.hpp"
+#include "CDialogPreferences.hpp"
 
 // Qt
 #include <QStandardItemModel>
@@ -26,14 +27,7 @@
 
 // FMOD
 #include <fmod/fmod.hpp>
-/*
-// TagLib
-#include <fileref.h>
-#include <tag.h>
-#include <flacfile.h>
-#include <xiphcomment.h>
-#include <tmap.h>
-*/
+
 // DEBUG
 #include <QtDebug>
 #include <QSqlDriver>
@@ -107,7 +101,7 @@ CApplication::CApplication(void) :
 
     connect(m_uiWidget->actionSelectAll, SIGNAL(triggered()), this, SLOT(selectAll()));
     connect(m_uiWidget->actionSelectNone, SIGNAL(triggered()), this, SLOT(selectNone()));
-    //connect(m_uiWidget->actionPreferences, SIGNAL(triggered()), this, SLOT(openDialogPreferences()));
+    connect(m_uiWidget->actionPreferences, SIGNAL(triggered()), this, SLOT(openDialogPreferences()));
 
     connect(m_uiWidget->actionPlay, SIGNAL(triggered()), this, SLOT(play()));
     connect(m_uiWidget->actionPause, SIGNAL(triggered()), this, SLOT(pause()));
@@ -168,66 +162,73 @@ CApplication::~CApplication()
 }
 
 
+/**
+ * Initialise l'interface graphique et charge les données.
+ */
+
 void CApplication::initWindow(void)
 {
     static bool init = false;
 
-    if (!init)
+    if (init)
     {
-        m_playListView = new CPlayListView(this);
-        m_uiWidget->splitter->addWidget(m_playListView);
-
-        int treeWidth = m_settings->value("Window/PlayListViewWidth", 200).toInt();
-        m_uiWidget->splitter->setSizes(QList<int>() << treeWidth);
-
-        //m_listModel = new QStandardItemModel(this);
-        //m_playListView->setModel(m_listModel);
-        connect(m_playListView, SIGNAL(clicked(const QModelIndex&)), this, SLOT(selectPlayListFromTreeView(const QModelIndex&)));
-
-
-        // Initialisation de FMOD
-        if (!initSoundSystem())
-        {
-            QMessageBox::critical(this, QString(), tr("Failed to init sound system with FMOD."));
-            QCoreApplication::exit();
-        }
-
-
-        // Chargement de la base de données
-        m_dataBase = QSqlDatabase::addDatabase("QSQLITE");
-
-        QString dbHostName = m_settings->value("Database/Host", QString("localhost")).toString();
-        QString dbBaseName = m_settings->value("Database/Base", QString("library.sqlite")).toString();
-        QString dbUserName = m_settings->value("Database/UserName", QString("root")).toString();
-        QString dbPassword = m_settings->value("Database/Password", QString("")).toString();
-
-        m_dataBase.setHostName(dbHostName);
-        m_dataBase.setDatabaseName(dbBaseName);
-        m_dataBase.setUserName(dbUserName);
-        m_dataBase.setPassword(dbPassword);
-
-        m_settings->setValue("Database/Host", dbHostName);
-        m_settings->setValue("Database/Base", dbBaseName);
-        m_settings->setValue("Database/UserName", dbUserName);
-        m_settings->setValue("Database/Password", dbPassword);
-
-        if (!m_dataBase.open())
-        {
-            QMessageBox::critical(this, QString(), tr("Failed to load database."));
-            QCoreApplication::exit();
-        }
-
-        loadDatabase();
-
-        m_timer = new QTimer(this);
-        connect(m_timer, SIGNAL(timeout()), this, SLOT(update()));
-        m_timer->start(400);
-
-        displaySongTable(m_library);
-        updateSongDescription(NULL);
-
-        init = true;
+        qWarning() << "CApplication::initWindow() : l'application a déjà été initialisée";
+        return;
     }
+
+    m_playListView = new CPlayListView(this);
+    m_uiWidget->splitter->addWidget(m_playListView);
+
+    int treeWidth = m_settings->value("Window/PlayListViewWidth", 200).toInt();
+    m_uiWidget->splitter->setSizes(QList<int>() << treeWidth);
+
+    //m_listModel = new QStandardItemModel(this);
+    //m_playListView->setModel(m_listModel);
+    connect(m_playListView, SIGNAL(clicked(const QModelIndex&)), this, SLOT(selectPlayListFromTreeView(const QModelIndex&)));
+
+
+    // Initialisation de FMOD
+    if (!initSoundSystem())
+    {
+        QMessageBox::critical(this, QString(), tr("Failed to init sound system with FMOD."));
+        QCoreApplication::exit();
+    }
+
+
+    // Chargement de la base de données
+    m_dataBase = QSqlDatabase::addDatabase("QSQLITE");
+
+    QString dbHostName = m_settings->value("Database/Host", QString("localhost")).toString();
+    QString dbBaseName = m_settings->value("Database/Base", QString("library.sqlite")).toString();
+    QString dbUserName = m_settings->value("Database/UserName", QString("root")).toString();
+    QString dbPassword = m_settings->value("Database/Password", QString("")).toString();
+
+    m_dataBase.setHostName(dbHostName);
+    m_dataBase.setDatabaseName(dbBaseName);
+    m_dataBase.setUserName(dbUserName);
+    m_dataBase.setPassword(dbPassword);
+
+    m_settings->setValue("Database/Host", dbHostName);
+    m_settings->setValue("Database/Base", dbBaseName);
+    m_settings->setValue("Database/UserName", dbUserName);
+    m_settings->setValue("Database/Password", dbPassword);
+
+    if (!m_dataBase.open())
+    {
+        QMessageBox::critical(this, QString(), tr("Failed to load database."));
+        QCoreApplication::exit();
+    }
+
+    loadDatabase();
+
+    m_timer = new QTimer(this);
+    connect(m_timer, SIGNAL(timeout()), this, SLOT(update()));
+    m_timer->start(400);
+
+    displaySongTable(m_library);
+    updateSongDescription(NULL);
+
+    init = true;
 }
 
 
@@ -240,6 +241,34 @@ void CApplication::showDatabaseError(const QString& msg, const QString& query, c
 
     qWarning() << "Database error (in file" << fileName << ", line" << line << "):" << msg;
     qWarning() << "  Query:" << query;
+}
+
+
+void CApplication::setRowHeight(int height)
+{
+    height = qBound(15, height, 50);
+    m_settings->setValue("Preferences/RowHeight", height);
+
+    // Mise à jour des vues
+    m_library->verticalHeader()->setDefaultSectionSize(height);
+
+    foreach (CPlayList * playList, getAllPlayLists())
+    {
+        playList->verticalHeader()->setDefaultSectionSize(height);
+    }
+}
+
+
+int CApplication::getRowHeight(void) const
+{
+    return m_settings->value("Preferences/RowHeight", 19).toInt();
+}
+
+
+void CApplication::showButtonStop(bool show)
+{
+    m_settings->setValue("Preferences/ShowButtonStop", show);
+    m_uiWidget->btnStop->setVisible(show);
 }
 
 
@@ -309,9 +338,22 @@ QList<CPlayList *> CApplication::getPlayListsWithSong(CSong * song) const
 }
 
 
+/**
+ * Retourne la liste des listes de lecture de la médiathèque.
+ *
+ * \todo Parcourir récursivement les dossiers.
+ *
+ * \return Listes de lecture.
+ */
+
 QList<CPlayList *> CApplication::getAllPlayLists(void) const
 {
     QList<CPlayList *> playLists;
+
+    foreach (CListFolder * folder, m_folders)
+    {
+        //...
+    }
 
     foreach (CPlayList * playList, m_playLists)
     {
@@ -628,6 +670,12 @@ void CApplication::togglePlay(void)
 }
 
 
+/**
+ * Active le morceau précédent du morceau actuel.
+ * Si le morceau actuel est le premier de la liste, ou que la position de lecture est
+ * supérieure à 4 secondes, on revient au début du morceau.
+ */
+
 void CApplication::previousSong(void)
 {
     qDebug() << "CApplication::previousSong()";
@@ -636,18 +684,50 @@ void CApplication::previousSong(void)
     {
         Q_CHECK_PTR(m_currentSongTable);
 
+        int position = m_currentSongItem->getSong()->getPosition();
+
         m_currentSongItem->getSong()->stop();
         updateSongDescription(NULL);
         m_uiWidget->btnPlay->setIcon(QPixmap(":/icons/play"));
 
-        m_currentSongItem = m_currentSongTable->getPreviousSong(m_currentSongItem, m_isShuffle);
-
-        if (!m_currentSongItem)
+        // Retour au début du morceau
+        if (position > 4000)
         {
-            m_currentSongTable = NULL;
-            m_state = Stopped;
+            if (m_state == Paused)
+            {
+                startPlay();
+                pause();
+            }
+            else
+            {
+                startPlay();
+            }
+
             return;
         }
+
+        CSongTableItem * songItem = m_currentSongTable->getPreviousSong(m_currentSongItem, m_isShuffle);
+
+        // Premier morceau de la liste
+        if (!songItem)
+        {
+            //m_currentSongTable = NULL;
+            //m_state = Stopped;
+
+            if (m_state == Paused)
+            {
+                startPlay();
+                pause();
+            }
+            else
+            {
+                startPlay();
+            }
+
+            return;
+        }
+
+        m_currentSongItem = songItem;
 
         if (m_currentSongTable == m_displayedSongTable)
         {
@@ -998,6 +1078,15 @@ void CApplication::deleteListFolder(CListFolder * folder)
 }
 */
 
+
+/// \todo Implémentation
+void CApplication::openDialogPreferences(void)
+{
+    CDialogPreferences * dialog = new CDialogPreferences(this, m_settings);
+    dialog->show();
+}
+
+
 /**
  * Affiche une boite de dialogue pour sélectionner des fichiers à ajouter à la médiathèque.
  */
@@ -1176,6 +1265,7 @@ void CApplication::addSong(const QString& fileName)
     if (song)
     {
         m_library->addSong(song);
+        updateListInformations();
         return;
     }
 }
@@ -1460,7 +1550,7 @@ void CApplication::update(void)
     {
         Q_CHECK_PTR(m_currentSongTable);
 
-        qDebug() << "CApplication::update()";
+        //qDebug() << "CApplication::update()";
         const int position = m_currentSongItem->getSong()->getPosition();
 
         if (m_currentSongItem->getSong()->isEnded())

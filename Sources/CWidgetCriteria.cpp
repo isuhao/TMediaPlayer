@@ -92,9 +92,17 @@ ICriteria * CWidgetCriteria::getCriteria(void)
     }
     else if ((m_type >> 8) == ICriteria::TypeMaskDate)
     {
-        criteria->m_value1 = m_uiWidget->editValue1Date->date();
-        criteria->m_value2 = m_uiWidget->editValue2Date->date();
-        //criteria->m_value2 = m_uiWidget->listDateUnit->currentIndex();
+        if (m_condition == ICriteria::CondDateInLast ||
+            m_condition == ICriteria::CondDateNotInLast)
+        {
+            criteria->m_value1 = m_uiWidget->editValue1Number->text();
+            criteria->m_value2 = m_uiWidget->listDateUnit->currentIndex();
+        }
+        else
+        {
+            criteria->m_value1 = m_uiWidget->editValue1Date->date();
+            criteria->m_value2 = m_uiWidget->editValue2Date->date();
+        }
     }
 
     return criteria;

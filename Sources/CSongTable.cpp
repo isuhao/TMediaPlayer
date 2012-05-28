@@ -63,11 +63,15 @@ CSongTable::CSongTable(CApplication * application) :
     connect(m_model, SIGNAL(columnSorted(int, Qt::SortOrder)), this, SLOT(sortColumn(int, Qt::SortOrder)));
 
     verticalHeader()->hide();
-    verticalHeader()->setDefaultSectionSize(19); /// \todo => paramètres
+    verticalHeader()->setDefaultSectionSize(m_application->getRowHeight());
 
     initColumns("");
 }
 
+
+/**
+ * Détruit la liste de morceaux.
+ */
 
 CSongTable::~CSongTable()
 {
@@ -935,11 +939,23 @@ bool CSongTable::isModified(void) const
 }
 
 
+/**
+ * Ajoute un morceau à la table.
+ *
+ * \todo Supprimer cette méthode ?
+ */
+
 void CSongTable::addSong(CSong * song, int pos)
 {
     addSongToTable(song, pos);
 }
 
+
+/**
+ * Ajoute une liste de morceaux à la table.
+ *
+ * \todo Supprimer cette méthode ?
+ */
 
 void CSongTable::addSongs(const QList<CSong *>& songs)
 {
@@ -947,11 +963,23 @@ void CSongTable::addSongs(const QList<CSong *>& songs)
 }
 
 
+/**
+ * Enlève un morceau de la table.
+ *
+ * \todo Supprimer cette méthode ?
+ */
+
 void CSongTable::removeSong(CSong * song)
 {
     removeSongFromTable(song);
 }
 
+
+/**
+ * Enlène un morceau de la table à partir de sa position.
+ *
+ * \todo Supprimer cette méthode ?
+ */
 
 void CSongTable::removeSong(int pos)
 {
@@ -968,7 +996,18 @@ void CSongTable::selectSongItem(CSongTableItem * songItem)
 }
 
 
-/// \todo Implémentation.
+void CSongTable::playSelectedSong(void)
+{
+    m_application->playSong(m_selectedItem);
+}
+
+
+/**
+ * Affiche le menu contextuel.
+ *
+ * \param point Position du clic.
+ */
+
 void CSongTable::openCustomMenuProject(const QPoint& point)
 {
     qDebug() << "CSongTable::openCustomMenuProject()";
@@ -980,20 +1019,31 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
     {
         bool severalSongs = (selectionModel()->selectedRows().size() > 1);
 
+        if (!severalSongs)
+        {
+            m_selectedItem = m_model->getSongItem(index);
+        }
+
         // Menu contextuel
         QMenu * menu = new QMenu(this);
         menu->setAttribute(Qt::WA_DeleteOnClose);
+        
+        if (!severalSongs)
+        {
+            menu->addAction(tr("Play"), this, SLOT(playSelectedSong()));
+            menu->addSeparator();
+        }
 
         menu->addAction(tr("Informations"), m_application, SLOT(openDialogSongInfos()));
         if (!severalSongs) menu->addAction(tr("Show in explorer"), m_application, SLOT(openSongInExplorer()));
         menu->addSeparator();
-        menu->addAction(tr("Remove from library"));
+        menu->addAction(tr("Remove from library")); //TODO
+        menu->addAction(tr("Check selection")); //TODO
+        menu->addAction(tr("Uncheck selection")); //TODO
         menu->addSeparator();
 
         if (!severalSongs)
         {
-            m_selectedItem = m_model->getSongItem(index);
-
             // Listes de lecture contenant le morceau
             //TODO: gérer les dossiers
             QMenu * menuPlayList = menu->addMenu(tr("Playlists"));
