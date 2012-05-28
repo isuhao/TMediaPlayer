@@ -8,6 +8,7 @@
 
 class CApplication;
 class QSettings;
+class QNetworkReply;
 
 
 class CDialogPreferences : public QDialog

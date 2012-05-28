@@ -18,6 +18,7 @@ class CPlayListView;
 class CDynamicPlayList;
 class QStandardItemModel;
 class QSettings;
+class QNetworkReply;
 
 namespace FMOD
 {
@@ -164,6 +165,12 @@ protected slots:
     void update(void);
     void selectPlayListFromTreeView(const QModelIndex& index);
 
+    // Last.fm
+    void connectToLastFm(void);
+    void replyLastFmGetToken(QNetworkReply * reply);
+    void getLastFmSession(void);
+    void replyLastFmFinished(QNetworkReply * reply);
+
 protected:
 
     void addPlayList(CPlayList * playList);
@@ -198,6 +205,14 @@ private:
     int m_volume;                       ///< Volume sonore (entre 0 et 100).
     QList<CListFolder *> m_folders;     ///< Liste des dossiers de listes de lecture.
     QList<CPlayList *> m_playLists;     ///< Liste des listes de lectures sans dossier.
+
+    // Last.fm
+    QTimer * m_timerLastFm;             ///< Timer utilisé pour récupérer la clé.
+    int m_lastFmSessionRequest;         ///< Nombre de requête envoyées pour récupérer la clé.
+    QByteArray m_lastFmToken;           ///< Token utilisé pour la connexion à Last.fm.
+    QByteArray m_lastFmKey;             ///< Clé utilisée pour l'authentification à Last.fm.
+    QByteArray m_lastFmAPIKey;
+    QByteArray m_lastFMSecret;
 };
 
 

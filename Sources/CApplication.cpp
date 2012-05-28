@@ -23,7 +23,12 @@
 #include <QFileDialog>
 #include <QProgressDialog>
 #include <QDesktopServices>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
 #include <QUrl>
+#include <QDomDocument>
+#include <QCryptographicHash>
 
 // FMOD
 #include <fmod/fmod.hpp>
@@ -34,22 +39,26 @@
 
 
 CApplication::CApplication(void) :
-    QMainWindow          (NULL),
-    m_uiWidget           (new Ui::TMediaPlayer()),
-    m_soundSystem        (NULL),
-    m_playListView       (NULL),
-    m_settings           (NULL),
-    m_timer              (NULL),
-    m_listInfos          (NULL),
-    m_currentSongItem    (NULL),
-    m_currentSongTable   (NULL),
-    m_library            (NULL),
-    m_displayedSongTable (NULL),
-    m_state              (Stopped),
-    m_isRepeat           (false),
-    m_isShuffle          (false),
-    m_isMute             (false),
-    m_volume             (50)
+    QMainWindow            (NULL),
+    m_uiWidget             (new Ui::TMediaPlayer()),
+    m_soundSystem          (NULL),
+    m_playListView         (NULL),
+    m_settings             (NULL),
+    m_timer                (NULL),
+    m_listInfos            (NULL),
+    m_currentSongItem      (NULL),
+    m_currentSongTable     (NULL),
+    m_library              (NULL),
+    m_displayedSongTable   (NULL),
+    m_state                (Stopped),
+    m_isRepeat             (false),
+    m_isShuffle            (false),
+    m_isMute               (false),
+    m_volume               (50),
+    m_timerLastFm          (NULL),
+    m_lastFmSessionRequest (0),
+    m_lastFmAPIKey         ("20478fcc23bae9e1e2396a2b1cc52338"),
+    m_lastFMSecret         ("b2ed8ec840ec1995003bb99fb02ace44")
 {
     // Chargement des paramètres de l'application
     m_settings = new QSettings("Ted", "TMediaPlayer", this);
@@ -128,7 +137,17 @@ CApplication::~CApplication()
 {
     qDebug() << "CApplication::~CApplication()";
 
-    m_timer->stop();
+    if (m_timerLastFm)
+    {
+        m_timerLastFm->stop();
+        delete m_timerLastFm;
+    }
+
+    if (m_timer)
+    {
+        m_timer->stop();
+        delete m_timer;
+    }
 
     // Largeur de la vue pour les listes de lecture
     int treeWidth = m_uiWidget->splitter->sizes()[0];
@@ -548,6 +567,197 @@ int CApplication::getGenreId(const QString& name)
     }
 
     return query.lastInsertId().toInt();
+}
+
+
+/**
+ * Lance le processus d'authentication avec Last.fm.
+ * Le navigateur doit s'ouvrir pour que l'utilisateur puisse se connecter.
+ */
+
+void CApplication::connectToLastFm(void)
+{
+qDebug() << "CApplication::connectToLastFm()";
+
+    QNetworkAccessManager * manager = new QNetworkAccessManager(this);
+    connect(manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(replyLastFmGetToken(QNetworkReply *)));
+
+    QCryptographicHash crypto(QCryptographicHash::Md5);
+    crypto.addData("api_key");
+    crypto.addData(m_lastFmAPIKey);
+    crypto.addData("methodauth.getToken");
+    crypto.addData(m_lastFMSecret);
+    QByteArray signature = crypto.result().toHex();
+
+qDebug() << "signature = " << signature << "(" << signature.size() << ")";
+
+    manager->get(QNetworkRequest(QUrl(QString("http://ws.audioscrobbler.com/2.0/?method=auth.gettoken&api_key=%1&api_sig=%2").arg(QString(m_lastFmAPIKey)).arg(QString(signature)))));
+}
+
+
+void CApplication::replyLastFmGetToken(QNetworkReply * reply)
+{
+qDebug() << "CApplication::replyLastFmGetToken()";
+    Q_CHECK_PTR(reply);
+
+    if (reply->error() != QNetworkReply::NoError)
+    {
+        qWarning() << "CApplication::replyLastFmGetToken() : erreur HTTP avec Last.fm (" << reply->error() << ")";
+        return;
+    }
+
+    QByteArray data = reply->readAll();
+
+    QDomDocument doc;
+    
+    QString error;
+    if (!doc.setContent(data, &error))
+    {
+        qWarning() << "CApplication::replyLastFmGetToken() : document XML invalide (" << error << ")";
+        return;
+    }
+
+    QDomElement racine = doc.documentElement();
+
+    if (racine.tagName() != "lfm")
+    {
+        qWarning() << "CApplication::replyLastFmGetToken() : réponse XML incorrecte (élément 'lfm' attendu)";
+        return;
+    }
+
+    if (racine.attribute("status", "failed") == "failed")
+    {
+        qWarning() << "CApplication::replyLastFmGetToken() : la requête Last.fm a echouée";
+        return;
+    }
+
+    racine = racine.firstChildElement();
+
+    if (racine.tagName() != "token")
+    {
+        qWarning() << "CApplication::replyLastFmGetToken() : réponse XML incorrecte (élément 'token' attendu)";
+        return;
+    }
+    
+    m_lastFmToken = racine.text().toLatin1();
+qDebug() << "CApplication::replyLastFmGetToken() : token = " << m_lastFmToken;
+
+    // Ouverture du navigateur
+    QDesktopServices::openUrl(QUrl(QString("http://www.last.fm/api/auth/?api_key=%1&token=%2").arg(QString(m_lastFmAPIKey)).arg(QString(m_lastFmToken))));
+
+    if (m_timerLastFm)
+    {
+        m_timerLastFm->stop();
+        delete m_timerLastFm;
+    }
+
+    m_timerLastFm = new QTimer(this);
+    connect(m_timerLastFm, SIGNAL(timeout()), this, SLOT(getLastFmSession()));
+    m_timerLastFm->start(5000);
+
+    reply->deleteLater();
+}
+
+
+void CApplication::getLastFmSession(void)
+{
+    Q_CHECK_PTR(m_timerLastFm);
+
+    QNetworkAccessManager * manager = new QNetworkAccessManager(this);
+    connect(manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(replyLastFmFinished(QNetworkReply *)));
+
+    QCryptographicHash crypto(QCryptographicHash::Md5);
+    crypto.addData("api_key");
+    crypto.addData(m_lastFmAPIKey);
+    crypto.addData("methodauth.getsession");
+    crypto.addData("token");
+    crypto.addData(m_lastFmToken);
+    crypto.addData(m_lastFMSecret);
+    QByteArray signature = crypto.result().toHex();
+
+qDebug() << "signature = " << signature << "(" << signature.size() << ")";
+
+    QString url = QString("http://ws.audioscrobbler.com/2.0/?method=auth.getsession&api_key=%1&token=%2&api_sig=%3").arg(QString(m_lastFmAPIKey)).arg(QString(m_lastFmToken)).arg(QString(signature));
+    qDebug() << url;
+    manager->get(QNetworkRequest(QUrl(url)));
+
+    if (++m_lastFmSessionRequest >= 10)
+    {
+        m_timerLastFm->stop();
+        delete m_timerLastFm;
+        m_timerLastFm = NULL;
+        m_lastFmSessionRequest = 0;
+        return;
+    }
+}
+
+
+void CApplication::replyLastFmFinished(QNetworkReply * reply)
+{
+    Q_CHECK_PTR(reply);
+    Q_CHECK_PTR(m_timerLastFm);
+
+    if (reply->error() != QNetworkReply::NoError)
+    {
+        qWarning() << "CApplication::replyLastFmFinished() : erreur HTTP avec Last.fm (" << reply->error() << ")";
+        return;
+    }
+
+    QByteArray data = reply->readAll();
+    qDebug() << "response = " << data;
+
+    QDomDocument doc;
+    
+    QString error;
+    if (!doc.setContent(data, &error))
+    {
+        qWarning() << "CApplication::replyLastFmFinished() : document XML invalide (" << error << ")";
+        return;
+    }
+
+    QDomElement racine = doc.documentElement();
+
+    if (racine.tagName() != "lfm")
+    {
+        qWarning() << "CApplication::replyLastFmFinished() : réponse XML incorrecte (élément 'lfm' attendu)";
+        return;
+    }
+
+    if (racine.attribute("status", "failed") == "failed")
+    {
+        qWarning() << "CApplication::replyLastFmFinished() : la requête Last.fm a echouée";
+        return;
+    }
+    
+    racine = racine.firstChildElement();
+
+    if (racine.tagName() != "session")
+    {
+        qWarning() << "CApplication::replyLastFmGetToken() : réponse XML incorrecte (élément 'session' attendu)";
+        return;
+    }
+
+    racine = racine.firstChildElement();
+    racine = racine.nextSiblingElement("key");
+
+    if (racine.isNull())
+    {
+        qWarning() << "CApplication::replyLastFmFinished() : réponse XML incorrecte (élément key attendu)";
+        return;
+    }
+
+    m_lastFmKey = racine.text().toLatin1();
+    qDebug() << "CApplication::replyLastFmFinished() : key = " << m_lastFmKey;
+
+    // Enregistrement de la clé
+    m_settings->setValue("LastFm/Key", m_lastFmKey);
+
+    reply->deleteLater();
+
+    m_timerLastFm->stop();
+    delete m_timerLastFm;
+    m_timerLastFm = NULL;
+    m_lastFmSessionRequest = 0;
 }
 
 

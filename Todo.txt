@@ -20,6 +20,7 @@
 - Écrire les métadonnées d'un morceau.
 
 - Intégrer Last.fm.
+  - Implémenter le scrobbling.
 
 - Terminer la boite de dialogue Edit Songs. (à terminer)
 
