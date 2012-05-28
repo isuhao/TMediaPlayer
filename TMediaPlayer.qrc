@@ -11,5 +11,9 @@
         <file alias="dynamic_list">Resources/icon_dynamic_list.png</file>
         <file alias="playlist">Resources/icon_playlist.png</file>
         <file alias="song">Resources/icon_song.png</file>
+        <file alias="folder_close">Resources/icon_folder_close.png</file>
+        <file alias="folder_open">Resources/icon_folder_open.png</file>
+        <file alias="TMediaPlayer">Resources/TMediaPlayer.png</file>
+        <file alias="library">Resources/icon_library.png</file>
     </qresource>
 </RCC>

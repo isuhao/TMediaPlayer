@@ -25,6 +25,8 @@ public:
     explicit CDynamicPlayList(CApplication * application, const QString& name = QString());
     ~CDynamicPlayList();
 
+    virtual bool isModified(void) const;
+
     inline int getId(void) const;
 
 public slots:
@@ -49,6 +51,7 @@ private:
     
     int m_id; ///< Identifiant de la liste en base de données.
     ICriteria * m_mainCriteria;
+    bool m_isDynamicListModified; ///< Indique si la liste a été modifiée.
     //QList<critères>
     //conditions de maj
 };

@@ -10,14 +10,26 @@
 #include <QtDebug>
 
 
+/**
+ * Construit la liste de lecture dynamique.
+ *
+ * \param application Pointeur sur l'application.
+ * \param name        Nom de la liste de lecture.
+ */
+
 CDynamicPlayList::CDynamicPlayList(CApplication * application, const QString& name) :
-    CPlayList      (application, name),
-    m_id           (-1),
-    m_mainCriteria (NULL)
+    CPlayList               (application, name),
+    m_id                    (-1),
+    m_mainCriteria          (NULL),
+    m_isDynamicListModified (false)
 {
     m_mainCriteria = new CMultiCriterion(this);
 }
 
+
+/**
+ * Détruit la liste de lecture dynamique.
+ */
 
 CDynamicPlayList::~CDynamicPlayList()
 {
@@ -25,12 +37,29 @@ CDynamicPlayList::~CDynamicPlayList()
 }
 
 
+/**
+ * Indique si la liste a été modifiée et doit être mise à jour en base de donnés.
+ *
+ * \return Booléen.
+ */
+
+bool CDynamicPlayList::isModified(void) const
+{
+    return (m_isDynamicListModified || CPlayList::isModified());
+}
+
+
+/**
+ * Met à jour la liste des morceaux.
+ */
+
 void CDynamicPlayList::update(void)
 {
-    qDebug() << "m_mainCriteria()";
+    qDebug() << "CDynamicPlayList::update()";
     QList<CSong *> songs = m_mainCriteria->getSongs(m_application->getLibrary()->getSongs());
 
     m_model->setSongs(songs);
+    sortByColumn(m_columnSort, m_sortOrder);
 }
 
 
@@ -92,9 +121,23 @@ bool CDynamicPlayList::updateDatabase(void)
         }
 
         m_id = query.lastInsertId().toInt();
+
+        // Insertion des nouveaux critères
+        m_mainCriteria->insertIntoDatabase(m_application);
+
+        query.prepare("UPDATE dynamic_list SET criteria_id = ? WHERE dynamic_list_id = ?");
+        
+        query.bindValue(0, m_mainCriteria->getId());
+        query.bindValue(1, m_id);
+
+        if (!query.exec())
+        {
+            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            return false;
+        }
     }
     // Mise à jour
-    else
+    else if (m_isDynamicListModified)
     {
         query.prepare("UPDATE dynamic_list SET criteria_id = ? WHERE dynamic_list_id = ?");
         
@@ -127,27 +170,31 @@ bool CDynamicPlayList::updateDatabase(void)
             m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
-    }
 
-    // Insertion des nouveaux critères
-    m_mainCriteria->insertIntoDatabase(m_application);
+        // Insertion des nouveaux critères
+        m_mainCriteria->insertIntoDatabase(m_application);
 
-    query.prepare("UPDATE dynamic_list SET criteria_id = ? WHERE dynamic_list_id = ?");
+        query.prepare("UPDATE dynamic_list SET criteria_id = ? WHERE dynamic_list_id = ?");
         
-    query.bindValue(0, m_mainCriteria->getId());
-    query.bindValue(1, m_id);
+        query.bindValue(0, m_mainCriteria->getId());
+        query.bindValue(1, m_id);
 
-    if (!query.exec())
-    {
-        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        return false;
+        if (!query.exec())
+        {
+            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            return false;
+        }
     }
 
+    m_isDynamicListModified = false;
     return CPlayList::updateDatabase();
 }
 
 
-/// \todo Charger les critères
+/**
+ * Charge la liste de lecture dynamique depuis la base de données.
+ */
+
 void CDynamicPlayList::loadFromDatabase(void)
 {
     if (m_id <= 0)
@@ -198,11 +245,10 @@ void CDynamicPlayList::loadFromDatabase(void)
         criteria->m_value1    = query.value(6);
         criteria->m_value2    = query.value(7);
 
-        //...
-
         criteriaList[criteria->m_id] = criteria;
     }
 
+    // Imbrication des critères
     foreach (ICriteria * criteria, criteriaList)
     {
         int parentId = reinterpret_cast<int>(criteria->m_parent);
@@ -238,6 +284,13 @@ void CDynamicPlayList::loadFromDatabase(void)
     }
 }
 
+
+/**
+ * Change le critère principale utilisé par la liste.
+ * L'ancien critère est détruit, et la liste devient le parent du critère.
+ *
+ * \param criteria Nouveau critère.
+ */
 
 void CDynamicPlayList::setCriteria(ICriteria * criteria)
 {

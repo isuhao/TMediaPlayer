@@ -286,6 +286,11 @@ void CSongTable::removeSongFromTable(int row)
 }
 
 
+/**
+ * Enlève tous les morceaux de la table.
+ * Aucune modification n'a lieu en base de données, et aucun signal n'est envoyé.
+ */
+
 void CSongTable::removeAllSongsFromTable(void)
 {
     m_model->clear();
@@ -293,7 +298,7 @@ void CSongTable::removeAllSongsFromTable(void)
 
 
 /**
- * Supprime tous les morceaux de la table.
+ * Supprime tous les morceaux de la table. La mémoire est libérée.
  */
 
 void CSongTable::deleteSongs(void)

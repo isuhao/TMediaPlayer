@@ -72,6 +72,7 @@ public:
     inline QDateTime getCreationDate(void) const;
     inline QDateTime getModificationDate(void) const;
 
+    inline bool isEnabled(void) const;
     inline QString getTitle(void) const;
     inline QString getSubTitle(void) const;
     inline QString getGrouping(void) const;
@@ -110,6 +111,7 @@ public:
 
 public slots:
 
+    void setEnabled(bool enabled = true);
     void setTitle(const QString& title);
     void setSubTitle(const QString& subTitle);
     void setGrouping(const QString& grouping);
@@ -138,6 +140,7 @@ protected:
 
     void startPlay(void);
     void startMultiModification(void);
+    void updateDatabase(void);
 
 protected slots:
 
@@ -148,7 +151,6 @@ protected slots:
     void play(void);
     void pause(void);
     void stop(void);
-    void updateDatabase(void);
     void emitPlayEnd(void);
 
 signals:
@@ -181,6 +183,7 @@ private:
     QDateTime m_modification;     ///< Date de la dernière modication.
 
     // Informations modifiables
+    bool m_isEnabled;             ///< Indique si le morceau est activé.
     QString m_title;              ///< Titre du morceau.
     QString m_subTitle;           ///< Sous-titre du morceau.
     QString m_grouping;           ///< Regroupement.
@@ -453,6 +456,12 @@ inline QDateTime CSong::getCreationDate(void) const
 inline QDateTime CSong::getModificationDate(void) const
 {
     return m_modification;
+}
+
+
+inline bool CSong::isEnabled(void) const
+{
+    return m_isEnabled;
 }
 
 

@@ -43,6 +43,7 @@ CSong::CSong(CApplication * application) :
     m_format            (FormatUnknown),
     m_numChannels       (0),
     m_duration          (0),
+    m_isEnabled         (true),
     m_title             (""),
     m_subTitle          (""),
     m_grouping          (""),
@@ -146,6 +147,9 @@ CSong::~CSong()
     {
         m_sound->release();
     }
+
+    // Mise à jour de la base de données
+    updateDatabase();
 }
 
 
@@ -173,6 +177,7 @@ void CSong::loadFromDatabase(void)
                       " song_duration,"
                       " song_creation,"
                       " song_modification,"
+                      " song_enabled,"
                       " song_title,"
                       " song_title_sort,"
                       " song_artist.artist_name,"
@@ -227,7 +232,8 @@ void CSong::loadFromDatabase(void)
     m_duration        = query.value(numValue++).toInt();
     m_creation        = query.value(numValue++).toDateTime();
     m_modification    = query.value(numValue++).toDateTime();
-
+    
+    m_isEnabled       = query.value(numValue++).toBool();
     m_title           = query.value(numValue++).toString();
     m_titleSort       = query.value(numValue++).toString();
     m_subTitle        = query.value(numValue++).toString();
@@ -958,6 +964,7 @@ QList<CSong *> CSong::loadAllSongsFromDatabase(CApplication * application)
                         " song_duration,"
                         " song_creation,"
                         " song_modification,"
+                        " song_enabled,"
                         " song_title,"
                         " song_title_sort,"
                         " song_subtitle,"
@@ -1007,7 +1014,8 @@ QList<CSong *> CSong::loadAllSongsFromDatabase(CApplication * application)
         song->m_duration        = query.value(numValue++).toInt();
         song->m_creation        = query.value(numValue++).toDateTime();
         song->m_modification    = query.value(numValue++).toDateTime();
-
+        
+        song->m_isEnabled       = query.value(numValue++).toBool();
         song->m_title           = query.value(numValue++).toString();
         song->m_titleSort       = query.value(numValue++).toString();
         song->m_subTitle        = query.value(numValue++).toString();
@@ -1092,6 +1100,17 @@ QString CSong::getFileSize(int fileSize)
 
     // Moins de 1 Kio
     return tr("%n byte(s)", "", fileSize);
+}
+
+
+void CSong::setEnabled(bool enabled)
+{
+    if (m_isEnabled != enabled)
+    {
+        m_isEnabled = enabled;
+        m_isModified = true;
+        if (!m_multiModification) emit songModified();
+    }
 }
 
 
@@ -1645,6 +1664,7 @@ void CSong::updateDatabase(void)
                               "song_duration, "
                               "song_creation, "
                               "song_modification, "
+                              "song_enabled, "
                               "song_title, "
                               "song_title_sort, "
                               "song_subtitle, "
@@ -1667,9 +1687,10 @@ void CSong::updateDatabase(void)
                               "song_language, "
                               "song_play_count, "
                               "song_play_time"
-                          ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                          ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
             int numValue = 0;
+
             query.bindValue(numValue++, m_fileName);
             query.bindValue(numValue++, m_fileSize);
             query.bindValue(numValue++, m_bitRate);
@@ -1679,6 +1700,7 @@ void CSong::updateDatabase(void)
             query.bindValue(numValue++, m_duration);
             query.bindValue(numValue++, m_creation);
             query.bindValue(numValue++, m_modification);
+            query.bindValue(numValue++, (m_isEnabled ? 1 : 0));
             query.bindValue(numValue++, m_title);
             query.bindValue(numValue++, m_titleSort);
             query.bindValue(numValue++, m_subTitle);
@@ -1715,6 +1737,7 @@ void CSong::updateDatabase(void)
         {
             query.prepare("UPDATE song SET "
                               "song_modification  = ?,"
+                              "song_enabled       = ?,"
                               "song_title         = ?,"
                               "song_title_sort    = ?,"
                               "song_subtitle      = ?,"
@@ -1740,6 +1763,7 @@ void CSong::updateDatabase(void)
             int numValue = 0;
 
             query.bindValue(numValue++, m_modification);
+            query.bindValue(numValue++, (m_isEnabled ? 1 : 0));
             query.bindValue(numValue++, m_title);
             query.bindValue(numValue++, m_titleSort);
             query.bindValue(numValue++, m_subTitle);

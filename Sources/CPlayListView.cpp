@@ -69,7 +69,6 @@ QModelIndex CPlayListView::addSongTable(CSongTable * songTable)
         if (dynamicList)
         {
             playListItem->setIcon(QPixmap(":/icons/dynamic_list"));
-            dynamicList->update();
         }
         else if (qobject_cast<CStaticPlayList *>(playList))
         {

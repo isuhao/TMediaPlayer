@@ -50,6 +50,11 @@ inline bool CSongTableItem::isValid(void) const
 }
 
 
+/**
+ * Modèle permettant de stocker une liste de morceaux.
+ * Doit être utilisé avec la classe CSongTable.
+ */
+
 class CSongTableModel : public QAbstractTableModel
 {
     Q_OBJECT
@@ -58,7 +63,7 @@ class CSongTableModel : public QAbstractTableModel
 
 public:
 
-    CSongTableModel(const QList<CSong *>& data = QList<CSong *>(), QWidget * parent = NULL);
+    explicit CSongTableModel(const QList<CSong *>& data = QList<CSong *>(), QWidget * parent = NULL);
     CSongTableModel(QWidget * parent);
 
     void setCanDrop(bool canDrop);
@@ -71,6 +76,7 @@ public:
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
     int columnCount(const QModelIndex& parent = QModelIndex()) const;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+    bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
     void sort(int column, Qt::SortOrder order);
 

@@ -1134,12 +1134,28 @@ void CApplication::addPlayList(CPlayList * playList)
 
     m_playLists.append(playList);
 
+    // Ajout dans le panneau gauche
     m_uiWidget->splitter->addWidget(playList);
     playList->hide();
 
     connect(playList, SIGNAL(songStarted(CSongTableItem *)), this, SLOT(playSong(CSongTableItem *)));
-    connect(playList, SIGNAL(songAdded(CSong *)), this, SLOT(updateListInformations()));
-    connect(playList, SIGNAL(songRemoved(CSong *)), this, SLOT(updateListInformations()));
+
+    // Liste de lecture statique
+    CStaticPlayList * staticList = qobject_cast<CStaticPlayList *>(playList);
+
+    if (staticList)
+    {
+        connect(staticList, SIGNAL(songAdded(CSong *)), this, SLOT(updateListInformations()));
+        connect(staticList, SIGNAL(songRemoved(CSong *)), this, SLOT(updateListInformations()));
+    }
+
+    // Liste de lecture dynamique
+    CDynamicPlayList * dynamicList = qobject_cast<CDynamicPlayList *>(playList);
+
+    if (dynamicList)
+    {
+        dynamicList->update();
+    }
 
     m_playListView->addSongTable(playList);
 }
@@ -1165,11 +1181,22 @@ void CApplication::addSong(const QString& fileName)
 }
 
 
+/**
+ * Sélectionne le morceau en cours de lecture.
+ */
+
 void CApplication::selectCurrentSong(void)
 {
     selectSong(m_currentSongTable, m_currentSongItem);
 }
 
+
+/**
+ * Sélectionne un morceau dans une liste.
+ *
+ * \param songTable Liste de morceaux à afficher.
+ * \param songItem  Morceau à sélectionner.
+ */
 
 void CApplication::selectSong(CSongTable * songTable, CSongTableItem * songItem)
 {
@@ -1276,6 +1303,10 @@ void CApplication::removeSong(CSongTableItem * songItem)
 }
 */
 
+/**
+ * Affiche le morceau sélectionné dans l'explorateur de fichiers.
+ */
+
 void CApplication::openSongInExplorer(void)
 {
     // Recherche du morceau sélectionné
@@ -1369,9 +1400,6 @@ void CApplication::updateSongDescription(CSong * song)
 {
     if (song)
     {
-        //m_uiWidget->label->setStyleSheet("QLabel a { color: red; text-decoration: none; } a:hover { text-decoration: underline; }");
-        //m_uiWidget->label->setStyleSheet("QLabel { color: red; text-decoration: none; }");
-        //m_uiWidget->label->setText("ttt<a href=\"song\" style=\"a {color: red;}\">" + song->getTitle() + " - " + song->getArtistName() + " - " + song->getAlbumTitle() + "</a>");
         m_uiWidget->songInfos->setText(song->getTitle() + " - " + song->getArtistName() + " - " + song->getAlbumTitle());
         m_uiWidget->sliderPosition->setEnabled(true);
 
@@ -1387,7 +1415,6 @@ void CApplication::updateSongDescription(CSong * song)
     }
     else
     {
-        //m_uiWidget->label->setText(""); // "Pas de morceau en cours de lecture..."
         m_uiWidget->songInfos->setText(""); // "Pas de morceau en cours de lecture..."
         m_uiWidget->sliderPosition->setEnabled(false);
         m_uiWidget->sliderPosition->setRange(0, 1000);
@@ -1399,6 +1426,10 @@ void CApplication::updateSongDescription(CSong * song)
 }
 
 
+/**
+ * Met à jour les informations sur la liste de morceaux affichée.
+ */
+
 void  CApplication::updateListInformations(void)
 {
     // Barre d'état
@@ -1408,11 +1439,20 @@ void  CApplication::updateListInformations(void)
 }
 
 
+/**
+ * Met à jour la position de lecture depuis la position du curseur.
+ */
+
 void CApplication::updatePosition(void)
 {
     setPosition(m_uiWidget->sliderPosition->value());
 }
 
+
+/**
+ * Méthode appelée régulièrement pour mettre à jour les informations sur la lecture,
+ * et pour passer au morceau suivant si nécessaire.
+ */
 
 void CApplication::update(void)
 {
@@ -1423,7 +1463,7 @@ void CApplication::update(void)
         qDebug() << "CApplication::update()";
         const int position = m_currentSongItem->getSong()->getPosition();
 
-        if (m_currentSongItem->getSong()->isEnded()/* && m_state != Loading*/)
+        if (m_currentSongItem->getSong()->isEnded())
         {
             qDebug() << "m_currentSong->isEnded()";
             m_currentSongItem->getSong()->emitPlayEnd();
@@ -1449,14 +1489,13 @@ void CApplication::selectPlayListFromTreeView(const QModelIndex& index)
 {
     qDebug() << "Changement de liste...";
 
-    //CSongTable * songTable = m_listModel->data(index, Qt::UserRole + 1).value<CSongTable *>();
     CSongTable * songTable = m_playListView->getSongTable(index);
     displaySongTable(songTable);
 }
 
 
 /**
- * Change la liste affichée.
+ * Change la liste de morceaux affichée.
  *
  * \param songTable Liste de morceaux à afficher.
  */
@@ -1558,7 +1597,8 @@ bool CApplication::initSoundSystem(void)
 /**
  * Charge la base de données.
  *
- * \todo Utiliser les méthodes dédiées dans les classes CSongTable et CListFolder.
+ * \todo Utiliser des méthodes dédiées dans les classes CSongTable et CListFolder.
+ * \todo Charger les dossiers.
  */
 
 void CApplication::loadDatabase(void)
@@ -1566,7 +1606,7 @@ void CApplication::loadDatabase(void)
     QSqlQuery query(m_dataBase);
 
 
-    // Création de la librairie
+    // Création de la médiathèque
     m_library = new CSongTable(this);
     m_library->m_idPlayList = 0;
     m_uiWidget->splitter->addWidget(m_library);

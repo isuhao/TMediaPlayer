@@ -9,11 +9,14 @@
   - Mise à jour des morceaux. (à terminer)
   - Vérifier que les champs ne sont pas vides.
   - Si un multi-critères ne contient qu'un enfant, on peut remonter celui-ci au niveau supérieur.
+  - Trier les types de critères par ordre alphabétique.
+  - Ajouter des unités pour certains types (taille du fichier, débit, etc.).
 
 - Lire les métadonnées d'un morceau au chargement. (à terminer)
   - MP3 : lire les tags APE.
   - FLAC.
   - Ogg Vorbis.
+
 - Écrire les métadonnées d'un morceau.
 
 - Intégrer Last.fm.
@@ -26,26 +29,29 @@
 - Implémenter le glisser-déposer au sein d'une liste statique.
 
 - Menu contextuel pour les listes de lecture.
-- Implémenter Ajouter morceau(x) à une liste statique.
-- Implémenter Suppression d'un morceau.
+  - Modifier une liste de lecture statique.
+  - Modifier une liste de lecture dynamique.
+  - Supprimer une liste de lecture.
+  - Créer un dossier.
+  - Créer une liste...
 
 - Implémenter la lecture aléatoire.
 
 - Import depuis iTunes / SongBird.
 
 - Optimisation : exécuter les requêtes SQL dans un thread séparé.
+  - Utiliser des transactions.
 
 --------------------------------------------------
   Importance moyenne
 --------------------------------------------------
 
-- Boite de dialogue Edit Song(s) : Mieux gérer les genres.
+- Boite de dialogue Edit Song(s) : Mieux gérer les genres (lister tous les genres utilisés et ajouter des genres prédéfinis, puis trier la liste).
 
 - Gérer les dossiers de listes de lecture.
 
 - Ajouter l'information "Fait partie d'une compilation".
 - Ajouter l'option "Ne pas lire en mode aléatoire".
-- Ajouter l'option "Morceau désactivé".
 
 - Implémenter le glisser-déposer pour créer une nouvelle liste de lecture.
 
@@ -67,7 +73,9 @@
   - Option "Illustrations : image dans le dossier".
 
 - Créer la boite de dialogue Édition des métadonnées.
-  -> Lire les métadonnées à l'ouverture de cette vue.
+  - Lire les métadonnées à l'ouverture de cette vue.
+  - Gérer les différents types de tags (ID3v1, ID3v2, xiphComment, APE).
+  - Gérer les tags binaires pour le ID3v2.
 
 - Boite de dialogue Edit Song : Affichage et modification des illustrations.
 - Boite de dialogue Edit Song : Afficher l'illustration principale dans l'onglet Résumé.

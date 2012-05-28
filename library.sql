@@ -61,6 +61,7 @@ CREATE TABLE song (
     song_duration INTEGER NOT NULL,
     song_creation DATETIME NOT NULL,
     song_modification DATETIME NOT NULL,
+    song_enabled INTEGER NOT NULL,
     song_title VARCHAR NOT NULL,
     song_title_sort VARCHAR NOT NULL,
     song_subtitle VARCHAR NOT NULL,

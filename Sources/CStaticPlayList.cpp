@@ -394,7 +394,6 @@ bool CStaticPlayList::updateDatabase(void)
         }
 
         m_id = query.lastInsertId().toInt();
-        m_isStaticListModified = false;
     }
     // Mise à jour
     else if (m_isStaticListModified)
@@ -409,10 +408,9 @@ bool CStaticPlayList::updateDatabase(void)
             m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
-
-        m_isStaticListModified = false;
     }
 
+    m_isStaticListModified = false;
     return CPlayList::updateDatabase();
 }
 

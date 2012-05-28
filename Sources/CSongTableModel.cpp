@@ -43,11 +43,24 @@ CSongTableModel::CSongTableModel(QWidget * parent) :
 }
 
 
+/**
+ * Active ou désactive le glisser-déposer vers la liste.
+ * Doit être actif pour les listes statiques uniquement.
+ *
+ * \param canDrop Indique si on peut déposer ou déplacer des morceaux vers la liste.
+ */
+
 void CSongTableModel::setCanDrop(bool canDrop)
 {
     m_canDrop = canDrop;
 }
 
+
+/**
+ * Modifie la liste des morceaux utilisée par le modèle.
+ *
+ * \param data Liste de morceaux.
+ */
 
 void CSongTableModel::setSongs(const QList<CSong *>& data)
 {
@@ -104,6 +117,14 @@ int CSongTableModel::columnCount(const QModelIndex& parent) const
     return CSongTable::ColNumber;
 }
 
+
+/**
+ * Retourne les données d'un item.
+ *
+ * \param index Index de l'item.
+ * \param role  Rôle demandé.
+ * \return Données de l'item.
+ */
 
 QVariant CSongTableModel::data(const QModelIndex& index, int role) const
 {
@@ -251,8 +272,39 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
                 return Qt::AlignRight;
         }
     }
+    else if (role == Qt::CheckStateRole)
+    {
+        if (index.column() == CSongTable::ColTitle)
+        {
+            return (m_data.at(index.row())->getSong()->isEnabled() ? Qt::Checked : Qt::Unchecked);
+        }
+    }
 
     return QVariant::Invalid;
+}
+
+
+/**
+ * Modifie les données d'un item.
+ * Cette méthode n'est utilisée que pour la case à cocher d'un morceau.
+ *
+ * \todo Implémentation.
+ *
+ * \param index Index de l'item.
+ * \param value Nouvelle valeur de la donnée.
+ * \param role  Rôle de la donnée.
+ * \return Booléen indiquant si les données ont été modifiées.
+ */
+
+bool CSongTableModel::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+    if (role == Qt::CheckStateRole && index.column() == CSongTable::ColTitle)
+    {
+        m_data.at(index.row())->getSong()->setEnabled(value.toInt() == Qt::Checked);
+        return true;
+    }
+
+    return QAbstractTableModel::setData(index, value, role);
 }
 
 
@@ -349,6 +401,14 @@ void CSongTableModel::sort(int column, Qt::SortOrder order)
 }
 
 
+/**
+ * Retourne les flags d'un item.
+ *
+ * \param index Index de l'item.
+ * \return Flags de l'item (ItemIsEnabled, ItemIsSelectable, ItemIsDragEnabled, et
+ *         éventuellement ItemIsDropEnabled et ItemIsUserCheckable).
+ */
+
 Qt::ItemFlags CSongTableModel::flags(const QModelIndex& index) const
 {
     Qt::ItemFlags flags = QAbstractTableModel::flags(index) | Qt::ItemIsDragEnabled;
@@ -359,11 +419,24 @@ Qt::ItemFlags CSongTableModel::flags(const QModelIndex& index) const
         {
             flags |= Qt::ItemIsDropEnabled;
         }
+
+        if (index.column() == CSongTable::ColTitle)
+        {
+            flags |= Qt::ItemIsUserCheckable;
+        }
     }
 
     return flags;
 }
 
+
+/**
+ * Retourne la liste des types MIME supportés par le modèle.
+ *
+ * \todo Ajouter les types de la classe parentes ?
+ *
+ * \return Liste types.
+ */
 
 QStringList CSongTableModel::mimeTypes(void) const
 {
@@ -459,6 +532,10 @@ void CSongTableModel::removeRow(int row)
     emit layoutChanged();
 }
 
+
+/**
+ * Supprime toutes les données du modèle.
+ */
 
 void CSongTableModel::clear(void)
 {
