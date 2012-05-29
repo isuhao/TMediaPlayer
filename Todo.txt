@@ -20,7 +20,9 @@
 - Écrire les métadonnées d'un morceau.
 
 - Intégrer Last.fm.
+  - Modifier les méthodes d'authentification pour utiliser les fonctions de requêtes Last.fm.
   - Implémenter le scrobbling.
+  - Inscrire toutes les requêtes et toutes les réponses dans un fichier de log.
 
 - Terminer la boite de dialogue Edit Songs. (à terminer)
 

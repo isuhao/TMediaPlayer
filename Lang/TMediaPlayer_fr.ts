@@ -8,12 +8,12 @@
         <translation type="obsolete">%1 morceau(x), %2</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="193"/>
+        <location filename="../Sources/CApplication.cpp" line="214"/>
         <source>Failed to init sound system with FMOD.</source>
         <translation>Le chargement du système de son avec FMOD a échoué.</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="218"/>
+        <location filename="../Sources/CApplication.cpp" line="239"/>
         <source>Failed to load database.</source>
         <translation>Erreur lors du chargement de la base de données.</translation>
     </message>
@@ -24,8 +24,8 @@
 %1</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="70"/>
-        <location filename="../Sources/CApplication.cpp" line="1449"/>
+        <location filename="../Sources/CApplication.cpp" line="81"/>
+        <location filename="../Sources/CApplication.cpp" line="1743"/>
         <source>%n song(s), %1</source>
         <translation>
             <numerusform>%n morceau, %1</numerusform>
@@ -33,12 +33,12 @@
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="239"/>
+        <location filename="../Sources/CApplication.cpp" line="260"/>
         <source>Database error</source>
         <translation>Erreur de base de données</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="239"/>
+        <location filename="../Sources/CApplication.cpp" line="260"/>
         <source>File: %1 (%2)
 
 Query: %3
@@ -55,17 +55,17 @@ Erreur : %4</translation>
         <translation type="obsolete">Êtes-vous sûr de vouloir supprimer cette liste de lecture ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1017"/>
+        <location filename="../Sources/CApplication.cpp" line="1311"/>
         <source>Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)</source>
         <translation>Fichiers multimédias (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;Tous les fichiers (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1043"/>
+        <location filename="../Sources/CApplication.cpp" line="1337"/>
         <source>Add files...</source>
         <translation>Ajout de fichiers...</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1043"/>
+        <location filename="../Sources/CApplication.cpp" line="1337"/>
         <source>Abort</source>
         <translation>Abandonner</translation>
     </message>
@@ -77,7 +77,7 @@ Erreur : %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1555"/>
+        <location filename="../Sources/CApplication.cpp" line="1880"/>
         <source>This program requires FMOD %1 or superior.</source>
         <translation>Ce programme nécessite FMOD %1 ou supérieur.</translation>
     </message>
@@ -277,14 +277,14 @@ Erreur : %4</translation>
 <context>
     <name>CDialogPreferences</name>
     <message>
-        <location filename="../Sources/CDialogPreferences.cpp" line="30"/>
+        <location filename="../Sources/CDialogPreferences.cpp" line="32"/>
         <source>OK</source>
-        <translation type="unfinished"></translation>
+        <translation>OK</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogPreferences.cpp" line="31"/>
+        <location filename="../Sources/CDialogPreferences.cpp" line="33"/>
         <source>Cancel</source>
-        <translation type="unfinished">Annuler</translation>
+        <translation>Annuler</translation>
     </message>
 </context>
 <context>
@@ -540,52 +540,52 @@ Erreur : %4</translation>
 %1</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1029"/>
+        <location filename="../Sources/CSongTable.cpp" line="1033"/>
         <source>Play</source>
         <translation>Lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1033"/>
+        <location filename="../Sources/CSongTable.cpp" line="1037"/>
         <source>Informations</source>
         <translation>Informations</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1034"/>
+        <location filename="../Sources/CSongTable.cpp" line="1038"/>
         <source>Show in explorer</source>
         <translation>Afficher dans l&apos;explorateur</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1036"/>
+        <location filename="../Sources/CSongTable.cpp" line="1040"/>
         <source>Remove from library</source>
         <translation>Enlever de la médiathèque</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1037"/>
+        <location filename="../Sources/CSongTable.cpp" line="1041"/>
         <source>Check selection</source>
         <translation>Cocher la sélection</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1038"/>
+        <location filename="../Sources/CSongTable.cpp" line="1042"/>
         <source>Uncheck selection</source>
         <translation>Décocher la sélection</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1045"/>
+        <location filename="../Sources/CSongTable.cpp" line="1049"/>
         <source>Playlists</source>
         <translation>Listes de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1047"/>
+        <location filename="../Sources/CSongTable.cpp" line="1051"/>
         <source>Library</source>
         <translation>Médiathèque</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1075"/>
+        <location filename="../Sources/CSongTable.cpp" line="1079"/>
         <source>Add to playlist</source>
         <translation>Ajouter à la liste de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1080"/>
+        <location filename="../Sources/CSongTable.cpp" line="1084"/>
         <source>There are no playlist</source>
         <translation>Il n&apos;y a pas de listes de lecture</translation>
     </message>
@@ -1394,38 +1394,53 @@ Voulez-vous les ajouter ?</translation>
         <source> %</source>
         <translation>%</translation>
     </message>
+    <message utf8="true">
+        <location filename="../Form/DialogPreferences.ui" line="147"/>
+        <source>Délai avant de signaler qu&apos;un nouveau morceau a commencé :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <location filename="../Form/DialogPreferences.ui" line="154"/>
+        <source>Lorsque vous démarrez la lecture d&apos;un morceau, une notification est envoyée à Last.fm pour mettre à jour votre profil. Cette valeur correspond au délai en secondes avant d&apos;envoyer l&apos;informations. Elle doit être comprise entre 2s et 20s.</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="151"/>
+        <location filename="../Form/DialogPreferences.ui" line="157"/>
+        <source>s</source>
+        <translation>s</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="177"/>
         <source>Metadata</source>
         <translation>Métadonnées</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="157"/>
+        <location filename="../Form/DialogPreferences.ui" line="183"/>
         <source>Saving</source>
         <translation>Enregistrement</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="166"/>
+        <location filename="../Form/DialogPreferences.ui" line="192"/>
         <source>Write song duration.</source>
         <translation>Écrire la durée du morceau.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="173"/>
+        <location filename="../Form/DialogPreferences.ui" line="199"/>
         <source>Write play count.</source>
         <translation>Écrire le nombre de lectures.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="180"/>
+        <location filename="../Form/DialogPreferences.ui" line="206"/>
         <source>Write rating.</source>
         <translation>Écrire la note.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="190"/>
+        <location filename="../Form/DialogPreferences.ui" line="216"/>
         <source>Loading</source>
         <translation>Chargement</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="196"/>
+        <location filename="../Form/DialogPreferences.ui" line="222"/>
         <source>Automatically compute sorting fields.</source>
         <translation>Déterminer automatiquement les valeurs pour le tri.</translation>
     </message>

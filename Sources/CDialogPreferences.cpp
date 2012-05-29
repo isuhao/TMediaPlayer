@@ -27,6 +27,8 @@ CDialogPreferences::CDialogPreferences(CApplication * application, QSettings * s
     m_uiWidget->editShowButtonStop->setChecked(m_settings->value("Preferences/ShowButtonStop", true).toBool());
 
     m_uiWidget->groupUseLastFm->setChecked(m_settings->value("LastFm/EnableScrobble", false).toBool());
+    m_uiWidget->editLastFmDelayBeforeNotification->setValue(m_settings->value("LastFm/DelayBeforeNotification", 5000).toInt() / 1000);
+    m_uiWidget->editLastFmPercentageBeforeScrobbling->setValue(m_settings->value("LastFm/PercentageBeforeScrobbling", 60).toInt());
 
     // Connexions des signaux des boutons
     QPushButton * btnOK = m_uiWidget->buttonBox->addButton(tr("OK"), QDialogButtonBox::AcceptRole);
@@ -60,7 +62,10 @@ void CDialogPreferences::save(void)
     m_application->setRowHeight(m_uiWidget->editRowHeight->value());
     m_application->showButtonStop(m_uiWidget->editShowButtonStop->isChecked());
 
-    m_settings->setValue("LastFm/EnableScrobble", m_uiWidget->groupUseLastFm->isChecked());
+    // Last.fm
+    m_application->enableScrobbling(m_uiWidget->groupUseLastFm->isChecked());
+    m_application->setDelayBeforeNotification(m_uiWidget->editLastFmDelayBeforeNotification->value() * 1000);
+    m_application->setPercentageBeforeScrobbling(m_uiWidget->editLastFmPercentageBeforeScrobbling->value());
 
     close();
 }
