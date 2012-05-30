@@ -95,6 +95,11 @@ public:
         return m_dataBase;
     }
 
+    inline QSettings * getSettings(void) const
+    {
+        return m_settings;
+    }
+
 public slots:
 
     void selectAll(void);
@@ -172,10 +177,10 @@ protected slots:
 
     // Last.fm
     void connectToLastFm(void);
-    void replyLastFmGetToken(QNetworkReply * reply);
-    void getLastFmSession(void);
-    void replyLastFmFinished(QNetworkReply * reply);
-    void replyLastFmUpdateNowPlaying(QNetworkReply * reply);
+    //void replyLastFmGetToken(QNetworkReply * reply);
+    //void getLastFmSession(void);
+    //void replyLastFmFinished(QNetworkReply * reply);
+    //void replyLastFmUpdateNowPlaying(QNetworkReply * reply);
 
 protected:
 
@@ -192,13 +197,8 @@ protected:
     virtual void closeEvent(QCloseEvent * event);
 
     // Last.fm
-    void scrobbleLastFm(CSong * song);
-    void updateLastFmNowPlaying(CSong * song);
-    QByteArray getLastFmQuery(const QMap<QByteArray, QByteArray>& args) const;
-    QByteArray getLastFmSignature(const QMap<QByteArray, QByteArray>& args) const;
-    void logLastFmRequest(const QString& url, const QString& content);
-    void logLastFmResponse(int code, const QString& content);
-    static QByteArray encodeString(const QByteArray& str);
+    //void scrobbleLastFm(CSong * song);
+    //void updateLastFmNowPlaying(CSong * song);
 
 private:
 
@@ -233,12 +233,12 @@ private:
     bool m_lastFmEnableScrobble;        ///< Indique si le scrobbling est activé.
     int m_delayBeforeNotification;      ///< Délai avant d'envoyer une notification.
     int m_percentageBeforeScrobbling;   ///< Pourcentage d'écouter avant de scrobbler.
-    QTimer * m_timerLastFm;             ///< Timer utilisé pour récupérer la clé.
-    int m_lastFmSessionRequest;         ///< Nombre de requête envoyées pour récupérer la clé.
-    QByteArray m_lastFmToken;           ///< Token utilisé pour la connexion à Last.fm.
+    //QTimer * m_timerLastFm;             ///< Timer utilisé pour récupérer la clé.
+    //int m_lastFmSessionRequest;         ///< Nombre de requête envoyées pour récupérer la clé.
+    //QByteArray m_lastFmToken;           ///< Token utilisé pour la connexion à Last.fm.
     QByteArray m_lastFmKey;             ///< Clé utilisée pour l'authentification à Last.fm.
-    const QByteArray m_lastFmAPIKey;
-    const QByteArray m_lastFMSecret;
+    //const QByteArray m_lastFmAPIKey;
+    //const QByteArray m_lastFMSecret;
     int m_lastFmTimeListened;
     int m_lastFmLastPosition;
     TLastFmState m_lastFmState;

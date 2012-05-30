@@ -38,6 +38,12 @@
       <Extensions>ts</Extensions>
       <ParseFiles>false</ParseFiles>
     </Filter>
+    <Filter Include="Source Files\Last.fm">
+      <UniqueIdentifier>{8e51d814-8a0a-4257-b701-f8c115fe47e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Last.fm">
+      <UniqueIdentifier>{96bb632b-17c3-4a44-bfaa-3406ea885137}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\CApplication.cpp">
@@ -244,6 +250,42 @@
     <ClCompile Include="GeneratedFiles\Release\moc_CDialogPreferences.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Last.fm\CUpdateNowPlaying.cpp">
+      <Filter>Source Files\Last.fm</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Last.fm\ILastFmService.cpp">
+      <Filter>Source Files\Last.fm</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ILastFmService.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ILastFmService.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_CUpdateNowPlaying.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_CUpdateNowPlaying.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_CAuthentication.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_CAuthentication.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Last.fm\CAuthentication.cpp">
+      <Filter>Source Files\Last.fm</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Last.fm\CScrobble.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_CScrobble.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_CScrobble.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Sources\CApplication.hpp">
@@ -337,6 +379,18 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="Sources\CDialogPreferences.hpp">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Sources\Last.fm\ILastFmService.hpp">
+      <Filter>Header Files\Last.fm</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Sources\Last.fm\CUpdateNowPlaying.hpp">
+      <Filter>Header Files\Last.fm</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Sources\Last.fm\CAuthentication.hpp">
+      <Filter>Header Files\Last.fm</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Sources\Last.fm\CScrobble.hpp">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

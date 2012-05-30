@@ -12,6 +12,11 @@
 #include "CDialogEditDynamicList.hpp"
 #include "CDialogPreferences.hpp"
 
+// Last.fm
+#include "CAuthentication.hpp"
+#include "CUpdateNowPlaying.hpp"
+#include "CScrobble.hpp"
+
 // Qt
 #include <QStandardItemModel>
 #include <QSettings>
@@ -23,12 +28,13 @@
 #include <QFileDialog>
 #include <QProgressDialog>
 #include <QDesktopServices>
-#include <QNetworkAccessManager>
-#include <QNetworkRequest>
-#include <QNetworkReply>
 #include <QUrl>
-#include <QDomDocument>
-#include <QCryptographicHash>
+//#include <QNetworkAccessManager>
+//#include <QNetworkRequest>
+//#include <QNetworkReply>
+//#include <QDomDocument>
+//#include <QCryptographicHash>
+#include <QDockWidget>
 
 // FMOD
 #include <fmod/fmod.hpp>
@@ -60,10 +66,10 @@ CApplication::CApplication(void) :
     m_lastFmEnableScrobble       (false),
     m_delayBeforeNotification    (5000),
     m_percentageBeforeScrobbling (60),
-    m_timerLastFm                (NULL),
-    m_lastFmSessionRequest       (0),
-    m_lastFmAPIKey               ("20478fcc23bae9e1e2396a2b1cc52338"),
-    m_lastFMSecret               ("b2ed8ec840ec1995003bb99fb02ace44"),
+    //m_timerLastFm                (NULL),
+    //m_lastFmSessionRequest       (0),
+    //m_lastFmAPIKey               ("20478fcc23bae9e1e2396a2b1cc52338"),
+    //m_lastFMSecret               ("b2ed8ec840ec1995003bb99fb02ace44"),
     m_lastFmTimeListened         (0),
     m_lastFmLastPosition         (0),
     m_lastFmState                (NoScrobble)
@@ -150,13 +156,13 @@ CApplication::CApplication(void) :
 CApplication::~CApplication()
 {
     qDebug() << "CApplication::~CApplication()";
-
+/*
     if (m_timerLastFm)
     {
         m_timerLastFm->stop();
         delete m_timerLastFm;
     }
-
+*/
     if (m_timer)
     {
         m_timer->stop();
@@ -210,7 +216,11 @@ void CApplication::initWindow(void)
     }
 
     m_playListView = new CPlayListView(this);
-    m_uiWidget->splitter->addWidget(m_playListView);
+    //m_uiWidget->splitter->addWidget(m_playListView);
+    QDockWidget * dockWidget = new QDockWidget(tr("Playlists"), this);
+    dockWidget->setWidget(m_playListView);
+    dockWidget->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+    this->addDockWidget(Qt::LeftDockWidgetArea, dockWidget);
 
     int treeWidth = m_settings->value("Window/PlayListViewWidth", 200).toInt();
     m_uiWidget->splitter->setSizes(QList<int>() << treeWidth);
@@ -615,16 +625,31 @@ int CApplication::getGenreId(const QString& name)
 void CApplication::connectToLastFm(void)
 {
 qDebug() << "CApplication::connectToLastFm()";
+    new CAuthentication(this);
+}
+
+
+/**
+ * Lance le processus d'authentication avec Last.fm.
+ * Le navigateur doit s'ouvrir pour que l'utilisateur puisse se connecter.
+ */
+/*
+void CApplication::connectToLastFm(void)
+{
+qDebug() << "CApplication::connectToLastFm()";
 
     QNetworkAccessManager * manager = new QNetworkAccessManager(this);
     connect(manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(replyLastFmGetToken(QNetworkReply *)));
 
     QMap<QByteArray, QByteArray> args;
-    args["method"]  = m_lastFmAPIKey;
-    args["api_key"] = "auth.getToken";
-    QByteArray signature = getLastFmSignature(args);
+    args["method"]  = "auth.getToken";
+    args["api_key"] = m_lastFmAPIKey;
+    QByteArray content = getLastFmQuery(args);
+    
+    QString url = QString("http://ws.audioscrobbler.com/2.0/?%1").arg(QString(content));
+    logLastFmRequest(url);
 
-    manager->get(QNetworkRequest(QUrl(QString("http://ws.audioscrobbler.com/2.0/?method=auth.gettoken&api_key=%1&api_sig=%2").arg(QString(m_lastFmAPIKey)).arg(QString(signature)))));
+    manager->get(QNetworkRequest(QUrl(url)));
 }
 
 
@@ -701,13 +726,15 @@ void CApplication::getLastFmSession(void)
     connect(manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(replyLastFmFinished(QNetworkReply *)));
 
     QMap<QByteArray, QByteArray> args;
-    args["method"]  = m_lastFmAPIKey;
-    args["api_key"] = "auth.getSession";
-    args["token"]  = m_lastFmToken;
-    QByteArray signature = getLastFmSignature(args);
 
-    QString url = QString("http://ws.audioscrobbler.com/2.0/?method=auth.getSession&api_key=%1&token=%2&api_sig=%3").arg(QString(m_lastFmAPIKey)).arg(QString(m_lastFmToken)).arg(QString(signature));
-    qDebug() << url;
+    args["method"]  = "auth.getSession";
+    args["api_key"] = m_lastFmAPIKey;
+    args["token"]   = m_lastFmToken;
+
+    QByteArray content = getLastFmQuery(args);
+    QString url = QString("http://ws.audioscrobbler.com/2.0/?%1").arg(QString(content));
+    logLastFmRequest(url);
+
     manager->get(QNetworkRequest(QUrl(url)));
 
     if (++m_lastFmSessionRequest >= 10)
@@ -805,7 +832,7 @@ void CApplication::replyLastFmUpdateNowPlaying(QNetworkReply * reply)
 
     reply->deleteLater();
 }
-
+*/
 
 void CApplication::selectAll(void)
 {
@@ -1195,7 +1222,8 @@ void CApplication::setPosition(int position)
     if (m_currentSongItem)
     {
         Q_CHECK_PTR(m_currentSongTable);
-
+        
+        const int songPositionBefore = m_currentSongItem->getSong()->getPosition();
         m_currentSongItem->getSong()->setPosition(position);
         const int songPosition = m_currentSongItem->getSong()->getPosition();
 
@@ -1206,7 +1234,7 @@ void CApplication::setPosition(int position)
             {
                 if (m_state == Playing)
                 {
-                    m_lastFmTimeListened += (songPosition - m_lastFmLastPosition);
+                    m_lastFmTimeListened += (songPositionBefore - m_lastFmLastPosition);
                 }
 
                 m_lastFmLastPosition = songPosition;
@@ -1838,7 +1866,8 @@ void CApplication::update(void)
                 if (m_lastFmTimeListened > m_delayBeforeNotification)
                 {
                     qDebug() << "Last.fm : update";
-                    updateLastFmNowPlaying(m_currentSongItem->getSong());
+                    CUpdateNowPlaying * query = new CUpdateNowPlaying(this, m_lastFmKey, m_currentSongItem->getSong());
+                    //updateLastFmNowPlaying(m_currentSongItem->getSong());
                     m_lastFmState = Notified;
                 }
             }
@@ -1847,6 +1876,7 @@ void CApplication::update(void)
                 if (m_lastFmTimeListened > 4 * 60000 || m_lastFmTimeListened > m_currentSongItem->getSong()->getDuration() * m_percentageBeforeScrobbling / 100)
                 {
                     qDebug() << "Last.fm : scrobble";
+                    CScrobble * query = new CScrobble(this, m_lastFmKey, m_currentSongItem->getSong());
                     m_lastFmState = Scrobbled;
                 }
             }
@@ -2156,7 +2186,7 @@ void CApplication::closeEvent(QCloseEvent * event)
     QMainWindow::closeEvent(event);
 }
 
-
+/*
 /// \todo Implémentation
 void CApplication::scrobbleLastFm(CSong * song)
 {
@@ -2208,93 +2238,4 @@ void CApplication::updateLastFmNowPlaying(CSong * song)
     request.setRawHeader("Content-Type", "application/x-www-form-urlencoded");
     manager->post(request, content);
 }
-
-
-void CApplication::logLastFmRequest(const QString& url, const QString& content)
-{
-    qDebug() << "--------------------------------------------------";
-    qDebug() << QDateTime::currentDateTime();
-    qDebug() << url;
-    qDebug() << content;
-    qDebug() << "--------------------------------------------------";
-}
-
-
-void CApplication::logLastFmResponse(int code, const QString& content)
-{
-    qDebug() << "--------------------------------------------------";
-    qDebug() << QDateTime::currentDateTime();
-    qDebug() << code;
-    qDebug() << content;
-    qDebug() << "--------------------------------------------------";
-}
-
-
-QByteArray CApplication::getLastFmQuery(const QMap<QByteArray, QByteArray>& args) const
-{
-    QByteArray content;
-
-    for (QMap<QByteArray, QByteArray>::const_iterator it = args.begin(); it != args.end(); ++it)
-    {
-        if (it != args.begin())
-        {
-            content.append("&");
-        }
-
-        content.append(it.key());
-        content.append("=");
-        content.append(encodeString(it.value()));
-    }
-
-    content.append("&api_sig=");
-    content.append(getLastFmSignature(args));
-
-    return content;
-}
-
-
-/**
- * Calcule la signature d'une méthode pour envoyer une requête à Last.fm.
- *
- * \param args       Tableau associatif des arguments (de la forme clé => valeur), avec la méthode.
- * \param methodName Nom de la méthode.
- */
-
-QByteArray CApplication::getLastFmSignature(const QMap<QByteArray, QByteArray>& args) const
-{
-    QCryptographicHash crypto(QCryptographicHash::Md5);
-
-    for (QMap<QByteArray, QByteArray>::const_iterator it = args.begin(); it != args.end(); ++it)
-    {
-        crypto.addData(it.key());
-        crypto.addData(it.value());
-    }
-
-    crypto.addData(m_lastFMSecret);
-    return crypto.result().toHex();
-}
-
-
-QByteArray CApplication::encodeString(const QByteArray& str)
-{
-    QByteArray res;
-
-    // Encodage de la chaine
-    for (int i = 0; i < str.size(); ++i)
-    {
-        if (str[i] == '&')
-        {
-            res.append("%26");
-        }
-        else if (str[i] == '=')
-        {
-            res.append("%3D");
-        }
-        else
-        {
-            res.append(str[i]);
-        }
-    }
-
-    return res;
-}
+*/
