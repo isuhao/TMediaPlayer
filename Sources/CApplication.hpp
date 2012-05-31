@@ -69,6 +69,7 @@ public:
     inline CSongTable * getDisplayedSongTable(void) const;
     void setDisplayedSongTable(CSongTable * songTable);
     CSong * getSongFromId(int id) const;
+    CListFolder * getFolderFromId(int id) const;
     QList<CPlayList *> getPlayListsWithSong(CSong * song) const;
     QList<CPlayList *> getAllPlayLists(void) const;
     void removeSongs(const QList<CSong *> songs);
@@ -210,8 +211,8 @@ private:
     bool m_isShuffle;                   ///< Indique si la lecture aléatoire est activée.
     bool m_isMute;                      ///< Indique si le son est coupé.
     int m_volume;                       ///< Volume sonore (entre 0 et 100).
-    QList<CListFolder *> m_folders;     ///< Liste des dossiers de listes de lecture.
-    QList<CPlayList *> m_playLists;     ///< Liste des listes de lectures sans dossier.
+    QList<CListFolder *> m_folders;     ///< Liste de l'ensemble des dossiers de listes de lecture.
+    QList<CPlayList *> m_playLists;     ///< Liste de l'ensemble des listes de lectures.
 
     // Last.fm
     enum TLastFmState

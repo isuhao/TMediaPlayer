@@ -1,24 +1,32 @@
 
 #include "CListFolder.hpp"
 #include "CPlayList.hpp"
+#include "CApplication.hpp"
 
 
-CListFolder::CListFolder(void) :
-    QObject      (),
+CListFolder::CListFolder(CApplication * application, const QString& name) :
+    QObject      (application),
     m_id         (-1),
+    m_name       (name),
+    m_folder     (NULL),
+    m_position   (1),
     m_isModified (false)
 {
+    Q_CHECK_PTR(application);
 
+    //...
 }
 
 
 CListFolder::~CListFolder()
 {
+/*
     foreach (CPlayList * playList, m_playLists)
     {
         playList->updateDatabase();
         delete playList;
     }
+*/
 }
 
 

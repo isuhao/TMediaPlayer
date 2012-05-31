@@ -18,11 +18,14 @@ class CListFolder : public QObject
 {
     Q_OBJECT
 
+    friend class CApplication;
+
 public:
 
-    CListFolder(void);
+    explicit CListFolder(CApplication * application, const QString& name = QString());
     ~CListFolder();
 
+    inline int getId(void) const;
     inline QString getName(void) const;
     inline QList<CPlayList *> getPlayLists(void) const;
     inline int getNumPlayLists(void) const;
@@ -38,9 +41,17 @@ private:
 
     int m_id;                       ///< Identifiant du dossier en base de données.
     QString m_name;                 ///< Nom du dossier.
+    CListFolder * m_folder;         ///< Dossier parent.
+    int m_position;                 ///< Position dans le dossier.
     bool m_isModified;              ///< Indique si le dossier a été modifié.
     QList<CPlayList *> m_playLists; ///< Liste des listes de lecture du dossier (l'ordre est le même que l'affichage).
 };
+
+
+inline int CListFolder::getId(void) const
+{
+    return m_id;
+}
 
 
 /**

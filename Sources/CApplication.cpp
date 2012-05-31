@@ -157,13 +157,7 @@ CApplication::CApplication(void) :
 CApplication::~CApplication()
 {
     qDebug() << "CApplication::~CApplication()";
-/*
-    if (m_timerLastFm)
-    {
-        m_timerLastFm->stop();
-        delete m_timerLastFm;
-    }
-*/
+
     if (m_timer)
     {
         m_timer->stop();
@@ -181,15 +175,18 @@ CApplication::~CApplication()
 
     //dumpObjectTree();
 
-    foreach (CListFolder * folder, m_folders)
+    // Met-à-jour et supprime tous les dossiers
+    for (QList<CListFolder *>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
     {
-        delete folder;
+        //(*it)->updateDatabase();
+        delete *it;
     }
 
-    foreach (CPlayList * playList, m_playLists)
+    // Met-à-jour et supprime toutes les listes de lecture
+    for (QList<CPlayList *>::const_iterator it = m_playLists.begin(); it != m_playLists.end(); ++it)
     {
-        playList->updateDatabase();
-        delete playList;
+        (*it)->updateDatabase();
+        delete *it;
     }
 
     m_library->updateDatabase();
@@ -296,9 +293,11 @@ void CApplication::setRowHeight(int height)
     // Mise à jour des vues
     m_library->verticalHeader()->setDefaultSectionSize(height);
 
-    foreach (CPlayList * playList, getAllPlayLists())
+    const QList<CPlayList *> playLists = getAllPlayLists();
+
+    for (QList<CPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
     {
-        playList->verticalHeader()->setDefaultSectionSize(height);
+        (*it)->verticalHeader()->setDefaultSectionSize(height);
     }
 }
 
@@ -380,6 +379,25 @@ CSong * CApplication::getSongFromId(int id) const
 }
 
 
+CListFolder * CApplication::getFolderFromId(int id) const
+{
+    if (id <= 0)
+    {
+        return NULL;
+    }
+
+    for (QList<CListFolder *>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
+    {
+        if ((*it)->getId() == id)
+        {
+            return (*it);
+        }
+    }
+
+    return NULL;
+}
+
+
 /**
  * Retourne la liste des listes de lecture contenant un morceau.
  *
@@ -410,26 +428,12 @@ QList<CPlayList *> CApplication::getPlayListsWithSong(CSong * song) const
 /**
  * Retourne la liste des listes de lecture de la médiathèque.
  *
- * \todo Parcourir récursivement les dossiers.
- *
  * \return Listes de lecture.
  */
 
 QList<CPlayList *> CApplication::getAllPlayLists(void) const
 {
-    QList<CPlayList *> playLists;
-
-    for (QList<CListFolder *>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
-    {
-        //...
-    }
-
-    for (QList<CPlayList *>::const_iterator it = m_playLists.begin(); it != m_playLists.end(); ++it)
-    {
-        playLists.append(*it);
-    }
-
-    return playLists;
+    return m_playLists;
 }
 
 
@@ -697,209 +701,8 @@ qDebug() << "CApplication::connectToLastFm()";
 
 
 /**
- * Lance le processus d'authentication avec Last.fm.
- * Le navigateur doit s'ouvrir pour que l'utilisateur puisse se connecter.
+ * Sélectionne tous les morceaux de la liste affichée.
  */
-/*
-void CApplication::connectToLastFm(void)
-{
-qDebug() << "CApplication::connectToLastFm()";
-
-    QNetworkAccessManager * manager = new QNetworkAccessManager(this);
-    connect(manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(replyLastFmGetToken(QNetworkReply *)));
-
-    QMap<QByteArray, QByteArray> args;
-    args["method"]  = "auth.getToken";
-    args["api_key"] = m_lastFmAPIKey;
-    QByteArray content = getLastFmQuery(args);
-    
-    QString url = QString("http://ws.audioscrobbler.com/2.0/?%1").arg(QString(content));
-    logLastFmRequest(url);
-
-    manager->get(QNetworkRequest(QUrl(url)));
-}
-
-
-void CApplication::replyLastFmGetToken(QNetworkReply * reply)
-{
-qDebug() << "CApplication::replyLastFmGetToken()";
-    Q_CHECK_PTR(reply);
-
-    if (reply->error() != QNetworkReply::NoError)
-    {
-        qWarning() << "CApplication::replyLastFmGetToken() : erreur HTTP avec Last.fm (" << reply->error() << ")";
-        //return;
-    }
-
-    QByteArray data = reply->readAll();
-    logLastFmResponse(reply->error(), data);
-
-    QDomDocument doc;
-    
-    QString error;
-    if (!doc.setContent(data, &error))
-    {
-        qWarning() << "CApplication::replyLastFmGetToken() : document XML invalide (" << error << ")";
-        return;
-    }
-
-    QDomElement racine = doc.documentElement();
-
-    if (racine.tagName() != "lfm")
-    {
-        qWarning() << "CApplication::replyLastFmGetToken() : réponse XML incorrecte (élément 'lfm' attendu)";
-        return;
-    }
-
-    if (racine.attribute("status", "failed") == "failed")
-    {
-        qWarning() << "CApplication::replyLastFmGetToken() : la requête Last.fm a echouée";
-        return;
-    }
-
-    racine = racine.firstChildElement();
-
-    if (racine.tagName() != "token")
-    {
-        qWarning() << "CApplication::replyLastFmGetToken() : réponse XML incorrecte (élément 'token' attendu)";
-        return;
-    }
-    
-    m_lastFmToken = racine.text().toLatin1();
-qDebug() << "CApplication::replyLastFmGetToken() : token = " << m_lastFmToken;
-
-    // Ouverture du navigateur
-    QDesktopServices::openUrl(QUrl(QString("http://www.last.fm/api/auth/?api_key=%1&token=%2").arg(QString(m_lastFmAPIKey)).arg(QString(m_lastFmToken))));
-
-    if (m_timerLastFm)
-    {
-        m_timerLastFm->stop();
-        delete m_timerLastFm;
-    }
-
-    m_timerLastFm = new QTimer(this);
-    connect(m_timerLastFm, SIGNAL(timeout()), this, SLOT(getLastFmSession()));
-    m_timerLastFm->start(5000);
-
-    reply->deleteLater();
-}
-
-
-void CApplication::getLastFmSession(void)
-{
-    Q_CHECK_PTR(m_timerLastFm);
-
-    QNetworkAccessManager * manager = new QNetworkAccessManager(this);
-    connect(manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(replyLastFmFinished(QNetworkReply *)));
-
-    QMap<QByteArray, QByteArray> args;
-
-    args["method"]  = "auth.getSession";
-    args["api_key"] = m_lastFmAPIKey;
-    args["token"]   = m_lastFmToken;
-
-    QByteArray content = getLastFmQuery(args);
-    QString url = QString("http://ws.audioscrobbler.com/2.0/?%1").arg(QString(content));
-    logLastFmRequest(url);
-
-    manager->get(QNetworkRequest(QUrl(url)));
-
-    if (++m_lastFmSessionRequest >= 10)
-    {
-        m_timerLastFm->stop();
-        delete m_timerLastFm;
-        m_timerLastFm = NULL;
-        m_lastFmSessionRequest = 0;
-        return;
-    }
-}
-
-
-void CApplication::replyLastFmFinished(QNetworkReply * reply)
-{
-    Q_CHECK_PTR(reply);
-    Q_CHECK_PTR(m_timerLastFm);
-
-    if (reply->error() != QNetworkReply::NoError)
-    {
-        qWarning() << "CApplication::replyLastFmFinished() : erreur HTTP avec Last.fm (" << reply->error() << ")";
-        //return;
-    }
-
-    QByteArray data = reply->readAll();
-    logLastFmResponse(reply->error(), data);
-
-    QDomDocument doc;
-    
-    QString error;
-    if (!doc.setContent(data, &error))
-    {
-        qWarning() << "CApplication::replyLastFmFinished() : document XML invalide (" << error << ")";
-        return;
-    }
-
-    QDomElement racine = doc.documentElement();
-
-    if (racine.tagName() != "lfm")
-    {
-        qWarning() << "CApplication::replyLastFmFinished() : réponse XML incorrecte (élément 'lfm' attendu)";
-        return;
-    }
-
-    if (racine.attribute("status", "failed") == "failed")
-    {
-        qWarning() << "CApplication::replyLastFmFinished() : la requête Last.fm a echouée";
-        return;
-    }
-    
-    racine = racine.firstChildElement();
-
-    if (racine.tagName() != "session")
-    {
-        qWarning() << "CApplication::replyLastFmGetToken() : réponse XML incorrecte (élément 'session' attendu)";
-        return;
-    }
-
-    racine = racine.firstChildElement();
-    racine = racine.nextSiblingElement("key");
-
-    if (racine.isNull())
-    {
-        qWarning() << "CApplication::replyLastFmFinished() : réponse XML incorrecte (élément key attendu)";
-        return;
-    }
-
-    m_lastFmKey = racine.text().toLatin1();
-    qDebug() << "CApplication::replyLastFmFinished() : key = " << m_lastFmKey;
-
-    // Enregistrement de la clé
-    m_settings->setValue("LastFm/SessionKey", m_lastFmKey);
-
-    reply->deleteLater();
-
-    m_timerLastFm->stop();
-    delete m_timerLastFm;
-    m_timerLastFm = NULL;
-    m_lastFmSessionRequest = 0;
-}
-
-
-void CApplication::replyLastFmUpdateNowPlaying(QNetworkReply * reply)
-{
-    Q_CHECK_PTR(reply);
-
-    if (reply->error() != QNetworkReply::NoError)
-    {
-        qWarning() << "CApplication::replyLastFmUpdateNowPlaying() : erreur HTTP avec Last.fm (" << reply->error() << ")";
-        //return;
-    }
-
-    QByteArray data = reply->readAll();
-    logLastFmResponse(reply->error(), data);
-
-    reply->deleteLater();
-}
-*/
 
 void CApplication::selectAll(void)
 {
@@ -907,6 +710,10 @@ void CApplication::selectAll(void)
     m_displayedSongTable->selectAll();
 }
 
+
+/**
+ * Désélectionne tous les morceaux de la liste affichée.
+ */
 
 void CApplication::selectNone(void)
 {
@@ -1385,9 +1192,9 @@ void CApplication::deletePlayList(CPlayList * playList)
         return;
     }
 
-    foreach (CPlayList * playListTmp, m_playLists)
+    for (QList<CPlayList *>::const_iterator it = m_playLists.begin(); it != m_playLists.end(); ++it)
     {
-        if (playListTmp == playList)
+        if (*it == playList)
         {
             //TODO: maj vue gauche
             m_playLists.removeOne(playList);
@@ -1430,10 +1237,11 @@ void CApplication::deleteListFolder(CListFolder * folder)
     //TODO: confirmation
     //TODO: maj vue
 
-    foreach (CPlayList * playList, folder->getPlayLists())
+    QList<CPlayList *> playLists = folder->getPlayLists();
+    for (QList<CPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
     {
-        playList->setFolder(nullptr);
-        m_playLists.append(playList);
+        (*it)->setFolder(nullptr);
+        m_playLists.append(*it);
     }
 
     m_folders.removeOne(folder);
@@ -1517,10 +1325,10 @@ void CApplication::openDialogAddFolder(void)
         QProgressDialog progress(tr("Add files..."), tr("Abort"), 0, fileList.size(), this);
         int i = 0;
 
-        foreach (QString fileName, fileList)
+        for (QStringList::const_iterator it = fileList.begin(); it != fileList.end(); ++it)
         {
             progress.setValue(i++);
-            addSong(fileName);
+            addSong(*it);
             qApp->processEvents();
 
             if (progress.wasCanceled())
@@ -1708,14 +1516,18 @@ QStringList CApplication::addFolder(const QString& pathName)
     QStringList fileList;
     QDir dir(pathName);
 
-    foreach (QString fileName, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name))
+    QStringList dirList = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
+
+    for (QStringList::const_iterator it = dirList.begin(); it != dirList.end(); ++it)
     {
-        fileList.append(addFolder(dir.absoluteFilePath(fileName)));
+        fileList.append(addFolder(dir.absoluteFilePath(*it)));
     }
 
-    foreach (QString fileName, dir.entryList(QDir::Files | QDir::Readable, QDir::Name))
+    QStringList fileDirList = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
+
+    for (QStringList::const_iterator it = fileDirList.begin(); it != fileDirList.end(); ++it)
     {
-        fileList.append(QDir::toNativeSeparators(dir.absoluteFilePath(fileName)));
+        fileList.append(QDir::toNativeSeparators(dir.absoluteFilePath(*it)));
     }
 
     return fileList;
@@ -1757,11 +1569,13 @@ void CApplication::removeSong(CSongTableItem * songItem)
 
     m_library->removeSong(songItem->getSong());
 
-    foreach (CListFolder * folder, m_folders)
+    for (QList<CListFolder *>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
     {
-        foreach (CPlayList * playList, folder->getPlayLists())
+        const QList<CPlayList *> playLists = folder->getPlayLists();
+
+        for (QList<CPlayList *>::const_iterator it2 = playLists.begin(); it2 != playLists.end(); ++it2)
         {
-            CStaticPlayList * staticPlayList = dynamic_cast<CStaticPlayList *>(playList);
+            CStaticPlayList * staticPlayList = dynamic_cast<CStaticPlayList *>(*it2);
 
             if (staticPlayList)
             {
@@ -1770,9 +1584,9 @@ void CApplication::removeSong(CSongTableItem * songItem)
         }
     }
 
-    foreach (CPlayList * playList, m_playLists)
+    for (QList<CPlayList *>::const_iterator it = m_playLists.begin(); it != m_playLists.end(); ++it)
     {
-        CStaticPlayList * staticPlayList = dynamic_cast<CStaticPlayList *>(playList);
+        CStaticPlayList * staticPlayList = dynamic_cast<CStaticPlayList *>(*it);
 
         if (staticPlayList)
         {
@@ -2114,7 +1928,6 @@ bool CApplication::initSoundSystem(void)
  * Charge la base de données.
  *
  * \todo Utiliser des méthodes dédiées dans les classes CSongTable et CListFolder.
- * \todo Charger les dossiers.
  */
 
 void CApplication::loadDatabase(void)
@@ -2148,22 +1961,37 @@ void CApplication::loadDatabase(void)
 
 
     // Création des dossiers
-    if (!query.exec("SELECT folder_id, folder_name FROM folder ORDER BY folder_position"))
+    if (!query.exec("SELECT folder_id, folder_name, folder_parent, folder_position FROM folder ORDER BY folder_position"))
     {
         showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
     }
 
     while (query.next())
     {
-        //CListFolder * folder = new CListFolder();
-        //folder->m_id   = query.value(0).toInt();
-        //folder->m_name = query.value(1).toString();
-        //...
+        CListFolder * folder = new CListFolder(this, query.value(1).toString());
+        folder->m_id       = query.value(0).toInt();
+        folder->m_folder   = reinterpret_cast<CListFolder *>(query.value(2).toInt());
+        folder->m_position = query.value(3).toInt();
+        m_folders.append(folder);
+
+        if (folder->m_folder < 0)
+        {
+            qWarning() << "CApplication::loadDatabase() : le dossier parent du dossier a un identifiant invalide";
+        }
+    }
+
+    for (QList<CListFolder *>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
+    {
+        int folderId = reinterpret_cast<int>((*it)->m_folder);
+        if (folderId >= 0 && folderId < m_folders.size())
+        {
+            (*it)->m_folder = getFolderFromId(folderId);
+        }
     }
 
 
     // Création des listes de lecture statiques
-    if (!query.exec("SELECT static_list_id, playlist_name, list_columns, playlist_id "
+    if (!query.exec("SELECT static_list_id, playlist_name, list_columns, playlist_id, folder_id "
                     "FROM static_list NATURAL JOIN playlist ORDER BY list_position"))
     {
         showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
@@ -2175,6 +2003,17 @@ void CApplication::loadDatabase(void)
         playList->m_id = query.value(0).toInt();
         playList->m_idPlayList = query.value(3).toInt();
         playList->initColumns(query.value(2).toString());
+
+        // Dossier contenant la liste
+        int folderId = query.value(4).toInt();
+        if (folderId > 0 && folderId < m_folders.size())
+        {
+            playList->m_folder = getFolderFromId(folderId);
+        }
+        else if (folderId != 0)
+        {
+            qWarning() << "CApplication::loadDatabase() : le dossier contenant la liste statique a un identifiant invalide";
+        }
 
         // Liste des morceaux de la liste de lecture
         QSqlQuery query2(m_dataBase);
@@ -2204,7 +2043,7 @@ void CApplication::loadDatabase(void)
 
 
     // Création des listes de lecture dynamiques
-    if (!query.exec("SELECT dynamic_list_id, playlist_name, list_columns, playlist_id "
+    if (!query.exec("SELECT dynamic_list_id, playlist_name, list_columns, playlist_id, folder_id "
                     "FROM dynamic_list NATURAL JOIN playlist ORDER BY list_position"))
     {
         showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
@@ -2216,6 +2055,17 @@ void CApplication::loadDatabase(void)
         playList->m_id = query.value(0).toInt();
         playList->m_idPlayList = query.value(3).toInt();
         playList->initColumns(query.value(2).toString());
+
+        // Dossier contenant la liste
+        int folderId = query.value(4).toInt();
+        if (folderId >= 0 && folderId < m_folders.size())
+        {
+            playList->m_folder = m_folders.at(folderId);
+        }
+        else if (folderId != 0)
+        {
+            qWarning() << "CApplication::loadDatabase() : le dossier contenant la liste statique a un identifiant invalide";
+        }
 
         playList->loadFromDatabase();
 
@@ -2282,57 +2132,3 @@ void CApplication::closeEvent(QCloseEvent * event)
 
     QMainWindow::closeEvent(event);
 }
-
-/*
-/// \todo Implémentation
-void CApplication::scrobbleLastFm(CSong * song)
-{
-    Q_CHECK_PTR(song);
-
-    //...
-}
-
-
-void CApplication::updateLastFmNowPlaying(CSong * song)
-{
-    Q_CHECK_PTR(song);
-
-    QNetworkAccessManager * manager = new QNetworkAccessManager(this);
-    connect(manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(replyLastFmUpdateNowPlaying(QNetworkReply *)));
-
-    // Arguments de la requête
-    QMap<QByteArray, QByteArray> args;
-    
-    args["method"]   = "track.updateNowPlaying";
-    args["artist"]   = song->getArtistName().toUtf8();
-    args["track"]    = song->getTitle().toUtf8();
-    args["api_key"]  = m_lastFmAPIKey;
-    args["duration"] = QString::number(song->getDuration() / 1000).toUtf8();
-    args["sk"]       = m_lastFmKey;
-
-    QByteArray albumTitle = song->getAlbumTitle().toUtf8();
-
-    if (!albumTitle.isEmpty())
-    {
-        args["album"] = albumTitle;
-        QByteArray albumArtist = song->getAlbumArtist().toUtf8();
-
-        if (!albumArtist.isEmpty() && albumArtist != args["artist"])
-        {
-            args["albumArtist"] = albumArtist;
-        }
-    }
-
-    if (song->getTrackNumber() > 0)
-    {
-        args["trackNumber"] = QString::number(song->getTrackNumber()).toUtf8();
-    }
-
-    QByteArray content = getLastFmQuery(args);
-    logLastFmRequest("http://ws.audioscrobbler.com/2.0/", content);
-
-    QNetworkRequest request(QUrl("http://ws.audioscrobbler.com/2.0/"));
-    request.setRawHeader("Content-Type", "application/x-www-form-urlencoded");
-    manager->post(request, content);
-}
-*/
