@@ -7,6 +7,7 @@
 #include "CListFolder.hpp"
 #include "CPlayListView.hpp"
 #include "CDialogEditSong.hpp"
+#include "CDialogEditMetadata.hpp"
 #include "CDialogEditSongs.hpp"
 #include "CDialogEditStaticPlayList.hpp"
 #include "CDialogEditDynamicList.hpp"
@@ -365,11 +366,13 @@ CSong * CApplication::getSongFromId(int id) const
         return NULL;
     }
 
-    foreach (CSong * song, m_library->getSongs())
+    const QList<CSong *> songList = m_library->getSongs();
+
+    for (QList<CSong *>::const_iterator it = songList.begin(); it != songList.end(); ++it)
     {
-        if (song->getId() == id)
+        if ((*it)->getId() == id)
         {
-            return song;
+            return (*it);
         }
     }
 
@@ -392,11 +395,11 @@ QList<CPlayList *> CApplication::getPlayListsWithSong(CSong * song) const
 
     QList<CPlayList *> playLists;
 
-    foreach (CPlayList * playList, m_playLists)
+    for (QList<CPlayList *>::const_iterator it = m_playLists.begin(); it != m_playLists.end(); ++it)
     {
-        if (playList->hasSong(song))
+        if ((*it)->hasSong(song))
         {
-            playLists.append(playList);
+            playLists.append(*it);
         }
     }
 
@@ -416,17 +419,81 @@ QList<CPlayList *> CApplication::getAllPlayLists(void) const
 {
     QList<CPlayList *> playLists;
 
-    foreach (CListFolder * folder, m_folders)
+    for (QList<CListFolder *>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
     {
         //...
     }
 
-    foreach (CPlayList * playList, m_playLists)
+    for (QList<CPlayList *>::const_iterator it = m_playLists.begin(); it != m_playLists.end(); ++it)
     {
-        playLists.append(playList);
+        playLists.append(*it);
     }
 
     return playLists;
+}
+
+
+/**
+ * Enlève une liste de morceaux de la médiathèque.
+ * La liste ne doit pas contenir de doublons.
+ *
+ * \todo Implémentation.
+ *
+ * \param songs Liste des morceaux à enlever.
+ */
+
+void CApplication::removeSongs(const QList<CSong *> songs)
+{
+    qDebug() << "CApplication::removeSongs()";
+    
+    for (QList<CSong *>::const_iterator it = songs.begin(); it != songs.end(); ++it)
+    {
+        Q_CHECK_PTR(*it);
+        m_library->removeSongFromTable(*it);
+        emit songRemoved(*it);
+    }
+
+    // Suppression des morceaux de chaque liste statique et mise à jour des listes dynamiques
+    const QList<CPlayList *> playLists = getAllPlayLists();
+
+    for (QList<CPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
+    {
+        CStaticPlayList * playList = qobject_cast<CStaticPlayList *>(*it);
+        CDynamicPlayList * dynamicList = qobject_cast<CDynamicPlayList *>(*it);
+
+        if (playList)
+        {
+            playList->removeSongs(songs, false);
+        }
+        else if (dynamicList)
+        {
+            dynamicList->update();
+        }
+    }
+    
+    // Mise à jour de la base
+    QSqlQuery query(m_dataBase);
+    query.prepare("DELETE FROM song WHERE song_id = ?");
+    
+    for (QList<CSong *>::const_iterator it = songs.begin(); it != songs.end(); ++it)
+    {
+        int songId = (*it)->getId();
+
+        if (songId > 0)
+        {
+            query.bindValue(0, songId);
+
+            if (!query.exec())
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                continue;
+            }
+        }
+
+        delete *it;
+    }
+
+    updateListInformations();
 }
 
 
@@ -1377,11 +1444,41 @@ void CApplication::deleteListFolder(CListFolder * folder)
 */
 
 
-/// \todo Implémentation
+/**
+ * Affiche la boite de dialogue pour modifier les préférences.
+ */
+
 void CApplication::openDialogPreferences(void)
 {
     CDialogPreferences * dialog = new CDialogPreferences(this, m_settings);
     dialog->show();
+}
+
+
+/**
+ * Affiche la boite de dialogue pour visualiser et modifier les métadonnées d'un morceau.
+ */
+
+void CApplication::openDialogEditMetadata(void)
+{
+    Q_CHECK_PTR(m_displayedSongTable);
+
+    // Liste des morceaux sélectionnés
+    QList<CSongTableItem *> songItemList = m_displayedSongTable->getSelectedSongItems();
+
+    if (songItemList.size() > 1)
+    {
+        return;
+    }
+
+    // Recherche du morceau sélectionné
+    CSongTableItem * songItem = m_displayedSongTable->getSelectedSongItem();
+
+    if (songItem)
+    {
+        CDialogEditMetadata * dialog = new CDialogEditMetadata(songItem->getSong());
+        dialog->show();
+    }
 }
 
 
@@ -1393,9 +1490,9 @@ void CApplication::openDialogAddSongs(void)
 {
     QStringList fileList = QFileDialog::getOpenFileNames(this, QString(), QString(), tr("Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)"));
 
-    foreach (QString fileName, fileList)
+    for (QStringList::const_iterator it = fileList.begin(); it != fileList.end(); ++it)
     {
-        addSong(fileName);
+        addSong(*it);
     }
 }
 

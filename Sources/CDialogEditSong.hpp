@@ -28,7 +28,7 @@ protected slots:
 
 private:
 
-    void updateInfos();
+    void updateInfos(void);
     
     Ui::DialogEditSong * m_uiWidget;
     CSongTable * m_songTable;

@@ -28,16 +28,18 @@ public slots:
 
     void addSong(CSong * song, int pos = -1);
     void addSongs(const QList<CSong *>& songs, bool confirm = true);
-    //void removeSong(CSong * song);
-    //void removeSong(int row);
-    void removeSongs(void);
+    void removeSong(CSong * song, bool confirm = true);
+    void removeSong(CSongTableItem * songItem, bool confirm = true);
+    void removeSongs(const QList<CSong *>& songs, bool confirm = true);
+    void removeSongs(const QList<CSongTableItem *>& songItemList, bool confirm = true);
+    void removeSelectedSongs(void);
     void removeDuplicateSongs(void);
 
 signals:
 
-    void songAdded(CSong * song);   ///< Signal émis lorsqu'une chanson est ajoutée à la liste.
-    void songRemoved(CSong * song); ///< Signal émis lorsqu'une chanson est enlevée de la liste.
-    void songMoved(CSong * song);   ///< Signal émis lorsqu'une chanson est déplacée dans la liste.
+    void songAdded(CSong * song);   ///< Signal émis lorsqu'une chanson est ajoutée à la liste.     \todo Remplacer CSong par CSongTableItem ?
+    void songRemoved(CSong * song); ///< Signal émis lorsqu'une chanson est enlevée de la liste.    \todo Remplacer CSong par CSongTableItem ?
+    void songMoved(CSong * song);   ///< Signal émis lorsqu'une chanson est déplacée dans la liste. \todo Remplacer CSong par CSongTableItem ?
 
 protected slots:
 

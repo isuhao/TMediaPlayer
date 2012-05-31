@@ -19,10 +19,9 @@
 
 - Écrire les métadonnées d'un morceau.
 
-- Terminer la boite de dialogue Edit Songs. (à terminer)
+- Boite de dialogue Edit Songs. (à terminer)
 
 - Menu contextuel dans les listes : ajouter le/les morceaux à une liste.
-- Menu contextuel dans les listes : enlever de la médiathèque.
 
 - Implémenter le glisser-déposer au sein d'une liste statique.
 

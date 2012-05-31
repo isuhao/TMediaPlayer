@@ -71,6 +71,7 @@ public:
     CSong * getSongFromId(int id) const;
     QList<CPlayList *> getPlayListsWithSong(CSong * song) const;
     QList<CPlayList *> getAllPlayLists(void) const;
+    void removeSongs(const QList<CSong *> songs);
 
     inline bool isPlaying(void) const;
     inline bool isPaused(void) const;
@@ -132,6 +133,7 @@ public slots:
     //void deleteListFolder(CListFolder * folder);
 
     void openDialogPreferences(void);
+    void openDialogEditMetadata(void);
     void openDialogAddSongs(void);
     void openDialogAddFolder(void);
     void openDialogSongInfos(void);
@@ -151,7 +153,7 @@ signals:
     // Signaux sur les morceaux
     //void songAdded(CSong * song);             ///< Signal émis lorsqu'un morceau est ajouté à la médiathèque.
     //void songModified(CSong * song);          ///< Signal émis lorsque les informations d'un morceau sont modifiées.
-    //void songRemoved(CSong * song);           ///< Signal émis lorsqu'un morceau est retiré de la médiathèque.
+    void songRemoved(CSong * song);           ///< Signal émis lorsqu'un morceau est retiré de la médiathèque.
     void songPlayStart(CSong * song);         ///< Signal émis lorsque la lecture d'un morceau démarre.
     void songPlayEnd(CSong * song);           ///< Signal émis lorsque la lecture d'un morceau se termine.
     void songPaused(CSong * song);            ///< Signal émis lorsque la lecture est mise en pause.
@@ -174,13 +176,7 @@ protected slots:
     void updatePosition(void);
     void update(void);
     void selectPlayListFromTreeView(const QModelIndex& index);
-
-    // Last.fm
     void connectToLastFm(void);
-    //void replyLastFmGetToken(QNetworkReply * reply);
-    //void getLastFmSession(void);
-    //void replyLastFmFinished(QNetworkReply * reply);
-    //void replyLastFmUpdateNowPlaying(QNetworkReply * reply);
 
 protected:
 
@@ -195,10 +191,6 @@ protected:
 
     virtual void keyPressEvent(QKeyEvent * event);
     virtual void closeEvent(QCloseEvent * event);
-
-    // Last.fm
-    //void scrobbleLastFm(CSong * song);
-    //void updateLastFmNowPlaying(CSong * song);
 
 private:
 
@@ -230,15 +222,10 @@ private:
         Scrobbled
     };
 
-    bool m_lastFmEnableScrobble;        ///< Indique si le scrobbling est activé.
-    int m_delayBeforeNotification;      ///< Délai avant d'envoyer une notification.
-    int m_percentageBeforeScrobbling;   ///< Pourcentage d'écouter avant de scrobbler.
-    //QTimer * m_timerLastFm;             ///< Timer utilisé pour récupérer la clé.
-    //int m_lastFmSessionRequest;         ///< Nombre de requête envoyées pour récupérer la clé.
-    //QByteArray m_lastFmToken;           ///< Token utilisé pour la connexion à Last.fm.
-    QByteArray m_lastFmKey;             ///< Clé utilisée pour l'authentification à Last.fm.
-    //const QByteArray m_lastFmAPIKey;
-    //const QByteArray m_lastFMSecret;
+    bool m_lastFmEnableScrobble;      ///< Indique si le scrobbling est activé.
+    int m_delayBeforeNotification;    ///< Délai avant d'envoyer une notification.
+    int m_percentageBeforeScrobbling; ///< Pourcentage d'écouter avant de scrobbler.
+    QByteArray m_lastFmKey;           ///< Clé utilisée pour l'authentification à Last.fm.
     int m_lastFmTimeListened;
     int m_lastFmLastPosition;
     TLastFmState m_lastFmState;

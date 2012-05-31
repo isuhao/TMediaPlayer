@@ -639,6 +639,87 @@ void CSongTable::goToSongTable(void)
 }
 
 
+/**
+ * Retire les morceaux sélectionnés de la médiathèque.
+ */
+
+void CSongTable::removeSongsFromLibrary(void)
+{
+    qDebug() << "CSongTable::removeSongsFromLibrary()";
+
+    // Liste des morceaux sélectionnés
+    QModelIndexList indexList = selectionModel()->selectedRows();
+
+    if (indexList.isEmpty())
+    {
+        return;
+    }
+
+    // Confirmation
+    if (QMessageBox::question(this, QString(), tr("Are you sure you want to remove the selected songs from the library?\nThe files will not be deleted."), tr("Remove"), tr("Cancel"), 0, 1) == 1)
+    {
+        return;
+    }
+
+    QList<CSong *> songList;
+
+    foreach (QModelIndex index, indexList)
+    {
+        CSongTableItem * songItem = m_model->getSongItem(index);
+
+        if (m_application->getCurrentSongItem() == songItem)
+        {
+            m_application->stop();
+        }
+
+        if (!songList.contains(songItem->getSong()))
+        {
+            songList.append(songItem->getSong());
+        }
+    }
+
+    m_application->removeSongs(songList);
+
+    selectionModel()->clearSelection();
+}
+
+
+/// \todo Implémentation.
+void CSongTable::checkSelection(void)
+{
+    qDebug() << "CSongTable::checkSelection()";
+
+    // Liste des morceaux sélectionnés
+    QModelIndexList indexList = selectionModel()->selectedRows();
+
+    if (indexList.isEmpty())
+    {
+        return;
+    }
+
+    QList<CSongTableItem *> songItemList;
+
+    for (QModelIndexList::const_iterator it = indexList.begin(); it != indexList.end(); ++it)
+    {
+        songItemList.append(m_model->getSongItem(*it));
+    }
+
+    for (QList<CSongTableItem *>::const_iterator it = songItemList.begin(); it != songItemList.end(); ++it)
+    {
+        //m_model->removeRow(m_model->getRowForSongItem(*it));
+    }
+
+    //...
+}
+
+
+/// \todo Implémentation.
+void CSongTable::uncheckSelection(void)
+{
+
+}
+
+
 QString CSongTable::getColumnsInfos(void) const
 {
     QString str;
@@ -878,8 +959,6 @@ void CSongTable::startDrag(Qt::DropActions supportedActions)
  * Gestion des touches du clavier.
  * Les touches Entrée et Supprimer sont gérées.
  *
- * \todo Gérer la touche Supprimer.
- *
  * \param event Évènement du clavier.
  */
 
@@ -896,12 +975,10 @@ void CSongTable::keyPressEvent(QKeyEvent * event)
 
     if (event->key() == Qt::Key_Delete)
     {
-        //delete
         event->accept();
+        removeSongsFromLibrary();
         return;
     }
-
-    //...
 
     return QTableView::keyPressEvent(event);
 }
@@ -1035,11 +1112,12 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
         }
 
         menu->addAction(tr("Informations"), m_application, SLOT(openDialogSongInfos()));
+        if (!severalSongs) menu->addAction(tr("Edit metadata"), m_application, SLOT(openDialogEditMetadata()));
         if (!severalSongs) menu->addAction(tr("Show in explorer"), m_application, SLOT(openSongInExplorer()));
         menu->addSeparator();
-        menu->addAction(tr("Remove from library")); //TODO
-        menu->addAction(tr("Check selection")); //TODO
-        menu->addAction(tr("Uncheck selection")); //TODO
+        menu->addAction(tr("Remove from library"), this, SLOT(removeSongsFromLibrary()));
+        menu->addAction(tr("Check selection"), this, SLOT(checkSelection()));
+        menu->addAction(tr("Uncheck selection"), this, SLOT(uncheckSelection()));
         menu->addSeparator();
 
         if (!severalSongs)

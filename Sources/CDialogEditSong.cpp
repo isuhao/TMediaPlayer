@@ -179,7 +179,6 @@ void CDialogEditSong::save(void)
  * Met à jour la boite de dialogue avec les informations du morceau.
  *
  * \todo Afficher les illustrations.
- * \todo Modifier le titre de la fenêtre.
  */
 
 void CDialogEditSong::updateInfos()

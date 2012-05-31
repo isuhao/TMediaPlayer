@@ -127,6 +127,9 @@ protected slots:
     void showColumn(int column, bool show = true);
     void sortColumn(int column, Qt::SortOrder order);
     void goToSongTable(void);
+    void removeSongsFromLibrary(void);
+    void checkSelection(void);
+    void uncheckSelection(void);
 
 protected:
 

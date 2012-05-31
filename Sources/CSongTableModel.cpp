@@ -261,7 +261,7 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
         {
             // Alignement à gauche
             default:
-                return (Qt::AlignVCenter | Qt::AlignLeft);
+                return QVariant(Qt::AlignVCenter | Qt::AlignLeft);
 
             // Alignement à droite
             case CSongTable::ColTrackNumber:
@@ -271,7 +271,7 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
             case CSongTable::ColDuration:
             case CSongTable::ColSampleRate:
             case CSongTable::ColFileSize:
-                return (Qt::AlignVCenter |Qt::AlignRight);
+                return QVariant(Qt::AlignVCenter | Qt::AlignRight);
         }
     }
     else if (role == Qt::CheckStateRole)
