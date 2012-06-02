@@ -20,20 +20,20 @@
 
 
 CSongTable::CSongTable(CApplication * application) :
-    QTableView       (application),
-    m_application    (application),
-    m_model          (NULL),
-    m_idPlayList     (-1),
-    m_columnSort     (ColArtist),
-    m_isModified     (false),
-    m_sortOrder      (Qt::AscendingOrder),
-    m_isColumnMoving (false),
-    m_selectedItem   (NULL),
-    m_automaticSort  (true)
+    QTableView        (application),
+    m_application     (application),
+    m_model           (NULL),
+    m_idPlayList      (-1),
+    m_columnSort      (ColArtist),
+    m_isModified      (false),
+    m_sortOrder       (Qt::AscendingOrder),
+    m_isColumnMoving  (false),
+    m_selectedItem    (NULL),
+    m_automaticSort   (true)
 {
     Q_CHECK_PTR(application);
 
-    m_model = new CSongTableModel(this);
+    m_model = new CSongTableModel(m_application, this);
     setModel(m_model);
 
     connect(m_model, SIGNAL(rowsInserted(const QModelIndex&, int, int)), this, SLOT(onRowCountChange(const QModelIndex&, int, int)));
@@ -1018,6 +1018,12 @@ void CSongTable::mouseDoubleClickEvent(QMouseEvent * event)
     QTableView::mouseDoubleClickEvent(event);
 }
 
+
+/**
+ * Indique si la liste de morceaux a été modifiée.
+ *
+ * \return Booléen.
+ */
 
 bool CSongTable::isModified(void) const
 {

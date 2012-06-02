@@ -63,8 +63,8 @@ class CSongTableModel : public QAbstractTableModel
 
 public:
 
-    explicit CSongTableModel(const QList<CSong *>& data = QList<CSong *>(), QWidget * parent = NULL);
-    explicit CSongTableModel(QWidget * parent);
+    explicit CSongTableModel(CApplication * application, const QList<CSong *>& data = QList<CSong *>(), QWidget * parent = NULL);
+    CSongTableModel(CApplication * application, QWidget * parent);
 
     void setCanDrop(bool canDrop);
 
@@ -95,6 +95,7 @@ public:
     int getRowForSongItem(CSongTableItem * songItem) const;
     CSongTableItem * getPreviousSong(CSongTableItem * songItem, bool shuffle) const;
     CSongTableItem * getNextSong(CSongTableItem * songItem, bool shuffle) const;
+    void setCurrentSong(CSongTableItem * songItem);
 
 signals:
 
@@ -398,7 +399,9 @@ private:
     }
 
 
+    CApplication * m_application;
     bool m_canDrop;
+    CSongTableItem * m_currentSongItem;
     QList<CSongTableItem *> m_data;
 };
 

@@ -15,5 +15,7 @@
         <file alias="folder_open">Resources/icon_folder_open.png</file>
         <file alias="TMediaPlayer">Resources/TMediaPlayer.png</file>
         <file alias="library">Resources/icon_library.png</file>
+        <file alias="song_paused">Resources/icon_song_paused.png</file>
+        <file alias="song_playing">Resources/icon_song_playing.png</file>
     </qresource>
 </RCC>

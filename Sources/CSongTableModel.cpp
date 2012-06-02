@@ -1,6 +1,7 @@
 
 #include "CSongTableModel.hpp"
 #include "CSongTable.hpp"
+#include "CApplication.hpp"
 #include <QMouseEvent>
 
 #include <QtDebug>
@@ -22,10 +23,14 @@ CSongTableItem::CSongTableItem(int position, CSong * song) :
 }
 
 
-CSongTableModel::CSongTableModel(const QList<CSong *>& data, QWidget * parent) :
+CSongTableModel::CSongTableModel(CApplication * application, const QList<CSong *>& data, QWidget * parent) :
     QAbstractTableModel (parent),
-    m_canDrop           (false)
+    m_application       (application),
+    m_canDrop           (false),
+    m_currentSongItem   (NULL)
 {
+    Q_CHECK_PTR(application);
+
     int i = 0;
 
     foreach (CSong * song, data)
@@ -35,11 +40,13 @@ CSongTableModel::CSongTableModel(const QList<CSong *>& data, QWidget * parent) :
 }
 
 
-CSongTableModel::CSongTableModel(QWidget * parent) :
+CSongTableModel::CSongTableModel(CApplication * application, QWidget * parent) :
     QAbstractTableModel (parent),
-    m_canDrop           (false)
+    m_application       (application),
+    m_canDrop           (false),
+    m_currentSongItem   (NULL)
 {
-
+    Q_CHECK_PTR(application);
 }
 
 
@@ -133,16 +140,41 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
         return QVariant::Invalid;
     }
 
-    if (role == Qt::DisplayRole)
+    if (role == Qt::FontRole)
+    {
+        return QFont("Segoe UI", 8);
+    }
+
+    if (role == Qt::DecorationRole)
+    {
+        if (index.column() == CSongTable::ColPosition)
+        {
+            if (m_data.at(index.row()) == m_currentSongItem)
+            {
+                if (m_application->isPlaying())
+                {
+                    return QPixmap(":/icons/song_playing");
+                }
+                else if (m_application->isPaused())
+                {
+                    return QPixmap(":/icons/song_paused");
+                }
+            }
+        }
+    }
+    else if (role == Qt::DisplayRole)
     {
         switch (index.column())
         {
             case CSongTable::ColPosition:
+            {
                 if (m_canDrop)
                 {
                     return m_data.at(index.row())->getPosition();
                 }
+
                 break;
+            }
 
             case CSongTable::ColTitle      : return m_data.at(index.row())->getSong()->getTitle();
             case CSongTable::ColArtist     : return m_data.at(index.row())->getSong()->getArtistName();
@@ -264,6 +296,7 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
                 return QVariant(Qt::AlignVCenter | Qt::AlignLeft);
 
             // Alignement à droite
+            case CSongTable::ColPosition:
             case CSongTable::ColTrackNumber:
             case CSongTable::ColDiscNumber:
             case CSongTable::ColPlayCount:
@@ -657,4 +690,11 @@ CSongTableItem * CSongTableModel::getNextSong(CSongTableItem * songItem, bool sh
             return (m_data.isEmpty() ? NULL : m_data.at(0));
         }
     }
+}
+
+
+void CSongTableModel::setCurrentSong(CSongTableItem * songItem)
+{
+    m_currentSongItem = songItem;
+    emit layoutChanged();
 }

@@ -793,6 +793,8 @@ void CApplication::play(void)
             m_uiControl->btnPlay->setIcon(QPixmap(":/icons/pause"));
             emit songResumed(m_currentSongItem->getSong());
             m_currentSongItem->getSong()->play();
+
+            m_currentSongTable->m_model->setCurrentSong(m_currentSongItem);
         }
 
         m_state = Playing;
@@ -839,10 +841,18 @@ void CApplication::stop(void)
 {
     if (m_currentSongItem)
     {
+        Q_CHECK_PTR(m_currentSongTable);
+
         m_currentSongItem->getSong()->stop();
         emit songStopped(m_currentSongItem->getSong());
         updateSongDescription(NULL);
         m_currentSongItem = NULL;
+
+        m_currentSongTable->m_model->setCurrentSong(NULL);
+    }
+    else
+    {
+        Q_ASSERT(m_currentSongTable == NULL);
     }
 
     m_currentSongTable = NULL;
@@ -862,10 +872,13 @@ void CApplication::pause(void)
 {
     if (m_currentSongItem)
     {
+        Q_CHECK_PTR(m_currentSongTable);
+
         m_uiControl->btnPlay->setIcon(QPixmap(":/icons/play"));
         m_currentSongItem->getSong()->pause();
         emit songPaused(m_currentSongItem->getSong());
         m_state = Paused;
+        m_currentSongTable->m_model->setCurrentSong(m_currentSongItem);
     }
 }
 
@@ -1061,6 +1074,7 @@ void CApplication::playSong(CSongTableItem * songItem)
 
         m_currentSongItem->getSong()->stop();
         updateSongDescription(NULL);
+        m_currentSongTable->m_model->setCurrentSong(NULL);
     }
 
     m_currentSongItem = songItem;
@@ -2245,6 +2259,7 @@ void CApplication::startPlay(void)
     connect(m_currentSongItem->getSong(), SIGNAL(playEnd()), this, SLOT(onPlayEnd()), Qt::UniqueConnection);
 
     updateSongDescription(m_currentSongItem->getSong());
+    m_currentSongTable->m_model->setCurrentSong(m_currentSongItem);
 
     m_state = Playing;
 
