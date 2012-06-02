@@ -13,7 +13,7 @@ class IWidgetCriteria : public QWidget
 public:
 
     explicit IWidgetCriteria(QWidget * parent = NULL);
-    ~IWidgetCriteria();
+    virtual ~IWidgetCriteria();
 
     virtual ICriteria * getCriteria(void) = 0;
     

@@ -23,7 +23,7 @@ class CListFolder : public QObject
 public:
 
     explicit CListFolder(CApplication * application, const QString& name = QString());
-    ~CListFolder();
+    virtual ~CListFolder();
 
     inline int getId(void) const;
     inline QString getName(void) const;

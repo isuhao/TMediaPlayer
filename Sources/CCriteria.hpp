@@ -19,6 +19,7 @@ public:
     ~CCriteria();
 
     virtual bool matchCriteria(CSong * song) const;
+    virtual IWidgetCriteria * getWidget(void) const;
 };
 
 #endif // FILE_C_CRITERIA

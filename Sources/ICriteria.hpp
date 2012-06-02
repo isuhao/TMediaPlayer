@@ -10,6 +10,7 @@
 class CSong;
 class CDynamicPlayList;
 class CApplication;
+class IWidgetCriteria;
 
 
 class ICriteria : public QObject
@@ -30,100 +31,100 @@ public:
     enum TType
     {
         // Special
-        TypeInvalid             = 0x0000,
-        TypeMultiCriterion      = 0x0001,
+        TypeInvalid            = 0x0000,
+        TypeMultiCriterion     = 0x0001,
 
         // Boolean
-        TypeMaskBoolean         = 0x01,
-        TypeLanguage            = 0x0101,
-        TypePlayList            = 0x0102,
-        TypeFormat              = 0x0103,
+        TypeMaskBoolean        = 0x01,
+        TypeLanguage           = 0x0101,
+        TypePlayList           = 0x0102,
+        TypeFormat             = 0x0103,
 
         // String
-        TypeMaskString          = 0x02,
-        TypeTitle               = 0x0201,
-        TypeArtist              = 0x0202,
-        TypeAlbum               = 0x0203,
-        TypeAlbumArtist         = 0x0204,
-        TypeComposer            = 0x0205,
-        TypeGenre               = 0x0206,
-        TypeComments            = 0x0207,
-        TypeLyrics              = 0x0208,
-        TypeFileName            = 0x0209,
+        TypeMaskString         = 0x02,
+        TypeTitle              = 0x0201,
+        TypeArtist             = 0x0202,
+        TypeAlbum              = 0x0203,
+        TypeAlbumArtist        = 0x0204,
+        TypeComposer           = 0x0205,
+        TypeGenre              = 0x0206,
+        TypeComments           = 0x0207,
+        TypeLyrics             = 0x0208,
+        TypeFileName           = 0x0209,
 
         // Number
-        TypeMaskNumber          = 0x03,
-        TypeYear                = 0x0301,
-        TypeTrackNumber         = 0x0302,
-        TypeDiscNumber          = 0x0303,
-        TypeBitRate             = 0x0304,
-        TypeSampleRate          = 0x0305,
-        TypePlayCount           = 0x0306,
-        TypeChannels            = 0x0307,
-        TypeRating              = 0x0308,
-        TypeFileSize            = 0x0309,
+        TypeMaskNumber         = 0x03,
+        TypeYear               = 0x0301,
+        TypeTrackNumber        = 0x0302,
+        TypeDiscNumber         = 0x0303,
+        TypeBitRate            = 0x0304,
+        TypeSampleRate         = 0x0305,
+        TypePlayCount          = 0x0306,
+        TypeChannels           = 0x0307,
+        TypeRating             = 0x0308,
+        TypeFileSize           = 0x0309,
 
         // Time
-        TypeMaskTime            = 0x04,
-        TypeDuration            = 0x0401,
+        TypeMaskTime           = 0x04,
+        TypeDuration           = 0x0401,
 
         // Date
-        TypeMaskDate            = 0x05,
-        TypeLastPlayTime        = 0x0501,
-        TypeAdded               = 0x0502,
-        TypeModified            = 0x0503
+        TypeMaskDate           = 0x05,
+        TypeLastPlayTime       = 0x0501,
+        TypeAdded              = 0x0502,
+        TypeModified           = 0x0503
     };
 
     enum TCondition
     {
         // Special
-        CondInvalid             = 0x0000,
+        CondInvalid            = 0x0000,
 
         // Boolean
-        CondMaskBoolean         = 0x01,
-        CondIs                  = 0x0101,
-        ConsIsNot               = 0x0102,
+        CondMaskBoolean        = 0x01,
+        CondIs                 = 0x0101,
+        ConsIsNot              = 0x0102,
         // Dupliquer ?
 
         // String
-        CondMaskString          = 0x02,
-        CondStringEqual         = 0x0201,
-        CondStringNotEqual      = 0x0202,
-        CondStringContains      = 0x0203,
-        CondStringNotContains   = 0x0204,
-        CondStringStartsWith    = 0x0205,
-        CondStringEndsWith      = 0x0206,
+        CondMaskString         = 0x02,
+        CondStringEqual        = 0x0201,
+        CondStringNotEqual     = 0x0202,
+        CondStringContains     = 0x0203,
+        CondStringNotContains  = 0x0204,
+        CondStringStartsWith   = 0x0205,
+        CondStringEndsWith     = 0x0206,
 
         // Number
-        CondMaskNumber          = 0x03,
-        CondNumberEqual         = 0x0301,
-        CondNumberNotEqual      = 0x0302,
-        CondNumberLessThan      = 0x0303,
-        CondNumberGreaterThan   = 0x0304,
-        CondNumberBetween       = 0x0305,
+        CondMaskNumber         = 0x03,
+        CondNumberEqual        = 0x0301,
+        CondNumberNotEqual     = 0x0302,
+        CondNumberLessThan     = 0x0303,
+        CondNumberGreaterThan  = 0x0304,
+        CondNumberBetween      = 0x0305,
 
         // Time
-        CondMaskTime            = 0x04,
-        CondTimeIs              = 0x0401,
-        CondTimeIsNot           = 0x0402,
-        CondTimeLessThan        = 0x0403,
-        CondTimeGreaterThan     = 0x0404,
-        CondTimeBetween         = 0x0405,
+        CondMaskTime           = 0x04,
+        CondTimeIs             = 0x0401,
+        CondTimeIsNot          = 0x0402,
+        CondTimeLessThan       = 0x0403,
+        CondTimeGreaterThan    = 0x0404,
+        CondTimeBetween        = 0x0405,
 
         // Date
-        CondMaskDate            = 0x05,
-        CondDateIs              = 0x0501,
-        CondDateIsNot           = 0x0502,
-        CondDateBefore          = 0x0503,
-        CondDateAfter           = 0x0504,
-        CondDateInLast          = 0x0505,
-        CondDateNotInLast       = 0x0506,
-        CondDateBetween         = 0x0507
+        CondMaskDate           = 0x05,
+        CondDateIs             = 0x0501,
+        CondDateIsNot          = 0x0502,
+        CondDateBefore         = 0x0503,
+        CondDateAfter          = 0x0504,
+        CondDateInLast         = 0x0505,
+        CondDateNotInLast      = 0x0506,
+        CondDateBetween        = 0x0507
     };
 
 
     explicit ICriteria(QObject * parent = NULL);
-    ~ICriteria();
+    virtual ~ICriteria();
 
     inline int getId(void) const;
     inline int getType(void) const;
@@ -137,6 +138,8 @@ public:
     //virtual QList<int> getValidTypes(void) const;
     //virtual bool isValidType(int type) const;
     //virtual QList<int> getValidConditions(void) const;
+
+    virtual IWidgetCriteria * getWidget(void) const = 0;
 
 protected:
 

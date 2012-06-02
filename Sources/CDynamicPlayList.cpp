@@ -2,6 +2,7 @@
 #include "CDynamicPlayList.hpp"
 #include "CApplication.hpp"
 #include "CMultiCriterion.hpp"
+#include "CWidgetMultiCriterion.hpp"
 #include "CCriteria.hpp"
 #include <QSqlQuery>
 #include <QSqlError>
@@ -49,6 +50,13 @@ bool CDynamicPlayList::isModified(void) const
 }
 
 
+CWidgetMultiCriterion * CDynamicPlayList::getWidget(void) const
+{
+    IWidgetCriteria * widget = m_mainCriteria->getWidget();
+    return qobject_cast<CWidgetMultiCriterion *>(widget);
+}
+
+
 /**
  * Met à jour la liste des morceaux.
  */
@@ -60,6 +68,8 @@ void CDynamicPlayList::update(void)
 
     m_model->setSongs(songs);
     sortByColumn(m_columnSort, m_sortOrder);
+
+    emit listUpdated();
 }
 
 
@@ -300,4 +310,7 @@ void CDynamicPlayList::setCriteria(ICriteria * criteria)
     criteria->setParent(this);
     criteria->setPlayList(this);
     m_mainCriteria = criteria;
+    m_isDynamicListModified = true;
+
+    emit listModified();
 }

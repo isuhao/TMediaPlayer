@@ -15,8 +15,8 @@ class CPlayListModel : public QStandardItemModel
 
 public:
 
-    CPlayListModel(CApplication * application);
-    ~CPlayListModel();
+    explicit CPlayListModel(CApplication * application);
+    virtual ~CPlayListModel();
 
     bool dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex& parent);
     QStringList mimeTypes(void) const;

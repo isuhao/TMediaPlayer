@@ -64,7 +64,7 @@ class CSongTableModel : public QAbstractTableModel
 public:
 
     explicit CSongTableModel(const QList<CSong *>& data = QList<CSong *>(), QWidget * parent = NULL);
-    CSongTableModel(QWidget * parent);
+    explicit CSongTableModel(QWidget * parent);
 
     void setCanDrop(bool canDrop);
 

@@ -36,6 +36,9 @@ CSongTable::CSongTable(CApplication * application) :
     m_model = new CSongTableModel(this);
     setModel(m_model);
 
+    connect(m_model, SIGNAL(rowsInserted(const QModelIndex&, int, int)), this, SLOT(onRowCountChange(const QModelIndex&, int, int)));
+    connect(m_model, SIGNAL(rowsRemoved(const QModelIndex&, int, int)), this, SLOT(onRowCountChange(const QModelIndex&, int, int)));
+
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(openCustomMenuProject(const QPoint&)));
 
@@ -717,6 +720,12 @@ void CSongTable::checkSelection(void)
 void CSongTable::uncheckSelection(void)
 {
 
+}
+
+
+void CSongTable::onRowCountChange(const QModelIndex& parent, int start, int end)
+{
+    emit rowCountChanged();
 }
 
 

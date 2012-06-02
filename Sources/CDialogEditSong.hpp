@@ -21,7 +21,7 @@ class CDialogEditSong : public QDialog
 public:
 
     CDialogEditSong(CSongTableItem * songItem, CSongTable * songTable);
-    ~CDialogEditSong();
+    virtual ~CDialogEditSong();
 
 protected slots:
 

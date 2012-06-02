@@ -35,22 +35,17 @@ CPlayListView::CPlayListView(CApplication * application) :
 
     // Menus contextuels
     m_menuPlaylist = new QMenu(this);
-    //m_menuPlaylist->addAction(tr("Open"));
+    //m_menuPlaylist->addAction(tr("Open")); //TODO: ouvrir dans une nouvelle fenêtre
     m_menuPlaylist->addAction(tr("Edit..."), m_application, SLOT(editSelectedPlayList()));
     m_menuPlaylist->addAction(tr("Remove"), m_application, SLOT(removeSelectedPlayList()));
 
     m_menuDefault = new QMenu(this);
-    m_menuDefault->addAction(tr("New playlist..."));
-    m_menuDefault->addAction(tr("New dynamic playlist..."));
+    //TODO: gérer le dossier
+    m_menuDefault->addAction(tr("New playlist..."), m_application, SLOT(openDialogAddStaticPlayList()));
+    m_menuDefault->addAction(tr("New dynamic playlist..."), m_application, SLOT(openDialogAddDynamicList()));
 
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(openCustomMenuProject(const QPoint&)));
-}
-
-
-CPlayListView::~CPlayListView()
-{
-
 }
 
 

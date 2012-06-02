@@ -18,7 +18,7 @@ class CDialogEditDynamicList : public QDialog
 public:
 
     CDialogEditDynamicList(CDynamicPlayList * playList, CApplication * application);
-    ~CDialogEditDynamicList();
+    virtual ~CDialogEditDynamicList();
 
 public slots:
 

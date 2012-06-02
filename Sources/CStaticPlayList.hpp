@@ -20,7 +20,7 @@ class CStaticPlayList : public CPlayList
 public:
 
     explicit CStaticPlayList(CApplication * application, const QString& name = QString());
-    ~CStaticPlayList();
+    virtual ~CStaticPlayList();
 
     virtual bool isModified(void) const;
 

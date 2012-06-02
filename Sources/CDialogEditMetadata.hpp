@@ -19,8 +19,8 @@ class CDialogEditMetadata : public QDialog
 
 public:
 
-    CDialogEditMetadata(CSong * song);
-    ~CDialogEditMetadata();
+    explicit CDialogEditMetadata(CSong * song);
+    virtual ~CDialogEditMetadata();
 
 protected slots:
 

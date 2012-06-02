@@ -11,6 +11,8 @@
 /**
  * Constructeur de la boite de dialogue d'édition des listes de lecture dynamiques.
  *
+ * \todo Charger les critères si la liste existe déjà.
+ *
  * \param playList    Pointeur sur la liste à modifier, ou NULL pour une nouvelle liste.
  * \param application Pointeur sur l'application.
  */
@@ -27,13 +29,23 @@ CDialogEditDynamicList::CDialogEditDynamicList(CDynamicPlayList * playList, CApp
     setAttribute(Qt::WA_DeleteOnClose);
     m_uiWidget->setupUi(this);
 
-    if (!m_playList)
+    if (m_playList)
+    {
+        //TODO: charger les critères
+        //m_widgetCriterion = new CWidgetMultiCriterion(this);
+        //m_uiWidget->verticalLayout->insertWidget(1, m_widgetCriterion);
+
+        m_widgetCriterion = m_playList->getWidget();
+        m_uiWidget->verticalLayout->insertWidget(1, m_widgetCriterion);
+        m_widgetCriterion->setParent(this);
+    }
+    else
     {
         m_playList = new CDynamicPlayList(m_application);
-    }
 
-    m_widgetCriterion = new CWidgetMultiCriterion(this);
-    m_uiWidget->verticalLayout->insertWidget(1, m_widgetCriterion);
+        m_widgetCriterion = new CWidgetMultiCriterion(this);
+        m_uiWidget->verticalLayout->insertWidget(1, m_widgetCriterion);
+    }
 
     m_uiWidget->editName->setText(m_playList->getName());
 
@@ -56,17 +68,19 @@ CDialogEditDynamicList::~CDialogEditDynamicList()
 }
 
 
+/**
+ * Redimensionne la boite de dialogue à chaque ajout ou suppression de critère.
+ */
+
 void CDialogEditDynamicList::resizeWindow(void)
 {
-        setMinimumSize(0, 0);
-        resize(size().width(), 1);
+    setMinimumSize(0, 0);
+    resize(size().width(), 1);
 }
 
 
 /**
  * Enregistre les paramètres de la liste de lecture dynamique.
- *
- * \todo Implémentation.
  */
 
 void CDialogEditDynamicList::save(void)

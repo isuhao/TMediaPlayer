@@ -299,7 +299,6 @@ void CApplication::initWindow(void)
     connect(m_timer, SIGNAL(timeout()), this, SLOT(update()));
     m_timer->start(400);
 
-    displaySongTable(m_library);
     updateSongDescription(NULL);
 
     init = true;
@@ -1495,6 +1494,14 @@ void CApplication::addPlayList(CPlayList * playList)
 
     if (m_playLists.contains(playList))
     {
+        // Liste de lecture dynamique
+        CDynamicPlayList * dynamicList = qobject_cast<CDynamicPlayList *>(playList);
+
+        if (dynamicList)
+        {
+            dynamicList->update();
+        }
+
         return;
     }
 
@@ -1506,6 +1513,7 @@ void CApplication::addPlayList(CPlayList * playList)
 
     connect(playList, SIGNAL(songStarted(CSongTableItem *)), this, SLOT(playSong(CSongTableItem *)));
     connect(playList, SIGNAL(nameChanged(const QString&, const QString&)), m_playListView, SLOT(onPlayListRenamed(const QString&, const QString&)));
+    connect(playList, SIGNAL(rowCountChanged()), this, SLOT(updateListInformations()));
 
     // Liste de lecture statique
     CStaticPlayList * staticList = qobject_cast<CStaticPlayList *>(playList);
@@ -1521,6 +1529,7 @@ void CApplication::addPlayList(CPlayList * playList)
 
     if (dynamicList)
     {
+        connect(dynamicList, SIGNAL(listUpdated()), this, SLOT(updateListInformations()));
         dynamicList->update();
     }
 
@@ -2074,6 +2083,7 @@ void CApplication::loadDatabase(void)
     // Liste des morceaux
     QList<CSong *> songList = CSong::loadAllSongsFromDatabase(this);
     m_library->addSongsToTable(songList);
+    displaySongTable(m_library);
 
 
     // Création des dossiers

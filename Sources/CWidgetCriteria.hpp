@@ -6,14 +6,20 @@
 #include "ui_WidgetCriteria.h"
 
 
+/**
+ * Widget permettant d'éditer un critère d'une liste dynamique.
+ */
+
 class CWidgetCriteria : public IWidgetCriteria
 {
     Q_OBJECT
 
+    friend class CCriteria;
+
 public:
 
     explicit CWidgetCriteria(QWidget * parent = NULL);
-    ~CWidgetCriteria();
+    virtual ~CWidgetCriteria();
 
     virtual ICriteria * getCriteria(void);
 

@@ -16,8 +16,7 @@ class CPlayListView : public QTreeView
 
 public:
 
-    CPlayListView(CApplication * application);
-    ~CPlayListView();
+    explicit CPlayListView(CApplication * application);
 
     QModelIndex addSongTable(CSongTable * songTable);
     CSongTable * getSongTable(const QModelIndex& index) const;

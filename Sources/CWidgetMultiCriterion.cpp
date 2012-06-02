@@ -61,6 +61,12 @@ ICriteria * CWidgetMultiCriterion::getCriteria(void)
 }
 
 
+void CWidgetMultiCriterion::setMultiCriterionType(int type)
+{
+    m_uiWidget->listUnion->setCurrentIndex(type);
+}
+
+
 /**
  * Ajoute un sous-critère.
  */
@@ -154,6 +160,8 @@ void CWidgetMultiCriterion::removeCriteriaFromButton(void)
 void CWidgetMultiCriterion::addCriteria(IWidgetCriteria * criteriaWidget)
 {
     Q_CHECK_PTR(criteriaWidget);
+
+    criteriaWidget->setParent(this);
 
     const int row = m_uiWidget->layoutChildren->rowCount();
 

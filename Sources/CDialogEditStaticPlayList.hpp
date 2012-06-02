@@ -17,7 +17,7 @@ class CDialogEditStaticPlayList : public QDialog
 public:
 
     CDialogEditStaticPlayList(CStaticPlayList * playList, CApplication * application);
-    ~CDialogEditStaticPlayList();
+    virtual ~CDialogEditStaticPlayList();
 
 protected slots:
 

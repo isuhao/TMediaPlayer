@@ -21,8 +21,8 @@ class CSongTableHeader : public QHeaderView
 
 public:
 
-    CSongTableHeader(QWidget * parent = NULL);
-    ~CSongTableHeader();
+    explicit CSongTableHeader(QWidget * parent = NULL);
+    virtual ~CSongTableHeader();
 
 signals:
 

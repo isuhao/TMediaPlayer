@@ -277,9 +277,6 @@
     <ClCompile Include="Sources\Last.fm\CAuthentication.cpp">
       <Filter>Source Files\Last.fm</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Last.fm\CScrobble.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_CScrobble.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -294,6 +291,9 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_CDialogEditMetadata.cpp">
       <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Last.fm\CScrobble.cpp">
+      <Filter>Source Files\Last.fm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -399,9 +399,6 @@
     <CustomBuild Include="Sources\Last.fm\CAuthentication.hpp">
       <Filter>Header Files\Last.fm</Filter>
     </CustomBuild>
-    <CustomBuild Include="Sources\Last.fm\CScrobble.hpp">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="Form\DialogEditMetadata.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
@@ -410,6 +407,9 @@
     </CustomBuild>
     <CustomBuild Include="Form\WidgetControl.ui">
       <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Sources\Last.fm\CScrobble.hpp">
+      <Filter>Header Files\Last.fm</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

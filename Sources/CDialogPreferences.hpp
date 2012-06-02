@@ -18,7 +18,7 @@ class CDialogPreferences : public QDialog
 public:
 
     CDialogPreferences(CApplication * application, QSettings * settings);
-    ~CDialogPreferences();
+    virtual ~CDialogPreferences();
 
 protected slots:
 

@@ -26,7 +26,7 @@ public:
 
 
     explicit CMultiCriterion(QObject * parent = NULL);
-    ~CMultiCriterion();
+    virtual ~CMultiCriterion();
 
     inline TMultiCriterionType getMultiCriterionType(void) const;
     inline QList<ICriteria *> getChildren(void) const;
@@ -39,6 +39,8 @@ public:
     virtual QList<CSong *> getSongs(const QList<CSong *>& from, const QList<CSong *>& with = QList<CSong *>()) const;
     //virtual QList<int> getValidTypes(void) const;
     //virtual bool isValidType(int type) const;
+
+    virtual IWidgetCriteria * getWidget(void) const;
 
 protected:
 

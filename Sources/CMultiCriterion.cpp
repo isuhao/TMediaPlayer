@@ -1,12 +1,17 @@
 
 #include "CMultiCriterion.hpp"
 #include "CApplication.hpp"
+#include "CWidgetMultiCriterion.hpp"
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QMessageBox>
 
 #include <QtDebug>
 
+
+/**
+ * Construit le sous-critère d'une liste dynamique.
+ */
 
 CMultiCriterion::CMultiCriterion(QObject * parent) :
     ICriteria    (parent),
@@ -15,6 +20,10 @@ CMultiCriterion::CMultiCriterion(QObject * parent) :
     m_type = TypeMultiCriterion;
 }
 
+
+/**
+ * Détruit le sous-critère.
+ */
 
 CMultiCriterion::~CMultiCriterion()
 {
@@ -58,9 +67,9 @@ bool CMultiCriterion::matchCriteria(CSong * song) const
 
     if (m_multi_type == Union)
     {
-        foreach (ICriteria * criteria, m_children)
+        for (QList<ICriteria *>::const_iterator it = m_children.begin(); it != m_children.end(); ++it)
         {
-            if (criteria->matchCriteria(song))
+            if ((*it)->matchCriteria(song))
             {
                 return true;
             }
@@ -68,9 +77,9 @@ bool CMultiCriterion::matchCriteria(CSong * song) const
     }
     else if (m_multi_type == Intersection)
     {
-        foreach (ICriteria * criteria, m_children)
+        for (QList<ICriteria *>::const_iterator it = m_children.begin(); it != m_children.end(); ++it)
         {
-            if (!criteria->matchCriteria(song))
+            if (!(*it)->matchCriteria(song))
             {
                 return false;
             }
@@ -102,18 +111,18 @@ QList<CSong *> CMultiCriterion::getSongs(const QList<CSong *>& from, const QList
     {
         songList = with;
 
-        foreach (ICriteria * criteria, m_children)
+        for (QList<ICriteria *>::const_iterator it = m_children.begin(); it != m_children.end(); ++it)
         {
-            songList = criteria->getSongs(from, songList);
+            songList = (*it)->getSongs(from, songList);
         }
     }
     else if (m_multi_type == Intersection)
     {
         songList = from;
 
-        foreach (ICriteria * criteria, m_children)
+        for (QList<ICriteria *>::const_iterator it = m_children.begin(); it != m_children.end(); ++it)
         {
-            songList = criteria->getSongs(songList, with);
+            songList = (*it)->getSongs(songList, with);
         }
     }
 
@@ -125,9 +134,9 @@ void CMultiCriterion::setPlayList(CDynamicPlayList * playList)
 {
     Q_CHECK_PTR(playList);
 
-    foreach (ICriteria * criteria, m_children)
+    for (QList<ICriteria *>::const_iterator it = m_children.begin(); it != m_children.end(); ++it)
     {
-        criteria->setPlayList(playList);
+        (*it)->setPlayList(playList);
     }
 
     ICriteria::setPlayList(playList);
@@ -154,9 +163,9 @@ void CMultiCriterion::insertIntoDatabase(CApplication * application)
         application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
     }
 
-    foreach (ICriteria * criteria, m_children)
+    for (QList<ICriteria *>::const_iterator it = m_children.begin(); it != m_children.end(); ++it)
     {
-        criteria->insertIntoDatabase(application);
+        (*it)->insertIntoDatabase(application);
     }
 }
 
@@ -176,3 +185,21 @@ bool CMultiCriterion::isValidType(int type) const
     return ICriteria::isValidType(type);
 }
 */
+
+
+/// \todo Implémentation.
+IWidgetCriteria * CMultiCriterion::getWidget(void) const
+{
+    CWidgetMultiCriterion * widget = new CWidgetMultiCriterion(NULL);
+    widget->setMultiCriterionType(m_type);
+
+    for (QList<ICriteria *>::const_iterator it = m_children.begin(); it != m_children.end(); ++it)
+    {
+        widget->addCriteria((*it)->getWidget());
+    }
+
+    // Suppression du premier critère crée par défaut
+    widget->removeCriteria(1);
+
+    return widget;
+}

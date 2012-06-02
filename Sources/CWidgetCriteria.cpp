@@ -87,8 +87,8 @@ ICriteria * CWidgetCriteria::getCriteria(void)
     }
     else if ((m_type >> 8) == ICriteria::TypeMaskTime)
     {
-        criteria->m_value1 = m_uiWidget->editValue1Time->date();
-        criteria->m_value2 = m_uiWidget->editValue2Time->date();
+        criteria->m_value1 = m_uiWidget->editValue1Time->time();
+        criteria->m_value2 = m_uiWidget->editValue2Time->time();
     }
     else if ((m_type >> 8) == ICriteria::TypeMaskDate)
     {

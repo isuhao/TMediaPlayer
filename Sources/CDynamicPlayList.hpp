@@ -6,6 +6,7 @@
 
 
 class ICriteria;
+class CWidgetMultiCriterion;
 
 
 /**
@@ -26,6 +27,7 @@ public:
     ~CDynamicPlayList();
 
     virtual bool isModified(void) const;
+    CWidgetMultiCriterion * getWidget(void) const;
 
     inline int getId(void) const;
 
@@ -39,7 +41,8 @@ protected slots:
 
 signals:
 
-    void listUpdated(void); ///< Signal émis lorsque la liste a été mise à jour.
+    void listModified(void); ///< Signal émis lorsque la liste a été modifiée.
+    void listUpdated(void);  ///< Signal émis lorsque la liste a été mise à jour.
 
 protected:
     

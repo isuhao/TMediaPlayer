@@ -55,7 +55,7 @@ public:
 
     explicit CSong(CApplication * application);
     explicit CSong(const QString& fileName, CApplication * application);
-    ~CSong();
+    virtual ~CSong();
 
     void loadFromDatabase(void);
     bool loadTags(bool readProperties = false);

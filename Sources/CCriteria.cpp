@@ -212,3 +212,124 @@ bool CCriteria::matchCriteria(CSong * song) const
 
     return false;
 }
+
+
+#include "CWidgetCriteria.hpp" // Si on l'inclut avant, l'intellisense bug complètement...
+
+
+/// \todo Implémentation.
+IWidgetCriteria * CCriteria::getWidget(void) const
+{
+    CWidgetCriteria * widget = new CWidgetCriteria(NULL);
+
+    switch (m_type)
+    {
+        case TypeMultiCriterion:
+            qWarning() << "CCriteria::getWidget() : un critère simple ne peut pas avoir le type TypeMultiCriterion";
+
+        default:
+        case TypeInvalid:
+
+        case TypeTitle       : widget->m_uiWidget->listType->setCurrentIndex( 0); break;
+        case TypeArtist      : widget->m_uiWidget->listType->setCurrentIndex( 1); break;
+        case TypeAlbum       : widget->m_uiWidget->listType->setCurrentIndex( 2); break;
+        case TypeAlbumArtist : widget->m_uiWidget->listType->setCurrentIndex( 3); break;
+        case TypeComposer    : widget->m_uiWidget->listType->setCurrentIndex( 4); break;
+        case TypeGenre       : widget->m_uiWidget->listType->setCurrentIndex( 5); break;
+        case TypeComments    : widget->m_uiWidget->listType->setCurrentIndex( 6); break;
+        case TypeLyrics      : widget->m_uiWidget->listType->setCurrentIndex( 7); break;
+        case TypeFileName    : widget->m_uiWidget->listType->setCurrentIndex( 8); break;
+        case TypeYear        : widget->m_uiWidget->listType->setCurrentIndex( 9); break;
+        case TypeTrackNumber : widget->m_uiWidget->listType->setCurrentIndex(10); break;
+        case TypeDiscNumber  : widget->m_uiWidget->listType->setCurrentIndex(11); break;
+        case TypeBitRate     : widget->m_uiWidget->listType->setCurrentIndex(12); break;
+        case TypeSampleRate  : widget->m_uiWidget->listType->setCurrentIndex(13); break;
+        case TypePlayCount   : widget->m_uiWidget->listType->setCurrentIndex(14); break;
+        case TypeChannels    : widget->m_uiWidget->listType->setCurrentIndex(15); break;
+        case TypeRating      : widget->m_uiWidget->listType->setCurrentIndex(16); break;
+        case TypeFileSize    : widget->m_uiWidget->listType->setCurrentIndex(17); break;
+        case TypeDuration    : widget->m_uiWidget->listType->setCurrentIndex(18); break;
+        case TypeLastPlayTime: widget->m_uiWidget->listType->setCurrentIndex(19); break;
+        case TypeAdded       : widget->m_uiWidget->listType->setCurrentIndex(20); break;
+        case TypeModified    : widget->m_uiWidget->listType->setCurrentIndex(21); break;
+        case TypeLanguage    : widget->m_uiWidget->listType->setCurrentIndex(22); break;
+        case TypePlayList    : widget->m_uiWidget->listType->setCurrentIndex(23); break;
+        case TypeFormat      : widget->m_uiWidget->listType->setCurrentIndex(24); break;
+    }
+
+    if ((m_type >> 8) == TypeMaskBoolean)
+    {
+        switch (m_condition)
+        {
+            default:
+            case CondIs   : widget->m_uiWidget->listConditionBoolean->setCurrentIndex(0); break;
+            case ConsIsNot: widget->m_uiWidget->listConditionBoolean->setCurrentIndex(1); break;
+        }
+    }
+    else if ((m_type >> 8) == TypeMaskString)
+    {
+        switch (m_condition)
+        {
+            default:
+            case CondStringEqual      : widget->m_uiWidget->listConditionString->setCurrentIndex(0); break;
+            case CondStringNotEqual   : widget->m_uiWidget->listConditionString->setCurrentIndex(1); break;
+            case CondStringContains   : widget->m_uiWidget->listConditionString->setCurrentIndex(2); break;
+            case CondStringNotContains: widget->m_uiWidget->listConditionString->setCurrentIndex(3); break;
+            case CondStringStartsWith : widget->m_uiWidget->listConditionString->setCurrentIndex(4); break;
+            case CondStringEndsWith   : widget->m_uiWidget->listConditionString->setCurrentIndex(5); break;
+        }
+
+        widget->m_uiWidget->editValue1String->setText(m_value1.toString());
+    }
+    else if ((m_type >> 8) == TypeMaskNumber)
+    {
+        switch (m_condition)
+        {
+            default:
+            case CondNumberEqual      : widget->m_uiWidget->listConditionNumber->setCurrentIndex(0); break;
+            case CondNumberNotEqual   : widget->m_uiWidget->listConditionNumber->setCurrentIndex(1); break;
+            case CondNumberLessThan   : widget->m_uiWidget->listConditionNumber->setCurrentIndex(2); break;
+            case CondNumberGreaterThan: widget->m_uiWidget->listConditionNumber->setCurrentIndex(3); break;
+            case CondNumberBetween    : widget->m_uiWidget->listConditionNumber->setCurrentIndex(4); break;
+        }
+
+        widget->m_uiWidget->editValue1Number->setValue(m_value1.toInt());
+        widget->m_uiWidget->editValue1Number->setValue(m_value2.toInt());
+    }
+    else if ((m_type >> 8) == TypeMaskTime)
+    {
+        switch (m_condition)
+        {
+            default:
+            case CondTimeIs         : widget->m_uiWidget->listConditionTime->setCurrentIndex(0); break;
+            case CondTimeIsNot      : widget->m_uiWidget->listConditionTime->setCurrentIndex(1); break;
+            case CondTimeLessThan   : widget->m_uiWidget->listConditionTime->setCurrentIndex(2); break;
+            case CondTimeGreaterThan: widget->m_uiWidget->listConditionTime->setCurrentIndex(3); break;
+            case CondTimeBetween    : widget->m_uiWidget->listConditionTime->setCurrentIndex(4); break;
+        }
+
+        widget->m_uiWidget->editValue1Time->setTime(m_value1.toTime());
+        widget->m_uiWidget->editValue2Time->setTime(m_value2.toTime());
+    }
+    else if ((m_type >> 8) == TypeMaskDate)
+    {
+        switch (m_condition)
+        {
+            default:
+            case CondDateIs       : widget->m_uiWidget->listConditionDate->setCurrentIndex(0); break;
+            case CondDateIsNot    : widget->m_uiWidget->listConditionDate->setCurrentIndex(1); break;
+            case CondDateBefore   : widget->m_uiWidget->listConditionDate->setCurrentIndex(2); break;
+            case CondDateAfter    : widget->m_uiWidget->listConditionDate->setCurrentIndex(3); break;
+            case CondDateInLast   : widget->m_uiWidget->listConditionDate->setCurrentIndex(4); break;
+            case CondDateNotInLast: widget->m_uiWidget->listConditionDate->setCurrentIndex(5); break;
+            case CondDateBetween  : widget->m_uiWidget->listConditionDate->setCurrentIndex(6); break;
+        }
+
+        widget->m_uiWidget->editValue1Number->setValue(m_value1.toInt());
+        widget->m_uiWidget->listDateUnit->setCurrentIndex(m_value2.toInt());
+        widget->m_uiWidget->editValue1Date->setDateTime(m_value1.toDateTime());
+        widget->m_uiWidget->editValue2Date->setDateTime(m_value2.toDateTime());
+    }
+
+    return widget;
+}

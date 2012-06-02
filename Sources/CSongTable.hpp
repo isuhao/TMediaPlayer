@@ -87,7 +87,7 @@ public:
 
 
     explicit CSongTable(CApplication * application);
-    ~CSongTable();
+    virtual ~CSongTable();
 
     QList<CSong *> getSongs(void) const;
     inline int getNumSongs(void) const;
@@ -118,6 +118,7 @@ signals:
     void songSelected(CSongTableItem *); ///< Signal émis quand un morceau est sélectionné.
     void songStarted(CSongTableItem *);  ///< Signal émis quand un morceau est lancé (double-clic).
     void columnChanged(void);            ///< Signal émis lorsque les colonnes sont modifiées.
+    void rowCountChanged(void);          ///< Signal émis lorsque le nombre de morceaux de la liste change.
     
 protected slots:
 
@@ -130,6 +131,7 @@ protected slots:
     void removeSongsFromLibrary(void);
     void checkSelection(void);
     void uncheckSelection(void);
+    void onRowCountChange(const QModelIndex& parent, int start, int end);
 
 protected:
 
