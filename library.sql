@@ -4,8 +4,11 @@ CREATE TABLE folder (
     folder_name VARCHAR NOT NULL,
     folder_parent INTEGER NOT NULL,
     folder_position INTEGER NOT NULL,
+    folder_expanded INTEGER NOT NULL,
     UNIQUE (folder_parent, folder_position)
 );
+
+INSERT INTO folder VALUES (0,"",0,1,1);
 
 CREATE TABLE playlist (
     playlist_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,

@@ -436,11 +436,11 @@ void CSongTable::initColumns(const QString& str)
     // d'affichée, sans quoi on pourrait faire disparaitre les données et le header en masquant toutes les colonnes.
     m_columns[0].visible = true;
 
-    qDebug() << "Modification des colonnes :";
+    //qDebug() << "Modification des colonnes :";
     
     m_isColumnMoving = true;
     CSongTableHeader * header = qobject_cast<CSongTableHeader *>(horizontalHeader());
-        
+/*
     QString debugStr1 = "";
     QString debugStr2 = "";
     for (int col = 0; col < ColNumber; ++col)
@@ -450,7 +450,7 @@ void CSongTable::initColumns(const QString& str)
     }
     qDebug() << "Colonnes Qt (avant) :" << debugStr1;
     qDebug() << "Colonnes TT (avant) :" << debugStr2;
-
+*/
     for (int col = 0; col < ColNumber; ++col)
     {
         // Redimensionnement
@@ -517,7 +517,7 @@ void CSongTable::initColumns(const QString& str)
         int visualIndex = header->visualIndex(logical);
         header->moveSection(visualIndex, col);
     }
-        
+/*
     debugStr1 = "";
     debugStr2 = "";
     for (int col = 0; col < ColNumber; ++col)
@@ -527,7 +527,7 @@ void CSongTable::initColumns(const QString& str)
     }
     qDebug() << "Colonnes Qt (apres) :" << debugStr1;
     qDebug() << "Colonnes TT (apres) :" << debugStr2;
-
+*/
     m_isColumnMoving = false;
 
     sortByColumn(m_columnSort, m_sortOrder);
@@ -565,8 +565,8 @@ void CSongTable::showColumn(int column, bool show)
             horizontalHeader()->hideSection(column);
         }
         
-        QString debugStr1 = "";
-        QString debugStr2 = "";
+        //QString debugStr1 = "";
+        //QString debugStr2 = "";
         for (int col = 0; col < ColNumber; ++col)
         {
             if (m_columns[col].visible)
@@ -574,17 +574,17 @@ void CSongTable::showColumn(int column, bool show)
                 ++numColumns;
             }
             
-            debugStr1 += QString::number(horizontalHeader()->visualIndex(col)) + ',';
-            debugStr2 += QString::number(m_columns[col].pos) + ',';
+            //debugStr1 += QString::number(horizontalHeader()->visualIndex(col)) + ',';
+            //debugStr2 += QString::number(m_columns[col].pos) + ',';
         }
-        qDebug() << "Colonnes Qt (avant) :" << debugStr1;
-        qDebug() << "Colonnes TT (avant) :" << debugStr2;
+        //qDebug() << "Colonnes Qt (avant) :" << debugStr1;
+        //qDebug() << "Colonnes TT (avant) :" << debugStr2;
 
         int visualIndex = horizontalHeader()->visualIndex(column);
 
         // Déplacement de la colonne
         horizontalHeader()->moveSection(visualIndex, numColumns);
-
+/*
         debugStr1 = "";
         debugStr2 = "";
         for (int col = 0; col < ColNumber; ++col)
@@ -594,7 +594,7 @@ void CSongTable::showColumn(int column, bool show)
         }
         qDebug() << "Colonnes Qt (apres) :" << debugStr1;
         qDebug() << "Colonnes TT (apres) :" << debugStr2;
-
+*/
         m_isModified = true;
     }
 }
@@ -806,7 +806,7 @@ void CSongTable::mousePressEvent(QMouseEvent * event)
 
 void CSongTable::columnMoved(int logicalIndex, int oldVisualIndex, int newVisualIndex)
 {
-    qDebug() << "columnMoved("<<logicalIndex<<""<<oldVisualIndex<<""<<newVisualIndex<<")";
+    //qDebug() << "columnMoved("<<logicalIndex<<""<<oldVisualIndex<<""<<newVisualIndex<<")";
 
     if (!m_isColumnMoving)
     {
@@ -844,7 +844,7 @@ void CSongTable::columnMoved(int logicalIndex, int oldVisualIndex, int newVisual
 
 void CSongTable::columnResized(int logicalIndex, int oldSize, int newSize)
 {
-    qDebug() << "columnResized("<<logicalIndex<<""<<oldSize<<""<<newSize<<")";
+    //qDebug() << "columnResized("<<logicalIndex<<""<<oldSize<<""<<newSize<<")";
 
     m_columns[logicalIndex].width = newSize;
 

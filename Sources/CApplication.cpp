@@ -48,6 +48,7 @@
 CApplication::CApplication(void) :
     QMainWindow            (NULL),
     m_uiWidget             (new Ui::TMediaPlayer()),
+    m_uiControl            (new Ui::WidgetControl()),
     m_soundSystem          (NULL),
     m_playListView         (NULL),
     m_settings             (NULL),
@@ -67,10 +68,6 @@ CApplication::CApplication(void) :
     m_lastFmEnableScrobble       (false),
     m_delayBeforeNotification    (5000),
     m_percentageBeforeScrobbling (60),
-    //m_timerLastFm                (NULL),
-    //m_lastFmSessionRequest       (0),
-    //m_lastFmAPIKey               ("20478fcc23bae9e1e2396a2b1cc52338"),
-    //m_lastFMSecret               ("b2ed8ec840ec1995003bb99fb02ace44"),
     m_lastFmTimeListened         (0),
     m_lastFmLastPosition         (0),
     m_lastFmState                (NoScrobble)
@@ -81,25 +78,17 @@ CApplication::CApplication(void) :
     // Initialisation de l'interface graphique
     m_uiWidget->setupUi(this);
 
-    restoreGeometry(m_settings->value("Window/WindowGeometry").toByteArray());
-    restoreState(m_settings->value("Window/WindowState").toByteArray());
-
     // Last.fm
     m_lastFmEnableScrobble = m_settings->value("LastFm/EnableScrobble", false).toBool();
     m_delayBeforeNotification = m_settings->value("LastFm/DelayBeforeNotification", 5000).toInt();
     m_percentageBeforeScrobbling = m_settings->value("LastFm/PercentageBeforeScrobbling", 60).toInt();
     m_lastFmKey = m_settings->value("LastFm/SessionKey", "").toByteArray();
 
-    // Paramètres de lecture
-    setVolume(m_settings->value("Preferences/Volume", 50).toInt());
-    setShuffle(m_settings->value("Preferences/Shuffle", false).toBool());
-    setRepeat(m_settings->value("Preferences/Repeat", false).toBool());
-
     // Barre d'état
     QTime duration(0, 0);
     m_listInfos = new QLabel(tr("%n song(s), %1", "", 0).arg(duration.toString()));
     statusBar()->addPermanentWidget(m_listInfos);
-
+/*
     m_uiWidget->btnStop->setVisible(m_settings->value("Preferences/ShowButtonStop", true).toBool());
 
 
@@ -120,7 +109,7 @@ CApplication::CApplication(void) :
     // Sliders
     connect(m_uiWidget->sliderVolume, SIGNAL(sliderMoved(int)), this, SLOT(setVolume(int)));
     connect(m_uiWidget->sliderPosition, SIGNAL(sliderReleased()), this, SLOT(updatePosition()));
-
+*/
     // Menus
     connect(m_uiWidget->actionNewPlayList, SIGNAL(triggered()), this, SLOT(openDialogAddStaticPlayList()));
     connect(m_uiWidget->actionNewDynamicPlayList, SIGNAL(triggered()), this, SLOT(openDialogAddDynamicList()));
@@ -165,8 +154,8 @@ CApplication::~CApplication()
     }
 
     // Largeur de la vue pour les listes de lecture
-    int treeWidth = m_uiWidget->splitter->sizes()[0];
-    m_settings->setValue("Window/PlayListViewWidth", treeWidth);
+    //int treeWidth = m_uiWidget->splitter->sizes()[0];
+    //m_settings->setValue("Window/PlayListViewWidth", treeWidth);
 
     // Enregistrement des paramètres
     m_settings->setValue("Preferences/Volume", m_volume);
@@ -213,19 +202,56 @@ void CApplication::initWindow(void)
         return;
     }
 
+
+    // Barre de contrôle
+    //QWidget * toolWidget = new QWidget(this);
+    //m_uiWidget->horizontalLayout->setParent(NULL);
+    //toolWidget->setLayout(m_uiWidget->horizontalLayout);
+    QWidget * widgetControl = new QWidget(this);
+    m_uiControl->setupUi(widgetControl);
+    m_uiWidget->toolBar->addWidget(widgetControl);
+
+    m_uiControl->btnStop->setVisible(m_settings->value("Preferences/ShowButtonStop", true).toBool());
+    
+    // Connexions des signaux et des slots
+    connect(m_uiControl->songInfos, SIGNAL(clicked()), this, SLOT(selectCurrentSong()));
+
+    connect(m_uiControl->btnPlay, SIGNAL(clicked()), this, SLOT(togglePlay()));
+    connect(m_uiControl->btnStop, SIGNAL(clicked()), this, SLOT(stop()));
+
+    connect(m_uiControl->btnPrevious, SIGNAL(clicked()), this, SLOT(previousSong()));
+    connect(m_uiControl->btnNext, SIGNAL(clicked()), this, SLOT(nextSong()));
+
+    connect(m_uiControl->btnRepeat, SIGNAL(toggled(bool)), this, SLOT(setRepeat(bool)));
+    connect(m_uiControl->btnShuffle, SIGNAL(toggled(bool)), this, SLOT(setShuffle(bool)));
+    connect(m_uiControl->btnMute, SIGNAL(clicked()), this, SLOT(toggleMute()));
+
+    // Sliders
+    connect(m_uiControl->sliderVolume, SIGNAL(sliderMoved(int)), this, SLOT(setVolume(int)));
+    connect(m_uiControl->sliderPosition, SIGNAL(sliderReleased()), this, SLOT(updatePosition()));
+
+
+    // Dock "Playlists"
     m_playListView = new CPlayListView(this);
-    //m_uiWidget->splitter->addWidget(m_playListView);
+
     QDockWidget * dockWidget = new QDockWidget(tr("Playlists"), this);
+    dockWidget->setObjectName("dock_playlists");
     dockWidget->setWidget(m_playListView);
     dockWidget->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    this->addDockWidget(Qt::LeftDockWidgetArea, dockWidget);
-
-    int treeWidth = m_settings->value("Window/PlayListViewWidth", 200).toInt();
-    m_uiWidget->splitter->setSizes(QList<int>() << treeWidth);
+    //addDockWidget(Qt::LeftDockWidgetArea, dockWidget);
+    //restoreDockWidget(dockWidget);
+    
+    //m_uiWidget->splitter->addWidget(m_playListView);
+    //int treeWidth = m_settings->value("Window/PlayListViewWidth", 200).toInt();
+    //m_uiWidget->splitter->setSizes(QList<int>() << treeWidth);
 
     //m_listModel = new QStandardItemModel(this);
     //m_playListView->setModel(m_listModel);
     connect(m_playListView, SIGNAL(clicked(const QModelIndex&)), this, SLOT(selectPlayListFromTreeView(const QModelIndex&)));
+
+
+    restoreGeometry(m_settings->value("Window/WindowGeometry").toByteArray());
+    restoreState(m_settings->value("Window/WindowState").toByteArray());
 
 
     // Initialisation de FMOD
@@ -234,6 +260,12 @@ void CApplication::initWindow(void)
         QMessageBox::critical(this, QString(), tr("Failed to init sound system with FMOD."));
         QCoreApplication::exit();
     }
+
+
+    // Paramètres de lecture
+    setVolume(m_settings->value("Preferences/Volume", 50).toInt());
+    setShuffle(m_settings->value("Preferences/Shuffle", false).toBool());
+    setRepeat(m_settings->value("Preferences/Repeat", false).toBool());
 
 
     // Chargement de la base de données
@@ -245,6 +277,7 @@ void CApplication::initWindow(void)
     QString dbPassword = m_settings->value("Database/Password", QString("")).toString();
 
     m_dataBase.setHostName(dbHostName);
+    //m_dataBase.setPort();
     m_dataBase.setDatabaseName(dbBaseName);
     m_dataBase.setUserName(dbUserName);
     m_dataBase.setPassword(dbPassword);
@@ -273,6 +306,15 @@ void CApplication::initWindow(void)
 }
 
 
+/**
+ * Affiche une erreur de base de données.
+ *
+ * \param msg      Message d'erreur.
+ * \param query    Requête exécutée.
+ * \param fileName Fichier source à l'origine de l'erreur.
+ * \param line     Ligne du fichier à l'origine de l'erreur.
+ */
+
 void CApplication::showDatabaseError(const QString& msg, const QString& query, const QString& fileName, int line)
 {
 
@@ -284,6 +326,12 @@ void CApplication::showDatabaseError(const QString& msg, const QString& query, c
     qWarning() << "  Query:" << query;
 }
 
+
+/**
+ * Modifie la hauteur des lignes des tableaux.
+ *
+ * \param height Hauteur des lignes en pixels, entre 15 et 50.
+ */
 
 void CApplication::setRowHeight(int height)
 {
@@ -302,6 +350,12 @@ void CApplication::setRowHeight(int height)
 }
 
 
+/**
+ * Retourne la hauteur des lignes des tableaux.
+ *
+ * \return Hauteur des lignes en pixels (par défaut, 19).
+ */
+
 int CApplication::getRowHeight(void) const
 {
     return m_settings->value("Preferences/RowHeight", 19).toInt();
@@ -311,7 +365,7 @@ int CApplication::getRowHeight(void) const
 void CApplication::showButtonStop(bool show)
 {
     m_settings->setValue("Preferences/ShowButtonStop", show);
-    m_uiWidget->btnStop->setVisible(show);
+    m_uiControl->btnStop->setVisible(show);
 }
 
 
@@ -494,7 +548,7 @@ void CApplication::removeSongs(const QList<CSong *> songs)
             }
         }
 
-        delete *it;
+        delete *it; // C'est pour ça que la liste ne doit pas contenir de doublons
     }
 
     updateListInformations();
@@ -737,7 +791,7 @@ void CApplication::play(void)
         if (m_state == Paused)
         {
             qDebug() << "CApplication::play() : chanson en pause";
-            m_uiWidget->btnPlay->setIcon(QPixmap(":/icons/pause"));
+            m_uiControl->btnPlay->setIcon(QPixmap(":/icons/pause"));
             emit songResumed(m_currentSongItem->getSong());
             m_currentSongItem->getSong()->play();
         }
@@ -794,7 +848,7 @@ void CApplication::stop(void)
 
     m_currentSongTable = NULL;
     m_state = Stopped;
-    m_uiWidget->btnPlay->setIcon(QPixmap(":/icons/play"));
+    m_uiControl->btnPlay->setIcon(QPixmap(":/icons/play"));
 
     m_lastFmTimeListened = 0;
     m_lastFmState = NoScrobble;
@@ -809,7 +863,7 @@ void CApplication::pause(void)
 {
     if (m_currentSongItem)
     {
-        m_uiWidget->btnPlay->setIcon(QPixmap(":/icons/play"));
+        m_uiControl->btnPlay->setIcon(QPixmap(":/icons/play"));
         m_currentSongItem->getSong()->pause();
         emit songPaused(m_currentSongItem->getSong());
         m_state = Paused;
@@ -848,7 +902,7 @@ void CApplication::previousSong(void)
 
         m_currentSongItem->getSong()->stop();
         updateSongDescription(NULL);
-        m_uiWidget->btnPlay->setIcon(QPixmap(":/icons/play"));
+        m_uiControl->btnPlay->setIcon(QPixmap(":/icons/play"));
 
         // Retour au début du morceau
         if (position > 4000)
@@ -946,7 +1000,7 @@ void CApplication::nextSong(void)
 
         m_currentSongItem->getSong()->stop();
         updateSongDescription(NULL);
-        m_uiWidget->btnPlay->setIcon(QPixmap(":/icons/play"));
+        m_uiControl->btnPlay->setIcon(QPixmap(":/icons/play"));
 
         m_currentSongItem = m_currentSongTable->getNextSong(m_currentSongItem, m_isShuffle);
 
@@ -1015,12 +1069,12 @@ void CApplication::playSong(CSongTableItem * songItem)
 
     if (m_currentSongItem->getSong()->loadSound())
     {
-        m_uiWidget->btnPlay->setIcon(QPixmap(":/icons/pause"));
+        m_uiControl->btnPlay->setIcon(QPixmap(":/icons/pause"));
         startPlay();
     }
     else
     {
-        m_uiWidget->btnPlay->setIcon(QPixmap(":/icons/play"));
+        m_uiControl->btnPlay->setIcon(QPixmap(":/icons/play"));
         m_currentSongItem = NULL;
         m_currentSongTable = NULL;
     }
@@ -1032,7 +1086,7 @@ void CApplication::setRepeat(bool repeat)
     if (repeat != m_isRepeat)
     {
         m_isRepeat = repeat;
-        m_uiWidget->btnRepeat->setChecked(repeat);
+        m_uiControl->btnRepeat->setChecked(repeat);
         m_uiWidget->actionRepeat->setChecked(repeat);
     }
 }
@@ -1043,7 +1097,7 @@ void CApplication::setShuffle(bool shuffle)
     if (shuffle != m_isShuffle)
     {
         m_isShuffle = shuffle;
-        m_uiWidget->btnShuffle->setChecked(shuffle);
+        m_uiControl->btnShuffle->setChecked(shuffle);
         m_uiWidget->actionShuffle->setChecked(shuffle);
     }
 }
@@ -1060,7 +1114,7 @@ void CApplication::setMute(bool mute)
             m_currentSongItem->getSong()->setMute(mute);
         }
 
-        m_uiWidget->btnMute->setIcon(QPixmap(mute ? ":/icons/muet" : ":/icons/volume"));
+        m_uiControl->btnMute->setIcon(QPixmap(mute ? ":/icons/muet" : ":/icons/volume"));
     }
 }
 
@@ -1084,7 +1138,7 @@ void CApplication::setVolume(int volume)
             m_currentSongItem->getSong()->setVolume(volume);
         }
 
-        m_uiWidget->sliderVolume->setValue(volume);
+        m_uiControl->sliderVolume->setValue(volume);
     }
 }
 
@@ -1114,11 +1168,11 @@ void CApplication::setPosition(int position)
                 m_lastFmLastPosition = songPosition;
             }
 
-            m_uiWidget->sliderPosition->setValue(songPosition);
+            m_uiControl->sliderPosition->setValue(songPosition);
 
             QTime positionTime(0, 0);
             positionTime = positionTime.addMSecs(songPosition);
-            m_uiWidget->lblPosition->setText(positionTime.toString("m:ss"));
+            m_uiControl->lblPosition->setText(positionTime.toString("m:ss"));
         }
     }
 }
@@ -1427,7 +1481,7 @@ void CApplication::addPlayList(CPlayList * playList)
     m_playLists.append(playList);
 
     // Ajout dans le panneau gauche
-    m_uiWidget->splitter->addWidget(playList);
+    //m_uiWidget->splitter->addWidget(playList);
     playList->hide();
 
     connect(playList, SIGNAL(songStarted(CSongTableItem *)), this, SLOT(playSong(CSongTableItem *)));
@@ -1699,29 +1753,29 @@ void CApplication::updateSongDescription(CSong * song)
 {
     if (song)
     {
-        m_uiWidget->songInfos->setText(song->getTitle() + " - " + song->getArtistName() + " - " + song->getAlbumTitle());
-        m_uiWidget->sliderPosition->setEnabled(true);
+        m_uiControl->songInfos->setText(song->getTitle() + " - " + song->getArtistName() + " - " + song->getAlbumTitle());
+        m_uiControl->sliderPosition->setEnabled(true);
 
         const int duration = song->getDuration();
         if (duration >= 0)
         {
-            m_uiWidget->sliderPosition->setRange(0, duration);
+            m_uiControl->sliderPosition->setRange(0, duration);
 
             QTime durationTime(0, 0);
             durationTime = durationTime.addMSecs(duration);
-            m_uiWidget->lblTime->setText(durationTime.toString("m:ss")); /// \todo Stocker dans les settings
+            m_uiControl->lblTime->setText(durationTime.toString("m:ss")); /// \todo Stocker dans les settings
         }
     }
     else
     {
-        m_uiWidget->songInfos->setText(""); // "Pas de morceau en cours de lecture..."
-        m_uiWidget->sliderPosition->setEnabled(false);
-        m_uiWidget->sliderPosition->setRange(0, 1000);
-        m_uiWidget->lblPosition->setText("0:00");
-        m_uiWidget->lblTime->setText("0:00");
+        m_uiControl->songInfos->setText(""); // "Pas de morceau en cours de lecture..."
+        m_uiControl->sliderPosition->setEnabled(false);
+        m_uiControl->sliderPosition->setRange(0, 1000);
+        m_uiControl->lblPosition->setText("0:00");
+        m_uiControl->lblTime->setText("0:00");
     }
 
-    m_uiWidget->sliderPosition->setValue(0);
+    m_uiControl->sliderPosition->setValue(0);
 }
 
 
@@ -1744,7 +1798,7 @@ void  CApplication::updateListInformations(void)
 
 void CApplication::updatePosition(void)
 {
-    setPosition(m_uiWidget->sliderPosition->value());
+    setPosition(m_uiControl->sliderPosition->value());
 }
 
 
@@ -1802,14 +1856,14 @@ void CApplication::update(void)
 
         if (position >= 0)
         {
-            if (!m_uiWidget->sliderPosition->isSliderDown())
+            if (!m_uiControl->sliderPosition->isSliderDown())
             {
-                m_uiWidget->sliderPosition->setValue(position);
+                m_uiControl->sliderPosition->setValue(position);
             }
 
             QTime positionTime(0, 0);
             positionTime = positionTime.addMSecs(position);
-            m_uiWidget->lblPosition->setText(positionTime.toString("m:ss"));
+            m_uiControl->lblPosition->setText(positionTime.toString("m:ss"));
         }
     }
 }
@@ -1838,13 +1892,15 @@ void CApplication::displaySongTable(CSongTable * songTable)
     {
         if (m_displayedSongTable)
         {
-            m_displayedSongTable->hide();
+            //m_displayedSongTable->hide();
+            m_displayedSongTable->setParent(NULL);
         }
 
         m_playListView->selectionModel()->clearSelection();
         m_playListView->selectionModel()->setCurrentIndex(m_playListView->getModelIndex(songTable), QItemSelectionModel::Select | QItemSelectionModel::Rows);
 
         m_displayedSongTable = songTable;
+        setCentralWidget(m_displayedSongTable);
         m_displayedSongTable->show();
 
         updateListInformations();
@@ -1938,7 +1994,8 @@ void CApplication::loadDatabase(void)
     // Création de la médiathèque
     m_library = new CSongTable(this);
     m_library->m_idPlayList = 0;
-    m_uiWidget->splitter->addWidget(m_library);
+    //m_uiWidget->splitter->addWidget(m_library);
+    setCentralWidget(m_library);
     connect(m_library, SIGNAL(songStarted(CSongTableItem *)), this, SLOT(playSong(CSongTableItem *)));
 
     if (!query.exec("SELECT list_columns FROM playlist WHERE playlist_id = 0"))
@@ -1961,7 +2018,7 @@ void CApplication::loadDatabase(void)
 
 
     // Création des dossiers
-    if (!query.exec("SELECT folder_id, folder_name, folder_parent, folder_position FROM folder ORDER BY folder_position"))
+    if (!query.exec("SELECT folder_id, folder_name, folder_parent, folder_position FROM folder WHERE folder_id != 0 ORDER BY folder_position"))
     {
         showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
     }
@@ -2074,6 +2131,10 @@ void CApplication::loadDatabase(void)
 }
 
 
+/**
+ * Démarre la lecture du morceau.
+ */
+
 void CApplication::startPlay(void)
 {
     qDebug() << "CApplication::startPlay()";
@@ -2081,7 +2142,7 @@ void CApplication::startPlay(void)
     Q_CHECK_PTR(m_currentSongItem);
     Q_CHECK_PTR(m_currentSongTable);
 
-    m_uiWidget->btnPlay->setIcon(QPixmap(":/icons/pause"));
+    m_uiControl->btnPlay->setIcon(QPixmap(":/icons/pause"));
     m_currentSongItem->getSong()->play();
     emit songPlayStart(m_currentSongItem->getSong());
     connect(m_currentSongItem->getSong(), SIGNAL(playEnd()), this, SLOT(onPlayEnd()), Qt::UniqueConnection);

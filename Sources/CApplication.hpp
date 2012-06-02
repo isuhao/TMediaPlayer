@@ -8,6 +8,7 @@
 #include <QMutexLocker>
 #include "CSongTableModel.hpp"
 #include "ui_TMediaPlayer.h"
+#include "ui_WidgetControl.h"
 
 
 class CSong;
@@ -196,6 +197,7 @@ protected:
 private:
 
     Ui::TMediaPlayer * m_uiWidget;      ///< Widget représentant la fenêtre principale.
+    Ui::WidgetControl * m_uiControl;    ///< Widget représentant la barre de contrôle.
     FMOD::System * m_soundSystem;       ///< Système de son de FMOD.
     CPlayListView * m_playListView;     ///< Vue pour afficher les listes de lecture.
     QSqlDatabase m_dataBase;            ///< Base de données.

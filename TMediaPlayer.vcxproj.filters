@@ -408,6 +408,9 @@
     <CustomBuild Include="Sources\CDialogEditMetadata.hpp">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="Form\WidgetControl.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_DialogEditDynamicPlayList.h">
@@ -435,6 +438,9 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_DialogEditMetadata.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_WidgetControl.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>

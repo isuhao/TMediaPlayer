@@ -140,7 +140,7 @@ CSong::CSong(const QString& fileName, CApplication * application) :
 
 CSong::~CSong()
 {
-    qDebug() << "CSong::~CSong()";
+    //qDebug() << "CSong::~CSong()";
     stop();
 
     if (m_sound)
