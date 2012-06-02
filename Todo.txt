@@ -27,8 +27,6 @@
 - Implémenter le glisser-déposer au sein d'une liste statique.
 
 - Menu contextuel pour les listes de lecture.
-  - Supprimer une liste de lecture statique.
-  - Supprimer une liste de lecture dynamique.
   - Créer un dossier.
 
 - Implémenter la lecture aléatoire.

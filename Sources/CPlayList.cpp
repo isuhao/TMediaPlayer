@@ -26,6 +26,12 @@ CPlayList::~CPlayList()
 }
 
 
+/**
+ * Indique si la liste de lecture a été modifiée et doit être mise à jour.
+ *
+ * \return Booléen.
+ */
+
 bool CPlayList::isModified(void) const
 {
     return (m_isPlayListModified || CSongTable::isModified());
@@ -83,7 +89,12 @@ void CPlayList::setFolder(CListFolder * folder)
 }
 
 
-/// \todo Implémentation.
+/**
+ * Met à jour la base de données si la liste a été modifiée.
+ *
+ * \return Booléen indiquant le succès de l'opération.
+ */
+
 bool CPlayList::updateDatabase(void)
 {
     if (m_isPlayListModified)
@@ -111,4 +122,32 @@ bool CPlayList::updateDatabase(void)
     }
 
     return CSongTable::updateDatabase();
+}
+
+
+/**
+ * Supprime la liste de la base de données.
+ */
+
+void CPlayList::romoveFromDatabase(void)
+{
+    if (m_idPlayList <= 0)
+    {
+        qWarning() << "CPlayList::romoveFromDatabase() : identifiant invalide";
+        return;
+    }
+    
+    // Suppression de la liste
+    QSqlQuery query(m_application->getDataBase());
+    query.prepare("DELETE FROM playlist WHERE playlist_id = ?");
+    query.bindValue(0, m_idPlayList);
+
+    if (!query.exec())
+    {
+        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        return;
+    }
+
+    m_isPlayListModified = false;
+    m_idPlayList = -1;
 }

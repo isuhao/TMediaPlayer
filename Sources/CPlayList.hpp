@@ -11,6 +11,7 @@ class CListFolder;
 
 /**
  * Classe de base des listes de lecture.
+ * Gère les paramètres communs aux listes : le nom, le dossier, et la position dans le dossier.
  */
 
 class CPlayList : public CSongTable
@@ -37,13 +38,37 @@ public slots:
 
 signals:
 
-    void nameChanged(const QString& oldName, const QString& newName); ///< Signal émis lorsque le nom de la liste change.
-    void folderChanged(CListFolder * oldFolder, CListFolder * newFolder); ///< Signal émis lorsque le dossier contenant la liste change.
-    void listModified(); ///< Signal émis lorsque le contenu de la liste change.
+    /**
+     * Signal émis lorsque le nom de la liste change.
+     * Utilisez la méthode sender() dans le slot pour connaitre la liste de lecture.
+     *
+     * \param oldName Ancien nom de la liste.
+     * \param newName Nouveau nom de la liste.
+     */
+
+    void nameChanged(const QString& oldName, const QString& newName);
+    
+    /**
+     * Signal émis lorsque le dossier contenant la liste change.
+     * Utilisez la méthode sender() dans le slot pour connaitre la liste de lecture.
+     *
+     * \param oldFolder Pointeur sur l'ancien dossier.
+     * \param newFolder Pointeur sur le nouveau dossier.
+     */
+
+    void folderChanged(CListFolder * oldFolder, CListFolder * newFolder);
+
+    /**
+     * Signal émis lorsque le contenu de la liste change.
+     * Utilisez la méthode sender() dans le slot pour connaitre la liste de lecture.
+     */
+
+    void listModified();
 
 protected:
 
     virtual bool updateDatabase(void);
+    virtual void romoveFromDatabase(void);
 
     QString m_name;            ///< Nom de la liste de lecture.
     int m_position;            ///< Position de la liste dans le dossier.
@@ -57,11 +82,23 @@ private:
 };
 
 
+/**
+ * Retourne le nom de la liste de lecture.
+ *
+ * \return Nom de la liste.
+ */
+
 inline QString CPlayList::getName(void) const
 {
     return m_name;
 }
 
+
+/**
+ * Retourne le dossier contenant la liste de lecture.
+ *
+ * \return Pointeur sur le dossier, ou NULL si la liste est à la racine.
+ */
 
 inline CListFolder * CPlayList::getFolder(void) const
 {

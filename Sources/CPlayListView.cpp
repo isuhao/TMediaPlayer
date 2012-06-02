@@ -81,6 +81,15 @@ QModelIndex CPlayListView::addSongTable(CSongTable * songTable)
 }
 
 
+void CPlayListView::removeSongTable(CSongTable * songTable)
+{
+    Q_CHECK_PTR(songTable);
+
+    QModelIndex index = getModelIndex(songTable);
+    m_model->removeRow(index.row(), index.parent());
+}
+
+
 /**
  * Retourne la liste de morceaux à partir d'un index.
  *
@@ -149,6 +158,35 @@ void CPlayListView::onPlayListRenamed(const QString& oldName, const QString& new
 }
 
 
+/**
+ * Gestion des touches du clavier.
+ * La touche Supprimer est gérée.
+ *
+ * \param event Évènement du clavier.
+ */
+
+void CPlayListView::keyPressEvent(QKeyEvent * event)
+{
+    Q_CHECK_PTR(event);
+
+    if (event->key() == Qt::Key_Delete)
+    {
+        event->accept();
+        m_application->removeSelectedPlayList();
+        return;
+    }
+
+    return QTreeView::keyPressEvent(event);
+}
+
+
+/**
+ * Gestion du glisser-déposer.
+ * Cette méthode est appelée à chaque fois qu'un objet QDrag est déplacé à l'intérieur de la vue.
+ *
+ * \param event Évènement.
+ */
+
 void CPlayListView::dragMoveEvent(QDragMoveEvent * event)
 {
     Q_CHECK_PTR(event);
@@ -197,7 +235,12 @@ void CPlayListView::dragMoveEvent(QDragMoveEvent * event)
 }
 
 
-/// \todo Implémentation.
+/**
+ * Ouvre le menu contextuel de la vue.
+ *
+ * \param point Position du clic.
+ */
+
 void CPlayListView::openCustomMenuProject(const QPoint& point)
 {
     qDebug() << "CPlayListView::openCustomMenuProject()";

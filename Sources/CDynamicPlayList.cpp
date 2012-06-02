@@ -50,6 +50,12 @@ bool CDynamicPlayList::isModified(void) const
 }
 
 
+/**
+ * Retourne le widget permettant l'édition de la liste dynamique.
+ *
+ * \return Widget.
+ */
+
 CWidgetMultiCriterion * CDynamicPlayList::getWidget(void) const
 {
     IWidgetCriteria * widget = m_mainCriteria->getWidget();
@@ -198,6 +204,47 @@ bool CDynamicPlayList::updateDatabase(void)
 
     m_isDynamicListModified = false;
     return CPlayList::updateDatabase();
+}
+
+
+/**
+ * Supprime la liste de la base de données.
+ */
+
+void CDynamicPlayList::romoveFromDatabase(void)
+{
+    if (m_id <= 0)
+    {
+        qWarning() << "CDynamicPlayList::romoveFromDatabase() : identifiant invalide";
+        return;
+    }
+
+    QSqlQuery query(m_application->getDataBase());
+
+    // Suppression des critères
+    query.prepare("DELETE FROM criteria WHERE dynamic_list_id = ?");
+    query.bindValue(0, m_id);
+
+    if (!query.exec())
+    {
+        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        return;
+    }
+
+    // Suppression de la liste dynamique
+    query.prepare("DELETE FROM dynamic_list WHERE dynamic_list_id = ?");
+    query.bindValue(0, m_id);
+
+    if (!query.exec())
+    {
+        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        return;
+    }
+
+    m_isDynamicListModified = false;
+    m_id = -1;
+
+    CPlayList::romoveFromDatabase();
 }
 
 

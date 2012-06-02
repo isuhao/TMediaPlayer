@@ -1709,7 +1709,10 @@ void CApplication::openSongInExplorer(void)
 }
 
 
-/// \todo Implémentation.
+/**
+ * Ouvre la boite de dialogue pour modifier la liste de lecture selectionnée dans la vue.
+ */
+
 void CApplication::editSelectedPlayList(void)
 {
     CPlayList * playList = qobject_cast<CPlayList *>(m_playListView->getSelectedSongTable());
@@ -1735,14 +1738,39 @@ void CApplication::editSelectedPlayList(void)
 }
 
 
-/// \todo Implémentation.
+/**
+ * Supprime la liste de lecture sélectionnée dans la vue CPlayListView.
+ * Affiche une boite de dialogue de confirmation.
+ *
+ * \todo Gérer le cas où la liste est utilisée dans un critère d'une liste dynamique.
+ */
+
 void CApplication::removeSelectedPlayList(void)
 {
     CPlayList * playList = qobject_cast<CPlayList *>(m_playListView->getSelectedSongTable());
 
     if (playList)
     {
-        //...
+        // Confirmation
+        if (QMessageBox::question(this, QString(), tr("Are you sure you want to delete this playlist?"), tr("Yes"), tr("No"), 0, 1) == 1)
+        {
+            return;
+        }
+
+        if (playList == m_displayedSongTable)
+        {
+            displaySongTable(m_library);
+        }
+
+        if (playList == m_currentSongTable)
+        {
+            stop();
+        }
+
+        m_playListView->removeSongTable(playList);
+        playList->romoveFromDatabase();
+        m_playLists.removeOne(playList);
+        delete playList;
     }
 }
 

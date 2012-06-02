@@ -50,7 +50,7 @@ public:
     };
 
     CApplication(void);
-    ~CApplication();
+    virtual ~CApplication();
 
     void initWindow(void);
     void showDatabaseError(const QString& msg, const QString& query, const QString& fileName, int line);

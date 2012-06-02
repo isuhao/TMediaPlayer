@@ -30,6 +30,12 @@ CStaticPlayList::~CStaticPlayList()
 }
 
 
+/**
+ * Indique si la liste de lecture a été modifiée et doit être mise à jour.
+ *
+ * \return Booléen.
+ */
+
 bool CStaticPlayList::isModified(void) const
 {
     return (m_isStaticListModified || CPlayList::isModified());
@@ -521,6 +527,47 @@ bool CStaticPlayList::updateDatabase(void)
 
     m_isStaticListModified = false;
     return CPlayList::updateDatabase();
+}
+
+
+/**
+ * Supprime la liste de la base de données.
+ */
+
+void CStaticPlayList::romoveFromDatabase(void)
+{
+    if (m_id <= 0)
+    {
+        qWarning() << "CStaticPlayList::romoveFromDatabase() : identifiant invalide";
+        return;
+    }
+
+    QSqlQuery query(m_application->getDataBase());
+
+    // Suppression des morceaux
+    query.prepare("DELETE FROM static_list_song WHERE static_list_id = ?");
+    query.bindValue(0, m_id);
+
+    if (!query.exec())
+    {
+        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        return;
+    }
+
+    // Suppression de la liste statique
+    query.prepare("DELETE FROM static_list WHERE static_list_id = ?");
+    query.bindValue(0, m_id);
+
+    if (!query.exec())
+    {
+        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        return;
+    }
+
+    m_isStaticListModified = false;
+    m_id = -1;
+
+    CPlayList::romoveFromDatabase();
 }
 
 

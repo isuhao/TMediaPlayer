@@ -19,6 +19,7 @@ public:
     explicit CPlayListView(CApplication * application);
 
     QModelIndex addSongTable(CSongTable * songTable);
+    void removeSongTable(CSongTable * songTable);
     CSongTable * getSongTable(const QModelIndex& index) const;
     CSongTable * getSelectedSongTable(void) const;
     QModelIndex getModelIndex(CSongTable * songTable) const;
@@ -28,7 +29,8 @@ public slots:
     void onPlayListRenamed(const QString& oldName, const QString& newName);
 
 protected:
-
+    
+    virtual void keyPressEvent(QKeyEvent * event);
     virtual void dragMoveEvent(QDragMoveEvent * event);
 
 protected slots:

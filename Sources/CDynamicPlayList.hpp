@@ -46,7 +46,8 @@ signals:
 
 protected:
     
-    bool updateDatabase(void);
+    virtual bool updateDatabase(void);
+    virtual void romoveFromDatabase(void);
     void loadFromDatabase(void);
     void setCriteria(ICriteria * criteria);
 
