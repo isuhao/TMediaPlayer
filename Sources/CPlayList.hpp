@@ -19,6 +19,7 @@ class CPlayList : public CSongTable
 
     friend class CApplication;
     friend class CListFolder;
+    friend class CPlayListView;
 
 public:
 
@@ -52,6 +53,7 @@ private:
     CListFolder * m_folder;    ///< Dossier contenant la liste.
     bool m_isPlayListModified; ///< Indique si la liste de lecture a été modifiée.
     bool m_folderChanging;     ///< Indique si le dossier est en train d'être changé.
+    QModelIndex m_index;       ///< Index de la liste dans la vue.
 };
 
 

@@ -1,6 +1,9 @@
 
 #include "CPlayList.hpp"
 #include "CListFolder.hpp"
+#include "CApplication.hpp"
+#include <QSqlQuery>
+#include <QSqlError>
 
 #include <QtDebug>
 
@@ -85,8 +88,26 @@ bool CPlayList::updateDatabase(void)
 {
     if (m_isPlayListModified)
     {
-        //...
-        m_isPlayListModified = false;
+        if (m_idPlayList <= 0)
+        {
+            qWarning() << "CPlayList::updateDatabase() : identifiant invalide";
+        }
+        else
+        {
+            QSqlQuery query(m_application->getDataBase());
+            query.prepare("UPDATE playlist SET playlist_name = ? WHERE playlist_id = ?");
+
+            query.bindValue(0, m_name);
+            query.bindValue(1, m_idPlayList);
+
+            if (!query.exec())
+            {
+                m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                return false;
+            }
+
+            m_isPlayListModified = false;
+        }
     }
 
     return CSongTable::updateDatabase();

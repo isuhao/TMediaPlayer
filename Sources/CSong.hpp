@@ -58,7 +58,7 @@ public:
     ~CSong();
 
     void loadFromDatabase(void);
-    void loadTags(void);
+    bool loadTags(bool readProperties = false);
     void writeTags(void) const;
 
     inline int getId(void) const;

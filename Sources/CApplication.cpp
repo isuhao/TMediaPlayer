@@ -1437,6 +1437,8 @@ qDebug() << songItemList;
 /**
  * Affiche la boite de dialogue pour crée une nouvelle liste de lecture statique.
  *
+ * \todo Gérer le dossier.
+ *
  * \param folder Pointeur sur le dossier où créer la liste.
  */
 
@@ -1446,13 +1448,13 @@ void CApplication::openDialogAddStaticPlayList(CListFolder * folder)
 
     CDialogEditStaticPlayList * dialog = new CDialogEditStaticPlayList(NULL, this);
     dialog->show();
-
-    //...
 }
 
 
 /**
  * Affiche la boite de dialogue pour crée une nouvelle liste de lecture dynamique.
+ *
+ * \todo Gérer le dossier.
  *
  * \param folder Pointeur sur le dossier où créer la liste.
  */
@@ -1463,13 +1465,26 @@ void CApplication::openDialogAddDynamicList(CListFolder * folder)
 
     CDialogEditDynamicList * dialog = new CDialogEditDynamicList(NULL, this);
     dialog->show();
+}
 
-    //...
+
+void CApplication::openDialogEditStaticPlayList(CStaticPlayList * playList)
+{
+    CDialogEditStaticPlayList * dialog = new CDialogEditStaticPlayList(playList, this);
+    dialog->show();
+}
+
+
+void CApplication::openDialogEditDynamicList(CDynamicPlayList * playList)
+{
+    CDialogEditDynamicList * dialog = new CDialogEditDynamicList(playList, this);
+    dialog->show();
 }
 
 
 /**
  * Ajoute une liste de lecture à la vue.
+ * Si la liste a déjà été ajoutée, rien n'est fait.
  *
  * \param playList Pointeur sur la liste de lecture à ajouter.
  */
@@ -1478,6 +1493,11 @@ void CApplication::addPlayList(CPlayList * playList)
 {
     Q_CHECK_PTR(playList);
 
+    if (m_playLists.contains(playList))
+    {
+        return;
+    }
+
     m_playLists.append(playList);
 
     // Ajout dans le panneau gauche
@@ -1485,6 +1505,7 @@ void CApplication::addPlayList(CPlayList * playList)
     playList->hide();
 
     connect(playList, SIGNAL(songStarted(CSongTableItem *)), this, SLOT(playSong(CSongTableItem *)));
+    connect(playList, SIGNAL(nameChanged(const QString&, const QString&)), m_playListView, SLOT(onPlayListRenamed(const QString&, const QString&)));
 
     // Liste de lecture statique
     CStaticPlayList * staticList = qobject_cast<CStaticPlayList *>(playList);
@@ -1503,7 +1524,7 @@ void CApplication::addPlayList(CPlayList * playList)
         dynamicList->update();
     }
 
-    m_playListView->addSongTable(playList);
+    playList->m_index = m_playListView->addSongTable(playList);
 }
 
 
@@ -1577,7 +1598,7 @@ QStringList CApplication::addFolder(const QString& pathName)
         fileList.append(addFolder(dir.absoluteFilePath(*it)));
     }
 
-    QStringList fileDirList = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
+    QStringList fileDirList = dir.entryList(QDir::Files | QDir::Readable, QDir::Name);
 
     for (QStringList::const_iterator it = fileDirList.begin(); it != fileDirList.end(); ++it)
     {
@@ -1675,6 +1696,44 @@ void CApplication::openSongInExplorer(void)
         QDir songDir(songItem->getSong()->getFileName());
         songDir.cdUp();
         QDesktopServices::openUrl(QUrl::fromLocalFile(songDir.absolutePath()));
+    }
+}
+
+
+/// \todo Implémentation.
+void CApplication::editSelectedPlayList(void)
+{
+    CPlayList * playList = qobject_cast<CPlayList *>(m_playListView->getSelectedSongTable());
+
+    if (playList)
+    {
+        CStaticPlayList * staticList = qobject_cast<CStaticPlayList *>(playList);
+
+        if (staticList)
+        {
+            openDialogEditStaticPlayList(staticList);
+        }
+        else
+        {
+            CDynamicPlayList * dynamicList = qobject_cast<CDynamicPlayList *>(playList);
+
+            if (dynamicList)
+            {
+                openDialogEditDynamicList(dynamicList);
+            }
+        }
+    }
+}
+
+
+/// \todo Implémentation.
+void CApplication::removeSelectedPlayList(void)
+{
+    CPlayList * playList = qobject_cast<CPlayList *>(m_playListView->getSelectedSongTable());
+
+    if (playList)
+    {
+        //...
     }
 }
 

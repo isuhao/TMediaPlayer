@@ -7,6 +7,10 @@
 #include "ui_DialogEditSongs.h"
 
 
+/**
+ * Boite de dialogue pour modifier les informations de plusieurs morceaux.
+ */
+
 class CDialogEditSongs : public QDialog
 {
     Q_OBJECT

@@ -17,6 +17,7 @@ class CListFolder;
 class CPlayList;
 class CPlayListView;
 class CDynamicPlayList;
+class CStaticPlayList;
 class QStandardItemModel;
 class QSettings;
 class QNetworkReply;
@@ -141,6 +142,8 @@ public slots:
     void openDialogSongInfos(void);
     void openDialogAddStaticPlayList(CListFolder * folder = NULL);
     void openDialogAddDynamicList(CListFolder * folder = NULL);
+    void openDialogEditStaticPlayList(CStaticPlayList * playList);
+    void openDialogEditDynamicList(CDynamicPlayList * playList);
 
     //void editSong(CSongTableItem * songItem);
     //void removeSong(CSongTableItem * songItem);
@@ -149,6 +152,9 @@ public slots:
     void selectSong(CSongTable * songTable, CSongTableItem * songItem);
 
     void openSongInExplorer(void);
+
+    void editSelectedPlayList(void);
+    void removeSelectedPlayList(void);
 
 signals:
 

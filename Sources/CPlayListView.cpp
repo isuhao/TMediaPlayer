@@ -36,8 +36,8 @@ CPlayListView::CPlayListView(CApplication * application) :
     // Menus contextuels
     m_menuPlaylist = new QMenu(this);
     //m_menuPlaylist->addAction(tr("Open"));
-    m_menuPlaylist->addAction(tr("Edit..."));
-    m_menuPlaylist->addAction(tr("Remove"));
+    m_menuPlaylist->addAction(tr("Edit..."), m_application, SLOT(editSelectedPlayList()));
+    m_menuPlaylist->addAction(tr("Remove"), m_application, SLOT(removeSelectedPlayList()));
 
     m_menuDefault = new QMenu(this);
     m_menuDefault->addAction(tr("New playlist..."));
@@ -80,15 +80,41 @@ QModelIndex CPlayListView::addSongTable(CSongTable * songTable)
         playListItem = new QStandardItem(QPixmap(":/icons/library"), tr("Library"));
     }
 
-    playListItem->setData(QVariant::fromValue(songTable));
+    playListItem->setData(QVariant::fromValue(songTable), Qt::UserRole + 1);
     m_model->appendRow(playListItem);
     return playListItem->index();
 }
 
 
+/**
+ * Retourne la liste de morceaux à partir d'un index.
+ *
+ * \param index Index de la liste.
+ * \return Liste de morceaux, ou NULL.
+ */
+
 CSongTable * CPlayListView::getSongTable(const QModelIndex& index) const
 {
     return m_model->data(index, Qt::UserRole + 1).value<CSongTable *>();
+}
+
+
+/**
+ * Retourne la liste de morceaux actuellement sélectionnée.
+ *
+ * \return Liste de morceaux.
+ */
+
+CSongTable * CPlayListView::getSelectedSongTable(void) const
+{
+    QModelIndex index = selectionModel()->currentIndex();
+
+    if (index.isValid())
+    {
+        return getSongTable(index);
+    }
+
+    return NULL;
 }
 
 
@@ -109,6 +135,22 @@ QModelIndex CPlayListView::getModelIndex(CSongTable * songTable) const
     }
 
     return QModelIndex();
+}
+
+
+void CPlayListView::onPlayListRenamed(const QString& oldName, const QString& newName)
+{
+    CPlayList * playList = qobject_cast<CPlayList *>(sender());
+
+    if (playList)
+    {
+        QStandardItem * item = m_model->itemFromIndex(playList->m_index);
+        
+        if (item)
+        {
+            item->setText(newName);
+        }
+    }
 }
 
 

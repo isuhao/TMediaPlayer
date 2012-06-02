@@ -21,7 +21,12 @@ public:
 
     QModelIndex addSongTable(CSongTable * songTable);
     CSongTable * getSongTable(const QModelIndex& index) const;
+    CSongTable * getSelectedSongTable(void) const;
     QModelIndex getModelIndex(CSongTable * songTable) const;
+    
+public slots:
+
+    void onPlayListRenamed(const QString& oldName, const QString& newName);
 
 protected:
 

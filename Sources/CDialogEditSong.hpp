@@ -10,6 +10,10 @@
 class CSongTable;
 
 
+/**
+ * Boite de dialogue pour modifier les informations d'un morceau.
+ */
+
 class CDialogEditSong : public QDialog
 {
     Q_OBJECT

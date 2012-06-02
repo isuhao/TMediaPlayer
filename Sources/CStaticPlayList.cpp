@@ -454,11 +454,11 @@ void CStaticPlayList::removeDuplicateSongs(void)
 
 bool CStaticPlayList::updateDatabase(void)
 {
-    QSqlQuery query(m_application->getDataBase());
-
     // Insertion
     if (m_id <= 0)
     {
+        QSqlQuery query(m_application->getDataBase());
+
         // Position dans le dossier
         query.prepare("SELECT MAX(list_position) FROM playlist WHERE folder_id = ?");
         query.bindValue(0, 0);
@@ -504,6 +504,8 @@ bool CStaticPlayList::updateDatabase(void)
     // Mise à jour
     else if (m_isStaticListModified)
     {
+/*
+        QSqlQuery query(m_application->getDataBase());
         query.prepare("UPDATE playlist SET playlist_name = ? WHERE playlist_id = ?");
 
         query.bindValue(0, m_name);
@@ -514,6 +516,7 @@ bool CStaticPlayList::updateDatabase(void)
             m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
+*/
     }
 
     m_isStaticListModified = false;

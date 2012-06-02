@@ -48,7 +48,6 @@ CDialogEditStaticPlayList::~CDialogEditStaticPlayList()
 }
 
 
-/// \todo Implémentation
 void CDialogEditStaticPlayList::save(void)
 {
     QString name = m_uiWidget->editName->text();

@@ -18,6 +18,7 @@
   - Ogg Vorbis.
 
 - Écrire les métadonnées d'un morceau.
+  - Ne pas oublier de mettre à jour la taille du fichier.
 
 - Boite de dialogue Edit Songs. (à terminer)
 
@@ -26,7 +27,6 @@
 - Implémenter le glisser-déposer au sein d'une liste statique.
 
 - Menu contextuel pour les listes de lecture.
-  - Modifier une liste de lecture statique.
   - Modifier une liste de lecture dynamique.
   - Supprimer une liste de lecture.
   - Créer un dossier.

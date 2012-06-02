@@ -66,6 +66,7 @@ CSong::CSong(CApplication * application) :
     m_comments          (""),
     m_bpm               (0),
     m_lyrics            (""),
+    m_language          (LangUnknown),
     m_isModified        (false)
 {
     Q_CHECK_PTR(application);
@@ -282,35 +283,441 @@ void CSong::loadFromDatabase(void)
  * \todo Implémentation.
  * \todo Retourner un booléen ?
  * \todo Retourner une map ?
+ *
+ * \param readProperties Indique si on doit lire les propriétés du fichier.
+ * \return Booléen valant true si les tags ont pu être lus, false sinon.
  */
 
-void CSong::loadTags(void)
+bool CSong::loadTags(bool readProperties)
 {
     switch (m_format)
     {
+        default:
+            qWarning() << "CSong::loadTags() : format non géré";
+            return false;
+
         case CSong::FormatMP3:
         {
-            TagLib::MPEG::File file(qPrintable(m_fileName), false);
+            TagLib::MPEG::File file(qPrintable(m_fileName), readProperties);
 
             if (!file.isValid())
             {
                 qWarning() << "CSong::loadTags() : impossible de lire le fichier MP3 " << m_fileName;
-                return;
+                return false;
             }
 
-            //...
+            m_fileSize = file.length();
+            
+            // Propriétés du morceau
+            if (file.audioProperties())
+            {
+                //TODO: Récupérer la version de MPEG : file.audioProperties()->version();
+                //TODO: Récupérer le mode stéréo : file.audioProperties()->channelMode();
+                m_bitRate     = file.audioProperties()->bitrate();
+                m_sampleRate  = file.audioProperties()->sampleRate();
+                m_numChannels = file.audioProperties()->channels();
+            }
+            else
+            {
+                qWarning() << "CSong::loadTags() : impossible de récupérer les propriétés du fichier " << m_fileName;
+            }
+
+            TagLib::ID3v2::Tag * tagID3v2 = file.ID3v2Tag(true);
+            TagLib::ID3v1::Tag * tagID3v1 = file.ID3v1Tag(true);
+            TagLib::APE::Tag * tagAPE = file.APETag(false);
+
+            TagLib::ID3v2::FrameList tagID3v2List;
+/*
+            // DEBUG
+            TagLib::ID3v2::FrameListMap tagMap = tagID3v2->frameListMap();
+            for (TagLib::ID3v2::FrameListMap::ConstIterator it = tagMap.begin(); it != tagMap.end(); ++it)
+            {
+                QString tagKey = QByteArray(it->first.data(), it->first.size());
+
+                for (TagLib::ID3v2::FrameList::ConstIterator it2 = it->second.begin(); it2 != it->second.end(); ++it2)
+                {
+                    qDebug() << tagKey << ":" << (*it2)->toString().toCString(true);
+                }
+            }
+*/
+            // Titre
+            tagID3v2List = tagID3v2->frameList("TIT2");
+            if (tagID3v2List.isEmpty())
+            {
+                TagLib::String str;
+                if (tagID3v1)
+                    str = tagID3v1->title();
+                if (str.isNull() && tagAPE)
+                    str = tagAPE->title();
+                m_title = QString::fromUtf8(str.toCString(true));
+            }
+            else
+            {
+                if (tagID3v2List.size() > 1)
+                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TIT2";
+                m_title = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
+            }
+
+            // Sous-titre
+            tagID3v2List = tagID3v2->frameList("TIT3");
+            if (tagID3v2List.isEmpty())
+            {
+                //TODO: APE
+            }
+            else
+            {
+                if (tagID3v2List.size() > 1)
+                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TIT3";
+                m_subTitle = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
+            }
+
+            // Artiste
+            tagID3v2List = tagID3v2->frameList("TPE1");
+            if (tagID3v2List.isEmpty())
+            {
+                TagLib::String str;
+                if (tagID3v1)
+                    str = tagID3v1->artist();
+                if (str.isNull() && tagAPE)
+                    str = tagAPE->artist();
+                m_artistName = QString::fromUtf8(str.toCString(true));
+            }
+            else
+            {
+                if (tagID3v2List.size() > 1)
+                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TPE1";
+                m_artistName = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
+            }
+
+            // Album
+            tagID3v2List = tagID3v2->frameList("TALB");
+            if (tagID3v2List.isEmpty())
+            {
+                TagLib::String str;
+                if (tagID3v1)
+                    str = tagID3v1->album();
+                if (str.isNull() && tagAPE)
+                    str = tagAPE->album();
+                m_albumTitle = QString::fromUtf8(str.toCString(true));
+            }
+            else
+            {
+                if (tagID3v2List.size() > 1)
+                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TALB";
+                m_albumTitle = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
+            }
+
+            // Artiste de l'album
+            tagID3v2List = tagID3v2->frameList("TPE2");
+            if (tagID3v2List.isEmpty())
+            {
+                //TODO: APE
+            }
+            else
+            {
+                if (tagID3v2List.size() > 1)
+                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TPE2";
+                m_albumArtist = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
+            }
+
+            // Compositeur
+            tagID3v2List = tagID3v2->frameList("TCOM");
+            if (tagID3v2List.isEmpty())
+            {
+                //TODO: APE
+            }
+            else
+            {
+                if (tagID3v2List.size() > 1)
+                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TCOM";
+                m_composer = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
+            }
+
+            // Titre pour le tri
+            tagID3v2List = tagID3v2->frameList("TSOT");
+            if (tagID3v2List.isEmpty())
+            {
+                //TODO: APE
+            }
+            else
+            {
+                if (tagID3v2List.size() > 1)
+                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TSOT";
+                m_titleSort = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
+            }
+
+            // Artiste pour le tri
+            tagID3v2List = tagID3v2->frameList("TSOP");
+            if (tagID3v2List.isEmpty())
+            {
+                //TODO: APE
+            }
+            else
+            {
+                if (tagID3v2List.size() > 1)
+                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TSOP";
+                m_artistNameSort = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
+            }
+
+            // Album pour le tri
+            tagID3v2List = tagID3v2->frameList("TSOA");
+            if (tagID3v2List.isEmpty())
+            {
+                //TODO: APE
+            }
+            else
+            {
+                if (tagID3v2List.size() > 1)
+                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TSOA";
+                m_albumTitleSort = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
+            }
+
+            // Année
+            tagID3v2List = tagID3v2->frameList("TDRC");
+            if (tagID3v2List.isEmpty())
+            {
+                m_year = tagID3v1->year();
+
+                if (m_year == 0)
+                {
+                    //TODO: APE
+                }
+            }
+            else
+            {
+                if (tagID3v2List.size() > 1)
+                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TDRC";
+                TagLib::String str = tagID3v2List.front()->toString();
+
+                if (!str.isNull() && str.size() >= 4)
+                {
+                    bool ok;
+                    m_year = str.substr(0, 4).toInt(&ok);
+                    if (!ok)
+                    {
+                        qWarning() << "CSong::loadFromFile() : ID3v2 : tag TDRC invalide";
+                        m_year = 0;
+                    }
+                }
+            }
+
+            // Regroupement
+            tagID3v2List = tagID3v2->frameList("TIT1");
+            if (tagID3v2List.isEmpty())
+            {
+                //TODO: APE
+            }
+            else
+            {
+                if (tagID3v2List.size() > 1)
+                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TIT1";
+                m_grouping = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
+            }
+
+            // Numéro de piste
+            tagID3v2List = tagID3v2->frameList("TRCK");
+            if (tagID3v2List.isEmpty())
+            {
+                m_trackNumber = tagID3v1->track();
+
+                if (m_trackNumber == 0)
+                {
+                    //TODO: APE
+                }
+            }
+            else
+            {
+                if (tagID3v2List.size() > 1)
+                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TRCK";
+
+                QString str = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
+
+                if (str.contains('/'))
+                {
+                    QStringList strSplit = str.split('/');
+
+                    if (strSplit.size() == 2)
+                    {
+                        bool ok;
+                        m_trackNumber = strSplit[0].toInt(&ok);
+                        if (!ok) qWarning() << "CSong::loadFromFile() : ID3v2 : tag TRCK invalide";
+                        m_trackTotal = strSplit[1].toInt(&ok);
+                        if (!ok) qWarning() << "CSong::loadFromFile() : ID3v2 : tag TRCK invalide";
+                    }
+                    else
+                    {
+                        qWarning() << "CSong::loadFromFile() : ID3v2 : tag TRCK invalide";
+                    }
+                }
+                else
+                {
+                    bool ok;
+                    m_trackNumber = str.toInt(&ok);
+                    if (!ok) qWarning() << "CSong::loadFromFile() : ID3v2 : tag TRCK invalide";
+                }
+            }
+
+            // Numéro de disque
+            tagID3v2List = tagID3v2->frameList("TPOS");
+            if (tagID3v2List.isEmpty())
+            {
+                //TODO: APE
+            }
+            else
+            {
+                if (tagID3v2List.size() > 1)
+                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TPOS";
+                QString str = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
+
+                if (str.contains('/'))
+                {
+                    QStringList strSplit = str.split('/');
+
+                    if (strSplit.size() == 2)
+                    {
+                        bool ok;
+                        m_discNumber = strSplit[0].toInt(&ok);
+                        if (!ok) qWarning() << "CSong::loadFromFile() : ID3v2 : tag TPOS invalide";
+                        m_discTotal = strSplit[1].toInt(&ok);
+                        if (!ok) qWarning() << "CSong::loadFromFile() : ID3v2 : tag TPOS invalide";
+                    }
+                    else
+                    {
+                        qWarning() << "CSong::loadFromFile() : ID3v2 : tag TPOS invalide";
+                    }
+                }
+                else
+                {
+                    bool ok;
+                    m_discNumber = str.toInt(&ok);
+                    if (!ok) qWarning() << "CSong::loadFromFile() : ID3v2 : tag TPOS invalide";
+                }
+            }
+
+            // Genre
+            tagID3v2List = tagID3v2->frameList("TCON");
+            if (tagID3v2List.isEmpty())
+            {
+                TagLib::String str = tagID3v1->genre();
+
+                if (str.isNull())
+                {
+                    //TODO: APE
+                }
+                else
+                    m_genre = QString::fromUtf8(str.toCString(true));
+            }
+            else
+            {
+                m_genre = QString::fromUtf8(tagID3v2->genre().toCString(true));
+            }
+
+            // Commentaires
+            tagID3v2List = tagID3v2->frameList("COMM");
+            if (tagID3v2List.isEmpty())
+            {
+                TagLib::String str = tagID3v1->comment();
+
+                if (str.isNull())
+                {
+                    //TODO: APE
+                }
+                else
+                    m_comments = QString::fromUtf8(str.toCString(true));
+            }
+            else
+            {
+                if (tagID3v2List.size() > 1)
+                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags COMM";
+
+                TagLib::ID3v2::CommentsFrame * frame = dynamic_cast<TagLib::ID3v2::CommentsFrame *>(tagID3v2List.front());
+
+                if (frame)
+                {
+                    m_comments = QString::fromUtf8(frame->text().toCString(true));
+                }
+            }
+
+            // BPM
+            tagID3v2List = tagID3v2->frameList("TBPM");
+            if (tagID3v2List.isEmpty())
+            {
+                //TODO: APE
+            }
+            else
+            {
+                if (tagID3v2List.size() > 1)
+                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TBPM";
+                QString str = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
+
+                bool ok;
+                m_bpm = str.toInt(&ok);
+                if (!ok) qWarning() << "CSong::loadFromFile() : ID3v2 : tag TBPM invalide";
+            }
+
+            // Paroles
+            tagID3v2List = tagID3v2->frameList("USLT");
+            if (tagID3v2List.isEmpty())
+            {
+                //TODO: APE
+            }
+            else
+            {
+                if (tagID3v2List.size() > 1)
+                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags USLT";
+
+                TagLib::ID3v2::UnsynchronizedLyricsFrame * frame = dynamic_cast<TagLib::ID3v2::UnsynchronizedLyricsFrame *>(tagID3v2List.front());
+
+                if (frame)
+                {
+                    m_lyrics = QString::fromUtf8(frame->text().toCString(true));
+                    TagLib::ByteVector lng = frame->language();
+                    Q_ASSERT(lng.size() == 3);
+                    m_language = getLanguageForISO3Code(QByteArray(lng.data(), 3));
+                }
+            }
+
+            // Langue
+            tagID3v2List = tagID3v2->frameList("TLAN");
+            if (tagID3v2List.isEmpty())
+            {
+                //TODO: APE
+            }
+            else
+            {
+                if (tagID3v2List.size() > 1)
+                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TLAN";
+
+                QString str = QString::fromUtf8(tagID3v2List.front()->toString().toCString(false));
+
+                if (str.size() != 3)
+                {
+                    qWarning() << "CSong::loadFromFile() : ID3v2 : tag TLAN invalide";
+                }
+                else
+                {
+                    TLanguage lng = getLanguageForISO3Code(qPrintable(str));
+
+                    if (m_language != LangUnknown && lng != m_language)
+                    {
+                        qWarning() << "CSong::loadFromFile() : ID3v2 : la langue des paroles et différente de la langue du morceau";
+                    }
+
+                    m_language = lng;
+                }
+            }
 
             break;
         }
 
         case CSong::FormatOGG:
         {
-            TagLib::Ogg::Vorbis::File file(qPrintable(m_fileName), false);
+            TagLib::Ogg::Vorbis::File file(qPrintable(m_fileName), readProperties);
 
             if (!file.isValid())
             {
                 qWarning() << "CSong::loadTags() : impossible de lire le fichier Ogg " << m_fileName;
-                return;
+                return false;
             }
 
             //...
@@ -320,12 +727,12 @@ void CSong::loadTags(void)
 
         case CSong::FormatFLAC:
         {
-            TagLib::FLAC::File file(qPrintable(m_fileName), false);
+            TagLib::FLAC::File file(qPrintable(m_fileName), readProperties);
 
             if (!file.isValid())
             {
                 qWarning() << "CSong::loadTags() : impossible de lire le fichier FLAC " << m_fileName;
-                return;
+                return false;
             }
 
             //...
@@ -333,6 +740,8 @@ void CSong::loadTags(void)
             break;
         }
     }
+
+    return true;
 }
 
 
@@ -497,442 +906,12 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
     }
 
     //sound->release();
-
+    
     // Chargement des métadonnées
-    switch (song->m_format)
+    if (!song->loadTags(true))
     {
-        case CSong::FormatMP3:
-        {
-            TagLib::MPEG::File file(qPrintable(fileName));
-
-            if (!file.isValid())
-            {
-                qWarning() << "CSong::loadFromFile() : impossible de lire le fichier MP3 " << fileName;
-                delete song;
-                return NULL;
-            }
-
-            song->m_fileSize = file.length();
-
-            // Propriétés du morceau
-            //TODO: Récupérer la version de MPEG : file.audioProperties()->version();
-            //TODO: Récupérer le mode stéréo : file.audioProperties()->channelMode();
-            song->m_bitRate     = file.audioProperties()->bitrate();
-            song->m_sampleRate  = file.audioProperties()->sampleRate();
-            song->m_numChannels = file.audioProperties()->channels();
-
-            TagLib::ID3v2::Tag * tagID3v2 = file.ID3v2Tag(true);
-            TagLib::ID3v1::Tag * tagID3v1 = file.ID3v1Tag(true);
-            TagLib::APE::Tag * tagAPE = file.APETag(false);
-
-            TagLib::ID3v2::FrameList tagID3v2List;
-/*
-            // DEBUG
-            TagLib::ID3v2::FrameListMap tagMap = tagID3v2->frameListMap();
-            for (TagLib::ID3v2::FrameListMap::ConstIterator it = tagMap.begin(); it != tagMap.end(); ++it)
-            {
-                QString tagKey = QByteArray(it->first.data(), it->first.size());
-
-                for (TagLib::ID3v2::FrameList::ConstIterator it2 = it->second.begin(); it2 != it->second.end(); ++it2)
-                {
-                    qDebug() << tagKey << ":" << (*it2)->toString().toCString(true);
-                }
-            }
-*/
-            // Titre
-            tagID3v2List = tagID3v2->frameList("TIT2");
-            if (tagID3v2List.isEmpty())
-            {
-                TagLib::String str;
-                if (tagID3v1)
-                    str = tagID3v1->title();
-                if (str.isNull() && tagAPE)
-                    str = tagAPE->title();
-                song->m_title = QString::fromUtf8(str.toCString(true));
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TIT2";
-                song->m_title = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
-            }
-
-            // Sous-titre
-            tagID3v2List = tagID3v2->frameList("TIT3");
-            if (tagID3v2List.isEmpty())
-            {
-                //TODO: APE
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TIT3";
-                song->m_subTitle = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
-            }
-
-            // Artiste
-            tagID3v2List = tagID3v2->frameList("TPE1");
-            if (tagID3v2List.isEmpty())
-            {
-                TagLib::String str;
-                if (tagID3v1)
-                    str = tagID3v1->artist();
-                if (str.isNull() && tagAPE)
-                    str = tagAPE->artist();
-                song->m_artistName = QString::fromUtf8(str.toCString(true));
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TPE1";
-                song->m_artistName = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
-            }
-
-            // Album
-            tagID3v2List = tagID3v2->frameList("TALB");
-            if (tagID3v2List.isEmpty())
-            {
-                TagLib::String str;
-                if (tagID3v1)
-                    str = tagID3v1->album();
-                if (str.isNull() && tagAPE)
-                    str = tagAPE->album();
-                song->m_albumTitle = QString::fromUtf8(str.toCString(true));
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TALB";
-                song->m_albumTitle = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
-            }
-
-            // Artiste de l'album
-            tagID3v2List = tagID3v2->frameList("TPE2");
-            if (tagID3v2List.isEmpty())
-            {
-                //TODO: APE
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TPE2";
-                song->m_albumArtist = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
-            }
-
-            // Compositeur
-            tagID3v2List = tagID3v2->frameList("TCOM");
-            if (tagID3v2List.isEmpty())
-            {
-                //TODO: APE
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TCOM";
-                song->m_composer = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
-            }
-
-            // Titre pour le tri
-            tagID3v2List = tagID3v2->frameList("TSOT");
-            if (tagID3v2List.isEmpty())
-            {
-                //TODO: APE
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TSOT";
-                song->m_titleSort = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
-            }
-
-            // Artiste pour le tri
-            tagID3v2List = tagID3v2->frameList("TSOP");
-            if (tagID3v2List.isEmpty())
-            {
-                //TODO: APE
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TSOP";
-                song->m_artistNameSort = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
-            }
-
-            // Album pour le tri
-            tagID3v2List = tagID3v2->frameList("TSOA");
-            if (tagID3v2List.isEmpty())
-            {
-                //TODO: APE
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TSOA";
-                song->m_albumTitleSort = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
-            }
-
-            // Année
-            tagID3v2List = tagID3v2->frameList("TDRC");
-            if (tagID3v2List.isEmpty())
-            {
-                song->m_year = tagID3v1->year();
-
-                if (song->m_year == 0)
-                {
-                    //TODO: APE
-                }
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TDRC";
-                TagLib::String str = tagID3v2List.front()->toString();
-
-                if (!str.isNull() && str.size() >= 4)
-                {
-                    bool ok;
-                    song->m_year = str.substr(0, 4).toInt(&ok);
-                    if (!ok)
-                    {
-                        qWarning() << "CSong::loadFromFile() : ID3v2 : tag TDRC invalide";
-                        song->m_year = 0;
-                    }
-                }
-            }
-
-            // Regroupement
-            tagID3v2List = tagID3v2->frameList("TIT1");
-            if (tagID3v2List.isEmpty())
-            {
-                //TODO: APE
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TIT1";
-                song->m_grouping = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
-            }
-
-            // Numéro de piste
-            tagID3v2List = tagID3v2->frameList("TRCK");
-            if (tagID3v2List.isEmpty())
-            {
-                song->m_trackNumber = tagID3v1->track();
-
-                if (song->m_trackNumber == 0)
-                {
-                    //TODO: APE
-                }
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TRCK";
-
-                QString str = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
-
-                if (str.contains('/'))
-                {
-                    QStringList strSplit = str.split('/');
-
-                    if (strSplit.size() == 2)
-                    {
-                        bool ok;
-                        song->m_trackNumber = strSplit[0].toInt(&ok);
-                        if (!ok) qWarning() << "CSong::loadFromFile() : ID3v2 : tag TRCK invalide";
-                        song->m_trackTotal = strSplit[1].toInt(&ok);
-                        if (!ok) qWarning() << "CSong::loadFromFile() : ID3v2 : tag TRCK invalide";
-                    }
-                    else
-                    {
-                        qWarning() << "CSong::loadFromFile() : ID3v2 : tag TRCK invalide";
-                    }
-                }
-                else
-                {
-                    bool ok;
-                    song->m_trackNumber = str.toInt(&ok);
-                    if (!ok) qWarning() << "CSong::loadFromFile() : ID3v2 : tag TRCK invalide";
-                }
-            }
-
-            // Numéro de disque
-            tagID3v2List = tagID3v2->frameList("TPOS");
-            if (tagID3v2List.isEmpty())
-            {
-                //TODO: APE
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TPOS";
-                QString str = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
-
-                if (str.contains('/'))
-                {
-                    QStringList strSplit = str.split('/');
-
-                    if (strSplit.size() == 2)
-                    {
-                        bool ok;
-                        song->m_discNumber = strSplit[0].toInt(&ok);
-                        if (!ok) qWarning() << "CSong::loadFromFile() : ID3v2 : tag TPOS invalide";
-                        song->m_discTotal = strSplit[1].toInt(&ok);
-                        if (!ok) qWarning() << "CSong::loadFromFile() : ID3v2 : tag TPOS invalide";
-                    }
-                    else
-                    {
-                        qWarning() << "CSong::loadFromFile() : ID3v2 : tag TPOS invalide";
-                    }
-                }
-                else
-                {
-                    bool ok;
-                    song->m_discNumber = str.toInt(&ok);
-                    if (!ok) qWarning() << "CSong::loadFromFile() : ID3v2 : tag TPOS invalide";
-                }
-            }
-
-            // Genre
-            tagID3v2List = tagID3v2->frameList("TCON");
-            if (tagID3v2List.isEmpty())
-            {
-                TagLib::String str = tagID3v1->genre();
-
-                if (str.isNull())
-                {
-                    //TODO: APE
-                }
-                else
-                    song->m_genre = QString::fromUtf8(str.toCString(true));
-            }
-            else
-            {
-                song->m_genre = QString::fromUtf8(tagID3v2->genre().toCString(true));
-            }
-
-            // Commentaires
-            tagID3v2List = tagID3v2->frameList("COMM");
-            if (tagID3v2List.isEmpty())
-            {
-                TagLib::String str = tagID3v1->comment();
-
-                if (str.isNull())
-                {
-                    //TODO: APE
-                }
-                else
-                    song->m_comments = QString::fromUtf8(str.toCString(true));
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags COMM";
-
-                TagLib::ID3v2::CommentsFrame * frame = dynamic_cast<TagLib::ID3v2::CommentsFrame *>(tagID3v2List.front());
-
-                if (frame)
-                {
-                    song->m_comments = QString::fromUtf8(frame->text().toCString(true));
-                }
-            }
-
-            // BPM
-            tagID3v2List = tagID3v2->frameList("TBPM");
-            if (tagID3v2List.isEmpty())
-            {
-                //TODO: APE
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TBPM";
-                QString str = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
-
-                bool ok;
-                song->m_bpm = str.toInt(&ok);
-                if (!ok) qWarning() << "CSong::loadFromFile() : ID3v2 : tag TBPM invalide";
-            }
-
-            // Paroles
-            tagID3v2List = tagID3v2->frameList("USLT");
-            if (tagID3v2List.isEmpty())
-            {
-                //TODO: APE
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags USLT";
-
-                TagLib::ID3v2::UnsynchronizedLyricsFrame * frame = dynamic_cast<TagLib::ID3v2::UnsynchronizedLyricsFrame *>(tagID3v2List.front());
-
-                if (frame)
-                {
-                    song->m_lyrics = QString::fromUtf8(frame->text().toCString(true));
-                    TagLib::ByteVector lng = frame->language();
-                    Q_ASSERT(lng.size() == 3);
-                    song->m_language = getLanguageForISO3Code(QByteArray(lng.data(), 3));
-                }
-            }
-
-            // Langue
-            tagID3v2List = tagID3v2->frameList("TLAN");
-            if (tagID3v2List.isEmpty())
-            {
-                //TODO: APE
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TLAN";
-
-                QString str = QString::fromUtf8(tagID3v2List.front()->toString().toCString(false));
-
-                if (str.size() != 3)
-                {
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : tag TLAN invalide";
-                }
-                else
-                {
-                    song->m_language = getLanguageForISO3Code(qPrintable(str));
-                }
-            }
-
-            break;
-        }
-
-        case CSong::FormatOGG:
-        {
-            TagLib::Ogg::Vorbis::File file(qPrintable(fileName));
-
-            if (!file.isValid())
-            {
-                qWarning() << "CSong::loadFromFile() : impossible de lire le fichier Ogg " << fileName;
-                delete song;
-                return NULL;
-            }
-
-            //...
-
-            break;
-        }
-
-        case CSong::FormatFLAC:
-        {
-            TagLib::FLAC::File file(qPrintable(fileName));
-
-            if (!file.isValid())
-            {
-                qWarning() << "CSong::loadFromFile() : impossible de lire le fichier FLAC " << fileName;
-                delete song;
-                return NULL;
-            }
-
-            //...
-
-            break;
-        }
+        delete song;
+        return NULL;
     }
 
     song->updateDatabase();
