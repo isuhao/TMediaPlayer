@@ -265,7 +265,7 @@ void CDynamicPlayList::loadFromDatabase(void)
     QSqlQuery query(m_application->getDataBase());
 
     // Liste des critères
-    query.prepare("SELECT criteria_id, criteria_parent, criteria_position, criteria_union, criteria_type, criteria_condition, criteria_value1, criteria_value2 "
+    query.prepare("SELECT criteria_id, criteria_parent, criteria_position, criteria_type, criteria_condition, criteria_value1, criteria_value2 "
                   "FROM criteria WHERE dynamic_list_id = ? ORDER BY criteria_position");
     query.bindValue(0, m_id);
 
@@ -281,10 +281,16 @@ void CDynamicPlayList::loadFromDatabase(void)
     {
         ICriteria * criteria = NULL;
 
-        if (query.value(4).toInt() == ICriteria::TypeMultiCriterion)
+        if (query.value(3).toInt() == ICriteria::TypeUnion)
         {
             CMultiCriterion * multiCriterion = new CMultiCriterion(m_application, this);
-            multiCriterion->setMultiCriterionType(CMultiCriterion::getMultiCriterionTypeFromInteger(query.value(3).toInt()));
+            multiCriterion->setMultiCriterionType(CMultiCriterion::Union);
+            criteria = multiCriterion;
+        }
+        else if (query.value(3).toInt() == ICriteria::TypeIntersection)
+        {
+            CMultiCriterion * multiCriterion = new CMultiCriterion(m_application, this);
+            multiCriterion->setMultiCriterionType(CMultiCriterion::Intersection);
             criteria = multiCriterion;
         }
         else
@@ -297,18 +303,25 @@ void CDynamicPlayList::loadFromDatabase(void)
       //criteria->m_position  = query.value(2).toInt();
         criteria->m_playList  = this;
 
-        criteria->m_type      = query.value(4).toInt();
-        criteria->m_condition = query.value(5).toInt();
-        criteria->m_value1    = query.value(6);
-        criteria->m_value2    = query.value(7);
+        criteria->m_type      = query.value(3).toInt();
+        criteria->m_condition = query.value(4).toInt();
+        criteria->m_value1    = query.value(5);
+        criteria->m_value2    = query.value(6);
 
         criteriaList[criteria->m_id] = criteria;
     }
 
-    // Imbrication des critères
-    foreach (ICriteria * criteria, criteriaList)
+    if (criteriaList.isEmpty())
     {
-        int parentId = reinterpret_cast<int>(criteria->m_parent);
+        qWarning() << "CDynamicPlayList::loadFromDatabase() : aucun critère défini";
+        m_mainCriteria = new CCriteria(m_application, this);
+        return;
+    }
+
+    // Imbrication des critères
+    for (QMap<int, ICriteria *>::const_iterator it = criteriaList.begin(); it != criteriaList.end(); ++it)
+    {
+        int parentId = reinterpret_cast<int>(it.value()->m_parent);
 
         if (parentId == 0)
         {
@@ -318,7 +331,7 @@ void CDynamicPlayList::loadFromDatabase(void)
                 continue;
             }
 
-            m_mainCriteria = criteria;
+            m_mainCriteria = it.value();
         }
         else
         {
@@ -336,7 +349,7 @@ void CDynamicPlayList::loadFromDatabase(void)
                 continue;
             }
 
-            multiCriterion->addChild(criteria);
+            multiCriterion->addChild(it.value());
         }
     }
 }

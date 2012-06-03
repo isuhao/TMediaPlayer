@@ -352,8 +352,9 @@ IWidgetCriteria * CCriteria::getWidget(void) const
 
     switch (m_type)
     {
-        case TypeMultiCriterion:
-            qWarning() << "CCriteria::getWidget() : un critère simple ne peut pas avoir le type TypeMultiCriterion";
+        case TypeUnion:
+        case TypeIntersection:
+            qWarning() << "CCriteria::getWidget() : un critère simple ne peut pas avoir le type TypeUnion ou TypeIntersection";
 
         default:
         case TypeInvalid:

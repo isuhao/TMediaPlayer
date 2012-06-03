@@ -14,10 +14,9 @@
  */
 
 CMultiCriterion::CMultiCriterion(CApplication * application, QObject * parent) :
-    ICriteria    (application, parent),
-    m_multi_type (Intersection)
+    ICriteria (application, parent)
 {
-    m_type = TypeMultiCriterion;
+    m_type = TypeUnion;
 }
 
 
@@ -31,9 +30,25 @@ CMultiCriterion::~CMultiCriterion()
 }
 
 
+CMultiCriterion::TMultiCriterionType CMultiCriterion::getMultiCriterionType(void) const
+{
+    switch (m_type)
+    {
+        default:
+        case TypeUnion:        return Union;
+        case TypeIntersection: return Intersection;
+    }
+}
+
+
 void CMultiCriterion::setMultiCriterionType(TMultiCriterionType type)
 {
-    m_multi_type = type;
+    switch (type)
+    {
+        default:
+        case Union       : m_type = TypeUnion       ; break;
+        case Intersection: m_type = TypeIntersection; break;
+    }
 }
 
 
@@ -65,7 +80,7 @@ bool CMultiCriterion::matchCriteria(CSong * song) const
         return false;
     }
 
-    if (m_multi_type == Union)
+    if (m_type == TypeUnion)
     {
         for (QList<ICriteria *>::const_iterator it = m_children.begin(); it != m_children.end(); ++it)
         {
@@ -75,7 +90,7 @@ bool CMultiCriterion::matchCriteria(CSong * song) const
             }
         }
     }
-    else if (m_multi_type == Intersection)
+    else if (m_type == TypeIntersection)
     {
         for (QList<ICriteria *>::const_iterator it = m_children.begin(); it != m_children.end(); ++it)
         {
@@ -107,7 +122,7 @@ QList<CSong *> CMultiCriterion::getSongs(const QList<CSong *>& from, const QList
 
     QList<CSong *> songList;
 
-    if (m_multi_type == Union)
+    if (m_type == TypeUnion)
     {
         songList = with;
 
@@ -116,7 +131,7 @@ QList<CSong *> CMultiCriterion::getSongs(const QList<CSong *>& from, const QList
             songList = (*it)->getSongs(from, songList);
         }
     }
-    else if (m_multi_type == Intersection)
+    else if (m_type == TypeIntersection)
     {
         songList = from;
 
@@ -150,18 +165,6 @@ void CMultiCriterion::insertIntoDatabase(CApplication * application)
 
     // Insertion du critère
     ICriteria::insertIntoDatabase(application);
-
-    // Modification du type
-    QSqlQuery query(application->getDataBase());
-
-    query.prepare("UPDATE criteria SET criteria_union = ? WHERE criteria_id = ?");
-    query.bindValue(0, m_multi_type);
-    query.bindValue(1, m_id);
-
-    if (!query.exec())
-    {
-        application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-    }
 
     for (QList<ICriteria *>::const_iterator it = m_children.begin(); it != m_children.end(); ++it)
     {

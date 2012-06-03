@@ -141,15 +141,14 @@ void ICriteria::insertIntoDatabase(CApplication * application)
         m_position = query.value(0).toInt() + 1;
     }
 
-    query.prepare("INSERT INTO criteria (dynamic_list_id, criteria_parent, criteria_position, criteria_union, criteria_type, criteria_condition, criteria_value1, criteria_value2) "
-                  "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    query.prepare("INSERT INTO criteria (dynamic_list_id, criteria_parent, criteria_position, criteria_type, criteria_condition, criteria_value1, criteria_value2) "
+                  "VALUES (?, ?, ?, ?, ?, ?, ?)");
 
     int numValue = 0;
 
     query.bindValue(numValue++, m_playList->getId());
     query.bindValue(numValue++, parentId);
     query.bindValue(numValue++, m_position);
-    query.bindValue(numValue++, 0);
     query.bindValue(numValue++, m_type);
     query.bindValue(numValue++, m_condition);
     query.bindValue(numValue++, m_value1);

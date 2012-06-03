@@ -32,7 +32,8 @@ public:
     {
         // Special
         TypeInvalid            = 0x0000,
-        TypeMultiCriterion     = 0x0001,
+        TypeUnion              = 0x0001,
+        TypeIntersection       = 0x0002,
 
         // Boolean
         TypeMaskBoolean        = 0x01,

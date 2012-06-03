@@ -19,13 +19,9 @@
   - Ne pas oublier de mettre à jour la taille du fichier.
 
 - Boite de dialogue Edit Songs. (à terminer)
-
 - Implémenter le glisser-déposer au sein d'une liste statique.
-
 - Implémenter la lecture aléatoire.
-
 - Import depuis iTunes / SongBird.
-
 - Tester le scrobbling Last.fm.
 
 --------------------------------------------------
@@ -43,9 +39,7 @@
 - Ajouter l'option "Ne pas lire en mode aléatoire".
 
 - Implémenter le glisser-déposer pour créer une nouvelle liste de lecture.
-
 - Créer la fenêtre Préférences. (à terminer)
-
 - Griser les boutons indisponibles suivant l'état (lecture, pause, etc.).
 
 - Optimisation : exécuter les requêtes SQL dans un thread séparé.
@@ -67,7 +61,6 @@
   - Option "Illustrations : image dans le dossier".
 
 - Enregistrer l'heure UTC de lecture.
-
 - Enregistrer l'état d'un dossier (expanded or not).
 
 - Créer la boite de dialogue Édition des métadonnées.

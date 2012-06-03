@@ -28,7 +28,7 @@ public:
     explicit CMultiCriterion(CApplication * application, QObject * parent = NULL);
     virtual ~CMultiCriterion();
 
-    inline TMultiCriterionType getMultiCriterionType(void) const;
+    TMultiCriterionType getMultiCriterionType(void) const;
     inline QList<ICriteria *> getChildren(void) const;
     inline int getNumChildren(void) const;
 
@@ -49,7 +49,6 @@ protected:
 
 private:
 
-    TMultiCriterionType m_multi_type;
     QList<ICriteria *> m_children;
 };
 
@@ -62,12 +61,6 @@ inline CMultiCriterion::TMultiCriterionType CMultiCriterion::getMultiCriterionTy
         case 0:  return Union;
         case 1:  return Intersection;
     }
-}
-
-
-inline CMultiCriterion::TMultiCriterionType CMultiCriterion::getMultiCriterionType(void) const
-{
-    return m_multi_type;
 }
 
 

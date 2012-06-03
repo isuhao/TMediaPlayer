@@ -31,13 +31,18 @@ CDialogEditDynamicList::CDialogEditDynamicList(CDynamicPlayList * playList, CApp
 
     if (m_playList)
     {
-        //TODO: charger les critères
-        //m_widgetCriterion = new CWidgetMultiCriterion(this);
-        //m_uiWidget->verticalLayout->insertWidget(1, m_widgetCriterion);
-
         m_widgetCriterion = m_playList->getWidget();
-        m_uiWidget->verticalLayout->insertWidget(1, m_widgetCriterion);
-        m_widgetCriterion->setParent(this);
+
+        if (m_widgetCriterion)
+        {
+            m_uiWidget->verticalLayout->insertWidget(1, m_widgetCriterion);
+            m_widgetCriterion->setParent(this);
+        }
+        else
+        {
+            m_widgetCriterion = new CWidgetMultiCriterion(m_application, this);
+            m_uiWidget->verticalLayout->insertWidget(1, m_widgetCriterion);
+        }
     }
     else
     {

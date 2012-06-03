@@ -34,7 +34,6 @@ CREATE TABLE criteria (
     dynamic_list_id INTEGER NOT NULL,
     criteria_parent INTEGER NOT NULL,
     criteria_position INTEGER NOT NULL,
-    criteria_union INTEGER NOT NULL,
     criteria_type INTEGER NOT NULL,
     criteria_condition INTEGER NOT NULL,
     criteria_value1 VARCHAR,

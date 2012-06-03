@@ -19,7 +19,7 @@ CWidgetMultiCriterion::CWidgetMultiCriterion(CApplication * application, QWidget
     IWidgetCriteria (application, parent),
     m_uiWidget      (new Ui::WidgetMultiCriterion())
 {
-    m_type = ICriteria::TypeMultiCriterion;
+    m_type = ICriteria::TypeUnion;
     m_uiWidget->setupUi(this);
 
     addCriteria();
@@ -63,7 +63,7 @@ ICriteria * CWidgetMultiCriterion::getCriteria(void)
 
 void CWidgetMultiCriterion::setMultiCriterionType(int type)
 {
-    m_uiWidget->listUnion->setCurrentIndex(type);
+    m_uiWidget->listUnion->setCurrentIndex(type - 1);
 }
 
 
