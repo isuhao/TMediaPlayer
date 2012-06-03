@@ -43,7 +43,7 @@ CDialogEditDynamicList::CDialogEditDynamicList(CDynamicPlayList * playList, CApp
     {
         m_playList = new CDynamicPlayList(m_application);
 
-        m_widgetCriterion = new CWidgetMultiCriterion(this);
+        m_widgetCriterion = new CWidgetMultiCriterion(m_application, this);
         m_uiWidget->verticalLayout->insertWidget(1, m_widgetCriterion);
     }
 

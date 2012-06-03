@@ -15,10 +15,11 @@ class CCriteria : public ICriteria
 
 public:
 
-    explicit CCriteria(QObject * parent = NULL);
-    ~CCriteria();
+    explicit CCriteria(CApplication * application, QObject * parent = NULL);
+    virtual ~CCriteria();
 
     virtual bool matchCriteria(CSong * song) const;
+    virtual QList<CSong *> getSongs(const QList<CSong *>& from, const QList<CSong *>& with = QList<CSong *>()) const;
     virtual IWidgetCriteria * getWidget(void) const;
 };
 

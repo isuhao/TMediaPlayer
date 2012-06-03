@@ -25,10 +25,10 @@ public:
 
     enum TFormat
     {
-        FormatUnknown = 0,
-        FormatMP3     = 1,
-        FormatOGG     = 2,
-        FormatFLAC    = 3
+        FormatUnknown = 0, ///< Format inconnu.
+        FormatMP3     = 1, ///< Format MPEG Layer 3.
+        FormatOGG     = 2, ///< Format Ogg Vorbis.
+        FormatFLAC    = 3  ///< Format FLAC.
     };
 
     static inline TFormat getFormatFromInteger(int format);
@@ -37,11 +37,11 @@ public:
 
     enum TLanguage
     {
-        LangUnknown = 0,
-        LangEnglish = 1,
-        LangFrench  = 2,
-        LangGerman  = 3,
-        LangItalian = 4
+        LangUnknown = 0, ///< Langue inconnue.
+        LangEnglish = 1, ///< Anglais.
+        LangFrench  = 2, ///< Français.
+        LangGerman  = 3, ///< Allemand.
+        LangItalian = 4  ///< Italien.
     };
 
     static inline TLanguage getLanguageFromInteger(int language);

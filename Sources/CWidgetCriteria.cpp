@@ -2,6 +2,10 @@
 #include "CWidgetCriteria.hpp"
 #include "CCriteria.hpp"
 #include "CSong.hpp"
+#include "CApplication.hpp"
+#include "CPlayList.hpp"
+#include "CStaticPlayList.hpp"
+#include "CDynamicPlayList.hpp"
 
 #include <QtDebug>
 
@@ -9,19 +13,44 @@
 /**
  * Construit le widget.
  *
- * \todo Remplir la liste des types de critères dans le code.
+ * \todo Remplir la liste des types de critères dans le code (et la trier).
  *
  * \param parent Widget parent.
  */
 
-CWidgetCriteria::CWidgetCriteria(QWidget * parent) :
-    IWidgetCriteria (parent),
+CWidgetCriteria::CWidgetCriteria(CApplication * application, QWidget * parent) :
+    IWidgetCriteria (application, parent),
     m_uiWidget      (new Ui::WidgetCriteria())
 {
     m_uiWidget->setupUi(this);
 
     //TODO: remplir la liste de type ici !
 
+    // Remplissage des listes
+    m_uiWidget->listLanguage->addItems(CSong::getLanguageList());
+    m_uiWidget->listFormat->addItems(CSong::getFormatList());
+
+    QList<CPlayList *> playLists = m_application->getAllPlayLists();
+
+    for (QList<CPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
+    {
+        if (qobject_cast<CStaticPlayList *>(*it))
+        {
+            m_uiWidget->listPlayList->addItem(QPixmap(":/icons/playlist"), (*it)->getName(), (*it)->getIdPlayList());
+        }
+        else if (qobject_cast<CDynamicPlayList *>(*it))
+        {
+            //TODO: Ne pas ajouter la liste courante
+            m_uiWidget->listPlayList->addItem(QPixmap(":/icons/dynamic_list"), (*it)->getName(), (*it)->getIdPlayList());
+        }
+        else
+        {
+            qWarning() << "CWidgetCriteria::CWidgetCriteria() : Type de liste inconnu";
+            m_uiWidget->listPlayList->addItem((*it)->getName(), (*it)->getIdPlayList());
+        }
+    }
+
+    // Initialisation
     changeType(0);
 
     connect(m_uiWidget->listType, SIGNAL(currentIndexChanged(int)), this, SLOT(changeType(int)));
@@ -56,7 +85,7 @@ ICriteria * CWidgetCriteria::getCriteria(void)
 {
     qDebug() << "CWidgetCriteria::getCriteria()";
 
-    CCriteria * criteria = new CCriteria(this);
+    CCriteria * criteria = new CCriteria(m_application, this);
     criteria->m_type      = m_type;
     criteria->m_condition = m_condition;
 
@@ -68,12 +97,11 @@ ICriteria * CWidgetCriteria::getCriteria(void)
         }
         else if (m_type == ICriteria::TypePlayList)
         {
-            //TODO...
-            //criteria->m_value1 = 
+            criteria->m_value1 = m_uiWidget->listPlayList->itemData(m_uiWidget->listPlayList->currentIndex(), Qt::UserRole);
         }
         else if (m_type == ICriteria::TypeFormat)
         {
-            criteria->m_value1 = m_uiWidget->listFormat->currentIndex();
+            criteria->m_value1 = m_uiWidget->listFormat->currentIndex() + 1;
         }
     }
     else if ((m_type >> 8) == ICriteria::TypeMaskString)
@@ -193,6 +221,7 @@ void CWidgetCriteria::changeType(int num)
     }
 }
 
+
 void CWidgetCriteria::changeConditionBoolean(int num)
 {
     if ((m_type >> 8) != ICriteria::TypeMaskBoolean)
@@ -204,7 +233,7 @@ void CWidgetCriteria::changeConditionBoolean(int num)
     {
         default: m_condition = ICriteria::CondInvalid; break;
         case  0: m_condition = ICriteria::CondIs;      break;
-        case  1: m_condition = ICriteria::ConsIsNot;   break;
+        case  1: m_condition = ICriteria::CondIsNot;   break;
     }
 
     m_uiWidget->editValue1String->hide();
@@ -221,6 +250,7 @@ void CWidgetCriteria::changeConditionBoolean(int num)
     m_uiWidget->listLanguage->setVisible(m_type == ICriteria::TypeLanguage);
     m_uiWidget->listPlayList->setVisible(m_type == ICriteria::TypePlayList);
 }
+
 
 void CWidgetCriteria::changeConditionString(int num)
 {

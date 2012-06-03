@@ -1,5 +1,7 @@
 
 #include "CCriteria.hpp"
+#include "CPlayList.hpp"
+#include "CApplication.hpp"
 #include "CSong.hpp"
 
 #include <QtDebug>
@@ -11,8 +13,8 @@
  * \param parent Pointeur sur l'objet parent.
  */
 
-CCriteria::CCriteria(QObject * parent) :
-    ICriteria (parent)
+CCriteria::CCriteria(CApplication * application, QObject * parent) :
+    ICriteria (application, parent)
 {
 
 }
@@ -31,11 +33,6 @@ CCriteria::~CCriteria()
 /**
  * Détermine si le morceau vérifie le critère.
  *
- * \todo Gérer le type "Liste de lecture".
- * \todo Gérer le type "Langue".
- * \todo Gérer le type "Format".
- * \todo Pouvoir changer l'échelle de temps pour les conditions "dans les derniers N jours".
- *
  * \param song Morceau à tester.
  * \return Booléen.
  */
@@ -46,7 +43,52 @@ bool CCriteria::matchCriteria(CSong * song) const
 
     if ((m_type >> 8) == ICriteria::TypeMaskBoolean)
     {
-        //...
+        if (m_type == ICriteria::TypeLanguage)
+        {
+            const CSong::TLanguage lng = CSong::getLanguageForISO2Code(m_value1.toString());
+
+            if (m_condition == ICriteria::CondIs)
+            {
+                return (song->getLanguage() == lng);
+            }
+            else if (m_condition == ICriteria::CondIsNot)
+            {
+                return (song->getLanguage() != lng);
+            }
+            else
+            {
+                qWarning() << "CCriteria::matchCriteria() : la condition n'est pas gérée";
+                return false;
+            }
+        }
+        else if (m_type == ICriteria::TypeFormat)
+        {
+            const CSong::TFormat format = CSong::getFormatFromInteger(m_value1.toInt());
+
+            if (m_condition == ICriteria::CondIs)
+            {
+                return (song->getFormat() == format);
+            }
+            else if (m_condition == ICriteria::CondIsNot)
+            {
+                return (song->getFormat() != format);
+            }
+            else
+            {
+                qWarning() << "CCriteria::matchCriteria() : la condition n'est pas gérée";
+                return false;
+            }
+        }
+        else if (m_type == ICriteria::TypePlayList)
+        {
+            qWarning() << "CCriteria::matchCriteria() : le critère TypePlayList doit être géré par la fonction appelante";
+            return false;
+        }
+        else
+        {
+            qWarning() << "CCriteria::matchCriteria() : le type de critère n'est pas géré";
+            return false;
+        }
     }
     else if ((m_type >> 8) == ICriteria::TypeMaskString)
     {
@@ -196,15 +238,35 @@ bool CCriteria::matchCriteria(CSong * song) const
 
             case CondDateInLast:
             {
-                QDateTime dateCmp1 = QDateTime::currentDateTime();
-                QDateTime dateCmp2 = dateCmp1.addDays(-m_value2.toInt()); //TODO: gérer l'unité de temps
+                const QDateTime dateCmp1 = QDateTime::currentDateTime();
+                QDateTime dateCmp2;
+
+                switch (m_value2.toInt())
+                {
+                    default:
+                    case 0: dateCmp2 = dateCmp1.addDays  (-    m_value1.toInt()); break; // Jours
+                    case 1: dateCmp2 = dateCmp1.addDays  (-7 * m_value1.toInt()); break; // Semaines
+                    case 2: dateCmp2 = dateCmp1.addMonths(-    m_value1.toInt()); break; // Mois
+                    case 3: dateCmp2 = dateCmp1.addYears (-    m_value1.toInt()); break; // Années
+                }
+
                 return (date <= dateCmp1 && date >= dateCmp2);
             }
 
             case CondDateNotInLast:
             {
-                QDateTime dateCmp1 = QDateTime::currentDateTime();
-                QDateTime dateCmp2 = dateCmp1.addDays(-m_value2.toInt()); //TODO: gérer l'unité de temps
+                const QDateTime dateCmp1 = QDateTime::currentDateTime();
+                QDateTime dateCmp2;
+
+                switch (m_value2.toInt())
+                {
+                    default:
+                    case 0: dateCmp2 = dateCmp1.addDays  (-    m_value1.toInt()); break; // Jours
+                    case 1: dateCmp2 = dateCmp1.addDays  (-7 * m_value1.toInt()); break; // Semaines
+                    case 2: dateCmp2 = dateCmp1.addMonths(-    m_value1.toInt()); break; // Mois
+                    case 3: dateCmp2 = dateCmp1.addYears (-    m_value1.toInt()); break; // Années
+                }
+
                 return !(date <= dateCmp1 && date >= dateCmp2);
             }
         }
@@ -214,13 +276,79 @@ bool CCriteria::matchCriteria(CSong * song) const
 }
 
 
+/**
+ * Retourne la liste des morceaux qui vérifient le critère.
+ * Cette implémentation parcourt la liste \a from et utilise la méthode matchCriteria
+ * pour tester si le morceau vérifie le critère, sauf si la condition est la présence
+ * ou non du morceau dans une liste, auquel cas on détermine l'intersection de \a from
+ * avec les morceaux de la liste de lecture.
+ *
+ * \param from Liste de morceaux à analyser.
+ * \param with Liste de morceaux à ajouter dans la liste.
+ * \return Liste de morceaux qui vérifient le critère, sans doublons, avec tous les
+ *         éléments de \a with.
+ */
+
+QList<CSong *> CCriteria::getSongs(const QList<CSong *>& from, const QList<CSong *>& with) const
+{
+    QList<CSong *> songList = with;
+
+    if (m_type == ICriteria::TypePlayList)
+    {
+        CPlayList * playList = m_application->getPlayListFromId(m_value1.toInt());
+
+        if (!playList)
+        {
+            qWarning() << "CCriteria::getSongs() : la liste de lecture n'est pas valide";
+            return songList;
+        }
+
+        if (m_condition == ICriteria::CondIs)
+        {
+            for (QList<CSong *>::const_iterator it = from.begin(); it != from.end(); ++it)
+            {
+                if (playList->hasSong(*it) && !songList.contains(*it))
+                {
+                    songList.append(*it);
+                }
+            }
+        }
+        else if (m_condition == ICriteria::CondIsNot)
+        {
+            for (QList<CSong *>::const_iterator it = from.begin(); it != from.end(); ++it)
+            {
+                if (!playList->hasSong(*it) && !songList.contains(*it))
+                {
+                    songList.append(*it);
+                }
+            }
+        }
+        else
+        {
+            qWarning() << "CCriteria::getSongs() : la condition n'est pas gérée";
+        }
+    }
+    else
+    {
+        for (QList<CSong *>::const_iterator it = from.begin(); it != from.end(); ++it)
+        {
+            if (matchCriteria(*it) && !songList.contains(*it))
+            {
+                songList.append(*it);
+            }
+        }
+    }
+
+    return songList;
+}
+
+
 #include "CWidgetCriteria.hpp" // Si on l'inclut avant, l'intellisense bug complètement...
 
 
-/// \todo Implémentation.
 IWidgetCriteria * CCriteria::getWidget(void) const
 {
-    CWidgetCriteria * widget = new CWidgetCriteria(NULL);
+    CWidgetCriteria * widget = new CWidgetCriteria(m_application, NULL);
 
     switch (m_type)
     {
@@ -263,7 +391,31 @@ IWidgetCriteria * CCriteria::getWidget(void) const
         {
             default:
             case CondIs   : widget->m_uiWidget->listConditionBoolean->setCurrentIndex(0); break;
-            case ConsIsNot: widget->m_uiWidget->listConditionBoolean->setCurrentIndex(1); break;
+            case CondIsNot: widget->m_uiWidget->listConditionBoolean->setCurrentIndex(1); break;
+        }
+
+        if (m_type == ICriteria::TypeLanguage)
+        {
+            widget->m_uiWidget->listLanguage->setCurrentIndex(CSong::getLanguageForISO2Code(m_value1.toString()));
+        }
+        else if (m_type == ICriteria::TypePlayList)
+        {
+            for (int row = 0; row < widget->m_uiWidget->listPlayList->count(); ++row)
+            {
+                if (widget->m_uiWidget->listPlayList->itemData(row, Qt::UserRole) == m_value1.toInt())
+                {
+                    widget->m_uiWidget->listPlayList->setCurrentIndex(row);
+                    break;
+                }
+            }
+        }
+        else if (m_type == ICriteria::TypeFormat)
+        {
+            widget->m_uiWidget->listFormat->setCurrentIndex(m_value1.toInt() - 1);
+        }
+        else
+        {
+            qWarning() << "CCriteria::getWidget() : type de critère non géré";
         }
     }
     else if ((m_type >> 8) == TypeMaskString)

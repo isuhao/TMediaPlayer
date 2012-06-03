@@ -879,6 +879,7 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
 
     // Recherche du format du morceau
     res = sound->getFormat(&type, NULL, NULL, NULL);
+
     if (res != FMOD_OK)
     {
         qWarning() << "CSong::loadFromFile() : impossible de déterminer le format du morceau";
@@ -888,8 +889,9 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
         switch (type)
         {
             default:
-                song->m_format = CSong::FormatUnknown;
-                break;
+                qWarning() << "CSong::loadFromFile() : format inconnu";
+                delete song;
+                return NULL;
 
             case FMOD_SOUND_TYPE_MPEG:
                 song->m_format = CSong::FormatMP3;

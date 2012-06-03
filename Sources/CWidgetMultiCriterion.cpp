@@ -15,8 +15,8 @@
  * \param parent Widget parent.
  */
 
-CWidgetMultiCriterion::CWidgetMultiCriterion(QWidget * parent) :
-    IWidgetCriteria (parent),
+CWidgetMultiCriterion::CWidgetMultiCriterion(CApplication * application, QWidget * parent) :
+    IWidgetCriteria (application, parent),
     m_uiWidget      (new Ui::WidgetMultiCriterion())
 {
     m_type = ICriteria::TypeMultiCriterion;
@@ -49,7 +49,7 @@ CWidgetMultiCriterion::~CWidgetMultiCriterion()
 ICriteria * CWidgetMultiCriterion::getCriteria(void)
 {
     qDebug() << "CWidgetMultiCriterion::getCriteria()";
-    CMultiCriterion * criteria = new CMultiCriterion(this);
+    CMultiCriterion * criteria = new CMultiCriterion(m_application, this);
     criteria->setMultiCriterionType(CMultiCriterion::getMultiCriterionTypeFromInteger(m_uiWidget->listUnion->currentIndex()));
 
     foreach (IWidgetCriteria * child, m_children)
@@ -73,7 +73,7 @@ void CWidgetMultiCriterion::setMultiCriterionType(int type)
 
 void CWidgetMultiCriterion::addCriteria(void)
 {
-    addCriteria(new CWidgetCriteria(this));
+    addCriteria(new CWidgetCriteria(m_application, this));
 }
 
 
@@ -83,7 +83,7 @@ void CWidgetMultiCriterion::addCriteria(void)
 
 void CWidgetMultiCriterion::addMultiCriterion(void)
 {
-    addCriteria(new CWidgetMultiCriterion(this));
+    addCriteria(new CWidgetMultiCriterion(m_application, this));
 }
 
 

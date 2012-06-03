@@ -83,7 +83,7 @@ public:
         // Boolean
         CondMaskBoolean        = 0x01,
         CondIs                 = 0x0101,
-        ConsIsNot              = 0x0102,
+        CondIsNot              = 0x0102,
         // Dupliquer ?
 
         // String
@@ -123,7 +123,7 @@ public:
     };
 
 
-    explicit ICriteria(QObject * parent = NULL);
+    explicit ICriteria(CApplication * application, QObject * parent = NULL);
     virtual ~ICriteria();
 
     inline int getId(void) const;
@@ -147,6 +147,7 @@ protected:
     int m_condition;   ///< Condition. (TCondition)
     QVariant m_value1; ///< Valeur 1.
     QVariant m_value2; ///< Valeur 2.
+    CApplication * m_application;
 
     virtual void setPlayList(CDynamicPlayList * playList);
     virtual void insertIntoDatabase(CApplication * application);

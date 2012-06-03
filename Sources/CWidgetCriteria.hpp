@@ -18,7 +18,7 @@ class CWidgetCriteria : public IWidgetCriteria
 
 public:
 
-    explicit CWidgetCriteria(QWidget * parent = NULL);
+    explicit CWidgetCriteria(CApplication * application, QWidget * parent = NULL);
     virtual ~CWidgetCriteria();
 
     virtual ICriteria * getCriteria(void);

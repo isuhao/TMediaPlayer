@@ -25,7 +25,7 @@ class CWidgetMultiCriterion : public IWidgetCriteria
 
 public:
 
-    explicit CWidgetMultiCriterion(QWidget * parent = NULL);
+    explicit CWidgetMultiCriterion(CApplication * application, QWidget * parent = NULL);
     virtual ~CWidgetMultiCriterion();
 
     virtual ICriteria * getCriteria(void);

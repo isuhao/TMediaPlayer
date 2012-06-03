@@ -72,6 +72,7 @@ public:
     void setDisplayedSongTable(CSongTable * songTable);
     CSong * getSongFromId(int id) const;
     CListFolder * getFolderFromId(int id) const;
+    CPlayList * getPlayListFromId(int id) const;
     QList<CPlayList *> getPlayListsWithSong(CSong * song) const;
     QList<CPlayList *> getAllPlayLists(void) const;
     void removeSongs(const QList<CSong *> songs);

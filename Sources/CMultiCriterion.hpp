@@ -25,7 +25,7 @@ public:
     static inline TMultiCriterionType getMultiCriterionTypeFromInteger(int type);
 
 
-    explicit CMultiCriterion(QObject * parent = NULL);
+    explicit CMultiCriterion(CApplication * application, QObject * parent = NULL);
     virtual ~CMultiCriterion();
 
     inline TMultiCriterionType getMultiCriterionType(void) const;

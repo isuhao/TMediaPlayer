@@ -24,7 +24,7 @@ CDynamicPlayList::CDynamicPlayList(CApplication * application, const QString& na
     m_mainCriteria          (NULL),
     m_isDynamicListModified (false)
 {
-    m_mainCriteria = new CMultiCriterion(this);
+    m_mainCriteria = new CMultiCriterion(m_application, this);
 }
 
 
@@ -283,13 +283,13 @@ void CDynamicPlayList::loadFromDatabase(void)
 
         if (query.value(4).toInt() == ICriteria::TypeMultiCriterion)
         {
-            CMultiCriterion * multiCriterion = new CMultiCriterion(this);
+            CMultiCriterion * multiCriterion = new CMultiCriterion(m_application, this);
             multiCriterion->setMultiCriterionType(CMultiCriterion::getMultiCriterionTypeFromInteger(query.value(3).toInt()));
             criteria = multiCriterion;
         }
         else
         {
-            criteria = new CCriteria(this);
+            criteria = new CCriteria(m_application, this);
         }
 
         criteria->m_id        = query.value(0).toInt();

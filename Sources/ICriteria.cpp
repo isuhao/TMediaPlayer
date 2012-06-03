@@ -15,18 +15,19 @@
  * \param parent Pointeur sur l'objet parent, qui sera chargé de détruire le critère.
  */
 
-ICriteria::ICriteria(QObject * parent) :
-    QObject     (parent),
-    m_type      (TypeInvalid),
-    m_condition (CondInvalid),
-    m_value1    (),
-    m_value2    (),
-    m_id        (-1),
-    m_position  (1),
-    m_parent    (NULL),
-    m_playList  (NULL)
+ICriteria::ICriteria(CApplication * application, QObject * parent) :
+    QObject       (parent),
+    m_type        (TypeInvalid),
+    m_condition   (CondInvalid),
+    m_value1      (),
+    m_value2      (),
+    m_application (application),
+    m_id          (-1),
+    m_position    (1),
+    m_parent      (NULL),
+    m_playList    (NULL)
 {
-
+    Q_CHECK_PTR(application);
 }
 
 
@@ -42,7 +43,7 @@ ICriteria::~ICriteria()
 
 /**
  * Retourne la liste des morceaux qui vérifient le critère.
- * Cette implémentation de base parcourt la liste \a from est utilise la méthode matchCriteria
+ * Cette implémentation de base parcourt la liste \a from et utilise la méthode matchCriteria
  * pour tester si le morceau vérifie le critère.
  *
  * \param from Liste de morceaux à analyser.
@@ -55,17 +56,23 @@ QList<CSong *> ICriteria::getSongs(const QList<CSong *>& from, const QList<CSong
 {
     QList<CSong *> songList = with;
 
-    foreach (CSong * song, from)
+    for (QList<CSong *>::const_iterator it = from.begin(); it != from.end(); ++it)
     {
-        if (matchCriteria(song) && !songList.contains(song))
+        if (matchCriteria(*it) && !songList.contains(*it))
         {
-            songList.append(song);
+            songList.append(*it);
         }
     }
 
     return songList;
 }
 
+
+/**
+ * Modifie la liste de lecture dynamique associée au critère.
+ *
+ * \param playList Pointeur sur la nouvelle liste dynamique.
+ */
 
 void ICriteria::setPlayList(CDynamicPlayList * playList)
 {
@@ -74,6 +81,12 @@ void ICriteria::setPlayList(CDynamicPlayList * playList)
     m_playList = playList;
 }
 
+
+/**
+ * Ajoute le critère en base de données.
+ *
+ * \param application Pointeur sur l'application.
+ */
 
 void ICriteria::insertIntoDatabase(CApplication * application)
 {

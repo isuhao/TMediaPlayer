@@ -48,6 +48,8 @@ CSongTable::CSongTable(CApplication * application) :
     sizePolicy.setHeightForWidth(this->sizePolicy().hasHeightForWidth());
     setSizePolicy(sizePolicy);
 
+    setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
+
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setAlternatingRowColors(true);

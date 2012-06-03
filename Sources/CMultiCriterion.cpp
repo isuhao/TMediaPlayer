@@ -13,8 +13,8 @@
  * Construit le sous-critère d'une liste dynamique.
  */
 
-CMultiCriterion::CMultiCriterion(QObject * parent) :
-    ICriteria    (parent),
+CMultiCriterion::CMultiCriterion(CApplication * application, QObject * parent) :
+    ICriteria    (application, parent),
     m_multi_type (Intersection)
 {
     m_type = TypeMultiCriterion;
@@ -187,10 +187,9 @@ bool CMultiCriterion::isValidType(int type) const
 */
 
 
-/// \todo Implémentation.
 IWidgetCriteria * CMultiCriterion::getWidget(void) const
 {
-    CWidgetMultiCriterion * widget = new CWidgetMultiCriterion(NULL);
+    CWidgetMultiCriterion * widget = new CWidgetMultiCriterion(m_application, NULL);
     widget->setMultiCriterionType(m_type);
 
     for (QList<ICriteria *>::const_iterator it = m_children.begin(); it != m_children.end(); ++it)

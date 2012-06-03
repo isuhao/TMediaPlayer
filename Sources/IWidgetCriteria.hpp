@@ -12,7 +12,7 @@ class IWidgetCriteria : public QWidget
 
 public:
 
-    explicit IWidgetCriteria(QWidget * parent = NULL);
+    explicit IWidgetCriteria(CApplication * application, QWidget * parent = NULL);
     virtual ~IWidgetCriteria();
 
     virtual ICriteria * getCriteria(void) = 0;
@@ -21,6 +21,7 @@ protected:
 
     ICriteria::TType m_type;
     ICriteria::TCondition m_condition;
+    CApplication * m_application;
 };
 
 #endif // FILE_I_WIDGET_CRITERIA

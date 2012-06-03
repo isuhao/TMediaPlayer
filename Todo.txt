@@ -4,13 +4,11 @@
 --------------------------------------------------
 
 - Listes de lecture dynamiques :
-  - Chargement des listes. (OK)
-  - Modification d'une liste.
-  - Mise à jour des morceaux. (à terminer)
   - Vérifier que les champs ne sont pas vides.
   - Si un multi-critères ne contient qu'un enfant, on peut remonter celui-ci au niveau supérieur.
   - Trier les types de critères par ordre alphabétique.
   - Ajouter des unités pour certains types (taille du fichier, débit, etc.).
+  - Vérifier qu'il n'y a pas de boucles pour le critère "Liste de lecture".
 
 - Lire les métadonnées d'un morceau au chargement. (à terminer)
   - MP3 : lire les tags APE.
@@ -26,9 +24,6 @@
 
 - Implémenter le glisser-déposer au sein d'une liste statique.
 
-- Menu contextuel pour les listes de lecture.
-  - Créer un dossier.
-
 - Implémenter la lecture aléatoire.
 
 - Import depuis iTunes / SongBird.
@@ -43,6 +38,8 @@
 
 - Gérer les dossiers de listes de lecture.
   - Implémenter le glisser-déposer pour déplacer les listes de lecture.
+  - Menu contextuel pour les listes de lecture : Création / Modification / Suppression.
+  - Pouvoir créer une liste directement dans un dossier.
 
 - Ajouter l'information "Fait partie d'une compilation".
 - Ajouter l'option "Ne pas lire en mode aléatoire".

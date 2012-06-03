@@ -432,6 +432,13 @@ CSong * CApplication::getSongFromId(int id) const
 }
 
 
+/**
+ * Retourne le dossier correspondant à un identifiant.
+ *
+ * \param id Identifiant du dossier.
+ * \return Pointeur sur le dossier, ou NULL si \a id n'est pas valide.
+ */
+
 CListFolder * CApplication::getFolderFromId(int id) const
 {
     if (id <= 0)
@@ -442,6 +449,32 @@ CListFolder * CApplication::getFolderFromId(int id) const
     for (QList<CListFolder *>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
     {
         if ((*it)->getId() == id)
+        {
+            return (*it);
+        }
+    }
+
+    return NULL;
+}
+
+
+/**
+ * Retourne la liste de lecture correspondant à un identifiant.
+ *
+ * \param id Identifiant de la liste.
+ * \return Pointeur sur la liste de lecture, ou NULL si \a id n'est pas valide.
+ */
+
+CPlayList *  CApplication::getPlayListFromId(int id) const
+{
+    if (id <= 0)
+    {
+        return NULL;
+    }
+
+    for (QList<CPlayList *>::const_iterator it = m_playLists.begin(); it != m_playLists.end(); ++it)
+    {
+        if ((*it)->getIdPlayList() == id)
         {
             return (*it);
         }
