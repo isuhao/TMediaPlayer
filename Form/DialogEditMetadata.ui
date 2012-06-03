@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tagID3v1">
       <attribute name="title">
@@ -141,7 +141,7 @@
        <item>
         <widget class="QTabWidget" name="tabWidget_2">
          <property name="currentIndex">
-          <number>0</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="tabText">
           <attribute name="title">
@@ -170,7 +170,7 @@
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_6">
            <item>
-            <widget class="QTableWidget" name="tableWidget_3">
+            <widget class="QTableWidget" name="tableWidget_2">
              <column>
               <property name="text">
                <string>Key</string>
@@ -196,7 +196,7 @@
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
-            <widget class="QTableWidget" name="tableWidget">
+            <widget class="QTableWidget" name="tableWidget_3">
              <column>
               <property name="text">
                <string>Language</string>
@@ -222,7 +222,7 @@
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_4">
            <item>
-            <widget class="QTableWidget" name="tableWidget_2">
+            <widget class="QTableWidget" name="tableWidget_4">
              <column>
               <property name="text">
                <string>Language</string>
@@ -248,7 +248,7 @@
           </attribute>
           <layout class="QGridLayout" name="gridLayout">
            <item row="0" column="0" rowspan="2">
-            <widget class="QTableWidget" name="tableWidget">
+            <widget class="QTableWidget" name="tableWidget_5">
              <column>
               <property name="text">
                <string>Description</string>

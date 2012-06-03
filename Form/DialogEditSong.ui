@@ -363,7 +363,7 @@
         </widget>
        </item>
        <item row="6" column="3">
-        <widget class="QLineEdit" name="editTrackTotal">
+        <widget class="QLineEdit" name="editTrackCount">
          <property name="maximumSize">
           <size>
            <width>36</width>
@@ -497,7 +497,7 @@
         </widget>
        </item>
        <item row="8" column="3">
-        <widget class="QLineEdit" name="editDiscTotal">
+        <widget class="QLineEdit" name="editDiscCount">
          <property name="maximumSize">
           <size>
            <width>36</width>
@@ -1014,10 +1014,10 @@
   <tabstop>editYear</tabstop>
   <tabstop>editAlbum</tabstop>
   <tabstop>editTrackNumber</tabstop>
-  <tabstop>editTrackTotal</tabstop>
+  <tabstop>editTrackCount</tabstop>
   <tabstop>editAlbumArtist</tabstop>
   <tabstop>editDiscNumber</tabstop>
-  <tabstop>editDiscTotal</tabstop>
+  <tabstop>editDiscCount</tabstop>
   <tabstop>editComposer</tabstop>
   <tabstop>editComments</tabstop>
   <tabstop>editGenre</tabstop>

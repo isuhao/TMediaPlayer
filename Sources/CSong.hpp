@@ -10,6 +10,15 @@
 #include <fmod/fmod.hpp>
 
 
+namespace TagLib
+{
+    namespace ID3v1 { class Tag; }
+    namespace ID3v2 { class Tag; }
+    namespace APE   { class Tag; }
+    namespace Ogg   { class XiphComment; }
+}
+
+
 /**
  * Représente un morceau pouvant être joué.
  */
@@ -87,9 +96,9 @@ public:
     inline QString getComposerSort(bool empty = true) const;
     inline int getYear(void) const;
     inline int getTrackNumber(void) const;
-    inline int getTrackTotal(void) const;
+    inline int getTrackCount(void) const;
     inline int getDiscNumber(void) const;
-    inline int getDiscTotal(void) const;
+    inline int getDiscCount(void) const;
     inline QString getGenre(void) const;
     inline int getRating(void) const;
     inline QString getComments(void) const;
@@ -126,9 +135,9 @@ public slots:
     void setComposerSort(const QString& composer);
     void setYear(int year);
     void setTrackNumber(int trackNumber);
-    void setTrackTotal(int trackNumber);
+    void setTrackCount(int trackCount);
     void setDiscNumber(int discNumber);
-    void setDiscTotal(int discNumber);
+    void setDiscCount(int discCount);
     void setGenre(const QString& genre);
     void setRating(int rating);
     void setComments(const QString& comments);
@@ -160,17 +169,58 @@ signals:
 
 private:
 
+    /**
+     * Contient toutes les informations modifiables d'un morceau.
+     */
+
+    struct TSongInfos
+    {
+        bool isEnabled;          ///< Indique si le morceau est activé.
+        QString title;           ///< Titre du morceau.
+        QString subTitle;        ///< Sous-titre du morceau.
+        QString grouping;        ///< Regroupement.
+        QString artistName;      ///< Artiste du morceau.
+        QString albumTitle;      ///< Titre de l'album.
+        QString albumArtist;     ///< Artiste de l'album.
+        QString composer;        ///< Compositeur.
+        QString titleSort;       ///< Titre du morceau pour le tri.
+        QString artistNameSort;  ///< Artiste du morceau pour le tri.
+        QString albumTitleSort;  ///< Titre de l'album pour le tri.
+        QString albumArtistSort; ///< Artiste de l'album pour le tri.
+        QString composerSort;    ///< Compositeur pour le tri.
+        int year;                ///< Année de sortie de l'album ou du morceau.
+        int trackNumber;         ///< Numéro de piste.
+        int trackCount;          ///< Nombre de pistes sur l'album.
+        int discNumber;          ///< Numéro de disque.
+        int discCount;           ///< Nombre de disques de l'album.
+        QString genre;           ///< Genre.
+        int rating;              ///< Note (entre 0 et 5).
+        QString comments;        ///< Commentaires.
+        int bpm;                 ///< Battements par minute.
+        QString lyrics;          ///< Paroles.
+        TLanguage language;      ///< Langue des paroles.
+
+        TSongInfos(void);
+    };
+
+
     // Copie interdite
     CSong(const CSong&);
     CSong& operator=(const CSong&);
 
-    CApplication * m_application;
+    // Lecture des métadonnées
+    static bool loadTags(TagLib::ID3v1::Tag * tags, TSongInfos& infos);
+    static bool loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos);
+    static bool loadTags(TagLib::APE::Tag * tags, TSongInfos& infos);
+    static bool loadTags(TagLib::Ogg::XiphComment * tags, TSongInfos& infos);
+
+
+    CApplication * m_application; ///< Pointeur sur l'application.
     FMOD::Sound * m_sound;        ///< Pointeur sur la structure de FMOD.
     FMOD::Channel * m_channel;    ///< Canal audio.
     bool m_multiModification;     ///< Indique que plusieurs modifications vont être effectuées, le
                                   ///< signal songModified() est alors émis dans la méthode updateDatabase.
     bool m_isModified;            ///< Indique si les données ont été modifiées.
-
     int m_id;                     ///< Identifiant du morceau en base de données.
     QString m_fileName;           ///< Fichier audio.
     int m_fileSize;               ///< Taille du fichier en octets.
@@ -181,33 +231,7 @@ private:
     int m_duration;               ///< Durée du morceau en millisecondes.
     QDateTime m_creation;         ///< Date de création (ajout à la médiathèque).
     QDateTime m_modification;     ///< Date de la dernière modication.
-
-    // Informations modifiables
-    bool m_isEnabled;             ///< Indique si le morceau est activé.
-    QString m_title;              ///< Titre du morceau.
-    QString m_subTitle;           ///< Sous-titre du morceau.
-    QString m_grouping;           ///< Regroupement.
-    QString m_artistName;         ///< Artiste du morceau.
-    QString m_albumTitle;         ///< Titre de l'album.
-    QString m_albumArtist;        ///< Artiste de l'album.
-    QString m_composer;           ///< Compositeur.
-    QString m_titleSort;          ///< Titre du morceau pour le tri.
-    QString m_artistNameSort;     ///< Artiste du morceau pour le tri.
-    QString m_albumTitleSort;     ///< Titre de l'album pour le tri.
-    QString m_albumArtistSort;    ///< Artiste de l'album pour le tri.
-    QString m_composerSort;       ///< Compositeur pour le tri.
-    int m_year;                   ///< Année de sortie de l'album ou du morceau.
-    int m_trackNumber;            ///< Numéro de piste.
-    int m_trackTotal;             ///< Nombre de piste sur l'album.
-    int m_discNumber;             ///< Numéro de disque.
-    int m_discTotal;              ///< Nombre de disque de l'album.
-    QString m_genre;              ///< Genre.
-    int m_rating;                 ///< Note (entre 0 et 5).
-    QString m_comments;           ///< Commentaires.
-    int m_bpm;                    ///< Battements par minute.
-    QString m_lyrics;             ///< Paroles.
-    TLanguage m_language;         ///< Langue des paroles.
-
+    TSongInfos m_infos;           ///< Informations modifiables
     QList<QDateTime> m_plays;     ///< Liste des dates de lecture.
 };
 
@@ -461,7 +485,7 @@ inline QDateTime CSong::getModificationDate(void) const
 
 inline bool CSong::isEnabled(void) const
 {
-    return m_isEnabled;
+    return m_infos.isEnabled;
 }
 
 
@@ -473,7 +497,7 @@ inline bool CSong::isEnabled(void) const
 
 inline QString CSong::getTitle(void) const
 {
-    return m_title;
+    return m_infos.title;
 }
 
 
@@ -485,138 +509,138 @@ inline QString CSong::getTitle(void) const
 
 inline QString CSong::getSubTitle(void) const
 {
-    return m_subTitle;
+    return m_infos.subTitle;
 }
 
 
 inline QString CSong::getGrouping(void) const
 {
-    return m_grouping;
+    return m_infos.grouping;
 }
 
 
 inline QString CSong::getArtistName(void) const
 {
-    return m_artistName;
+    return m_infos.artistName;
 }
 
 
 inline QString CSong::getAlbumTitle(void) const
 {
-    return m_albumTitle;
+    return m_infos.albumTitle;
 }
 
 
 inline QString CSong::getAlbumArtist(void) const
 {
-    return m_albumArtist;
+    return m_infos.albumArtist;
 }
 
 
 inline QString CSong::getComposer(void) const
 {
-    return m_composer;
+    return m_infos.composer;
 }
 
 
 inline QString CSong::getTitleSort(bool empty) const
 {
-    if (!empty && m_titleSort.isEmpty()) return m_title;
-    return m_titleSort;
+    if (!empty && m_infos.titleSort.isEmpty()) return m_infos.title;
+    return m_infos.titleSort;
 }
 
 
 inline QString CSong::getArtistNameSort(bool empty) const
 {
-    if (!empty && m_artistNameSort.isEmpty()) return m_artistName;
-    return m_artistNameSort;
+    if (!empty && m_infos.artistNameSort.isEmpty()) return m_infos.artistName;
+    return m_infos.artistNameSort;
 }
 
 
 inline QString CSong::getAlbumTitleSort(bool empty) const
 {
-    if (!empty && m_albumTitleSort.isEmpty()) return m_albumTitle;
-    return m_albumTitleSort;
+    if (!empty && m_infos.albumTitleSort.isEmpty()) return m_infos.albumTitle;
+    return m_infos.albumTitleSort;
 }
 
 
 inline QString CSong::getAlbumArtistSort(bool empty) const
 {
-    if (!empty && m_albumArtistSort.isEmpty()) return m_albumArtist;
-    return m_albumArtistSort;
+    if (!empty && m_infos.albumArtistSort.isEmpty()) return m_infos.albumArtist;
+    return m_infos.albumArtistSort;
 }
 
 
 inline QString CSong::getComposerSort(bool empty) const
 {
-    if (!empty && m_composerSort.isEmpty()) return m_composer;
-    return m_composerSort;
+    if (!empty && m_infos.composerSort.isEmpty()) return m_infos.composer;
+    return m_infos.composerSort;
 }
 
 
 inline int CSong::getYear(void) const
 {
-    return m_year;
+    return m_infos.year;
 }
 
 
 inline int CSong::getTrackNumber(void) const
 {
-    return m_trackNumber;
+    return m_infos.trackNumber;
 }
 
 
-inline int CSong::getTrackTotal(void) const
+inline int CSong::getTrackCount(void) const
 {
-    return m_trackTotal;
+    return m_infos.trackCount;
 }
 
 
 inline int CSong::getDiscNumber(void) const
 {
-    return m_discNumber;
+    return m_infos.discNumber;
 }
 
 
-inline int CSong::getDiscTotal(void) const
+inline int CSong::getDiscCount(void) const
 {
-    return m_discTotal;
+    return m_infos.discCount;
 }
 
 
 inline QString CSong::getGenre(void) const
 {
-    return m_genre;
+    return m_infos.genre;
 }
 
 
 inline int CSong::getRating(void) const
 {
-    return m_rating;
+    return m_infos.rating;
 }
 
 
 inline QString CSong::getComments(void) const
 {
-    return m_comments;
+    return m_infos.comments;
 }
 
 
 inline int CSong::getBPM(void) const
 {
-    return m_bpm;
+    return m_infos.bpm;
 }
 
 
 inline QString CSong::getLyrics(void) const
 {
-    return m_lyrics;
+    return m_infos.lyrics;
 }
 
 
 inline CSong::TLanguage CSong::getLanguage(void) const
 {
-    return m_language;
+    return m_infos.language;
 }
 
 

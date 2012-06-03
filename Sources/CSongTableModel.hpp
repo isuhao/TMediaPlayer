@@ -214,7 +214,13 @@ private:
 
     static inline bool cmpSongTrackAsc(CSongTableItem * song1, CSongTableItem * song2)
     {
-        return (song1->getSong()->getTrackNumber() < song2->getSong()->getTrackNumber());
+        const int track1 = song1->getSong()->getTrackNumber();
+        const int track2 = song2->getSong()->getTrackNumber();
+
+        if (track1 < track2) return true;
+        if (track1 > track2) return false;
+
+        return cmpSongTitleAsc(song1, song2);
     }
 
     static inline bool cmpSongTrackDesc(CSongTableItem * song1, CSongTableItem * song2)

@@ -23,6 +23,36 @@
 #include <QtDebug>
 
 
+CSong::TSongInfos::TSongInfos(void) :
+    isEnabled       (true),
+    title           (""),
+    subTitle        (""),
+    grouping        (""),
+    artistName      (""),
+    albumTitle      (""),
+    albumArtist     (""),
+    composer        (""),
+    titleSort       (""),
+    artistNameSort  (""),
+    albumTitleSort  (""),
+    albumArtistSort (""),
+    composerSort    (""),
+    year            (0),
+    trackNumber     (0),
+    trackCount      (0),
+    discNumber      (0),
+    discCount       (0),
+    genre           (""),
+    rating          (0),
+    comments        (""),
+    bpm             (0),
+    lyrics          (""),
+    language        (LangUnknown)
+{
+
+}
+
+
 /**
  * Crée un nouveau morceau invalide.
  *
@@ -43,6 +73,7 @@ CSong::CSong(CApplication * application) :
     m_format            (FormatUnknown),
     m_numChannels       (0),
     m_duration          (0),
+/*
     m_isEnabled         (true),
     m_title             (""),
     m_subTitle          (""),
@@ -58,15 +89,16 @@ CSong::CSong(CApplication * application) :
     m_composerSort      (""),
     m_year              (0),
     m_trackNumber       (0),
-    m_trackTotal        (0),
+    m_trackCount        (0),
     m_discNumber        (0),
-    m_discTotal         (0),
+    m_discCount         (0),
     m_genre             (""),
     m_rating            (0),
     m_comments          (""),
     m_bpm               (0),
     m_lyrics            (""),
     m_language          (LangUnknown),
+*/
     m_isModified        (false)
 {
     Q_CHECK_PTR(application);
@@ -96,6 +128,8 @@ CSong::CSong(const QString& fileName, CApplication * application) :
     m_format            (FormatUnknown),
     m_numChannels       (0),
     m_duration          (0),
+/*
+    m_isEnabled         (true),
     m_title             (""),
     m_subTitle          (""),
     m_grouping          (""),
@@ -110,14 +144,16 @@ CSong::CSong(const QString& fileName, CApplication * application) :
     m_composerSort      (""),
     m_year              (0),
     m_trackNumber       (0),
-    m_trackTotal        (0),
+    m_trackCount        (0),
     m_discNumber        (0),
-    m_discTotal         (0),
+    m_discCount         (0),
     m_genre             (""),
     m_rating            (0),
     m_comments          (""),
     m_bpm               (0),
     m_lyrics            (""),
+    m_language          (LangUnknown),
+*/
     m_isModified        (false)
 {
     Q_CHECK_PTR(application);
@@ -193,9 +229,9 @@ void CSong::loadFromDatabase(void)
                       " song_composer_sort,"
                       " song_year,"
                       " song_track_number,"
-                      " song_track_total,"
+                      " song_track_count,"
                       " song_disc_number,"
-                      " song_disc_total,"
+                      " song_disc_count,"
                       " genre_name,"
                       " song_rating,"
                       " song_comments,"
@@ -233,7 +269,31 @@ void CSong::loadFromDatabase(void)
     m_duration        = query.value(numValue++).toInt();
     m_creation        = query.value(numValue++).toDateTime();
     m_modification    = query.value(numValue++).toDateTime();
-    
+
+    m_infos.isEnabled       = query.value(numValue++).toBool();
+    m_infos.title           = query.value(numValue++).toString();
+    m_infos.titleSort       = query.value(numValue++).toString();
+    m_infos.subTitle        = query.value(numValue++).toString();
+    m_infos.grouping        = query.value(numValue++).toString();
+    m_infos.artistName      = query.value(numValue++).toString();
+    m_infos.artistNameSort  = query.value(numValue++).toString();
+    m_infos.albumTitle      = query.value(numValue++).toString();
+    m_infos.albumTitleSort  = query.value(numValue++).toString();
+    m_infos.albumArtist     = query.value(numValue++).toString();
+    m_infos.albumArtistSort = query.value(numValue++).toString();
+    m_infos.composer        = query.value(numValue++).toString();
+    m_infos.composerSort    = query.value(numValue++).toString();
+    m_infos.year            = query.value(numValue++).toInt();
+    m_infos.trackNumber     = query.value(numValue++).toInt();
+    m_infos.trackCount      = query.value(numValue++).toInt();
+    m_infos.discNumber      = query.value(numValue++).toInt();
+    m_infos.discCount       = query.value(numValue++).toInt();
+    m_infos.genre           = query.value(numValue++).toString();
+    m_infos.rating          = query.value(numValue++).toInt();
+    m_infos.comments        = query.value(numValue++).toString();
+    m_infos.lyrics          = query.value(numValue++).toString();
+    m_infos.language        = getLanguageForISO2Code(query.value(numValue++).toString());
+/*
     m_isEnabled       = query.value(numValue++).toBool();
     m_title           = query.value(numValue++).toString();
     m_titleSort       = query.value(numValue++).toString();
@@ -249,15 +309,15 @@ void CSong::loadFromDatabase(void)
     m_composerSort    = query.value(numValue++).toString();
     m_year            = query.value(numValue++).toInt();
     m_trackNumber     = query.value(numValue++).toInt();
-    m_trackTotal      = query.value(numValue++).toInt();
+    m_trackCount      = query.value(numValue++).toInt();
     m_discNumber      = query.value(numValue++).toInt();
-    m_discTotal       = query.value(numValue++).toInt();
+    m_discCount       = query.value(numValue++).toInt();
     m_genre           = query.value(numValue++).toString();
     m_rating          = query.value(numValue++).toInt();
     m_comments        = query.value(numValue++).toString();
     m_lyrics          = query.value(numValue++).toString();
     m_language        = getLanguageForISO2Code(query.value(numValue++).toString());
-
+*/
     // Lectures
     query.prepare("SELECT play_time FROM play WHERE song_id = ? ORDER BY play_time DESC");
     query.bindValue(0, m_id);
@@ -309,403 +369,25 @@ bool CSong::loadTags(bool readProperties)
             m_fileSize = file.length();
             
             // Propriétés du morceau
-            if (file.audioProperties())
+            if (readProperties)
             {
-                //TODO: Récupérer la version de MPEG : file.audioProperties()->version();
-                //TODO: Récupérer le mode stéréo : file.audioProperties()->channelMode();
-                m_bitRate     = file.audioProperties()->bitrate();
-                m_sampleRate  = file.audioProperties()->sampleRate();
-                m_numChannels = file.audioProperties()->channels();
-            }
-            else
-            {
-                qWarning() << "CSong::loadTags() : impossible de récupérer les propriétés du fichier " << m_fileName;
-            }
-
-            TagLib::ID3v2::Tag * tagID3v2 = file.ID3v2Tag(true);
-            TagLib::ID3v1::Tag * tagID3v1 = file.ID3v1Tag(true);
-            TagLib::APE::Tag * tagAPE = file.APETag(false);
-
-            TagLib::ID3v2::FrameList tagID3v2List;
-/*
-            // DEBUG
-            TagLib::ID3v2::FrameListMap tagMap = tagID3v2->frameListMap();
-            for (TagLib::ID3v2::FrameListMap::ConstIterator it = tagMap.begin(); it != tagMap.end(); ++it)
-            {
-                QString tagKey = QByteArray(it->first.data(), it->first.size());
-
-                for (TagLib::ID3v2::FrameList::ConstIterator it2 = it->second.begin(); it2 != it->second.end(); ++it2)
+                if (file.audioProperties())
                 {
-                    qDebug() << tagKey << ":" << (*it2)->toString().toCString(true);
-                }
-            }
-*/
-            // Titre
-            tagID3v2List = tagID3v2->frameList("TIT2");
-            if (tagID3v2List.isEmpty())
-            {
-                TagLib::String str;
-                if (tagID3v1)
-                    str = tagID3v1->title();
-                if (str.isNull() && tagAPE)
-                    str = tagAPE->title();
-                m_title = QString::fromUtf8(str.toCString(true));
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TIT2";
-                m_title = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
-            }
-
-            // Sous-titre
-            tagID3v2List = tagID3v2->frameList("TIT3");
-            if (tagID3v2List.isEmpty())
-            {
-                //TODO: APE
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TIT3";
-                m_subTitle = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
-            }
-
-            // Artiste
-            tagID3v2List = tagID3v2->frameList("TPE1");
-            if (tagID3v2List.isEmpty())
-            {
-                TagLib::String str;
-                if (tagID3v1)
-                    str = tagID3v1->artist();
-                if (str.isNull() && tagAPE)
-                    str = tagAPE->artist();
-                m_artistName = QString::fromUtf8(str.toCString(true));
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TPE1";
-                m_artistName = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
-            }
-
-            // Album
-            tagID3v2List = tagID3v2->frameList("TALB");
-            if (tagID3v2List.isEmpty())
-            {
-                TagLib::String str;
-                if (tagID3v1)
-                    str = tagID3v1->album();
-                if (str.isNull() && tagAPE)
-                    str = tagAPE->album();
-                m_albumTitle = QString::fromUtf8(str.toCString(true));
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TALB";
-                m_albumTitle = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
-            }
-
-            // Artiste de l'album
-            tagID3v2List = tagID3v2->frameList("TPE2");
-            if (tagID3v2List.isEmpty())
-            {
-                //TODO: APE
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TPE2";
-                m_albumArtist = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
-            }
-
-            // Compositeur
-            tagID3v2List = tagID3v2->frameList("TCOM");
-            if (tagID3v2List.isEmpty())
-            {
-                //TODO: APE
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TCOM";
-                m_composer = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
-            }
-
-            // Titre pour le tri
-            tagID3v2List = tagID3v2->frameList("TSOT");
-            if (tagID3v2List.isEmpty())
-            {
-                //TODO: APE
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TSOT";
-                m_titleSort = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
-            }
-
-            // Artiste pour le tri
-            tagID3v2List = tagID3v2->frameList("TSOP");
-            if (tagID3v2List.isEmpty())
-            {
-                //TODO: APE
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TSOP";
-                m_artistNameSort = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
-            }
-
-            // Album pour le tri
-            tagID3v2List = tagID3v2->frameList("TSOA");
-            if (tagID3v2List.isEmpty())
-            {
-                //TODO: APE
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TSOA";
-                m_albumTitleSort = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
-            }
-
-            // Année
-            tagID3v2List = tagID3v2->frameList("TDRC");
-            if (tagID3v2List.isEmpty())
-            {
-                m_year = tagID3v1->year();
-
-                if (m_year == 0)
-                {
-                    //TODO: APE
-                }
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TDRC";
-                TagLib::String str = tagID3v2List.front()->toString();
-
-                if (!str.isNull() && str.size() >= 4)
-                {
-                    bool ok;
-                    m_year = str.substr(0, 4).toInt(&ok);
-                    if (!ok)
-                    {
-                        qWarning() << "CSong::loadFromFile() : ID3v2 : tag TDRC invalide";
-                        m_year = 0;
-                    }
-                }
-            }
-
-            // Regroupement
-            tagID3v2List = tagID3v2->frameList("TIT1");
-            if (tagID3v2List.isEmpty())
-            {
-                //TODO: APE
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TIT1";
-                m_grouping = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
-            }
-
-            // Numéro de piste
-            tagID3v2List = tagID3v2->frameList("TRCK");
-            if (tagID3v2List.isEmpty())
-            {
-                m_trackNumber = tagID3v1->track();
-
-                if (m_trackNumber == 0)
-                {
-                    //TODO: APE
-                }
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TRCK";
-
-                QString str = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
-
-                if (str.contains('/'))
-                {
-                    QStringList strSplit = str.split('/');
-
-                    if (strSplit.size() == 2)
-                    {
-                        bool ok;
-                        m_trackNumber = strSplit[0].toInt(&ok);
-                        if (!ok) qWarning() << "CSong::loadFromFile() : ID3v2 : tag TRCK invalide";
-                        m_trackTotal = strSplit[1].toInt(&ok);
-                        if (!ok) qWarning() << "CSong::loadFromFile() : ID3v2 : tag TRCK invalide";
-                    }
-                    else
-                    {
-                        qWarning() << "CSong::loadFromFile() : ID3v2 : tag TRCK invalide";
-                    }
+                    //TODO: Récupérer la version de MPEG : file.audioProperties()->version();
+                    //TODO: Récupérer le mode stéréo : file.audioProperties()->channelMode();
+                    m_bitRate     = file.audioProperties()->bitrate();
+                    m_sampleRate  = file.audioProperties()->sampleRate();
+                    m_numChannels = file.audioProperties()->channels();
                 }
                 else
                 {
-                    bool ok;
-                    m_trackNumber = str.toInt(&ok);
-                    if (!ok) qWarning() << "CSong::loadFromFile() : ID3v2 : tag TRCK invalide";
+                    qWarning() << "CSong::loadTags() : impossible de récupérer les propriétés du fichier " << m_fileName;
                 }
             }
 
-            // Numéro de disque
-            tagID3v2List = tagID3v2->frameList("TPOS");
-            if (tagID3v2List.isEmpty())
-            {
-                //TODO: APE
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TPOS";
-                QString str = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
-
-                if (str.contains('/'))
-                {
-                    QStringList strSplit = str.split('/');
-
-                    if (strSplit.size() == 2)
-                    {
-                        bool ok;
-                        m_discNumber = strSplit[0].toInt(&ok);
-                        if (!ok) qWarning() << "CSong::loadFromFile() : ID3v2 : tag TPOS invalide";
-                        m_discTotal = strSplit[1].toInt(&ok);
-                        if (!ok) qWarning() << "CSong::loadFromFile() : ID3v2 : tag TPOS invalide";
-                    }
-                    else
-                    {
-                        qWarning() << "CSong::loadFromFile() : ID3v2 : tag TPOS invalide";
-                    }
-                }
-                else
-                {
-                    bool ok;
-                    m_discNumber = str.toInt(&ok);
-                    if (!ok) qWarning() << "CSong::loadFromFile() : ID3v2 : tag TPOS invalide";
-                }
-            }
-
-            // Genre
-            tagID3v2List = tagID3v2->frameList("TCON");
-            if (tagID3v2List.isEmpty())
-            {
-                TagLib::String str = tagID3v1->genre();
-
-                if (str.isNull())
-                {
-                    //TODO: APE
-                }
-                else
-                    m_genre = QString::fromUtf8(str.toCString(true));
-            }
-            else
-            {
-                m_genre = QString::fromUtf8(tagID3v2->genre().toCString(true));
-            }
-
-            // Commentaires
-            tagID3v2List = tagID3v2->frameList("COMM");
-            if (tagID3v2List.isEmpty())
-            {
-                TagLib::String str = tagID3v1->comment();
-
-                if (str.isNull())
-                {
-                    //TODO: APE
-                }
-                else
-                    m_comments = QString::fromUtf8(str.toCString(true));
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags COMM";
-
-                TagLib::ID3v2::CommentsFrame * frame = dynamic_cast<TagLib::ID3v2::CommentsFrame *>(tagID3v2List.front());
-
-                if (frame)
-                {
-                    m_comments = QString::fromUtf8(frame->text().toCString(true));
-                }
-            }
-
-            // BPM
-            tagID3v2List = tagID3v2->frameList("TBPM");
-            if (tagID3v2List.isEmpty())
-            {
-                //TODO: APE
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TBPM";
-                QString str = QString::fromUtf8(tagID3v2List.front()->toString().toCString(true));
-
-                bool ok;
-                m_bpm = str.toInt(&ok);
-                if (!ok) qWarning() << "CSong::loadFromFile() : ID3v2 : tag TBPM invalide";
-            }
-
-            // Paroles
-            tagID3v2List = tagID3v2->frameList("USLT");
-            if (tagID3v2List.isEmpty())
-            {
-                //TODO: APE
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags USLT";
-
-                TagLib::ID3v2::UnsynchronizedLyricsFrame * frame = dynamic_cast<TagLib::ID3v2::UnsynchronizedLyricsFrame *>(tagID3v2List.front());
-
-                if (frame)
-                {
-                    m_lyrics = QString::fromUtf8(frame->text().toCString(true));
-                    TagLib::ByteVector lng = frame->language();
-                    Q_ASSERT(lng.size() == 3);
-                    m_language = getLanguageForISO3Code(QByteArray(lng.data(), 3));
-                }
-            }
-
-            // Langue
-            tagID3v2List = tagID3v2->frameList("TLAN");
-            if (tagID3v2List.isEmpty())
-            {
-                //TODO: APE
-            }
-            else
-            {
-                if (tagID3v2List.size() > 1)
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : plusieurs tags TLAN";
-
-                QString str = QString::fromUtf8(tagID3v2List.front()->toString().toCString(false));
-
-                if (str.size() != 3)
-                {
-                    qWarning() << "CSong::loadFromFile() : ID3v2 : tag TLAN invalide";
-                }
-                else
-                {
-                    TLanguage lng = getLanguageForISO3Code(qPrintable(str));
-
-                    if (m_language != LangUnknown && lng != m_language)
-                    {
-                        qWarning() << "CSong::loadFromFile() : ID3v2 : la langue des paroles et différente de la langue du morceau";
-                    }
-
-                    m_language = lng;
-                }
-            }
+            loadTags(file.APETag(false), m_infos);
+            loadTags(file.ID3v1Tag(true), m_infos);
+            loadTags(file.ID3v2Tag(true), m_infos);
 
             break;
         }
@@ -720,7 +402,24 @@ bool CSong::loadTags(bool readProperties)
                 return false;
             }
 
-            //...
+            m_fileSize = file.length();
+            
+            // Propriétés du morceau
+            if (readProperties)
+            {
+                if (file.audioProperties())
+                {
+                    m_bitRate     = file.audioProperties()->bitrate();
+                    m_sampleRate  = file.audioProperties()->sampleRate();
+                    m_numChannels = file.audioProperties()->channels();
+                }
+                else
+                {
+                    qWarning() << "CSong::loadTags() : impossible de récupérer les propriétés du fichier " << m_fileName;
+                }
+            }
+
+            loadTags(file.tag(), m_infos);
 
             break;
         }
@@ -735,7 +434,26 @@ bool CSong::loadTags(bool readProperties)
                 return false;
             }
 
-            //...
+            m_fileSize = file.length();
+            
+            // Propriétés du morceau
+            if (readProperties)
+            {
+                if (file.audioProperties())
+                {
+                    m_bitRate     = file.audioProperties()->bitrate();
+                    m_sampleRate  = file.audioProperties()->sampleRate();
+                    m_numChannels = file.audioProperties()->channels();
+                }
+                else
+                {
+                    qWarning() << "CSong::loadTags() : impossible de récupérer les propriétés du fichier " << m_fileName;
+                }
+            }
+
+            loadTags(file.ID3v1Tag(true), m_infos);
+            loadTags(file.ID3v2Tag(true), m_infos);
+            loadTags(file.xiphComment(true), m_infos);
 
             break;
         }
@@ -960,9 +678,9 @@ QList<CSong *> CSong::loadAllSongsFromDatabase(CApplication * application)
                         " song_composer_sort,"
                         " song_year,"
                         " song_track_number,"
-                        " song_track_total,"
+                        " song_track_count,"
                         " song_disc_number,"
-                        " song_disc_total,"
+                        " song_disc_count,"
                         " genre_name,"
                         " song_rating,"
                         " song_comments,"
@@ -996,30 +714,30 @@ QList<CSong *> CSong::loadAllSongsFromDatabase(CApplication * application)
         song->m_creation        = query.value(numValue++).toDateTime();
         song->m_modification    = query.value(numValue++).toDateTime();
         
-        song->m_isEnabled       = query.value(numValue++).toBool();
-        song->m_title           = query.value(numValue++).toString();
-        song->m_titleSort       = query.value(numValue++).toString();
-        song->m_subTitle        = query.value(numValue++).toString();
-        song->m_grouping        = query.value(numValue++).toString();
-        song->m_artistName      = query.value(numValue++).toString();
-        song->m_artistNameSort  = query.value(numValue++).toString();
-        song->m_albumTitle      = query.value(numValue++).toString();
-        song->m_albumTitleSort  = query.value(numValue++).toString();
-        song->m_albumArtist     = query.value(numValue++).toString();
-        song->m_albumArtistSort = query.value(numValue++).toString();
-        song->m_composer        = query.value(numValue++).toString();
-        song->m_composerSort    = query.value(numValue++).toString();
-        song->m_year            = query.value(numValue++).toInt();
-        song->m_trackNumber     = query.value(numValue++).toInt();
-        song->m_trackTotal      = query.value(numValue++).toInt();
-        song->m_discNumber      = query.value(numValue++).toInt();
-        song->m_discTotal       = query.value(numValue++).toInt();
-        song->m_genre           = query.value(numValue++).toString();
-        song->m_rating          = query.value(numValue++).toInt();
-        song->m_comments        = query.value(numValue++).toString();
-        song->m_bpm             = query.value(numValue++).toInt();
-        song->m_lyrics          = query.value(numValue++).toString();
-        song->m_language        = getLanguageForISO2Code(query.value(numValue++).toString());
+        song->m_infos.isEnabled       = query.value(numValue++).toBool();
+        song->m_infos.title           = query.value(numValue++).toString();
+        song->m_infos.titleSort       = query.value(numValue++).toString();
+        song->m_infos.subTitle        = query.value(numValue++).toString();
+        song->m_infos.grouping        = query.value(numValue++).toString();
+        song->m_infos.artistName      = query.value(numValue++).toString();
+        song->m_infos.artistNameSort  = query.value(numValue++).toString();
+        song->m_infos.albumTitle      = query.value(numValue++).toString();
+        song->m_infos.albumTitleSort  = query.value(numValue++).toString();
+        song->m_infos.albumArtist     = query.value(numValue++).toString();
+        song->m_infos.albumArtistSort = query.value(numValue++).toString();
+        song->m_infos.composer        = query.value(numValue++).toString();
+        song->m_infos.composerSort    = query.value(numValue++).toString();
+        song->m_infos.year            = query.value(numValue++).toInt();
+        song->m_infos.trackNumber     = query.value(numValue++).toInt();
+        song->m_infos.trackCount      = query.value(numValue++).toInt();
+        song->m_infos.discNumber      = query.value(numValue++).toInt();
+        song->m_infos.discCount       = query.value(numValue++).toInt();
+        song->m_infos.genre           = query.value(numValue++).toString();
+        song->m_infos.rating          = query.value(numValue++).toInt();
+        song->m_infos.comments        = query.value(numValue++).toString();
+        song->m_infos.bpm             = query.value(numValue++).toInt();
+        song->m_infos.lyrics          = query.value(numValue++).toString();
+        song->m_infos.language        = getLanguageForISO2Code(query.value(numValue++).toString());
 
         // Lectures
         QSqlQuery query2(application->getDataBase());
@@ -1086,9 +804,9 @@ QString CSong::getFileSize(int fileSize)
 
 void CSong::setEnabled(bool enabled)
 {
-    if (m_isEnabled != enabled)
+    if (m_infos.isEnabled != enabled)
     {
-        m_isEnabled = enabled;
+        m_infos.isEnabled = enabled;
         m_isModified = true;
         if (!m_multiModification) emit songModified();
     }
@@ -1103,9 +821,9 @@ void CSong::setEnabled(bool enabled)
 
 void CSong::setTitle(const QString& title)
 {
-    if (m_title != title)
+    if (m_infos.title != title)
     {
-        m_title = title;
+        m_infos.title = title;
         m_isModified = true;
         if (!m_multiModification) emit songModified();
     }
@@ -1120,9 +838,9 @@ void CSong::setTitle(const QString& title)
 
 void CSong::setSubTitle(const QString& subTitle)
 {
-    if (m_subTitle != subTitle)
+    if (m_infos.subTitle != subTitle)
     {
-        m_subTitle = subTitle;
+        m_infos.subTitle = subTitle;
         m_isModified = true;
         if (!m_multiModification) emit songModified();
     }
@@ -1131,9 +849,9 @@ void CSong::setSubTitle(const QString& subTitle)
 
 void CSong::setGrouping(const QString& grouping)
 {
-    if (m_grouping != grouping)
+    if (m_infos.grouping != grouping)
     {
-        m_grouping = grouping;
+        m_infos.grouping = grouping;
         m_isModified = true;
         if (!m_multiModification) emit songModified();
     }
@@ -1148,9 +866,9 @@ void CSong::setGrouping(const QString& grouping)
 
 void CSong::setArtistName(const QString& artistName)
 {
-    if (m_artistName != artistName)
+    if (m_infos.artistName != artistName)
     {
-        m_artistName = artistName;
+        m_infos.artistName = artistName;
         m_isModified = true;
         if (!m_multiModification) emit songModified();
     }
@@ -1165,9 +883,9 @@ void CSong::setArtistName(const QString& artistName)
 
 void CSong::setAlbumTitle(const QString& albumTitle)
 {
-    if (m_albumTitle != albumTitle)
+    if (m_infos.albumTitle != albumTitle)
     {
-        m_albumTitle = albumTitle;
+        m_infos.albumTitle = albumTitle;
         m_isModified = true;
         if (!m_multiModification) emit songModified();
     }
@@ -1182,9 +900,9 @@ void CSong::setAlbumTitle(const QString& albumTitle)
 
 void CSong::setAlbumArtist(const QString& albumArtist)
 {
-    if (m_albumArtist != albumArtist)
+    if (m_infos.albumArtist != albumArtist)
     {
-        m_albumArtist = albumArtist;
+        m_infos.albumArtist = albumArtist;
         m_isModified = true;
         if (!m_multiModification) emit songModified();
     }
@@ -1199,9 +917,9 @@ void CSong::setAlbumArtist(const QString& albumArtist)
 
 void CSong::setComposer(const QString& composer)
 {
-    if (m_composer != composer)
+    if (m_infos.composer != composer)
     {
-        m_composer = composer;
+        m_infos.composer = composer;
         m_isModified = true;
         if (!m_multiModification) emit songModified();
     }
@@ -1210,9 +928,9 @@ void CSong::setComposer(const QString& composer)
 
 void CSong::setTitleSort(const QString& title)
 {
-    if (m_titleSort != title)
+    if (m_infos.titleSort != title)
     {
-        m_titleSort = title;
+        m_infos.titleSort = title;
         m_isModified = true;
         if (!m_multiModification) emit songModified();
     }
@@ -1221,9 +939,9 @@ void CSong::setTitleSort(const QString& title)
 
 void CSong::setArtistNameSort(const QString& artistName)
 {
-    if (m_artistNameSort != artistName)
+    if (m_infos.artistNameSort != artistName)
     {
-        m_artistNameSort = artistName;
+        m_infos.artistNameSort = artistName;
         m_isModified = true;
         if (!m_multiModification) emit songModified();
     }
@@ -1232,9 +950,9 @@ void CSong::setArtistNameSort(const QString& artistName)
 
 void CSong::setAlbumTitleSort(const QString& albumTitle)
 {
-    if (m_albumTitleSort != albumTitle)
+    if (m_infos.albumTitleSort != albumTitle)
     {
-        m_albumTitleSort = albumTitle;
+        m_infos.albumTitleSort = albumTitle;
         m_isModified = true;
         if (!m_multiModification) emit songModified();
     }
@@ -1243,9 +961,9 @@ void CSong::setAlbumTitleSort(const QString& albumTitle)
 
 void CSong::setAlbumArtistSort(const QString& albumArtist)
 {
-    if (m_albumArtistSort != albumArtist)
+    if (m_infos.albumArtistSort != albumArtist)
     {
-        m_albumArtistSort = albumArtist;
+        m_infos.albumArtistSort = albumArtist;
         m_isModified = true;
         if (!m_multiModification) emit songModified();
     }
@@ -1254,9 +972,9 @@ void CSong::setAlbumArtistSort(const QString& albumArtist)
 
 void CSong::setComposerSort(const QString& composer)
 {
-    if (m_composerSort != composer)
+    if (m_infos.composerSort != composer)
     {
-        m_composerSort = composer;
+        m_infos.composerSort = composer;
         m_isModified = true;
         if (!m_multiModification) emit songModified();
     }
@@ -1267,72 +985,102 @@ void CSong::setYear(int year)
 {
     Q_ASSERT(year >= 0);
 
-    if (m_year != year)
+    if (m_infos.year != year)
     {
-        m_year = year;
+        m_infos.year = year;
         m_isModified = true;
         if (!m_multiModification) emit songModified();
     }
 }
 
+
+/**
+ * Modifie le numéro de piste du morceau.
+ *
+ * \param trackNumber Numéro de piste.
+ */
 
 void CSong::setTrackNumber(int trackNumber)
 {
     Q_ASSERT(trackNumber >= 0);
 
-    if (m_trackNumber != trackNumber)
+    if (m_infos.trackNumber != trackNumber)
     {
-        m_trackNumber = trackNumber;
+        m_infos.trackNumber = trackNumber;
         m_isModified = true;
         if (!m_multiModification) emit songModified();
     }
 }
 
 
-void CSong::setTrackTotal(int trackNumber)
+/**
+ * Modifie le nombre de pistes de l'album.
+ *
+ * \param trackCount Nombre de pistes de l'album.
+ */
+
+void CSong::setTrackCount(int trackCount)
 {
-    Q_ASSERT(trackNumber >= 0);
+    Q_ASSERT(trackCount >= 0);
 
-    if (m_trackTotal != trackNumber)
+    if (m_infos.trackCount != trackCount)
     {
-        m_trackTotal = trackNumber;
+        m_infos.trackCount = trackCount;
         m_isModified = true;
         if (!m_multiModification) emit songModified();
     }
 }
 
+
+/**
+ * Modifie le numéro de disque du morceau.
+ *
+ * \param discNumber Numéro de disque.
+ */
 
 void CSong::setDiscNumber(int discNumber)
 {
     Q_ASSERT(discNumber >= 0);
 
-    if (m_discNumber != discNumber)
+    if (m_infos.discNumber != discNumber)
     {
-        m_discNumber = discNumber;
+        m_infos.discNumber = discNumber;
         m_isModified = true;
         if (!m_multiModification) emit songModified();
     }
 }
 
 
-void CSong::setDiscTotal(int discNumber)
+/**
+ * Modifie le nombre de disques de l'album.
+ *
+ * \param discCount Nombre de disques de l'album.
+ */
+
+void CSong::setDiscCount(int discCount)
 {
-    Q_ASSERT(discNumber >= 0);
+    Q_ASSERT(discCount >= 0);
 
-    if (m_discTotal != discNumber)
+    if (m_infos.discCount != discCount)
     {
-        m_discTotal = discNumber;
+        m_infos.discCount = discCount;
         m_isModified = true;
         if (!m_multiModification) emit songModified();
     }
 }
 
+
+/**
+ * Modifie le genre du morceau.
+ *
+ * \param genre Nouveau genre du morceau.
+ */
 
 void CSong::setGenre(const QString& genre)
 {
-    if (m_genre != genre)
+    if (m_infos.genre != genre)
     {
-        m_genre = genre;
+        m_infos.genre = genre;
         m_isModified = true;
         if (!m_multiModification) emit songModified();
     }
@@ -1349,9 +1097,9 @@ void CSong::setRating(int rating)
 {
     Q_ASSERT(rating >= 0 && rating <= 5);
 
-    if (m_rating != rating)
+    if (m_infos.rating != rating)
     {
-        m_rating = rating;
+        m_infos.rating = rating;
         m_isModified = true;
         if (!m_multiModification) emit songModified();
     }
@@ -1366,20 +1114,28 @@ void CSong::setRating(int rating)
 
 void CSong::setComments(const QString& comments)
 {
-    if (m_comments != comments)
+    if (m_infos.comments != comments)
     {
-        m_comments = comments;
+        m_infos.comments = comments;
         m_isModified = true;
         if (!m_multiModification) emit songModified();
     }
 }
 
 
+/**
+ * Modifie le nombre de battements par minute du morceau.
+ *
+ * \param bpm Battements par minute.
+ */
+
 void CSong::setBPM(int bpm)
 {
-    if (m_bpm != bpm)
+    Q_ASSERT(bpm >= 0);
+
+    if (m_infos.bpm != bpm)
     {
-        m_bpm = bpm;
+        m_infos.bpm = bpm;
         m_isModified = true;
         if (!m_multiModification) emit songModified();
     }
@@ -1394,9 +1150,9 @@ void CSong::setBPM(int bpm)
 
 void CSong::setLyrics(const QString& lyrics)
 {
-    if (m_lyrics != lyrics)
+    if (m_infos.lyrics != lyrics)
     {
-        m_lyrics = lyrics;
+        m_infos.lyrics = lyrics;
         m_isModified = true;
         if (!m_multiModification) emit songModified();
     }
@@ -1411,9 +1167,9 @@ void CSong::setLyrics(const QString& lyrics)
 
 void CSong::setLanguage(CSong::TLanguage language)
 {
-    if (m_language != language)
+    if (m_infos.language != language)
     {
-        m_language = language;
+        m_infos.language = language;
         m_isModified = true;
         if (!m_multiModification) emit songModified();
     }
@@ -1621,13 +1377,13 @@ void CSong::updateDatabase(void)
 
         QSqlQuery query(m_application->getDataBase());
 
-        int artistId = m_application->getArtistId(m_artistName, m_artistNameSort);
+        int artistId = m_application->getArtistId(m_infos.artistName, m_infos.artistNameSort);
         if (artistId < 0) artistId = 0;
-        int albumId = m_application->getAlbumId(m_albumTitle, m_albumTitleSort);
+        int albumId = m_application->getAlbumId(m_infos.albumTitle, m_infos.albumTitleSort);
         if (albumId < 0) albumId = 0;
-        int albumArtistId = m_application->getArtistId(m_albumArtist, m_albumArtistSort);
+        int albumArtistId = m_application->getArtistId(m_infos.albumArtist, m_infos.albumArtistSort);
         if (albumArtistId < 0) albumArtistId = 0;
-        int genreId = m_application->getGenreId(m_genre);
+        int genreId = m_application->getGenreId(m_infos.genre);
         if (genreId < 0) genreId = 0;
 
         // Insertion
@@ -1657,9 +1413,9 @@ void CSong::updateDatabase(void)
                               "song_composer_sort, "
                               "song_year, "
                               "song_track_number, "
-                              "song_track_total, "
+                              "song_track_count, "
                               "song_disc_number, "
-                              "song_disc_total, "
+                              "song_disc_count, "
                               "genre_id, "
                               "song_rating, "
                               "song_comments, "
@@ -1681,27 +1437,27 @@ void CSong::updateDatabase(void)
             query.bindValue(numValue++, m_duration);
             query.bindValue(numValue++, m_creation);
             query.bindValue(numValue++, m_modification);
-            query.bindValue(numValue++, (m_isEnabled ? 1 : 0));
-            query.bindValue(numValue++, m_title);
-            query.bindValue(numValue++, m_titleSort);
-            query.bindValue(numValue++, m_subTitle);
-            query.bindValue(numValue++, m_grouping);
+            query.bindValue(numValue++, (m_infos.isEnabled ? 1 : 0));
+            query.bindValue(numValue++, m_infos.title);
+            query.bindValue(numValue++, m_infos.titleSort);
+            query.bindValue(numValue++, m_infos.subTitle);
+            query.bindValue(numValue++, m_infos.grouping);
             query.bindValue(numValue++, artistId);
             query.bindValue(numValue++, albumId);
             query.bindValue(numValue++, albumArtistId);
-            query.bindValue(numValue++, m_composer);
-            query.bindValue(numValue++, m_composerSort);
-            query.bindValue(numValue++, m_year);
-            query.bindValue(numValue++, m_trackNumber);
-            query.bindValue(numValue++, m_trackTotal);
-            query.bindValue(numValue++, m_discNumber);
-            query.bindValue(numValue++, m_discTotal);
+            query.bindValue(numValue++, m_infos.composer);
+            query.bindValue(numValue++, m_infos.composerSort);
+            query.bindValue(numValue++, m_infos.year);
+            query.bindValue(numValue++, m_infos.trackNumber);
+            query.bindValue(numValue++, m_infos.trackCount);
+            query.bindValue(numValue++, m_infos.discNumber);
+            query.bindValue(numValue++, m_infos.discCount);
             query.bindValue(numValue++, genreId);
-            query.bindValue(numValue++, m_rating);
-            query.bindValue(numValue++, m_comments);
-            query.bindValue(numValue++, m_bpm);
-            query.bindValue(numValue++, m_lyrics);
-            query.bindValue(numValue++, getISO2CodeForLanguage(m_language));
+            query.bindValue(numValue++, m_infos.rating);
+            query.bindValue(numValue++, m_infos.comments);
+            query.bindValue(numValue++, m_infos.bpm);
+            query.bindValue(numValue++, m_infos.lyrics);
+            query.bindValue(numValue++, getISO2CodeForLanguage(m_infos.language));
             query.bindValue(numValue++, 0);  // Play count
             query.bindValue(numValue++, ""); // Last play time
 
@@ -1730,9 +1486,9 @@ void CSong::updateDatabase(void)
                               "song_composer_sort = ?,"
                               "song_year          = ?,"
                               "song_track_number  = ?,"
-                              "song_track_total   = ?,"
+                              "song_track_count   = ?,"
                               "song_disc_number   = ?,"
-                              "song_disc_total    = ?,"
+                              "song_disc_count    = ?,"
                               "genre_id           = ?,"
                               "song_rating        = ?,"
                               "song_comments      = ?,"
@@ -1744,28 +1500,27 @@ void CSong::updateDatabase(void)
             int numValue = 0;
 
             query.bindValue(numValue++, m_modification);
-            query.bindValue(numValue++, (m_isEnabled ? 1 : 0));
-            query.bindValue(numValue++, m_title);
-            query.bindValue(numValue++, m_titleSort);
-            query.bindValue(numValue++, m_subTitle);
-            query.bindValue(numValue++, m_grouping);
+            query.bindValue(numValue++, (m_infos.isEnabled ? 1 : 0));
+            query.bindValue(numValue++, m_infos.title);
+            query.bindValue(numValue++, m_infos.titleSort);
+            query.bindValue(numValue++, m_infos.subTitle);
+            query.bindValue(numValue++, m_infos.grouping);
             query.bindValue(numValue++, artistId);
             query.bindValue(numValue++, albumId);
             query.bindValue(numValue++, albumArtistId);
-            query.bindValue(numValue++, m_composer);
-            query.bindValue(numValue++, m_composerSort);
-            query.bindValue(numValue++, m_year);
-            query.bindValue(numValue++, m_trackNumber);
-            query.bindValue(numValue++, m_trackTotal);
-            query.bindValue(numValue++, m_discNumber);
-            query.bindValue(numValue++, m_discTotal);
+            query.bindValue(numValue++, m_infos.composer);
+            query.bindValue(numValue++, m_infos.composerSort);
+            query.bindValue(numValue++, m_infos.year);
+            query.bindValue(numValue++, m_infos.trackNumber);
+            query.bindValue(numValue++, m_infos.trackCount);
+            query.bindValue(numValue++, m_infos.discNumber);
+            query.bindValue(numValue++, m_infos.discCount);
             query.bindValue(numValue++, genreId);
-            query.bindValue(numValue++, m_rating);
-            query.bindValue(numValue++, m_comments);
-            query.bindValue(numValue++, m_bpm);
-            query.bindValue(numValue++, m_lyrics);
-            query.bindValue(numValue++, getISO2CodeForLanguage(m_language));
-
+            query.bindValue(numValue++, m_infos.rating);
+            query.bindValue(numValue++, m_infos.comments);
+            query.bindValue(numValue++, m_infos.bpm);
+            query.bindValue(numValue++, m_infos.lyrics);
+            query.bindValue(numValue++, getISO2CodeForLanguage(m_infos.language));
             query.bindValue(numValue++, m_id);
 
             if (!query.exec())
@@ -1822,4 +1577,526 @@ void CSong::emitPlayEnd(void)
     m_plays.append(currentTime);
 
     emit playEnd();
+}
+
+
+/**
+ * Lit les informations d'un morceau depuis des tags ID3 version 1.
+ *
+ * \param tags  Métadonnées.
+ * \param infos Structure à remplir.
+ * \return Booléen indiquant le succès de l'opération.
+ */
+
+bool CSong::loadTags(TagLib::ID3v1::Tag * tags, TSongInfos& infos)
+{
+    if (!tags)
+        return false;
+
+    //infos = TSongInfos();
+
+    TagLib::String str;
+
+    // Titre
+    str = tags->title();
+    if (!str.isNull())
+        infos.title = QString::fromUtf8(str.toCString(true));
+
+    // Artiste
+    str = tags->artist();
+    if (!str.isNull())
+        infos.artistName = QString::fromUtf8(str.toCString(true));
+
+    // Album
+    str = tags->album();
+    if (!str.isNull())
+        infos.albumTitle = QString::fromUtf8(str.toCString(true));
+
+    // Année
+    infos.year = tags->year();
+    
+    // Numéro de piste
+    infos.trackNumber = tags->track();
+    
+    // Genre
+    str = tags->genre();
+    if (!str.isNull())
+        infos.genre = QString::fromUtf8(str.toCString(true));
+
+    // Commentaires
+    str = tags->comment();
+    if (!str.isNull())
+        infos.comments = QString::fromUtf8(str.toCString(true));
+
+    return true;
+}
+
+
+/**
+ * Lit les informations d'un morceau depuis des tags ID3 version 2.
+ *
+ * \param tags  Métadonnées.
+ * \param infos Structure à remplir.
+ * \return Booléen indiquant le succès de l'opération.
+ */
+
+bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos)
+{
+    if (!tags)
+        return false;
+/*
+    // DEBUG
+    TagLib::ID3v2::FrameListMap tagMap = tags->frameListMap();
+    for (TagLib::ID3v2::FrameListMap::ConstIterator it = tagMap.begin(); it != tagMap.end(); ++it)
+    {
+        QString tagKey = QByteArray(it->first.data(), it->first.size());
+
+        for (TagLib::ID3v2::FrameList::ConstIterator it2 = it->second.begin(); it2 != it->second.end(); ++it2)
+        {
+            qDebug() << tagKey << ":" << (*it2)->toString().toCString(true);
+        }
+    }
+*/
+    //infos = TSongInfos();
+
+    TagLib::ID3v2::FrameList tagList;
+
+    // Titre
+    tagList = tags->frameList("TIT2");
+    if (!tagList.isEmpty())
+    {
+        if (tagList.size() > 1)
+            qWarning() << "CSong::loadTags() : ID3v2 : plusieurs tags TIT2";
+        infos.title = QString::fromUtf8(tagList.front()->toString().toCString(true));
+    }
+
+    // Sous-titre
+    tagList = tags->frameList("TIT3");
+    if (!tagList.isEmpty())
+    {
+        if (tagList.size() > 1)
+            qWarning() << "CSong::loadTags() : ID3v2 : plusieurs tags TIT3";
+        infos.subTitle = QString::fromUtf8(tagList.front()->toString().toCString(true));
+    }
+
+    // Artiste
+    tagList = tags->frameList("TPE1");
+    if (!tagList.isEmpty())
+    {
+        if (tagList.size() > 1)
+            qWarning() << "CSong::loadTags() : ID3v2 : plusieurs tags TPE1";
+        infos.artistName = QString::fromUtf8(tagList.front()->toString().toCString(true));
+    }
+
+    // Album
+    tagList = tags->frameList("TALB");
+    if (!tagList.isEmpty())
+    {
+        if (tagList.size() > 1)
+            qWarning() << "CSong::loadTags() : ID3v2 : plusieurs tags TALB";
+        infos.albumTitle = QString::fromUtf8(tagList.front()->toString().toCString(true));
+    }
+
+    // Artiste de l'album
+    tagList = tags->frameList("TPE2");
+    if (!tagList.isEmpty())
+    {
+        if (tagList.size() > 1)
+            qWarning() << "CSong::loadTags() : ID3v2 : plusieurs tags TPE2";
+        infos.albumArtist = QString::fromUtf8(tagList.front()->toString().toCString(true));
+    }
+
+    // Compositeur
+    tagList = tags->frameList("TCOM");
+    if (!tagList.isEmpty())
+    {
+        if (tagList.size() > 1)
+            qWarning() << "CSong::loadTags() : ID3v2 : plusieurs tags TCOM";
+        infos.composer = QString::fromUtf8(tagList.front()->toString().toCString(true));
+    }
+
+    // Titre pour le tri
+    tagList = tags->frameList("TSOT");
+    if (!tagList.isEmpty())
+    {
+        if (tagList.size() > 1)
+            qWarning() << "CSong::loadTags() : ID3v2 : plusieurs tags TSOT";
+        infos.titleSort = QString::fromUtf8(tagList.front()->toString().toCString(true));
+    }
+
+    // Artiste pour le tri
+    tagList = tags->frameList("TSOP");
+    if (!tagList.isEmpty())
+    {
+        if (tagList.size() > 1)
+            qWarning() << "CSong::loadTags() : ID3v2 : plusieurs tags TSOP";
+        infos.artistNameSort = QString::fromUtf8(tagList.front()->toString().toCString(true));
+    }
+
+    // Album pour le tri
+    tagList = tags->frameList("TSOA");
+    if (!tagList.isEmpty())
+    {
+        if (tagList.size() > 1)
+            qWarning() << "CSong::loadTags() : ID3v2 : plusieurs tags TSOA";
+        infos.albumTitleSort = QString::fromUtf8(tagList.front()->toString().toCString(true));
+    }
+
+    // Année
+    tagList = tags->frameList("TDRC");
+    if (!tagList.isEmpty())
+    {
+        if (tagList.size() > 1)
+            qWarning() << "CSong::loadTags() : ID3v2 : plusieurs tags TDRC";
+        TagLib::String str = tagList.front()->toString();
+
+        if (!str.isNull() && str.size() >= 4)
+        {
+            bool ok;
+            infos.year = str.substr(0, 4).toInt(&ok);
+            if (!ok)
+            {
+                qWarning() << "CSong::loadTags() : ID3v2 : tag TDRC invalide";
+                infos.year = 0;
+            }
+        }
+    }
+
+    // Regroupement
+    tagList = tags->frameList("TIT1");
+    if (!tagList.isEmpty())
+    {
+        if (tagList.size() > 1)
+            qWarning() << "CSong::loadTags() : ID3v2 : plusieurs tags TIT1";
+        infos.grouping = QString::fromUtf8(tagList.front()->toString().toCString(true));
+    }
+
+    // Numéro de piste
+    tagList = tags->frameList("TRCK");
+    if (!tagList.isEmpty())
+    {
+        if (tagList.size() > 1)
+            qWarning() << "CSong::loadTags() : ID3v2 : plusieurs tags TRCK";
+
+        QString str = QString::fromUtf8(tagList.front()->toString().toCString(true));
+
+        if (str.contains('/'))
+        {
+            QStringList strSplit = str.split('/');
+
+            if (strSplit.size() == 2)
+            {
+                bool ok;
+                infos.trackNumber = strSplit[0].toInt(&ok);
+                if (!ok) qWarning() << "CSong::loadTags() : ID3v2 : tag TRCK invalide";
+                infos.trackCount = strSplit[1].toInt(&ok);
+                if (!ok) qWarning() << "CSong::loadTags() : ID3v2 : tag TRCK invalide";
+            }
+            else
+            {
+                qWarning() << "CSong::loadTags() : ID3v2 : tag TRCK invalide";
+            }
+        }
+        else
+        {
+            bool ok;
+            infos.trackNumber = str.toInt(&ok);
+            if (!ok) qWarning() << "CSong::loadTags() : ID3v2 : tag TRCK invalide";
+        }
+    }
+
+    // Numéro de disque
+    tagList = tags->frameList("TPOS");
+    if (!tagList.isEmpty())
+    {
+        if (tagList.size() > 1)
+            qWarning() << "CSong::loadTags() : ID3v2 : plusieurs tags TPOS";
+        QString str = QString::fromUtf8(tagList.front()->toString().toCString(true));
+
+        if (str.contains('/'))
+        {
+            QStringList strSplit = str.split('/');
+
+            if (strSplit.size() == 2)
+            {
+                bool ok;
+                infos.discNumber = strSplit[0].toInt(&ok);
+                if (!ok) qWarning() << "CSong::loadTags() : ID3v2 : tag TPOS invalide";
+                infos.discCount = strSplit[1].toInt(&ok);
+                if (!ok) qWarning() << "CSong::loadTags() : ID3v2 : tag TPOS invalide";
+            }
+            else
+            {
+                qWarning() << "CSong::loadTags() : ID3v2 : tag TPOS invalide";
+            }
+        }
+        else
+        {
+            bool ok;
+            infos.discNumber = str.toInt(&ok);
+            if (!ok) qWarning() << "CSong::loadTags() : ID3v2 : tag TPOS invalide";
+        }
+    }
+
+    // Genre
+    tagList = tags->frameList("TCON");
+    if (!tagList.isEmpty())
+    {
+        infos.genre = QString::fromUtf8(tags->genre().toCString(true));
+    }
+
+    // Commentaires
+    tagList = tags->frameList("COMM");
+    if (!tagList.isEmpty())
+    {
+        if (tagList.size() > 1)
+            qWarning() << "CSong::loadTags() : ID3v2 : plusieurs tags COMM";
+
+        TagLib::ID3v2::CommentsFrame * frame = dynamic_cast<TagLib::ID3v2::CommentsFrame *>(tagList.front());
+
+        if (frame)
+        {
+            infos.comments = QString::fromUtf8(frame->text().toCString(true));
+        }
+    }
+
+    // BPM
+    tagList = tags->frameList("TBPM");
+    if (!tagList.isEmpty())
+    {
+        if (tagList.size() > 1)
+            qWarning() << "CSong::loadTags() : ID3v2 : plusieurs tags TBPM";
+        QString str = QString::fromUtf8(tagList.front()->toString().toCString(true));
+
+        bool ok;
+        infos.bpm = str.toInt(&ok);
+        if (!ok) qWarning() << "CSong::loadTags() : ID3v2 : tag TBPM invalide";
+    }
+
+    // Paroles
+    tagList = tags->frameList("USLT");
+    if (!tagList.isEmpty())
+    {
+        if (tagList.size() > 1)
+            qWarning() << "CSong::loadTags() : ID3v2 : plusieurs tags USLT";
+
+        TagLib::ID3v2::UnsynchronizedLyricsFrame * frame = dynamic_cast<TagLib::ID3v2::UnsynchronizedLyricsFrame *>(tagList.front());
+
+        if (frame)
+        {
+            infos.lyrics = QString::fromUtf8(frame->text().toCString(true));
+            TagLib::ByteVector lng = frame->language();
+            
+            if (lng.size() != 3)
+            {
+                qWarning() << "CSong::loadTags() : ID3v2 : langue du tag USLT invalide";
+            }
+            else
+            {
+                infos.language = getLanguageForISO3Code(QByteArray(lng.data(), 3));
+            }
+        }
+    }
+
+    // Langue
+    tagList = tags->frameList("TLAN");
+    if (!tagList.isEmpty())
+    {
+        if (tagList.size() > 1)
+            qWarning() << "CSong::loadTags() : ID3v2 : plusieurs tags TLAN";
+
+        QString str = QString::fromUtf8(tagList.front()->toString().toCString(false));
+
+        if (str.size() != 3)
+        {
+            qWarning() << "CSong::loadTags() : ID3v2 : tag TLAN invalide";
+        }
+        else
+        {
+            TLanguage lng = getLanguageForISO3Code(qPrintable(str));
+
+            if (infos.language != LangUnknown && lng != infos.language)
+            {
+                qWarning() << "CSong::loadTags() : ID3v2 : la langue des paroles et différente de la langue du morceau";
+            }
+
+            infos.language = lng;
+        }
+    }
+
+    return true;
+}
+
+
+/**
+ * Lit les informations d'un morceau depuis des tags APE.
+ *
+ * \param tags  Métadonnées.
+ * \param infos Structure à remplir.
+ * \return Booléen indiquant le succès de l'opération.
+ */
+
+bool CSong::loadTags(TagLib::APE::Tag * tags, TSongInfos& infos)
+{
+    if (!tags)
+        return false;
+
+    //infos = TSongInfos();
+
+    const TagLib::APE::ItemListMap tagMap = tags->itemListMap();
+/*
+    // DEBUG
+    for (TagLib::APE::ItemListMap::ConstIterator it = tagMap.begin(); it != tagMap.end(); ++it)
+    {
+        const QString tagKey = it->first.toCString();
+        const TagLib::StringList tagValues = it->second.toStringList();
+
+        for (TagLib::StringList::ConstIterator it2 = tagValues.begin(); it2 != tagValues.end(); ++it2)
+        {
+            qDebug() << tagKey << ":" << it2->toCString(true);
+        }
+    }
+*/
+    // Titre
+    if (!tagMap["TITLE"].isEmpty())
+    {
+        infos.title = QString::fromUtf8(tagMap["TITLE"].toString().toCString(true));
+    }
+
+    // Sous-titre
+    if (!tagMap["SUBTITLE"].isEmpty())
+    {
+        infos.subTitle = QString::fromUtf8(tagMap["SUBTITLE"].toString().toCString(true));
+    }
+
+    // Artiste
+    if (!tagMap["ARTIST"].isEmpty())
+    {
+        infos.artistName = QString::fromUtf8(tagMap["ARTIST"].toString().toCString(true));
+    }
+
+    // Album
+    if (!tagMap["ALBUM"].isEmpty())
+    {
+        infos.albumTitle = QString::fromUtf8(tagMap["ALBUM"].toString().toCString(true));
+    }
+
+    // Compositeur
+    if (!tagMap["COMPOSER"].isEmpty())
+    {
+        infos.composer = QString::fromUtf8(tagMap["COMPOSER"].toString().toCString(true));
+    }
+
+    // Genre
+    if (!tagMap["GENRE"].isEmpty())
+    {
+        infos.genre = QString::fromUtf8(tagMap["GENRE"].toString().toCString(true));
+    }
+
+    // Année
+    if (!tagMap["YEAR"].isEmpty())
+    {
+        infos.year = tagMap["YEAR"].toString().toInt();
+    }
+    else if (!tagMap["RECORDDATE"].isEmpty())
+    {
+        // TODO: tester...
+        infos.year = tagMap["RECORDDATE"].toString().toInt();
+    }
+
+    // Commentaires
+    if (!tagMap["COMMENT"].isEmpty())
+    {
+        infos.comments = QString::fromUtf8(tagMap["COMMENT"].toString().toCString(true));
+    }
+
+    // Numéro de piste
+    if (!tagMap["TRACK"].isEmpty())
+    {
+        QString str = QString::fromUtf8(tagMap["TRACK"].toString().toCString(true));
+
+        if (str.contains('/'))
+        {
+            QStringList strSplit = str.split('/');
+
+            if (strSplit.size() == 2)
+            {
+                bool ok;
+                infos.trackNumber = strSplit[0].toInt(&ok);
+                if (!ok) qWarning() << "CSong::loadTags() : APE : tag TRACK invalide";
+                infos.trackCount = strSplit[1].toInt(&ok);
+                if (!ok) qWarning() << "CSong::loadTags() : APE : tag TRACK invalide";
+            }
+            else
+            {
+                qWarning() << "CSong::loadTags() : APE : tag TRACK invalide";
+            }
+        }
+        else
+        {
+            bool ok;
+            infos.trackNumber = str.toInt(&ok);
+            if (!ok) qWarning() << "CSong::loadTags() : APE : tag TRACK invalide";
+        }
+    }
+
+    // Numéro de disque
+    if (!tagMap["MEDIA"].isEmpty())
+    {
+        QString str = QString::fromUtf8(tagMap["MEDIA"].toString().toCString(true));
+
+        if (str.contains('/'))
+        {
+            QStringList strSplit = str.split('/');
+
+            if (strSplit.size() == 2)
+            {
+                bool ok;
+                infos.discNumber = strSplit[0].toInt(&ok);
+                if (!ok) qWarning() << "CSong::loadTags() : APE : tag MEDIA invalide";
+                infos.discCount = strSplit[1].toInt(&ok);
+                if (!ok) qWarning() << "CSong::loadTags() : APE : tag MEDIA invalide";
+            }
+            else
+            {
+                qWarning() << "CSong::loadTags() : APE : tag MEDIA invalide";
+            }
+        }
+        else
+        {
+            bool ok;
+            infos.discNumber = str.toInt(&ok);
+            if (!ok) qWarning() << "CSong::loadTags() : APE : tag MEDIA invalide";
+        }
+    }
+
+    // Langue
+    if (!tagMap["LANGUAGE"].isEmpty())
+    {
+        qDebug() << "CSong::loadTags() : APE : langue = " << QString::fromUtf8(tagMap["LANGUAGE"].toString().toCString(true));
+        //infos.language = QString::fromUtf8(tagMap["LANGUAGE"].toString().toCString(true));
+    }
+
+    return false;
+}
+
+
+/**
+ * Lit les informations d'un morceau depuis des tags Xiph Comment.
+ *
+ * \todo Implémentation.
+ *
+ * \param tags  Métadonnées.
+ * \param infos Structure à remplir.
+ * \return Booléen indiquant le succès de l'opération.
+ */
+
+bool CSong::loadTags(TagLib::Ogg::XiphComment * tags, TSongInfos& infos)
+{
+    if (!tags)
+        return false;
+
+    //infos = TSongInfos();
+
+    return false;
 }

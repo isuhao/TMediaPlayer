@@ -199,11 +199,11 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
                     return QString();
                 }
 
-                const int trackTotal = m_data.at(index.row())->getSong()->getTrackTotal();
+                const int trackCount = m_data.at(index.row())->getSong()->getTrackCount();
 
-                if (trackTotal >= trackNumber)
+                if (trackCount >= trackNumber)
                 {
-                    return QString("%1/%2").arg(trackNumber).arg(trackTotal);
+                    return QString("%1/%2").arg(trackNumber).arg(trackCount);
                 }
                 else
                 {
@@ -221,11 +221,11 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
                     return QString();
                 }
 
-                const int discTotal = m_data.at(index.row())->getSong()->getDiscTotal();
+                const int discCount = m_data.at(index.row())->getSong()->getDiscCount();
 
-                if (discTotal >= discNumber)
+                if (discCount >= discNumber)
                 {
-                    return QString("%1/%2").arg(discNumber).arg(discTotal);
+                    return QString("%1/%2").arg(discNumber).arg(discCount);
                 }
                 else
                 {

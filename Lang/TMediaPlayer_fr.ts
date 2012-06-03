@@ -25,7 +25,7 @@
     </message>
     <message numerus="yes">
         <location filename="../Sources/CApplication.cpp" line="89"/>
-        <location filename="../Sources/CApplication.cpp" line="1850"/>
+        <location filename="../Sources/CApplication.cpp" line="1934"/>
         <source>%n song(s), %1</source>
         <translation>
             <numerusform>%n morceau, %1</numerusform>
@@ -38,12 +38,12 @@
         <translation>Listes de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="322"/>
+        <location filename="../Sources/CApplication.cpp" line="321"/>
         <source>Database error</source>
         <translation>Erreur de base de données</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="322"/>
+        <location filename="../Sources/CApplication.cpp" line="321"/>
         <source>File: %1 (%2)
 
 Query: %3
@@ -56,21 +56,32 @@ Requête : %3
 Erreur : %4</translation>
     </message>
     <message>
+        <location filename="../Sources/CApplication.cpp" line="1802"/>
         <source>Are you sure you want to delete this playlist?</source>
-        <translation type="obsolete">Êtes-vous sûr de vouloir supprimer cette liste de lecture ?</translation>
+        <translation>Êtes-vous sûr de vouloir supprimer cette liste de lecture ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1353"/>
+        <location filename="../Sources/CApplication.cpp" line="1802"/>
+        <source>Yes</source>
+        <translation>Oui</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CApplication.cpp" line="1802"/>
+        <source>No</source>
+        <translation>Non</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CApplication.cpp" line="1399"/>
         <source>Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)</source>
         <translation>Fichiers multimédias (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;Tous les fichiers (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1379"/>
+        <location filename="../Sources/CApplication.cpp" line="1425"/>
         <source>Add files...</source>
         <translation>Ajout de fichiers...</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1379"/>
+        <location filename="../Sources/CApplication.cpp" line="1425"/>
         <source>Abort</source>
         <translation>Abandonner</translation>
     </message>
@@ -82,7 +93,7 @@ Erreur : %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1989"/>
+        <location filename="../Sources/CApplication.cpp" line="2073"/>
         <source>This program requires FMOD %1 or superior.</source>
         <translation>Ce programme nécessite FMOD %1 ou supérieur.</translation>
     </message>
@@ -94,17 +105,17 @@ Erreur : %4</translation>
 <context>
     <name>CDialogEditDynamicList</name>
     <message>
-        <location filename="../Sources/CDialogEditDynamicList.cpp" line="41"/>
+        <location filename="../Sources/CDialogEditDynamicList.cpp" line="58"/>
         <source>Save</source>
         <translation>Enregistrer</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditDynamicList.cpp" line="42"/>
+        <location filename="../Sources/CDialogEditDynamicList.cpp" line="59"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditDynamicList.cpp" line="78"/>
+        <location filename="../Sources/CDialogEditDynamicList.cpp" line="97"/>
         <source>You need to choose a name for the playlist.</source>
         <translation>Vous devez choisir un nom pour la liste de lecture.</translation>
     </message>
@@ -418,22 +429,22 @@ Erreur : %4</translation>
         <translation>Italien</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="1067"/>
+        <location filename="../Sources/CSong.cpp" line="1069"/>
         <source>%1 Gio</source>
         <translation>%1 Gio</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="1072"/>
+        <location filename="../Sources/CSong.cpp" line="1074"/>
         <source>%1 Mio</source>
         <translation>%1 Mio</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="1077"/>
+        <location filename="../Sources/CSong.cpp" line="1079"/>
         <source>%1 Kio</source>
         <translation>%1 Kio</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CSong.cpp" line="1081"/>
+        <location filename="../Sources/CSong.cpp" line="1083"/>
         <source>%n byte(s)</source>
         <translation>
             <numerusform>%n octet</numerusform>
@@ -448,122 +459,122 @@ Erreur : %4</translation>
         <translation type="obsolete">#</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="212"/>
+        <location filename="../Sources/CSongTable.hpp" line="217"/>
         <source>Title</source>
         <translation>Titre</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="213"/>
+        <location filename="../Sources/CSongTable.hpp" line="218"/>
         <source>Artist</source>
         <translation>Artiste</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="214"/>
+        <location filename="../Sources/CSongTable.hpp" line="219"/>
         <source>Album</source>
         <translation>Album</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="215"/>
+        <location filename="../Sources/CSongTable.hpp" line="220"/>
         <source>Album artist</source>
         <translation>Artiste de l&apos;album</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="216"/>
+        <location filename="../Sources/CSongTable.hpp" line="221"/>
         <source>Composer</source>
         <translation>Compositeur</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="217"/>
+        <location filename="../Sources/CSongTable.hpp" line="222"/>
         <source>Year</source>
         <translation>Année</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="218"/>
+        <location filename="../Sources/CSongTable.hpp" line="223"/>
         <source>Track</source>
         <translation>Piste</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="219"/>
+        <location filename="../Sources/CSongTable.hpp" line="224"/>
         <source>Disc</source>
         <translation>Disque</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="220"/>
+        <location filename="../Sources/CSongTable.hpp" line="225"/>
         <source>Genre</source>
         <translation>Genre</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="221"/>
+        <location filename="../Sources/CSongTable.hpp" line="226"/>
         <source>Rating</source>
         <translation>Note</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="222"/>
+        <location filename="../Sources/CSongTable.hpp" line="227"/>
         <source>Comments</source>
         <translation>Commentaires</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="223"/>
+        <location filename="../Sources/CSongTable.hpp" line="228"/>
         <source>Plays</source>
         <translation>Lectures</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="224"/>
+        <location filename="../Sources/CSongTable.hpp" line="229"/>
         <source>Last played</source>
         <translation>Dernière lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="225"/>
+        <location filename="../Sources/CSongTable.hpp" line="230"/>
         <source>File name</source>
         <translation>Fichier</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="226"/>
+        <location filename="../Sources/CSongTable.hpp" line="231"/>
         <source>Bit rate</source>
         <translation>Débit</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="227"/>
+        <location filename="../Sources/CSongTable.hpp" line="232"/>
         <source>Format</source>
         <translation>Format</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="228"/>
+        <location filename="../Sources/CSongTable.hpp" line="233"/>
         <source>Duration</source>
         <translation>Durée</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="229"/>
+        <location filename="../Sources/CSongTable.hpp" line="234"/>
         <source>Sample rate</source>
         <translation>Taux d&apos;échantillonnage</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="230"/>
+        <location filename="../Sources/CSongTable.hpp" line="235"/>
         <source>Creation date</source>
         <translation>Date de création</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="231"/>
+        <location filename="../Sources/CSongTable.hpp" line="236"/>
         <source>Modification date</source>
         <translation>Date de modification</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="232"/>
+        <location filename="../Sources/CSongTable.hpp" line="237"/>
         <source>Channels</source>
         <translation>Canaux</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="233"/>
+        <location filename="../Sources/CSongTable.hpp" line="238"/>
         <source>File size</source>
         <translation>Taille du fichier</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="234"/>
+        <location filename="../Sources/CSongTable.hpp" line="239"/>
         <source>Lyrics</source>
         <translation>Paroles</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="235"/>
+        <location filename="../Sources/CSongTable.hpp" line="240"/>
         <source>Language</source>
         <translation>Langue</translation>
     </message>
@@ -574,74 +585,74 @@ Erreur : %4</translation>
 %1</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="659"/>
+        <location filename="../Sources/CSongTable.cpp" line="704"/>
         <source>Are you sure you want to remove the selected songs from the library?
 The files will not be deleted.</source>
         <translation>Êtes-vous sur de vouloir supprimer les morceaux sélectionnés de la médiathèque ?
 Les fichiers ne seront pas supprimés.</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="659"/>
+        <location filename="../Sources/CSongTable.cpp" line="704"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1110"/>
+        <location filename="../Sources/CSongTable.cpp" line="1167"/>
         <source>Play</source>
         <translation>Lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1114"/>
+        <location filename="../Sources/CSongTable.cpp" line="1171"/>
         <source>Informations</source>
         <translation>Informations</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1115"/>
+        <location filename="../Sources/CSongTable.cpp" line="1172"/>
         <source>Edit metadata</source>
         <translation>Éditer les métadonnées</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1116"/>
+        <location filename="../Sources/CSongTable.cpp" line="1173"/>
         <source>Show in explorer</source>
         <translation>Afficher dans l&apos;explorateur</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1118"/>
+        <location filename="../Sources/CSongTable.cpp" line="1175"/>
         <source>Remove from library</source>
         <translation>Enlever de la médiathèque</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1119"/>
+        <location filename="../Sources/CSongTable.cpp" line="1176"/>
         <source>Check selection</source>
         <translation>Cocher la sélection</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1120"/>
+        <location filename="../Sources/CSongTable.cpp" line="1177"/>
         <source>Uncheck selection</source>
         <translation>Décocher la sélection</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1127"/>
+        <location filename="../Sources/CSongTable.cpp" line="1184"/>
         <source>Playlists</source>
         <translation>Listes de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1129"/>
+        <location filename="../Sources/CSongTable.cpp" line="1186"/>
         <source>Library</source>
         <translation>Médiathèque</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1157"/>
+        <location filename="../Sources/CSongTable.cpp" line="1214"/>
         <source>Add to playlist</source>
         <translation>Ajouter à la liste de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1162"/>
+        <location filename="../Sources/CSongTable.cpp" line="1219"/>
         <source>There are no playlist</source>
         <translation>Il n&apos;y a pas de listes de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="659"/>
+        <location filename="../Sources/CSongTable.cpp" line="704"/>
         <source>Remove</source>
         <translation>Supprimer</translation>
     </message>
@@ -843,7 +854,7 @@ Les fichiers ne seront pas supprimés.</translation>
 <context>
     <name>CStaticPlayList</name>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="95"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="101"/>
         <source>There had duplicates being added to the playlist.
 Would you like to add them?</source>
         <translation>Certains morceaux sélectionnés font déjà partie de la liste de lecture.
@@ -864,85 +875,85 @@ Voulez-vous les ajouter ?</translation>
         <translation type="obsolete">Non</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="227"/>
-        <location filename="../Sources/CStaticPlayList.cpp" line="314"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="233"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="320"/>
         <source>Are you sure you want to remove the selected songs from the list?</source>
         <translation>Êtes-vous sur de vouloir supprimer les morceaux sélectionnés de la liste ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="227"/>
-        <location filename="../Sources/CStaticPlayList.cpp" line="314"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="233"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="320"/>
         <source>Remove</source>
         <translation>Supprimer</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="227"/>
-        <location filename="../Sources/CStaticPlayList.cpp" line="314"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="233"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="320"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="554"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="601"/>
         <source>Play</source>
         <translation>Lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="558"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="605"/>
         <source>Informations</source>
         <translation>Informations</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="559"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="606"/>
         <source>Edit metadata</source>
         <translation>Éditer les métadonnées</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="560"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="607"/>
         <source>Show in explorer</source>
         <translation>Afficher dans l&apos;explorateur</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="562"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="609"/>
         <source>Remove from playlist</source>
         <translation>Enlever de la liste de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="563"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="610"/>
         <source>Remove from library</source>
         <translation>Enlever de la médiathèque</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="564"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="611"/>
         <source>Check selection</source>
         <translation>Cocher la sélection</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="565"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="612"/>
         <source>Uncheck selection</source>
         <translation>Décocher la sélection</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="572"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="619"/>
         <source>Playlists</source>
         <translation>Listes de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="574"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="621"/>
         <source>Library</source>
         <translation>Médiathèque</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="602"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="649"/>
         <source>Add to playlist</source>
         <translation>Ajouter à la liste de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="607"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="654"/>
         <source>There are no playlist</source>
         <translation>Il n&apos;y a pas de listes de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="622"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="671"/>
         <source>Remove duplicates</source>
         <translation>Supprimer les doublons</translation>
     </message>
@@ -950,7 +961,7 @@ Voulez-vous les ajouter ?</translation>
 <context>
     <name>CWidgetMultiCriterion</name>
     <message>
-        <location filename="../Sources/CWidgetMultiCriterion.cpp" line="163"/>
+        <location filename="../Sources/CWidgetMultiCriterion.cpp" line="171"/>
         <source>-</source>
         <translation>-</translation>
     </message>
@@ -1879,11 +1890,6 @@ Voulez-vous les ajouter ?</translation>
 <context>
     <name>WidgetControl</name>
     <message>
-        <location filename="../Form/WidgetControl.ui" line="6"/>
-        <source>Form</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../Form/WidgetControl.ui" line="147"/>
         <source>Repeat</source>
         <translation>Répétition</translation>
@@ -1897,85 +1903,85 @@ Voulez-vous les ajouter ?</translation>
 <context>
     <name>WidgetCriteria</name>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="192"/>
-        <location filename="../Form/WidgetCriteria.ui" line="238"/>
-        <location filename="../Form/WidgetCriteria.ui" line="279"/>
-        <location filename="../Form/WidgetCriteria.ui" line="320"/>
-        <location filename="../Form/WidgetCriteria.ui" line="371"/>
+        <location filename="../Form/WidgetCriteria.ui" line="195"/>
+        <location filename="../Form/WidgetCriteria.ui" line="241"/>
+        <location filename="../Form/WidgetCriteria.ui" line="282"/>
+        <location filename="../Form/WidgetCriteria.ui" line="323"/>
+        <location filename="../Form/WidgetCriteria.ui" line="374"/>
         <source>is</source>
         <translation>est</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="197"/>
-        <location filename="../Form/WidgetCriteria.ui" line="243"/>
-        <location filename="../Form/WidgetCriteria.ui" line="284"/>
-        <location filename="../Form/WidgetCriteria.ui" line="325"/>
-        <location filename="../Form/WidgetCriteria.ui" line="376"/>
+        <location filename="../Form/WidgetCriteria.ui" line="200"/>
+        <location filename="../Form/WidgetCriteria.ui" line="246"/>
+        <location filename="../Form/WidgetCriteria.ui" line="287"/>
+        <location filename="../Form/WidgetCriteria.ui" line="328"/>
+        <location filename="../Form/WidgetCriteria.ui" line="379"/>
         <source>is not</source>
         <translation>n&apos;est pas</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="202"/>
+        <location filename="../Form/WidgetCriteria.ui" line="205"/>
         <source>contains</source>
         <translation>contient</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="207"/>
+        <location filename="../Form/WidgetCriteria.ui" line="210"/>
         <source>does not contains</source>
         <translation>ne contient pas</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="212"/>
+        <location filename="../Form/WidgetCriteria.ui" line="215"/>
         <source>starts with</source>
         <translation>commence par</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="217"/>
+        <location filename="../Form/WidgetCriteria.ui" line="220"/>
         <source>ends with</source>
         <translation>se termine par</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="248"/>
-        <location filename="../Form/WidgetCriteria.ui" line="289"/>
+        <location filename="../Form/WidgetCriteria.ui" line="251"/>
+        <location filename="../Form/WidgetCriteria.ui" line="292"/>
         <source>is less than</source>
         <translation>est inférieur à</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="253"/>
-        <location filename="../Form/WidgetCriteria.ui" line="294"/>
+        <location filename="../Form/WidgetCriteria.ui" line="256"/>
+        <location filename="../Form/WidgetCriteria.ui" line="297"/>
         <source>is greater than</source>
         <translation>est supérieur à</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="330"/>
+        <location filename="../Form/WidgetCriteria.ui" line="333"/>
         <source>is before</source>
         <translation>est avant</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="335"/>
+        <location filename="../Form/WidgetCriteria.ui" line="338"/>
         <source>is after</source>
         <translation>est après</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="340"/>
+        <location filename="../Form/WidgetCriteria.ui" line="343"/>
         <source>is in the last</source>
         <translation>est dans les derniers</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="345"/>
+        <location filename="../Form/WidgetCriteria.ui" line="348"/>
         <source>is not in the last</source>
         <translation>n&apos;est pas dans les derniers</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="398"/>
-        <location filename="../Form/WidgetCriteria.ui" line="476"/>
+        <location filename="../Form/WidgetCriteria.ui" line="401"/>
+        <location filename="../Form/WidgetCriteria.ui" line="479"/>
         <source>mm:ss</source>
         <translation>mm:ss</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="258"/>
-        <location filename="../Form/WidgetCriteria.ui" line="299"/>
-        <location filename="../Form/WidgetCriteria.ui" line="350"/>
+        <location filename="../Form/WidgetCriteria.ui" line="261"/>
+        <location filename="../Form/WidgetCriteria.ui" line="302"/>
+        <location filename="../Form/WidgetCriteria.ui" line="353"/>
         <source>is between</source>
         <translation>est entre</translation>
     </message>
@@ -1992,42 +1998,42 @@ Voulez-vous les ajouter ?</translation>
         <translation type="obsolete">après</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="49"/>
+        <location filename="../Form/WidgetCriteria.ui" line="52"/>
         <source>Title</source>
         <translation>Titre</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="54"/>
+        <location filename="../Form/WidgetCriteria.ui" line="57"/>
         <source>Artist</source>
         <translation>Artiste</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="59"/>
+        <location filename="../Form/WidgetCriteria.ui" line="62"/>
         <source>Album</source>
         <translation>Album</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="64"/>
+        <location filename="../Form/WidgetCriteria.ui" line="67"/>
         <source>Album artist</source>
         <translation>Artiste de l&apos;album</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="69"/>
+        <location filename="../Form/WidgetCriteria.ui" line="72"/>
         <source>Composer</source>
         <translation>Compositeur</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="74"/>
+        <location filename="../Form/WidgetCriteria.ui" line="77"/>
         <source>Genre</source>
         <translation>Genre</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="79"/>
+        <location filename="../Form/WidgetCriteria.ui" line="82"/>
         <source>Comments</source>
         <translation>Commentaires</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="84"/>
+        <location filename="../Form/WidgetCriteria.ui" line="87"/>
         <source>Lyrics</source>
         <translation>Paroles</translation>
     </message>
@@ -2036,114 +2042,114 @@ Voulez-vous les ajouter ?</translation>
         <translation type="obsolete">Encodeur</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="89"/>
+        <location filename="../Form/WidgetCriteria.ui" line="92"/>
         <source>File name</source>
         <translation>Fichier</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="94"/>
+        <location filename="../Form/WidgetCriteria.ui" line="97"/>
         <source>Year</source>
         <translation>Année</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="99"/>
+        <location filename="../Form/WidgetCriteria.ui" line="102"/>
         <source>Track</source>
         <translation>Piste</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="104"/>
+        <location filename="../Form/WidgetCriteria.ui" line="107"/>
         <source>Disc</source>
         <translation>Disque</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="109"/>
+        <location filename="../Form/WidgetCriteria.ui" line="112"/>
         <source>Bit rate</source>
         <translation>Débit</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="114"/>
+        <location filename="../Form/WidgetCriteria.ui" line="117"/>
         <source>Sample rate</source>
         <translation>Taux d&apos;échantillonnage</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="119"/>
+        <location filename="../Form/WidgetCriteria.ui" line="122"/>
         <source>Play count</source>
         <translation>Lectures</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="124"/>
+        <location filename="../Form/WidgetCriteria.ui" line="127"/>
         <source>Channels</source>
         <translation>Canaux</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="129"/>
+        <location filename="../Form/WidgetCriteria.ui" line="132"/>
         <source>Rating</source>
         <translation>Note</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="134"/>
+        <location filename="../Form/WidgetCriteria.ui" line="137"/>
         <source>File size</source>
         <translation>Taille du fichier</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="144"/>
+        <location filename="../Form/WidgetCriteria.ui" line="147"/>
         <source>Last played</source>
         <translation>Dernière lecture</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="149"/>
+        <location filename="../Form/WidgetCriteria.ui" line="152"/>
         <source>Added</source>
         <translation>Création</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="154"/>
+        <location filename="../Form/WidgetCriteria.ui" line="157"/>
         <source>Modified</source>
         <translation>Modification</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="159"/>
+        <location filename="../Form/WidgetCriteria.ui" line="162"/>
         <source>Language</source>
         <translation>Langue</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="164"/>
+        <location filename="../Form/WidgetCriteria.ui" line="167"/>
         <source>Playlist</source>
         <translation>Liste de lecture</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="169"/>
+        <location filename="../Form/WidgetCriteria.ui" line="172"/>
         <source>Format</source>
         <translation>Format</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="460"/>
+        <location filename="../Form/WidgetCriteria.ui" line="463"/>
         <source>and</source>
         <extracomment>between A and B</extracomment>
         <translatorcomment>entre A et B</translatorcomment>
         <translation>et</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="522"/>
+        <location filename="../Form/WidgetCriteria.ui" line="525"/>
         <source>days</source>
         <translation>jours</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="527"/>
+        <location filename="../Form/WidgetCriteria.ui" line="530"/>
         <source>weeks</source>
         <translation>semaines</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="532"/>
+        <location filename="../Form/WidgetCriteria.ui" line="535"/>
         <source>months</source>
         <translation>mois</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="537"/>
+        <location filename="../Form/WidgetCriteria.ui" line="540"/>
         <source>years</source>
         <translation>années</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetCriteria.ui" line="139"/>
+        <location filename="../Form/WidgetCriteria.ui" line="142"/>
         <source>Duration</source>
         <translation>Durée</translation>
     </message>
@@ -2151,37 +2157,37 @@ Voulez-vous les ajouter ?</translation>
 <context>
     <name>WidgetMultiCriterion</name>
     <message>
-        <location filename="../Form/WidgetMultiCriterion.ui" line="64"/>
+        <location filename="../Form/WidgetMultiCriterion.ui" line="62"/>
         <source>Match </source>
         <translation>Vérifie </translation>
     </message>
     <message>
-        <location filename="../Form/WidgetMultiCriterion.ui" line="72"/>
+        <location filename="../Form/WidgetMultiCriterion.ui" line="75"/>
         <source>all conditions</source>
         <translation>toutes les conditions</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetMultiCriterion.ui" line="77"/>
+        <location filename="../Form/WidgetMultiCriterion.ui" line="70"/>
         <source>one condition</source>
         <translation>n&apos;importe quelle condition</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetMultiCriterion.ui" line="115"/>
+        <location filename="../Form/WidgetMultiCriterion.ui" line="113"/>
         <source>Add a criteria</source>
         <translation>Ajouter un critère</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetMultiCriterion.ui" line="118"/>
+        <location filename="../Form/WidgetMultiCriterion.ui" line="116"/>
         <source>+</source>
         <translation>+</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetMultiCriterion.ui" line="131"/>
+        <location filename="../Form/WidgetMultiCriterion.ui" line="129"/>
         <source>Add a multi-criterion</source>
         <translation>Ajoute un multi-critères</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetMultiCriterion.ui" line="134"/>
+        <location filename="../Form/WidgetMultiCriterion.ui" line="132"/>
         <source>...</source>
         <translation>...</translation>
     </message>

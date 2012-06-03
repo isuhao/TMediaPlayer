@@ -150,9 +150,9 @@ void CDialogEditSong::apply(void)
     song->setBPM(m_uiWidget->editBPM->text().toInt());
     song->setYear(m_uiWidget->editYear->text().toInt());
     song->setTrackNumber(m_uiWidget->editTrackNumber->text().toInt());
-    song->setTrackTotal(m_uiWidget->editTrackTotal->text().toInt());
+    song->setTrackCount(m_uiWidget->editTrackCount->text().toInt());
     song->setDiscNumber(m_uiWidget->editDiscNumber->text().toInt());
-    song->setDiscTotal(m_uiWidget->editDiscTotal->text().toInt());
+    song->setDiscCount(m_uiWidget->editDiscCount->text().toInt());
     song->setComments(m_uiWidget->editComments->toPlainText());
     song->setGenre(m_uiWidget->editGenre->currentText());
     song->setRating(m_uiWidget->editRating->value());
@@ -255,14 +255,14 @@ void CDialogEditSong::updateInfos()
     const int trackNumber = song->getTrackNumber();
     m_uiWidget->editTrackNumber->setText(trackNumber > 0 ? QString::number(trackNumber) : "");
 
-    const int trackTotal = song->getTrackTotal();
-    m_uiWidget->editTrackTotal->setText(trackTotal > 0 ? QString::number(trackTotal) : "");
+    const int trackCount = song->getTrackCount();
+    m_uiWidget->editTrackCount->setText(trackCount > 0 ? QString::number(trackCount) : "");
 
     const int discNumber = song->getDiscNumber();
     m_uiWidget->editDiscNumber->setText(discNumber > 0 ? QString::number(discNumber) : "");
 
-    const int discTotal = song->getDiscTotal();
-    m_uiWidget->editDiscTotal->setText(discTotal > 0 ? QString::number(discTotal) : "");
+    const int discCount = song->getDiscCount();
+    m_uiWidget->editDiscCount->setText(discCount > 0 ? QString::number(discCount) : "");
 
     m_uiWidget->editComments->setText(song->getComments());
 
