@@ -658,9 +658,11 @@ void CStaticPlayList::openCustomMenuProject(const QPoint& point)
         {
             for (QList<CPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
             {
-                if (qobject_cast<CStaticPlayList *>(*it))
+                CStaticPlayList * staticList = qobject_cast<CStaticPlayList *>(*it);
+                if (staticList)
                 {
-                    menuAddToPlayList->addAction(QPixmap(":/icons/playlist"), (*it)->getName());
+                    m_actionAddToPlayList[staticList] = menuAddToPlayList->addAction(QPixmap(":/icons/playlist"), (*it)->getName());
+                    connect(m_actionAddToPlayList[staticList], SIGNAL(triggered()), this, SLOT(addToPlayList()));
                 }
             }
         }

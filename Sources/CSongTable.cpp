@@ -644,6 +644,46 @@ void CSongTable::goToSongTable(void)
 }
 
 
+void CSongTable::addToPlayList(void)
+{
+    qDebug() << "CSongTable::addToPlayList";
+
+    QAction * action = qobject_cast<QAction *>(sender());
+
+    if (action)
+    {
+        CStaticPlayList * playList = m_actionAddToPlayList.key(action);
+
+        if (playList)
+        {
+            // Liste des morceaux sélectionnés
+            QModelIndexList indexList = selectionModel()->selectedRows();
+
+            if (indexList.isEmpty())
+            {
+                return;
+            }
+
+            QList<CSong *> songList;
+
+            foreach (QModelIndex index, indexList)
+            {
+                CSongTableItem * songItem = m_model->getSongItem(index);
+
+                if (!songList.contains(songItem->getSong()))
+                {
+                    songList.append(songItem->getSong());
+                }
+            }
+
+            playList->addSongs(songList);
+
+            //m_application->selectSong(songTable, songTable->getFirstSongItem(m_selectedItem->getSong()));
+        }
+    }
+}
+
+
 /**
  * Retire les morceaux sélectionnés de la médiathèque.
  */
@@ -1152,18 +1192,18 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
             {
                 menuPlayList->addSeparator();
 
-                foreach (CPlayList * playList, playLists)
+                for (QList<CPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
                 {
-                    m_actionGoToSongTable[playList] = menuPlayList->addAction(playList->getName());
-                    connect(m_actionGoToSongTable[playList], SIGNAL(triggered()), this, SLOT(goToSongTable()));
+                    m_actionGoToSongTable[*it] = menuPlayList->addAction((*it)->getName());
+                    connect(m_actionGoToSongTable[*it], SIGNAL(triggered()), this, SLOT(goToSongTable()));
 
-                    if (qobject_cast<CDynamicPlayList *>(playList))
+                    if (qobject_cast<CDynamicPlayList *>(*it))
                     {
-                        m_actionGoToSongTable[playList]->setIcon(QPixmap(":/icons/dynamic_list"));
+                        m_actionGoToSongTable[*it]->setIcon(QPixmap(":/icons/dynamic_list"));
                     }
-                    else if (qobject_cast<CStaticPlayList *>(playList))
+                    else if (qobject_cast<CStaticPlayList *>(*it))
                     {
-                        m_actionGoToSongTable[playList]->setIcon(QPixmap(":/icons/playlist"));
+                        m_actionGoToSongTable[*it]->setIcon(QPixmap(":/icons/playlist"));
                     }
                 }
             }
@@ -1181,11 +1221,13 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
         }
         else
         {
-            foreach (CPlayList * playList, playLists)
+            for (QList<CPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
             {
-                if (qobject_cast<CStaticPlayList *>(playList))
+                CStaticPlayList * staticList = qobject_cast<CStaticPlayList *>(*it);
+                if (staticList)
                 {
-                    menuAddToPlayList->addAction(QPixmap(":/icons/playlist"), playList->getName());
+                    m_actionAddToPlayList[staticList] = menuAddToPlayList->addAction(QPixmap(":/icons/playlist"), (*it)->getName());
+                    connect(m_actionAddToPlayList[staticList], SIGNAL(triggered()), this, SLOT(addToPlayList()));
                 }
             }
         }

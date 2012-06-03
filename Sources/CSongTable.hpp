@@ -12,6 +12,7 @@
 
 class CSong;
 class CApplication;
+class CStaticPlayList;
 class QMenu;
 class QAction;
 
@@ -128,6 +129,7 @@ protected slots:
     void showColumn(int column, bool show = true);
     void sortColumn(int column, Qt::SortOrder order);
     void goToSongTable(void);
+    void addToPlayList(void);
     void removeSongsFromLibrary(void);
     void checkSelection(void);
     void uncheckSelection(void);
@@ -161,6 +163,7 @@ protected:
     bool m_automaticSort;         ///< Indique si le tri est automatique lorsqu'on modifie la table.
     CSongTableItem * m_selectedItem;
     QMap<CSongTable *, QAction *> m_actionGoToSongTable;
+    QMap<CStaticPlayList *, QAction *> m_actionAddToPlayList;
 
 private:
     
