@@ -746,9 +746,9 @@ void CSongTable::removeSongsFromLibrary(void)
 
     QList<CSong *> songList;
 
-    foreach (QModelIndex index, indexList)
+    for (QModelIndexList::const_iterator it = indexList.begin(); it != indexList.end(); ++it)
     {
-        CSongTableItem * songItem = m_model->getSongItem(index);
+        CSongTableItem * songItem = m_model->getSongItem(*it);
 
         if (m_application->getCurrentSongItem() == songItem)
         {
@@ -767,7 +767,10 @@ void CSongTable::removeSongsFromLibrary(void)
 }
 
 
-/// \todo Implémentation.
+/**
+ * Coche tous les morceaux sélectionnés dans la liste.
+ */
+
 void CSongTable::checkSelection(void)
 {
     qDebug() << "CSongTable::checkSelection()";
@@ -780,26 +783,33 @@ void CSongTable::checkSelection(void)
         return;
     }
 
-    QList<CSongTableItem *> songItemList;
-
     for (QModelIndexList::const_iterator it = indexList.begin(); it != indexList.end(); ++it)
     {
-        songItemList.append(m_model->getSongItem(*it));
+        m_model->m_data.at(it->row())->getSong()->setEnabled(true);
     }
-
-    for (QList<CSongTableItem *>::const_iterator it = songItemList.begin(); it != songItemList.end(); ++it)
-    {
-        //m_model->removeRow(m_model->getRowForSongItem(*it));
-    }
-
-    //...
 }
 
 
-/// \todo Implémentation.
+/**
+ * Décoche tous les morceaux sélectionnés dans la liste.
+ */
+
 void CSongTable::uncheckSelection(void)
 {
+    qDebug() << "CSongTable::uncheckSelection()";
 
+    // Liste des morceaux sélectionnés
+    QModelIndexList indexList = selectionModel()->selectedRows();
+
+    if (indexList.isEmpty())
+    {
+        return;
+    }
+
+    for (QModelIndexList::const_iterator it = indexList.begin(); it != indexList.end(); ++it)
+    {
+        m_model->m_data.at(it->row())->getSong()->setEnabled(false);
+    }
 }
 
 

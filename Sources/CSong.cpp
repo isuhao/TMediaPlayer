@@ -2098,5 +2098,155 @@ bool CSong::loadTags(TagLib::Ogg::XiphComment * tags, TSongInfos& infos)
 
     //infos = TSongInfos();
 
+    const TagLib::Ogg::FieldListMap tagMap = tags->fieldListMap();
+
+    // DEBUG
+    for (TagLib::Ogg::FieldListMap::ConstIterator it = tagMap.begin(); it != tagMap.end(); ++it)
+    {
+        QString tagKey = QString::fromUtf8(it->first.toCString(true));
+
+        for (TagLib::StringList::ConstIterator it2 = it->second.begin(); it2 != it->second.end(); ++it2)
+        {
+            qDebug() << tagKey << ":" << QString::fromUtf8(it2->toCString(true)).replace('\r', ' ').replace('\n', ' ');
+        }
+    }
+
+    // Titre
+    if (!tagMap["TITLE"].isEmpty())
+    {
+        infos.title = QString::fromUtf8(tagMap["TITLE"].toString().toCString(true));
+    }
+
+    // Album
+    if (!tagMap["ALBUM"].isEmpty())
+    {
+        infos.albumTitle = QString::fromUtf8(tagMap["ALBUM"].toString().toCString(true));
+    }
+
+    // Artiste
+    if (!tagMap["ARTIST"].isEmpty())
+    {
+        infos.artistName = QString::fromUtf8(tagMap["ARTIST"].toString().toCString(true));
+    }
+
+    // Artiste pour le tri
+    if (!tagMap["ARTISTSORT"].isEmpty())
+    {
+        infos.artistNameSort = QString::fromUtf8(tagMap["ARTISTSORT"].toString().toCString(true));
+    }
+
+    // Artiste de l'album
+    if (!tagMap["ALBUMARTIST"].isEmpty())
+    {
+        infos.albumArtist = QString::fromUtf8(tagMap["ALBUMARTIST"].toString().toCString(true));
+    }
+
+    // Genre
+    if (!tagMap["GENRE"].isEmpty())
+    {
+        infos.genre = QString::fromUtf8(tagMap["GENRE"].toString().toCString(true));
+    }
+
+    // Année
+    if (!tagMap["DATE"].isEmpty())
+    {
+        QString year = QString::fromUtf8(tagMap["DATE"].toString().toCString(true));
+
+        if (year.size() != 4)
+        {
+            qWarning() << "CSong::loadTags() : XiphComment : tag DATE invalide";
+        }
+        else
+        {
+            bool ok;
+            infos.year = year.toInt(&ok);
+            if (!ok) qWarning() << "CSong::loadTags() : XiphComment : tag DATE invalide";
+        }
+    }
+
+    // Numéro de piste
+    if (!tagMap["TRACKNUMBER"].isEmpty())
+    {
+        QString trackNumber = QString::fromUtf8(tagMap["TRACKNUMBER"].toString().toCString(true));
+        bool ok;
+        infos.trackNumber = trackNumber.toInt(&ok);
+
+        if (!ok || infos.trackNumber <= 0)
+        {
+            qWarning() << "CSong::loadTags() : XiphComment : tag TRACKNUMBER invalide";
+            infos.trackNumber = 0;
+        }
+    }
+
+    // Nombre de pistes
+    if (!tagMap["TRACKTOTAL"].isEmpty())
+    {
+        QString trackCount = QString::fromUtf8(tagMap["TRACKTOTAL"].toString().toCString(true));
+        bool ok;
+        infos.trackCount = trackCount.toInt(&ok);
+
+        if (!ok || infos.trackCount <= 0)
+        {
+            qWarning() << "CSong::loadTags() : XiphComment : tag TRACKTOTAL invalide";
+            infos.trackCount = 0;
+        }
+    }
+
+    if (!tagMap["TOTALTRACKS"].isEmpty())
+    {
+        if (!tagMap["TRACKTOTAL"].isEmpty())
+        {
+            qWarning() << "CSong::loadTags() : XiphComment : les tags TRACKTOTAL et TOTALTRACKS sont présents tous les deux";
+        }
+
+        QString trackCount = QString::fromUtf8(tagMap["TOTALTRACKS"].toString().toCString(true));
+        bool ok;
+        infos.trackCount = trackCount.toInt(&ok);
+
+        if (!ok || infos.trackCount <= 0)
+        {
+            qWarning() << "CSong::loadTags() : XiphComment : tag TOTALTRACKS invalide";
+            infos.trackCount = 0;
+        }
+    }
+
+    // BPM
+    if (!tagMap["TEMPO"].isEmpty())
+    {
+        QString bpm = QString::fromUtf8(tagMap["TEMPO"].toString().toCString(true));
+        bool ok;
+        infos.bpm = bpm.toInt(&ok);
+
+        if (!ok || infos.bpm <= 0)
+        {
+            qWarning() << "CSong::loadTags() : XiphComment : tag TEMPO invalide";
+            infos.bpm = 0;
+        }
+    }
+
+    if (!tagMap["BPM"].isEmpty())
+    {
+        if (!tagMap["TEMPO"].isEmpty())
+        {
+            qWarning() << "CSong::loadTags() : XiphComment : les tags TEMPO et BPM sont présents tous les deux";
+        }
+
+        QString bpm = QString::fromUtf8(tagMap["BPM"].toString().toCString(true));
+        bool ok;
+        infos.bpm = bpm.toInt(&ok);
+
+        if (!ok || infos.bpm <= 0)
+        {
+            qWarning() << "CSong::loadTags() : XiphComment : tag BPM invalide";
+            infos.bpm = 0;
+        }
+    }
+
+    // Paroles
+    if (!tagMap["LYRICS"].isEmpty())
+    {
+        infos.lyrics = QString::fromUtf8(tagMap["LYRICS"].toString().toCString(true));
+    }
+
     return false;
 }

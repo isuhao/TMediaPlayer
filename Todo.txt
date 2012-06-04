@@ -10,9 +10,6 @@
   - Ajouter des unités pour certains types (taille du fichier, débit, etc.).
   - Vérifier qu'il n'y a pas de boucles pour le critère "Liste de lecture".
 
-- Lire les métadonnées d'un morceau au chargement.
-  - Xiph Comment.
-
 - Écrire les métadonnées d'un morceau.
   - Ne pas oublier de mettre à jour la taille du fichier.
   - Que faire si le morceau est en cours de lecture ?
@@ -75,7 +72,6 @@
 - Recherche automatique des illustrations.
 - Ajouter la métadonnée "Parolier".
 - Ajouter l'option "Volume du morceau".
-- Menu contextuel dans les listes : Cocher / Décocher la sélection.
 - Récupérer les paroles depuis Internet.
 - Récupérer les pochettes depuis Internet.
 - Option "Lecture seule".
