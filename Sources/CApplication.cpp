@@ -1135,10 +1135,13 @@ void CApplication::playSong(CSongTableItem * songItem)
     }
 
     m_currentSongItem = songItem;
-    m_currentSongTable = m_displayedSongTable;
 
-    if (m_state == Stopped && m_isShuffle)
-        m_currentSongTable->initShuffle(m_currentSongItem);
+    if (m_isShuffle && (m_state == Stopped || m_currentSongTable != m_displayedSongTable))
+    {
+        m_displayedSongTable->initShuffle(m_currentSongItem);
+    }
+
+    m_currentSongTable = m_displayedSongTable;
 
     if (m_currentSongItem->getSong()->loadSound())
     {

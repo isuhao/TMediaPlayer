@@ -864,6 +864,24 @@ void CSongTableModel::setCurrentSong(CSongTableItem * songItem)
 }
 
 
+/**
+ * Initialise la liste des morceaux aléatoires.
+ *
+ * La liste des morceaux aléatoires contient chaque morceau de la liste de morceaux,
+ * sans doublons, avec une position calculée aléatoirement.
+ *
+ * Cette méthode doit être appelée lorsqu'on lance la lecture d'un morceau dans une liste (en
+ * appuyant sur le bouton "Play" ou en demandant la lecture d'un morceau particulier alors
+ * qu'aucun morceau n'est en cours de lecture).
+ *
+ * Une fois cette initialisation effectuée, on peut naviguer dans la liste aléatoire avec
+ * les boutons précédent et suivant, ou en lançant la lecture d'un morceau particulier.
+ *
+ * Le fonctionnement de la lecture aléatoire est identique à celui de iTunes.
+ *
+ * \param firstSong Morceau à placer au début de la liste.
+ */
+
 void CSongTableModel::initShuffle(CSongTableItem * firstSong)
 {
     qDebug() << "CSongTableModel::initShuffle()";

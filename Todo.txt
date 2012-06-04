@@ -79,3 +79,4 @@
 - Récupérer les paroles depuis Internet.
 - Récupérer les pochettes depuis Internet.
 - Option "Lecture seule".
+- Égaliser le volume sonore d'un morceau.

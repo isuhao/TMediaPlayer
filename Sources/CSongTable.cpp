@@ -143,10 +143,28 @@ int CSongTable::getRowForSongItem(CSongTableItem * songItem) const
 }
 
 
+/**
+ * Retourne le premier item sélectionné dans la table.
+ *
+ * \return Pointeur sur l'item, ou NULL si aucun n'est sélectionné.
+ */
+
 CSongTableItem * CSongTable::getSelectedSongItem(void) const
 {
-    QItemSelectionModel * selection = selectionModel();
-    return m_model->getSongItem(selection->currentIndex());
+    // On cherche la première ligne sélectionnée
+    int row = -1;
+    QModelIndexList indexList = selectionModel()->selectedIndexes();
+
+    for (QModelIndexList::const_iterator it = indexList.begin(); it != indexList.end(); ++it)
+    {
+        if (row == -1 || it->row() < row)
+        {
+            row = it->row();
+        }
+    }
+
+    return (row < 0 ? NULL : m_model->getSongItem(row));
+    //return m_model->getSongItem(selectionModel()->currentIndex());
 }
 
 
@@ -328,6 +346,12 @@ void CSongTable::deleteSongs(void)
     removeAllSongsFromTable();
 }
 
+
+/**
+ * Initialise la liste des morceaux aléatoires.
+ *
+ * \param firstSong Morceau à placer au début de la liste.
+ */
 
 void CSongTable::initShuffle(CSongTableItem * firstSong)
 {
