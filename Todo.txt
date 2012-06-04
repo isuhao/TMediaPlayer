@@ -15,9 +15,9 @@
 
 - Écrire les métadonnées d'un morceau.
   - Ne pas oublier de mettre à jour la taille du fichier.
+  - Que faire si le morceau est en cours de lecture ?
 
 - Boite de dialogue Edit Songs. (à terminer)
-- Implémenter le glisser-déposer au sein d'une liste statique.
 - Implémenter la lecture aléatoire.
 - Import depuis iTunes / SongBird.
 - Tester le scrobbling Last.fm.

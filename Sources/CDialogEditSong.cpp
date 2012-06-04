@@ -289,9 +289,9 @@ void CDialogEditSong::updateInfos()
     QStandardItemModel * model = new QStandardItemModel();
     m_uiWidget->listPlayings->setModel(model);
 
-    foreach (QDateTime playTime, song->m_plays)
+    for (QList<QDateTime>::const_iterator it = song->m_plays.begin(); it != song->m_plays.end(); ++it)
     {
-        QStandardItem * item = new QStandardItem(playTime.toString());
+        QStandardItem * item = new QStandardItem(it->toString());
         model->appendRow(item);
     }
 }

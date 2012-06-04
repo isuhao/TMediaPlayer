@@ -54,6 +54,7 @@ CSongTable::CSongTable(CApplication * application) :
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setAlternatingRowColors(true);
     setSelectionBehavior(QAbstractItemView::SelectRows);
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
     setSortingEnabled(true);
     setShowGrid(false);
 
@@ -96,6 +97,13 @@ QList<CSong *> CSongTable::getSongs(void) const
 }
 
 
+/**
+ * Retourne le premier item correspond à un morceau dans la liste.
+ *
+ * \param song Morceau à rechercher.
+ * \return Pointeur sur l'item, ou NULL si le morceau n'est pas dans la liste.
+ */
+
 CSongTableItem * CSongTable::getFirstSongItem(CSong * song) const
 {
     if (!song)
@@ -103,11 +111,11 @@ CSongTableItem * CSongTable::getFirstSongItem(CSong * song) const
         return NULL;
     }
 
-    foreach (CSongTableItem * songItem, m_model->m_data)
+    for (QList<CSongTableItem *>::const_iterator it = m_model->m_data.begin(); it != m_model->m_data.end(); ++it)
     {
-        if (songItem->getSong() == song)
+        if ((*it)->getSong() == song)
         {
-            return songItem;
+            return *it;
         }
     }
 
@@ -1035,6 +1043,12 @@ void CSongTable::keyPressEvent(QKeyEvent * event)
 }
 
 
+/**
+ * Gestion des double-clics.
+ *
+ * \param event Évènement de la souris.
+ */
+
 void CSongTable::mouseDoubleClickEvent(QMouseEvent * event)
 {
     Q_CHECK_PTR(event);
@@ -1046,14 +1060,14 @@ void CSongTable::mouseDoubleClickEvent(QMouseEvent * event)
 
         if (index.isValid())
         {
-            qDebug() << "Double-clic sur un item...";
+            //qDebug() << "Double-clic sur un item...";
             selectRow(index.row());
             emit songStarted(m_model->getSongItem(index));
             event->accept();
         }
         else
         {
-            qDebug() << "Double-clic en dehors de la table";
+            //qDebug() << "Double-clic en dehors de la table";
         }
     }
 

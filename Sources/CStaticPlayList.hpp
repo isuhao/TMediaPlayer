@@ -50,11 +50,15 @@ protected slots:
 protected:
 
     virtual void keyPressEvent(QKeyEvent * event);
+    virtual void dragMoveEvent(QDragMoveEvent * event);
+    virtual void dropEvent(QDropEvent * event);
+    virtual void paintEvent(QPaintEvent * event);
 
 private:
 
     int m_id;                    ///< Identifiant de la liste en base de données.
     bool m_isStaticListModified; ///< Indique si la liste a été modifiée.
+    QRect m_dropIndicatorRect;
 };
 
 #endif // FILE_C_STATIC_PLAYLIST

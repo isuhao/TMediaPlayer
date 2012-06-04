@@ -123,6 +123,23 @@ public:
         CondDateBetween        = 0x0507
     };
 
+    /**
+     * Conditions de mise à jour d'une liste dynamique, selon les types de critère.
+     */
+
+    enum TUpdateCondition
+    {
+        UpdateNever          = 0x00, ///< Pas besoin de mise-à-jour.
+        UpdateOnSongAdded    = 0x01, ///< Mise à jour lorsqu'un morceau est ajouté à la médiathèque.
+        UpdateOnSongRemoved  = 0x02, ///< Mise à jour lorsqu'un morceau est retiré de la médiathèque.
+        UpdateOnSongModified = 0x04, ///< Mise à jour lorsque les informations d'un morceau sont modifiés.
+        UpdateOnSongMoved    = 0x08, ///< Mise à jour lorsque le fichier d'un morceau est déplacé.
+        UpdateOnSongPlayEnd  = 0x10, ///< Mise à jour lorsque la lecture d'un morceau se termine.
+        UpdateOnListModified = 0x20  ///< Mise à jour lorsqu'une liste de lecture est modifiée.
+    };
+
+    Q_DECLARE_FLAGS(TUpdateConditions, TUpdateCondition)
+
 
     explicit ICriteria(CApplication * application, QObject * parent = NULL);
     virtual ~ICriteria();
@@ -139,6 +156,7 @@ public:
     //virtual QList<int> getValidTypes(void) const;
     //virtual bool isValidType(int type) const;
     //virtual QList<int> getValidConditions(void) const;
+    virtual inline TUpdateConditions getUpdateConditions(void) const;
 
     virtual IWidgetCriteria * getWidget(void) const = 0;
 
@@ -160,6 +178,8 @@ private:
     ICriteria * m_parent;          ///< Pointeur sur le critère parent.
     CDynamicPlayList * m_playList; ///< Pointeur sur la liste de lecture dynamique.
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(ICriteria::TUpdateConditions)
 
 
 inline int ICriteria::getId(void) const
@@ -195,6 +215,12 @@ inline QVariant ICriteria::getValue2(void) const
 inline CDynamicPlayList * ICriteria::getPlayList(void) const
 {
     return m_playList;
+}
+
+
+inline ICriteria::TUpdateConditions ICriteria::getUpdateConditions(void) const
+{
+    return UpdateNever;
 }
 
 #endif // FILE_I_CRITERIA

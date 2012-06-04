@@ -51,7 +51,7 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
     m_uiWidget->editLanguage->addItems(CSong::getLanguageList());
 
     
-    // Recherche des données similaires pour tous les éléments
+    // Recherche des données similaires pour tous les éléments (23 éléments)
     QString songTitle;           bool songTitleSim           = true;
     QString songTitleSort;       bool songTitleSortSim       = true;
     QString songArtist;          bool songArtistSim          = true;
@@ -62,16 +62,19 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
     QString songAlbumArtistSort; bool songAlbumArtistSortSim = true;
     QString songComposer;        bool songComposerSim        = true;
     QString songComposerSort;    bool songComposerSortSim    = true;
+    QString songSubTitle;        bool songSubTitleSim        = true;
+    QString songGrouping;        bool songGroupingSim        = true;
+    QString songComments;        bool songCommentsSim        = true;
 
     int songYear; bool songYearSim = true;
     //...
 
     bool first = true;
 
-    foreach (CSongTableItem * songItem, m_songItemList)
+    for (QList<CSongTableItem *>::const_iterator it = m_songItemList.begin(); it != m_songItemList.end(); ++it)
     {
-        Q_CHECK_PTR(songItem);
-        CSong * song = songItem->getSong();
+        Q_CHECK_PTR(*it);
+        CSong * song = (*it)->getSong();
 
         if (first)
         {
@@ -85,6 +88,9 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
             songAlbumArtistSort = song->getAlbumArtistSort();
             songComposer        = song->getComposer();
             songComposerSort    = song->getComposerSort();
+            songSubTitle        = song->getSubTitle();
+            songGrouping        = song->getGrouping();
+            songComments        = song->getComments();
 
             songYear = song->getYear();
             //...
@@ -103,6 +109,9 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
             if (songAlbumArtistSortSim && song->getAlbumArtistSort() != songAlbumArtistSort) { songAlbumArtistSortSim = false; songAlbumArtistSort.clear(); }
             if (songComposerSim        && song->getComposer()        != songComposer       ) { songComposerSim        = false; songComposer       .clear(); }
             if (songComposerSortSim    && song->getComposerSort()    != songComposerSort   ) { songComposerSortSim    = false; songComposerSort   .clear(); }
+            if (songSubTitleSim        && song->getSubTitle()        != songSubTitle       ) { songSubTitleSim        = false; songSubTitle       .clear(); }
+            if (songGroupingSim        && song->getGrouping()        != songGrouping       ) { songGroupingSim        = false; songGrouping       .clear(); }
+            if (songCommentsSim        && song->getComments()        != songComments       ) { songCommentsSim        = false; songComments       .clear(); }
 
             if (songYearSim && song->getYear() != songYear ) { songYearSim = false; songYear = 0; }
             //...
@@ -200,6 +209,30 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
     if (!songComposerSortSim)
     {
         m_uiWidget->editComposerSort->setPlaceholderText(notSimText);
+    }
+
+    // Sous-titre
+    m_uiWidget->editSubTitle->setText(songSubTitle);
+
+    if (!songSubTitleSim)
+    {
+        m_uiWidget->editSubTitle->setPlaceholderText(notSimText);
+    }
+
+    // Regroupement
+    m_uiWidget->editGrouping->setText(songGrouping);
+
+    if (!songGroupingSim)
+    {
+        m_uiWidget->editGrouping->setPlaceholderText(notSimText);
+    }
+
+    // Commentaires
+    m_uiWidget->editComments->setText(songComments);
+
+    if (!songCommentsSim)
+    {
+        //m_uiWidget->editComments->setPlaceholderText(notSimText);
     }
 
     // Année

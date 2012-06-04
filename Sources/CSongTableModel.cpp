@@ -3,6 +3,7 @@
 #include "CSongTable.hpp"
 #include "CApplication.hpp"
 #include <QMouseEvent>
+#include <QUrl>
 
 #include <QtDebug>
 
@@ -27,6 +28,7 @@ CSongTableModel::CSongTableModel(CApplication * application, const QList<CSong *
     QAbstractTableModel (parent),
     m_application       (application),
     m_canDrop           (false),
+    m_columnSort        (-1),
     m_currentSongItem   (NULL)
 {
     Q_CHECK_PTR(application);
@@ -44,6 +46,7 @@ CSongTableModel::CSongTableModel(CApplication * application, QWidget * parent) :
     QAbstractTableModel (parent),
     m_application       (application),
     m_canDrop           (false),
+    m_columnSort        (-1),
     m_currentSongItem   (NULL)
 {
     Q_CHECK_PTR(application);
@@ -76,23 +79,32 @@ void CSongTableModel::setSongs(const QList<CSong *>& data)
     m_data.clear();
     int i = 0;
 
-    foreach (CSong * song, data)
+    for (QList<CSong *>::const_iterator it = data.begin(); it != data.end(); ++it)
     {
-        m_data.append(new CSongTableItem(++i, song));
+        m_data.append(new CSongTableItem(++i, *it));
     }
 
     emit layoutChanged();
 }
 
 
+/**
+ * Retourne la liste des morceaux de la liste, triée selon leur position croissante.
+ *
+ * \return Liste des morceaux.
+ */
+
 QList<CSong *> CSongTableModel::getSongs(void) const
 {
+    QList<CSongTableItem *> dataCopy = m_data;
+    qSort(dataCopy.begin(), dataCopy.end(), cmpSongPositionAsc);
+
     QList<CSong *> songList;
     songList.reserve(m_data.size());
 
-    foreach (CSongTableItem * item, m_data)
+    for (QList<CSongTableItem *>::const_iterator it = dataCopy.begin(); it != dataCopy.end(); ++it)
     {
-        songList.append(item->getSong());
+        songList.append((*it)->getSong());
     }
 
     return songList;
@@ -368,6 +380,8 @@ void CSongTableModel::sort(int column, Qt::SortOrder order)
 {
     emit layoutAboutToBeChanged();
 
+    m_columnSort = column;
+
     if (order == Qt::AscendingOrder)
     {
         switch (column)
@@ -460,6 +474,10 @@ Qt::ItemFlags CSongTableModel::flags(const QModelIndex& index) const
             flags |= Qt::ItemIsUserCheckable;
         }
     }
+    else if (m_canDrop)
+    {
+        flags |= Qt::ItemIsDropEnabled;
+    }
 
     return flags;
 }
@@ -468,24 +486,29 @@ Qt::ItemFlags CSongTableModel::flags(const QModelIndex& index) const
 /**
  * Retourne la liste des types MIME supportés par le modèle.
  *
- * \todo Ajouter les types de la classe parentes ?
- *
  * \return Liste types.
  */
 
 QStringList CSongTableModel::mimeTypes(void) const
 {
     QStringList types;
-    types << "application/x-ted-media-songs";
+
+    if (m_canDrop)
+    {
+        types << "application/x-ted-media-items";
+    }
+
+    //types << "application/x-ted-media-songs";
+    //types << "text/uri-list";
+
     return types;
 }
 
 
 QMimeData * CSongTableModel::mimeData(const QModelIndexList& indexes) const
 {
-    QByteArray encodedData;
-    QDataStream stream(&encodedData, QIODevice::WriteOnly);
-
+    // Liste des lignes et des fichiers
+    QStringList fileList;
     QList<int> rows;
 
     foreach (QModelIndex index, indexes)
@@ -493,47 +516,145 @@ QMimeData * CSongTableModel::mimeData(const QModelIndexList& indexes) const
         if (index.isValid() && !rows.contains(index.row()))
         {
             rows.append(index.row());
+
+            const QString fileName = m_data.at(index.row())->getSong()->getFileName();
+
+            if (!fileList.contains(fileName))
+            {
+                fileList.append(fileName);
+            }
         }
     }
 
     qSort(rows);
 
-    stream << rows.size();
+    QByteArray songListData;
+    QDataStream streamSongs(&songListData, QIODevice::WriteOnly);
+    streamSongs << rows.size();
 
-    foreach (int row, rows)
+    QByteArray rowListData;
+    QDataStream streamRows(&rowListData, QIODevice::WriteOnly);
+    streamRows << rows.size();
+
+    for (QList<int>::const_iterator it = rows.begin(); it != rows.end(); ++it)
     {
-        stream << m_data[row]->getSong()->getId();
+        streamSongs << m_data[*it]->getSong()->getId();
+        streamRows << *it;
     }
 
-    qDebug() << "CSongTableModel::mimeData()...";
-    
-    QMimeData * mimeData = new QMimeData(); // = QTreeView::mimeData(indexes);
-    mimeData->setData("application/x-ted-media-songs", encodedData);
+    QString fileListString;
+
+    for (QStringList::const_iterator it = fileList.begin(); it != fileList.end(); ++it)
+    {
+        fileListString.append(QUrl::fromLocalFile(*it).toString());
+        fileListString.append("\r\n");
+    }
+
+    QByteArray fileListData(fileListString.toUtf8());
+
+    QMimeData * mimeData = new QMimeData();
+    mimeData->setData("application/x-ted-media-songs", songListData);
+    mimeData->setData("text/uri-list", fileListData);
+
+    if (m_canDrop && m_columnSort == CSongTable::ColPosition)
+    {
+        mimeData->setData("application/x-ted-media-items", rowListData);
+    }
+
     return mimeData;
 }
 
 
+/**
+ * Méthode appelée lorsqu'on déposer des données dans le modèle.
+ *
+ * \param data   Données déposées.
+ * \param action Action de glisser-déposer.
+ * \param row    Ligne où les données sont déposées.
+ * \param column Colonne om les données sont déposées.
+ * \param parent Index parent.
+ */
+
 bool CSongTableModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex& parent)
 {
+    Q_CHECK_PTR(data);
+
     if (action == Qt::IgnoreAction)
     {
         return true;
     }
 
-    if (!m_canDrop)
+    // Fichiers à ajouter à la médiathèque
+    if (data->hasFormat("text/uri-list"))
+    {
+        //...
+    }
+
+    // Déplacement des morceaux dans la liste
+    if (!m_canDrop || !data->hasFormat("application/x-ted-media-items") || m_columnSort != CSongTable::ColPosition)
     {
         return false;
     }
 
-    if (!data->hasFormat("application/x-ted-media-songs"))
+    return true;
+}
+
+
+/**
+ * Déplace un ensemble de lignes vers une autre position.
+ * La liste \a rows doit être triée et ne doit pas contenir de doublons.
+ *
+ * \todo Implémentation.
+ *
+ * \param rows    Liste de lignes (les numéros de ligne doivent être compris entre 0 et rowCount() - 1).
+ * \param rowDest Ligne de destination (entre 0 et rowCount()).
+ */
+
+void CSongTableModel::moveRows(const QList<int>& rows, int rowDest)
+{
+    qDebug() << "M" << rows << " -> " << rowDest;
+
+    if (rows.isEmpty() || rowDest < 0 || rowDest > m_data.size())
     {
-        return false;
+        return;
     }
 
-    qDebug() << "CSongTableModel::dropMimeData()";
-    //...
+    QList<CSongTableItem *> dataCopy = m_data;
+    qSort(dataCopy.begin(), dataCopy.end(), cmpSongPositionAsc);
 
-    return false;
+    QList<int>::const_iterator it2 = rows.begin() - 1;
+    int numMoved = 0;
+
+    for (QList<int>::const_iterator it = rows.begin(); it != rows.end(); ++it)
+    {
+        if (*it < rowDest)
+        {
+            it2 = it;
+            continue;
+        }
+
+        dataCopy.move(*it, rowDest + numMoved);
+        qDebug() << "A" << *it << "->" << (rowDest + numMoved);
+        ++numMoved;
+    }
+
+    numMoved = 0;
+
+    for (; it2 >= rows.begin(); --it2)
+    {
+        dataCopy.move(*it2, rowDest - 1 - numMoved);
+        qDebug() << "B" << *it2 << "->" << (rowDest - 1 - numMoved);
+        ++numMoved;
+    }
+
+    for (int pos = 0; pos < dataCopy.size(); ++pos)
+    {
+        dataCopy[pos]->m_position = pos + 1;
+    }
+
+    emit layoutAboutToBeChanged();
+    m_data = dataCopy;
+    emit layoutChanged();
 }
 
 

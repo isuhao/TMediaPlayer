@@ -2316,7 +2316,7 @@ void CApplication::startPlay(void)
 
 void CApplication::keyPressEvent(QKeyEvent * event)
 {
-    qDebug() << event->key();
+    //qDebug() << "CApplication::keyPressEvent() : " << event->key();
     event->accept();
 }
 

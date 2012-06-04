@@ -29,7 +29,7 @@ CPlayListView::CPlayListView(CApplication * application) :
     setModel(m_model);
 
     // Glisser-déposer
-    setDropIndicatorShown(true);
+    setDropIndicatorShown(false);
     setAcceptDrops(true);
     //viewport()->setAcceptDrops(true);
 

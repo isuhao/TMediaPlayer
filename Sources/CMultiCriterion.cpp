@@ -145,6 +145,24 @@ QList<CSong *> CMultiCriterion::getSongs(const QList<CSong *>& from, const QList
 }
 
 
+ICriteria::TUpdateConditions CMultiCriterion::getUpdateConditions(void) const
+{
+    if (m_children.isEmpty())
+    {
+        return UpdateNever;
+    }
+
+    TUpdateConditions ret;
+
+    for (QList<ICriteria *>::const_iterator it = m_children.begin(); it != m_children.end(); ++it)
+    {
+        ret |= (*it)->getUpdateConditions();
+    }
+
+    return ret;
+}
+
+
 void CMultiCriterion::setPlayList(CDynamicPlayList * playList)
 {
     Q_CHECK_PTR(playList);

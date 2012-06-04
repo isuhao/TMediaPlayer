@@ -343,6 +343,47 @@ QList<CSong *> CCriteria::getSongs(const QList<CSong *>& from, const QList<CSong
 }
 
 
+ICriteria::TUpdateConditions CCriteria::getUpdateConditions(void) const
+{
+    switch (m_type)
+    {
+        case TypeUnion:
+        case TypeIntersection:
+            qWarning() << "CCriteria::getWidget() : un critère simple ne peut pas avoir le type TypeUnion ou TypeIntersection";
+
+        default:
+        case TypeInvalid:
+            return UpdateNever;
+
+        case TypeTitle       : return (UpdateOnSongAdded | UpdateOnSongRemoved | UpdateOnSongModified);
+        case TypeArtist      : return (UpdateOnSongAdded | UpdateOnSongRemoved | UpdateOnSongModified);
+        case TypeAlbum       : return (UpdateOnSongAdded | UpdateOnSongRemoved | UpdateOnSongModified);
+        case TypeAlbumArtist : return (UpdateOnSongAdded | UpdateOnSongRemoved | UpdateOnSongModified);
+        case TypeComposer    : return (UpdateOnSongAdded | UpdateOnSongRemoved | UpdateOnSongModified);
+        case TypeGenre       : return (UpdateOnSongAdded | UpdateOnSongRemoved | UpdateOnSongModified);
+        case TypeComments    : return (UpdateOnSongAdded | UpdateOnSongRemoved | UpdateOnSongModified);
+        case TypeLyrics      : return (UpdateOnSongAdded | UpdateOnSongRemoved | UpdateOnSongModified);
+        case TypeFileName    : return (UpdateOnSongAdded | UpdateOnSongRemoved | UpdateOnSongMoved);
+        case TypeYear        : return (UpdateOnSongAdded | UpdateOnSongRemoved | UpdateOnSongModified);
+        case TypeTrackNumber : return (UpdateOnSongAdded | UpdateOnSongRemoved | UpdateOnSongModified);
+        case TypeDiscNumber  : return (UpdateOnSongAdded | UpdateOnSongRemoved | UpdateOnSongModified);
+        case TypeBitRate     : return (UpdateOnSongAdded | UpdateOnSongRemoved);
+        case TypeSampleRate  : return (UpdateOnSongAdded | UpdateOnSongRemoved);
+        case TypePlayCount   : return (UpdateOnSongAdded | UpdateOnSongRemoved | UpdateOnSongPlayEnd);
+        case TypeChannels    : return (UpdateOnSongAdded | UpdateOnSongRemoved);
+        case TypeRating      : return (UpdateOnSongAdded | UpdateOnSongRemoved | UpdateOnSongModified);
+        case TypeFileSize    : return (UpdateOnSongAdded | UpdateOnSongRemoved | UpdateOnSongModified);
+        case TypeDuration    : return (UpdateOnSongAdded | UpdateOnSongRemoved);
+        case TypeLastPlayTime: return (UpdateOnSongAdded | UpdateOnSongRemoved | UpdateOnSongPlayEnd);
+        case TypeAdded       : return (UpdateOnSongAdded | UpdateOnSongRemoved);
+        case TypeModified    : return (UpdateOnSongAdded | UpdateOnSongRemoved | UpdateOnSongModified);
+        case TypeLanguage    : return (UpdateOnSongAdded | UpdateOnSongRemoved | UpdateOnSongModified);
+        case TypePlayList    : return (UpdateOnListModified);
+        case TypeFormat      : return (UpdateOnSongAdded | UpdateOnSongRemoved);
+    }
+}
+
+
 #include "CWidgetCriteria.hpp" // Si on l'inclut avant, l'intellisense bug complètement...
 
 

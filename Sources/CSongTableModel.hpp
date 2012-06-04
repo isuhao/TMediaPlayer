@@ -85,6 +85,7 @@ public:
     QStringList mimeTypes(void) const;
     QMimeData * mimeData(const QModelIndexList& indexes) const;
     bool dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex& parent);
+    void moveRows(const QList<int>& rows, int rowDest);
 
     void insertRow(CSong * song, int pos = -1);
     void removeRow(int row);
@@ -407,6 +408,7 @@ private:
 
     CApplication * m_application;
     bool m_canDrop;
+    int m_columnSort;             ///< Numéro de la colonne triée.
     CSongTableItem * m_currentSongItem;
     QList<CSongTableItem *> m_data;
 };

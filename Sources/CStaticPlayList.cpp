@@ -7,6 +7,7 @@
 #include <QSqlError>
 #include <QMessageBox>
 #include <QKeyEvent>
+#include <QPainter>
 
 #include <QtDebug>
 
@@ -19,7 +20,7 @@ CStaticPlayList::CStaticPlayList(CApplication * application, const QString& name
     m_model->setCanDrop(true);
 
     // Glisser-déposer
-    setDropIndicatorShown(true);
+    setDropIndicatorShown(false);
     setAcceptDrops(true);
 }
 
@@ -695,4 +696,124 @@ void CStaticPlayList::keyPressEvent(QKeyEvent * event)
     }
 
     return CPlayList::keyPressEvent(event);
+}
+
+
+/**
+ * Gestion du glisser-déposer.
+ * S'occupe d'afficher la ligne indiquant la nouvelle position des items.
+ *
+ * \param event Évènement de déplacement.
+ */
+
+void CStaticPlayList::dragMoveEvent(QDragMoveEvent * event)
+{
+    CPlayList::dragMoveEvent(event);
+
+    if (event->source() != this)
+    {
+        return;
+    }
+
+    QModelIndex index = indexAt(event->pos());
+
+    if (index.isValid())
+    {
+        QRect rect = visualRect(index);
+        m_dropIndicatorRect = QRect(0, rect.top(), width(), 1);
+    }
+    else
+    {
+        QRect rect = visualRect(m_model->index(m_model->rowCount() - 1, 0));
+        m_dropIndicatorRect = QRect(0, rect.bottom(), width(), 1);
+    }
+}
+
+
+void CStaticPlayList::dropEvent(QDropEvent * event)
+{
+    event->ignore();
+
+    CPlayList::dropEvent(event);
+
+    if (event->isAccepted())
+    {
+        qDebug() << "CStaticPlayList::dropEvent() : OK";
+
+        QModelIndex index = indexAt(event->pos());
+        int row = -1;
+
+        if (index.isValid())
+        {
+            row = index.row();
+        }
+        else
+        {
+            row = m_model->rowCount();
+        }
+
+        QByteArray encodedData = event->mimeData()->data("application/x-ted-media-items");
+        QDataStream stream(&encodedData, QIODevice::ReadOnly);
+
+        int numSongs;
+        stream >> numSongs;
+
+        QList<int> rowList;
+        int numRowsBeforeDest = 0;
+
+        for (int i = 0; i < numSongs; ++i)
+        {
+            int songRow;
+            stream >> songRow;
+            rowList << songRow;
+
+            if (songRow < row)
+            {
+                ++numRowsBeforeDest;
+            }
+        }
+
+        qDebug() << "V" << rowList << " -> " << row;
+
+        m_model->moveRows(rowList, row);
+
+        QList<CSong *> songs = getSongs();
+
+        removeAllSongsFromTable();
+
+        QSqlQuery query(m_application->getDataBase());
+        query.prepare("DELETE FROM static_list_song WHERE static_list_id = ?");
+        query.bindValue(0, m_id);
+
+        if (!query.exec())
+        {
+            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+
+        addSongs(songs, false);
+
+        // Modification de la sélection
+        QItemSelection selection;
+        selection.select(m_model->index(row - numRowsBeforeDest, 0), m_model->index(row - numRowsBeforeDest + numSongs - 1, 0));
+        selectionModel()->select(selection, QItemSelectionModel::Current | QItemSelectionModel::Select  | QItemSelectionModel::Rows);
+    }
+}
+
+
+void CStaticPlayList::paintEvent(QPaintEvent * event)
+{
+    CPlayList::paintEvent(event);
+
+    if (state() == QAbstractItemView::DraggingState
+#ifndef QT_NO_CURSOR
+        && viewport()->cursor().shape() != Qt::ForbiddenCursor
+#endif
+        )
+    {
+        QPainter painter(viewport());
+        QStyleOption opt;
+        opt.init(this);
+        opt.rect = m_dropIndicatorRect;
+        style()->drawPrimitive(QStyle::PE_IndicatorItemViewItemDrop, &opt, &painter, this);
+    }
 }

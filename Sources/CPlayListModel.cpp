@@ -67,7 +67,7 @@ bool CPlayListModel::dropMimeData(const QMimeData * data, Qt::DropAction action,
             return true;
         }
 
-        qDebug() << "library ou dynamis list";
+        qDebug() << "library ou dynamic list";
         return false;
     }
 
