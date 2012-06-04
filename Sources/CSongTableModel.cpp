@@ -351,6 +351,7 @@ bool CSongTableModel::setData(const QModelIndex& index, const QVariant& value, i
     if (role == Qt::CheckStateRole && index.column() == CSongTable::ColTitle)
     {
         m_data.at(index.row())->getSong()->setEnabled(value.toInt() == Qt::Checked);
+        emit layoutChanged();
         return true;
     }
 
