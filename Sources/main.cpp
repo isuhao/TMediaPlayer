@@ -1,11 +1,14 @@
 
 #include <QApplication>
 #include <QTranslator>
+#include <ctime>
 #include "CApplication.hpp"
 
 
 int main(int argc, char * argv[])
 {
+    srand(time(NULL));
+
     QApplication app(argc, argv);
     app.setWindowIcon(QPixmap(":/icons/TMediaPlayer"));
 

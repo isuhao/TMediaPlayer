@@ -18,7 +18,6 @@
   - Que faire si le morceau est en cours de lecture ?
 
 - Boite de dialogue Edit Songs. (à terminer)
-- Implémenter la lecture aléatoire.
 - Import depuis iTunes / SongBird.
 - Tester le scrobbling Last.fm.
 
@@ -39,6 +38,7 @@
 - Implémenter le glisser-déposer pour créer une nouvelle liste de lecture.
 - Créer la fenêtre Préférences. (à terminer)
 - Griser les boutons indisponibles suivant l'état (lecture, pause, etc.).
+- Implémenter la répétition (répétition de la liste, du morceau, etc.).
 
 - Optimisation : exécuter les requêtes SQL dans un thread séparé.
   - Utiliser des transactions.

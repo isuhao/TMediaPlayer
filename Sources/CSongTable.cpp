@@ -320,12 +320,18 @@ void CSongTable::removeAllSongsFromTable(void)
 
 void CSongTable::deleteSongs(void)
 {
-    foreach (CSongTableItem * songItem, m_model->m_data)
+    for (QList<CSongTableItem *>::const_iterator it = m_model->m_data.begin(); it != m_model->m_data.end(); ++it)
     {
-        delete songItem->getSong();
+        delete (*it)->getSong();
     }
 
     removeAllSongsFromTable();
+}
+
+
+void CSongTable::initShuffle(CSongTableItem * firstSong)
+{
+    m_model->initShuffle(firstSong);
 }
 
 

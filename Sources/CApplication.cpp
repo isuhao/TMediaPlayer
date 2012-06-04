@@ -361,6 +361,12 @@ int CApplication::getRowHeight(void) const
 }
 
 
+/**
+ * Affiche ou masque le bouton "Stop".
+ *
+ * \param show Booléen.
+ */
+
 void CApplication::showButtonStop(bool show)
 {
     m_settings->setValue("Preferences/ShowButtonStop", show);
@@ -368,10 +374,16 @@ void CApplication::showButtonStop(bool show)
 }
 
 
+/**
+ * Active ou désactive le scrobbling avec Last.fm.
+ *
+ * \param enable Booléen.
+ */
+
 void CApplication::enableScrobbling(bool enable)
 {
-    m_lastFmEnableScrobble = true;
-    m_settings->setValue("LastFm/EnableScrobble", true);
+    m_lastFmEnableScrobble = enable;
+    m_settings->setValue("LastFm/EnableScrobble", enable);
 }
 
 
@@ -842,9 +854,17 @@ void CApplication::play(void)
         // Recherche du morceau sélectionné
         m_currentSongItem = m_currentSongTable->getSelectedSongItem();
 
-        // Lecture du premier morceau de la liste
-        if (!m_currentSongItem)
+        if (m_currentSongItem)
         {
+            if (m_isShuffle)
+                m_currentSongTable->initShuffle(m_currentSongItem);
+        }
+        else
+        {
+            if (m_isShuffle)
+                m_currentSongTable->initShuffle();
+
+            // Lecture du premier morceau de la liste
             m_currentSongItem = m_currentSongTable->getNextSong(NULL, m_isShuffle);
         }
 
@@ -947,6 +967,7 @@ void CApplication::previousSong(void)
 
         m_currentSongItem->getSong()->stop();
         updateSongDescription(NULL);
+        m_currentSongTable->m_model->setCurrentSong(NULL);
         m_uiControl->btnPlay->setIcon(QPixmap(":/icons/play"));
 
         // Retour au début du morceau
@@ -970,9 +991,11 @@ void CApplication::previousSong(void)
         // Premier morceau de la liste
         if (!songItem)
         {
-            //m_currentSongTable = NULL;
-            //m_state = Stopped;
-
+/*
+            m_currentSongItem = NULL;
+            m_currentSongTable = NULL;
+            m_state = Stopped;
+*/
             if (m_state == Paused)
             {
                 startPlay();
@@ -1045,6 +1068,7 @@ void CApplication::nextSong(void)
 
         m_currentSongItem->getSong()->stop();
         updateSongDescription(NULL);
+        m_currentSongTable->m_model->setCurrentSong(NULL);
         m_uiControl->btnPlay->setIcon(QPixmap(":/icons/play"));
 
         m_currentSongItem = m_currentSongTable->getNextSong(m_currentSongItem, m_isShuffle);
@@ -1112,6 +1136,9 @@ void CApplication::playSong(CSongTableItem * songItem)
 
     m_currentSongItem = songItem;
     m_currentSongTable = m_displayedSongTable;
+
+    if (m_state == Stopped && m_isShuffle)
+        m_currentSongTable->initShuffle(m_currentSongItem);
 
     if (m_currentSongItem->getSong()->loadSound())
     {

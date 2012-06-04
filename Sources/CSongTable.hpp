@@ -143,6 +143,7 @@ protected:
     void removeSongFromTable(int row);
     void removeAllSongsFromTable(void);
     void deleteSongs(void);
+    void initShuffle(CSongTableItem * firstSong = NULL);
 
     virtual void initColumns(const QString& str);
     QString getColumnsInfos(void) const;

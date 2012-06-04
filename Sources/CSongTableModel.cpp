@@ -77,12 +77,15 @@ void CSongTableModel::setSongs(const QList<CSong *>& data)
     emit layoutAboutToBeChanged();
 
     m_data.clear();
+    m_dataShuffle.clear();
     int i = 0;
 
     for (QList<CSong *>::const_iterator it = data.begin(); it != data.end(); ++it)
     {
         m_data.append(new CSongTableItem(++i, *it));
     }
+
+    initShuffle();
 
     emit layoutChanged();
 }
@@ -188,7 +191,7 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
                 break;
             }
 
-            case CSongTable::ColTitle      : return m_data.at(index.row())->getSong()->getTitle();
+            case CSongTable::ColTitle      : return m_data.at(index.row())->getSong()->getTitle() + QString(" (%1)").arg(m_dataShuffle.indexOf(m_data.at(index.row())));
             case CSongTable::ColArtist     : return m_data.at(index.row())->getSong()->getArtistName();
             case CSongTable::ColAlbum      : return m_data.at(index.row())->getSong()->getAlbumTitle();
             case CSongTable::ColAlbumArtist: return m_data.at(index.row())->getSong()->getAlbumArtist();
@@ -634,7 +637,7 @@ void CSongTableModel::moveRows(const QList<int>& rows, int rowDest)
         }
 
         dataCopy.move(*it, rowDest + numMoved);
-        qDebug() << "A" << *it << "->" << (rowDest + numMoved);
+        //qDebug() << "A" << *it << "->" << (rowDest + numMoved);
         ++numMoved;
     }
 
@@ -643,7 +646,7 @@ void CSongTableModel::moveRows(const QList<int>& rows, int rowDest)
     for (; it2 >= rows.begin(); --it2)
     {
         dataCopy.move(*it2, rowDest - 1 - numMoved);
-        qDebug() << "B" << *it2 << "->" << (rowDest - 1 - numMoved);
+        //qDebug() << "B" << *it2 << "->" << (rowDest - 1 - numMoved);
         ++numMoved;
     }
 
@@ -664,14 +667,18 @@ void CSongTableModel::insertRow(CSong * song, int pos)
 
     emit layoutAboutToBeChanged();
 
+    CSongTableItem * songItem = new CSongTableItem(pos, song);
+
     if (pos < 0 || pos >= m_data.size())
     {
-        m_data.append(new CSongTableItem(pos, song));
+        m_data.append(songItem);
     }
     else
     {
-        m_data.insert(pos, new CSongTableItem(pos, song));
+        m_data.insert(pos, songItem);
     }
+
+    m_dataShuffle.append(songItem);
 
     emit layoutChanged();
 }
@@ -679,12 +686,12 @@ void CSongTableModel::insertRow(CSong * song, int pos)
 
 void CSongTableModel::removeRow(int row)
 {
-    emit layoutAboutToBeChanged();
-
     Q_ASSERT(row >= 0 && row < m_data.size());
 
-    delete m_data.takeAt(row);
-
+    emit layoutAboutToBeChanged();
+    CSongTableItem * songItem = m_data.takeAt(row);
+    m_dataShuffle.removeOne(songItem);
+    delete songItem;
     emit layoutChanged();
 }
 
@@ -703,6 +710,7 @@ void CSongTableModel::clear(void)
     }
 
     m_data.clear();
+    m_dataShuffle.clear();
     emit layoutChanged();
 }
 
@@ -744,31 +752,42 @@ int CSongTableModel::getRowForSongItem(CSongTableItem * songItem) const
 
 CSongTableItem * CSongTableModel::getPreviousSong(CSongTableItem * songItem, bool shuffle) const
 {
+    qDebug() << "Morceau précédant" << songItem;
+
+    if (songItem && !m_data.contains(songItem))
+    {
+        qWarning() << "CSongTableModel::getPreviousSong() : l'item demandé n'est pas dans la table";
+        songItem = NULL;
+    }
+
     if (songItem)
     {
-        const int row = getRowForSongItem(songItem);
-
         if (shuffle)
         {
-            //TODO...
-            return NULL;
+            if (m_data.size() != m_dataShuffle.size())
+            {
+                qWarning() << "CSongTableModel::getPreviousSong() : la liste des morceaux aléatoires est incorrecte";
+            }
+
+            const int row = m_dataShuffle.indexOf(songItem);
+
+            if (row < 0)
+            {
+                qWarning() << "CSongTableModel::getPreviousSong() : l'item demandé n'est pas dans la liste des morceaux aléatoires";
+                return NULL;
+            }
+
+            return (row == 0 ? NULL : m_dataShuffle.at(row - 1));
         }
         else
         {
+            const int row = getRowForSongItem(songItem);
             return (row <= 0 ? NULL : m_data.at(row - 1));
         }
     }
     else
     {
-        if (shuffle)
-        {
-            //TODO...
-            return NULL;
-        }
-        else
-        {
-            return NULL;
-        }
+        return NULL;
     }
 }
 
@@ -785,17 +804,36 @@ CSongTableItem * CSongTableModel::getPreviousSong(CSongTableItem * songItem, boo
 
 CSongTableItem * CSongTableModel::getNextSong(CSongTableItem * songItem, bool shuffle) const
 {
+    qDebug() << "Morceau suivant" << songItem;
+
+    if (songItem && !m_data.contains(songItem))
+    {
+        qWarning() << "CSongTableModel::getNextSong() : l'item demandé n'est pas dans la table";
+        songItem = NULL;
+    }
+
     if (songItem)
     {
-        const int row = getRowForSongItem(songItem);
-
         if (shuffle)
         {
-            //TODO...
-            return NULL;
+            if (m_data.size() != m_dataShuffle.size())
+            {
+                qWarning() << "CSongTableModel::getNextSong() : la liste des morceaux aléatoires est incorrecte";
+            }
+
+            const int row = m_dataShuffle.indexOf(songItem);
+
+            if (row < 0)
+            {
+                qWarning() << "CSongTableModel::getNextSong() : l'item demandé n'est pas dans la liste des morceaux aléatoires";
+                return NULL;
+            }
+
+            return (row == m_dataShuffle.size() - 1 ? NULL : m_dataShuffle.at(row + 1));
         }
         else
         {
+            const int row = getRowForSongItem(songItem);
             return (row == m_data.size() - 1 ? NULL : m_data.at(row + 1));
         }
     }
@@ -803,8 +841,13 @@ CSongTableItem * CSongTableModel::getNextSong(CSongTableItem * songItem, bool sh
     {
         if (shuffle)
         {
-            //TODO...
-            return NULL;
+            if (m_data.size() != m_dataShuffle.size())
+            {
+                qWarning() << "CSongTableModel::getNextSong() : la liste des morceaux aléatoires est incorrecte";
+                return NULL;
+            }
+
+            return (m_dataShuffle.isEmpty() ? NULL : m_dataShuffle.at(0));
         }
         else
         {
@@ -818,4 +861,27 @@ void CSongTableModel::setCurrentSong(CSongTableItem * songItem)
 {
     m_currentSongItem = songItem;
     emit layoutChanged();
+}
+
+
+void CSongTableModel::initShuffle(CSongTableItem * firstSong)
+{
+    qDebug() << "CSongTableModel::initShuffle()";
+
+    m_dataShuffle = m_data;
+    const int numSongs = rowCount();
+
+    if (numSongs > 1)
+    {
+        for (int index = 0; index < numSongs; ++index)
+        {
+            int newIndex = static_cast<int>((static_cast<double>(rand()) / static_cast<double>(RAND_MAX)) * (numSongs - index) + index);
+            m_dataShuffle.swap(index, newIndex); // Permutation
+        }
+
+        if (firstSong)
+        {
+            m_dataShuffle.swap(m_dataShuffle.indexOf(firstSong), 0);
+        }
+    }
 }

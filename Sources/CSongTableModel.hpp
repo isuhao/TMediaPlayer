@@ -97,6 +97,7 @@ public:
     CSongTableItem * getPreviousSong(CSongTableItem * songItem, bool shuffle) const;
     CSongTableItem * getNextSong(CSongTableItem * songItem, bool shuffle) const;
     void setCurrentSong(CSongTableItem * songItem);
+    void initShuffle(CSongTableItem * firstSong = NULL);
 
 signals:
 
@@ -411,6 +412,7 @@ private:
     int m_columnSort;             ///< Numéro de la colonne triée.
     CSongTableItem * m_currentSongItem;
     QList<CSongTableItem *> m_data;
+    QList<CSongTableItem *> m_dataShuffle;
 };
 
 
