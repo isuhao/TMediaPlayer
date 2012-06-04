@@ -4,6 +4,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QMessageBox>
+#include <QFile>
 
 // TagLib
 #include <fileref.h>
@@ -1644,20 +1645,30 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos)
 {
     if (!tags)
         return false;
-/*
-    // DEBUG
-    TagLib::ID3v2::FrameListMap tagMap = tags->frameListMap();
-    for (TagLib::ID3v2::FrameListMap::ConstIterator it = tagMap.begin(); it != tagMap.end(); ++it)
-    {
-        QString tagKey = QByteArray(it->first.data(), it->first.size());
 
-        for (TagLib::ID3v2::FrameList::ConstIterator it2 = it->second.begin(); it2 != it->second.end(); ++it2)
+    //infos = TSongInfos();
+
+    // Log
+    QFile logFile("metadata.log");
+
+    if (logFile.open(QIODevice::WriteOnly | QIODevice::Append))
+    {
+        QTextStream stream(&logFile);
+        stream << "========================================\n";
+        stream << "   Tags ID3v2\n";
+        stream << "----------------------------------------\n";
+
+        TagLib::ID3v2::FrameListMap tagMap = tags->frameListMap();
+        for (TagLib::ID3v2::FrameListMap::ConstIterator it = tagMap.begin(); it != tagMap.end(); ++it)
         {
-            qDebug() << tagKey << ":" << (*it2)->toString().toCString(true);
+            QString tagKey = QByteArray(it->first.data(), it->first.size());
+
+            for (TagLib::ID3v2::FrameList::ConstIterator it2 = it->second.begin(); it2 != it->second.end(); ++it2)
+            {
+                stream << tagKey << ": " << (*it2)->toString().toCString(true) << "\n";
+            }
         }
     }
-*/
-    //infos = TSongInfos();
 
     TagLib::ID3v2::FrameList tagList;
 
@@ -1944,19 +1955,29 @@ bool CSong::loadTags(TagLib::APE::Tag * tags, TSongInfos& infos)
     //infos = TSongInfos();
 
     const TagLib::APE::ItemListMap tagMap = tags->itemListMap();
-/*
-    // DEBUG
-    for (TagLib::APE::ItemListMap::ConstIterator it = tagMap.begin(); it != tagMap.end(); ++it)
-    {
-        const QString tagKey = it->first.toCString();
-        const TagLib::StringList tagValues = it->second.toStringList();
 
-        for (TagLib::StringList::ConstIterator it2 = tagValues.begin(); it2 != tagValues.end(); ++it2)
+    // Log
+    QFile logFile("metadata.log");
+
+    if (logFile.open(QIODevice::WriteOnly | QIODevice::Append))
+    {
+        QTextStream stream(&logFile);
+        stream << "========================================\n";
+        stream << "   Tags APE\n";
+        stream << "----------------------------------------\n";
+
+        for (TagLib::APE::ItemListMap::ConstIterator it = tagMap.begin(); it != tagMap.end(); ++it)
         {
-            qDebug() << tagKey << ":" << it2->toCString(true);
+            const QString tagKey = it->first.toCString();
+            const TagLib::StringList tagValues = it->second.toStringList();
+
+            for (TagLib::StringList::ConstIterator it2 = tagValues.begin(); it2 != tagValues.end(); ++it2)
+            {
+                stream << tagKey << ": " << it2->toCString(true) << "\n";
+            }
         }
     }
-*/
+
     // Titre
     if (!tagMap["TITLE"].isEmpty())
     {
@@ -2100,14 +2121,29 @@ bool CSong::loadTags(TagLib::Ogg::XiphComment * tags, TSongInfos& infos)
 
     const TagLib::Ogg::FieldListMap tagMap = tags->fieldListMap();
 
-    // DEBUG
-    for (TagLib::Ogg::FieldListMap::ConstIterator it = tagMap.begin(); it != tagMap.end(); ++it)
-    {
-        QString tagKey = QString::fromUtf8(it->first.toCString(true));
+    // Log
+    QFile logFile("metadata.log");
 
-        for (TagLib::StringList::ConstIterator it2 = it->second.begin(); it2 != it->second.end(); ++it2)
+    if (logFile.open(QIODevice::WriteOnly | QIODevice::Append))
+    {
+        QTextStream stream(&logFile);
+        stream << "========================================\n";
+        stream << "   Tags XiphComment\n";
+        stream << "----------------------------------------\n";
+
+        for (TagLib::Ogg::FieldListMap::ConstIterator it = tagMap.begin(); it != tagMap.end(); ++it)
         {
-            qDebug() << tagKey << ":" << QString::fromUtf8(it2->toCString(true)).replace('\r', ' ').replace('\n', ' ');
+            QString tagKey = QString::fromUtf8(it->first.toCString(true));
+
+            for (TagLib::StringList::ConstIterator it2 = it->second.begin(); it2 != it->second.end(); ++it2)
+            {
+                QString tagValue = QString::fromUtf8(it2->toCString(true)).replace('\r', ' ').replace('\n', ' ');
+
+                if (tagValue.size() > 100)
+                    stream << tagKey << ": " << tagValue.left(97) << "...\n";
+                else
+                    stream << tagKey << ": " << tagValue << '\n';
+            }
         }
     }
 
