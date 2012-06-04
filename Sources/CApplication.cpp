@@ -866,6 +866,12 @@ void CApplication::play(void)
 
             // Lecture du premier morceau de la liste
             m_currentSongItem = m_currentSongTable->getNextSong(NULL, m_isShuffle);
+
+            if (m_currentSongItem && !m_currentSongItem->getSong()->isEnabled())
+            {
+                nextSong();
+                return;
+            }
         }
 
         if (!m_currentSongItem)
@@ -1011,6 +1017,12 @@ void CApplication::previousSong(void)
 
         m_currentSongItem = songItem;
 
+        if (m_currentSongItem && !m_currentSongItem->getSong()->isEnabled())
+        {
+            previousSong();
+            return;
+        }
+
         if (m_currentSongTable == m_displayedSongTable)
         {
             selectCurrentSong();
@@ -1072,6 +1084,12 @@ void CApplication::nextSong(void)
         m_uiControl->btnPlay->setIcon(QPixmap(":/icons/play"));
 
         m_currentSongItem = m_currentSongTable->getNextSong(m_currentSongItem, m_isShuffle);
+
+        if (m_currentSongItem && !m_currentSongItem->getSong()->isEnabled())
+        {
+            nextSong();
+            return;
+        }
 
         // Répétition de la liste
         if (!m_currentSongItem && m_isRepeat)
