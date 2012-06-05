@@ -6,6 +6,7 @@
 #include <QList>
 #include <QSqlDatabase>
 #include <QMutexLocker>
+#include <QFile>
 #include "CSongTableModel.hpp"
 #include "ui_TMediaPlayer.h"
 #include "ui_WidgetControl.h"
@@ -103,6 +104,11 @@ public:
     inline QSettings * getSettings(void) const
     {
         return m_settings;
+    }
+
+    inline QFile * getLogMetadata(void)
+    {
+        return &m_logMetadata;
     }
 
 public slots:
@@ -222,6 +228,7 @@ private:
     int m_volume;                       ///< Volume sonore (entre 0 et 100).
     QList<CListFolder *> m_folders;     ///< Liste de l'ensemble des dossiers de listes de lecture.
     QList<CPlayList *> m_playLists;     ///< Liste de l'ensemble des listes de lectures.
+    QFile m_logMetadata;                ///< Fichier de log des métadonnées.
 
     // Last.fm
     enum TLastFmState

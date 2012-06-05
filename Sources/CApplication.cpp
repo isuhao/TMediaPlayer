@@ -45,6 +45,10 @@
 #include <QSqlDriver>
 
 
+/**
+ * Constructeur de la classe principale de l'application.
+ */
+
 CApplication::CApplication(void) :
     QMainWindow            (NULL),
     m_uiWidget             (new Ui::TMediaPlayer()),
@@ -63,6 +67,7 @@ CApplication::CApplication(void) :
     m_isShuffle            (false),
     m_isMute               (false),
     m_volume               (50),
+    m_logMetadata          ("metadata.log"),
 
     // Last.fm
     m_lastFmEnableScrobble       (false),
@@ -74,6 +79,11 @@ CApplication::CApplication(void) :
 {
     // Chargement des paramètres de l'application
     m_settings = new QSettings("Ted", "TMediaPlayer", this);
+
+    if (!m_logMetadata.open(QIODevice::WriteOnly | QIODevice::Append))
+    {
+        qWarning() << "Erreur lors de l'ouverture du fichier metadata.log";
+    }
 
     // Initialisation de l'interface graphique
     m_uiWidget->setupUi(this);
@@ -547,13 +557,24 @@ QList<CPlayList *> CApplication::getAllPlayLists(void) const
 void CApplication::removeSongs(const QList<CSong *> songs)
 {
     qDebug() << "CApplication::removeSongs()";
-    
+
+    m_library->removeSongsFromTable(songs);
+
+    for (QList<CSong *>::const_iterator it = songs.begin(); it != songs.end(); ++it)
+    {
+        Q_CHECK_PTR(*it);
+        emit songRemoved(*it);
+    }
+/*
+    m_library->m_automaticSort = false;
     for (QList<CSong *>::const_iterator it = songs.begin(); it != songs.end(); ++it)
     {
         Q_CHECK_PTR(*it);
         m_library->removeSongFromTable(*it);
         emit songRemoved(*it);
     }
+    m_library->m_automaticSort = true;
+*/
 
     // Suppression des morceaux de chaque liste statique et mise à jour des listes dynamiques
     const QList<CPlayList *> playLists = getAllPlayLists();

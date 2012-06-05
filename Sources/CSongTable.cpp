@@ -286,11 +286,13 @@ void CSongTable::removeSongFromTable(CSong * song)
 {
     Q_CHECK_PTR(song);
 
-    foreach (CSongTableItem * songItem, m_model->m_data)
+    int row = 0;
+
+    for (QList<CSongTableItem *>::const_iterator it = m_model->m_data.begin(); it != m_model->m_data.end(); ++it, ++row)
     {
-        if (songItem->getSong() == song)
+        if ((*it)->getSong() == song)
         {
-            int row = getRowForSongItem(songItem);
+            //int row = getRowForSongItem(*it);
             m_model->removeRow(row);
         }
     }
@@ -313,6 +315,17 @@ void CSongTable::removeSongFromTable(int row)
     Q_ASSERT(row >= 0 && row < m_model->m_data.size());
 
     m_model->removeRow(row);
+
+    if (m_automaticSort)
+    {
+        sortByColumn(m_columnSort, m_sortOrder);
+    }
+}
+
+
+void CSongTable::removeSongsFromTable(const QList<CSong *>& songs)
+{
+    m_model->removeSongs(songs);
 
     if (m_automaticSort)
     {

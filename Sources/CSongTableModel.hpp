@@ -68,7 +68,7 @@ public:
 
     void setCanDrop(bool canDrop);
 
-    void setSongs(const QList<CSong *>& data);
+    void setSongs(const QList<CSong *>& songs);
     QList<CSong *> getSongs(void) const;
     inline int getNumSongs(void) const;
     bool hasSong(CSong * song) const;
@@ -89,6 +89,7 @@ public:
 
     void insertRow(CSong * song, int pos = -1);
     void removeRow(int row);
+    void removeSongs(const QList<CSong *>& songs);
     void clear(void);
 
     CSongTableItem * getSongItem(const QModelIndex& index) const;

@@ -141,6 +141,7 @@ protected:
     void addSongsToTable(const QList<CSong *>& songs);
     void removeSongFromTable(CSong * song);
     void removeSongFromTable(int row);
+    void removeSongsFromTable(const QList<CSong *>& songs);
     void removeAllSongsFromTable(void);
     void deleteSongs(void);
     void initShuffle(CSongTableItem * firstSong = NULL);

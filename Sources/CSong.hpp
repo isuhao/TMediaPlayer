@@ -18,6 +18,8 @@ namespace TagLib
     namespace Ogg   { class XiphComment; }
 }
 
+class QFile;
+
 
 /**
  * Représente un morceau pouvant être joué.
@@ -209,10 +211,10 @@ private:
     CSong& operator=(const CSong&);
 
     // Lecture des métadonnées
-    static bool loadTags(TagLib::ID3v1::Tag * tags, TSongInfos& infos);
-    static bool loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos);
-    static bool loadTags(TagLib::APE::Tag * tags, TSongInfos& infos);
-    static bool loadTags(TagLib::Ogg::XiphComment * tags, TSongInfos& infos);
+    static bool loadTags(TagLib::ID3v1::Tag * tags, TSongInfos& infos, QFile * logFile, const QString& fileName);
+    static bool loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFile, const QString& fileName);
+    static bool loadTags(TagLib::APE::Tag * tags, TSongInfos& infos, QFile * logFile, const QString& fileName);
+    static bool loadTags(TagLib::Ogg::XiphComment * tags, TSongInfos& infos, QFile * logFile, const QString& fileName);
 
 
     CApplication * m_application; ///< Pointeur sur l'application.

@@ -144,14 +144,14 @@
           <item row="3" column="0">
            <widget class="QLabel" name="lblLastFmDelayBeforeNotification">
             <property name="text">
-             <string>Délai avant de signaler qu'un nouveau morceau a commencé :</string>
+             <string>Delay before notify that a new song has started:</string>
             </property>
            </widget>
           </item>
           <item row="3" column="1">
            <widget class="QSpinBox" name="editLastFmDelayBeforeNotification">
             <property name="whatsThis">
-             <string>Lorsque vous démarrez la lecture d'un morceau, une notification est envoyée à Last.fm pour mettre à jour votre profil. Cette valeur correspond au délai en secondes avant d'envoyer l'informations. Elle doit être comprise entre 2s et 20s.</string>
+             <string>When you start playing a song, a notification is send to Last.fm to update your profile. This value represent the delay in seconds before sending the information. It must be between 2s and 20s.</string>
             </property>
             <property name="suffix">
              <string>s</string>
@@ -218,6 +218,9 @@
          <layout class="QFormLayout" name="formLayout_3">
           <item row="0" column="0">
            <widget class="QCheckBox" name="checkBox_4">
+            <property name="whatsThis">
+             <string>When you add a file into the library, if there are no sorting fields, they will be automatically compute. For example, if a title starts with &quot;The &quot;.</string>
+            </property>
             <property name="text">
              <string>Automatically compute sorting fields.</string>
             </property>

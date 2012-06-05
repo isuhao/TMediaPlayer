@@ -697,6 +697,31 @@ void CSongTableModel::removeRow(int row)
 }
 
 
+void CSongTableModel::removeSongs(const QList<CSong *>& songs)
+{
+    if (songs.isEmpty())
+    {
+        return;
+    }
+
+    emit layoutAboutToBeChanged();
+
+    QList<CSongTableItem *> dataCopy = m_data;
+
+    for (QList<CSongTableItem *>::const_iterator it = dataCopy.begin(); it != dataCopy.end(); ++it)
+    {
+        if (songs.contains((*it)->getSong()))
+        {
+            m_data.removeOne(*it);
+            m_dataShuffle.removeOne(*it);
+            delete *it;
+        }
+    }
+
+    emit layoutChanged();
+}
+
+
 /**
  * Supprime toutes les données du modèle.
  */
@@ -894,7 +919,7 @@ void CSongTableModel::initShuffle(CSongTableItem * firstSong)
     {
         for (int index = 0; index < numSongs; ++index)
         {
-            int newIndex = static_cast<int>((static_cast<double>(rand()) / static_cast<double>(RAND_MAX)) * (numSongs - index) + index);
+            int newIndex = static_cast<int>((static_cast<double>(rand()) / static_cast<double>(RAND_MAX)) * (numSongs - index - 1) + index);
             m_dataShuffle.swap(index, newIndex); // Permutation
         }
 

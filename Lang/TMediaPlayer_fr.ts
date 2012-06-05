@@ -8,12 +8,12 @@
         <translation type="obsolete">%1 morceau(x), %2</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="260"/>
+        <location filename="../Sources/CApplication.cpp" line="270"/>
         <source>Failed to init sound system with FMOD.</source>
         <translation>Le chargement du système de son avec FMOD a échoué.</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="292"/>
+        <location filename="../Sources/CApplication.cpp" line="302"/>
         <source>Failed to load database.</source>
         <translation>Erreur lors du chargement de la base de données.</translation>
     </message>
@@ -24,8 +24,8 @@
 %1</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="89"/>
-        <location filename="../Sources/CApplication.cpp" line="1982"/>
+        <location filename="../Sources/CApplication.cpp" line="99"/>
+        <location filename="../Sources/CApplication.cpp" line="1992"/>
         <source>%n song(s), %1</source>
         <translation>
             <numerusform>%n morceau, %1</numerusform>
@@ -33,17 +33,17 @@
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="237"/>
+        <location filename="../Sources/CApplication.cpp" line="247"/>
         <source>Playlists</source>
         <translation>Listes de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="321"/>
+        <location filename="../Sources/CApplication.cpp" line="331"/>
         <source>Database error</source>
         <translation>Erreur de base de données</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="321"/>
+        <location filename="../Sources/CApplication.cpp" line="331"/>
         <source>File: %1 (%2)
 
 Query: %3
@@ -56,32 +56,32 @@ Requête : %3
 Erreur : %4</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1850"/>
+        <location filename="../Sources/CApplication.cpp" line="1860"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Êtes-vous sûr de vouloir supprimer cette liste de lecture ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1850"/>
+        <location filename="../Sources/CApplication.cpp" line="1860"/>
         <source>Yes</source>
         <translation>Oui</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1850"/>
+        <location filename="../Sources/CApplication.cpp" line="1860"/>
         <source>No</source>
         <translation>Non</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1447"/>
+        <location filename="../Sources/CApplication.cpp" line="1457"/>
         <source>Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)</source>
         <translation>Fichiers multimédias (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;Tous les fichiers (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1473"/>
+        <location filename="../Sources/CApplication.cpp" line="1483"/>
         <source>Add files...</source>
         <translation>Ajout de fichiers...</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1473"/>
+        <location filename="../Sources/CApplication.cpp" line="1483"/>
         <source>Abort</source>
         <translation>Abandonner</translation>
     </message>
@@ -93,7 +93,7 @@ Erreur : %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2121"/>
+        <location filename="../Sources/CApplication.cpp" line="2131"/>
         <source>This program requires FMOD %1 or superior.</source>
         <translation>Ce programme nécessite FMOD %1 ou supérieur.</translation>
     </message>
@@ -382,69 +382,69 @@ Erreur : %4</translation>
 %1</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="259"/>
+        <location filename="../Sources/CSong.hpp" line="261"/>
         <source>Unknown</source>
         <comment>Unknown format</comment>
         <translation>Inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="260"/>
+        <location filename="../Sources/CSong.hpp" line="262"/>
         <source>MP3</source>
         <translation>MP3</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="261"/>
+        <location filename="../Sources/CSong.hpp" line="263"/>
         <source>Ogg Vorbis</source>
         <translation>Ogg Vorbis</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="262"/>
+        <location filename="../Sources/CSong.hpp" line="264"/>
         <source>FLAC</source>
         <translation>FLAC</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="299"/>
+        <location filename="../Sources/CSong.hpp" line="301"/>
         <source>Unknown</source>
         <comment>Unknown language</comment>
         <translation>Inconnue</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="300"/>
+        <location filename="../Sources/CSong.hpp" line="302"/>
         <source>English</source>
         <translation>Anglais</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="301"/>
+        <location filename="../Sources/CSong.hpp" line="303"/>
         <source>French</source>
         <translation>Français</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="302"/>
+        <location filename="../Sources/CSong.hpp" line="304"/>
         <source>German</source>
         <translation>Allemand</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="303"/>
+        <location filename="../Sources/CSong.hpp" line="305"/>
         <source>Italian</source>
         <translation>Italien</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="787"/>
+        <location filename="../Sources/CSong.cpp" line="788"/>
         <source>%1 Gio</source>
         <translation>%1 Gio</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="792"/>
+        <location filename="../Sources/CSong.cpp" line="793"/>
         <source>%1 Mio</source>
         <translation>%1 Mio</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="797"/>
+        <location filename="../Sources/CSong.cpp" line="798"/>
         <source>%1 Kio</source>
         <translation>%1 Kio</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CSong.cpp" line="801"/>
+        <location filename="../Sources/CSong.cpp" line="802"/>
         <source>%n byte(s)</source>
         <translation>
             <numerusform>%n octet</numerusform>
@@ -1102,7 +1102,7 @@ Voulez-vous les ajouter ?</translation>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="319"/>
         <source>Popularimeter</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Popularité</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="324"/>
@@ -1611,15 +1611,20 @@ Voulez-vous les ajouter ?</translation>
         <source> %</source>
         <translation>%</translation>
     </message>
-    <message utf8="true">
+    <message>
         <location filename="../Form/DialogPreferences.ui" line="147"/>
-        <source>Délai avant de signaler qu&apos;un nouveau morceau a commencé :</source>
-        <translation type="unfinished"></translation>
+        <source>Delay before notify that a new song has started:</source>
+        <translation>Délai avant de signaler qu&apos;un nouveau morceau a commencé :</translation>
     </message>
-    <message utf8="true">
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="222"/>
+        <source>When you add a file into the library, if there are no sorting fields, they will be automatically compute. For example, if a title starts with &quot;The &quot;.</source>
+        <translation>Quand vous ajoutez unfichier à la médiathèque, s&apos;il n&apos;y a pas de valeurs pour le tri, elles sont automatiquement déterminées. Par exemple, si un titre commence par &quot;Le &quot;.</translation>
+    </message>
+    <message>
         <location filename="../Form/DialogPreferences.ui" line="154"/>
-        <source>Lorsque vous démarrez la lecture d&apos;un morceau, une notification est envoyée à Last.fm pour mettre à jour votre profil. Cette valeur correspond au délai en secondes avant d&apos;envoyer l&apos;informations. Elle doit être comprise entre 2s et 20s.</source>
-        <translation type="unfinished"></translation>
+        <source>When you start playing a song, a notification is send to Last.fm to update your profile. This value represent the delay in seconds before sending the information. It must be between 2s and 20s.</source>
+        <translation>Lorsque vous démarrez la lecture d&apos;un morceau, une notification est envoyée à Last.fm pour mettre à jour votre profil. Cette valeur correspond au délai en secondes avant d&apos;envoyer l&apos;information. Elle doit être comprise entre 2s et 20s.</translation>
     </message>
     <message>
         <location filename="../Form/DialogPreferences.ui" line="157"/>
@@ -1657,7 +1662,11 @@ Voulez-vous les ajouter ?</translation>
         <translation>Chargement</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="222"/>
+        <source>When you add a file into the library, if there are no sorting fields, they will be automatically compute. For example, if a song starts with &quot;The &quot;.</source>
+        <translation type="obsolete">Quand vous ajoutez unfichier à la médiathèque, s&apos;il n&apos;y a pas de valeurs pour le tri, elles sont automatiquement déterminées. Par exemple, si un titre commence par &quot;Le &quot;.</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="225"/>
         <source>Automatically compute sorting fields.</source>
         <translation>Déterminer automatiquement les valeurs pour le tri.</translation>
     </message>
