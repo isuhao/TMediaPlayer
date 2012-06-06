@@ -70,7 +70,7 @@ public:
 
     void loadFromDatabase(void);
     bool loadTags(bool readProperties = false);
-    void writeTags(void) const;
+    bool writeTags(void) const;
 
     inline int getId(void) const;
     inline QString getFileName(void) const;
@@ -210,11 +210,16 @@ private:
     CSong(const CSong&);
     CSong& operator=(const CSong&);
 
-    // Lecture des métadonnées
+    // Lecture et écriture des métadonnées
     static bool loadTags(TagLib::ID3v1::Tag * tags, TSongInfos& infos, QFile * logFile, const QString& fileName);
     static bool loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFile, const QString& fileName);
     static bool loadTags(TagLib::APE::Tag * tags, TSongInfos& infos, QFile * logFile, const QString& fileName);
     static bool loadTags(TagLib::Ogg::XiphComment * tags, TSongInfos& infos, QFile * logFile, const QString& fileName);
+
+    static bool writeTags(TagLib::ID3v1::Tag * tags, const TSongInfos& infos, QFile * logFile, const QString& fileName);
+    static bool writeTags(TagLib::ID3v2::Tag * tags, const TSongInfos& infos, QFile * logFile, const QString& fileName);
+    static bool writeTags(TagLib::APE::Tag * tags, const TSongInfos& infos, QFile * logFile, const QString& fileName);
+    static bool writeTags(TagLib::Ogg::XiphComment * tags, const TSongInfos& infos, QFile * logFile, const QString& fileName);
 
 
     CApplication * m_application; ///< Pointeur sur l'application.
@@ -223,6 +228,7 @@ private:
     bool m_multiModification;     ///< Indique que plusieurs modifications vont être effectuées, le
                                   ///< signal songModified() est alors émis dans la méthode updateDatabase.
     bool m_isModified;            ///< Indique si les données ont été modifiées.
+    mutable bool m_needWriteTags; ///< Indique si les métadonnées doivent être mises à jour.
     int m_id;                     ///< Identifiant du morceau en base de données.
     QString m_fileName;           ///< Fichier audio.
     int m_fileSize;               ///< Taille du fichier en octets.

@@ -6,6 +6,13 @@
 #include <QtDebug>
 
 
+/**
+ * Construit la boite de dialogue pour modifier les informations d'un morceau.
+ *
+ * \param songItem  Morceau à modifier.
+ * \param songTable Liste contenant le morceau, pour pouvoir naviguer parmi les morceaux.
+ */
+
 CDialogEditSong::CDialogEditSong(CSongTableItem * songItem, CSongTable * songTable) :
     QDialog     (songTable),
     m_uiWidget  (new Ui::DialogEditSong()),
@@ -80,8 +87,6 @@ CDialogEditSong::~CDialogEditSong()
 
 /**
  * Affiche les informations du morceau précédent dans la liste.
- *
- * \todo Implémentation.
  */
 
 void CDialogEditSong::previousSong(void)
@@ -102,8 +107,6 @@ void CDialogEditSong::previousSong(void)
 
 /**
  * Affiche les informations du morceau suivant dans la liste.
- *
- * \todo Implémentation.
  */
 
 void CDialogEditSong::nextSong(void)

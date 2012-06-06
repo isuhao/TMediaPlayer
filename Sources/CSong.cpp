@@ -66,6 +66,8 @@ CSong::CSong(CApplication * application) :
     m_sound             (NULL),
     m_channel           (NULL),
     m_multiModification (false),
+    m_isModified        (false),
+    m_needWriteTags     (false),
     m_id                (-1),
     m_fileName          (""),
     m_fileSize          (0),
@@ -73,34 +75,7 @@ CSong::CSong(CApplication * application) :
     m_sampleRate        (0),
     m_format            (FormatUnknown),
     m_numChannels       (0),
-    m_duration          (0),
-/*
-    m_isEnabled         (true),
-    m_title             (""),
-    m_subTitle          (""),
-    m_grouping          (""),
-    m_artistName        (""),
-    m_albumTitle        (""),
-    m_albumArtist       (""),
-    m_composer          (""),
-    m_titleSort         (""),
-    m_artistNameSort    (""),
-    m_albumTitleSort    (""),
-    m_albumArtistSort   (""),
-    m_composerSort      (""),
-    m_year              (0),
-    m_trackNumber       (0),
-    m_trackCount        (0),
-    m_discNumber        (0),
-    m_discCount         (0),
-    m_genre             (""),
-    m_rating            (0),
-    m_comments          (""),
-    m_bpm               (0),
-    m_lyrics            (""),
-    m_language          (LangUnknown),
-*/
-    m_isModified        (false)
+    m_duration          (0)
 {
     Q_CHECK_PTR(application);
 }
@@ -121,6 +96,8 @@ CSong::CSong(const QString& fileName, CApplication * application) :
     m_sound             (NULL),
     m_channel           (NULL),
     m_multiModification (false),
+    m_isModified        (false),
+    m_needWriteTags     (false),
     m_id                (-1),
     m_fileName          (fileName),
     m_fileSize          (0),
@@ -128,34 +105,7 @@ CSong::CSong(const QString& fileName, CApplication * application) :
     m_sampleRate        (0),
     m_format            (FormatUnknown),
     m_numChannels       (0),
-    m_duration          (0),
-/*
-    m_isEnabled         (true),
-    m_title             (""),
-    m_subTitle          (""),
-    m_grouping          (""),
-    m_artistName        (""),
-    m_albumTitle        (""),
-    m_albumArtist       (""),
-    m_composer          (""),
-    m_titleSort         (""),
-    m_artistNameSort    (""),
-    m_albumTitleSort    (""),
-    m_albumArtistSort   (""),
-    m_composerSort      (""),
-    m_year              (0),
-    m_trackNumber       (0),
-    m_trackCount        (0),
-    m_discNumber        (0),
-    m_discCount         (0),
-    m_genre             (""),
-    m_rating            (0),
-    m_comments          (""),
-    m_bpm               (0),
-    m_lyrics            (""),
-    m_language          (LangUnknown),
-*/
-    m_isModified        (false)
+    m_duration          (0)
 {
     Q_CHECK_PTR(application);
 
@@ -184,6 +134,15 @@ CSong::~CSong()
     if (m_sound)
     {
         m_sound->release();
+        m_sound = NULL;
+    }
+
+    m_channel = NULL;
+
+    // Mise à jour du fichier
+    if (m_needWriteTags)
+    {
+        writeTags();
     }
 
     // Mise à jour de la base de données
@@ -470,16 +429,98 @@ bool CSong::loadTags(bool readProperties)
  * Pour le format FLAC, les tags xiphComment, ID3v1 et ID3v2 sont écrits.
  * Seuls les tags gérés par l'application sont mis à jour, les autres sont conservés.
  *
- * \todo Implémentation.
+ * \return Booléen indiquant le succès de l'opération.
  */
 
-void CSong::writeTags(void) const
+bool CSong::writeTags(void) const
 {
     qDebug() << "CSong::writeTags()";
 
-    return; // Read-only !
+    switch (m_format)
+    {
+        default:
+            qWarning() << "CSong::writeTags() : format non géré";
+            return false;
 
-    //...
+        case CSong::FormatMP3:
+        {
+            TagLib::MPEG::File file(qPrintable(m_fileName), false);
+
+            if (!file.isValid())
+            {
+                qWarning() << "CSong::writeTags() : impossible de lire le fichier MP3 " << m_fileName;
+                m_needWriteTags = true;
+                return false;
+            }
+
+            if (file.readOnly())
+            {
+                qWarning() << "CSong::writeTags() : le fichier est ouvert en lecture seule";
+                m_needWriteTags = true;
+                return false;
+            }
+
+            //writeTags(file.APETag(false), m_infos, m_application->getLogMetadata(), m_fileName);
+            writeTags(file.ID3v1Tag(true), m_infos, m_application->getLogMetadata(), m_fileName);
+            writeTags(file.ID3v2Tag(true), m_infos, m_application->getLogMetadata(), m_fileName);
+
+            file.save(TagLib::MPEG::File::ID3v1 | TagLib::MPEG::File::ID3v2, true);
+            break;
+        }
+
+        case CSong::FormatOGG:
+        {
+            TagLib::Ogg::Vorbis::File file(qPrintable(m_fileName), false);
+
+            if (!file.isValid())
+            {
+                qWarning() << "CSong::writeTags() : impossible de lire le fichier Ogg " << m_fileName;
+                m_needWriteTags = true;
+                return false;
+            }
+
+            if (file.readOnly())
+            {
+                qWarning() << "CSong::writeTags() : le fichier est ouvert en lecture seule";
+                m_needWriteTags = true;
+                return false;
+            }
+
+            writeTags(file.tag(), m_infos, m_application->getLogMetadata(), m_fileName);
+
+            file.save();
+            break;
+        }
+
+        case CSong::FormatFLAC:
+        {
+            TagLib::FLAC::File file(qPrintable(m_fileName), false);
+
+            if (!file.isValid())
+            {
+                qWarning() << "CSong::writeTags() : impossible de lire le fichier FLAC " << m_fileName;
+                m_needWriteTags = true;
+                return false;
+            }
+
+            if (file.readOnly())
+            {
+                qWarning() << "CSong::writeTags() : le fichier est ouvert en lecture seule";
+                m_needWriteTags = true;
+                return false;
+            }
+
+            writeTags(file.ID3v1Tag(true), m_infos, m_application->getLogMetadata(), m_fileName);
+            writeTags(file.ID3v2Tag(true), m_infos, m_application->getLogMetadata(), m_fileName);
+            writeTags(file.xiphComment(true), m_infos, m_application->getLogMetadata(), m_fileName);
+
+            file.save();
+            break;
+        }
+    }
+
+    m_needWriteTags = false;
+    return true;
 }
 
 
@@ -1362,6 +1403,16 @@ void CSong::stop(void)
     if (m_sound && m_channel)
     {
         m_channel->stop();
+
+        // Fermeture du fichier pour écrire les métadonnées
+        if (m_needWriteTags)
+        {
+            m_sound->release();
+            m_sound = NULL;
+            m_channel = NULL;
+
+            writeTags();
+        }
     }
 }
 
@@ -2319,7 +2370,46 @@ bool CSong::loadTags(TagLib::Ogg::XiphComment * tags, TSongInfos& infos, QFile *
         infos.lyrics = QString::fromUtf8(tagMap["LYRICS"].toString().toCString(true));
     }
 
-    // Autres tags
+    // Compositeur
+    if (!tagMap["COMPOSER"].isEmpty())
+    {
+        infos.composer = QString::fromUtf8(tagMap["COMPOSER"].toString().toCString(true));
+    }
+
+    // Numéro de disque
+    if (!tagMap["DISCNUMBER"].isEmpty())
+    {
+        QString discNumber = QString::fromUtf8(tagMap["DISCNUMBER"].toString().toCString(true));
+        bool ok;
+        infos.discNumber = discNumber.toInt(&ok);
+
+        if (!ok || infos.discNumber <= 0)
+        {
+            stream << "Erreur : tag DISCNUMBER invalide";
+            infos.discNumber = 0;
+        }
+    }
+
+    // Nombre de disques
+    if (!tagMap["DISCTOTAL"].isEmpty())
+    {
+        QString discCount = QString::fromUtf8(tagMap["DISCTOTAL"].toString().toCString(true));
+        bool ok;
+        infos.discCount = discCount.toInt(&ok);
+
+        if (!ok || infos.discCount <= 0)
+        {
+            stream << "Erreur : tag DISCTOTAL invalide";
+            infos.discCount = 0;
+        }
+    }
+
+    // Commentaires
+    if (!tagMap["COMMENT"].isEmpty())
+    {
+        infos.comments = QString::fromUtf8(tagMap["COMMENT"].toString().toCString(true));
+    }
+
 /*
     Autres tags :
     - "ALBUM ARTIST"
@@ -2328,4 +2418,281 @@ bool CSong::loadTags(TagLib::Ogg::XiphComment * tags, TSongInfos& infos, QFile *
 */
 
     return false;
+}
+
+
+bool CSong::writeTags(TagLib::ID3v1::Tag * tags, const TSongInfos& infos, QFile * logFile, const QString& fileName)
+{
+    if (!tags)
+        return false;
+
+    tags->setTitle(infos.title.toUtf8().constData());
+    tags->setArtist(infos.artistName.toUtf8().constData());
+    tags->setAlbum(infos.albumTitle.toUtf8().constData());
+    tags->setComment(infos.comments.toUtf8().constData());
+    tags->setGenre(infos.genre.toUtf8().constData());
+    tags->setYear(infos.year);
+    tags->setTrack(infos.trackNumber);
+
+    return true;
+}
+
+
+/// \todo Implémentation.
+bool CSong::writeTags(TagLib::ID3v2::Tag * tags, const TSongInfos& infos, QFile * logFile, const QString& fileName)
+{
+    if (!tags)
+        return false;
+
+    // Log
+    QTextStream stream(logFile);
+    stream << "========================================\n";
+    stream << "   Tags ID3v2\n";
+    stream << "----------------------------------------\n";
+    stream << " Fichier : " << fileName << '\n';
+    stream << " Date    : " << QDateTime::currentDateTime().toString() << '\n';
+    stream << "----------------------------------------\n";
+
+    //...
+
+    return true;
+}
+
+
+bool CSong::writeTags(TagLib::APE::Tag * tags, const TSongInfos& infos, QFile * logFile, const QString& fileName)
+{
+    if (!tags)
+        return false;
+
+    // Log
+    QTextStream stream(logFile);
+    stream << "========================================\n";
+    stream << "   Tags APE\n";
+    stream << "----------------------------------------\n";
+    stream << " Fichier : " << fileName << '\n';
+    stream << " Date    : " << QDateTime::currentDateTime().toString() << '\n';
+    stream << "----------------------------------------\n";
+
+    // Titre
+    tags->addValue("TITLE", infos.title.toUtf8().constData());
+
+    // Sous-titre
+    tags->addValue("SUBTITLE", infos.subTitle.toUtf8().constData());
+
+    // Regroupement
+    stream << "Aucun tag pour enregistrer le regroupement\n";
+
+    // Artiste
+    tags->addValue("ARTIST", infos.artistName.toUtf8().constData());
+
+    // Album
+    tags->addValue("ALBUM", infos.albumTitle.toUtf8().constData());
+
+    // Artiste de l'album
+    stream << "Aucun tag pour enregistrer l'artiste de l'album\n";
+
+    // Compositeur
+    tags->addValue("COMPOSER", infos.composer.toUtf8().constData());
+
+    // Titre pour le tri
+    stream << "Aucun tag pour enregistrer le titre pour le tri\n";
+
+    // Artiste pour le tri
+    stream << "Aucun tag pour enregistrer l'artiste pour le tri\n";
+
+    // Album pour le tri
+    stream << "Aucun tag pour enregistrer l'album pour le tri\n";
+
+    // Artiste de l'album pour le tri
+    stream << "Aucun tag pour enregistrer l'artiste pour le tri\n";
+
+    // Compositeur pour le tri
+    stream << "Aucun tag pour enregistrer le compositeur pour le tri\n";
+
+    // Année
+    if (infos.year > 0)
+    {
+        tags->addValue("YEAR", TagLib::String::number(infos.year));
+    }
+    else
+    {
+        tags->removeItem("DATE");
+    }
+
+    // Numéro de piste
+    if (infos.trackNumber > 0)
+    {
+        if (infos.trackCount >= infos.trackNumber)
+        {
+            tags->addValue("TRACK", TagLib::String::number(infos.trackNumber) + "/" + TagLib::String::number(infos.trackCount));
+        }
+        else
+        {
+            tags->addValue("TRACK", TagLib::String::number(infos.trackNumber));
+        }
+    }
+    else
+    {
+        tags->removeItem("TRACK");
+    }
+
+    // Numéro de disque
+    if (infos.discNumber > 0)
+    {
+        if (infos.discCount >= infos.discNumber)
+        {
+            tags->addValue("MEDIA", TagLib::String::number(infos.discNumber) + "/" + TagLib::String::number(infos.discCount));
+        }
+        else
+        {
+            tags->addValue("MEDIA", TagLib::String::number(infos.discNumber));
+        }
+    }
+    else
+    {
+        tags->removeItem("MEDIA");
+    }
+
+    // Genre
+    tags->addValue("GENRE", infos.genre.toUtf8().constData());
+
+    // Commentaires
+    tags->addValue("COMMENT", infos.comments.toUtf8().constData());
+
+    // BPM
+    stream << "Aucun tag pour enregistrer le nombre de battements par minute\n";
+
+    // Paroles
+    stream << "Aucun tag pour enregistrer les paroles\n";
+
+    // Langue
+    tags->addValue("LANGUAGE", CSong::getISO3CodeForLanguage(infos.language).toUtf8().constData());
+
+    return true;
+}
+
+
+bool CSong::writeTags(TagLib::Ogg::XiphComment * tags, const TSongInfos& infos, QFile * logFile, const QString& fileName)
+{
+    if (!tags)
+        return false;
+
+    // Log
+    QTextStream stream(logFile);
+    stream << "========================================\n";
+    stream << "   Tags Xiph Comment\n";
+    stream << "----------------------------------------\n";
+    stream << " Fichier : " << fileName << '\n';
+    stream << " Date    : " << QDateTime::currentDateTime().toString() << '\n';
+    stream << "----------------------------------------\n";
+
+    // Titre
+    tags->addField("TITLE", infos.title.toUtf8().constData());
+
+    // Sous-titre
+    stream << "Aucun tag pour enregistrer le sous-titre\n";
+
+    // Regroupement
+    stream << "Aucun tag pour enregistrer le regroupement\n";
+
+    // Artiste
+    tags->addField("ARTIST", infos.artistName.toUtf8().constData());
+
+    // Album
+    tags->addField("ALBUM", infos.albumTitle.toUtf8().constData());
+
+    // Artiste de l'album
+    tags->addField("ALBUMARTIST", infos.albumArtist.toUtf8().constData());
+
+    // Compositeur
+    tags->addField("COMPOSER", infos.composer.toUtf8().constData());
+
+    // Titre pour le tri
+    stream << "Aucun tag pour enregistrer le titre pour le tri\n";
+
+    // Artiste pour le tri
+    tags->addField("ARTISTSORT", infos.artistNameSort.toUtf8().constData());
+
+    // Album pour le tri
+    stream << "Aucun tag pour enregistrer l'album pour le tri\n";
+
+    // Artiste de l'album pour le tri
+    stream << "Aucun tag pour enregistrer l'artiste pour le tri\n";
+
+    // Compositeur pour le tri
+    stream << "Aucun tag pour enregistrer le compositeur pour le tri\n";
+
+    // Année
+    if (infos.year > 0)
+    {
+        tags->addField("DATE", TagLib::String::number(infos.year));
+    }
+    else
+    {
+        tags->removeField("DATE");
+    }
+
+    // Numéro de piste
+    if (infos.trackNumber > 0)
+    {
+        tags->addField("TRACKNUMBER", TagLib::String::number(infos.trackNumber));
+    }
+    else
+    {
+        tags->removeField("TRACKNUMBER");
+    }
+
+    // Nombre de pistes
+    if (infos.trackCount > 0)
+    {
+        tags->addField("TRACKTOTAL", TagLib::String::number(infos.trackCount));
+    }
+    else
+    {
+        tags->removeField("TRACKTOTAL");
+    }
+
+    // Numéro de disque
+    if (infos.discNumber > 0)
+    {
+        tags->addField("DISCNUMBER", TagLib::String::number(infos.discNumber));
+    }
+    else
+    {
+        tags->removeField("DISCNUMBER");
+    }
+
+    // Nombre de disques
+    if (infos.discCount > 0)
+    {
+        tags->addField("DISCTOTAL", TagLib::String::number(infos.discCount));
+    }
+    else
+    {
+        tags->removeField("DISCTOTAL");
+    }
+
+    // Genre
+    tags->addField("GENRE", infos.genre.toUtf8().constData());
+
+    // Commentaires
+    tags->addField("COMMENT", infos.comments.toUtf8().constData());
+
+    // BPM
+    if (infos.bpm > 0)
+    {
+        tags->addField("TEMPO", TagLib::String::number(infos.bpm));
+    }
+    else
+    {
+        tags->removeField("TEMPO");
+    }
+
+    // Paroles
+    tags->addField("LYRICS", infos.lyrics.toUtf8().constData());
+
+    // Langue
+    stream << "Aucun tag pour enregistrer la langue\n";
+
+    return true;
 }

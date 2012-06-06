@@ -10,12 +10,12 @@
   - Ajouter des unités pour certains types (taille du fichier, débit, etc.).
   - Vérifier qu'il n'y a pas de boucles pour le critère "Liste de lecture".
 
-- Écrire les métadonnées d'un morceau.
-  - Ne pas oublier de mettre à jour la taille du fichier.
-  - Que faire si le morceau est en cours de lecture ?
+- Écrire les métadonnées d'un morceau : mettre à jour la taille du fichier.
 
 - Boite de dialogue Edit Songs. (à terminer)
+
 - Import depuis iTunes / SongBird.
+
 - Tester le scrobbling Last.fm.
 
 --------------------------------------------------
@@ -35,7 +35,7 @@
 - Implémenter le glisser-déposer pour créer une nouvelle liste de lecture.
 - Créer la fenêtre Préférences. (à terminer)
 - Griser les boutons indisponibles suivant l'état (lecture, pause, etc.).
-- Implémenter la répétition (répétition de la liste, du morceau, etc.).
+- Implémenter correctement la répétition (répétition de la liste, du morceau, etc.).
 
 - Optimisation : exécuter les requêtes SQL dans un thread séparé.
   - Utiliser des transactions.
@@ -64,14 +64,17 @@
   - Gérer les tags binaires pour le ID3v2.
   - Ajouter une option "Vérifier la cohérence des données" (tags duppliqués, valeurs identiques pour les différents formats de tags...).
 
-- Boite de dialogue Edit Song : Affichage et modification des illustrations.
-- Boite de dialogue Edit Song : Afficher l'illustration principale dans l'onglet Résumé.
+- Boite de dialogue Edit Song :
+  - Affichage et modification des illustrations.
+  - Afficher l'illustration principale dans l'onglet Résumé.
+
+- Nouvelles options et métadonnées :
+  - Ajouter la métadonnée "Parolier".
+  - Ajouter l'option "Volume du morceau".
+  - Ajouter l'option "Fait partie d'une compilation".
+
 - Moteur de recherche dans la liste de lecture.
 - Égaliseur.
-- Recherche automatique des paroles.
-- Recherche automatique des illustrations.
-- Ajouter la métadonnée "Parolier".
-- Ajouter l'option "Volume du morceau".
 - Récupérer les paroles depuis Internet.
 - Récupérer les pochettes depuis Internet.
 - Option "Lecture seule".
