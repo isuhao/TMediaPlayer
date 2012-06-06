@@ -259,7 +259,15 @@ private:
 
     static inline bool cmpSongRatingAsc(CSongTableItem * song1, CSongTableItem * song2)
     {
-        return (song1->getSong()->getRating() < song2->getSong()->getRating());
+        int rating1 = song1->getSong()->getRating();
+        int rating2 = song2->getSong()->getRating();
+
+        if (rating1 == rating2)
+        {
+            return cmpSongArtistAsc(song1, song2);
+        }
+
+        return (rating1 < rating2);
     }
 
     static inline bool cmpSongRatingDesc(CSongTableItem * song1, CSongTableItem * song2)
@@ -399,12 +407,20 @@ private:
 
     static inline bool cmpSongLanguageAsc(CSongTableItem * song1, CSongTableItem * song2)
     {
-        return (CSong::getLanguageName(song1->getSong()->getLanguage()) < CSong::getLanguageName(song2->getSong()->getLanguage()));
+        CSong::TLanguage lang1 = song1->getSong()->getLanguage();
+        CSong::TLanguage lang2 = song2->getSong()->getLanguage();
+
+        if (lang1 == lang2)
+        {
+            return cmpSongArtistAsc(song1, song2);
+        }
+
+        return (CSong::getLanguageName(lang1) < CSong::getLanguageName(lang2));
     }
 
     static inline bool cmpSongLanguageDesc(CSongTableItem * song1, CSongTableItem * song2)
     {
-        return cmpSongLyricsAsc(song2, song1);
+        return cmpSongLanguageAsc(song2, song1);
     }
 
 

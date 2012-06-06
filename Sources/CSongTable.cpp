@@ -42,6 +42,7 @@ CSongTable::CSongTable(CApplication * application) :
 
     connect(m_model, SIGNAL(rowsInserted(const QModelIndex&, int, int)), this, SLOT(onRowCountChange(const QModelIndex&, int, int)));
     connect(m_model, SIGNAL(rowsRemoved(const QModelIndex&, int, int)), this, SLOT(onRowCountChange(const QModelIndex&, int, int)));
+    connect(m_model, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), this, SLOT(sort()));
 
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(openCustomMenuProject(const QPoint&)));
@@ -678,6 +679,12 @@ void CSongTable::sortColumn(int column, Qt::SortOrder order)
 
         m_isModified = true;
     }
+}
+
+
+void CSongTable::sort(void)
+{
+    m_model->sort(m_columnSort, m_sortOrder);
 }
 
 

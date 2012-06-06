@@ -352,13 +352,13 @@ bool CSongTableModel::setData(const QModelIndex& index, const QVariant& value, i
     if (role == Qt::CheckStateRole && index.column() == CSongTable::ColTitle)
     {
         m_data.at(index.row())->getSong()->setEnabled(value.toInt() == Qt::Checked);
-        emit layoutChanged();
+        emit dataChanged(index, index);
         return true;
     }
     else if (role == Qt::EditRole && index.column() == CSongTable::ColRating)
     {
         m_data.at(index.row())->getSong()->setRating(value.value<CRating>().getRating());
-        emit layoutChanged();
+        emit dataChanged(index, index);
         return true;
     }
 

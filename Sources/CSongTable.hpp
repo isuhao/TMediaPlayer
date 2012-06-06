@@ -128,6 +128,7 @@ protected slots:
     virtual void openCustomMenuProject(const QPoint& point);
     void showColumn(int column, bool show = true);
     void sortColumn(int column, Qt::SortOrder order);
+    void sort(void);
     void goToSongTable(void);
     void addToPlayList(void);
     void removeSongsFromLibrary(void);
