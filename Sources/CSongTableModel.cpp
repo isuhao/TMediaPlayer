@@ -2,6 +2,7 @@
 #include "CSongTableModel.hpp"
 #include "CSongTable.hpp"
 #include "CApplication.hpp"
+#include "CRating.hpp"
 #include <QMouseEvent>
 #include <QUrl>
 
@@ -249,7 +250,7 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
             }
 
             case CSongTable::ColGenre       : return m_data.at(index.row())->getSong()->getGenre();
-            case CSongTable::ColRating      : return m_data.at(index.row())->getSong()->getRating();
+            case CSongTable::ColRating      : return QVariant::fromValue<CRating>(m_data.at(index.row())->getSong()->getRating());
             case CSongTable::ColComments    : return m_data.at(index.row())->getSong()->getComments();
             case CSongTable::ColPlayCount   : return m_data.at(index.row())->getSong()->getNumPlays();
             case CSongTable::ColLastPlayTime: return m_data.at(index.row())->getSong()->getLastPlay();
@@ -351,6 +352,12 @@ bool CSongTableModel::setData(const QModelIndex& index, const QVariant& value, i
     if (role == Qt::CheckStateRole && index.column() == CSongTable::ColTitle)
     {
         m_data.at(index.row())->getSong()->setEnabled(value.toInt() == Qt::Checked);
+        emit layoutChanged();
+        return true;
+    }
+    else if (role == Qt::EditRole && index.column() == CSongTable::ColRating)
+    {
+        m_data.at(index.row())->getSong()->setRating(value.value<CRating>().getRating());
         emit layoutChanged();
         return true;
     }
@@ -468,17 +475,17 @@ Qt::ItemFlags CSongTableModel::flags(const QModelIndex& index) const
 
     if (index.isValid())
     {
-        if (m_canDrop)
-        {
-            flags |= Qt::ItemIsDropEnabled;
-        }
-
         if (index.column() == CSongTable::ColTitle)
         {
             flags |= Qt::ItemIsUserCheckable;
         }
+        else if (index.column() == CSongTable::ColRating)
+        {
+            flags |= Qt::ItemIsEditable;
+        }
     }
-    else if (m_canDrop)
+
+    if (m_canDrop)
     {
         flags |= Qt::ItemIsDropEnabled;
     }

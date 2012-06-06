@@ -295,6 +295,27 @@
     <ClCompile Include="Sources\Last.fm\CScrobble.cpp">
       <Filter>Source Files\Last.fm</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\CRating.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\CRatingDelegate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_CRatingDelegate.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_CRatingDelegate.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\CRatingEditor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_CRatingEditor.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_CRatingEditor.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Sources\CApplication.hpp">
@@ -411,6 +432,12 @@
     <CustomBuild Include="Sources\Last.fm\CScrobble.hpp">
       <Filter>Header Files\Last.fm</Filter>
     </CustomBuild>
+    <CustomBuild Include="Sources\CRatingDelegate.hpp">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Sources\CRatingEditor.hpp">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_DialogEditDynamicPlayList.h">
@@ -442,6 +469,9 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_WidgetControl.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\CRating.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

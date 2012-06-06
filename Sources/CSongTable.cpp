@@ -7,6 +7,7 @@
 #include "CSongTableHeader.hpp"
 #include "CStaticPlayList.hpp"
 #include "CDynamicPlayList.hpp"
+#include "CRatingDelegate.hpp"
 #include <QStringList>
 #include <QMouseEvent>
 #include <QHeaderView>
@@ -33,6 +34,9 @@ CSongTable::CSongTable(CApplication * application) :
 {
     Q_CHECK_PTR(application);
 
+    setItemDelegate(new CRatingDelegate());
+    setEditTriggers(QAbstractItemView::SelectedClicked);
+
     m_model = new CSongTableModel(m_application, this);
     setModel(m_model);
 
@@ -51,7 +55,7 @@ CSongTable::CSongTable(CApplication * application) :
     setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
 
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    setEditTriggers(QAbstractItemView::NoEditTriggers);
+    //setEditTriggers(QAbstractItemView::NoEditTriggers);
     setAlternatingRowColors(true);
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setSelectionMode(QAbstractItemView::ExtendedSelection);

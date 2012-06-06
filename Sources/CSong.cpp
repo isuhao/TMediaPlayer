@@ -327,7 +327,7 @@ bool CSong::loadTags(bool readProperties)
             }
 
             m_fileSize = file.length();
-            
+
             // Propriétés du morceau
             if (readProperties)
             {
@@ -363,7 +363,7 @@ bool CSong::loadTags(bool readProperties)
             }
 
             m_fileSize = file.length();
-            
+
             // Propriétés du morceau
             if (readProperties)
             {
@@ -395,7 +395,7 @@ bool CSong::loadTags(bool readProperties)
             }
 
             m_fileSize = file.length();
-            
+
             // Propriétés du morceau
             if (readProperties)
             {
@@ -624,7 +624,7 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
     CSong * song = new CSong(application);
 
     song->m_isModified = true;
-    song->m_sound      = sound;
+    //song->m_sound      = sound;
     song->m_fileName   = fileName;
 
     // Recherche de la durée du morceau
@@ -667,8 +667,8 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
         }
     }
 
-    //sound->release();
-    
+    sound->release();
+
     // Chargement des métadonnées
     if (!song->loadTags(true))
     {
@@ -755,7 +755,7 @@ QList<CSong *> CSong::loadAllSongsFromDatabase(CApplication * application)
         song->m_duration        = query.value(numValue++).toInt();
         song->m_creation        = query.value(numValue++).toDateTime();
         song->m_modification    = query.value(numValue++).toDateTime();
-        
+
         song->m_infos.isEnabled       = query.value(numValue++).toBool();
         song->m_infos.title           = query.value(numValue++).toString();
         song->m_infos.titleSort       = query.value(numValue++).toString();
@@ -1404,13 +1404,14 @@ void CSong::stop(void)
     {
         m_channel->stop();
 
-        // Fermeture du fichier pour écrire les métadonnées
+        // Fermeture du fichier
+        m_sound->release();
+        m_sound = NULL;
+        m_channel = NULL;
+
+        // Écriture des métadonnées
         if (m_needWriteTags)
         {
-            m_sound->release();
-            m_sound = NULL;
-            m_channel = NULL;
-
             writeTags();
         }
     }
@@ -1667,10 +1668,10 @@ bool CSong::loadTags(TagLib::ID3v1::Tag * tags, TSongInfos& infos, QFile * logFi
 
     // Année
     infos.year = tags->year();
-    
+
     // Numéro de piste
     infos.trackNumber = tags->track();
-    
+
     // Genre
     str = tags->genre();
     if (!str.isNull())
@@ -1700,7 +1701,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
         return false;
 
     //infos = TSongInfos();
-    
+
     // Log
     QTextStream stream(logFile);
     stream << "========================================\n";
@@ -1812,6 +1813,15 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
         if (tagList.size() > 1)
             stream << "Erreur : plusieurs tags TSOA";
         infos.albumTitleSort = QString::fromUtf8(tagList.front()->toString().toCString(true));
+    }
+
+    // Artiste de l'album pour le tri
+    tagList = tags->frameList("TSO2");
+    if (!tagList.isEmpty())
+    {
+        if (tagList.size() > 1)
+            stream << "Erreur : plusieurs tags TSO2";
+        infos.albumArtistSort = QString::fromUtf8(tagList.front()->toString().toCString(true));
     }
 
     // Année
@@ -1965,7 +1975,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
         {
             infos.lyrics = QString::fromUtf8(frame->text().toCString(true));
             TagLib::ByteVector lng = frame->language();
-            
+
             if (lng.size() != 3)
             {
                 stream << "Erreur : langue du tag USLT invalide";
