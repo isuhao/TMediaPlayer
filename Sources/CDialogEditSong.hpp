@@ -8,6 +8,7 @@
 
 
 class CSongTable;
+class CApplication;
 
 
 /**
@@ -20,7 +21,7 @@ class CDialogEditSong : public QDialog
 
 public:
 
-    CDialogEditSong(CSongTableItem * songItem, CSongTable * songTable);
+    CDialogEditSong(CSongTableItem * songItem, CSongTable * songTable, CApplication * application);
     virtual ~CDialogEditSong();
 
 protected slots:

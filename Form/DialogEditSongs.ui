@@ -139,6 +139,12 @@
          <property name="editable">
           <bool>true</bool>
          </property>
+         <property name="maxVisibleItems">
+          <number>20</number>
+         </property>
+         <property name="insertPolicy">
+          <enum>QComboBox::NoInsert</enum>
+         </property>
         </widget>
        </item>
        <item row="8" column="3">
@@ -324,16 +330,6 @@
          </property>
          <property name="text">
           <string>Rating</string>
-         </property>
-         <property name="buddy">
-          <cstring>editRating</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="17" column="3" colspan="4">
-        <widget class="QSpinBox" name="editRating">
-         <property name="maximum">
-          <number>5</number>
          </property>
         </widget>
        </item>
@@ -940,7 +936,6 @@
   <tabstop>editComposer</tabstop>
   <tabstop>editComments</tabstop>
   <tabstop>editGenre</tabstop>
-  <tabstop>editRating</tabstop>
   <tabstop>editTitle_2</tabstop>
   <tabstop>editTitleSort</tabstop>
   <tabstop>editArtist_2</tabstop>

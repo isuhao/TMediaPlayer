@@ -811,6 +811,52 @@ int CApplication::getGenreId(const QString& name)
 
 
 /**
+ * Retourne la liste des genres classée par nom.
+ *
+ * \todo Compléter la liste des genres prédéfinis.
+ *
+ * \return Liste des genres, qui contient l'ensemble des genres utilisés
+ *         par les morceaux, en plus de certains genres prédéfinis.
+ */
+
+QStringList CApplication::getGenreList(void)
+{
+    QStringList genres;
+    
+    // Genres prédéfinis
+    genres.append("Classical");
+    genres.append("Country");
+    genres.append("Funk");
+    genres.append("Hard Rock");
+    genres.append("Heavy Metal");
+    genres.append("Jazz");
+    genres.append("Punk");
+    genres.append("Rap");
+    genres.append("Reggae");
+    genres.append("Rock");
+
+    // Liste des genres utilisés
+    QSqlQuery query(m_dataBase);
+    
+    if (query.exec("SELECT genre_name FROM genres"))
+    {
+        while (query.next())
+        {
+            genres.append(query.value(0).toString());
+        }
+    }
+    else
+    {
+        showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+    }
+
+    genres.removeDuplicates();
+    genres.sort();
+    return genres;
+}
+
+
+/**
  * Lance le processus d'authentication avec Last.fm.
  * Le navigateur doit s'ouvrir pour que l'utilisateur puisse se connecter.
  */
@@ -1529,12 +1575,8 @@ void CApplication::openDialogSongInfos(void)
 
     if (songItemList.size() > 1)
     {
-qDebug() << songItemList;
-
         CDialogEditSongs * dialog = new CDialogEditSongs(songItemList, this);
         dialog->show();
-
-        //...
 
         return;
     }
@@ -1544,10 +1586,8 @@ qDebug() << songItemList;
 
     if (songItem)
     {
-        CDialogEditSong * dialog = new CDialogEditSong(songItem, m_displayedSongTable);
+        CDialogEditSong * dialog = new CDialogEditSong(songItem, m_displayedSongTable, this);
         dialog->show();
-
-        //...
     }
 }
 

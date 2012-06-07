@@ -1,14 +1,27 @@
 
 #include "CDialogEditSongs.hpp"
+#include "CApplication.hpp"
+#include "CSpecialSpinBox.hpp"
 #include <QStandardItemModel>
 #include <QPushButton>
 
 
-CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget * parent) :
-    QDialog        (parent),
-    m_uiWidget     (new Ui::DialogEditSongs()),
-    m_songItemList (songItemList)
+/**
+ * Construit la boite de dialogue pour modifier les informations de plusieurs morceaux.
+ *
+ * \param songItemList Liste des morceaux à modifier.
+ * \param application  Pointeur sur l'application.
+ */
+
+CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, CApplication * application) :
+    QDialog             (application),
+    m_uiWidget          (new Ui::DialogEditSongs()),
+    m_editRating        (NULL),
+    m_differentComments (false),
+    m_differentLyrics   (false),
+    m_songItemList      (songItemList)
 {
+    Q_CHECK_PTR(application);
     Q_ASSERT(songItemList.size() > 1);
 
     setAttribute(Qt::WA_DeleteOnClose);
@@ -65,9 +78,19 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
     QString songSubTitle;        bool songSubTitleSim        = true;
     QString songGrouping;        bool songGroupingSim        = true;
     QString songComments;        bool songCommentsSim        = true;
+    QString songGenre;           bool songGenreSim           = true;
+    QString songLyrics;          bool songLyricsSim          = true;
 
-    int songYear; bool songYearSim = true;
-    //...
+    int songYear        = 0; bool songYearSim        = true;
+    int songTrackNumber = 0; bool songTrackNumberSim = true;
+    int songTrackCount  = 0; bool songTrackCountSim  = true;
+    int songDiscNumber  = 0; bool songDiscNumberSim  = true;
+    int songDiscCount   = 0; bool songDiscCountSim   = true;
+    int songBPM         = 0; bool songBPMSim         = true;
+    int songRating      = 0; bool songRatingSim      = true;
+
+    CSong::TLanguage songLanguage = CSong::LangUnknown;
+    bool songLanguageSim = true;
 
     bool first = true;
 
@@ -91,9 +114,18 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
             songSubTitle        = song->getSubTitle();
             songGrouping        = song->getGrouping();
             songComments        = song->getComments();
+            songGenre           = song->getGenre();
+            songLyrics          = song->getLyrics();
 
-            songYear = song->getYear();
-            //...
+            songYear        = song->getYear();
+            songTrackNumber = song->getTrackNumber();
+            songTrackCount  = song->getTrackCount();
+            songDiscNumber  = song->getDiscNumber();
+            songDiscCount   = song->getDiscCount();
+            songBPM         = song->getBPM();
+            songRating      = song->getRating();
+
+            songLanguage = song->getLanguage();
 
             first = false;
         }
@@ -112,14 +144,27 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
             if (songSubTitleSim        && song->getSubTitle()        != songSubTitle       ) { songSubTitleSim        = false; songSubTitle       .clear(); }
             if (songGroupingSim        && song->getGrouping()        != songGrouping       ) { songGroupingSim        = false; songGrouping       .clear(); }
             if (songCommentsSim        && song->getComments()        != songComments       ) { songCommentsSim        = false; songComments       .clear(); }
+            if (songGenreSim           && song->getGenre()           != songGenre          ) { songGenreSim           = false; songGenre          .clear(); }
+            if (songLyricsSim          && song->getLyrics()          != songLyrics         ) { songLyricsSim          = false; songLyrics         .clear(); }
 
-            if (songYearSim && song->getYear() != songYear ) { songYearSim = false; songYear = 0; }
-            //...
+            if (songYearSim        && song->getYear()        != songYear        ) { songYearSim        = false; songYear        = 0; }
+            if (songTrackNumberSim && song->getTrackNumber() != songTrackNumber ) { songTrackNumberSim = false; songTrackNumber = 0; }
+            if (songTrackCountSim  && song->getTrackCount()  != songTrackCount  ) { songTrackCountSim  = false; songTrackCount  = 0; }
+            if (songDiscNumberSim  && song->getDiscNumber()  != songDiscNumber  ) { songDiscNumberSim  = false; songDiscNumber  = 0; }
+            if (songDiscCountSim   && song->getDiscCount()   != songDiscCount   ) { songDiscCountSim   = false; songDiscCount   = 0; }
+            if (songBPMSim         && song->getBPM()         != songBPM         ) { songBPMSim         = false; songBPM         = 0; }
+            if (songRatingSim      && song->getRating()      != songRating      ) { songRatingSim      = false; songRating      = 0; }
+
+            if (songLanguageSim && song->getLanguage() != songLanguage)
+            {
+                songLanguageSim = false;
+                songLanguage = CSong::LangUnknown;
+            }
         }
     }
 
     const QString notSimText = tr("Different values");
-   
+
 
     // Titre
     m_uiWidget->editTitle->setText(songTitle);
@@ -278,14 +323,15 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
 
     if (!songCommentsSim)
     {
-        //m_uiWidget->editComments->setPlaceholderText(notSimText);
+        m_uiWidget->editComments->setText("<span style='color:grey;'>" + notSimText + "</span>");
+        m_differentComments = true;
     }
 
-    connect(m_uiWidget->editComments, SIGNAL(textEdited(const QString&)), this, SLOT(onCommentsChange(const QString&)));
+    connect(m_uiWidget->editComments, SIGNAL(textChanged()), this, SLOT(onCommentsChange()));
     connect(m_uiWidget->chComments, SIGNAL(clicked(bool)), this, SLOT(onCommentsChecked(bool)));
 
     // Année
-    m_uiWidget->editYear->setText(QString::number(songYear));
+    m_uiWidget->editYear->setText(songYear > 0 ? QString::number(songYear) : QString());
     m_uiWidget->editYear->setValidator(new QIntValidator(0, 9999, this));
 
     if (!songYearSim)
@@ -297,34 +343,126 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
     connect(m_uiWidget->chYear, SIGNAL(clicked(bool)), this, SLOT(onYearChecked(bool)));
 
     // Numéro de piste
+    m_uiWidget->editTrackNumber->setText(songTrackNumber > 0 ? QString::number(songTrackNumber) : QString());
     m_uiWidget->editTrackNumber->setValidator(new QIntValidator(0, 999, this));
+
+    if (!songTrackNumberSim)
+    {
+        m_uiWidget->editTrackNumber->setPlaceholderText(notSimText);
+    }
+
+    connect(m_uiWidget->editTrackNumber, SIGNAL(textEdited(const QString&)), this, SLOT(onTrackNumberChange(const QString&)));
+    connect(m_uiWidget->chTrackNumber, SIGNAL(clicked(bool)), this, SLOT(onTrackNumberChecked(bool)));
+    
+    // Nombre de pistes
+    m_uiWidget->editTrackCount->setText(songTrackCount > 0 ? QString::number(songTrackCount) : QString());
     m_uiWidget->editTrackCount->setValidator(new QIntValidator(0, 999, this));
 
+    if (!songTrackCountSim)
+    {
+        m_uiWidget->editTrackCount->setPlaceholderText(notSimText);
+    }
+
+    connect(m_uiWidget->editTrackCount, SIGNAL(textEdited(const QString&)), this, SLOT(onTrackCountChange(const QString&)));
+    connect(m_uiWidget->chTrackCount, SIGNAL(clicked(bool)), this, SLOT(onTrackCountChecked(bool)));
+
+    // Numéro de disque
+    m_uiWidget->editDiscNumber->setText(songDiscNumber > 0 ? QString::number(songDiscNumber) : QString());
     m_uiWidget->editDiscNumber->setValidator(new QIntValidator(0, 999, this));
+
+    if (!songDiscNumberSim)
+    {
+        m_uiWidget->editDiscNumber->setPlaceholderText(notSimText);
+    }
+
+    connect(m_uiWidget->editDiscNumber, SIGNAL(textEdited(const QString&)), this, SLOT(onDiscNumberChange(const QString&)));
+    connect(m_uiWidget->chDiscNumber, SIGNAL(clicked(bool)), this, SLOT(onDiscNumberChecked(bool)));
+    
+    // Nombre de disques
+    m_uiWidget->editDiscCount->setText(songDiscCount > 0 ? QString::number(songDiscCount) : QString());
     m_uiWidget->editDiscCount->setValidator(new QIntValidator(0, 999, this));
 
-/*
-    const int trackNumber = m_songItem->song->getTrackNumber();
-    m_uiWidget->editTrackNumber->setText(trackNumber > 0 ? QString::number(trackNumber) : "");
+    if (!songDiscCountSim)
+    {
+        m_uiWidget->editDiscCount->setPlaceholderText(notSimText);
+    }
 
-    const int trackTotal = m_songItem->song->getTrackTotal();
-    m_uiWidget->editTrackTotal->setText(trackTotal > 0 ? QString::number(trackTotal) : "");
+    connect(m_uiWidget->editDiscCount, SIGNAL(textEdited(const QString&)), this, SLOT(onDiscCountChange(const QString&)));
+    connect(m_uiWidget->chDiscCount, SIGNAL(clicked(bool)), this, SLOT(onDiscCountChecked(bool)));
 
-    const int discNumber = m_songItem->song->getDiscNumber();
-    m_uiWidget->editDiscNumber->setText(discNumber > 0 ? QString::number(discNumber) : "");
+    // BPM
+    m_uiWidget->editBPM->setText(songBPM > 0 ? QString::number(songBPM) : QString());
+    m_uiWidget->editBPM->setValidator(new QIntValidator(0, 999, this));
 
-    const int discTotal = m_songItem->song->getDiscTotal();
-    m_uiWidget->editDiscTotal->setText(discTotal > 0 ? QString::number(discTotal) : "");
+    if (!songBPMSim)
+    {
+        m_uiWidget->editBPM->setPlaceholderText(notSimText);
+    }
 
-    m_uiWidget->editComments->setText(m_songItem->song->getComments());
-    
-    //Genre...
-    m_uiWidget->editRating->setValue(m_songItem->song->getRating());
-*/
+    connect(m_uiWidget->editBPM, SIGNAL(textEdited(const QString&)), this, SLOT(onBPMChange(const QString&)));
+    connect(m_uiWidget->chBPM, SIGNAL(clicked(bool)), this, SLOT(onBPMChecked(bool)));
+
+    // Genre
+    QStringList genres = application->getGenreList();
+    m_uiWidget->editGenre->addItems(genres);
+    m_uiWidget->editGenre->lineEdit()->setText(songGenre);
+    m_uiWidget->editGenre->setCurrentIndex(m_uiWidget->editGenre->findText(songGenre));
+
+    if (!songGenreSim)
+    {
+        m_uiWidget->editGenre->lineEdit()->setPlaceholderText(notSimText);
+    }
+
+    connect(m_uiWidget->editGenre, SIGNAL(editTextChanged(const QString&)), this, SLOT(onGenreChange(const QString&)));
+    connect(m_uiWidget->editGenre, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onGenreChange(const QString&)));
+    connect(m_uiWidget->chGenre, SIGNAL(clicked(bool)), this, SLOT(onGenreChecked(bool)));
+
+    // Note
+    m_editRating = new CSpecialSpinBox();
+    m_editRating->setObjectName(QString::fromUtf8("editRating"));
+    m_editRating->setMaximum(5);
+    m_uiWidget->gridLayout->addWidget(m_editRating, 17, 3, 1, 4);
+
+    if (songRatingSim)
+    {
+        m_editRating->setValue(songRating);
+    }
+    else
+    {
+        m_editRating->setSpecialValue(10);
+        m_editRating->setPlaceholderText(notSimText);
+    }
+
+    connect(m_editRating, SIGNAL(valueChanged(int)), this, SLOT(onRatingChange(int)));
+    connect(m_uiWidget->chRating, SIGNAL(clicked(bool)), this, SLOT(onGenreChecked(bool)));
+
     // Paroles
-    // Langue
+    m_uiWidget->editLyrics->setText(songLyrics);
 
-    //...
+    if (!songLyricsSim)
+    {
+        m_uiWidget->editLyrics->setText("<span style='color:grey;'>" + notSimText + "</span>");
+        m_differentLyrics = true;
+    }
+
+    connect(m_uiWidget->editLyrics, SIGNAL(textChanged()), this, SLOT(onLyricsChange()));
+    connect(m_uiWidget->chLyrics, SIGNAL(clicked(bool)), this, SLOT(onLyricsChecked(bool)));
+
+    // Langue
+    if (songLanguageSim)
+    {
+        m_uiWidget->editLanguage->setCurrentIndex(songLanguage);
+    }
+    else
+    {
+        m_uiWidget->editLanguage->setCurrentIndex(-1);
+    }
+
+    connect(m_uiWidget->editLanguage, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onLanguageChange(const QString&)));
+    connect(m_uiWidget->chLanguage, SIGNAL(clicked(bool)), this, SLOT(onLanguageChecked(bool)));
+
+
+    connect(qApp, SIGNAL(focusChanged(QWidget *, QWidget *)), this, SLOT(onFocusChange(QWidget *, QWidget *)));
 
 
     // Connexions des signaux des boutons
@@ -385,7 +523,6 @@ void CDialogEditSongs::onTitleChange(const QString& title)
 void CDialogEditSongs::onTitleSortChange(const QString& title)
 {
     m_uiWidget->editTitleSort->setPlaceholderText(QString());
-
     m_uiWidget->chTitleSort->setChecked(true);
 }
 
@@ -403,7 +540,6 @@ void CDialogEditSongs::onArtistChange(const QString& artistName)
 void CDialogEditSongs::onArtistSortChange(const QString& artistName)
 {
     m_uiWidget->editArtistSort->setPlaceholderText(QString());
-
     m_uiWidget->chArtistSort->setChecked(true);
 }
 
@@ -421,8 +557,139 @@ void CDialogEditSongs::onAlbumChange(const QString& albumTitle)
 void CDialogEditSongs::onAlbumSortChange(const QString& albumTitle)
 {
     m_uiWidget->editAlbumSort->setPlaceholderText(QString());
-
     m_uiWidget->chAlbumSort->setChecked(true);
+}
+
+
+void CDialogEditSongs::onAlbumArtistChange(const QString& albumTitle)
+{
+    m_uiWidget->editAlbumArtist->setPlaceholderText(QString());
+    m_uiWidget->editAlbumArtist_2->setPlaceholderText(QString());
+
+    m_uiWidget->chAlbumArtist->setChecked(true);
+    m_uiWidget->chAlbumArtist_2->setChecked(true);
+}
+
+
+void CDialogEditSongs::onAlbumArtistSortChange(const QString& albumTitle)
+{
+    m_uiWidget->editAlbumArtistSort->setPlaceholderText(QString());
+    m_uiWidget->chAlbumArtistSort->setChecked(true);
+}
+
+
+void CDialogEditSongs::onComposerChange(const QString& composer)
+{
+    m_uiWidget->editComposer->setPlaceholderText(QString());
+    m_uiWidget->editComposer_2->setPlaceholderText(QString());
+
+    m_uiWidget->chComposer->setChecked(true);
+    m_uiWidget->chComposer_2->setChecked(true);
+}
+
+
+void CDialogEditSongs::onComposerSortChange(const QString& composer)
+{
+    m_uiWidget->editComposerSort->setPlaceholderText(QString());
+    m_uiWidget->chComposerSort->setChecked(true);
+}
+
+
+void CDialogEditSongs::onSubTitleChange(const QString& subTitle)
+{
+    m_uiWidget->editSubTitle->setPlaceholderText(QString());
+    m_uiWidget->chSubTitle->setChecked(true);
+}
+
+
+void CDialogEditSongs::onGroupingChange(const QString& grouping)
+{
+    m_uiWidget->editGrouping->setPlaceholderText(QString());
+    m_uiWidget->chGrouping->setChecked(true);
+}
+
+
+void CDialogEditSongs::onCommentsChange(void)
+{
+    if (m_differentComments)
+    {
+        m_differentComments = false;
+    }
+
+    m_uiWidget->chComments->setChecked(true);
+}
+
+
+void CDialogEditSongs::onYearChange(const QString& year)
+{
+    m_uiWidget->editYear->setPlaceholderText(QString());
+    m_uiWidget->chYear->setChecked(true);
+}
+
+
+void CDialogEditSongs::onTrackNumberChange(const QString& trackNumber)
+{
+    m_uiWidget->editTrackNumber->setPlaceholderText(QString());
+    m_uiWidget->chTrackNumber->setChecked(true);
+}
+
+
+void CDialogEditSongs::onTrackCountChange(const QString& trackCount)
+{
+    m_uiWidget->editTrackCount->setPlaceholderText(QString());
+    m_uiWidget->chTrackCount->setChecked(true);
+}
+
+
+void CDialogEditSongs::onDiscNumberChange(const QString& discNumber)
+{
+    m_uiWidget->editDiscNumber->setPlaceholderText(QString());
+    m_uiWidget->chDiscNumber->setChecked(true);
+}
+
+
+void CDialogEditSongs::onDiscCountChange(const QString& discCount)
+{
+    m_uiWidget->editDiscCount->setPlaceholderText(QString());
+    m_uiWidget->chDiscCount->setChecked(true);
+}
+
+
+void CDialogEditSongs::onBPMChange(const QString& bpm)
+{
+    m_uiWidget->editBPM->setPlaceholderText(QString());
+    m_uiWidget->chBPM->setChecked(true);
+}
+
+
+void CDialogEditSongs::onGenreChange(const QString& genre)
+{
+    m_uiWidget->editGenre->lineEdit()->setPlaceholderText(QString());
+    m_uiWidget->chGenre->setChecked(true);
+}
+
+
+void CDialogEditSongs::onRatingChange(int rating)
+{
+    m_editRating->setPlaceholderText(QString());
+    m_uiWidget->chRating->setChecked(true);
+}
+
+
+void CDialogEditSongs::onLyricsChange(void)
+{
+    if (m_differentLyrics)
+    {
+        m_differentLyrics = false;
+    }
+
+    m_uiWidget->chLyrics->setChecked(true);
+}
+
+
+void CDialogEditSongs::onLanguageChange(const QString& language)
+{
+    m_uiWidget->chLanguage->setChecked(true);
 }
 
 
@@ -462,4 +729,159 @@ void CDialogEditSongs::onAlbumChecked(bool checked)
 void CDialogEditSongs::onAlbumSortChecked(bool checked)
 {
     m_uiWidget->editAlbumSort->setPlaceholderText(QString());
+}
+
+
+void CDialogEditSongs::onAlbumArtistChecked(bool checked)
+{
+    m_uiWidget->editAlbumArtist->setPlaceholderText(QString());
+    m_uiWidget->editAlbumArtist_2->setPlaceholderText(QString());
+}
+
+
+void CDialogEditSongs::onAlbumArtistSortChecked(bool checked)
+{
+    m_uiWidget->editAlbumArtistSort->setPlaceholderText(QString());
+}
+
+
+void CDialogEditSongs::onComposerChecked(bool checked)
+{
+    m_uiWidget->editComposer->setPlaceholderText(QString());
+    m_uiWidget->editComposer_2->setPlaceholderText(QString());
+}
+
+
+void CDialogEditSongs::onComposerSortChecked(bool checked)
+{
+    m_uiWidget->editComposer->setPlaceholderText(QString());
+}
+
+
+void CDialogEditSongs::onSubTitleChecked(bool checked)
+{
+    m_uiWidget->editSubTitle->setPlaceholderText(QString());
+}
+
+
+void CDialogEditSongs::onGroupingChecked(bool checked)
+{
+    m_uiWidget->editGrouping->setPlaceholderText(QString());
+}
+
+
+void CDialogEditSongs::onCommentsChecked(bool checked)
+{
+    if (m_differentComments)
+    {
+        m_uiWidget->editComments->setText(QString());
+        m_differentComments = false;
+    }
+}
+
+
+void CDialogEditSongs::onYearChecked(bool checked)
+{
+    m_uiWidget->editYear->setPlaceholderText(QString());
+}
+
+
+void CDialogEditSongs::onTrackNumberChecked(bool checked)
+{
+    m_uiWidget->editTrackNumber->setPlaceholderText(QString());
+}
+
+
+void CDialogEditSongs::onTrackCountChecked(bool checked)
+{
+    m_uiWidget->editTrackCount->setPlaceholderText(QString());
+}
+
+
+void CDialogEditSongs::onDiscNumberChecked(bool checked)
+{
+    m_uiWidget->editDiscNumber->setPlaceholderText(QString());
+}
+
+
+void CDialogEditSongs::onDiscCountChecked(bool checked)
+{
+    m_uiWidget->editDiscCount->setPlaceholderText(QString());
+}
+
+
+void CDialogEditSongs::onBPMChecked(bool checked)
+{
+    m_uiWidget->editBPM->setPlaceholderText(QString());
+}
+
+
+void CDialogEditSongs::onGenreChecked(bool checked)
+{
+    m_uiWidget->editGenre->lineEdit()->setPlaceholderText(QString());
+}
+
+
+void CDialogEditSongs::onRatingChecked(bool checked)
+{
+    m_editRating->setPlaceholderText(QString());
+}
+
+
+void CDialogEditSongs::onLyricsChecked(bool checked)
+{
+    if (m_differentLyrics)
+    {
+        m_uiWidget->editLyrics->setText(QString());
+        m_differentLyrics = false;
+    }
+}
+
+
+void CDialogEditSongs::onLanguageChecked(bool checked)
+{
+    if (m_uiWidget->editLanguage->currentIndex() == -1)
+    {
+        m_uiWidget->editLanguage->setCurrentIndex(0);
+    }
+}
+
+
+void CDialogEditSongs::onFocusChange(QWidget * old, QWidget * now)
+{
+    if (m_differentComments)
+    {
+        if (now == m_uiWidget->editComments)
+        {
+            m_uiWidget->editComments->setText(QString());
+            m_differentComments = true;
+            m_uiWidget->chComments->setChecked(false);
+            return;
+        }
+        else if (old == m_uiWidget->editComments)
+        {
+            m_uiWidget->editComments->setText("<span style='color:grey;'>" + tr("Different values") + "</span>");
+            m_differentComments = true;
+            m_uiWidget->chComments->setChecked(false);
+            return;
+        }
+    }
+
+    if (m_differentLyrics)
+    {
+        if (now == m_uiWidget->editLyrics)
+        {
+            m_uiWidget->editLyrics->setText(QString());
+            m_differentLyrics = true;
+            m_uiWidget->chLyrics->setChecked(false);
+            return;
+        }
+        else if (old == m_uiWidget->editLyrics)
+        {
+            m_uiWidget->editLyrics->setText("<span style='color:grey;'>" + tr("Different values") + "</span>");
+            m_differentLyrics = true;
+            m_uiWidget->chLyrics->setChecked(false);
+            return;
+        }
+    }
 }

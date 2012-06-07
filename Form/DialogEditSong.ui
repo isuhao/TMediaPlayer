@@ -464,7 +464,7 @@
           <number>20</number>
          </property>
          <property name="insertPolicy">
-          <enum>QComboBox::InsertAlphabetically</enum>
+          <enum>QComboBox::NoInsert</enum>
          </property>
         </widget>
        </item>

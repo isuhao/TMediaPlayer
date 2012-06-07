@@ -1,6 +1,7 @@
 
 #include "CDialogEditSong.hpp"
 #include "CSongTable.hpp"
+#include "CApplication.hpp"
 #include <QStandardItemModel>
 
 #include <QtDebug>
@@ -9,18 +10,20 @@
 /**
  * Construit la boite de dialogue pour modifier les informations d'un morceau.
  *
- * \param songItem  Morceau à modifier.
- * \param songTable Liste contenant le morceau, pour pouvoir naviguer parmi les morceaux.
+ * \param songItem    Morceau à modifier.
+ * \param songTable   Liste contenant le morceau, pour pouvoir naviguer parmi les morceaux.
+ * \param application Pointeur sur l'application.
  */
 
-CDialogEditSong::CDialogEditSong(CSongTableItem * songItem, CSongTable * songTable) :
-    QDialog     (songTable),
+CDialogEditSong::CDialogEditSong(CSongTableItem * songItem, CSongTable * songTable, CApplication * application) :
+    QDialog     (application),
     m_uiWidget  (new Ui::DialogEditSong()),
     m_songTable (songTable),
     m_songItem  (songItem)
 {
     Q_CHECK_PTR(songItem);
     Q_CHECK_PTR(songTable);
+    Q_CHECK_PTR(application);
 
     setAttribute(Qt::WA_DeleteOnClose);
     m_uiWidget->setupUi(this);
@@ -31,15 +34,8 @@ CDialogEditSong::CDialogEditSong(CSongTableItem * songItem, CSongTable * songTab
 
 
     // Liste des genres
-    /// \todo Déplacer dans une fonction
-    /// \todo Gérer tous les genres de base
-    /// \todo Trier la liste
-    /// \todo Ajouter tous les genres utilisés dans la médiathèque
-    QStringList genreList;
-    genreList << tr("Classical");
-    genreList << tr("Reggae");
-    genreList << tr("Rock");
-    m_uiWidget->editGenre->addItems(genreList);
+    QStringList genres = application->getGenreList();
+    m_uiWidget->editGenre->addItems(genres);
 
 
     // Synchronisation des champs avec tri
@@ -246,29 +242,39 @@ void CDialogEditSong::updateInfos()
 
     m_uiWidget->editGrouping->setText(song->getGrouping());
     const int bpm = song->getBPM();
-    m_uiWidget->editBPM->setText(bpm > 0 ? QString::number(bpm) : "");
+    m_uiWidget->editBPM->setText(bpm > 0 ? QString::number(bpm) : QString());
 
     m_uiWidget->editComposer->setText(song->getComposer());
     m_uiWidget->editComposer_2->setText(song->getComposer());
     m_uiWidget->editComposerSort->setText(song->getComposerSort());
 
+    // Année
     const int year = song->getYear();
-    m_uiWidget->editYear->setText(year > 0 ? QString::number(year) : "");
+    m_uiWidget->editYear->setText(year > 0 ? QString::number(year) : QString());
+    m_uiWidget->editYear->setValidator(new QIntValidator(0, 9999, this));
 
+    // Numéro de piste
     const int trackNumber = song->getTrackNumber();
-    m_uiWidget->editTrackNumber->setText(trackNumber > 0 ? QString::number(trackNumber) : "");
+    m_uiWidget->editTrackNumber->setText(trackNumber > 0 ? QString::number(trackNumber) : QString());
+    m_uiWidget->editTrackNumber->setValidator(new QIntValidator(0, 999, this));
 
     const int trackCount = song->getTrackCount();
-    m_uiWidget->editTrackCount->setText(trackCount > 0 ? QString::number(trackCount) : "");
+    m_uiWidget->editTrackCount->setText(trackCount > 0 ? QString::number(trackCount) : QString());
+    m_uiWidget->editTrackCount->setValidator(new QIntValidator(0, 999, this));
 
+    // Numéro de disque
     const int discNumber = song->getDiscNumber();
-    m_uiWidget->editDiscNumber->setText(discNumber > 0 ? QString::number(discNumber) : "");
+    m_uiWidget->editDiscNumber->setText(discNumber > 0 ? QString::number(discNumber) : QString());
+    m_uiWidget->editDiscNumber->setValidator(new QIntValidator(0, 999, this));
 
     const int discCount = song->getDiscCount();
-    m_uiWidget->editDiscCount->setText(discCount > 0 ? QString::number(discCount) : "");
+    m_uiWidget->editDiscCount->setText(discCount > 0 ? QString::number(discCount) : QString());
+    m_uiWidget->editDiscCount->setValidator(new QIntValidator(0, 999, this));
 
+    // Commentaires
     m_uiWidget->editComments->setText(song->getComments());
 
+    // Genres
     int genreIndex = m_uiWidget->editGenre->findText(song->getGenre());
     if (genreIndex < 0)
     {
@@ -278,12 +284,13 @@ void CDialogEditSong::updateInfos()
 
     m_uiWidget->editGenre->setCurrentIndex(genreIndex);
 
+    // Note
     m_uiWidget->editRating->setValue(song->getRating());
 
-
     // Paroles
-
     m_uiWidget->editLyrics->setText(song->getLyrics());
+
+    // Langue
     m_uiWidget->editLanguage->setCurrentIndex(song->getLanguage());
 
 

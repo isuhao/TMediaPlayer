@@ -90,6 +90,7 @@ public:
     int getArtistId(const QString& name, const QString& nameSort);
     int getAlbumId(const QString& title, const QString& titleSort);
     int getGenreId(const QString& name);
+    QStringList getGenreList(void);
 
     inline FMOD::System * getSoundSystem(void) const
     {
