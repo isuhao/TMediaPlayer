@@ -123,12 +123,13 @@ bool CCriteria::matchCriteria(CSong * song) const
                 qWarning() << "CCriteria::matchCriteria() : la condition n'est pas gérée";
                 return false;
 
-            case CondStringEqual      : return (str == m_value1.toString());
-            case CondStringNotEqual   : return (str != m_value1.toString());
-            case CondStringContains   : return (str.contains(m_value1.toString()));
-            case CondStringNotContains: return (!str.contains(m_value1.toString()));
-            case CondStringStartsWith : return (str.startsWith(m_value1.toString()));
-            case CondStringEndsWith   : return (str.endsWith(m_value1.toString()));
+            case CondStringEqual      : return (str.toLower() == m_value1.toString());
+            case CondStringNotEqual   : return (str.toLower() != m_value1.toString());
+            case CondStringContains   : return (str.contains(m_value1.toString(), Qt::CaseInsensitive));
+            case CondStringNotContains: return (!str.contains(m_value1.toString(), Qt::CaseInsensitive));
+            case CondStringStartsWith : return (str.startsWith(m_value1.toString(), Qt::CaseInsensitive));
+            case CondStringEndsWith   : return (str.endsWith(m_value1.toString(), Qt::CaseInsensitive));
+            case CondStringRegex      : return (str.contains(QRegExp(m_value1.toString())));
         }
     }
     else if ((m_type >> 8) == ICriteria::TypeMaskNumber)
@@ -471,6 +472,7 @@ IWidgetCriteria * CCriteria::getWidget(void) const
             case CondStringNotContains: widget->m_uiWidget->listConditionString->setCurrentIndex(3); break;
             case CondStringStartsWith : widget->m_uiWidget->listConditionString->setCurrentIndex(4); break;
             case CondStringEndsWith   : widget->m_uiWidget->listConditionString->setCurrentIndex(5); break;
+            case CondStringRegex      : widget->m_uiWidget->listConditionString->setCurrentIndex(6); break;
         }
 
         widget->m_uiWidget->editValue1String->setText(m_value1.toString());

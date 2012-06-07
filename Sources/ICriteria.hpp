@@ -95,6 +95,7 @@ public:
         CondStringNotContains  = 0x0204,
         CondStringStartsWith   = 0x0205,
         CondStringEndsWith     = 0x0206,
+        CondStringRegex        = 0x0207,
 
         // Number
         CondMaskNumber         = 0x03,

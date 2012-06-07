@@ -53,6 +53,7 @@ CDialogEditDynamicList::CDialogEditDynamicList(CDynamicPlayList * playList, CApp
     }
 
     m_uiWidget->editName->setText(m_playList->getName());
+    resizeWindow();
 
     // Connexions des signaux des boutons
     QPushButton * btnSave = m_uiWidget->buttonBox->addButton(tr("Save"), QDialogButtonBox::AcceptRole);

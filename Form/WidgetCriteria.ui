@@ -176,6 +176,9 @@
       </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout">
+        <property name="spacing">
+         <number>0</number>
+        </property>
         <item>
          <widget class="QComboBox" name="listConditionString">
           <property name="minimumSize">
@@ -218,6 +221,11 @@
           <item>
            <property name="text">
             <string>ends with</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>regular expression</string>
            </property>
           </item>
          </widget>
@@ -385,6 +393,9 @@
       </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_2">
+        <property name="spacing">
+         <number>0</number>
+        </property>
         <item>
          <widget class="QLineEdit" name="editValue1String"/>
         </item>
@@ -466,6 +477,9 @@
       </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_3">
+        <property name="spacing">
+         <number>0</number>
+        </property>
         <item>
          <widget class="QSpinBox" name="editValue2Number">
           <property name="maximum">

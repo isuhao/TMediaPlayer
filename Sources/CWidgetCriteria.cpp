@@ -106,7 +106,7 @@ ICriteria * CWidgetCriteria::getCriteria(void)
     }
     else if ((m_type >> 8) == ICriteria::TypeMaskString)
     {
-        criteria->m_value1 = m_uiWidget->editValue1String->text();
+        criteria->m_value1 = m_uiWidget->editValue1String->text().toLower();
     }
     else if ((m_type >> 8) == ICriteria::TypeMaskNumber)
     {
@@ -268,6 +268,7 @@ void CWidgetCriteria::changeConditionString(int num)
         case  3: m_condition = ICriteria::CondStringNotContains; break;
         case  4: m_condition = ICriteria::CondStringStartsWith;  break;
         case  5: m_condition = ICriteria::CondStringEndsWith;    break;
+        case  6: m_condition = ICriteria::CondStringRegex;       break;
     }
 
     m_uiWidget->editValue1String->show();
