@@ -25,6 +25,20 @@ protected slots:
     void apply(void);
     void save(void);
 
+    void onTitleChange(const QString& title);
+    void onTitleSortChange(const QString& title);
+    void onArtistChange(const QString& artistName);
+    void onArtistSortChange(const QString& artistName);
+    void onAlbumChange(const QString& albumTitle);
+    void onAlbumSortChange(const QString& albumTitle);
+
+    void onTitleChecked(bool checked);
+    void onTitleSortChecked(bool checked);
+    void onArtistChecked(bool checked);
+    void onArtistSortChecked(bool checked);
+    void onAlbumChecked(bool checked);
+    void onAlbumSortChecked(bool checked);
+
 private:
     
     Ui::DialogEditSongs * m_uiWidget;

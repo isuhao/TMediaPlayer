@@ -4,8 +4,6 @@ TMediaPlayer.suo
 TMediaPlayer.vcxproj.user
 TMediaPlayer.opensdf
 
-library.sqlite
-
 Bin/
 Debug/
 GeneratedFiles/

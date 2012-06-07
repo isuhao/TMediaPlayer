@@ -364,7 +364,10 @@
           </size>
          </property>
          <property name="text">
-          <string/>
+          <string notr="true"/>
+         </property>
+         <property name="maxLength">
+          <number>3</number>
          </property>
         </widget>
        </item>
@@ -377,7 +380,10 @@
           </size>
          </property>
          <property name="text">
-          <string/>
+          <string notr="true"/>
+         </property>
+         <property name="maxLength">
+          <number>3</number>
          </property>
         </widget>
        </item>
@@ -471,7 +477,10 @@
           </size>
          </property>
          <property name="text">
-          <string/>
+          <string notr="true"/>
+         </property>
+         <property name="maxLength">
+          <number>3</number>
          </property>
         </widget>
        </item>
@@ -504,7 +513,10 @@
        <item row="4" column="1" colspan="3">
         <widget class="QLineEdit" name="editYear">
          <property name="text">
-          <string/>
+          <string notr="true"/>
+         </property>
+         <property name="maxLength">
+          <number>4</number>
          </property>
         </widget>
        </item>
@@ -517,7 +529,10 @@
           </size>
          </property>
          <property name="text">
-          <string/>
+          <string notr="true"/>
+         </property>
+         <property name="maxLength">
+          <number>3</number>
          </property>
         </widget>
        </item>

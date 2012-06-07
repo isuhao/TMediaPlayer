@@ -67,7 +67,6 @@ CApplication::CApplication(void) :
     m_isShuffle            (false),
     m_isMute               (false),
     m_volume               (50),
-    m_logMetadata          ("metadata.log"),
 
     // Last.fm
     m_lastFmEnableScrobble       (false),
@@ -78,8 +77,12 @@ CApplication::CApplication(void) :
     m_lastFmState                (NoScrobble)
 {
     // Chargement des paramètres de l'application
-    m_settings = new QSettings("Ted", "TMediaPlayer", this);
+    m_settings = new QSettings(this);
 
+    const QString applicationPath = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
+    QDir(applicationPath).mkpath(".");
+
+    m_logMetadata.setFileName(applicationPath + QDir::separator() + "metadata.log");
     if (!m_logMetadata.open(QIODevice::WriteOnly | QIODevice::Append))
     {
         qWarning() << "Erreur lors de l'ouverture du fichier metadata.log";
@@ -288,7 +291,7 @@ void CApplication::initWindow(void)
 
     m_dataBase.setHostName(dbHostName);
     //m_dataBase.setPort();
-    m_dataBase.setDatabaseName(dbBaseName);
+    m_dataBase.setDatabaseName(QDesktopServices::storageLocation(QDesktopServices::DataLocation) + QDir::separator() + dbBaseName);
     m_dataBase.setUserName(dbUserName);
     m_dataBase.setPassword(dbPassword);
 

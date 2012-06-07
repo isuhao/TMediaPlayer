@@ -131,6 +131,11 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
         m_uiWidget->editTitle_2->setPlaceholderText(notSimText);
     }
 
+    connect(m_uiWidget->editTitle, SIGNAL(textEdited(const QString&)), this, SLOT(onTitleChange(const QString&)));
+    connect(m_uiWidget->editTitle_2, SIGNAL(textEdited(const QString&)), this, SLOT(onTitleChange(const QString&)));
+    connect(m_uiWidget->chTitle, SIGNAL(clicked(bool)), this, SLOT(onTitleChecked(bool)));
+    connect(m_uiWidget->chTitle_2, SIGNAL(clicked(bool)), this, SLOT(onTitleChecked(bool)));
+
     // Titre pour le tri
     m_uiWidget->editTitleSort->setText(songTitleSort);
 
@@ -138,6 +143,9 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
     {
         m_uiWidget->editTitleSort->setPlaceholderText(notSimText);
     }
+
+    connect(m_uiWidget->editTitleSort, SIGNAL(textEdited(const QString&)), this, SLOT(onTitleSortChange(const QString&)));
+    connect(m_uiWidget->chTitleSort, SIGNAL(clicked(bool)), this, SLOT(onTitleSortChecked(bool)));
 
     // Artiste
     m_uiWidget->editArtist->setText(songArtist);
@@ -149,6 +157,11 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
         m_uiWidget->editArtist_2->setPlaceholderText(notSimText);
     }
 
+    connect(m_uiWidget->editArtist, SIGNAL(textEdited(const QString&)), this, SLOT(onArtistChange(const QString&)));
+    connect(m_uiWidget->editArtist_2, SIGNAL(textEdited(const QString&)), this, SLOT(onArtistChange(const QString&)));
+    connect(m_uiWidget->chArtist, SIGNAL(clicked(bool)), this, SLOT(onArtistChecked(bool)));
+    connect(m_uiWidget->chArtist_2, SIGNAL(clicked(bool)), this, SLOT(onArtistChecked(bool)));
+
     // Artiste pour le tri
     m_uiWidget->editArtistSort->setText(songArtistSort);
 
@@ -156,6 +169,9 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
     {
         m_uiWidget->editArtistSort->setPlaceholderText(notSimText);
     }
+
+    connect(m_uiWidget->editArtistSort, SIGNAL(textEdited(const QString&)), this, SLOT(onArtistSortChange(const QString&)));
+    connect(m_uiWidget->chArtistSort, SIGNAL(clicked(bool)), this, SLOT(onArtistSortChecked(bool)));
 
     // Album
     m_uiWidget->editAlbum->setText(songAlbum);
@@ -167,6 +183,11 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
         m_uiWidget->editAlbum_2->setPlaceholderText(notSimText);
     }
 
+    connect(m_uiWidget->editAlbum, SIGNAL(textEdited(const QString&)), this, SLOT(onAlbumChange(const QString&)));
+    connect(m_uiWidget->editAlbum_2, SIGNAL(textEdited(const QString&)), this, SLOT(onAlbumChange(const QString&)));
+    connect(m_uiWidget->chAlbum, SIGNAL(clicked(bool)), this, SLOT(onAlbumChecked(bool)));
+    connect(m_uiWidget->chAlbum_2, SIGNAL(clicked(bool)), this, SLOT(onAlbumChecked(bool)));
+
     // Album pour le tri
     m_uiWidget->editAlbumSort->setText(songAlbumSort);
 
@@ -174,6 +195,9 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
     {
         m_uiWidget->editAlbumSort->setPlaceholderText(notSimText);
     }
+
+    connect(m_uiWidget->editAlbumSort, SIGNAL(textEdited(const QString&)), this, SLOT(onAlbumSortChange(const QString&)));
+    connect(m_uiWidget->chAlbumSort, SIGNAL(clicked(bool)), this, SLOT(onAlbumSortChecked(bool)));
 
     // Artiste de l'album
     m_uiWidget->editAlbumArtist->setText(songAlbumArtist);
@@ -185,6 +209,11 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
         m_uiWidget->editAlbumArtist_2->setPlaceholderText(notSimText);
     }
 
+    connect(m_uiWidget->editAlbumArtist, SIGNAL(textEdited(const QString&)), this, SLOT(onAlbumArtistChange(const QString&)));
+    connect(m_uiWidget->editAlbumArtist_2, SIGNAL(textEdited(const QString&)), this, SLOT(onAlbumArtistChange(const QString&)));
+    connect(m_uiWidget->chAlbumArtist, SIGNAL(clicked(bool)), this, SLOT(onAlbumArtistChecked(bool)));
+    connect(m_uiWidget->chAlbumArtist_2, SIGNAL(clicked(bool)), this, SLOT(onAlbumArtistChecked(bool)));
+
     // Artiste de l'album pour le tri
     m_uiWidget->editAlbumArtistSort->setText(songAlbumArtistSort);
 
@@ -192,6 +221,9 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
     {
         m_uiWidget->editAlbumArtistSort->setPlaceholderText(notSimText);
     }
+
+    connect(m_uiWidget->editAlbumArtistSort, SIGNAL(textEdited(const QString&)), this, SLOT(onAlbumArtistSortChange(const QString&)));
+    connect(m_uiWidget->chAlbumArtistSort, SIGNAL(clicked(bool)), this, SLOT(onAlbumArtistSortChecked(bool)));
 
     // Compositeur
     m_uiWidget->editComposer->setText(songComposer);
@@ -203,6 +235,11 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
         m_uiWidget->editComposer_2->setPlaceholderText(notSimText);
     }
 
+    connect(m_uiWidget->editComposer, SIGNAL(textEdited(const QString&)), this, SLOT(onComposerChange(const QString&)));
+    connect(m_uiWidget->editComposer_2, SIGNAL(textEdited(const QString&)), this, SLOT(onComposerChange(const QString&)));
+    connect(m_uiWidget->chComposer, SIGNAL(clicked(bool)), this, SLOT(onComposerChecked(bool)));
+    connect(m_uiWidget->chComposer_2, SIGNAL(clicked(bool)), this, SLOT(onComposerChecked(bool)));
+
     // Compositeur pour le tri
     m_uiWidget->editComposerSort->setText(songComposerSort);
 
@@ -210,6 +247,9 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
     {
         m_uiWidget->editComposerSort->setPlaceholderText(notSimText);
     }
+
+    connect(m_uiWidget->editComposerSort, SIGNAL(textEdited(const QString&)), this, SLOT(onComposerSortChange(const QString&)));
+    connect(m_uiWidget->chComposerSort, SIGNAL(clicked(bool)), this, SLOT(onComposerSortChecked(bool)));
 
     // Sous-titre
     m_uiWidget->editSubTitle->setText(songSubTitle);
@@ -219,6 +259,9 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
         m_uiWidget->editSubTitle->setPlaceholderText(notSimText);
     }
 
+    connect(m_uiWidget->editSubTitle, SIGNAL(textEdited(const QString&)), this, SLOT(onSubTitleChange(const QString&)));
+    connect(m_uiWidget->chSubTitle, SIGNAL(clicked(bool)), this, SLOT(onSubTitleChecked(bool)));
+
     // Regroupement
     m_uiWidget->editGrouping->setText(songGrouping);
 
@@ -226,6 +269,9 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
     {
         m_uiWidget->editGrouping->setPlaceholderText(notSimText);
     }
+
+    connect(m_uiWidget->editGrouping, SIGNAL(textEdited(const QString&)), this, SLOT(onGroupingChange(const QString&)));
+    connect(m_uiWidget->chGrouping, SIGNAL(clicked(bool)), this, SLOT(onGroupingChecked(bool)));
 
     // Commentaires
     m_uiWidget->editComments->setText(songComments);
@@ -235,13 +281,27 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
         //m_uiWidget->editComments->setPlaceholderText(notSimText);
     }
 
+    connect(m_uiWidget->editComments, SIGNAL(textEdited(const QString&)), this, SLOT(onCommentsChange(const QString&)));
+    connect(m_uiWidget->chComments, SIGNAL(clicked(bool)), this, SLOT(onCommentsChecked(bool)));
+
     // Année
     m_uiWidget->editYear->setText(QString::number(songYear));
+    m_uiWidget->editYear->setValidator(new QIntValidator(0, 9999, this));
 
     if (!songYearSim)
     {
         m_uiWidget->editYear->setPlaceholderText(notSimText);
     }
+
+    connect(m_uiWidget->editYear, SIGNAL(textEdited(const QString&)), this, SLOT(onYearChange(const QString&)));
+    connect(m_uiWidget->chYear, SIGNAL(clicked(bool)), this, SLOT(onYearChecked(bool)));
+
+    // Numéro de piste
+    m_uiWidget->editTrackNumber->setValidator(new QIntValidator(0, 999, this));
+    m_uiWidget->editTrackCount->setValidator(new QIntValidator(0, 999, this));
+
+    m_uiWidget->editDiscNumber->setValidator(new QIntValidator(0, 999, this));
+    m_uiWidget->editDiscCount->setValidator(new QIntValidator(0, 999, this));
 
 /*
     const int trackNumber = m_songItem->song->getTrackNumber();
@@ -278,6 +338,10 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, QWidget
 }
 
 
+/**
+ * Détruit la boite de dialogue.
+ */
+
 CDialogEditSongs::~CDialogEditSongs()
 {
     delete m_uiWidget;
@@ -292,6 +356,7 @@ CDialogEditSongs::~CDialogEditSongs()
 
 void CDialogEditSongs::apply(void)
 {
+    //TODO: mettre à jour les données cochées
     //...
 }
 
@@ -304,4 +369,97 @@ void CDialogEditSongs::save(void)
 {
     apply();
     close();
+}
+
+
+void CDialogEditSongs::onTitleChange(const QString& title)
+{
+    m_uiWidget->editTitle->setPlaceholderText(QString());
+    m_uiWidget->editTitle_2->setPlaceholderText(QString());
+
+    m_uiWidget->chTitle->setChecked(true);
+    m_uiWidget->chTitle_2->setChecked(true);
+}
+
+
+void CDialogEditSongs::onTitleSortChange(const QString& title)
+{
+    m_uiWidget->editTitleSort->setPlaceholderText(QString());
+
+    m_uiWidget->chTitleSort->setChecked(true);
+}
+
+
+void CDialogEditSongs::onArtistChange(const QString& artistName)
+{
+    m_uiWidget->editArtist->setPlaceholderText(QString());
+    m_uiWidget->editArtist_2->setPlaceholderText(QString());
+
+    m_uiWidget->chArtist->setChecked(true);
+    m_uiWidget->chArtist_2->setChecked(true);
+}
+
+
+void CDialogEditSongs::onArtistSortChange(const QString& artistName)
+{
+    m_uiWidget->editArtistSort->setPlaceholderText(QString());
+
+    m_uiWidget->chArtistSort->setChecked(true);
+}
+
+
+void CDialogEditSongs::onAlbumChange(const QString& albumTitle)
+{
+    m_uiWidget->editAlbum->setPlaceholderText(QString());
+    m_uiWidget->editAlbum_2->setPlaceholderText(QString());
+
+    m_uiWidget->chAlbum->setChecked(true);
+    m_uiWidget->chAlbum_2->setChecked(true);
+}
+
+
+void CDialogEditSongs::onAlbumSortChange(const QString& albumTitle)
+{
+    m_uiWidget->editAlbumSort->setPlaceholderText(QString());
+
+    m_uiWidget->chAlbumSort->setChecked(true);
+}
+
+
+void CDialogEditSongs::onTitleChecked(bool checked)
+{
+    m_uiWidget->editTitle->setPlaceholderText(QString());
+    m_uiWidget->editTitle_2->setPlaceholderText(QString());
+}
+
+
+void CDialogEditSongs::onTitleSortChecked(bool checked)
+{
+    m_uiWidget->editTitleSort->setPlaceholderText(QString());
+}
+
+
+void CDialogEditSongs::onArtistChecked(bool checked)
+{
+    m_uiWidget->editArtist->setPlaceholderText(QString());
+    m_uiWidget->editArtist_2->setPlaceholderText(QString());
+}
+
+
+void CDialogEditSongs::onArtistSortChecked(bool checked)
+{
+    m_uiWidget->editArtistSort->setPlaceholderText(QString());
+}
+
+
+void CDialogEditSongs::onAlbumChecked(bool checked)
+{
+    m_uiWidget->editAlbum->setPlaceholderText(QString());
+    m_uiWidget->editAlbum_2->setPlaceholderText(QString());
+}
+
+
+void CDialogEditSongs::onAlbumSortChecked(bool checked)
+{
+    m_uiWidget->editAlbumSort->setPlaceholderText(QString());
 }

@@ -44,6 +44,10 @@
   - Pouvoir préciser le schéma du nom ("%ARTIST%/%ALBUM%/{{%DISC%-}%TRACK% }%TITLE%")
   - Ajouter une option pour tronquer les noms (40 caractères pour iTunes).
 
+- Barre d'état :
+  - Pouvoir afficher des notifications (Last.fm, ajout de fichiers, etc.).
+  - Afficher les informations sur les morceaux sélectionnés.
+
 --------------------------------------------------
   Importance faible
 --------------------------------------------------

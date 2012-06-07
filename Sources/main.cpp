@@ -12,6 +12,9 @@ int main(int argc, char * argv[])
     QApplication app(argc, argv);
     app.setWindowIcon(QPixmap(":/icons/TMediaPlayer"));
 
+    QCoreApplication::setOrganizationName("Ted");
+    QCoreApplication::setApplicationName("TMediaPlayer");
+
     // Internationnalisation
     QString locale = QLocale::system().name();
     QTranslator translator;

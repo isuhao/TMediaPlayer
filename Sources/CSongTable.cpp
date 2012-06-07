@@ -1246,7 +1246,7 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
             menu->addSeparator();
         }
 
-        menu->addAction(tr("Informations"), m_application, SLOT(openDialogSongInfos()));
+        menu->addAction(tr("Informations..."), m_application, SLOT(openDialogSongInfos()));
         if (!severalSongs) menu->addAction(tr("Edit metadata"), m_application, SLOT(openDialogEditMetadata()));
         if (!severalSongs) menu->addAction(tr("Show in explorer"), m_application, SLOT(openSongInExplorer()));
         menu->addSeparator();
