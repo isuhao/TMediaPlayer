@@ -12,6 +12,13 @@
 #include <QtDebug>
 
 
+/**
+ * Construit une liste de lecture statique.
+ *
+ * \param application Pointeur sur l'application.
+ * \param name        Nom de la liste de lecture.
+ */
+
 CStaticPlayList::CStaticPlayList(CApplication * application, const QString& name) :
     CPlayList              (application, name),
     m_id                   (-1),
@@ -25,9 +32,13 @@ CStaticPlayList::CStaticPlayList(CApplication * application, const QString& name
 }
 
 
+/**
+ * Détruit la liste de lecture statique.
+ */
+
 CStaticPlayList::~CStaticPlayList()
 {
-    qDebug() << "CStaticPlayList::~CStaticPlayList()";
+    //qDebug() << "CStaticPlayList::~CStaticPlayList()";
 }
 
 

@@ -66,12 +66,13 @@ public:
 
 
     explicit CSong(CApplication * application);
-    explicit CSong(const QString& fileName, CApplication * application);
+    CSong(const QString& fileName, CApplication * application);
     virtual ~CSong();
 
     void loadFromDatabase(void);
     bool loadTags(bool readProperties = false);
     bool writeTags(void);
+    bool moveFile(void);
 
     inline int getId(void) const;
     inline QString getFileName(void) const;
@@ -119,7 +120,6 @@ public:
     static int getId(CApplication * application, const QString& fileName);
     static CSong * loadFromFile(CApplication * application, const QString& fileName);
     static QList<CSong *> loadAllSongsFromDatabase(CApplication * application);
-
     static QString getFileSize(int fileSize);
 
 public slots:
@@ -235,7 +235,7 @@ private:
     QString m_fileName;           ///< Fichier audio.
     int m_fileSize;               ///< Taille du fichier en octets.
     int m_bitRate;                ///< Débit binaire.
-    int m_sampleRate;             ///< Taux d'échantillonnage.
+    int m_sampleRate;             ///< Fréquence d'échantillonnage.
     TFormat m_format;             ///< Format de fichier.
     int m_numChannels;            ///< Nombre de canaux.
     int m_duration;               ///< Durée du morceau en millisecondes.
@@ -441,9 +441,9 @@ inline int CSong::getBitRate(void) const
 
 
 /**
- * Retourne le taux d'échantillonnage du morceau.
+ * Retourne la fréquence d'échantillonnage du morceau.
  *
- * \return Taux d'échantillonnage.
+ * \return Fréquence d'échantillonnage.
  */
 
 inline int CSong::getSampleRate(void) const

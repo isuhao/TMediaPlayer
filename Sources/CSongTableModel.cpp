@@ -187,12 +187,15 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
                 if (m_canDrop)
                 {
                     return m_data.at(index.row())->getPosition();
+                    //return index.row();
                 }
 
                 break;
             }
 
-            case CSongTable::ColTitle      : return m_data.at(index.row())->getSong()->getTitle() + QString(" (%1)").arg(m_dataShuffle.indexOf(m_data.at(index.row())));
+          //case CSongTable::ColShufflePos : return m_dataShuffle.indexOf(m_data.at(index.row()));
+
+            case CSongTable::ColTitle      : return m_data.at(index.row())->getSong()->getTitle();
             case CSongTable::ColArtist     : return m_data.at(index.row())->getSong()->getArtistName();
             case CSongTable::ColAlbum      : return m_data.at(index.row())->getSong()->getAlbumTitle();
             case CSongTable::ColAlbumArtist: return m_data.at(index.row())->getSong()->getAlbumArtist();
@@ -258,7 +261,7 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
 
             // Débit
             case CSongTable::ColBitRate:
-                return QString("%1 kbit/s").arg(m_data.at(index.row())->getSong()->getBitRate());
+                return tr("%1 kbit/s").arg(m_data.at(index.row())->getSong()->getBitRate());
 
             // Format
             case CSongTable::ColFormat:
@@ -274,9 +277,9 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
                 return durationTime.toString("m:ss"); /// \todo Stocker le format dans les paramètres.
             }
 
-            // Taux d'échantillonnage
+            // Fréquence d'échantillonnage
             case CSongTable::ColSampleRate:
-                return QString("%1 Hz").arg(m_data.at(index.row())->getSong()->getSampleRate());
+                return tr("%1 Hz").arg(m_data.at(index.row())->getSong()->getSampleRate());
 
             // Date de création
             case CSongTable::ColCreationDate:

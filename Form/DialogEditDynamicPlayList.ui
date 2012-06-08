@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>DialogEditDynamicPlayList</class>
  <widget class="QDialog" name="DialogEditDynamicPlayList">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>100</height>
+   </rect>
+  </property>
   <property name="minimumSize">
    <size>
     <width>400</width>

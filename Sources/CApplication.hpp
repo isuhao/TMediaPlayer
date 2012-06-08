@@ -116,22 +116,18 @@ public slots:
 
     void selectAll(void);
     void selectNone(void);
-
     void play(void);
     void stop(void);
     void pause(void);
     void togglePlay(void);
-
     void previousSong(void);
     void nextSong(void);
     void playSong(CSongTableItem * songItem);
-
     void setRepeat(bool repeat);
     void setShuffle(bool shuffle);
     void setMute(bool mute);
     void toggleMute(void);
     void setVolume(int volume);
-
     void setPosition(int position);
 
     //void openPlayList(CPlayList * playList);
@@ -158,17 +154,16 @@ public slots:
 
     void selectCurrentSong(void);
     void selectSong(CSongTable * songTable, CSongTableItem * songItem);
-
     void openSongInExplorer(void);
-
     void editSelectedPlayList(void);
     void removeSelectedPlayList(void);
+    void onSongModified(void);
 
 signals:
 
     // Signaux sur les morceaux
     void songAdded(CSong * song);             ///< Signal émis lorsqu'un morceau est ajouté à la médiathèque.
-  //void songModified(CSong * song);          ///< Signal émis lorsque les informations d'un morceau sont modifiées.
+    void songModified(CSong * song);          ///< Signal émis lorsque les informations d'un morceau sont modifiées.
     void songRemoved(CSong * song);           ///< Signal émis lorsqu'un morceau est retiré de la médiathèque.
   //void songMoved(CSong * song);             ///< Signal émis lorsque le fichier d'un morceau est déplacé.
     void songPlayStart(CSong * song);         ///< Signal émis lorsque la lecture d'un morceau démarre.

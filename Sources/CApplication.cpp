@@ -158,7 +158,7 @@ CApplication::CApplication(void) :
 
 CApplication::~CApplication()
 {
-    qDebug() << "CApplication::~CApplication()";
+    //qDebug() << "CApplication::~CApplication()";
 
     if (m_timer)
     {
@@ -1749,6 +1749,22 @@ void CApplication::selectSong(CSongTable * songTable, CSongTableItem * songItem)
 
 
 /**
+ * Méthode appelée lorsqu'un morceau est modifié.
+ * Le signal songModified est émis.
+ */
+
+void CApplication::onSongModified(void)
+{
+    CSong * song = qobject_cast<CSong *>(sender());
+
+    if (song)
+    {
+        emit songModified(song);
+    }
+}
+
+
+/**
  * Liste les morceaux contenus dans un répertoire.
  *
  * \param pathName Nom du répertoire à parcourir récursivement.
@@ -2127,7 +2143,7 @@ void CApplication::update(void)
 
 void CApplication::selectPlayListFromTreeView(const QModelIndex& index)
 {
-    qDebug() << "Changement de liste...";
+    //qDebug() << "Changement de liste...";
 
     CSongTable * songTable = m_playListView->getSongTable(index);
     displaySongTable(songTable);

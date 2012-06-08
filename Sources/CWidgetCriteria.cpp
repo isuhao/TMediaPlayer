@@ -68,7 +68,7 @@ CWidgetCriteria::CWidgetCriteria(CApplication * application, QWidget * parent) :
 
 CWidgetCriteria::~CWidgetCriteria()
 {
-    qDebug() << "CWidgetCriteria::~CWidgetCriteria()";
+    //qDebug() << "CWidgetCriteria::~CWidgetCriteria()";
     delete m_uiWidget;
 }
 
@@ -177,36 +177,56 @@ void CWidgetCriteria::changeType(int num)
         m_uiWidget->listConditionDate->hide();
         m_uiWidget->listConditionBoolean->show();
 
+        m_uiWidget->listConditionBoolean->setCurrentIndex(0);
         changeConditionBoolean(0);
     }
     else if ((m_type >> 8) == ICriteria::TypeMaskString)
     {
-        m_uiWidget->listConditionString->show();
         m_uiWidget->listConditionNumber->hide();
         m_uiWidget->listConditionTime->hide();
         m_uiWidget->listConditionDate->hide();
         m_uiWidget->listConditionBoolean->hide();
-
+        m_uiWidget->listConditionString->show();
+        
+        m_uiWidget->listConditionString->setCurrentIndex(0);
         changeConditionString(0);
     }
     else if ((m_type >> 8) == ICriteria::TypeMaskNumber)
     {
         m_uiWidget->listConditionString->hide();
-        m_uiWidget->listConditionNumber->show();
         m_uiWidget->listConditionTime->hide();
         m_uiWidget->listConditionDate->hide();
         m_uiWidget->listConditionBoolean->hide();
+        m_uiWidget->listConditionNumber->show();
 
+        if (m_type == ICriteria::TypeBitRate)
+        {
+            m_uiWidget->editValue1Number->setSuffix(tr(" kbit/s"));
+            m_uiWidget->editValue2Number->setSuffix(tr(" kbit/s"));
+        }
+        else if (m_type == ICriteria::TypeSampleRate)
+        {
+            m_uiWidget->editValue1Number->setSuffix(tr(" Hz"));
+            m_uiWidget->editValue2Number->setSuffix(tr(" Hz"));
+        }
+        else
+        {
+            m_uiWidget->editValue1Number->setSuffix(QString());
+            m_uiWidget->editValue2Number->setSuffix(QString());
+        }
+        
+        m_uiWidget->listConditionNumber->setCurrentIndex(0);
         changeConditionNumber(0);
     }
     else if ((m_type >> 8) == ICriteria::TypeMaskTime)
     {
         m_uiWidget->listConditionString->hide();
         m_uiWidget->listConditionNumber->hide();
-        m_uiWidget->listConditionTime->show();
         m_uiWidget->listConditionDate->hide();
         m_uiWidget->listConditionBoolean->hide();
-
+        m_uiWidget->listConditionTime->show();
+        
+        m_uiWidget->listConditionTime->setCurrentIndex(0);
         changeConditionTime(0);
     }
     else if ((m_type >> 8) == ICriteria::TypeMaskDate)
@@ -214,9 +234,13 @@ void CWidgetCriteria::changeType(int num)
         m_uiWidget->listConditionString->hide();
         m_uiWidget->listConditionNumber->hide();
         m_uiWidget->listConditionTime->hide();
-        m_uiWidget->listConditionDate->show();
         m_uiWidget->listConditionBoolean->hide();
+        m_uiWidget->listConditionDate->show();
 
+        m_uiWidget->editValue1Number->setSuffix(QString());
+        m_uiWidget->editValue2Number->setSuffix(QString());
+        
+        m_uiWidget->listConditionDate->setCurrentIndex(0);
         changeConditionDate(0);
     }
 }
@@ -271,7 +295,6 @@ void CWidgetCriteria::changeConditionString(int num)
         case  6: m_condition = ICriteria::CondStringRegex;       break;
     }
 
-    m_uiWidget->editValue1String->show();
     m_uiWidget->editValue1Number->hide();
     m_uiWidget->editValue1Time->hide();
     m_uiWidget->editValue1Date->hide();
@@ -280,6 +303,7 @@ void CWidgetCriteria::changeConditionString(int num)
     m_uiWidget->editValue2Date->hide();
     m_uiWidget->listDateUnit->hide();
     m_uiWidget->lblBetween->hide();
+    m_uiWidget->editValue1String->show();
 
     m_uiWidget->listFormat->hide();
     m_uiWidget->listLanguage->hide();
@@ -305,14 +329,14 @@ void CWidgetCriteria::changeConditionNumber(int num)
     }
 
     m_uiWidget->editValue1String->hide();
-    m_uiWidget->editValue1Number->show();
     m_uiWidget->editValue1Time->hide();
     m_uiWidget->editValue1Date->hide();
-    m_uiWidget->editValue2Number->setVisible(m_condition == ICriteria::CondNumberBetween);
     m_uiWidget->editValue2Time->hide();
     m_uiWidget->editValue2Date->hide();
     m_uiWidget->listDateUnit->hide();
+    m_uiWidget->editValue2Number->setVisible(m_condition == ICriteria::CondNumberBetween);
     m_uiWidget->lblBetween->setVisible(m_condition == ICriteria::CondNumberBetween);
+    m_uiWidget->editValue1Number->show();
 
     m_uiWidget->listFormat->hide();
     m_uiWidget->listLanguage->hide();
@@ -339,13 +363,13 @@ void CWidgetCriteria::changeConditionTime(int num)
 
     m_uiWidget->editValue1String->hide();
     m_uiWidget->editValue1Number->hide();
-    m_uiWidget->editValue1Time->show();
     m_uiWidget->editValue1Date->hide();
     m_uiWidget->editValue2Number->hide();
-    m_uiWidget->editValue2Time->setVisible(m_condition == ICriteria::CondTimeBetween);
     m_uiWidget->editValue2Date->hide();
     m_uiWidget->listDateUnit->hide();
+    m_uiWidget->editValue2Time->setVisible(m_condition == ICriteria::CondTimeBetween);
     m_uiWidget->lblBetween->setVisible(m_condition == ICriteria::CondTimeBetween);
+    m_uiWidget->editValue1Time->show();
 
     m_uiWidget->listFormat->hide();
     m_uiWidget->listLanguage->hide();
@@ -373,11 +397,11 @@ void CWidgetCriteria::changeConditionDate(int num)
     }
 
     m_uiWidget->editValue1String->hide();
-    m_uiWidget->editValue1Number->setVisible(m_condition == ICriteria::CondDateInLast || m_condition == ICriteria::CondDateNotInLast);
     m_uiWidget->editValue1Time->hide();
-    m_uiWidget->editValue1Date->setVisible(m_condition != ICriteria::CondDateInLast && m_condition != ICriteria::CondDateNotInLast);
     m_uiWidget->editValue2Number->hide();
     m_uiWidget->editValue2Time->hide();
+    m_uiWidget->editValue1Number->setVisible(m_condition == ICriteria::CondDateInLast || m_condition == ICriteria::CondDateNotInLast);
+    m_uiWidget->editValue1Date->setVisible(m_condition != ICriteria::CondDateInLast && m_condition != ICriteria::CondDateNotInLast);
     m_uiWidget->editValue2Date->setVisible(m_condition == ICriteria::CondDateBetween);
     m_uiWidget->listDateUnit->setVisible(m_condition == ICriteria::CondDateInLast || m_condition == ICriteria::CondDateNotInLast);
     m_uiWidget->lblBetween->setVisible(m_condition == ICriteria::CondDateBetween);

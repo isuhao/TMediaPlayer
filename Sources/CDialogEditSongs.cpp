@@ -502,15 +502,10 @@ CDialogEditSongs::~CDialogEditSongs()
 
 /**
  * Enregistre les modifications effectuées sur les morceaux.
- *
- * \todo Implémentation.
  */
 
 void CDialogEditSongs::apply(void)
 {
-    //TODO: mettre à jour les données cochées
-    //...
-
     // Modification de chaque morceau
     for (QList<CSongTableItem *>::const_iterator it = m_songItemList.begin(); it != m_songItemList.end(); ++it)
     {

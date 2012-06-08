@@ -62,7 +62,7 @@ public:
         ColBitRate          = 15, ///< Débit.
         ColFormat           = 16, ///< Format.
         ColDuration         = 17, ///< Durée.
-        ColSampleRate       = 18, ///< Taux d'échantillonnage.
+        ColSampleRate       = 18, ///< Fréquence d'échantillonnage.
         ColCreationDate     = 19, ///< Date de création.
         ColModificationDate = 20, ///< Date de modification.
         ColChannels         = 21, ///< Canaux.

@@ -214,7 +214,7 @@ void CDialogEditSong::updateInfos()
     m_uiWidget->valueBitRate->setText(tr("%1 kbit/s").arg(song->getBitRate()));
     m_uiWidget->valueFormat->setText(CSong::getFormatName(song->getFormat()));
     m_uiWidget->valueChannels->setText(QString::number(song->getNumChannels()));
-    m_uiWidget->valueSampleRate->setText(tr("%1 kHz").arg(song->getSampleRate()));
+    m_uiWidget->valueSampleRate->setText(tr("%1 Hz").arg(song->getSampleRate()));
 
     m_uiWidget->valueLastPlayTime->setText(song->getLastPlay().toString());
     m_uiWidget->valuePlayCount->setText(QString::number(song->getNumPlays()));

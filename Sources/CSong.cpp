@@ -4,6 +4,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QMessageBox>
+#include <QSettings>
 #include <QFile>
 
 // TagLib
@@ -505,8 +506,72 @@ return false; // Lecture seule...
     }
 
     updateFileInfos();
+    emit songModified();
 
     m_needWriteTags = false;
+    return true;
+}
+
+
+/// \todo Implémentation.
+bool CSong::moveFile(void)
+{
+    QString title;
+    QString artistName;
+    QString albumTitle;
+    QString trackNumber;
+    QString discNumber;
+    QString year;
+
+    if (m_infos.title.isEmpty())
+        title = m_application->getSettings()->value("Preferences/PathFormatTitleDefault", tr("Unknown title")).toString();
+    else
+        title = m_application->getSettings()->value("Preferences/PathFormatTitle", "%1").toString().arg(m_infos.title);
+
+    if (m_infos.artistName.isEmpty())
+        artistName = m_application->getSettings()->value("Preferences/PathFormatArtistDefault", tr("Unknown artist")).toString();
+    else
+        artistName = m_application->getSettings()->value("Preferences/PathFormatArtist", "%1").toString().arg(m_infos.artistName);
+
+    if (m_infos.albumTitle.isEmpty())
+        albumTitle = m_application->getSettings()->value("Preferences/PathFormatAlbumDefault", tr("Unknown album")).toString();
+    else
+        albumTitle = m_application->getSettings()->value("Preferences/PathFormatAlbum", "%1").toString().arg(m_infos.albumTitle);
+
+    if (m_infos.trackNumber == 0)
+        trackNumber = m_application->getSettings()->value("Preferences/PathFormatTrackDefault", tr("")).toString();
+    else
+        trackNumber = m_application->getSettings()->value("Preferences/PathFormatTrack", "%1 ").toString().arg(m_infos.trackNumber);
+
+    if (m_infos.discNumber == 0)
+        discNumber = m_application->getSettings()->value("Preferences/PathFormatDiscDefault", tr("")).toString();
+    else
+        discNumber = m_application->getSettings()->value("Preferences/PathFormatDisc", "%1-").toString().arg(m_infos.discNumber);
+
+    if (m_infos.year == 0)
+        year = m_application->getSettings()->value("Preferences/PathFormatYearDefault", tr("")).toString();
+    else
+        year = m_application->getSettings()->value("Preferences/PathFormatYear", " (%1)").toString().arg(m_infos.year);
+
+    QString pathName = m_application->getSettings()->value("Preferences/PathFormat", "%a/%b/%d%n%t").toString();
+    pathName.replace("%t", title);
+    pathName.replace("%a", artistName);
+    pathName.replace("%b", albumTitle);
+    pathName.replace("%n", trackNumber);
+    pathName.replace("%d", discNumber);
+    pathName.replace("%y", year);
+
+    pathName = m_application->getSettings()->value("Preferences/Path", "%USERNAME%/Music/").toString() + pathName;
+
+    switch (m_format)
+    {
+        case FormatMP3:  pathName += ".mp3"; break;
+        case FormatOGG:  pathName += ".ogg"; break;
+        case FormatFLAC: pathName += ".flac"; break;
+    }
+
+    //...
+
     return true;
 }
 
@@ -664,6 +729,7 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
     }
 
     song->updateDatabase();
+    connect(song, SIGNAL(songModified()), application, SLOT(onSongModified()));
     return song;
 }
 
@@ -788,6 +854,7 @@ QList<CSong *> CSong::loadAllSongsFromDatabase(CApplication * application)
             }
         }
 
+        connect(song, SIGNAL(songModified()), application, SLOT(onSongModified()));
         songList.append(song);
     }
 

@@ -35,7 +35,7 @@ CWidgetMultiCriterion::CWidgetMultiCriterion(CApplication * application, QWidget
 
 CWidgetMultiCriterion::~CWidgetMultiCriterion()
 {
-    qDebug() << "CWidgetMultiCriterion::~CWidgetMultiCriterion()";
+    //qDebug() << "CWidgetMultiCriterion::~CWidgetMultiCriterion()";
     delete m_uiWidget;
 }
 
