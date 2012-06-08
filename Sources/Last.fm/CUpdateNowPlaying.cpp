@@ -59,7 +59,7 @@ void CUpdateNowPlaying::replyFinished(QNetworkReply * reply)
 {
     Q_CHECK_PTR(reply);
 
-    qDebug() << "CUpdateNowPlaying::replyFinished()";
+    //qDebug() << "CUpdateNowPlaying::replyFinished()";
 
     if (reply->error() != QNetworkReply::NoError)
     {

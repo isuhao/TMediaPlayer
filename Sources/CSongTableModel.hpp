@@ -423,6 +423,36 @@ private:
         return cmpSongLanguageAsc(song2, song1);
     }
 
+    static inline bool cmpSongLyricistAsc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return (song1->getSong()->getLyricist() < song2->getSong()->getLyricist());
+    }
+
+    static inline bool cmpSongLyricistDesc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return cmpSongLyricistAsc(song2, song1);
+    }
+
+    static inline bool cmpSongGroupingAsc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return (song1->getSong()->getGrouping() < song2->getSong()->getGrouping());
+    }
+
+    static inline bool cmpSongGroupingDesc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return cmpSongGroupingAsc(song2, song1);
+    }
+
+    static inline bool cmpSongSubTitleAsc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return (song1->getSong()->getSubTitle() < song2->getSong()->getSubTitle());
+    }
+
+    static inline bool cmpSongSubTitleDesc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return cmpSongSubTitleAsc(song2, song1);
+    }
+
 
     CApplication * m_application;
     bool m_canDrop;

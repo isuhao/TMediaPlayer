@@ -10,8 +10,6 @@
   - Ajouter des unités pour certains types (taille du fichier, débit, etc.).
   - Vérifier qu'il n'y a pas de boucles pour le critère "Liste de lecture".
 
-- Écrire les métadonnées d'un morceau : mettre à jour la taille du fichier.
-
 - Boite de dialogue Edit Songs. (à terminer)
 
 - Import depuis iTunes / SongBird.
@@ -73,7 +71,6 @@
   - Afficher l'illustration principale dans l'onglet Résumé.
 
 - Nouvelles options et métadonnées :
-  - Ajouter la métadonnée "Parolier".
   - Ajouter l'option "Volume du morceau".
   - Ajouter l'option "Fait partie d'une compilation".
 

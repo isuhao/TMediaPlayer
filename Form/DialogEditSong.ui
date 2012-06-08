@@ -22,7 +22,48 @@
   <property name="windowTitle">
    <string>Song infos</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_8">
+  <layout class="QGridLayout" name="layoutDialog">
+   <item row="1" column="2">
+    <widget class="QDialogButtonBox" name="buttonBox"/>
+   </item>
+   <item row="1" column="0">
+    <widget class="QPushButton" name="btnPrevious">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>25</width>
+       <height>25</height>
+      </size>
+     </property>
+     <property name="text">
+      <string notr="true">◄</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QPushButton" name="btnNext">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>25</width>
+       <height>25</height>
+      </size>
+     </property>
+     <property name="text">
+      <string notr="true">►</string>
+     </property>
+    </widget>
+   </item>
    <item row="0" column="0" colspan="3">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
@@ -32,7 +73,7 @@
       <attribute name="title">
        <string>Summary</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <layout class="QVBoxLayout" name="layoutSummary">
        <item>
         <layout class="QGridLayout" name="gridLayout_2">
          <item row="0" column="1">
@@ -122,7 +163,7 @@
         </widget>
        </item>
        <item>
-        <layout class="QGridLayout" name="gridLayout_4" columnstretch="0,1" columnminimumwidth="150,0">
+        <layout class="QGridLayout" name="layoutSummary2" columnstretch="0,1" columnminimumwidth="150,0">
          <item row="3" column="1">
           <widget class="QLabel" name="valueModification">
            <property name="whatsThis">
@@ -138,6 +179,13 @@
          </item>
          <item row="6" column="0">
           <widget class="QLabel" name="lblFormat">
+           <property name="font">
+            <font>
+             <pointsize>7</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
             <string>Format:</string>
            </property>
@@ -145,6 +193,13 @@
          </item>
          <item row="2" column="0">
           <widget class="QLabel" name="lblCreation">
+           <property name="font">
+            <font>
+             <pointsize>7</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
             <string>Creation date:</string>
            </property>
@@ -172,6 +227,13 @@
          </item>
          <item row="0" column="0">
           <widget class="QLabel" name="lblFileName">
+           <property name="font">
+            <font>
+             <pointsize>7</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
             <string>File name:</string>
            </property>
@@ -179,6 +241,13 @@
          </item>
          <item row="1" column="0">
           <widget class="QLabel" name="lblFileSize">
+           <property name="font">
+            <font>
+             <pointsize>7</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
             <string>File size:</string>
            </property>
@@ -186,6 +255,13 @@
          </item>
          <item row="3" column="0">
           <widget class="QLabel" name="lblModification">
+           <property name="font">
+            <font>
+             <pointsize>7</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
             <string>Modification date:</string>
            </property>
@@ -213,6 +289,13 @@
          </item>
          <item row="8" column="0">
           <widget class="QLabel" name="lblSampleRate">
+           <property name="font">
+            <font>
+             <pointsize>7</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
             <string>Sample rate:</string>
            </property>
@@ -230,6 +313,13 @@
          </item>
          <item row="7" column="0">
           <widget class="QLabel" name="lblChannels">
+           <property name="font">
+            <font>
+             <pointsize>7</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
             <string>Channels:</string>
            </property>
@@ -244,6 +334,13 @@
          </item>
          <item row="5" column="0">
           <widget class="QLabel" name="lblBitRate">
+           <property name="font">
+            <font>
+             <pointsize>7</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
             <string>Bit rate:</string>
            </property>
@@ -251,6 +348,13 @@
          </item>
          <item row="11" column="0">
           <widget class="QLabel" name="lblPlayCount">
+           <property name="font">
+            <font>
+             <pointsize>7</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
             <string>Play count:</string>
            </property>
@@ -258,6 +362,13 @@
          </item>
          <item row="10" column="0">
           <widget class="QLabel" name="lblLastPlayTime">
+           <property name="font">
+            <font>
+             <pointsize>7</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
             <string>Last play time:</string>
            </property>
@@ -337,7 +448,7 @@
       <attribute name="title">
        <string>Informations</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout">
+      <layout class="QGridLayout" name="layoutInfos">
        <property name="verticalSpacing">
         <number>3</number>
        </property>
@@ -721,7 +832,7 @@
       <attribute name="title">
        <string>Sorting</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_6">
+      <layout class="QGridLayout" name="layoutSorting">
        <property name="verticalSpacing">
         <number>3</number>
        </property>
@@ -940,16 +1051,115 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tabOptions">
+      <attribute name="title">
+       <string>Options</string>
+      </attribute>
+      <layout class="QGridLayout" name="layoutOptions">
+       <item row="0" column="0">
+        <widget class="QLabel" name="lblVolume">
+         <property name="font">
+          <font>
+           <pointsize>7</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Volume adjustment:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QSpinBox" name="editVolume">
+         <property name="suffix">
+          <string>%</string>
+         </property>
+         <property name="minimum">
+          <number>-100</number>
+         </property>
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="singleStep">
+          <number>10</number>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="2">
+        <widget class="QCheckBox" name="editEnabled">
+         <property name="font">
+          <font>
+           <pointsize>7</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Song is enabled.</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="2">
+        <widget class="QCheckBox" name="editSkipShuffle">
+         <property name="font">
+          <font>
+           <pointsize>7</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Skip when shuffling.</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0" colspan="2">
+        <widget class="QCheckBox" name="editCompilation">
+         <property name="font">
+          <font>
+           <pointsize>7</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Part of a compilation.</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <spacer name="verticalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>10</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="tabLyrics">
       <attribute name="title">
        <string>Lyrics</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_5">
-       <item row="1" column="0" colspan="2">
+      <layout class="QGridLayout" name="layoutLyrics">
+       <item row="0" column="0" colspan="2">
         <widget class="QTextEdit" name="editLyrics"/>
        </item>
-       <item row="0" column="0">
+       <item row="1" column="0">
         <widget class="QLabel" name="lblLanguage">
+         <property name="font">
+          <font>
+           <pointsize>7</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
          <property name="text">
           <string>Language:</string>
          </property>
@@ -958,8 +1168,25 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
+       <item row="1" column="1">
         <widget class="QComboBox" name="editLanguage"/>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="lblLyricist">
+         <property name="font">
+          <font>
+           <pointsize>7</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Author:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLineEdit" name="editLyricist"/>
        </item>
       </layout>
      </widget>
@@ -967,7 +1194,7 @@
       <attribute name="title">
        <string>Covers</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_7">
+      <layout class="QGridLayout" name="layoutCovers">
        <item row="0" column="0">
         <widget class="QFrame" name="frameCovers">
          <property name="frameShape">
@@ -980,57 +1207,16 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tabPlayings">
+     <widget class="QWidget" name="tabPlays">
       <attribute name="title">
-       <string>Playings</string>
+       <string>Plays</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_9">
+      <layout class="QGridLayout" name="layoutPlays">
        <item row="0" column="0">
-        <widget class="QListView" name="listPlayings"/>
+        <widget class="QListView" name="listPlays"/>
        </item>
       </layout>
      </widget>
-    </widget>
-   </item>
-   <item row="1" column="2">
-    <widget class="QDialogButtonBox" name="buttonBox"/>
-   </item>
-   <item row="1" column="0">
-    <widget class="QPushButton" name="btnPrevious">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>25</width>
-       <height>25</height>
-      </size>
-     </property>
-     <property name="text">
-      <string notr="true">◄</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QPushButton" name="btnNext">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>25</width>
-       <height>25</height>
-      </size>
-     </property>
-     <property name="text">
-      <string notr="true">►</string>
-     </property>
     </widget>
    </item>
   </layout>
@@ -1060,7 +1246,6 @@
   <tabstop>editComposer_2</tabstop>
   <tabstop>editComposerSort</tabstop>
   <tabstop>editLanguage</tabstop>
-  <tabstop>editLyrics</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources/>

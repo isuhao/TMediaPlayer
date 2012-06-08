@@ -34,7 +34,7 @@ CDynamicPlayList::CDynamicPlayList(CApplication * application, const QString& na
 
 CDynamicPlayList::~CDynamicPlayList()
 {
-    qDebug() << "CDynamicPlayList::~CDynamicPlayList()";
+    //qDebug() << "CDynamicPlayList::~CDynamicPlayList()";
 }
 
 
@@ -69,7 +69,7 @@ CWidgetMultiCriterion * CDynamicPlayList::getWidget(void) const
 
 void CDynamicPlayList::update(void)
 {
-    qDebug() << "CDynamicPlayList::update()";
+    //qDebug() << "CDynamicPlayList::update()";
     QList<CSong *> songs = m_mainCriteria->getSongs(m_application->getLibrary()->getSongs());
 
     m_model->setSongs(songs);
@@ -352,6 +352,40 @@ void CDynamicPlayList::loadFromDatabase(void)
             multiCriterion->addChild(it.value());
         }
     }
+
+
+    // Conditions de mise à jour
+    ICriteria::TUpdateConditions conditions = m_mainCriteria->getUpdateConditions();
+
+    if (conditions.testFlag(ICriteria::UpdateOnSongAdded))
+    {
+        connect(m_application, SIGNAL(songAdded(CSong *)), this, SLOT(update()), Qt::UniqueConnection);
+    }
+
+    if (conditions.testFlag(ICriteria::UpdateOnSongRemoved))
+    {
+        connect(m_application, SIGNAL(songRemoved(CSong *)), this, SLOT(update()), Qt::UniqueConnection);
+    }
+
+    if (conditions.testFlag(ICriteria::UpdateOnSongModified))
+    {
+        connect(m_application, SIGNAL(songModified(CSong *)), this, SLOT(update()), Qt::UniqueConnection);
+    }
+
+    if (conditions.testFlag(ICriteria::UpdateOnSongMoved))
+    {
+        connect(m_application, SIGNAL(songMoved(CSong *)), this, SLOT(update()), Qt::UniqueConnection);
+    }
+
+    if (conditions.testFlag(ICriteria::UpdateOnSongPlayEnd))
+    {
+        connect(m_application, SIGNAL(songPlayEnd(CSong *)), this, SLOT(update()), Qt::UniqueConnection);
+    }
+
+    if (conditions.testFlag(ICriteria::UpdateOnListModified))
+    {
+        connect(m_application, SIGNAL(listModified()), this, SLOT(update()), Qt::UniqueConnection);
+    }
 }
 
 
@@ -371,6 +405,8 @@ void CDynamicPlayList::setCriteria(ICriteria * criteria)
     criteria->setPlayList(this);
     m_mainCriteria = criteria;
     m_isDynamicListModified = true;
+
+    //+++
 
     emit listModified();
 }

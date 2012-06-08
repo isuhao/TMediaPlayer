@@ -31,6 +31,7 @@ class CSong : public QObject
 
     friend class CApplication;
     friend class CDialogEditSong;
+    friend class CDialogEditSongs;
 
 public:
 
@@ -70,7 +71,7 @@ public:
 
     void loadFromDatabase(void);
     bool loadTags(bool readProperties = false);
-    bool writeTags(void) const;
+    bool writeTags(void);
 
     inline int getId(void) const;
     inline QString getFileName(void) const;
@@ -107,6 +108,7 @@ public:
     inline int getBPM(void) const;
     inline QString getLyrics(void) const;
     inline TLanguage getLanguage(void) const;
+    inline QString getLyricist(void) const;
 
     int getPosition(void) const;
     bool isEnded(void) const;
@@ -146,12 +148,13 @@ public slots:
     void setBPM(int bpm);
     void setLyrics(const QString& lyrics);
     void setLanguage(TLanguage language);
+    void setLyricist(const QString& lyricist);
 
 protected:
 
     void startPlay(void);
-    void startMultiModification(void);
     void updateDatabase(void);
+    void updateFileInfos(void);
 
 protected slots:
 
@@ -201,6 +204,7 @@ private:
         int bpm;                 ///< Battements par minute.
         QString lyrics;          ///< Paroles.
         TLanguage language;      ///< Langue des paroles.
+        QString lyricist;        ///< Auteur des paroles.
 
         TSongInfos(void);
     };
@@ -225,8 +229,6 @@ private:
     CApplication * m_application; ///< Pointeur sur l'application.
     FMOD::Sound * m_sound;        ///< Pointeur sur la structure de FMOD.
     FMOD::Channel * m_channel;    ///< Canal audio.
-    bool m_multiModification;     ///< Indique que plusieurs modifications vont être effectuées, le
-                                  ///< signal songModified() est alors émis dans la méthode updateDatabase.
     bool m_isModified;            ///< Indique si les données ont été modifiées.
     mutable bool m_needWriteTags; ///< Indique si les métadonnées doivent être mises à jour.
     int m_id;                     ///< Identifiant du morceau en base de données.
@@ -299,6 +301,13 @@ inline CSong::TLanguage CSong::getLanguageFromInteger(int language)
 }
 
 
+/**
+ * Retourne le nom correspondant à une langue.
+ *
+ * \param language Langue.
+ * \param Nom de la langue.
+ */
+
 inline QString CSong::getLanguageName(CSong::TLanguage language)
 {
     switch (language)
@@ -312,6 +321,12 @@ inline QString CSong::getLanguageName(CSong::TLanguage language)
     }
 }
 
+
+/**
+ * Retourne la liste des langues.
+ *
+ * \return Liste des langues.
+ */
 
 inline QStringList CSong::getLanguageList(void)
 {
@@ -437,6 +452,12 @@ inline int CSong::getSampleRate(void) const
 }
 
 
+/**
+ * Retourne le format du morceau.
+ *
+ * \return Format du morceau.
+ */
+
 inline CSong::TFormat CSong::getFormat(void) const
 {
     return m_format;
@@ -490,6 +511,12 @@ inline QDateTime CSong::getModificationDate(void) const
     return m_modification;
 }
 
+
+/**
+ * Indique si le morceau est coché ou pas.
+ *
+ * \return Booléen.
+ */
 
 inline bool CSong::isEnabled(void) const
 {
@@ -649,6 +676,12 @@ inline QString CSong::getLyrics(void) const
 inline CSong::TLanguage CSong::getLanguage(void) const
 {
     return m_infos.language;
+}
+
+
+inline QString CSong::getLyricist(void) const
+{
+    return m_infos.lyricist;
 }
 
 

@@ -63,7 +63,7 @@ void CScrobble::replyFinished(QNetworkReply * reply)
 {
     Q_CHECK_PTR(reply);
 
-    qDebug() << "CScrobble::replyFinished()";
+    //qDebug() << "CScrobble::replyFinished()";
 
     if (reply->error() != QNetworkReply::NoError)
     {

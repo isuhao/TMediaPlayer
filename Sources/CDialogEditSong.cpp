@@ -127,10 +127,9 @@ void CDialogEditSong::nextSong(void)
 
 void CDialogEditSong::apply(void)
 {
-    qDebug() << "CDialogEditSong::apply";
+    //qDebug() << "CDialogEditSong::apply";
 
     CSong * song = m_songItem->getSong();
-    song->startMultiModification();
 
     song->setTitle(m_uiWidget->editTitle->text());
     song->setSubTitle(m_uiWidget->editSubTitle->text());
@@ -157,6 +156,7 @@ void CDialogEditSong::apply(void)
     song->setRating(m_uiWidget->editRating->value());
     song->setLyrics(m_uiWidget->editLyrics->toPlainText());
     song->setLanguage(CSong::getLanguageFromInteger(m_uiWidget->editLanguage->currentIndex()));
+    song->setLyricist(m_uiWidget->editLyricist->text());
 
     song->writeTags();
     song->updateDatabase();
@@ -289,15 +289,18 @@ void CDialogEditSong::updateInfos()
 
     // Paroles
     m_uiWidget->editLyrics->setText(song->getLyrics());
-
-    // Langue
     m_uiWidget->editLanguage->setCurrentIndex(song->getLanguage());
+    m_uiWidget->editLyricist->setText(song->getLyricist());
+
+
+    // Options
+    //...
 
 
     // Lectures
 
     QStandardItemModel * model = new QStandardItemModel();
-    m_uiWidget->listPlayings->setModel(model);
+    m_uiWidget->listPlays->setModel(model);
 
     for (QList<QDateTime>::const_iterator it = song->m_plays.begin(); it != song->m_plays.end(); ++it)
     {

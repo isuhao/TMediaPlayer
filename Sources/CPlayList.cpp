@@ -22,7 +22,7 @@ CPlayList::CPlayList(CApplication * application, const QString& name) :
 
 CPlayList::~CPlayList()
 {
-    qDebug() << "CPlayList::~CPlayList()";
+    //qDebug() << "CPlayList::~CPlayList()";
 }
 
 

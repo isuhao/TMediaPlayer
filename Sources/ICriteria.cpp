@@ -37,7 +37,7 @@ ICriteria::ICriteria(CApplication * application, QObject * parent) :
 
 ICriteria::~ICriteria()
 {
-    qDebug() << "ICriteria::~ICriteria()";
+    //qDebug() << "ICriteria::~ICriteria()";
 }
 
 

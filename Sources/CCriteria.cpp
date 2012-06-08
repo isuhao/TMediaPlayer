@@ -26,7 +26,7 @@ CCriteria::CCriteria(CApplication * application, QObject * parent) :
 
 CCriteria::~CCriteria()
 {
-    qDebug() << "CCriteria::~CCriteria()";
+    //qDebug() << "CCriteria::~CCriteria()";
 }
 
 

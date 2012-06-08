@@ -69,8 +69,11 @@ public:
         ColFileSize         = 22, ///< Taille du fichier.
         ColLyrics           = 23, ///< Paroles.
         ColLanguage         = 24, ///< Langue.
+        ColLyricist         = 25, ///< Parolier.
+        ColGrouping         = 26, ///< Regroupement.
+        ColSubTitle         = 27, ///< Sous-titre.
 
-        ColNumber           = 25  ///< Nombre de types de colonnes.
+        ColNumber           = 28  ///< Nombre de types de colonnes.
     };
 
     static inline TColumnType getColumnTypeFromInteger(int column);
@@ -207,6 +210,9 @@ inline CSongTable::TColumnType CSongTable::getColumnTypeFromInteger(int column)
         case 22: return ColFileSize        ;
         case 23: return ColLyrics          ;
         case 24: return ColLanguage        ;
+        case 25: return ColLyricist        ;
+        case 26: return ColGrouping        ;
+        case 27: return ColSubTitle        ;
     }
 }
 
@@ -241,6 +247,9 @@ inline QString CSongTable::getColumnTypeName(CSongTable::TColumnType column)
         case ColFileSize        : return tr("File size"        );
         case ColLyrics          : return tr("Lyrics"           );
         case ColLanguage        : return tr("Language"         );
+        case ColLyricist        : return tr("Lyricist"         );
+        case ColGrouping        : return tr("Grouping"         );
+        case ColSubTitle        : return tr("Subtitle"         );
     }
 }
 

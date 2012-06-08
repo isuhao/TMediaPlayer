@@ -86,7 +86,7 @@ CSongTable::CSongTable(CApplication * application) :
 
 CSongTable::~CSongTable()
 {
-    qDebug() << "CSongTable::~CSongTable()";
+    //qDebug() << "CSongTable::~CSongTable()";
 }
 
 
@@ -690,7 +690,7 @@ void CSongTable::sort(void)
 
 void CSongTable::goToSongTable(void)
 {
-    qDebug() << "CSongTable::goToSongTable";
+    //qDebug() << "CSongTable::goToSongTable";
 
     QAction * action = qobject_cast<QAction *>(sender());
 
@@ -708,7 +708,7 @@ void CSongTable::goToSongTable(void)
 
 void CSongTable::addToPlayList(void)
 {
-    qDebug() << "CSongTable::addToPlayList";
+    //qDebug() << "CSongTable::addToPlayList";
 
     QAction * action = qobject_cast<QAction *>(sender());
 
@@ -752,7 +752,7 @@ void CSongTable::addToPlayList(void)
 
 void CSongTable::removeSongsFromLibrary(void)
 {
-    qDebug() << "CSongTable::removeSongsFromLibrary()";
+    //qDebug() << "CSongTable::removeSongsFromLibrary()";
 
     // Liste des morceaux sélectionnés
     QModelIndexList indexList = selectionModel()->selectedRows();
@@ -797,7 +797,7 @@ void CSongTable::removeSongsFromLibrary(void)
 
 void CSongTable::checkSelection(void)
 {
-    qDebug() << "CSongTable::checkSelection()";
+    //qDebug() << "CSongTable::checkSelection()";
 
     // Liste des morceaux sélectionnés
     QModelIndexList indexList = selectionModel()->selectedRows();
@@ -820,7 +820,7 @@ void CSongTable::checkSelection(void)
 
 void CSongTable::uncheckSelection(void)
 {
-    qDebug() << "CSongTable::uncheckSelection()";
+    //qDebug() << "CSongTable::uncheckSelection()";
 
     // Liste des morceaux sélectionnés
     QModelIndexList indexList = selectionModel()->selectedRows();
@@ -1222,7 +1222,7 @@ void CSongTable::playSelectedSong(void)
 
 void CSongTable::openCustomMenuProject(const QPoint& point)
 {
-    qDebug() << "CSongTable::openCustomMenuProject()";
+    //qDebug() << "CSongTable::openCustomMenuProject()";
 
     QModelIndex index = indexAt(point);
     m_selectedItem = NULL;

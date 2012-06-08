@@ -31,7 +31,7 @@ void CAuthentication::replyFinished(QNetworkReply * reply)
 {
     Q_CHECK_PTR(reply);
 
-    qDebug() << "CAuthentication::replyFinished()";
+    //qDebug() << "CAuthentication::replyFinished()";
 
     Q_CHECK_PTR(reply);
 

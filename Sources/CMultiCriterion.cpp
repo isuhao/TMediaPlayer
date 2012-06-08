@@ -26,7 +26,7 @@ CMultiCriterion::CMultiCriterion(CApplication * application, QObject * parent) :
 
 CMultiCriterion::~CMultiCriterion()
 {
-    qDebug() << "CMultiCriterion::~CMultiCriterion()";
+    //qDebug() << "CMultiCriterion::~CMultiCriterion()";
 }
 
 
@@ -179,7 +179,7 @@ void CMultiCriterion::setPlayList(CDynamicPlayList * playList)
 void CMultiCriterion::insertIntoDatabase(CApplication * application)
 {
     Q_CHECK_PTR(application);
-    qDebug() << "CMultiCriterion::insertIntoDatabase()";
+    //qDebug() << "CMultiCriterion::insertIntoDatabase()";
 
     // Insertion du critère
     ICriteria::insertIntoDatabase(application);

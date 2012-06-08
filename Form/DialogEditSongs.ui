@@ -22,7 +22,7 @@
   <property name="windowTitle">
    <string>Songs infos</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_2">
+  <layout class="QGridLayout" name="layoutDialog">
    <item row="0" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
@@ -32,7 +32,7 @@
       <attribute name="title">
        <string>Informations</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout">
+      <layout class="QGridLayout" name="layoutInfos">
        <property name="verticalSpacing">
         <number>3</number>
        </property>
@@ -449,7 +449,7 @@
           </widget>
          </item>
          <item row="0" column="3">
-          <widget class="QLabel" name="label">
+          <widget class="QLabel" name="lblSubTitle">
            <property name="font">
             <font>
              <pointsize>7</pointsize>
@@ -518,7 +518,7 @@
       <attribute name="title">
        <string>Sorting</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_6">
+      <layout class="QGridLayout" name="layoutSorting">
        <property name="verticalSpacing">
         <number>3</number>
        </property>
@@ -867,28 +867,142 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tabLyrics">
+     <widget class="QWidget" name="tabOptions">
       <attribute name="title">
-       <string>Lyrics</string>
+       <string>Options</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_5">
-       <item row="1" column="1" colspan="2">
-        <widget class="QTextEdit" name="editLyrics"/>
+      <layout class="QGridLayout" name="layoutOptions">
+       <item row="0" column="0">
+        <widget class="QCheckBox" name="chVolume">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLabel" name="lblLanguage">
-         <property name="text">
-          <string>Language:</string>
+        <widget class="QLabel" name="lblVolume">
+         <property name="font">
+          <font>
+           <pointsize>7</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
          </property>
-         <property name="buddy">
-          <cstring>editLanguage</cstring>
+         <property name="text">
+          <string>Volume adjustment:</string>
          </property>
         </widget>
        </item>
        <item row="0" column="2">
-        <widget class="QComboBox" name="editLanguage"/>
+        <widget class="QSpinBox" name="editVolume">
+         <property name="suffix">
+          <string>%</string>
+         </property>
+         <property name="minimum">
+          <number>-100</number>
+         </property>
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="singleStep">
+          <number>10</number>
+         </property>
+        </widget>
        </item>
+       <item row="1" column="0" colspan="3">
+        <widget class="QCheckBox" name="editEnabled">
+         <property name="font">
+          <font>
+           <pointsize>7</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Songs are enabled.</string>
+         </property>
+         <property name="tristate">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="3">
+        <widget class="QCheckBox" name="editSkipShuffle">
+         <property name="font">
+          <font>
+           <pointsize>7</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Skip when shuffling.</string>
+         </property>
+         <property name="tristate">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0" colspan="3">
+        <widget class="QCheckBox" name="editCompilation">
+         <property name="font">
+          <font>
+           <pointsize>7</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Part of a compilation.</string>
+         </property>
+         <property name="tristate">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <spacer name="verticalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>13</width>
+           <height>290</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabLyrics">
+      <attribute name="title">
+       <string>Lyrics</string>
+      </attribute>
+      <layout class="QGridLayout" name="layoutLyrics">
        <item row="0" column="0">
+        <widget class="QCheckBox" name="chLyrics">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string notr="true"/>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1" colspan="2">
+        <widget class="QTextEdit" name="editLyrics"/>
+       </item>
+       <item row="1" column="0">
         <widget class="QCheckBox" name="chLanguage">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -901,8 +1015,28 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QCheckBox" name="chLyrics">
+       <item row="1" column="1">
+        <widget class="QLabel" name="lblLanguage">
+         <property name="font">
+          <font>
+           <pointsize>7</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Language:</string>
+         </property>
+         <property name="buddy">
+          <cstring>editLanguage</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QComboBox" name="editLanguage"/>
+       </item>
+       <item row="2" column="0">
+        <widget class="QCheckBox" name="chLyricist">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -910,9 +1044,26 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string notr="true"/>
+          <string/>
          </property>
         </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLabel" name="lblLyricist">
+         <property name="font">
+          <font>
+           <pointsize>7</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Author:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="2">
+        <widget class="QLineEdit" name="editLyricist"/>
        </item>
       </layout>
      </widget>

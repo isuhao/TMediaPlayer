@@ -1712,6 +1712,7 @@ void CApplication::addSong(const QString& fileName)
     {
         m_library->addSong(song);
         updateListInformations();
+        emit songAdded(song);
         return;
     }
 }
@@ -2356,7 +2357,7 @@ void CApplication::loadDatabase(void)
 
 
     // Création des listes de lecture dynamiques
-    if (!query.exec("SELECT dynamic_list_id, playlist_name, list_columns, playlist_id, folder_id "
+    if (!query.exec("SELECT dynamic_list_id, playlist_name, list_columns, playlist_id, folder_id, list_position "
                     "FROM dynamic_list NATURAL JOIN playlist ORDER BY list_position"))
     {
         showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);

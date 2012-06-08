@@ -301,6 +301,18 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
             // Langue
             case CSongTable::ColLanguage:
                 return CSong::getLanguageName(m_data.at(index.row())->getSong()->getLanguage());
+
+            // Parolier
+            case CSongTable::ColLyricist:
+                return m_data.at(index.row())->getSong()->getLyricist();
+
+            // Regroupement
+            case CSongTable::ColGrouping:
+                return m_data.at(index.row())->getSong()->getGrouping();
+
+            // Sous-titre
+            case CSongTable::ColSubTitle:
+                return m_data.at(index.row())->getSong()->getSubTitle();
         }
     }
     else if (role == Qt::TextAlignmentRole)
@@ -422,6 +434,9 @@ void CSongTableModel::sort(int column, Qt::SortOrder order)
             case CSongTable::ColFileSize        : qSort(m_data.begin(), m_data.end(), cmpSongFileSizeAsc        ); break;
             case CSongTable::ColLyrics          : qSort(m_data.begin(), m_data.end(), cmpSongLyricsAsc          ); break;
             case CSongTable::ColLanguage        : qSort(m_data.begin(), m_data.end(), cmpSongLanguageAsc        ); break;
+            case CSongTable::ColLyricist        : qSort(m_data.begin(), m_data.end(), cmpSongLyricistAsc        ); break;
+            case CSongTable::ColGrouping        : qSort(m_data.begin(), m_data.end(), cmpSongGroupingAsc        ); break;
+            case CSongTable::ColSubTitle        : qSort(m_data.begin(), m_data.end(), cmpSongSubTitleAsc        ); break;
         }
     }
     else
@@ -453,6 +468,9 @@ void CSongTableModel::sort(int column, Qt::SortOrder order)
             case CSongTable::ColFileSize        : qSort(m_data.begin(), m_data.end(), cmpSongFileSizeDesc        ); break;
             case CSongTable::ColLyrics          : qSort(m_data.begin(), m_data.end(), cmpSongLyricsDesc          ); break;
             case CSongTable::ColLanguage        : qSort(m_data.begin(), m_data.end(), cmpSongLanguageDesc        ); break;
+            case CSongTable::ColLyricist        : qSort(m_data.begin(), m_data.end(), cmpSongLyricistDesc        ); break;
+            case CSongTable::ColGrouping        : qSort(m_data.begin(), m_data.end(), cmpSongGroupingDesc        ); break;
+            case CSongTable::ColSubTitle        : qSort(m_data.begin(), m_data.end(), cmpSongSubTitleDesc        ); break;
         }
     }
 
@@ -917,7 +935,7 @@ void CSongTableModel::setCurrentSong(CSongTableItem * songItem)
 
 void CSongTableModel::initShuffle(CSongTableItem * firstSong)
 {
-    qDebug() << "CSongTableModel::initShuffle()";
+    //qDebug() << "CSongTableModel::initShuffle()";
 
     m_dataShuffle = m_data;
     const int numSongs = rowCount();

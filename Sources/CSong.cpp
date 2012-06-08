@@ -19,6 +19,7 @@
 #include <xiphcomment.h>
 #include <commentsframe.h>
 #include <unsynchronizedlyricsframe.h>
+#include <textidentificationframe.h>
 
 // Debug
 #include <QtDebug>
@@ -48,7 +49,8 @@ CSong::TSongInfos::TSongInfos(void) :
     comments        (""),
     bpm             (0),
     lyrics          (""),
-    language        (LangUnknown)
+    language        (LangUnknown),
+    lyricist        ("")
 {
 
 }
@@ -61,21 +63,20 @@ CSong::TSongInfos::TSongInfos(void) :
  */
 
 CSong::CSong(CApplication * application) :
-    QObject             (application),
-    m_application       (application),
-    m_sound             (NULL),
-    m_channel           (NULL),
-    m_multiModification (false),
-    m_isModified        (false),
-    m_needWriteTags     (false),
-    m_id                (-1),
-    m_fileName          (""),
-    m_fileSize          (0),
-    m_bitRate           (0),
-    m_sampleRate        (0),
-    m_format            (FormatUnknown),
-    m_numChannels       (0),
-    m_duration          (0)
+    QObject         (application),
+    m_application   (application),
+    m_sound         (NULL),
+    m_channel       (NULL),
+    m_isModified    (false),
+    m_needWriteTags (false),
+    m_id            (-1),
+    m_fileName      (""),
+    m_fileSize      (0),
+    m_bitRate       (0),
+    m_sampleRate    (0),
+    m_format        (FormatUnknown),
+    m_numChannels   (0),
+    m_duration      (0)
 {
     Q_CHECK_PTR(application);
 }
@@ -91,21 +92,20 @@ CSong::CSong(CApplication * application) :
  */
 
 CSong::CSong(const QString& fileName, CApplication * application) :
-    QObject             (application),
-    m_application       (application),
-    m_sound             (NULL),
-    m_channel           (NULL),
-    m_multiModification (false),
-    m_isModified        (false),
-    m_needWriteTags     (false),
-    m_id                (-1),
-    m_fileName          (fileName),
-    m_fileSize          (0),
-    m_bitRate           (0),
-    m_sampleRate        (0),
-    m_format            (FormatUnknown),
-    m_numChannels       (0),
-    m_duration          (0)
+    QObject         (application),
+    m_application   (application),
+    m_sound         (NULL),
+    m_channel       (NULL),
+    m_isModified    (false),
+    m_needWriteTags (false),
+    m_id            (-1),
+    m_fileName      (fileName),
+    m_fileSize      (0),
+    m_bitRate       (0),
+    m_sampleRate    (0),
+    m_format        (FormatUnknown),
+    m_numChannels   (0),
+    m_duration      (0)
 {
     Q_CHECK_PTR(application);
 
@@ -196,7 +196,8 @@ void CSong::loadFromDatabase(void)
                       " song_rating,"
                       " song_comments,"
                       " song_lyrics,"
-                      " song_language"
+                      " song_language,"
+                      " song_lyricist"
                   " FROM song"
                   " NATURAL JOIN artist AS song_artist"
                   " NATURAL JOIN album"
@@ -253,31 +254,8 @@ void CSong::loadFromDatabase(void)
     m_infos.comments        = query.value(numValue++).toString();
     m_infos.lyrics          = query.value(numValue++).toString();
     m_infos.language        = getLanguageForISO2Code(query.value(numValue++).toString());
-/*
-    m_isEnabled       = query.value(numValue++).toBool();
-    m_title           = query.value(numValue++).toString();
-    m_titleSort       = query.value(numValue++).toString();
-    m_subTitle        = query.value(numValue++).toString();
-    m_grouping        = query.value(numValue++).toString();
-    m_artistName      = query.value(numValue++).toString();
-    m_artistNameSort  = query.value(numValue++).toString();
-    m_albumTitle      = query.value(numValue++).toString();
-    m_albumTitleSort  = query.value(numValue++).toString();
-    m_albumArtist     = query.value(numValue++).toString();
-    m_albumArtistSort = query.value(numValue++).toString();
-    m_composer        = query.value(numValue++).toString();
-    m_composerSort    = query.value(numValue++).toString();
-    m_year            = query.value(numValue++).toInt();
-    m_trackNumber     = query.value(numValue++).toInt();
-    m_trackCount      = query.value(numValue++).toInt();
-    m_discNumber      = query.value(numValue++).toInt();
-    m_discCount       = query.value(numValue++).toInt();
-    m_genre           = query.value(numValue++).toString();
-    m_rating          = query.value(numValue++).toInt();
-    m_comments        = query.value(numValue++).toString();
-    m_lyrics          = query.value(numValue++).toString();
-    m_language        = getLanguageForISO2Code(query.value(numValue++).toString());
-*/
+    m_infos.lyricist        = query.value(numValue++).toString();
+
     // Lectures
     query.prepare("SELECT play_time FROM play WHERE song_id = ? ORDER BY play_time DESC");
     query.bindValue(0, m_id);
@@ -299,10 +277,6 @@ void CSong::loadFromDatabase(void)
 
 /**
  * Charge les informations du morceau à partir de ses métadonnées.
- *
- * \todo Implémentation.
- * \todo Retourner un booléen ?
- * \todo Retourner une map ?
  *
  * \param readProperties Indique si on doit lire les propriétés du fichier.
  * \return Booléen valant true si les tags ont pu être lus, false sinon.
@@ -429,12 +403,17 @@ bool CSong::loadTags(bool readProperties)
  * Pour le format FLAC, les tags xiphComment, ID3v1 et ID3v2 sont écrits.
  * Seuls les tags gérés par l'application sont mis à jour, les autres sont conservés.
  *
+ * \todo Activer l'écriture.
+ * \todo Vérifier que la taille est bien mise à jour.
+ *
  * \return Booléen indiquant le succès de l'opération.
  */
 
-bool CSong::writeTags(void) const
+bool CSong::writeTags(void)
 {
-    qDebug() << "CSong::writeTags()";
+    //qDebug() << "CSong::writeTags()";
+
+return false; // Lecture seule...
 
     switch (m_format)
     {
@@ -465,6 +444,8 @@ bool CSong::writeTags(void) const
             writeTags(file.ID3v2Tag(true), m_infos, m_application->getLogMetadata(), m_fileName);
 
             file.save(TagLib::MPEG::File::ID3v1 | TagLib::MPEG::File::ID3v2, true);
+            m_fileSize = file.length();
+
             break;
         }
 
@@ -489,6 +470,8 @@ bool CSong::writeTags(void) const
             writeTags(file.tag(), m_infos, m_application->getLogMetadata(), m_fileName);
 
             file.save();
+            m_fileSize = file.length();
+
             break;
         }
 
@@ -515,9 +498,13 @@ bool CSong::writeTags(void) const
             writeTags(file.xiphComment(true), m_infos, m_application->getLogMetadata(), m_fileName);
 
             file.save();
+            m_fileSize = file.length();
+
             break;
         }
     }
+
+    updateFileInfos();
 
     m_needWriteTags = false;
     return true;
@@ -728,7 +715,8 @@ QList<CSong *> CSong::loadAllSongsFromDatabase(CApplication * application)
                         " song_comments,"
                         " song_bpm,"
                         " song_lyrics,"
-                        " song_language"
+                        " song_language,"
+                        " song_lyricist"
                     " FROM song"
                     " NATURAL JOIN artist AS song_artist"
                     " NATURAL JOIN album"
@@ -780,6 +768,7 @@ QList<CSong *> CSong::loadAllSongsFromDatabase(CApplication * application)
         song->m_infos.bpm             = query.value(numValue++).toInt();
         song->m_infos.lyrics          = query.value(numValue++).toString();
         song->m_infos.language        = getLanguageForISO2Code(query.value(numValue++).toString());
+        song->m_infos.lyricist        = query.value(numValue++).toString();
 
         // Lectures
         QSqlQuery query2(application->getDataBase());
@@ -850,7 +839,6 @@ void CSong::setEnabled(bool enabled)
     {
         m_infos.isEnabled = enabled;
         m_isModified = true;
-        if (!m_multiModification) emit songModified();
     }
 }
 
@@ -867,7 +855,6 @@ void CSong::setTitle(const QString& title)
     {
         m_infos.title = title;
         m_isModified = true;
-        if (!m_multiModification) emit songModified();
     }
 }
 
@@ -884,10 +871,15 @@ void CSong::setSubTitle(const QString& subTitle)
     {
         m_infos.subTitle = subTitle;
         m_isModified = true;
-        if (!m_multiModification) emit songModified();
     }
 }
 
+
+/**
+ * Modifie le regroupement du morceau.
+ *
+ * \param grouping Nouveau regroupement du morceau.
+ */
 
 void CSong::setGrouping(const QString& grouping)
 {
@@ -895,7 +887,6 @@ void CSong::setGrouping(const QString& grouping)
     {
         m_infos.grouping = grouping;
         m_isModified = true;
-        if (!m_multiModification) emit songModified();
     }
 }
 
@@ -912,7 +903,6 @@ void CSong::setArtistName(const QString& artistName)
     {
         m_infos.artistName = artistName;
         m_isModified = true;
-        if (!m_multiModification) emit songModified();
     }
 }
 
@@ -929,7 +919,6 @@ void CSong::setAlbumTitle(const QString& albumTitle)
     {
         m_infos.albumTitle = albumTitle;
         m_isModified = true;
-        if (!m_multiModification) emit songModified();
     }
 }
 
@@ -946,7 +935,6 @@ void CSong::setAlbumArtist(const QString& albumArtist)
     {
         m_infos.albumArtist = albumArtist;
         m_isModified = true;
-        if (!m_multiModification) emit songModified();
     }
 }
 
@@ -963,10 +951,15 @@ void CSong::setComposer(const QString& composer)
     {
         m_infos.composer = composer;
         m_isModified = true;
-        if (!m_multiModification) emit songModified();
     }
 }
 
+
+/**
+ * Modifie le titre pour le tri du morceau.
+ *
+ * \param title Nouveau titre pour le tri.
+ */
 
 void CSong::setTitleSort(const QString& title)
 {
@@ -974,10 +967,15 @@ void CSong::setTitleSort(const QString& title)
     {
         m_infos.titleSort = title;
         m_isModified = true;
-        if (!m_multiModification) emit songModified();
     }
 }
 
+
+/**
+ * Modifie le nom de l'artiste pour le tri du morceau.
+ *
+ * \param artistName Nouveau nom de l'artiste pour le tri.
+ */
 
 void CSong::setArtistNameSort(const QString& artistName)
 {
@@ -985,10 +983,15 @@ void CSong::setArtistNameSort(const QString& artistName)
     {
         m_infos.artistNameSort = artistName;
         m_isModified = true;
-        if (!m_multiModification) emit songModified();
     }
 }
 
+
+/**
+ * Modifie le titre de l'album pour le tri du morceau.
+ *
+ * \param albumTitle Nouveau titre de l'album pour le tri.
+ */
 
 void CSong::setAlbumTitleSort(const QString& albumTitle)
 {
@@ -996,7 +999,6 @@ void CSong::setAlbumTitleSort(const QString& albumTitle)
     {
         m_infos.albumTitleSort = albumTitle;
         m_isModified = true;
-        if (!m_multiModification) emit songModified();
     }
 }
 
@@ -1007,10 +1009,15 @@ void CSong::setAlbumArtistSort(const QString& albumArtist)
     {
         m_infos.albumArtistSort = albumArtist;
         m_isModified = true;
-        if (!m_multiModification) emit songModified();
     }
 }
 
+
+/**
+ * Modifie le compositeur pour le tri du morceau.
+ *
+ * \param composer Nouveau compositeur pour le tri.
+ */
 
 void CSong::setComposerSort(const QString& composer)
 {
@@ -1018,10 +1025,15 @@ void CSong::setComposerSort(const QString& composer)
     {
         m_infos.composerSort = composer;
         m_isModified = true;
-        if (!m_multiModification) emit songModified();
     }
 }
 
+
+/**
+ * Modifie l'année de sortie du morceau ou de l'album.
+ *
+ * \param year Nouvelle année de sortie.
+ */
 
 void CSong::setYear(int year)
 {
@@ -1031,7 +1043,6 @@ void CSong::setYear(int year)
     {
         m_infos.year = year;
         m_isModified = true;
-        if (!m_multiModification) emit songModified();
     }
 }
 
@@ -1050,7 +1061,6 @@ void CSong::setTrackNumber(int trackNumber)
     {
         m_infos.trackNumber = trackNumber;
         m_isModified = true;
-        if (!m_multiModification) emit songModified();
     }
 }
 
@@ -1069,7 +1079,6 @@ void CSong::setTrackCount(int trackCount)
     {
         m_infos.trackCount = trackCount;
         m_isModified = true;
-        if (!m_multiModification) emit songModified();
     }
 }
 
@@ -1088,7 +1097,6 @@ void CSong::setDiscNumber(int discNumber)
     {
         m_infos.discNumber = discNumber;
         m_isModified = true;
-        if (!m_multiModification) emit songModified();
     }
 }
 
@@ -1107,7 +1115,6 @@ void CSong::setDiscCount(int discCount)
     {
         m_infos.discCount = discCount;
         m_isModified = true;
-        if (!m_multiModification) emit songModified();
     }
 }
 
@@ -1124,7 +1131,6 @@ void CSong::setGenre(const QString& genre)
     {
         m_infos.genre = genre;
         m_isModified = true;
-        if (!m_multiModification) emit songModified();
     }
 }
 
@@ -1143,7 +1149,6 @@ void CSong::setRating(int rating)
     {
         m_infos.rating = rating;
         m_isModified = true;
-        if (!m_multiModification) emit songModified();
     }
 }
 
@@ -1160,7 +1165,6 @@ void CSong::setComments(const QString& comments)
     {
         m_infos.comments = comments;
         m_isModified = true;
-        if (!m_multiModification) emit songModified();
     }
 }
 
@@ -1179,7 +1183,6 @@ void CSong::setBPM(int bpm)
     {
         m_infos.bpm = bpm;
         m_isModified = true;
-        if (!m_multiModification) emit songModified();
     }
 }
 
@@ -1196,7 +1199,6 @@ void CSong::setLyrics(const QString& lyrics)
     {
         m_infos.lyrics = lyrics;
         m_isModified = true;
-        if (!m_multiModification) emit songModified();
     }
 }
 
@@ -1213,10 +1215,29 @@ void CSong::setLanguage(CSong::TLanguage language)
     {
         m_infos.language = language;
         m_isModified = true;
-        if (!m_multiModification) emit songModified();
     }
 }
 
+
+/**
+ * Modifie l'auteur des paroles du morceau.
+ *
+ * \param lyricist Auteur des paroles.
+ */
+
+void CSong::setLyricist(const QString& lyricist)
+{
+    if (m_infos.lyricist != lyricist)
+    {
+        m_infos.lyricist = lyricist;
+        m_isModified = true;
+    }
+}
+
+
+/**
+ * Démarre la lecture du morceau.
+ */
 
 void CSong::startPlay(void)
 {
@@ -1242,12 +1263,6 @@ void CSong::startPlay(void)
         m_channel = NULL;
         return;
     }
-}
-
-
-void CSong::startMultiModification(void)
-{
-    m_multiModification = true;
 }
 
 
@@ -1475,9 +1490,10 @@ void CSong::updateDatabase(void)
                               "song_bpm, "
                               "song_lyrics, "
                               "song_language, "
+                              "song_lyricist, "
                               "song_play_count, "
                               "song_play_time"
-                          ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                          ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
             int numValue = 0;
 
@@ -1511,6 +1527,7 @@ void CSong::updateDatabase(void)
             query.bindValue(numValue++, m_infos.bpm);
             query.bindValue(numValue++, m_infos.lyrics);
             query.bindValue(numValue++, getISO2CodeForLanguage(m_infos.language));
+            query.bindValue(numValue++, m_infos.lyricist);
             query.bindValue(numValue++, 0);  // Play count
             query.bindValue(numValue++, ""); // Last play time
 
@@ -1547,7 +1564,8 @@ void CSong::updateDatabase(void)
                               "song_comments      = ?,"
                               "song_bpm           = ?,"
                               "song_lyrics        = ?,"
-                              "song_language      = ? "
+                              "song_language      = ?,"
+                              "song_lyricist      = ? "
                           "WHERE song_id = ?");
 
             int numValue = 0;
@@ -1574,6 +1592,7 @@ void CSong::updateDatabase(void)
             query.bindValue(numValue++, m_infos.bpm);
             query.bindValue(numValue++, m_infos.lyrics);
             query.bindValue(numValue++, getISO2CodeForLanguage(m_infos.language));
+            query.bindValue(numValue++, m_infos.lyricist);
             query.bindValue(numValue++, m_id);
 
             if (!query.exec())
@@ -1584,12 +1603,32 @@ void CSong::updateDatabase(void)
         }
 
         m_isModified = false;
+        emit songModified();
+    }
+}
 
-        if (m_multiModification)
-        {
-            m_multiModification = false;
-            emit songModified();
-        }
+
+/**
+ * Met à jour le nom et la taille du fichier en base de données.
+ */
+
+void CSong::updateFileInfos(void)
+{
+    if (m_id <= 0)
+    {
+        return;
+    }
+
+    QSqlQuery query(m_application->getDataBase());
+    query.prepare("UPDATE song SET song_filename = ?, song_filesize = ? WHERE song_id = ?");
+    query.bindValue(0, m_fileName);
+    query.bindValue(1, m_fileSize);
+    query.bindValue(2, m_id);
+
+    if (!query.exec())
+    {
+        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        return;
     }
 }
 
@@ -1638,6 +1677,7 @@ void CSong::emitPlayEnd(void)
  *
  * \param tags     Métadonnées.
  * \param infos    Structure à remplir.
+ * \param logFile  Fichier de log.
  * \param fileName Nom du fichier contenant ces métadonnées.
  * \return Booléen indiquant le succès de l'opération.
  */
@@ -1648,6 +1688,14 @@ bool CSong::loadTags(TagLib::ID3v1::Tag * tags, TSongInfos& infos, QFile * logFi
         return false;
 
     //infos = TSongInfos();
+
+    // Log
+    QTextStream stream(logFile);
+    stream << "========================================\n";
+    stream << "   Chargement des tags ID3v1\n";
+    stream << "----------------------------------------\n";
+    stream << " Fichier : " << fileName << '\n';
+    stream << " Date    : " << QDateTime::currentDateTime().toString() << '\n';
 
     TagLib::String str;
 
@@ -1691,6 +1739,7 @@ bool CSong::loadTags(TagLib::ID3v1::Tag * tags, TSongInfos& infos, QFile * logFi
  *
  * \param tags     Métadonnées.
  * \param infos    Structure à remplir.
+ * \param logFile  Fichier de log.
  * \param fileName Nom du fichier contenant ces métadonnées.
  * \return Booléen indiquant le succès de l'opération.
  */
@@ -1705,7 +1754,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
     // Log
     QTextStream stream(logFile);
     stream << "========================================\n";
-    stream << "   Tags ID3v2\n";
+    stream << "   Chargement des tags ID3v2\n";
     stream << "----------------------------------------\n";
     stream << " Fichier : " << fileName << '\n';
     stream << " Date    : " << QDateTime::currentDateTime().toString() << '\n';
@@ -2013,6 +2062,15 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
         }
     }
 
+    // Parolier
+    tagList = tags->frameList("TEXT");
+    if (!tagList.isEmpty())
+    {
+        if (tagList.size() > 1)
+            stream << "Erreur : plusieurs tags TEXT";
+        infos.lyricist = QString::fromUtf8(tagList.front()->toString().toCString(true));
+    }
+
     return true;
 }
 
@@ -2022,6 +2080,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
  *
  * \param tags     Métadonnées.
  * \param infos    Structure à remplir.
+ * \param logFile  Fichier de log.
  * \param fileName Nom du fichier contenant ces métadonnées.
  * \return Booléen indiquant le succès de l'opération.
  */
@@ -2038,7 +2097,7 @@ bool CSong::loadTags(TagLib::APE::Tag * tags, TSongInfos& infos, QFile * logFile
     // Log
     QTextStream stream(logFile);
     stream << "========================================\n";
-    stream << "   Tags APE\n";
+    stream << "   Chargement des tags APE\n";
     stream << "----------------------------------------\n";
     stream << " Fichier : " << fileName << '\n';
     stream << " Date    : " << QDateTime::currentDateTime().toString() << '\n';
@@ -2187,6 +2246,7 @@ bool CSong::loadTags(TagLib::APE::Tag * tags, TSongInfos& infos, QFile * logFile
     // Langue
     if (!tagMap["LANGUAGE"].isEmpty())
     {
+        stream << "Erreur : tag LANGUAGE non géré";
         qDebug() << "CSong::loadTags() : APE : langue = " << QString::fromUtf8(tagMap["LANGUAGE"].toString().toCString(true));
         //infos.language = QString::fromUtf8(tagMap["LANGUAGE"].toString().toCString(true));
     }
@@ -2200,6 +2260,7 @@ bool CSong::loadTags(TagLib::APE::Tag * tags, TSongInfos& infos, QFile * logFile
  *
  * \param tags     Métadonnées.
  * \param infos    Structure à remplir.
+ * \param logFile  Fichier de log.
  * \param fileName Nom du fichier contenant ces métadonnées.
  * \return Booléen indiquant le succès de l'opération.
  */
@@ -2216,7 +2277,7 @@ bool CSong::loadTags(TagLib::Ogg::XiphComment * tags, TSongInfos& infos, QFile *
     // Log
     QTextStream stream(logFile);
     stream << "========================================\n";
-    stream << "   Tags XiphComment\n";
+    stream << "   Chargement des tags XiphComment\n";
     stream << "----------------------------------------\n";
     stream << " Fichier : " << fileName << '\n';
     stream << " Date    : " << QDateTime::currentDateTime().toString() << '\n';
@@ -2431,10 +2492,28 @@ bool CSong::loadTags(TagLib::Ogg::XiphComment * tags, TSongInfos& infos, QFile *
 }
 
 
+/**
+ * Écrit les informations d'un morceau dans les tags ID3 version 1.
+ *
+ * \param tags     Métadonnées à modifier.
+ * \param infos    Informations à écrire.
+ * \param logFile  Fichier de log.
+ * \param fileName Nom du fichier contenant le morceau.
+ * \return Booléen indiquant le succès de l'opération.
+ */
+
 bool CSong::writeTags(TagLib::ID3v1::Tag * tags, const TSongInfos& infos, QFile * logFile, const QString& fileName)
 {
     if (!tags)
         return false;
+
+    // Log
+    QTextStream stream(logFile);
+    stream << "========================================\n";
+    stream << "   Enregistrement des tags ID3v1\n";
+    stream << "----------------------------------------\n";
+    stream << " Fichier : " << fileName << '\n';
+    stream << " Date    : " << QDateTime::currentDateTime().toString() << '\n';
 
     tags->setTitle(infos.title.toUtf8().constData());
     tags->setArtist(infos.artistName.toUtf8().constData());
@@ -2448,7 +2527,16 @@ bool CSong::writeTags(TagLib::ID3v1::Tag * tags, const TSongInfos& infos, QFile 
 }
 
 
-/// \todo Implémentation.
+/**
+ * Écrit les informations d'un morceau dans les tags ID3 version 2.
+ *
+ * \param tags     Métadonnées à modifier.
+ * \param infos    Informations à écrire.
+ * \param logFile  Fichier de log.
+ * \param fileName Nom du fichier contenant le morceau.
+ * \return Booléen indiquant le succès de l'opération.
+ */
+
 bool CSong::writeTags(TagLib::ID3v2::Tag * tags, const TSongInfos& infos, QFile * logFile, const QString& fileName)
 {
     if (!tags)
@@ -2457,17 +2545,210 @@ bool CSong::writeTags(TagLib::ID3v2::Tag * tags, const TSongInfos& infos, QFile 
     // Log
     QTextStream stream(logFile);
     stream << "========================================\n";
-    stream << "   Tags ID3v2\n";
+    stream << "   Enregistrement des tags ID3v2\n";
     stream << "----------------------------------------\n";
     stream << " Fichier : " << fileName << '\n';
     stream << " Date    : " << QDateTime::currentDateTime().toString() << '\n';
     stream << "----------------------------------------\n";
 
-    //...
+    // Titre
+    {
+        tags->removeFrames("TIT2");
+        TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TIT2", TagLib::String::UTF8);
+        frame->setText(infos.title.toUtf8().constData());
+        tags->addFrame(frame);
+    }
+
+    // Sous-titre
+    {
+        tags->removeFrames("TIT3");
+        TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TIT3", TagLib::String::UTF8);
+        frame->setText(infos.subTitle.toUtf8().constData());
+        tags->addFrame(frame);
+    }
+
+    // Regroupement
+    {
+        tags->removeFrames("TIT1");
+        TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TIT1", TagLib::String::UTF8);
+        frame->setText(infos.grouping.toUtf8().constData());
+        tags->addFrame(frame);
+    }
+
+    // Artiste
+    {
+        tags->removeFrames("TPE1");
+        TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TPE1", TagLib::String::UTF8);
+        frame->setText(infos.artistName.toUtf8().constData());
+        tags->addFrame(frame);
+    }
+
+    // Album
+    {
+        tags->removeFrames("TALB");
+        TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TALB", TagLib::String::UTF8);
+        frame->setText(infos.albumTitle.toUtf8().constData());
+        tags->addFrame(frame);
+    }
+
+    // Artiste de l'album
+    {
+        tags->removeFrames("TPE2");
+        TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TPE2", TagLib::String::UTF8);
+        frame->setText(infos.albumArtist.toUtf8().constData());
+        tags->addFrame(frame);
+    }
+
+    // Compositeur
+    {
+        tags->removeFrames("TCOM");
+        TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TCOM", TagLib::String::UTF8);
+        frame->setText(infos.composer.toUtf8().constData());
+        tags->addFrame(frame);
+    }
+
+    // Titre pour le tri
+    {
+        tags->removeFrames("TSOT");
+        TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TSOT", TagLib::String::UTF8);
+        frame->setText(infos.titleSort.toUtf8().constData());
+        tags->addFrame(frame);
+    }
+
+    // Artiste pour le tri
+    {
+        tags->removeFrames("TSOP");
+        TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TSOP", TagLib::String::UTF8);
+        frame->setText(infos.artistNameSort.toUtf8().constData());
+        tags->addFrame(frame);
+    }
+
+    // Album pour le tri
+    {
+        tags->removeFrames("TSOA");
+        TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TSOA", TagLib::String::UTF8);
+        frame->setText(infos.albumTitleSort.toUtf8().constData());
+        tags->addFrame(frame);
+    }
+
+    // Artiste de l'album pour le tri
+    {
+        tags->removeFrames("TSO2");
+        TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TSO2", TagLib::String::UTF8);
+        frame->setText(infos.albumArtistSort.toUtf8().constData());
+        tags->addFrame(frame);
+    }
+
+    // Compositeur pour le tri
+    stream << "Aucun tag pour enregistrer le compositeur pour le tri\n";
+
+    // Année
+    tags->removeFrames("TDRC");
+    if (infos.year > 0)
+    {
+        TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TDRC", TagLib::String::UTF8);
+        frame->setText(TagLib::String::number(infos.year));
+        tags->addFrame(frame);
+    }
+
+    // Numéro de piste
+    tags->removeFrames("TRCK");
+    if (infos.trackNumber > 0)
+    {
+        if (infos.trackCount >= infos.trackNumber)
+        {
+            TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TRCK", TagLib::String::UTF8);
+            frame->setText(TagLib::String::number(infos.trackNumber) + "/" + TagLib::String::number(infos.trackCount));
+            tags->addFrame(frame);
+        }
+        else
+        {
+            TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TRCK", TagLib::String::UTF8);
+            frame->setText(TagLib::String::number(infos.trackNumber));
+            tags->addFrame(frame);
+        }
+    }
+
+    // Numéro de disque
+    tags->removeFrames("TPOS");
+    if (infos.discNumber > 0)
+    {
+        if (infos.discCount >= infos.discNumber)
+        {
+            TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TPOS", TagLib::String::UTF8);
+            frame->setText(TagLib::String::number(infos.discNumber) + "/" + TagLib::String::number(infos.discCount));
+            tags->addFrame(frame);
+        }
+        else
+        {
+            TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TPOS", TagLib::String::UTF8);
+            frame->setText(TagLib::String::number(infos.discNumber));
+            tags->addFrame(frame);
+        }
+    }
+
+    // Genre
+    {
+        tags->removeFrames("TCON");
+        TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TCON", TagLib::String::UTF8);
+        frame->setText(infos.genre.toUtf8().constData());
+        tags->addFrame(frame);
+    }
+
+    // Commentaires
+    {
+        tags->removeFrames("COMM");
+        TagLib::ID3v2::CommentsFrame * frame = new TagLib::ID3v2::CommentsFrame(TagLib::String::UTF8);
+        frame->setText(infos.comments.toUtf8().constData());
+        tags->addFrame(frame);
+    }
+
+    // BPM
+    {
+        tags->removeFrames("TBPM");
+        TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TBPM", TagLib::String::UTF8);
+        frame->setText(TagLib::String::number(infos.bpm));
+        tags->addFrame(frame);
+    }
+
+    // Paroles
+    {
+        tags->removeFrames("USLT");
+        TagLib::ID3v2::UnsynchronizedLyricsFrame * frame = new TagLib::ID3v2::UnsynchronizedLyricsFrame(TagLib::String::UTF8);
+        frame->setText(infos.lyrics.toUtf8().constData());
+        frame->setLanguage(CSong::getISO3CodeForLanguage(infos.language).toLatin1().constData());
+        tags->addFrame(frame);
+    }
+
+    // Langue
+    {
+        tags->removeFrames("TLAN");
+        TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TLAN", TagLib::String::UTF8);
+        frame->setText(CSong::getISO3CodeForLanguage(infos.language).toLatin1().constData());
+        tags->addFrame(frame);
+    }
+
+    // Parolier
+    {
+        tags->removeFrames("TEXT");
+        TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TEXT", TagLib::String::UTF8);
+        frame->setText(infos.lyricist.toUtf8().constData());
+        tags->addFrame(frame);
+    }
 
     return true;
 }
 
+
+/**
+ * Écrit les informations d'un morceau dans les tags APE.
+ *
+ * \param tags     Métadonnées à modifier.
+ * \param infos    Informations à écrire.
+ * \param logFile  Fichier de log.
+ * \param fileName Nom du fichier contenant le morceau.
+ * \return Booléen indiquant le succès de l'opération.
+ */
 
 bool CSong::writeTags(TagLib::APE::Tag * tags, const TSongInfos& infos, QFile * logFile, const QString& fileName)
 {
@@ -2477,7 +2758,7 @@ bool CSong::writeTags(TagLib::APE::Tag * tags, const TSongInfos& infos, QFile * 
     // Log
     QTextStream stream(logFile);
     stream << "========================================\n";
-    stream << "   Tags APE\n";
+    stream << "   Enregistrement des tags APE\n";
     stream << "----------------------------------------\n";
     stream << " Fichier : " << fileName << '\n';
     stream << " Date    : " << QDateTime::currentDateTime().toString() << '\n';
@@ -2578,9 +2859,22 @@ bool CSong::writeTags(TagLib::APE::Tag * tags, const TSongInfos& infos, QFile * 
     // Langue
     tags->addValue("LANGUAGE", CSong::getISO3CodeForLanguage(infos.language).toUtf8().constData());
 
+    // Parolier
+    stream << "Aucun tag pour enregistrer le parolier\n";
+
     return true;
 }
 
+
+/**
+ * Écrit les informations d'un morceau dans les tags Xiph Comment.
+ *
+ * \param tags     Métadonnées à modifier.
+ * \param infos    Informations à écrire.
+ * \param logFile  Fichier de log.
+ * \param fileName Nom du fichier contenant le morceau.
+ * \return Booléen indiquant le succès de l'opération.
+ */
 
 bool CSong::writeTags(TagLib::Ogg::XiphComment * tags, const TSongInfos& infos, QFile * logFile, const QString& fileName)
 {
@@ -2590,7 +2884,7 @@ bool CSong::writeTags(TagLib::Ogg::XiphComment * tags, const TSongInfos& infos, 
     // Log
     QTextStream stream(logFile);
     stream << "========================================\n";
-    stream << "   Tags Xiph Comment\n";
+    stream << "   Enregistrement des tags Xiph Comment\n";
     stream << "----------------------------------------\n";
     stream << " Fichier : " << fileName << '\n';
     stream << " Date    : " << QDateTime::currentDateTime().toString() << '\n';
@@ -2703,6 +2997,9 @@ bool CSong::writeTags(TagLib::Ogg::XiphComment * tags, const TSongInfos& infos, 
 
     // Langue
     stream << "Aucun tag pour enregistrer la langue\n";
+
+    // Parolier
+    stream << "Aucun tag pour enregistrer le parolier\n";
 
     return true;
 }

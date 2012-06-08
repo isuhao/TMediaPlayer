@@ -243,7 +243,7 @@ void CPlayListView::dragMoveEvent(QDragMoveEvent * event)
 
 void CPlayListView::openCustomMenuProject(const QPoint& point)
 {
-    qDebug() << "CPlayListView::openCustomMenuProject()";
+    //qDebug() << "CPlayListView::openCustomMenuProject()";
 
     QModelIndex index = indexAt(point);
 

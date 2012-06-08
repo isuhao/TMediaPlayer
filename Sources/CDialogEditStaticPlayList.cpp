@@ -43,7 +43,7 @@ CDialogEditStaticPlayList::CDialogEditStaticPlayList(CStaticPlayList * playList,
 
 CDialogEditStaticPlayList::~CDialogEditStaticPlayList()
 {
-    qDebug() << "CDialogEditStaticPlayList::~CDialogEditStaticPlayList()";
+    //qDebug() << "CDialogEditStaticPlayList::~CDialogEditStaticPlayList()";
     delete m_uiWidget;
 }
 

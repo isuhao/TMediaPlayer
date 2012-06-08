@@ -18,9 +18,13 @@ CPlayListModel::CPlayListModel(CApplication * application) :
 
 CPlayListModel::~CPlayListModel()
 {
-    qDebug() << "CPlayListModel::~CPlayListModel()";
+    //qDebug() << "CPlayListModel::~CPlayListModel()";
 }
 
+
+/**
+ * \todo Pouvoir créer une liste de lecture statique.
+ */
 
 bool CPlayListModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex& parent)
 {
@@ -38,14 +42,14 @@ bool CPlayListModel::dropMimeData(const QMimeData * data, Qt::DropAction action,
 
     if (parent.isValid())
     {
-        qDebug() << "CPlayListModel::dropMimeData() : ajout à une liste...";
+        //qDebug() << "CPlayListModel::dropMimeData() : ajout à une liste...";
 
         CSongTable * songTable = this->data(parent, Qt::UserRole + 1).value<CSongTable *>();
         CStaticPlayList * playList = qobject_cast<CStaticPlayList *>(songTable);
 
         if (songTable && playList)
         {
-            qDebug() << "playlist " << playList->getName();
+            //qDebug() << "playlist " << playList->getName();
 
             QByteArray encodedData = data->data("application/x-ted-media-songs");
             QDataStream stream(&encodedData, QIODevice::ReadOnly);
@@ -67,7 +71,7 @@ bool CPlayListModel::dropMimeData(const QMimeData * data, Qt::DropAction action,
             return true;
         }
 
-        qDebug() << "library ou dynamic list";
+        //qDebug() << "library ou dynamic list";
         return false;
     }
 

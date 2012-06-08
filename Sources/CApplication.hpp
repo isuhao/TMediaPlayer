@@ -167,9 +167,10 @@ public slots:
 signals:
 
     // Signaux sur les morceaux
-    //void songAdded(CSong * song);             ///< Signal émis lorsqu'un morceau est ajouté à la médiathèque.
-    //void songModified(CSong * song);          ///< Signal émis lorsque les informations d'un morceau sont modifiées.
+    void songAdded(CSong * song);             ///< Signal émis lorsqu'un morceau est ajouté à la médiathèque.
+  //void songModified(CSong * song);          ///< Signal émis lorsque les informations d'un morceau sont modifiées.
     void songRemoved(CSong * song);           ///< Signal émis lorsqu'un morceau est retiré de la médiathèque.
+  //void songMoved(CSong * song);             ///< Signal émis lorsque le fichier d'un morceau est déplacé.
     void songPlayStart(CSong * song);         ///< Signal émis lorsque la lecture d'un morceau démarre.
     void songPlayEnd(CSong * song);           ///< Signal émis lorsque la lecture d'un morceau se termine.
     void songPaused(CSong * song);            ///< Signal émis lorsque la lecture est mise en pause.
