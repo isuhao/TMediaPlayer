@@ -30,11 +30,6 @@
 #include <QProgressDialog>
 #include <QDesktopServices>
 #include <QUrl>
-//#include <QNetworkAccessManager>
-//#include <QNetworkRequest>
-//#include <QNetworkReply>
-//#include <QDomDocument>
-//#include <QCryptographicHash>
 #include <QDockWidget>
 
 // FMOD
@@ -101,28 +96,7 @@ CApplication::CApplication(void) :
     QTime duration(0, 0);
     m_listInfos = new QLabel(tr("%n song(s), %1", "", 0).arg(duration.toString()));
     statusBar()->addPermanentWidget(m_listInfos);
-/*
-    m_uiWidget->btnStop->setVisible(m_settings->value("Preferences/ShowButtonStop", true).toBool());
 
-
-    // Connexions des signaux et des slots
-    connect(m_uiWidget->songInfos, SIGNAL(clicked()), this, SLOT(selectCurrentSong()));
-
-    // Boutons
-    connect(m_uiWidget->btnPlay, SIGNAL(clicked()), this, SLOT(togglePlay()));
-    connect(m_uiWidget->btnStop, SIGNAL(clicked()), this, SLOT(stop()));
-
-    connect(m_uiWidget->btnPrevious, SIGNAL(clicked()), this, SLOT(previousSong()));
-    connect(m_uiWidget->btnNext, SIGNAL(clicked()), this, SLOT(nextSong()));
-
-    connect(m_uiWidget->btnRepeat, SIGNAL(toggled(bool)), this, SLOT(setRepeat(bool)));
-    connect(m_uiWidget->btnShuffle, SIGNAL(toggled(bool)), this, SLOT(setShuffle(bool)));
-    connect(m_uiWidget->btnMute, SIGNAL(clicked()), this, SLOT(toggleMute()));
-
-    // Sliders
-    connect(m_uiWidget->sliderVolume, SIGNAL(sliderMoved(int)), this, SLOT(setVolume(int)));
-    connect(m_uiWidget->sliderPosition, SIGNAL(sliderReleased()), this, SLOT(updatePosition()));
-*/
     // Menus
     connect(m_uiWidget->actionNewPlayList, SIGNAL(triggered()), this, SLOT(openDialogAddStaticPlayList()));
     connect(m_uiWidget->actionNewDynamicPlayList, SIGNAL(triggered()), this, SLOT(openDialogAddDynamicList()));
@@ -290,7 +264,7 @@ void CApplication::initWindow(void)
     QString dbPassword = m_settings->value("Database/Password", QString("")).toString();
 
     m_dataBase.setHostName(dbHostName);
-    //m_dataBase.setPort();
+    //m_dataBase.setPort(dbPort);
     m_dataBase.setDatabaseName(QDesktopServices::storageLocation(QDesktopServices::DataLocation) + QDir::separator() + dbBaseName);
     m_dataBase.setUserName(dbUserName);
     m_dataBase.setPassword(dbPassword);
@@ -1516,10 +1490,29 @@ void CApplication::openDialogAddSongs(void)
 {
     QStringList fileList = QFileDialog::getOpenFileNames(this, QString(), QString(), tr("Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)"));
 
+    if (fileList.isEmpty())
+    {
+        return;
+    }
+
+    QList<CSong *> songs;
+
+    // Chargement des fichiers
     for (QStringList::const_iterator it = fileList.begin(); it != fileList.end(); ++it)
     {
-        addSong(*it);
+        CSong * song = CSong::loadFromFile(this, *it);
+        if (song) songs.append(song);
+        //addSong(*it);
     }
+
+    // Ajout des morceaux à la médiathèque
+    for (QList<CSong *>::const_iterator it = songs.begin(); it != songs.end(); ++it)
+    {
+        m_library->addSong(*it);
+        emit songAdded(*it);
+    }
+
+    updateListInformations();
 }
 
 
@@ -1538,23 +1531,38 @@ void CApplication::openDialogAddFolder(void)
 
     QStringList fileList = addFolder(folder);
 
-    if (!fileList.isEmpty())
+    if (fileList.isEmpty())
     {
-        QProgressDialog progress(tr("Add files..."), tr("Abort"), 0, fileList.size(), this);
-        int i = 0;
+        return;
+    }
 
-        for (QStringList::const_iterator it = fileList.begin(); it != fileList.end(); ++it)
+    QList<CSong *> songs;
+
+    QProgressDialog progress(tr("Loading files..."), tr("Abort"), 0, fileList.size(), this);
+    int i = 0;
+
+    for (QStringList::const_iterator it = fileList.begin(); it != fileList.end(); ++it)
+    {
+        progress.setValue(i++);
+        CSong * song = CSong::loadFromFile(this, *it);
+        if (song) songs.append(song);
+        //addSong(*it);
+        qApp->processEvents();
+
+        if (progress.wasCanceled())
         {
-            progress.setValue(i++);
-            addSong(*it);
-            qApp->processEvents();
-
-            if (progress.wasCanceled())
-            {
-                return;
-            }
+            break;
         }
     }
+
+    // Ajout des morceaux à la médiathèque
+    for (QList<CSong *>::const_iterator it = songs.begin(); it != songs.end(); ++it)
+    {
+        m_library->addSong(*it);
+        emit songAdded(*it);
+    }
+
+    updateListInformations();
 }
 
 
@@ -1697,7 +1705,7 @@ void CApplication::addPlayList(CPlayList * playList)
 
 
 /**
- * Ajoute une chanson à la médiathèque.
+ * Ajoute un morceau à la médiathèque.
  * Le fichier doit être un son valide, et ne doit pas être déjà présent dans la médiathèque.
  *
  * \param fileName Fichier à charger.
@@ -2261,6 +2269,241 @@ bool CApplication::initSoundSystem(void)
 void CApplication::loadDatabase(void)
 {
     QSqlQuery query(m_dataBase);
+
+
+    // Création des relations
+    QStringList tables = m_dataBase.tables(QSql::Tables);
+
+    if (!tables.contains("folder"))
+    {
+        if (!query.exec("CREATE TABLE folder ("
+                            "folder_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+                            "folder_name VARCHAR NOT NULL,"
+                            "folder_parent INTEGER NOT NULL,"
+                            "folder_position INTEGER NOT NULL,"
+                            "folder_expanded INTEGER NOT NULL,"
+                            "UNIQUE (folder_parent, folder_position)"
+                        ")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+
+        if (!query.exec("INSERT INTO folder VALUES (0, \"\", 0, 1, 1)"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
+
+    if (!tables.contains("playlist"))
+    {
+        if (!query.exec("CREATE TABLE playlist ("
+                            "playlist_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+                            "playlist_name VARCHAR NOT NULL,"
+                            "folder_id INTEGER NOT NULL,"
+                            "list_position INTEGER NOT NULL,"
+                            "list_columns VARCHAR NOT NULL,"
+                            "UNIQUE (folder_id, list_position)"
+                        ")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+
+        if (!query.exec("INSERT INTO playlist (playlist_id, playlist_name, folder_id, list_position, list_columns) "
+                        "VALUES (0, \"Library\", 0, 0, \"\")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
+
+    if (!tables.contains("dynamic_list"))
+    {
+        if (!query.exec("CREATE TABLE dynamic_list ("
+                            "dynamic_list_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+                            "criteria_id INTEGER NOT NULL,"
+                            "playlist_id INTEGER NOT NULL,"
+                            "UNIQUE (playlist_id)"
+                        ")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
+
+    if (!tables.contains("criteria"))
+    {
+        if (!query.exec("CREATE TABLE criteria ("
+                            "criteria_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+                            "dynamic_list_id INTEGER NOT NULL,"
+                            "criteria_parent INTEGER NOT NULL,"
+                            "criteria_position INTEGER NOT NULL,"
+                            "criteria_type INTEGER NOT NULL,"
+                            "criteria_condition INTEGER NOT NULL,"
+                            "criteria_value1 VARCHAR,"
+                            "criteria_value2 VARCHAR,"
+                            "UNIQUE (dynamic_list_id, criteria_parent, criteria_position)"
+                        ")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
+
+    if (!tables.contains("static_list"))
+    {
+        if (!query.exec("CREATE TABLE static_list ("
+                            "static_list_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+                            "playlist_id INTEGER NOT NULL,"
+                            "UNIQUE (playlist_id)"
+                        ")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
+
+    if (!tables.contains("static_list_song"))
+    {
+        if (!query.exec("CREATE TABLE static_list_song ("
+                            "static_list_id INTEGER NOT NULL,"
+                            "song_id INTEGER NOT NULL,"
+                            "song_position INTEGER NOT NULL,"
+                            "UNIQUE (static_list_id, song_position)"
+                        ")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
+
+    if (!tables.contains("song"))
+    {
+        if (!query.exec("CREATE TABLE song ("
+                            "song_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+                            "song_filename VARCHAR NOT NULL UNIQUE,"
+                            "song_filesize INTEGER NOT NULL,"
+                            "song_bitrate INTEGER NOT NULL,"
+                            "song_sample_rate INTEGER NOT NULL,"
+                            "song_format INTEGER NOT NULL,"
+                            "song_channels INTEGER NOT NULL,"
+                            "song_duration INTEGER NOT NULL,"
+                            "song_creation DATETIME NOT NULL,"
+                            "song_modification DATETIME NOT NULL,"
+                            "song_enabled INTEGER NOT NULL,"
+                            "song_title VARCHAR NOT NULL,"
+                            "song_title_sort VARCHAR NOT NULL,"
+                            "song_subtitle VARCHAR NOT NULL,"
+                            "song_grouping VARCHAR NOT NULL,"
+                            "artist_id INTEGER NOT NULL,"
+                            "album_id INTEGER NOT NULL,"
+                            "album_artist_id INTEGER NOT NULL,"
+                            "song_composer VARCHAR NOT NULL,"
+                            "song_composer_sort VARCHAR NOT NULL,"
+                            "song_year INTEGER NOT NULL,"
+                            "song_track_number INTEGER NOT NULL,"
+                            "song_track_count INTEGER NOT NULL,"
+                            "song_disc_number INTEGER NOT NULL,"
+                            "song_disc_count INTEGER NOT NULL,"
+                            "genre_id INTEGER NOT NULL,"
+                            "song_rating INTEGER NOT NULL,"
+                            "song_comments VARCHAR NOT NULL,"
+                            "song_bpm INTEGER NOT NULL,"
+                            "song_lyrics TEXT NOT NULL,"
+                            "song_language VARCHAR(2) NOT NULL,"
+                            "song_lyricist VARCHAR NOT NULL,"
+                            "song_play_count INTEGER NOT NULL,"
+                            "song_play_time DATETIME NOT NULL"
+                        ")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
+
+    if (!tables.contains("album"))
+    {
+        if (!query.exec("CREATE TABLE album ("
+                            "album_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+                            "album_title VARCHAR NOT NULL,"
+                            "album_title_sort VARCHAR,"
+                            "UNIQUE (album_title, album_title_sort)"
+                        ")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+
+        if (!query.exec("INSERT INTO album (album_id, album_title, album_title_sort) VALUES (0, \"\", \"\")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
+
+    if (!tables.contains("artist"))
+    {
+        if (!query.exec("CREATE TABLE artist ("
+                            "artist_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+                            "artist_name VARCHAR NOT NULL,"
+                            "artist_name_sort VARCHAR,"
+                            "UNIQUE (artist_name, artist_name_sort)"
+                        ")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+
+        if (!query.exec("INSERT INTO artist (artist_id, artist_name, artist_name_sort) VALUES (0, \"\", \"\")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
+
+    if (!tables.contains("genre"))
+    {
+        if (!query.exec("CREATE TABLE genre ("
+                            "genre_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+                            "genre_name VARCHAR NOT NULL UNIQUE"
+                        ")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+
+        if (!query.exec("INSERT INTO genre (genre_id, genre_name) VALUES (0, \"\")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
+
+    if (!tables.contains("play"))
+    {
+        if (!query.exec("CREATE TABLE play ("
+                            "song_id INTEGER NOT NULL,"
+                            "play_time DATETIME NOT NULL"
+                        ")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
+
+
+    // Création des vues
+    tables = m_dataBase.tables(QSql::Views);
+
+    if (!tables.contains("albums"))
+    {
+        if (!query.exec("CREATE VIEW albums AS SELECT DISTINCT(album_title) FROM album NATURAL JOIN song WHERE song_id IS NOT NULL"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
+
+    if (!tables.contains("artists"))
+    {
+        if (!query.exec("CREATE VIEW artists AS SELECT DISTINCT(artist_name) FROM artist NATURAL JOIN song WHERE song_id IS NOT NULL"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
+
+    if (!tables.contains("genres"))
+    {
+        if (!query.exec("CREATE VIEW genres AS SELECT DISTINCT(genre_name) FROM genre NATURAL JOIN song WHERE song_id IS NOT NULL"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
 
 
     // Création de la médiathèque

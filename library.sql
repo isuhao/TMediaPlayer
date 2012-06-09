@@ -8,7 +8,7 @@ CREATE TABLE folder (
     UNIQUE (folder_parent, folder_position)
 );
 
-INSERT INTO folder VALUES (0,"",0,1,1);
+INSERT INTO folder VALUES (0, "", 0, 1, 1);
 
 CREATE TABLE playlist (
     playlist_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -117,8 +117,8 @@ CREATE TABLE genre (
 INSERT INTO genre (genre_id, genre_name) VALUES (0, "");
 
 CREATE TABLE play (
-    song_id INTEGER NOT NULL ,
-    play_time DATETIME NOT NULL 
+    song_id INTEGER NOT NULL,
+    play_time DATETIME NOT NULL
 );
 
 

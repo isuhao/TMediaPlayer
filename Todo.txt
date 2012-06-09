@@ -7,10 +7,7 @@
   - Vérifier que les champs ne sont pas vides.
   - Si un multi-critères ne contient qu'un enfant, on peut remonter celui-ci au niveau supérieur.
   - Trier les types de critères par ordre alphabétique.
-  - Ajouter des unités pour certains types (taille du fichier, débit, etc.).
   - Vérifier qu'il n'y a pas de boucles pour le critère "Liste de lecture".
-
-- Boite de dialogue Edit Songs. (à terminer)
 
 - Import depuis iTunes / SongBird.
 
@@ -20,18 +17,19 @@
   Importance moyenne
 --------------------------------------------------
 
-- Boite de dialogue Edit Song(s) : Mieux gérer les genres (lister tous les genres utilisés et ajouter des genres prédéfinis, puis trier la liste).
+- Boite de dialogue Edit Song(s) :
+  - Gérer l'option "Fait partie d'une compilation".
+  - Gérer l'option "Ne pas lire en mode aléatoire".
+  - Gérer l'option "Morceau coché".
+  - Gérer l'option "Ajustement du volume".
 
 - Gérer les dossiers de listes de lecture.
   - Implémenter le glisser-déposer pour déplacer les listes de lecture.
   - Menu contextuel pour les listes de lecture : Création / Modification / Suppression.
   - Pouvoir créer une liste directement dans un dossier.
-
-- Ajouter l'information "Fait partie d'une compilation".
-- Ajouter l'option "Ne pas lire en mode aléatoire".
+  - Enregistrer l'état d'un dossier (expanded or not).
 
 - Implémenter le glisser-déposer pour créer une nouvelle liste de lecture.
-- Créer la fenêtre Préférences. (à terminer)
 - Griser les boutons indisponibles suivant l'état (lecture, pause, etc.).
 - Implémenter correctement la répétition (répétition de la liste, du morceau, etc.).
 
@@ -58,7 +56,6 @@
   - Option "Illustrations : image dans le dossier".
 
 - Enregistrer l'heure UTC de lecture.
-- Enregistrer l'état d'un dossier (expanded or not).
 
 - Créer la boite de dialogue Édition des métadonnées.
   - Lire les métadonnées à l'ouverture de cette vue.
@@ -69,10 +66,6 @@
 - Boite de dialogue Edit Song :
   - Affichage et modification des illustrations.
   - Afficher l'illustration principale dans l'onglet Résumé.
-
-- Nouvelles options et métadonnées :
-  - Ajouter l'option "Volume du morceau".
-  - Ajouter l'option "Fait partie d'une compilation".
 
 - Moteur de recherche dans la liste de lecture.
 - Égaliseur.
