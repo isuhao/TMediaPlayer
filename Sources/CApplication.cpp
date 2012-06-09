@@ -12,6 +12,7 @@
 #include "CDialogEditStaticPlayList.hpp"
 #include "CDialogEditDynamicList.hpp"
 #include "CDialogPreferences.hpp"
+#include "CImporterITunes.hpp"
 
 // Last.fm
 #include "CAuthentication.hpp"
@@ -104,6 +105,7 @@ CApplication::CApplication(void) :
     connect(m_uiWidget->actionAddFolder, SIGNAL(triggered()), this, SLOT(openDialogAddFolder()));
     connect(m_uiWidget->actionInformations, SIGNAL(triggered()), this, SLOT(openDialogSongInfos()));
     connect(m_uiWidget->actionOpenInExplorer, SIGNAL(triggered()), this, SLOT(openSongInExplorer()));
+    connect(m_uiWidget->actionImportITunes, SIGNAL(triggered()), this, SLOT(importFromITunes()));
 
     connect(m_uiWidget->actionSelectAll, SIGNAL(triggered()), this, SLOT(selectAll()));
     connect(m_uiWidget->actionSelectNone, SIGNAL(triggered()), this, SLOT(selectNone()));
@@ -1644,6 +1646,13 @@ void CApplication::openDialogEditStaticPlayList(CStaticPlayList * playList)
 void CApplication::openDialogEditDynamicList(CDynamicPlayList * playList)
 {
     CDialogEditDynamicList * dialog = new CDialogEditDynamicList(playList, this);
+    dialog->show();
+}
+
+
+void CApplication::importFromITunes(void)
+{
+    CImporterITunes * dialog = new CImporterITunes(this);
     dialog->show();
 }
 

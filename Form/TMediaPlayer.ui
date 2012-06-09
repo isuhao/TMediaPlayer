@@ -42,11 +42,18 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
+    <widget class="QMenu" name="menuImport">
+     <property name="title">
+      <string>Import</string>
+     </property>
+     <addaction name="actionImportITunes"/>
+    </widget>
     <addaction name="actionNewPlayList"/>
     <addaction name="actionNewDynamicPlayList"/>
     <addaction name="separator"/>
     <addaction name="actionAddFiles"/>
     <addaction name="actionAddFolder"/>
+    <addaction name="menuImport"/>
     <addaction name="separator"/>
     <addaction name="actionInformations"/>
     <addaction name="actionOpenInExplorer"/>
@@ -129,7 +136,7 @@
   </action>
   <action name="actionInformations">
    <property name="text">
-    <string>Informations</string>
+    <string>Informations...</string>
    </property>
   </action>
   <action name="actionAddFolder">
@@ -205,6 +212,11 @@
   <action name="actionAboutQt">
    <property name="text">
     <string>About Qt...</string>
+   </property>
+  </action>
+  <action name="actionImportITunes">
+   <property name="text">
+    <string>From iTunes...</string>
    </property>
   </action>
  </widget>

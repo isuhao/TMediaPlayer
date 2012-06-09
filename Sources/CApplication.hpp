@@ -134,7 +134,6 @@ public slots:
     //void renamePlayList(CPlayList * playList);
     //void editDynamicPlayList(CDynamicPlayList * playList);
     //void deletePlayList(CPlayList * playList);
-
     //void addListFolder(void);
     //void renameListFolder(CListFolder * folder);
     //void deleteListFolder(CListFolder * folder);
@@ -148,10 +147,9 @@ public slots:
     void openDialogAddDynamicList(CListFolder * folder = NULL);
     void openDialogEditStaticPlayList(CStaticPlayList * playList);
     void openDialogEditDynamicList(CDynamicPlayList * playList);
-
+    void importFromITunes(void);
     //void editSong(CSongTableItem * songItem);
     //void removeSong(CSongTableItem * songItem);
-
     void selectCurrentSong(void);
     void selectSong(CSongTable * songTable, CSongTableItem * songItem);
     void openSongInExplorer(void);

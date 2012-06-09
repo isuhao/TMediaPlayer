@@ -1384,37 +1384,42 @@ Voulez-vous les ajouter ?</translation>
         <translation>TMediaPlayer</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="172"/>
+        <location filename="../Form/TMediaPlayer.ui" line="179"/>
         <source>Previous</source>
         <translation>Précédent</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="157"/>
+        <location filename="../Form/TMediaPlayer.ui" line="164"/>
         <source>Play</source>
         <translation>Lecture</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="162"/>
+        <location filename="../Form/TMediaPlayer.ui" line="139"/>
+        <source>Informations...</source>
+        <translation>Informations...</translation>
+    </message>
+    <message>
+        <location filename="../Form/TMediaPlayer.ui" line="169"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="167"/>
+        <location filename="../Form/TMediaPlayer.ui" line="174"/>
         <source>Stop</source>
         <translation>Stop</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="177"/>
+        <location filename="../Form/TMediaPlayer.ui" line="184"/>
         <source>Next</source>
         <translation>Suivant</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="193"/>
+        <location filename="../Form/TMediaPlayer.ui" line="200"/>
         <source>Repeat</source>
         <translation>Répétition</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="185"/>
+        <location filename="../Form/TMediaPlayer.ui" line="192"/>
         <source>Shuffle</source>
         <translation>Aléatoire</translation>
     </message>
@@ -1424,79 +1429,92 @@ Voulez-vous les ajouter ?</translation>
         <translation>&amp;Fichier</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="59"/>
+        <location filename="../Form/TMediaPlayer.ui" line="47"/>
+        <source>Import</source>
+        <translation>Importer</translation>
+    </message>
+    <message>
+        <location filename="../Form/TMediaPlayer.ui" line="66"/>
         <source>&amp;Edit</source>
         <translation>É&amp;dition</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="68"/>
+        <location filename="../Form/TMediaPlayer.ui" line="75"/>
         <source>&amp;Controls</source>
         <translation>&amp;Contrôles</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="83"/>
+        <location filename="../Form/TMediaPlayer.ui" line="90"/>
         <source>&amp;Help</source>
         <translation>&amp;Aide</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="95"/>
+        <location filename="../Form/TMediaPlayer.ui" line="102"/>
         <source>Controls</source>
         <translation>Contrôles</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="112"/>
+        <location filename="../Form/TMediaPlayer.ui" line="119"/>
         <source>Add files to library...</source>
         <translation>Ajouter des fichiers à la médiathèque...</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="117"/>
+        <location filename="../Form/TMediaPlayer.ui" line="124"/>
         <source>E&amp;xit</source>
         <translation>&amp;Quitter</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="122"/>
+        <location filename="../Form/TMediaPlayer.ui" line="129"/>
         <source>New playlist...</source>
         <translation>Nouvelle liste de lecture...</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="127"/>
+        <location filename="../Form/TMediaPlayer.ui" line="134"/>
         <source>New dynamic playlist...</source>
         <translation>Nouvelle liste de lecture dynamique...</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="132"/>
         <source>Informations</source>
-        <translation>Informations</translation>
+        <translation type="obsolete">Informations</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="137"/>
+        <location filename="../Form/TMediaPlayer.ui" line="144"/>
         <source>Add folder to library...</source>
         <translation>Ajouter un dossier à la médiathèque...</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="142"/>
+        <location filename="../Form/TMediaPlayer.ui" line="149"/>
         <source>Show in explorer</source>
         <translation>Afficher dans l&apos;explorateur</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="147"/>
+        <location filename="../Form/TMediaPlayer.ui" line="154"/>
         <source>Select all</source>
         <translation>Tous sélectionner</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="152"/>
+        <location filename="../Form/TMediaPlayer.ui" line="159"/>
         <source>Select none</source>
         <translation>Ne rien sélectionner</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="202"/>
+        <location filename="../Form/TMediaPlayer.ui" line="209"/>
         <source>Preferences...</source>
         <translation>Préférences...</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="207"/>
+        <location filename="../Form/TMediaPlayer.ui" line="214"/>
         <source>About Qt...</source>
         <translation>À propos de Qt...</translation>
+    </message>
+    <message>
+        <location filename="../Form/TMediaPlayer.ui" line="219"/>
+        <source>From iTunes...</source>
+        <translation>Depuis iTunes...</translation>
+    </message>
+    <message>
+        <source>From iTunes</source>
+        <translation type="obsolete">Depuis iTunes...</translation>
     </message>
 </context>
 <context>

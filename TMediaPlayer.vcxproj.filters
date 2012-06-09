@@ -44,6 +44,9 @@
     <Filter Include="Header Files\Last.fm">
       <UniqueIdentifier>{96bb632b-17c3-4a44-bfaa-3406ea885137}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Importer">
+      <UniqueIdentifier>{cc87ed29-2e7b-4c91-a2a7-e143703ae1e9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\CApplication.cpp">
@@ -325,6 +328,15 @@
     <ClCompile Include="GeneratedFiles\Release\moc_CSpecialSpinBox.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Importer\CImporterITunes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_CImporterITunes.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_CImporterITunes.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Sources\CApplication.hpp">
@@ -450,6 +462,12 @@
     <CustomBuild Include="Sources\CSpecialSpinBox.hpp">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="Sources\Importer\CImporterITunes.hpp">
+      <Filter>Header Files\Importer</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Form\DialogImportITunes.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_DialogEditDynamicPlayList.h">
@@ -484,6 +502,9 @@
     </ClInclude>
     <ClInclude Include="Sources\CRating.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_DialogImportITunes.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
