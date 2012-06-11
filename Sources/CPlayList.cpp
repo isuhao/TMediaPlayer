@@ -27,9 +27,9 @@ CPlayList::~CPlayList()
 
 
 /**
- * Indique si la liste de lecture a été modifiée et doit être mise à jour.
+ * Indique si la liste de lecture a Ã©tÃ© modifiÃ©e et doit Ãªtre mise Ã  jour.
  *
- * \return Booléen.
+ * \return BoolÃ©en.
  */
 
 bool CPlayList::isModified(void) const
@@ -90,9 +90,9 @@ void CPlayList::setFolder(CListFolder * folder)
 
 
 /**
- * Met à jour la base de données si la liste a été modifiée.
+ * Met Ã  jour la base de donnÃ©es si la liste a Ã©tÃ© modifiÃ©e.
  *
- * \return Booléen indiquant le succès de l'opération.
+ * \return BoolÃ©en indiquant le succÃ¨s de l'opÃ©ration.
  */
 
 bool CPlayList::updateDatabase(void)
@@ -126,7 +126,7 @@ bool CPlayList::updateDatabase(void)
 
 
 /**
- * Supprime la liste de la base de données.
+ * Supprime la liste de la base de donnÃ©es.
  */
 
 void CPlayList::romoveFromDatabase(void)

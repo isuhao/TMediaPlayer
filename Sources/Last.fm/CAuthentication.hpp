@@ -29,8 +29,8 @@ protected slots:
 
 private:
 
-    QByteArray m_lastFmToken; ///< Token utilisé pour la connexion à Last.fm.
-    QTimer * m_timerLastFm;   ///< Timer utilisé pour récupérer la clé.
+    QByteArray m_lastFmToken; ///< Token utilisÃ© pour la connexion Ã  Last.fm.
+    QTimer * m_timerLastFm;   ///< Timer utilisÃ© pour rÃ©cupÃ©rer la clÃ©.
     int m_numRequests;
 };
 

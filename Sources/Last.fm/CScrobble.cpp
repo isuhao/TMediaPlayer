@@ -14,7 +14,7 @@ CScrobble::CScrobble(CApplication * application, const QByteArray& sessionKey, C
 {
     Q_CHECK_PTR(song);
 
-    // Arguments de la requête
+    // Arguments de la requÃªte
     QMap<QByteArray, QByteArray> args;
 
     args["method"]    = "track.scrobble";

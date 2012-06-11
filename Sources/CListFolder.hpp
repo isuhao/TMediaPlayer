@@ -39,12 +39,12 @@ public slots:
 
 private:
 
-    int m_id;                       ///< Identifiant du dossier en base de données.
+    int m_id;                       ///< Identifiant du dossier en base de donnÃ©es.
     QString m_name;                 ///< Nom du dossier.
     CListFolder * m_folder;         ///< Dossier parent.
     int m_position;                 ///< Position dans le dossier.
-    bool m_isModified;              ///< Indique si le dossier a été modifié.
-    QList<CPlayList *> m_playLists; ///< Liste des listes de lecture du dossier (l'ordre est le même que l'affichage).
+    bool m_isModified;              ///< Indique si le dossier a Ã©tÃ© modifiÃ©.
+    QList<CPlayList *> m_playLists; ///< Liste des listes de lecture du dossier (l'ordre est le mÃªme que l'affichage).
 };
 
 

@@ -7,7 +7,7 @@
 /**
  * Construit la boite de dialogue.
  *
- * \param song Morceau dont on veut afficher les métadonnées.
+ * \param song Morceau dont on veut afficher les mÃ©tadonnÃ©es.
  */
 
 CDialogEditMetadata::CDialogEditMetadata(CSong * song) :
@@ -47,7 +47,7 @@ CDialogEditMetadata::CDialogEditMetadata(CSong * song) :
 
 
 /**
- * Détruit la boite de dialogue.
+ * DÃ©truit la boite de dialogue.
  */
 
 CDialogEditMetadata::~CDialogEditMetadata()
@@ -57,9 +57,9 @@ CDialogEditMetadata::~CDialogEditMetadata()
 
 
 /**
- * Enregistre les modifications effectuées sur le morceau.
+ * Enregistre les modifications effectuÃ©es sur le morceau.
  *
- * \todo Implémentation.
+ * \todo ImplÃ©mentation.
  */
 
 void CDialogEditMetadata::apply(void)
@@ -69,7 +69,7 @@ void CDialogEditMetadata::apply(void)
 
 
 /**
- * Enregistre les modifications effectuées sur le morceau et ferme la boite de dialogue.
+ * Enregistre les modifications effectuÃ©es sur le morceau et ferme la boite de dialogue.
  */
 
 void CDialogEditMetadata::save(void)
@@ -80,17 +80,17 @@ void CDialogEditMetadata::save(void)
 
 
 /**
- * Recharge les métadonnées du morceau.
+ * Recharge les mÃ©tadonnÃ©es du morceau.
  *
- * \todo Implémentation.
+ * \todo ImplÃ©mentation.
  */
 
 void CDialogEditMetadata::reset(void)
 {
     //...
 
-    // TODO: récupérer les tags du morceau suivant son format
-    // TODO: masquer les onglets non-gérés par le format
+    // TODO: rÃ©cupÃ©rer les tags du morceau suivant son format
+    // TODO: masquer les onglets non-gÃ©rÃ©s par le format
 
     //initTabID3v1(tagID3v1...);
     //initTabID3v2(void);

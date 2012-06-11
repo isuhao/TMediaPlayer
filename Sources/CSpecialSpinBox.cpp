@@ -19,14 +19,14 @@ void CSpecialSpinBox::setPlaceholderText(const QString& text)
 
 
 /**
- * Modifie la valeur spéciale.
+ * Modifie la valeur spÃ©ciale.
  *
- * La valeur spécial doit commencer par un chiffre valide différent de 0, et
- * être supérieure à la valeur maximale.
+ * La valeur spÃ©cial doit commencer par un chiffre valide diffÃ©rent de 0, et
+ * Ãªtre supÃ©rieure Ã  la valeur maximale.
  *
- * Attention : setMaximum() ne doit pas être appelée après cette méthode.
+ * Attention : setMaximum() ne doit pas Ãªtre appelÃ©e aprÃ¨s cette mÃ©thode.
  *
- * \param value Valeur spéciale.
+ * \param value Valeur spÃ©ciale.
  */
 
 void CSpecialSpinBox::setSpecialValue(int value)

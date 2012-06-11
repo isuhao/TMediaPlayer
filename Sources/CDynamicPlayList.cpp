@@ -29,7 +29,7 @@ CDynamicPlayList::CDynamicPlayList(CApplication * application, const QString& na
 
 
 /**
- * Détruit la liste de lecture dynamique.
+ * DÃ©truit la liste de lecture dynamique.
  */
 
 CDynamicPlayList::~CDynamicPlayList()
@@ -39,9 +39,9 @@ CDynamicPlayList::~CDynamicPlayList()
 
 
 /**
- * Indique si la liste a été modifiée et doit être mise à jour en base de donnés.
+ * Indique si la liste a Ã©tÃ© modifiÃ©e et doit Ãªtre mise Ã  jour en base de donnÃ©s.
  *
- * \return Booléen.
+ * \return BoolÃ©en.
  */
 
 bool CDynamicPlayList::isModified(void) const
@@ -51,7 +51,7 @@ bool CDynamicPlayList::isModified(void) const
 
 
 /**
- * Retourne le widget permettant l'édition de la liste dynamique.
+ * Retourne le widget permettant l'Ã©dition de la liste dynamique.
  *
  * \return Widget.
  */
@@ -64,7 +64,7 @@ CWidgetMultiCriterion * CDynamicPlayList::getWidget(void) const
 
 
 /**
- * Met à jour la liste des morceaux.
+ * Met Ã  jour la liste des morceaux.
  */
 
 void CDynamicPlayList::update(void)
@@ -80,11 +80,11 @@ void CDynamicPlayList::update(void)
 
 
 /**
- * Met à jour les informations de la liste en base de données.
+ * Met Ã  jour les informations de la liste en base de donnÃ©es.
  *
- * \todo Gérer les critères.
+ * \todo GÃ©rer les critÃ¨res.
  *
- * \return Booléen indiquant le succès de l'opération.
+ * \return BoolÃ©en indiquant le succÃ¨s de l'opÃ©ration.
  */
 
 bool CDynamicPlayList::updateDatabase(void)
@@ -115,7 +115,7 @@ bool CDynamicPlayList::updateDatabase(void)
         query.bindValue(0, m_name);
         query.bindValue(1, 0);
         query.bindValue(2, m_position);
-        query.bindValue(3, "0:40;1:100;2:100;3:100"); // Disposition par défaut \todo => settings
+        query.bindValue(3, "0:40;1:100;2:100;3:100"); // Disposition par dÃ©faut \todo => settings
 
         if (!query.exec())
         {
@@ -138,7 +138,7 @@ bool CDynamicPlayList::updateDatabase(void)
 
         m_id = query.lastInsertId().toInt();
 
-        // Insertion des nouveaux critères
+        // Insertion des nouveaux critÃ¨res
         m_mainCriteria->insertIntoDatabase(m_application);
 
         query.prepare("UPDATE dynamic_list SET criteria_id = ? WHERE dynamic_list_id = ?");
@@ -152,7 +152,7 @@ bool CDynamicPlayList::updateDatabase(void)
             return false;
         }
     }
-    // Mise à jour
+    // Mise Ã  jour
     else if (m_isDynamicListModified)
     {
         query.prepare("UPDATE dynamic_list SET criteria_id = ? WHERE dynamic_list_id = ?");
@@ -177,7 +177,7 @@ bool CDynamicPlayList::updateDatabase(void)
             return false;
         }
 
-        // Suppression des anciens critères
+        // Suppression des anciens critÃ¨res
         query.prepare("DELETE FROM criteria WHERE dynamic_list_id = ?");
         query.bindValue(0, m_id);
 
@@ -187,7 +187,7 @@ bool CDynamicPlayList::updateDatabase(void)
             return false;
         }
 
-        // Insertion des nouveaux critères
+        // Insertion des nouveaux critÃ¨res
         m_mainCriteria->insertIntoDatabase(m_application);
 
         query.prepare("UPDATE dynamic_list SET criteria_id = ? WHERE dynamic_list_id = ?");
@@ -208,7 +208,7 @@ bool CDynamicPlayList::updateDatabase(void)
 
 
 /**
- * Supprime la liste de la base de données.
+ * Supprime la liste de la base de donnÃ©es.
  */
 
 void CDynamicPlayList::romoveFromDatabase(void)
@@ -221,7 +221,7 @@ void CDynamicPlayList::romoveFromDatabase(void)
 
     QSqlQuery query(m_application->getDataBase());
 
-    // Suppression des critères
+    // Suppression des critÃ¨res
     query.prepare("DELETE FROM criteria WHERE dynamic_list_id = ?");
     query.bindValue(0, m_id);
 
@@ -249,7 +249,7 @@ void CDynamicPlayList::romoveFromDatabase(void)
 
 
 /**
- * Charge la liste de lecture dynamique depuis la base de données.
+ * Charge la liste de lecture dynamique depuis la base de donnÃ©es.
  */
 
 void CDynamicPlayList::loadFromDatabase(void)
@@ -264,7 +264,7 @@ void CDynamicPlayList::loadFromDatabase(void)
 
     QSqlQuery query(m_application->getDataBase());
 
-    // Liste des critères
+    // Liste des critÃ¨res
     query.prepare("SELECT criteria_id, criteria_parent, criteria_position, criteria_type, criteria_condition, criteria_value1, criteria_value2 "
                   "FROM criteria WHERE dynamic_list_id = ? ORDER BY criteria_position");
     query.bindValue(0, m_id);
@@ -313,21 +313,21 @@ void CDynamicPlayList::loadFromDatabase(void)
 
     if (criteriaList.isEmpty())
     {
-        qWarning() << "CDynamicPlayList::loadFromDatabase() : aucun critère défini";
+        qWarning() << "CDynamicPlayList::loadFromDatabase() : aucun critÃ¨re dÃ©fini";
         m_mainCriteria = new CCriteria(m_application, this);
         return;
     }
 
-    // Imbrication des critères
+    // Imbrication des critÃ¨res
     for (QMap<int, ICriteria *>::const_iterator it = criteriaList.begin(); it != criteriaList.end(); ++it)
     {
-        int parentId = reinterpret_cast<int>(it.value()->m_parent);
+        long parentId = reinterpret_cast<long>(it.value()->m_parent);
 
         if (parentId == 0)
         {
             if (m_mainCriteria)
             {
-                qWarning() << "CDynamicPlayList::loadFromDatabase() : plusieurs critères principaux";
+                qWarning() << "CDynamicPlayList::loadFromDatabase() : plusieurs critÃ¨res principaux";
                 continue;
             }
 
@@ -337,7 +337,7 @@ void CDynamicPlayList::loadFromDatabase(void)
         {
             if (!criteriaList.contains(parentId))
             {
-                qWarning() << "CDynamicPlayList::loadFromDatabase() : l'identifiant du parent ne correspond a aucun critère de la liste";
+                qWarning() << "CDynamicPlayList::loadFromDatabase() : l'identifiant du parent ne correspond a aucun critÃ¨re de la liste";
                 continue;
             }
 
@@ -345,7 +345,7 @@ void CDynamicPlayList::loadFromDatabase(void)
 
             if (!multiCriterion)
             {
-                qWarning() << "CDynamicPlayList::loadFromDatabase() : la parent du critère n'est pas un multi-critères";
+                qWarning() << "CDynamicPlayList::loadFromDatabase() : la parent du critÃ¨re n'est pas un multi-critÃ¨res";
                 continue;
             }
 
@@ -354,7 +354,7 @@ void CDynamicPlayList::loadFromDatabase(void)
     }
 
 
-    // Conditions de mise à jour
+    // Conditions de mise Ã  jour
     ICriteria::TUpdateConditions conditions = m_mainCriteria->getUpdateConditions();
 
     if (conditions.testFlag(ICriteria::UpdateOnSongAdded))
@@ -390,10 +390,10 @@ void CDynamicPlayList::loadFromDatabase(void)
 
 
 /**
- * Change le critère principale utilisé par la liste.
- * L'ancien critère est détruit, et la liste devient le parent du critère.
+ * Change le critÃ¨re principale utilisÃ© par la liste.
+ * L'ancien critÃ¨re est dÃ©truit, et la liste devient le parent du critÃ¨re.
  *
- * \param criteria Nouveau critère.
+ * \param criteria Nouveau critÃ¨re.
  */
 
 void CDynamicPlayList::setCriteria(ICriteria * criteria)
@@ -407,7 +407,7 @@ void CDynamicPlayList::setCriteria(ICriteria * criteria)
     m_isDynamicListModified = true;
 
 
-    // Conditions de mise à jour
+    // Conditions de mise Ã  jour
     disconnect(m_application, SIGNAL(songAdded(CSong *)), this, SLOT(update()));
     disconnect(m_application, SIGNAL(songRemoved(CSong *)), this, SLOT(update()));
     disconnect(m_application, SIGNAL(songModified(CSong *)), this, SLOT(update()));

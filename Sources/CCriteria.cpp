@@ -8,7 +8,7 @@
 
 
 /**
- * Crée le critère.
+ * CrÃ©e le critÃ¨re.
  *
  * \param parent Pointeur sur l'objet parent.
  */
@@ -21,7 +21,7 @@ CCriteria::CCriteria(CApplication * application, QObject * parent) :
 
 
 /**
- * Détruit le critère.
+ * DÃ©truit le critÃ¨re.
  */
 
 CCriteria::~CCriteria()
@@ -31,10 +31,10 @@ CCriteria::~CCriteria()
 
 
 /**
- * Détermine si le morceau vérifie le critère.
+ * DÃ©termine si le morceau vÃ©rifie le critÃ¨re.
  *
- * \param song Morceau à tester.
- * \return Booléen.
+ * \param song Morceau Ã  tester.
+ * \return BoolÃ©en.
  */
 
 bool CCriteria::matchCriteria(CSong * song) const
@@ -57,7 +57,7 @@ bool CCriteria::matchCriteria(CSong * song) const
             }
             else
             {
-                qWarning() << "CCriteria::matchCriteria() : la condition n'est pas gérée";
+                qWarning() << "CCriteria::matchCriteria() : la condition n'est pas gÃ©rÃ©e";
                 return false;
             }
         }
@@ -75,18 +75,18 @@ bool CCriteria::matchCriteria(CSong * song) const
             }
             else
             {
-                qWarning() << "CCriteria::matchCriteria() : la condition n'est pas gérée";
+                qWarning() << "CCriteria::matchCriteria() : la condition n'est pas gÃ©rÃ©e";
                 return false;
             }
         }
         else if (m_type == ICriteria::TypePlayList)
         {
-            qWarning() << "CCriteria::matchCriteria() : le critère TypePlayList doit être géré par la fonction appelante";
+            qWarning() << "CCriteria::matchCriteria() : le critÃ¨re TypePlayList doit Ãªtre gÃ©rÃ© par la fonction appelante";
             return false;
         }
         else
         {
-            qWarning() << "CCriteria::matchCriteria() : le type de critère n'est pas géré";
+            qWarning() << "CCriteria::matchCriteria() : le type de critÃ¨re n'est pas gÃ©rÃ©";
             return false;
         }
     }
@@ -97,7 +97,7 @@ bool CCriteria::matchCriteria(CSong * song) const
         switch (m_type)
         {
             default:
-                qWarning() << "CCriteria::matchCriteria() : le type de critère n'est pas géré";
+                qWarning() << "CCriteria::matchCriteria() : le type de critÃ¨re n'est pas gÃ©rÃ©";
                 return false;
 
             case TypeTitle      : str = song->getTitle();       break;
@@ -120,7 +120,7 @@ bool CCriteria::matchCriteria(CSong * song) const
         switch (m_condition)
         {
             default:
-                qWarning() << "CCriteria::matchCriteria() : la condition n'est pas gérée";
+                qWarning() << "CCriteria::matchCriteria() : la condition n'est pas gÃ©rÃ©e";
                 return false;
 
             case CondStringEqual      : return (str.toLower() == m_value1.toString());
@@ -139,7 +139,7 @@ bool CCriteria::matchCriteria(CSong * song) const
         switch (m_type)
         {
             default:
-                qWarning() << "CCriteria::matchCriteria() : le type de critère n'est pas géré";
+                qWarning() << "CCriteria::matchCriteria() : le type de critÃ¨re n'est pas gÃ©rÃ©";
                 return false;
 
             case TypeYear       : num = song->getYear();       break;
@@ -162,7 +162,7 @@ bool CCriteria::matchCriteria(CSong * song) const
         switch (m_condition)
         {
             default:
-                qWarning() << "CCriteria::matchCriteria() : la condition n'est pas gérée";
+                qWarning() << "CCriteria::matchCriteria() : la condition n'est pas gÃ©rÃ©e";
                 return false;
 
             case CondNumberEqual      : return (num == m_value1.toInt());
@@ -179,7 +179,7 @@ bool CCriteria::matchCriteria(CSong * song) const
         switch (m_type)
         {
             default:
-                qWarning() << "CCriteria::matchCriteria() : le type de critère n'est pas géré";
+                qWarning() << "CCriteria::matchCriteria() : le type de critÃ¨re n'est pas gÃ©rÃ©";
                 return false;
 
             case TypeDuration: time = time.addMSecs(song->getDuration()); break;
@@ -194,7 +194,7 @@ bool CCriteria::matchCriteria(CSong * song) const
         switch (m_condition)
         {
             default:
-                qWarning() << "CCriteria::matchCriteria() : la condition n'est pas gérée";
+                qWarning() << "CCriteria::matchCriteria() : la condition n'est pas gÃ©rÃ©e";
                 return false;
 
             case CondTimeIs         : return (time == m_value1.toTime());
@@ -211,7 +211,7 @@ bool CCriteria::matchCriteria(CSong * song) const
         switch (m_type)
         {
             default:
-                qWarning() << "CCriteria::matchCriteria() : le type de critère n'est pas géré";
+                qWarning() << "CCriteria::matchCriteria() : le type de critÃ¨re n'est pas gÃ©rÃ©";
                 return false;
 
             case TypeLastPlayTime: date = song->getLastPlay(); break;
@@ -228,7 +228,7 @@ bool CCriteria::matchCriteria(CSong * song) const
         switch (m_condition)
         {
             default:
-                qWarning() << "CCriteria::matchCriteria() : la condition n'est pas gérée";
+                qWarning() << "CCriteria::matchCriteria() : la condition n'est pas gÃ©rÃ©e";
                 return false;
 
             case CondDateIs       : return (date == m_value1.toDateTime());
@@ -248,7 +248,7 @@ bool CCriteria::matchCriteria(CSong * song) const
                     case 0: dateCmp2 = dateCmp1.addDays  (-    m_value1.toInt()); break; // Jours
                     case 1: dateCmp2 = dateCmp1.addDays  (-7 * m_value1.toInt()); break; // Semaines
                     case 2: dateCmp2 = dateCmp1.addMonths(-    m_value1.toInt()); break; // Mois
-                    case 3: dateCmp2 = dateCmp1.addYears (-    m_value1.toInt()); break; // Années
+                    case 3: dateCmp2 = dateCmp1.addYears (-    m_value1.toInt()); break; // AnnÃ©es
                 }
 
                 return (date <= dateCmp1 && date >= dateCmp2);
@@ -265,7 +265,7 @@ bool CCriteria::matchCriteria(CSong * song) const
                     case 0: dateCmp2 = dateCmp1.addDays  (-    m_value1.toInt()); break; // Jours
                     case 1: dateCmp2 = dateCmp1.addDays  (-7 * m_value1.toInt()); break; // Semaines
                     case 2: dateCmp2 = dateCmp1.addMonths(-    m_value1.toInt()); break; // Mois
-                    case 3: dateCmp2 = dateCmp1.addYears (-    m_value1.toInt()); break; // Années
+                    case 3: dateCmp2 = dateCmp1.addYears (-    m_value1.toInt()); break; // AnnÃ©es
                 }
 
                 return !(date <= dateCmp1 && date >= dateCmp2);
@@ -278,16 +278,16 @@ bool CCriteria::matchCriteria(CSong * song) const
 
 
 /**
- * Retourne la liste des morceaux qui vérifient le critère.
- * Cette implémentation parcourt la liste \a from et utilise la méthode matchCriteria
- * pour tester si le morceau vérifie le critère, sauf si la condition est la présence
- * ou non du morceau dans une liste, auquel cas on détermine l'intersection de \a from
+ * Retourne la liste des morceaux qui vÃ©rifient le critÃ¨re.
+ * Cette implÃ©mentation parcourt la liste \a from et utilise la mÃ©thode matchCriteria
+ * pour tester si le morceau vÃ©rifie le critÃ¨re, sauf si la condition est la prÃ©sence
+ * ou non du morceau dans une liste, auquel cas on dÃ©termine l'intersection de \a from
  * avec les morceaux de la liste de lecture.
  *
- * \param from Liste de morceaux à analyser.
- * \param with Liste de morceaux à ajouter dans la liste.
- * \return Liste de morceaux qui vérifient le critère, sans doublons, avec tous les
- *         éléments de \a with.
+ * \param from Liste de morceaux Ã  analyser.
+ * \param with Liste de morceaux Ã  ajouter dans la liste.
+ * \return Liste de morceaux qui vÃ©rifient le critÃ¨re, sans doublons, avec tous les
+ *         Ã©lÃ©ments de \a with.
  */
 
 QList<CSong *> CCriteria::getSongs(const QList<CSong *>& from, const QList<CSong *>& with) const
@@ -326,7 +326,7 @@ QList<CSong *> CCriteria::getSongs(const QList<CSong *>& from, const QList<CSong
         }
         else
         {
-            qWarning() << "CCriteria::getSongs() : la condition n'est pas gérée";
+            qWarning() << "CCriteria::getSongs() : la condition n'est pas gÃ©rÃ©e";
         }
     }
     else
@@ -350,7 +350,7 @@ ICriteria::TUpdateConditions CCriteria::getUpdateConditions(void) const
     {
         case TypeUnion:
         case TypeIntersection:
-            qWarning() << "CCriteria::getWidget() : un critère simple ne peut pas avoir le type TypeUnion ou TypeIntersection";
+            qWarning() << "CCriteria::getWidget() : un critÃ¨re simple ne peut pas avoir le type TypeUnion ou TypeIntersection";
 
         default:
         case TypeInvalid:
@@ -385,7 +385,7 @@ ICriteria::TUpdateConditions CCriteria::getUpdateConditions(void) const
 }
 
 
-#include "CWidgetCriteria.hpp" // Si on l'inclut avant, l'intellisense bug complètement...
+#include "CWidgetCriteria.hpp" // Si on l'inclut avant, l'intellisense bug complÃ¨tement...
 
 
 IWidgetCriteria * CCriteria::getWidget(void) const
@@ -396,7 +396,7 @@ IWidgetCriteria * CCriteria::getWidget(void) const
     {
         case TypeUnion:
         case TypeIntersection:
-            qWarning() << "CCriteria::getWidget() : un critère simple ne peut pas avoir le type TypeUnion ou TypeIntersection";
+            qWarning() << "CCriteria::getWidget() : un critÃ¨re simple ne peut pas avoir le type TypeUnion ou TypeIntersection";
 
         default:
         case TypeInvalid:
@@ -458,7 +458,7 @@ IWidgetCriteria * CCriteria::getWidget(void) const
         }
         else
         {
-            qWarning() << "CCriteria::getWidget() : type de critère non géré";
+            qWarning() << "CCriteria::getWidget() : type de critÃ¨re non gÃ©rÃ©";
         }
     }
     else if ((m_type >> 8) == TypeMaskString)

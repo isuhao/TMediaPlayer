@@ -2564,7 +2564,7 @@ void CApplication::loadDatabase(void)
 
     for (QList<CListFolder *>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
     {
-        int folderId = reinterpret_cast<int>((*it)->m_folder);
+        long folderId = reinterpret_cast<long>((*it)->m_folder);
         if (folderId >= 0 && folderId < m_folders.size())
         {
             (*it)->m_folder = getFolderFromId(folderId);

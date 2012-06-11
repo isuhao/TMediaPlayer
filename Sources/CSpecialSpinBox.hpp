@@ -6,8 +6,8 @@
 
 
 /**
- * Spin box permettant d'afficher un placeholder pour une valeur spéciale.
- * Les valeurs valides sont supérieures à 0. La valeur nulle est une valeur spéciale.
+ * Spin box permettant d'afficher un placeholder pour une valeur spÃ©ciale.
+ * Les valeurs valides sont supÃ©rieures Ã  0. La valeur nulle est une valeur spÃ©ciale.
  */
 
 class CSpecialSpinBox : public QSpinBox

@@ -5,9 +5,9 @@
 
 
 /**
- * Construit la boite de dialogue des préférences.
+ * Construit la boite de dialogue des prÃ©fÃ©rences.
  *
- * \todo Gérer toutes les préferences.
+ * \todo GÃ©rer toutes les prÃ©ferences.
  */
 
 CDialogPreferences::CDialogPreferences(CApplication * application, QSettings * settings) :
@@ -22,7 +22,7 @@ CDialogPreferences::CDialogPreferences(CApplication * application, QSettings * s
     setAttribute(Qt::WA_DeleteOnClose);
     m_uiWidget->setupUi(this);
 
-    // Récupération des paramètres
+    // RÃ©cupÃ©ration des paramÃ¨tres
     m_uiWidget->editRowHeight->setValue(m_settings->value("Preferences/RowHeight", 19).toInt());
     m_uiWidget->editShowButtonStop->setChecked(m_settings->value("Preferences/ShowButtonStop", true).toBool());
 
@@ -42,7 +42,7 @@ CDialogPreferences::CDialogPreferences(CApplication * application, QSettings * s
 
 
 /**
- * Détruit la boite de dialogue.
+ * DÃ©truit la boite de dialogue.
  */
 
 CDialogPreferences::~CDialogPreferences()
@@ -52,9 +52,9 @@ CDialogPreferences::~CDialogPreferences()
 
 
 /**
- * Enregistre les préférences et ferme la boite de dialogue.
+ * Enregistre les prÃ©fÃ©rences et ferme la boite de dialogue.
  *
- * \todo Gérer toutes les préferences.
+ * \todo GÃ©rer toutes les prÃ©ferences.
  */
 
 void CDialogPreferences::save(void)

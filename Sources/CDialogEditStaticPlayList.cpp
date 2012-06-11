@@ -38,7 +38,7 @@ CDialogEditStaticPlayList::CDialogEditStaticPlayList(CStaticPlayList * playList,
 
 
 /**
- * Détruit le widget.
+ * DÃ©truit le widget.
  */
 
 CDialogEditStaticPlayList::~CDialogEditStaticPlayList()

@@ -23,7 +23,7 @@ CPlayListModel::~CPlayListModel()
 
 
 /**
- * \todo Pouvoir créer une liste de lecture statique.
+ * \todo Pouvoir crÃ©er une liste de lecture statique.
  */
 
 bool CPlayListModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex& parent)
@@ -42,7 +42,7 @@ bool CPlayListModel::dropMimeData(const QMimeData * data, Qt::DropAction action,
 
     if (parent.isValid())
     {
-        //qDebug() << "CPlayListModel::dropMimeData() : ajout à une liste...";
+        //qDebug() << "CPlayListModel::dropMimeData() : ajout Ã  une liste...";
 
         CSongTable * songTable = this->data(parent, Qt::UserRole + 1).value<CSongTable *>();
         CStaticPlayList * playList = qobject_cast<CStaticPlayList *>(songTable);
@@ -75,7 +75,7 @@ bool CPlayListModel::dropMimeData(const QMimeData * data, Qt::DropAction action,
         return false;
     }
 
-    qDebug() << "CPlayListModel::dropMimeData() : création d'une nouvelle liste...";
+    qDebug() << "CPlayListModel::dropMimeData() : crÃ©ation d'une nouvelle liste...";
     return true;
 }
 

@@ -9,11 +9,11 @@
 
 
 /**
- * Constructeur de la boite de dialogue d'Èdition des listes de lecture dynamiques.
+ * Constructeur de la boite de dialogue d'√©dition des listes de lecture dynamiques.
  *
- * \todo Charger les critËres si la liste existe dÈj‡.
+ * \todo Charger les crit√®res si la liste existe d√©j√†.
  *
- * \param playList    Pointeur sur la liste ‡ modifier, ou NULL pour une nouvelle liste.
+ * \param playList    Pointeur sur la liste √† modifier, ou NULL pour une nouvelle liste.
  * \param application Pointeur sur l'application.
  */
 
@@ -65,7 +65,7 @@ CDialogEditDynamicList::CDialogEditDynamicList(CDynamicPlayList * playList, CApp
 
 
 /**
- * DÈtruit le widget.
+ * D√©truit le widget.
  */
 
 CDialogEditDynamicList::~CDialogEditDynamicList()
@@ -75,7 +75,7 @@ CDialogEditDynamicList::~CDialogEditDynamicList()
 
 
 /**
- * Redimensionne la boite de dialogue ‡ chaque ajout ou suppression de critËre.
+ * Redimensionne la boite de dialogue √† chaque ajout ou suppression de crit√®re.
  */
 
 void CDialogEditDynamicList::resizeWindow(void)
@@ -86,7 +86,7 @@ void CDialogEditDynamicList::resizeWindow(void)
 
 
 /**
- * Enregistre les paramËtres de la liste de lecture dynamique.
+ * Enregistre les param√®tres de la liste de lecture dynamique.
  */
 
 void CDialogEditDynamicList::save(void)

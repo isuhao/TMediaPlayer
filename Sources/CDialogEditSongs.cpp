@@ -9,7 +9,7 @@
 /**
  * Construit la boite de dialogue pour modifier les informations de plusieurs morceaux.
  *
- * \param songItemList Liste des morceaux à modifier.
+ * \param songItemList Liste des morceaux Ã  modifier.
  * \param application  Pointeur sur l'application.
  */
 
@@ -64,7 +64,7 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, CApplic
     m_uiWidget->editLanguage->addItems(CSong::getLanguageList());
 
     
-    // Recherche des données similaires pour tous les éléments
+    // Recherche des donnÃ©es similaires pour tous les Ã©lÃ©ments
     QString songTitle;           bool songTitleSim           = true;
     QString songTitleSort;       bool songTitleSortSim       = true;
     QString songArtist;          bool songArtistSim          = true;
@@ -333,7 +333,7 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, CApplic
     connect(m_uiWidget->editComments, SIGNAL(textChanged()), this, SLOT(onCommentsChange()));
     connect(m_uiWidget->chComments, SIGNAL(clicked(bool)), this, SLOT(onCommentsChecked(bool)));
 
-    // Année
+    // AnnÃ©e
     m_uiWidget->editYear->setText(songYear > 0 ? QString::number(songYear) : QString());
     m_uiWidget->editYear->setValidator(new QIntValidator(0, 9999, this));
 
@@ -345,7 +345,7 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, CApplic
     connect(m_uiWidget->editYear, SIGNAL(textEdited(const QString&)), this, SLOT(onYearChange(const QString&)));
     connect(m_uiWidget->chYear, SIGNAL(clicked(bool)), this, SLOT(onYearChecked(bool)));
 
-    // Numéro de piste
+    // NumÃ©ro de piste
     m_uiWidget->editTrackNumber->setText(songTrackNumber > 0 ? QString::number(songTrackNumber) : QString());
     m_uiWidget->editTrackNumber->setValidator(new QIntValidator(0, 999, this));
 
@@ -369,7 +369,7 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, CApplic
     connect(m_uiWidget->editTrackCount, SIGNAL(textEdited(const QString&)), this, SLOT(onTrackCountChange(const QString&)));
     connect(m_uiWidget->chTrackCount, SIGNAL(clicked(bool)), this, SLOT(onTrackCountChecked(bool)));
 
-    // Numéro de disque
+    // NumÃ©ro de disque
     m_uiWidget->editDiscNumber->setText(songDiscNumber > 0 ? QString::number(songDiscNumber) : QString());
     m_uiWidget->editDiscNumber->setValidator(new QIntValidator(0, 999, this));
 
@@ -491,7 +491,7 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, CApplic
 
 
 /**
- * Détruit la boite de dialogue.
+ * DÃ©truit la boite de dialogue.
  */
 
 CDialogEditSongs::~CDialogEditSongs()
@@ -501,7 +501,7 @@ CDialogEditSongs::~CDialogEditSongs()
 
 
 /**
- * Enregistre les modifications effectuées sur les morceaux.
+ * Enregistre les modifications effectuÃ©es sur les morceaux.
  */
 
 void CDialogEditSongs::apply(void)
@@ -590,7 +590,7 @@ void CDialogEditSongs::apply(void)
 
 
 /**
- * Enregistre les modifications effectuées sur les morceaux et ferme la boite de dialogue.
+ * Enregistre les modifications effectuÃ©es sur les morceaux et ferme la boite de dialogue.
  */
 
 void CDialogEditSongs::save(void)

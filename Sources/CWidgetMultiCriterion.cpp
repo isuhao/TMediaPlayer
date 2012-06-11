@@ -10,7 +10,7 @@
 
 /**
  * Construit le widget.
- * Un sous-critère simple est ajouté.
+ * Un sous-critÃ¨re simple est ajoutÃ©.
  *
  * \param parent Widget parent.
  */
@@ -30,7 +30,7 @@ CWidgetMultiCriterion::CWidgetMultiCriterion(CApplication * application, QWidget
 
 
 /**
- * Détruit le widget.
+ * DÃ©truit le widget.
  */
 
 CWidgetMultiCriterion::~CWidgetMultiCriterion()
@@ -41,9 +41,9 @@ CWidgetMultiCriterion::~CWidgetMultiCriterion()
 
 
 /**
- * Retourne le critère définis par le widget.
+ * Retourne le critÃ¨re dÃ©finis par le widget.
  *
- * \return Pointeur sur le critère.
+ * \return Pointeur sur le critÃ¨re.
  */
 
 ICriteria * CWidgetMultiCriterion::getCriteria(void)
@@ -68,7 +68,7 @@ void CWidgetMultiCriterion::setMultiCriterionType(int type)
 
 
 /**
- * Ajoute un sous-critère.
+ * Ajoute un sous-critÃ¨re.
  */
 
 void CWidgetMultiCriterion::addCriteria(void)
@@ -78,7 +78,7 @@ void CWidgetMultiCriterion::addCriteria(void)
 
 
 /**
- * Ajoute un sous-critère de type multi-critères.
+ * Ajoute un sous-critÃ¨re de type multi-critÃ¨res.
  */
 
 void CWidgetMultiCriterion::addMultiCriterion(void)
@@ -88,16 +88,16 @@ void CWidgetMultiCriterion::addMultiCriterion(void)
 
 
 /**
- * Enlève un sous-critère.
+ * EnlÃ¨ve un sous-critÃ¨re.
  *
- * \param row Numéro de la ligne à enlever.
+ * \param row NumÃ©ro de la ligne Ã  enlever.
  */
 
 void CWidgetMultiCriterion::removeCriteria(int row)
 {
     Q_ASSERT(row >= 0 && row < m_uiWidget->layoutChildren->rowCount());
 
-    // On garde au moins un critère
+    // On garde au moins un critÃ¨re
     if (m_children.size() <= 1)
     {
         return;
@@ -136,8 +136,8 @@ void CWidgetMultiCriterion::removeCriteria(int row)
 
 
 /**
- * Méthode appelée lorsqu'on clique sur un bouton pour supprimer un sous-critère.
- * Le numéro de la ligne est déterminée à partir du widget ayant envoyé le signal.
+ * MÃ©thode appelÃ©e lorsqu'on clique sur un bouton pour supprimer un sous-critÃ¨re.
+ * Le numÃ©ro de la ligne est dÃ©terminÃ©e Ã  partir du widget ayant envoyÃ© le signal.
  */
 
 void CWidgetMultiCriterion::removeCriteriaFromButton(void)
@@ -152,9 +152,9 @@ void CWidgetMultiCriterion::removeCriteriaFromButton(void)
 
 
 /**
- * Ajoute un sous-critère au widget.
+ * Ajoute un sous-critÃ¨re au widget.
  *
- * \param criteriaWidget Widget du sous-critère à ajouter.
+ * \param criteriaWidget Widget du sous-critÃ¨re Ã  ajouter.
  */
 
 void CWidgetMultiCriterion::addCriteria(IWidgetCriteria * criteriaWidget)

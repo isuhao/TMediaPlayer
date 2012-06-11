@@ -47,6 +47,9 @@
     <Filter Include="Header Files\Importer">
       <UniqueIdentifier>{cc87ed29-2e7b-4c91-a2a7-e143703ae1e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Importer">
+      <UniqueIdentifier>{85bbc06a-5cf9-4570-ae6b-96f415dda68e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\CApplication.cpp">
@@ -328,14 +331,14 @@
     <ClCompile Include="GeneratedFiles\Release\moc_CSpecialSpinBox.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Importer\CImporterITunes.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_CImporterITunes.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_CImporterITunes.cpp">
       <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Importer\CImporterITunes.cpp">
+      <Filter>Source Files\Importer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

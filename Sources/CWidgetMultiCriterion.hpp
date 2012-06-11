@@ -14,7 +14,7 @@ class QPushButton;
 
 
 /**
- * Widget permettant d'éditer un sous-critère d'une liste dynamique.
+ * Widget permettant d'Ã©diter un sous-critÃ¨re d'une liste dynamique.
  */
 
 class CWidgetMultiCriterion : public IWidgetCriteria

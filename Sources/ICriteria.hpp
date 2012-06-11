@@ -19,13 +19,13 @@ class ICriteria : public QObject
 
     friend class CDynamicPlayList;
     friend class CWidgetCriteria;
-    friend class CMultiCriterion; /// La méthode ICriteria::setPlayList est innaccessible depuis CMultiCriterion::setPlayList !
+    friend class CMultiCriterion; /// La mÃ©thode ICriteria::setPlayList est innaccessible depuis CMultiCriterion::setPlayList !
 
 public:
 
     /**
-     * Types de critères disponibles.
-     * La valeur est codée sur 2 octets : le premier indique le type, et le suivant le critère.
+     * Types de critÃ¨res disponibles.
+     * La valeur est codÃ©e sur 2 octets : le premier indique le type, et le suivant le critÃ¨re.
      */
 
     enum TType
@@ -125,18 +125,18 @@ public:
     };
 
     /**
-     * Conditions de mise à jour d'une liste dynamique, selon les types de critère.
+     * Conditions de mise Ã  jour d'une liste dynamique, selon les types de critÃ¨re.
      */
 
     enum TUpdateCondition
     {
-        UpdateNever          = 0x00, ///< Pas besoin de mise-à-jour.
-        UpdateOnSongAdded    = 0x01, ///< Mise à jour lorsqu'un morceau est ajouté à la médiathèque.
-        UpdateOnSongRemoved  = 0x02, ///< Mise à jour lorsqu'un morceau est retiré de la médiathèque.
-        UpdateOnSongModified = 0x04, ///< Mise à jour lorsque les informations d'un morceau sont modifiés.
-        UpdateOnSongMoved    = 0x08, ///< Mise à jour lorsque le fichier d'un morceau est déplacé.
-        UpdateOnSongPlayEnd  = 0x10, ///< Mise à jour lorsque la lecture d'un morceau se termine.
-        UpdateOnListModified = 0x20  ///< Mise à jour lorsqu'une liste de lecture est modifiée.
+        UpdateNever          = 0x00, ///< Pas besoin de mise-Ã -jour.
+        UpdateOnSongAdded    = 0x01, ///< Mise Ã  jour lorsqu'un morceau est ajoutÃ© Ã  la mÃ©diathÃ¨que.
+        UpdateOnSongRemoved  = 0x02, ///< Mise Ã  jour lorsqu'un morceau est retirÃ© de la mÃ©diathÃ¨que.
+        UpdateOnSongModified = 0x04, ///< Mise Ã  jour lorsque les informations d'un morceau sont modifiÃ©s.
+        UpdateOnSongMoved    = 0x08, ///< Mise Ã  jour lorsque le fichier d'un morceau est dÃ©placÃ©.
+        UpdateOnSongPlayEnd  = 0x10, ///< Mise Ã  jour lorsque la lecture d'un morceau se termine.
+        UpdateOnListModified = 0x20  ///< Mise Ã  jour lorsqu'une liste de lecture est modifiÃ©e.
     };
 
     Q_DECLARE_FLAGS(TUpdateConditions, TUpdateCondition)
@@ -163,7 +163,7 @@ public:
 
 protected:
 
-    int m_type;        ///< Type de critère (TType).
+    int m_type;        ///< Type de critÃ¨re (TType).
     int m_condition;   ///< Condition. (TCondition)
     QVariant m_value1; ///< Valeur 1.
     QVariant m_value2; ///< Valeur 2.
@@ -174,9 +174,9 @@ protected:
 
 private:
 
-    int m_id;                      ///< Identifiant du critère en base de données.
-    int m_position;                ///< Position du critère.
-    ICriteria * m_parent;          ///< Pointeur sur le critère parent.
+    int m_id;                      ///< Identifiant du critÃ¨re en base de donnÃ©es.
+    int m_position;                ///< Position du critÃ¨re.
+    ICriteria * m_parent;          ///< Pointeur sur le critÃ¨re parent.
     CDynamicPlayList * m_playList; ///< Pointeur sur la liste de lecture dynamique.
 };
 

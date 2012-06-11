@@ -7,7 +7,7 @@
 
 
 /**
- * Widget permettant d'éditer un critère d'une liste dynamique.
+ * Widget permettant d'Ã©diter un critÃ¨re d'une liste dynamique.
  */
 
 class CWidgetCriteria : public IWidgetCriteria

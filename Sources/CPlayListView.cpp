@@ -28,19 +28,19 @@ CPlayListView::CPlayListView(CApplication * application) :
     m_model = new CPlayListModel(m_application);
     setModel(m_model);
 
-    // Glisser-déposer
+    // Glisser-dÃ©poser
     setDropIndicatorShown(false);
     setAcceptDrops(true);
     //viewport()->setAcceptDrops(true);
 
     // Menus contextuels
     m_menuPlaylist = new QMenu(this);
-    //m_menuPlaylist->addAction(tr("Open")); //TODO: ouvrir dans une nouvelle fenêtre
+    //m_menuPlaylist->addAction(tr("Open")); //TODO: ouvrir dans une nouvelle fenÃªtre
     m_menuPlaylist->addAction(tr("Edit..."), m_application, SLOT(editSelectedPlayList()));
     m_menuPlaylist->addAction(tr("Remove"), m_application, SLOT(removeSelectedPlayList()));
 
     m_menuDefault = new QMenu(this);
-    //TODO: gérer le dossier
+    //TODO: gÃ©rer le dossier
     m_menuDefault->addAction(tr("New playlist..."), m_application, SLOT(openDialogAddStaticPlayList()));
     m_menuDefault->addAction(tr("New dynamic playlist..."), m_application, SLOT(openDialogAddDynamicList()));
 
@@ -91,7 +91,7 @@ void CPlayListView::removeSongTable(CSongTable * songTable)
 
 
 /**
- * Retourne la liste de morceaux à partir d'un index.
+ * Retourne la liste de morceaux Ã  partir d'un index.
  *
  * \param index Index de la liste.
  * \return Liste de morceaux, ou NULL.
@@ -104,7 +104,7 @@ CSongTable * CPlayListView::getSongTable(const QModelIndex& index) const
 
 
 /**
- * Retourne la liste de morceaux actuellement sélectionnée.
+ * Retourne la liste de morceaux actuellement sÃ©lectionnÃ©e.
  *
  * \return Liste de morceaux.
  */
@@ -160,9 +160,9 @@ void CPlayListView::onPlayListRenamed(const QString& oldName, const QString& new
 
 /**
  * Gestion des touches du clavier.
- * La touche Supprimer est gérée.
+ * La touche Supprimer est gÃ©rÃ©e.
  *
- * \param event Évènement du clavier.
+ * \param event Ã‰vÃ¨nement du clavier.
  */
 
 void CPlayListView::keyPressEvent(QKeyEvent * event)
@@ -181,10 +181,10 @@ void CPlayListView::keyPressEvent(QKeyEvent * event)
 
 
 /**
- * Gestion du glisser-déposer.
- * Cette méthode est appelée à chaque fois qu'un objet QDrag est déplacé à l'intérieur de la vue.
+ * Gestion du glisser-dÃ©poser.
+ * Cette mÃ©thode est appelÃ©e Ã  chaque fois qu'un objet QDrag est dÃ©placÃ© Ã  l'intÃ©rieur de la vue.
  *
- * \param event Évènement.
+ * \param event Ã‰vÃ¨nement.
  */
 
 void CPlayListView::dragMoveEvent(QDragMoveEvent * event)
@@ -193,7 +193,7 @@ void CPlayListView::dragMoveEvent(QDragMoveEvent * event)
 
     if (event->keyboardModifiers() & Qt::ControlModifier)
     {
-        // Traitement différent si Ctrl+Glisser (par exemple pour copier OU déplacer)
+        // Traitement diffÃ©rent si Ctrl+Glisser (par exemple pour copier OU dÃ©placer)
         // on verra plus tard...
     }
 

@@ -55,10 +55,10 @@ QByteArray ILastFmService::getLastFmQuery(const QMap<QByteArray, QByteArray>& ar
 
 
 /**
- * Calcule la signature d'une méthode pour envoyer une requête à Last.fm.
+ * Calcule la signature d'une mÃ©thode pour envoyer une requÃªte Ã  Last.fm.
  *
- * \param args       Tableau associatif des arguments (de la forme clé => valeur), avec la méthode.
- * \param methodName Nom de la méthode.
+ * \param args       Tableau associatif des arguments (de la forme clÃ© => valeur), avec la mÃ©thode.
+ * \param methodName Nom de la mÃ©thode.
  */
 
 QByteArray ILastFmService::getLastFmSignature(const QMap<QByteArray, QByteArray>& args) const
@@ -77,12 +77,12 @@ QByteArray ILastFmService::getLastFmSignature(const QMap<QByteArray, QByteArray>
 
 
 /**
- * Log une requête.
+ * Log une requÃªte.
  *
  * \todo Ecrire dans un fichier.
  *
  * \param url     Adresse de destination.
- * \param content Contenu du corps de la requête.
+ * \param content Contenu du corps de la requÃªte.
  */
 
 void ILastFmService::logLastFmRequest(const QString& url, const QString& content)
@@ -95,11 +95,11 @@ void ILastFmService::logLastFmRequest(const QString& url, const QString& content
 
 
 /**
- * Log une réponse à une requête.
+ * Log une rÃ©ponse Ã  une requÃªte.
  *
  * \todo Ecrire dans un fichier.
  *
- * \param code    Code de retour de la requête.
+ * \param code    Code de retour de la requÃªte.
  * \param content Contenu du message de retour.
  */
 
@@ -113,10 +113,10 @@ void ILastFmService::logLastFmResponse(int code, const QString& content)
 
 
 /**
- * Convertit une chaine de caractère pour l'utiliser comme URL d'une requête à Last.fm
+ * Convertit une chaine de caractÃ¨re pour l'utiliser comme URL d'une requÃªte Ã  Last.fm
  *
- * \param str Chaine à convertir.
- * \return Chaine convertie (les caractères & et = sont remplacés par leur code hexadécimal).
+ * \param str Chaine Ã  convertir.
+ * \return Chaine convertie (les caractÃ¨res & et = sont remplacÃ©s par leur code hexadÃ©cimal).
  */
 
 QByteArray ILastFmService::encodeString(const QByteArray& str)

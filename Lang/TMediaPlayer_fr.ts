@@ -4,18 +4,18 @@
 <context>
     <name>CApplication</name>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="247"/>
+        <location filename="../Sources/CApplication.cpp" line="249"/>
         <source>Failed to init sound system with FMOD.</source>
         <translation>Le chargement du système de son avec FMOD a échoué.</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="279"/>
+        <location filename="../Sources/CApplication.cpp" line="281"/>
         <source>Failed to load database.</source>
         <translation>Erreur lors du chargement de la base de données.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="97"/>
-        <location filename="../Sources/CApplication.cpp" line="2071"/>
+        <location filename="../Sources/CApplication.cpp" line="98"/>
+        <location filename="../Sources/CApplication.cpp" line="2080"/>
         <source>%n song(s), %1</source>
         <translation>
             <numerusform>%n morceau, %1</numerusform>
@@ -23,17 +23,17 @@
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="224"/>
+        <location filename="../Sources/CApplication.cpp" line="226"/>
         <source>Playlists</source>
         <translation>Listes de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="308"/>
+        <location filename="../Sources/CApplication.cpp" line="310"/>
         <source>Database error</source>
         <translation>Erreur de base de données</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="308"/>
+        <location filename="../Sources/CApplication.cpp" line="310"/>
         <source>File: %1 (%2)
 
 Query: %3
@@ -46,37 +46,37 @@ Requête : %3
 Erreur : %4</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1541"/>
+        <location filename="../Sources/CApplication.cpp" line="1543"/>
         <source>Loading files...</source>
         <translation>Chargement des fichiers...</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1939"/>
+        <location filename="../Sources/CApplication.cpp" line="1948"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Êtes-vous sûr de vouloir supprimer cette liste de lecture ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1939"/>
+        <location filename="../Sources/CApplication.cpp" line="1948"/>
         <source>Yes</source>
         <translation>Oui</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1939"/>
+        <location filename="../Sources/CApplication.cpp" line="1948"/>
         <source>No</source>
         <translation>Non</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1491"/>
+        <location filename="../Sources/CApplication.cpp" line="1493"/>
         <source>Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)</source>
         <translation>Fichiers multimédias (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;Tous les fichiers (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1541"/>
+        <location filename="../Sources/CApplication.cpp" line="1543"/>
         <source>Abort</source>
         <translation>Interrompre</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2210"/>
+        <location filename="../Sources/CApplication.cpp" line="2219"/>
         <source>This program requires FMOD %1 or superior.</source>
         <translation>Ce programme nécessite FMOD %1 ou supérieur.</translation>
     </message>
@@ -216,6 +216,24 @@ Erreur : %4</translation>
         <location filename="../Sources/CDialogPreferences.cpp" line="35"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
+    </message>
+</context>
+<context>
+    <name>CITunesLibrary</name>
+    <message numerus="yes">
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="837"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="1115"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="1134"/>
+        <source>%1 (%n song(s))</source>
+        <translation>
+            <numerusform>%1 (%n morceau)</numerusform>
+            <numerusform>%1 (%n morceaux)</numerusform>
+        </translation>
+    </message>
+    <message>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="837"/>
+        <source>Library</source>
+        <translation>Médiathèque</translation>
     </message>
 </context>
 <context>
@@ -1261,6 +1279,44 @@ Voulez-vous les ajouter ?</translation>
         <location filename="../Form/DialogEditStaticPlayList.ui" line="32"/>
         <source>Name of the list:</source>
         <translation>Nom de la liste :</translation>
+    </message>
+</context>
+<context>
+    <name>DialogImportITunes</name>
+    <message>
+        <location filename="../Form/DialogImportITunes.ui" line="12"/>
+        <source>Import from iTunes</source>
+        <translation>Importer depuis iTunes</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogImportITunes.ui" line="25"/>
+        <source>Library localisation</source>
+        <translation>Localisation de la médiathèque</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogImportITunes.ui" line="28"/>
+        <source>Select the file which contains the iTunes library.</source>
+        <translation>Sélectionnez le fichier qui contient la médiathèque de iTunes.</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogImportITunes.ui" line="34"/>
+        <source>Library:</source>
+        <translation>Fichier :</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogImportITunes.ui" line="44"/>
+        <source>...</source>
+        <translation>...</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogImportITunes.ui" line="52"/>
+        <source>Items to import</source>
+        <translation>Éléments à importer</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogImportITunes.ui" line="55"/>
+        <source>Select items you want to import in your library.</source>
+        <translation>Sélectionnez les éléments que vous souhaitez importer dans votre médiathèque.</translation>
     </message>
 </context>
 <context>

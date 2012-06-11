@@ -10,7 +10,7 @@ class CSong;
 
 
 /**
- * Boite de dialogue pour afficher et modifier les métadonnées d'un morceau.
+ * Boite de dialogue pour afficher et modifier les mÃ©tadonnÃ©es d'un morceau.
  */
 
 class CDialogEditMetadata : public QDialog

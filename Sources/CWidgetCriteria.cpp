@@ -13,7 +13,7 @@
 /**
  * Construit le widget.
  *
- * \todo Remplir la liste des types de critères dans le code (et la trier).
+ * \todo Remplir la liste des types de critÃ¨res dans le code (et la trier).
  *
  * \param parent Widget parent.
  */
@@ -63,7 +63,7 @@ CWidgetCriteria::CWidgetCriteria(CApplication * application, QWidget * parent) :
 
 
 /**
- * Détruit le widget.
+ * DÃ©truit le widget.
  */
 
 CWidgetCriteria::~CWidgetCriteria()
@@ -74,11 +74,11 @@ CWidgetCriteria::~CWidgetCriteria()
 
 
 /**
- * Retourne le critère définis par le widget.
+ * Retourne le critÃ¨re dÃ©finis par le widget.
  *
- * \todo Gérer le critère "Playlist".
+ * \todo GÃ©rer le critÃ¨re "Playlist".
  *
- * \return Pointeur sur le critère.
+ * \return Pointeur sur le critÃ¨re.
  */
 
 ICriteria * CWidgetCriteria::getCriteria(void)

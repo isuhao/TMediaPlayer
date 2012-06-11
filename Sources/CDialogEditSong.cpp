@@ -10,7 +10,7 @@
 /**
  * Construit la boite de dialogue pour modifier les informations d'un morceau.
  *
- * \param songItem    Morceau à modifier.
+ * \param songItem    Morceau Ã  modifier.
  * \param songTable   Liste contenant le morceau, pour pouvoir naviguer parmi les morceaux.
  * \param application Pointeur sur l'application.
  */
@@ -72,7 +72,7 @@ CDialogEditSong::CDialogEditSong(CSongTableItem * songItem, CSongTable * songTab
 
 
 /**
- * Détruit la boite de dialogue.
+ * DÃ©truit la boite de dialogue.
  */
 
 CDialogEditSong::~CDialogEditSong()
@@ -82,7 +82,7 @@ CDialogEditSong::~CDialogEditSong()
 
 
 /**
- * Affiche les informations du morceau précédent dans la liste.
+ * Affiche les informations du morceau prÃ©cÃ©dent dans la liste.
  */
 
 void CDialogEditSong::previousSong(void)
@@ -122,7 +122,7 @@ void CDialogEditSong::nextSong(void)
 
 
 /**
- * Enregistre les modifications effectuées sur le morceau.
+ * Enregistre les modifications effectuÃ©es sur le morceau.
  */
 
 void CDialogEditSong::apply(void)
@@ -164,7 +164,7 @@ void CDialogEditSong::apply(void)
 
 
 /**
- * Enregistre les modifications effectuées sur le morceau et ferme la boite de dialogue.
+ * Enregistre les modifications effectuÃ©es sur le morceau et ferme la boite de dialogue.
  */
 
 void CDialogEditSong::save(void)
@@ -175,7 +175,7 @@ void CDialogEditSong::save(void)
 
 
 /**
- * Met à jour la boite de dialogue avec les informations du morceau.
+ * Met Ã  jour la boite de dialogue avec les informations du morceau.
  *
  * \todo Afficher les illustrations.
  */
@@ -196,7 +196,7 @@ void CDialogEditSong::updateInfos()
         setWindowTitle(tr("Song infos") + " - " + songTitle + " - " + songArtist);
     }
 
-    // Résumé
+    // RÃ©sumÃ©
 
     const int duration = song->getDuration();
     QTime durationTime(0, 0);
@@ -248,12 +248,12 @@ void CDialogEditSong::updateInfos()
     m_uiWidget->editComposer_2->setText(song->getComposer());
     m_uiWidget->editComposerSort->setText(song->getComposerSort());
 
-    // Année
+    // AnnÃ©e
     const int year = song->getYear();
     m_uiWidget->editYear->setText(year > 0 ? QString::number(year) : QString());
     m_uiWidget->editYear->setValidator(new QIntValidator(0, 9999, this));
 
-    // Numéro de piste
+    // NumÃ©ro de piste
     const int trackNumber = song->getTrackNumber();
     m_uiWidget->editTrackNumber->setText(trackNumber > 0 ? QString::number(trackNumber) : QString());
     m_uiWidget->editTrackNumber->setValidator(new QIntValidator(0, 999, this));
@@ -262,7 +262,7 @@ void CDialogEditSong::updateInfos()
     m_uiWidget->editTrackCount->setText(trackCount > 0 ? QString::number(trackCount) : QString());
     m_uiWidget->editTrackCount->setValidator(new QIntValidator(0, 999, this));
 
-    // Numéro de disque
+    // NumÃ©ro de disque
     const int discNumber = song->getDiscNumber();
     m_uiWidget->editDiscNumber->setText(discNumber > 0 ? QString::number(discNumber) : QString());
     m_uiWidget->editDiscNumber->setValidator(new QIntValidator(0, 999, this));

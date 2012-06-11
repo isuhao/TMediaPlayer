@@ -51,8 +51,8 @@ inline bool CSongTableItem::isValid(void) const
 
 
 /**
- * Modèle permettant de stocker une liste de morceaux.
- * Doit être utilisé avec la classe CSongTable.
+ * ModÃ¨le permettant de stocker une liste de morceaux.
+ * Doit Ãªtre utilisÃ© avec la classe CSongTable.
  */
 
 class CSongTableModel : public QAbstractTableModel
@@ -80,7 +80,7 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
     void sort(int column, Qt::SortOrder order);
 
-    // Glisser-déposer
+    // Glisser-dÃ©poser
     Qt::ItemFlags flags(const QModelIndex& index) const;
     QStringList mimeTypes(void) const;
     QMimeData * mimeData(const QModelIndexList& indexes) const;
@@ -102,7 +102,7 @@ public:
 
 signals:
 
-    void columnSorted(int column, Qt::SortOrder order); ///< Signal émis lorsqu'une colonne est triée.
+    void columnSorted(int column, Qt::SortOrder order); ///< Signal Ã©mis lorsqu'une colonne est triÃ©e.
 
 private:
 
@@ -456,7 +456,7 @@ private:
 
     CApplication * m_application;
     bool m_canDrop;
-    int m_columnSort;             ///< Numéro de la colonne triée.
+    int m_columnSort;             ///< NumÃ©ro de la colonne triÃ©e.
     CSongTableItem * m_currentSongItem;
     QList<CSongTableItem *> m_data;
     QList<CSongTableItem *> m_dataShuffle;

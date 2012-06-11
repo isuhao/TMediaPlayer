@@ -6,7 +6,7 @@
 
 
 /**
- * Critère simple.
+ * CritÃ¨re simple.
  */
 
 class CCriteria : public ICriteria

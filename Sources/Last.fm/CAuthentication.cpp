@@ -56,13 +56,13 @@ void CAuthentication::replyFinished(QNetworkReply * reply)
 
     if (racine.tagName() != "lfm")
     {
-        qWarning() << "CApplication::replyLastFmGetToken() : réponse XML incorrecte (élément 'lfm' attendu)";
+        qWarning() << "CApplication::replyLastFmGetToken() : rÃ©ponse XML incorrecte (Ã©lÃ©ment 'lfm' attendu)";
         return;
     }
 
     if (racine.attribute("status", "failed") == "failed")
     {
-        qWarning() << "CApplication::replyLastFmGetToken() : la requête Last.fm a echouée";
+        qWarning() << "CApplication::replyLastFmGetToken() : la requÃªte Last.fm a echouÃ©e";
         return;
     }
 
@@ -70,7 +70,7 @@ void CAuthentication::replyFinished(QNetworkReply * reply)
 
     if (racine.tagName() != "token")
     {
-        qWarning() << "CApplication::replyLastFmGetToken() : réponse XML incorrecte (élément 'token' attendu)";
+        qWarning() << "CApplication::replyLastFmGetToken() : rÃ©ponse XML incorrecte (Ã©lÃ©ment 'token' attendu)";
         return;
     }
     
@@ -149,13 +149,13 @@ void CAuthentication::replyLastFmFinished(QNetworkReply * reply)
 
     if (racine.tagName() != "lfm")
     {
-        qWarning() << "CApplication::replyLastFmFinished() : réponse XML incorrecte (élément 'lfm' attendu)";
+        qWarning() << "CApplication::replyLastFmFinished() : rÃ©ponse XML incorrecte (Ã©lÃ©ment 'lfm' attendu)";
         return;
     }
 
     if (racine.attribute("status", "failed") == "failed")
     {
-        qWarning() << "CApplication::replyLastFmFinished() : la requête Last.fm a echouée";
+        qWarning() << "CApplication::replyLastFmFinished() : la requÃªte Last.fm a echouÃ©e";
         return;
     }
     
@@ -163,7 +163,7 @@ void CAuthentication::replyLastFmFinished(QNetworkReply * reply)
 
     if (racine.tagName() != "session")
     {
-        qWarning() << "CApplication::replyLastFmGetToken() : réponse XML incorrecte (élément 'session' attendu)";
+        qWarning() << "CApplication::replyLastFmGetToken() : rÃ©ponse XML incorrecte (Ã©lÃ©ment 'session' attendu)";
         return;
     }
 
@@ -172,13 +172,13 @@ void CAuthentication::replyLastFmFinished(QNetworkReply * reply)
 
     if (racine.isNull())
     {
-        qWarning() << "CApplication::replyLastFmFinished() : réponse XML incorrecte (élément key attendu)";
+        qWarning() << "CApplication::replyLastFmFinished() : rÃ©ponse XML incorrecte (Ã©lÃ©ment key attendu)";
         return;
     }
 
     m_sessionKey = racine.text().toLatin1();
 
-    // Enregistrement de la clé
+    // Enregistrement de la clÃ©
     m_application->getSettings()->setValue("LastFm/SessionKey", m_sessionKey);
 
     reply->deleteLater();

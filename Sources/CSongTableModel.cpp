@@ -55,10 +55,10 @@ CSongTableModel::CSongTableModel(CApplication * application, QWidget * parent) :
 
 
 /**
- * Active ou désactive le glisser-déposer vers la liste.
- * Doit être actif pour les listes statiques uniquement.
+ * Active ou dÃ©sactive le glisser-dÃ©poser vers la liste.
+ * Doit Ãªtre actif pour les listes statiques uniquement.
  *
- * \param canDrop Indique si on peut déposer ou déplacer des morceaux vers la liste.
+ * \param canDrop Indique si on peut dÃ©poser ou dÃ©placer des morceaux vers la liste.
  */
 
 void CSongTableModel::setCanDrop(bool canDrop)
@@ -68,7 +68,7 @@ void CSongTableModel::setCanDrop(bool canDrop)
 
 
 /**
- * Modifie la liste des morceaux utilisée par le modèle.
+ * Modifie la liste des morceaux utilisÃ©e par le modÃ¨le.
  *
  * \param data Liste de morceaux.
  */
@@ -93,7 +93,7 @@ void CSongTableModel::setSongs(const QList<CSong *>& data)
 
 
 /**
- * Retourne la liste des morceaux de la liste, triée selon leur position croissante.
+ * Retourne la liste des morceaux de la liste, triÃ©e selon leur position croissante.
  *
  * \return Liste des morceaux.
  */
@@ -142,11 +142,11 @@ int CSongTableModel::columnCount(const QModelIndex& parent) const
 
 
 /**
- * Retourne les données d'un item.
+ * Retourne les donnÃ©es d'un item.
  *
  * \param index Index de l'item.
- * \param role  Rôle demandé.
- * \return Données de l'item.
+ * \param role  RÃ´le demandÃ©.
+ * \return DonnÃ©es de l'item.
  */
 
 QVariant CSongTableModel::data(const QModelIndex& index, int role) const
@@ -201,14 +201,14 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
             case CSongTable::ColAlbumArtist: return m_data.at(index.row())->getSong()->getAlbumArtist();
             case CSongTable::ColComposer   : return m_data.at(index.row())->getSong()->getComposer();
 
-            // Année
+            // AnnÃ©e
             case CSongTable::ColYear:
             {
                 int year = m_data.at(index.row())->getSong()->getYear();
                 return (year > 0 ? year : QVariant(QString()));
             }
 
-            // Numéro de piste
+            // NumÃ©ro de piste
             case CSongTable::ColTrackNumber:
             {
                 const int trackNumber = m_data.at(index.row())->getSong()->getTrackNumber();
@@ -230,7 +230,7 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
                 }
             }
 
-            // Numéro de disque
+            // NumÃ©ro de disque
             case CSongTable::ColDiscNumber:
             {
                 const int discNumber = m_data.at(index.row())->getSong()->getDiscNumber();
@@ -259,7 +259,7 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
             case CSongTable::ColLastPlayTime: return m_data.at(index.row())->getSong()->getLastPlay();
             case CSongTable::ColFileName    : return m_data.at(index.row())->getSong()->getFileName();
 
-            // Débit
+            // DÃ©bit
             case CSongTable::ColBitRate:
                 return tr("%1 kbit/s").arg(m_data.at(index.row())->getSong()->getBitRate());
 
@@ -267,21 +267,21 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
             case CSongTable::ColFormat:
                 return CSong::getFormatName(m_data.at(index.row())->getSong()->getFormat());
 
-            // Durée
+            // DurÃ©e
             case CSongTable::ColDuration:
             {
                 int duration = m_data.at(index.row())->getSong()->getDuration();
 
                 QTime durationTime(0, 0);
                 durationTime = durationTime.addMSecs(duration);
-                return durationTime.toString("m:ss"); /// \todo Stocker le format dans les paramètres.
+                return durationTime.toString("m:ss"); /// \todo Stocker le format dans les paramÃ¨tres.
             }
 
-            // Fréquence d'échantillonnage
+            // FrÃ©quence d'Ã©chantillonnage
             case CSongTable::ColSampleRate:
                 return tr("%1 Hz").arg(m_data.at(index.row())->getSong()->getSampleRate());
 
-            // Date de création
+            // Date de crÃ©ation
             case CSongTable::ColCreationDate:
                 return m_data.at(index.row())->getSong()->getCreationDate();
 
@@ -322,11 +322,11 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
     {
         switch (index.column())
         {
-            // Alignement à gauche
+            // Alignement Ã  gauche
             default:
                 return QVariant(Qt::AlignVCenter | Qt::AlignLeft);
 
-            // Alignement à droite
+            // Alignement Ã  droite
             case CSongTable::ColPosition:
             case CSongTable::ColTrackNumber:
             case CSongTable::ColDiscNumber:
@@ -351,15 +351,15 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
 
 
 /**
- * Modifie les données d'un item.
- * Cette méthode n'est utilisée que pour la case à cocher d'un morceau.
+ * Modifie les donnÃ©es d'un item.
+ * Cette mÃ©thode n'est utilisÃ©e que pour la case Ã  cocher d'un morceau.
  *
- * \todo Implémentation.
+ * \todo ImplÃ©mentation.
  *
  * \param index Index de l'item.
- * \param value Nouvelle valeur de la donnée.
- * \param role  Rôle de la donnée.
- * \return Booléen indiquant si les données ont été modifiées.
+ * \param value Nouvelle valeur de la donnÃ©e.
+ * \param role  RÃ´le de la donnÃ©e.
+ * \return BoolÃ©en indiquant si les donnÃ©es ont Ã©tÃ© modifiÃ©es.
  */
 
 bool CSongTableModel::setData(const QModelIndex& index, const QVariant& value, int role)
@@ -487,7 +487,7 @@ void CSongTableModel::sort(int column, Qt::SortOrder order)
  *
  * \param index Index de l'item.
  * \return Flags de l'item (ItemIsEnabled, ItemIsSelectable, ItemIsDragEnabled, et
- *         éventuellement ItemIsDropEnabled et ItemIsUserCheckable).
+ *         Ã©ventuellement ItemIsDropEnabled et ItemIsUserCheckable).
  */
 
 Qt::ItemFlags CSongTableModel::flags(const QModelIndex& index) const
@@ -516,7 +516,7 @@ Qt::ItemFlags CSongTableModel::flags(const QModelIndex& index) const
 
 
 /**
- * Retourne la liste des types MIME supportés par le modèle.
+ * Retourne la liste des types MIME supportÃ©s par le modÃ¨le.
  *
  * \return Liste types.
  */
@@ -598,12 +598,12 @@ QMimeData * CSongTableModel::mimeData(const QModelIndexList& indexes) const
 
 
 /**
- * Méthode appelée lorsqu'on déposer des données dans le modèle.
+ * MÃ©thode appelÃ©e lorsqu'on dÃ©poser des donnÃ©es dans le modÃ¨le.
  *
- * \param data   Données déposées.
- * \param action Action de glisser-déposer.
- * \param row    Ligne où les données sont déposées.
- * \param column Colonne om les données sont déposées.
+ * \param data   DonnÃ©es dÃ©posÃ©es.
+ * \param action Action de glisser-dÃ©poser.
+ * \param row    Ligne oÃ¹ les donnÃ©es sont dÃ©posÃ©es.
+ * \param column Colonne om les donnÃ©es sont dÃ©posÃ©es.
  * \param parent Index parent.
  */
 
@@ -616,13 +616,13 @@ bool CSongTableModel::dropMimeData(const QMimeData * data, Qt::DropAction action
         return true;
     }
 
-    // Fichiers à ajouter à la médiathèque
+    // Fichiers Ã  ajouter Ã  la mÃ©diathÃ¨que
     if (data->hasFormat("text/uri-list"))
     {
         //...
     }
 
-    // Déplacement des morceaux dans la liste
+    // DÃ©placement des morceaux dans la liste
     if (!m_canDrop || !data->hasFormat("application/x-ted-media-items") || m_columnSort != CSongTable::ColPosition)
     {
         return false;
@@ -633,12 +633,12 @@ bool CSongTableModel::dropMimeData(const QMimeData * data, Qt::DropAction action
 
 
 /**
- * Déplace un ensemble de lignes vers une autre position.
- * La liste \a rows doit être triée et ne doit pas contenir de doublons.
+ * DÃ©place un ensemble de lignes vers une autre position.
+ * La liste \a rows doit Ãªtre triÃ©e et ne doit pas contenir de doublons.
  *
- * \todo Implémentation.
+ * \todo ImplÃ©mentation.
  *
- * \param rows    Liste de lignes (les numéros de ligne doivent être compris entre 0 et rowCount() - 1).
+ * \param rows    Liste de lignes (les numÃ©ros de ligne doivent Ãªtre compris entre 0 et rowCount() - 1).
  * \param rowDest Ligne de destination (entre 0 et rowCount()).
  */
 
@@ -751,7 +751,7 @@ void CSongTableModel::removeSongs(const QList<CSong *>& songs)
 
 
 /**
- * Supprime toutes les données du modèle.
+ * Supprime toutes les donnÃ©es du modÃ¨le.
  */
 
 void CSongTableModel::clear(void)
@@ -795,22 +795,22 @@ int CSongTableModel::getRowForSongItem(CSongTableItem * songItem) const
 
 
 /**
- * Cherche le morceau situé avant un autre dans la liste.
+ * Cherche le morceau situÃ© avant un autre dans la liste.
  *
- * \todo Implémenter la lecture aléatoire.
+ * \todo ImplÃ©menter la lecture alÃ©atoire.
  *
  * \param songItem Item actuel.
- * \param shuffle  Indique si la lecture aléatoire est activée.
- * \return Item précédent.
+ * \param shuffle  Indique si la lecture alÃ©atoire est activÃ©e.
+ * \return Item prÃ©cÃ©dent.
  */
 
 CSongTableItem * CSongTableModel::getPreviousSong(CSongTableItem * songItem, bool shuffle) const
 {
-    qDebug() << "Morceau précédant" << songItem;
+    qDebug() << "Morceau prÃ©cÃ©dant" << songItem;
 
     if (songItem && !m_data.contains(songItem))
     {
-        qWarning() << "CSongTableModel::getPreviousSong() : l'item demandé n'est pas dans la table";
+        qWarning() << "CSongTableModel::getPreviousSong() : l'item demandÃ© n'est pas dans la table";
         songItem = NULL;
     }
 
@@ -820,14 +820,14 @@ CSongTableItem * CSongTableModel::getPreviousSong(CSongTableItem * songItem, boo
         {
             if (m_data.size() != m_dataShuffle.size())
             {
-                qWarning() << "CSongTableModel::getPreviousSong() : la liste des morceaux aléatoires est incorrecte";
+                qWarning() << "CSongTableModel::getPreviousSong() : la liste des morceaux alÃ©atoires est incorrecte";
             }
 
             const int row = m_dataShuffle.indexOf(songItem);
 
             if (row < 0)
             {
-                qWarning() << "CSongTableModel::getPreviousSong() : l'item demandé n'est pas dans la liste des morceaux aléatoires";
+                qWarning() << "CSongTableModel::getPreviousSong() : l'item demandÃ© n'est pas dans la liste des morceaux alÃ©atoires";
                 return NULL;
             }
 
@@ -847,12 +847,12 @@ CSongTableItem * CSongTableModel::getPreviousSong(CSongTableItem * songItem, boo
 
 
 /**
- * Cherche le morceau situé après un autre dans la liste.
+ * Cherche le morceau situÃ© aprÃ¨s un autre dans la liste.
  *
- * \todo Implémenter la lecture aléatoire.
+ * \todo ImplÃ©menter la lecture alÃ©atoire.
  *
  * \param songItem Item actuel.
- * \param shuffle  Indique si la lecture aléatoire est activée.
+ * \param shuffle  Indique si la lecture alÃ©atoire est activÃ©e.
  * \return Item suivant.
  */
 
@@ -862,7 +862,7 @@ CSongTableItem * CSongTableModel::getNextSong(CSongTableItem * songItem, bool sh
 
     if (songItem && !m_data.contains(songItem))
     {
-        qWarning() << "CSongTableModel::getNextSong() : l'item demandé n'est pas dans la table";
+        qWarning() << "CSongTableModel::getNextSong() : l'item demandÃ© n'est pas dans la table";
         songItem = NULL;
     }
 
@@ -872,14 +872,14 @@ CSongTableItem * CSongTableModel::getNextSong(CSongTableItem * songItem, bool sh
         {
             if (m_data.size() != m_dataShuffle.size())
             {
-                qWarning() << "CSongTableModel::getNextSong() : la liste des morceaux aléatoires est incorrecte";
+                qWarning() << "CSongTableModel::getNextSong() : la liste des morceaux alÃ©atoires est incorrecte";
             }
 
             const int row = m_dataShuffle.indexOf(songItem);
 
             if (row < 0)
             {
-                qWarning() << "CSongTableModel::getNextSong() : l'item demandé n'est pas dans la liste des morceaux aléatoires";
+                qWarning() << "CSongTableModel::getNextSong() : l'item demandÃ© n'est pas dans la liste des morceaux alÃ©atoires";
                 return NULL;
             }
 
@@ -897,7 +897,7 @@ CSongTableItem * CSongTableModel::getNextSong(CSongTableItem * songItem, bool sh
         {
             if (m_data.size() != m_dataShuffle.size())
             {
-                qWarning() << "CSongTableModel::getNextSong() : la liste des morceaux aléatoires est incorrecte";
+                qWarning() << "CSongTableModel::getNextSong() : la liste des morceaux alÃ©atoires est incorrecte";
                 return NULL;
             }
 
@@ -919,21 +919,21 @@ void CSongTableModel::setCurrentSong(CSongTableItem * songItem)
 
 
 /**
- * Initialise la liste des morceaux aléatoires.
+ * Initialise la liste des morceaux alÃ©atoires.
  *
- * La liste des morceaux aléatoires contient chaque morceau de la liste de morceaux,
- * sans doublons, avec une position calculée aléatoirement.
+ * La liste des morceaux alÃ©atoires contient chaque morceau de la liste de morceaux,
+ * sans doublons, avec une position calculÃ©e alÃ©atoirement.
  *
- * Cette méthode doit être appelée lorsqu'on lance la lecture d'un morceau dans une liste (en
+ * Cette mÃ©thode doit Ãªtre appelÃ©e lorsqu'on lance la lecture d'un morceau dans une liste (en
  * appuyant sur le bouton "Play" ou en demandant la lecture d'un morceau particulier alors
  * qu'aucun morceau n'est en cours de lecture).
  *
- * Une fois cette initialisation effectuée, on peut naviguer dans la liste aléatoire avec
- * les boutons précédent et suivant, ou en lançant la lecture d'un morceau particulier.
+ * Une fois cette initialisation effectuÃ©e, on peut naviguer dans la liste alÃ©atoire avec
+ * les boutons prÃ©cÃ©dent et suivant, ou en lanÃ§ant la lecture d'un morceau particulier.
  *
- * Le fonctionnement de la lecture aléatoire est identique à celui de iTunes.
+ * Le fonctionnement de la lecture alÃ©atoire est identique Ã  celui de iTunes.
  *
- * \param firstSong Morceau à placer au début de la liste.
+ * \param firstSong Morceau Ã  placer au dÃ©but de la liste.
  */
 
 void CSongTableModel::initShuffle(CSongTableItem * firstSong)

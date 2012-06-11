@@ -10,9 +10,9 @@
 
 
 /**
- * Crée le critère.
+ * CrÃ©e le critÃ¨re.
  *
- * \param parent Pointeur sur l'objet parent, qui sera chargé de détruire le critère.
+ * \param parent Pointeur sur l'objet parent, qui sera chargÃ© de dÃ©truire le critÃ¨re.
  */
 
 ICriteria::ICriteria(CApplication * application, QObject * parent) :
@@ -32,7 +32,7 @@ ICriteria::ICriteria(CApplication * application, QObject * parent) :
 
 
 /**
- * Détruit le critère.
+ * DÃ©truit le critÃ¨re.
  */
 
 ICriteria::~ICriteria()
@@ -42,14 +42,14 @@ ICriteria::~ICriteria()
 
 
 /**
- * Retourne la liste des morceaux qui vérifient le critère.
- * Cette implémentation de base parcourt la liste \a from et utilise la méthode matchCriteria
- * pour tester si le morceau vérifie le critère.
+ * Retourne la liste des morceaux qui vÃ©rifient le critÃ¨re.
+ * Cette implÃ©mentation de base parcourt la liste \a from et utilise la mÃ©thode matchCriteria
+ * pour tester si le morceau vÃ©rifie le critÃ¨re.
  *
- * \param from Liste de morceaux à analyser.
- * \param with Liste de morceaux à ajouter dans la liste.
- * \return Liste de morceaux qui vérifient le critère, sans doublons, avec tous les
- *         éléments de \a with.
+ * \param from Liste de morceaux Ã  analyser.
+ * \param with Liste de morceaux Ã  ajouter dans la liste.
+ * \return Liste de morceaux qui vÃ©rifient le critÃ¨re, sans doublons, avec tous les
+ *         Ã©lÃ©ments de \a with.
  */
 
 QList<CSong *> ICriteria::getSongs(const QList<CSong *>& from, const QList<CSong *>& with) const
@@ -69,7 +69,7 @@ QList<CSong *> ICriteria::getSongs(const QList<CSong *>& from, const QList<CSong
 
 
 /**
- * Modifie la liste de lecture dynamique associée au critère.
+ * Modifie la liste de lecture dynamique associÃ©e au critÃ¨re.
  *
  * \param playList Pointeur sur la nouvelle liste dynamique.
  */
@@ -83,7 +83,7 @@ void ICriteria::setPlayList(CDynamicPlayList * playList)
 
 
 /**
- * Ajoute le critère en base de données.
+ * Ajoute le critÃ¨re en base de donnÃ©es.
  *
  * \param application Pointeur sur l'application.
  */
@@ -95,19 +95,19 @@ void ICriteria::insertIntoDatabase(CApplication * application)
 
     if (m_id != -1)
     {
-        qWarning() << "ICriteria::insertIntoDatabase() : le critère a déjà été inséré dans la base de données";
+        qWarning() << "ICriteria::insertIntoDatabase() : le critÃ¨re a dÃ©jÃ  Ã©tÃ© insÃ©rÃ© dans la base de donnÃ©es";
         //return;
     }
 
     if (!m_playList)
     {
-        qWarning() << "ICriteria::insertIntoDatabase() : le critère n'a pas de liste associée";
+        qWarning() << "ICriteria::insertIntoDatabase() : le critÃ¨re n'a pas de liste associÃ©e";
         return;
     }
 
     if (m_playList->getId() <= 0)
     {
-        qWarning() << "ICriteria::insertIntoDatabase() : la liste associée au critère a un identifiant invalide";
+        qWarning() << "ICriteria::insertIntoDatabase() : la liste associÃ©e au critÃ¨re a un identifiant invalide";
         return;
     }
 
@@ -118,14 +118,14 @@ void ICriteria::insertIntoDatabase(CApplication * application)
 
         if (parentId <= 0)
         {
-            qWarning() << "ICriteria::insertIntoDatabase() : le critère a un parent, mais son identifiant est incorrect";
+            qWarning() << "ICriteria::insertIntoDatabase() : le critÃ¨re a un parent, mais son identifiant est incorrect";
             parentId = 0;
         }
     }
 
     QSqlQuery query(application->getDataBase());
 
-    // Position du critère
+    // Position du critÃ¨re
     query.prepare("SELECT MAX(criteria_position) FROM criteria WHERE criteria_parent = ? AND dynamic_list_id = ?");
     query.bindValue(0, parentId);
     query.bindValue(1, m_playList->getId());

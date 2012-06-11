@@ -15,7 +15,7 @@ CUpdateNowPlaying::CUpdateNowPlaying(CApplication * application, const QByteArra
 {
     Q_CHECK_PTR(song);
 
-    // Arguments de la requête
+    // Arguments de la requÃªte
     QMap<QByteArray, QByteArray> args;
     
     args["method"]   = "track.updateNowPlaying";
