@@ -460,6 +460,9 @@
            <property name="text">
             <string>Subtitle</string>
            </property>
+           <property name="buddy">
+            <cstring>editSubTitle</cstring>
+           </property>
           </widget>
          </item>
         </layout>
@@ -897,6 +900,9 @@
          <property name="text">
           <string>Volume adjustment:</string>
          </property>
+         <property name="buddy">
+          <cstring>editVolume</cstring>
+         </property>
         </widget>
        </item>
        <item row="0" column="2">
@@ -1059,6 +1065,9 @@
          </property>
          <property name="text">
           <string>Author:</string>
+         </property>
+         <property name="buddy">
+          <cstring>editLyricist</cstring>
          </property>
         </widget>
        </item>

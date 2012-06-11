@@ -521,8 +521,6 @@ bool CITunesLibrary::loadFile(const QString& fileName)
                         }
 
                         //File
-
-                        //...
                     }
                     else if (nodeListAttr.text() == "Location")
                     {
@@ -654,7 +652,16 @@ bool CITunesLibrary::loadFile(const QString& fileName)
 
                         song.enabled = false;
                     }
-                    //Compilation
+                    else if (nodeListAttr.text() == "Compilation")
+                    {
+                        if (nodeListAttrValue.tagName() != "true")
+                        {
+                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'true' attendu)";
+                            continue;
+                        }
+
+                        song.compilation = true;
+                    }
                     //Part Of Gapless Album
                     //Volume Adjustment
                     //Start Time

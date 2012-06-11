@@ -13,7 +13,7 @@
  * \param application  Pointeur sur l'application.
  */
 
-CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, CApplication * application) :
+CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *>& songItemList, CApplication * application) :
     QDialog             (application),
     m_uiWidget          (new Ui::DialogEditSongs()),
     m_editRating        (NULL),
@@ -93,6 +93,11 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, CApplic
     CSong::TLanguage songLanguage = CSong::LangUnknown;
     bool songLanguageSim = true;
 
+    bool songEnabled     = false; bool songEnabledSim     = true;
+    bool songSkipShuffle = false; bool songSkipShuffleSim = true;
+    bool songCompilation = false; bool songCompilationSim = true;
+
+
     bool first = true;
 
     for (QList<CSongTableItem *>::const_iterator it = m_songItemList.begin(); it != m_songItemList.end(); ++it)
@@ -127,7 +132,11 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, CApplic
             songBPM         = song->getBPM();
             songRating      = song->getRating();
 
-            songLanguage = song->getLanguage();
+            songLanguage    = song->getLanguage();
+
+            songEnabled     = song->isEnabled();
+            songSkipShuffle = song->isSkipShuffle();
+            songCompilation = song->isCompilation();
 
             first = false;
         }
@@ -163,6 +172,10 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, CApplic
                 songLanguageSim = false;
                 songLanguage = CSong::LangUnknown;
             }
+
+            if (songEnabledSim     && song->isEnabled()     != songEnabled    ) songEnabledSim     = false;
+            if (songSkipShuffleSim && song->isSkipShuffle() != songSkipShuffle) songSkipShuffleSim = false;
+            if (songCompilationSim && song->isCompilation() != songCompilation) songCompilationSim = false;
         }
     }
 
@@ -475,6 +488,36 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *> songItemList, CApplic
     connect(m_uiWidget->editLyricist, SIGNAL(textEdited(const QString&)), this, SLOT(onLyricistChange(const QString&)));
     connect(m_uiWidget->chLyricist, SIGNAL(clicked(bool)), this, SLOT(onLyricistChecked(bool)));
 
+    // Morceau coché
+    if (songEnabledSim)
+    {
+        m_uiWidget->editEnabled->setChecked(songEnabled);
+    }
+    else
+    {
+        m_uiWidget->editEnabled->setCheckState(Qt::PartiallyChecked);
+    }
+
+    // Ne pas lire en mode aléatoire
+    if (songSkipShuffleSim)
+    {
+        m_uiWidget->editSkipShuffle->setChecked(songSkipShuffle);
+    }
+    else
+    {
+        m_uiWidget->editSkipShuffle->setCheckState(Qt::PartiallyChecked);
+    }
+
+    // Compilation
+    if (songCompilationSim)
+    {
+        m_uiWidget->editCompilation->setChecked(songCompilation);
+    }
+    else
+    {
+        m_uiWidget->editCompilation->setCheckState(Qt::PartiallyChecked);
+    }
+
 
     connect(qApp, SIGNAL(focusChanged(QWidget *, QWidget *)), this, SLOT(onFocusChange(QWidget *, QWidget *)));
 
@@ -582,6 +625,15 @@ void CDialogEditSongs::apply(void)
 
         if (m_uiWidget->chLyricist->isChecked())
             song->setLyricist(m_uiWidget->editLyricist->text());
+
+        if (m_uiWidget->editEnabled->checkState() != Qt::PartiallyChecked)
+            song->setEnabled(m_uiWidget->editEnabled->isChecked());
+
+        if (m_uiWidget->editSkipShuffle->checkState() != Qt::PartiallyChecked)
+            song->setSkipShuffle(m_uiWidget->editSkipShuffle->isChecked());
+
+        if (m_uiWidget->editCompilation->checkState() != Qt::PartiallyChecked)
+            song->setCompilation(m_uiWidget->editCompilation->isChecked());
 
         song->writeTags();
         song->updateDatabase();

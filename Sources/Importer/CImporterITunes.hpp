@@ -108,8 +108,9 @@ private:
         QDateTime lastPlayed; ///< Date de la dernière lecture.
         int rating;           ///< Note du morceau.
         bool enabled;         ///< Indique si le morceau est coché ou pas.
+        bool compilation;     ///< Indique si le morceau fait partie d'une compilation.
 
-        TSong(void) : id(0), playCount(0), rating(0), enabled(true) { }
+        TSong(void) : id(0), playCount(0), rating(0), enabled(true), compilation(false) { }
     };
 
     struct TDynamicList

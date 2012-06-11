@@ -21,7 +21,7 @@ class CDialogEditSongs : public QDialog
 
 public:
 
-    explicit CDialogEditSongs(QList<CSongTableItem *> songItemList, CApplication * application);
+    explicit CDialogEditSongs(QList<CSongTableItem *>& songItemList, CApplication * application);
     virtual ~CDialogEditSongs();
 
 protected slots:

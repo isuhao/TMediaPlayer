@@ -87,6 +87,8 @@ CREATE TABLE song (
     song_lyrics TEXT NOT NULL,
     song_language VARCHAR(2) NOT NULL,
     song_lyricist VARCHAR NOT NULL,
+    song_compilation INTEGER NOT NULL,
+    song_skip_shuffle INTEGER NOT NULL,
     song_play_count INTEGER NOT NULL,
     song_play_time DATETIME NOT NULL
 );

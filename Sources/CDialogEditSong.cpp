@@ -157,6 +157,10 @@ void CDialogEditSong::apply(void)
     song->setLyrics(m_uiWidget->editLyrics->toPlainText());
     song->setLanguage(CSong::getLanguageFromInteger(m_uiWidget->editLanguage->currentIndex()));
     song->setLyricist(m_uiWidget->editLyricist->text());
+    
+    song->setEnabled(m_uiWidget->editEnabled->isChecked());
+    song->setSkipShuffle(m_uiWidget->editSkipShuffle->isChecked());
+    song->setCompilation(m_uiWidget->editCompilation->isChecked());
 
     song->writeTags();
     song->updateDatabase();
@@ -294,7 +298,9 @@ void CDialogEditSong::updateInfos()
 
 
     // Options
-    //...
+    m_uiWidget->editEnabled->setChecked(song->isEnabled());
+    m_uiWidget->editSkipShuffle->setChecked(song->isSkipShuffle());
+    m_uiWidget->editCompilation->setChecked(song->isCompilation());
 
 
     // Lectures

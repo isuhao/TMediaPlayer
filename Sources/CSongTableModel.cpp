@@ -831,7 +831,13 @@ CSongTableItem * CSongTableModel::getPreviousSong(CSongTableItem * songItem, boo
                 return NULL;
             }
 
-            return (row == 0 ? NULL : m_dataShuffle.at(row - 1));
+            if (row == 0)
+            {
+                return NULL;
+            }
+
+            CSongTableItem * previousItem = m_dataShuffle.at(row - 1);
+            return (previousItem->getSong()->isSkipShuffle() ? getNextSong(previousItem, true) : previousItem);
         }
         else
         {
@@ -883,7 +889,13 @@ CSongTableItem * CSongTableModel::getNextSong(CSongTableItem * songItem, bool sh
                 return NULL;
             }
 
-            return (row == m_dataShuffle.size() - 1 ? NULL : m_dataShuffle.at(row + 1));
+            if (row == m_dataShuffle.size() - 1)
+            {
+                return NULL;
+            }
+
+            CSongTableItem * nextItem = m_dataShuffle.at(row + 1);
+            return (nextItem->getSong()->isSkipShuffle() ? getNextSong(nextItem, true) : nextItem);
         }
         else
         {
@@ -901,7 +913,13 @@ CSongTableItem * CSongTableModel::getNextSong(CSongTableItem * songItem, bool sh
                 return NULL;
             }
 
-            return (m_dataShuffle.isEmpty() ? NULL : m_dataShuffle.at(0));
+            if (m_dataShuffle.isEmpty())
+            {
+                return NULL;
+            }
+
+            CSongTableItem * nextItem = m_dataShuffle.at(0);
+            return (nextItem->getSong()->isSkipShuffle() ? getNextSong(nextItem, true) : nextItem);
         }
         else
         {

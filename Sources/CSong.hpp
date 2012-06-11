@@ -110,6 +110,8 @@ public:
     inline QString getLyrics(void) const;
     inline TLanguage getLanguage(void) const;
     inline QString getLyricist(void) const;
+    inline bool isCompilation(void) const;
+    inline bool isSkipShuffle(void) const;
 
     int getPosition(void) const;
     bool isEnded(void) const;
@@ -149,6 +151,8 @@ public slots:
     void setLyrics(const QString& lyrics);
     void setLanguage(TLanguage language);
     void setLyricist(const QString& lyricist);
+    void setCompilation(bool compilation);
+    void setSkipShuffle(bool skipShuffle);
 
 protected:
 
@@ -205,6 +209,8 @@ private:
         QString lyrics;          ///< Paroles.
         TLanguage language;      ///< Langue des paroles.
         QString lyricist;        ///< Auteur des paroles.
+        bool compilation;        ///< Indique si le morceau fait partie d'une compilation.
+        bool skipShuffle;        ///< Indique si on ne doit pas lire le morceau en mode aléatoire.
 
         TSongInfos(void);
     };
@@ -682,6 +688,18 @@ inline CSong::TLanguage CSong::getLanguage(void) const
 inline QString CSong::getLyricist(void) const
 {
     return m_infos.lyricist;
+}
+
+
+inline bool CSong::isCompilation(void) const
+{
+    return m_infos.compilation;
+}
+
+
+inline bool CSong::isSkipShuffle(void) const
+{
+    return m_infos.skipShuffle;
 }
 
 

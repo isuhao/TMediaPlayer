@@ -10,17 +10,20 @@
   - Vérifier qu'il n'y a pas de boucles pour le critère "Liste de lecture".
 
 - Import depuis iTunes / SongBird.
+  - Importer les morceaux.
+  - Importer les listes statiques.
+  - Importer les listes dynamiques.
+  - Importer les dossiers.
+  - Gestion des conflits (fichier XML, métadonnées, fichier déjà ajouté...).
 
 - Tester le scrobbling Last.fm.
+  - Log dans un fichier.
 
 --------------------------------------------------
   Importance moyenne
 --------------------------------------------------
 
 - Boite de dialogue Edit Song(s) :
-  - Gérer l'option "Fait partie d'une compilation".
-  - Gérer l'option "Ne pas lire en mode aléatoire".
-  - Gérer l'option "Morceau coché".
   - Gérer l'option "Ajustement du volume".
 
 - Gérer les dossiers de listes de lecture.

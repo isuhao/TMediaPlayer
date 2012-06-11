@@ -51,7 +51,9 @@ CSong::TSongInfos::TSongInfos(void) :
     bpm             (0),
     lyrics          (""),
     language        (LangUnknown),
-    lyricist        ("")
+    lyricist        (""),
+    compilation     (false),
+    skipShuffle     (false)
 {
 
 }
@@ -198,7 +200,9 @@ void CSong::loadFromDatabase(void)
                       " song_comments,"
                       " song_lyrics,"
                       " song_language,"
-                      " song_lyricist"
+                      " song_lyricist,"
+                      " song_compilation,"
+                      " song_skip_shuffle"
                   " FROM song"
                   " NATURAL JOIN artist AS song_artist"
                   " NATURAL JOIN album"
@@ -256,6 +260,8 @@ void CSong::loadFromDatabase(void)
     m_infos.lyrics          = query.value(numValue++).toString();
     m_infos.language        = getLanguageForISO2Code(query.value(numValue++).toString());
     m_infos.lyricist        = query.value(numValue++).toString();
+    m_infos.compilation     = query.value(numValue++).toBool();
+    m_infos.skipShuffle     = query.value(numValue++).toBool();
 
     // Lectures
     query.prepare("SELECT play_time FROM play WHERE song_id = ? ORDER BY play_time DESC");
@@ -782,7 +788,9 @@ QList<CSong *> CSong::loadAllSongsFromDatabase(CApplication * application)
                         " song_bpm,"
                         " song_lyrics,"
                         " song_language,"
-                        " song_lyricist"
+                        " song_lyricist,"
+                        " song_compilation,"
+                        " song_skip_shuffle"
                     " FROM song"
                     " NATURAL JOIN artist AS song_artist"
                     " NATURAL JOIN album"
@@ -835,6 +843,8 @@ QList<CSong *> CSong::loadAllSongsFromDatabase(CApplication * application)
         song->m_infos.lyrics          = query.value(numValue++).toString();
         song->m_infos.language        = getLanguageForISO2Code(query.value(numValue++).toString());
         song->m_infos.lyricist        = query.value(numValue++).toString();
+        song->m_infos.compilation     = query.value(numValue++).toBool();
+        song->m_infos.skipShuffle     = query.value(numValue++).toBool();
 
         // Lectures
         QSqlQuery query2(application->getDataBase());
@@ -1302,6 +1312,26 @@ void CSong::setLyricist(const QString& lyricist)
 }
 
 
+void CSong::setCompilation(bool compilation)
+{
+    if (m_infos.compilation != compilation)
+    {
+        m_infos.compilation = compilation;
+        m_isModified = true;
+    }
+}
+
+
+void CSong::setSkipShuffle(bool skipShuffle)
+{
+    if (m_infos.skipShuffle != skipShuffle)
+    {
+        m_infos.skipShuffle = skipShuffle;
+        m_isModified = true;
+    }
+}
+
+
 /**
  * Démarre la lecture du morceau.
  */
@@ -1558,9 +1588,11 @@ void CSong::updateDatabase(void)
                               "song_lyrics, "
                               "song_language, "
                               "song_lyricist, "
+                              "song_compilation, "
+                              "song_skip_shuffle, "
                               "song_play_count, "
                               "song_play_time"
-                          ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                          ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
             int numValue = 0;
 
@@ -1595,6 +1627,8 @@ void CSong::updateDatabase(void)
             query.bindValue(numValue++, m_infos.lyrics);
             query.bindValue(numValue++, getISO2CodeForLanguage(m_infos.language));
             query.bindValue(numValue++, m_infos.lyricist);
+            query.bindValue(numValue++, (m_infos.compilation ? 1 : 0));
+            query.bindValue(numValue++, (m_infos.skipShuffle ? 1 : 0));
             query.bindValue(numValue++, 0);  // Play count
             query.bindValue(numValue++, ""); // Last play time
 
@@ -1632,7 +1666,9 @@ void CSong::updateDatabase(void)
                               "song_bpm           = ?,"
                               "song_lyrics        = ?,"
                               "song_language      = ?,"
-                              "song_lyricist      = ? "
+                              "song_lyricist      = ?,"
+                              "song_compilation   = ?,"
+                              "song_skip_shuffle  = ? "
                           "WHERE song_id = ?");
 
             int numValue = 0;
@@ -1661,6 +1697,8 @@ void CSong::updateDatabase(void)
             query.bindValue(numValue++, getISO2CodeForLanguage(m_infos.language));
             query.bindValue(numValue++, m_infos.lyricist);
             query.bindValue(numValue++, m_id);
+            query.bindValue(numValue++, (m_infos.compilation ? 1 : 0));
+            query.bindValue(numValue++, (m_infos.skipShuffle ? 1 : 0));
 
             if (!query.exec())
             {
