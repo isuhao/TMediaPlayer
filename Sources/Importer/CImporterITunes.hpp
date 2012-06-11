@@ -5,12 +5,20 @@
 #include <QWizard>
 #include <QDomDocument>
 #include <QDateTime>
-#include "ui_DialogImportITunes.h"
+#include <QWizard>
+#include <QMap>
 
 
+class QGridLayout;
+class QLabel;
+class QLineEdit;
+class QStandardItemModel;
+class QToolButton;
+class QTreeView;
 class CApplication;
 class CITunesLibrary;
-class QStandardItemModel;
+class CITunesWizardPage1;
+class CITunesWizardPage2;
 
 
 class CImporterITunes : public QWizard
@@ -24,14 +32,57 @@ public:
 
 protected slots:
 
-    void chooseFile(void);
     void onPageChanged(int page);
 
 private:
 
     CApplication * m_application;
     CITunesLibrary * m_library;
-    Ui::DialogImportITunes * m_uiWidget;
+    CITunesWizardPage1 * m_page1;
+    CITunesWizardPage2 * m_page2;
+};
+
+
+class CITunesWizardPage1 : public QWizardPage
+{
+    Q_OBJECT
+
+public:
+
+    explicit CITunesWizardPage1(CITunesLibrary * library, QWidget * parent = NULL);
+
+    virtual bool isComplete(void) const;
+    virtual void initializePage(void);
+
+protected slots:
+
+    void chooseFile(void);
+
+private:
+
+    CITunesLibrary * m_library;
+    QGridLayout * m_gridLayout;
+    QLabel * m_lblFileName;
+    QLineEdit * m_editFileName;
+    QToolButton * m_btnFileName;
+};
+
+
+class CITunesWizardPage2 : public QWizardPage
+{
+    Q_OBJECT
+
+public:
+
+    explicit CITunesWizardPage2(CITunesLibrary * library, QWidget * parent = NULL);
+
+    virtual void initializePage(void);
+
+private:
+    
+    CITunesLibrary * m_library;
+    QGridLayout * m_gridLayout;
+    QTreeView * m_treeView;
 };
 
 

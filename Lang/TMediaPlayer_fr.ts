@@ -221,9 +221,9 @@ Erreur : %4</translation>
 <context>
     <name>CITunesLibrary</name>
     <message numerus="yes">
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="837"/>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="1115"/>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="1134"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="950"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="1228"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="1249"/>
         <source>%1 (%n song(s))</source>
         <translation>
             <numerusform>%1 (%n morceau)</numerusform>
@@ -231,9 +231,53 @@ Erreur : %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="837"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="950"/>
         <source>Library</source>
         <translation>Médiathèque</translation>
+    </message>
+</context>
+<context>
+    <name>CITunesWizardPage1</name>
+    <message>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="67"/>
+        <source>Library localisation</source>
+        <translation>Localisation de la médiathèque</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="68"/>
+        <source>Select the file which contains the iTunes library.</source>
+        <translation>Sélectionnez le fichier qui contient la médiathèque de iTunes.</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="71"/>
+        <source>Library:</source>
+        <translation>Fichier :</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="77"/>
+        <source>...</source>
+        <translation>...</translation>
+    </message>
+</context>
+<context>
+    <name>CITunesWizardPage2</name>
+    <message>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="107"/>
+        <source>Items to import</source>
+        <translation>Éléments à importer</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="108"/>
+        <source>Select items you want to import in your library.</source>
+        <translation>Sélectionnez les éléments que vous souhaitez importer dans votre médiathèque.</translation>
+    </message>
+</context>
+<context>
+    <name>CImporterITunes</name>
+    <message>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="25"/>
+        <source>Import from iTunes</source>
+        <translation>Importer depuis iTunes</translation>
     </message>
 </context>
 <context>
@@ -1284,39 +1328,32 @@ Voulez-vous les ajouter ?</translation>
 <context>
     <name>DialogImportITunes</name>
     <message>
-        <location filename="../Form/DialogImportITunes.ui" line="12"/>
         <source>Import from iTunes</source>
-        <translation>Importer depuis iTunes</translation>
+        <translation type="obsolete">Importer depuis iTunes</translation>
     </message>
     <message>
-        <location filename="../Form/DialogImportITunes.ui" line="25"/>
         <source>Library localisation</source>
-        <translation>Localisation de la médiathèque</translation>
+        <translation type="obsolete">Localisation de la médiathèque</translation>
     </message>
     <message>
-        <location filename="../Form/DialogImportITunes.ui" line="28"/>
         <source>Select the file which contains the iTunes library.</source>
-        <translation>Sélectionnez le fichier qui contient la médiathèque de iTunes.</translation>
+        <translation type="obsolete">Sélectionnez le fichier qui contient la médiathèque de iTunes.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogImportITunes.ui" line="34"/>
         <source>Library:</source>
-        <translation>Fichier :</translation>
+        <translation type="obsolete">Fichier :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogImportITunes.ui" line="44"/>
         <source>...</source>
-        <translation>...</translation>
+        <translation type="obsolete">...</translation>
     </message>
     <message>
-        <location filename="../Form/DialogImportITunes.ui" line="52"/>
         <source>Items to import</source>
-        <translation>Éléments à importer</translation>
+        <translation type="obsolete">Éléments à importer</translation>
     </message>
     <message>
-        <location filename="../Form/DialogImportITunes.ui" line="55"/>
         <source>Select items you want to import in your library.</source>
-        <translation>Sélectionnez les éléments que vous souhaitez importer dans votre médiathèque.</translation>
+        <translation type="obsolete">Sélectionnez les éléments que vous souhaitez importer dans votre médiathèque.</translation>
     </message>
 </context>
 <context>

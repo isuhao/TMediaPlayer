@@ -4,6 +4,9 @@
 #include <QFileDialog>
 #include <QStandardItem>
 #include <QStandardItemModel>
+#include <QTreeView>
+#include <QLineEdit>
+#include <QWizardPage>
 
 #include <QtDebug>
 
@@ -11,15 +14,22 @@
 CImporterITunes::CImporterITunes(CApplication * application) :
     QWizard       (application),
     m_application (application),
-    m_library     (new CITunesLibrary(this)),
-    m_uiWidget    (new Ui::DialogImportITunes())
+    m_library     (new CITunesLibrary(this))
 {
     Q_CHECK_PTR(application);
 
     setAttribute(Qt::WA_DeleteOnClose);
-    m_uiWidget->setupUi(this);
+    resize(400, 300);
+    setModal(true);
+    setOptions(QWizard::HelpButtonOnRight|QWizard::NoBackButtonOnStartPage);
+    setWindowTitle(tr("Import from iTunes"));
 
-    connect(m_uiWidget->btnFileName, SIGNAL(clicked()), this, SLOT(chooseFile()));
+    m_page1 = new CITunesWizardPage1(m_library, this);
+    m_page2 = new CITunesWizardPage2(m_library, this);
+
+    addPage(m_page1);
+    addPage(m_page2);
+
     connect(this, SIGNAL(currentIdChanged(int)), this, SLOT(onPageChanged(int)));
 }
 
@@ -30,13 +40,7 @@ CImporterITunes::CImporterITunes(CApplication * application) :
 
 CImporterITunes::~CImporterITunes()
 {
-    delete m_uiWidget;
-}
 
-
-void CImporterITunes::chooseFile(void)
-{
-    m_uiWidget->editFileName->setText(QFileDialog::getOpenFileName(this, QString(), "iTunes Music Library.xml"));
 }
 
 
@@ -44,15 +48,90 @@ void CImporterITunes::onPageChanged(int page)
 {
     if (page == 1)
     {
+/*
         qDebug() << "CImporterITunes::onPageChanged() : page 1";
         QStandardItemModel * model = new QStandardItemModel(this);
         m_uiWidget->treeView->setModel(model);
 
         m_library->loadFile(m_uiWidget->editFileName->text());
         m_library->initModelWithLists(model);
+*/
     }
 }
 
+
+CITunesWizardPage1::CITunesWizardPage1(CITunesLibrary * library, QWidget * parent) :
+    QWizardPage (parent),
+    m_library   (library)
+{
+    setTitle(tr("Library localisation"));
+    setSubTitle(tr("Select the file which contains the iTunes library."));
+
+    m_gridLayout = new QGridLayout(this);
+    m_lblFileName = new QLabel(tr("Library:"), this);
+    m_gridLayout->addWidget(m_lblFileName, 0, 0, 1, 1);
+    m_editFileName = new QLineEdit(this);
+    registerField("fileName", m_editFileName);
+    m_gridLayout->addWidget(m_editFileName, 0, 1, 1, 1);
+    m_btnFileName = new QToolButton(this);
+    m_btnFileName->setText(tr("..."));
+    m_gridLayout->addWidget(m_btnFileName, 0, 2, 1, 1);
+
+    connect(m_editFileName, SIGNAL(textChanged(const QString&)), this, SIGNAL(completeChanged()));
+    connect(m_btnFileName, SIGNAL(clicked()), this, SLOT(chooseFile()));
+}
+
+    
+bool CITunesWizardPage1::isComplete(void) const
+{
+    return (!m_editFileName->text().isEmpty() && QWizardPage::isComplete());
+}
+
+
+void CITunesWizardPage1::initializePage(void)
+{
+
+}
+
+
+void CITunesWizardPage1::chooseFile(void)
+{
+    m_editFileName->setText(QFileDialog::getOpenFileName(this, QString(), "iTunes Music Library.xml"));
+}
+
+
+CITunesWizardPage2::CITunesWizardPage2(CITunesLibrary * library, QWidget * parent) :
+    QWizardPage (parent),
+    m_library   (library)
+{
+    setTitle(tr("Items to import"));
+    setSubTitle(tr("Select items you want to import in your library."));
+
+    m_gridLayout = new QGridLayout(this);
+    m_treeView = new QTreeView(this);
+    m_treeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    m_treeView->setUniformRowHeights(true);
+    m_treeView->header()->setVisible(false);
+    m_gridLayout->addWidget(m_treeView, 0, 0, 1, 1);
+}
+
+
+void CITunesWizardPage2::initializePage(void)
+{
+    QStandardItemModel * model = new QStandardItemModel(this);
+    m_treeView->setModel(model);
+
+    QString fileName = field("fileName").toString();
+    m_library->loadFile(fileName);
+    m_library->initModelWithLists(model);
+}
+
+/*
+bool CITunesWizardPage1::validateCurrentPage(void)
+{
+    return QWizardPage::validateCurrentPage();
+}
+*/
 
 CITunesLibrary::CITunesLibrary(QObject * parent) :
     QObject    (parent),
@@ -630,17 +709,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
                 // Parcours des attributs de la liste de lecture
                 for (QDomElement nodeListAttr = nodeList.firstChildElement(); !nodeListAttr.isNull(); nodeListAttr = nodeListAttr.nextSibling().toElement())
                 {
-                    if (nodeListAttr.tagName() == "array")
-                    {
-/*
-			<array>
-				<dict><key>Track ID</key><integer>11390</integer></dict>
-				<dict><key>Track ID</key><integer>26862</integer></dict>
-			</array>
-*/
-                        continue;
-                    }
-                    else if (nodeListAttr.tagName() != "key")
+                    if (nodeListAttr.tagName() != "key")
                     {
                         qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'key' attendu)";
                         continue;
@@ -680,6 +749,48 @@ bool CITunesLibrary::loadFile(const QString& fileName)
                     else if (nodeListAttr.text() == "Smart Info" || nodeListAttr.text() == "Smart Criteria")
                     {
                         isDynamic = true;
+                    }
+                    else if (nodeListAttr.text() == "Playlist Items")
+                    {
+                        if (nodeListAttrValue.tagName() != "array")
+                        {
+                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'array' attendu)";
+                            continue;
+                        }
+
+                        // Parcours de la liste des morceaux
+                        for (QDomElement nodeListSongs = nodeListAttrValue.firstChildElement(); !nodeListSongs.isNull(); nodeListSongs = nodeListSongs.nextSibling().toElement())
+                        {
+                            if (nodeListSongs.tagName() != "dict")
+                            {
+                                qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'dict' attendu)";
+                                continue;
+                            }
+
+                            QDomElement nodeListSong = nodeListSongs.firstChildElement();
+
+                            if (nodeListSong.tagName() != "key")
+                            {
+                                qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'key' attendu)";
+                                continue;
+                            }
+
+                            if (nodeListSong.text() != "Track ID")
+                            {
+                                qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (valeur 'Track ID' attendue)";
+                                continue;
+                            }
+
+                            nodeListSong = nodeListSong.nextSibling().toElement();
+
+                            if (nodeListSong.tagName() != "integer")
+                            {
+                                qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'integer' attendu)";
+                                continue;
+                            }
+
+                            songs.append(nodeListSong.text().toInt());
+                        }
                     }
                     else if (nodeListAttr.text() == "Name")
                     {
@@ -725,15 +836,17 @@ bool CITunesLibrary::loadFile(const QString& fileName)
                         if (folderID.isEmpty())
                         {
                             TStaticList list;
-                            list.name = playListName;
-                            list.id   = playListID;
+                            list.name  = playListName;
+                            list.id    = playListID;
+                            list.songs = songs;
                             m_staticLists.append(list);
                         }
                         else
                         {
                             staticListParents[playListID] = folderID;
-                            staticLists[playListID].name = playListName;
-                            staticLists[playListID].id   = playListID;
+                            staticLists[playListID].name  = playListName;
+                            staticLists[playListID].id    = playListID;
+                            staticLists[playListID].songs = songs;
                         }
                     }
                 }
@@ -1125,14 +1238,18 @@ void CITunesLibrary::initModelWithLists(QStandardItemModel * model) const
     {
         QStandardItem * item = new QStandardItem(QPixmap(":/icons/dynamic_list"), it->name);
         item->setData(it->id, Qt::UserRole + 1);
+        item->setCheckable(true);
+        item->setEnabled(false);
         model->appendRow(item);
     }
 
     // Listes statiques
     for (QList<TStaticList>::const_iterator it = m_staticLists.begin(); it != m_staticLists.end(); ++it)
     {
-        QStandardItem * item = new QStandardItem(QPixmap(":/icons/static_list"), tr("%1 (%n song(s))", "", it->songs.size()).arg(it->name));
+        QStandardItem * item = new QStandardItem(QPixmap(":/icons/playlist"), tr("%1 (%n song(s))", "", it->songs.size()).arg(it->name));
         item->setData(it->id, Qt::UserRole + 1);
+        item->setCheckable(true);
+        item->setEnabled(false);
         model->appendRow(item);
     }
 }

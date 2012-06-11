@@ -468,9 +468,6 @@
     <CustomBuild Include="Sources\Importer\CImporterITunes.hpp">
       <Filter>Header Files\Importer</Filter>
     </CustomBuild>
-    <CustomBuild Include="Form\DialogImportITunes.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_DialogEditDynamicPlayList.h">
@@ -505,9 +502,6 @@
     </ClInclude>
     <ClInclude Include="Sources\CRating.hpp">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GeneratedFiles\ui_DialogImportITunes.h">
-      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
