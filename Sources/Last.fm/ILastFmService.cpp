@@ -77,42 +77,6 @@ QByteArray ILastFmService::getLastFmSignature(const QMap<QByteArray, QByteArray>
 
 
 /**
- * Log une requête.
- *
- * \todo Ecrire dans un fichier.
- *
- * \param url     Adresse de destination.
- * \param content Contenu du corps de la requête.
- */
-
-void ILastFmService::logLastFmRequest(const QString& url, const QString& content)
-{
-    qDebug() << "--------------------------------------------------";
-    qDebug() << QDateTime::currentDateTime();
-    qDebug() << url;
-    qDebug() << content;
-}
-
-
-/**
- * Log une réponse à une requête.
- *
- * \todo Ecrire dans un fichier.
- *
- * \param code    Code de retour de la requête.
- * \param content Contenu du message de retour.
- */
-
-void ILastFmService::logLastFmResponse(int code, const QString& content)
-{
-    qDebug() << "--------------------------------------------------";
-    qDebug() << QDateTime::currentDateTime();
-    qDebug() << "Code = " << code;
-    qDebug() << content;
-}
-
-
-/**
  * Convertit une chaine de caractère pour l'utiliser comme URL d'une requête à Last.fm
  *
  * \param str Chaine à convertir.

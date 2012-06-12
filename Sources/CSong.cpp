@@ -326,9 +326,11 @@ bool CSong::loadTags(bool readProperties)
                 }
             }
 
-            loadTags(file.APETag(false), m_infos, m_application->getLogMetadata(), m_fileName);
-            loadTags(file.ID3v1Tag(true), m_infos, m_application->getLogMetadata(), m_fileName);
-            loadTags(file.ID3v2Tag(true), m_infos, m_application->getLogMetadata(), m_fileName);
+            QFile * logFile = m_application->getLogFile("metadata");
+
+            loadTags(file.APETag(false), m_infos, logFile, m_fileName);
+            loadTags(file.ID3v1Tag(true), m_infos, logFile, m_fileName);
+            loadTags(file.ID3v2Tag(true), m_infos, logFile, m_fileName);
 
             break;
         }
@@ -360,7 +362,7 @@ bool CSong::loadTags(bool readProperties)
                 }
             }
 
-            loadTags(file.tag(), m_infos, m_application->getLogMetadata(), m_fileName);
+            loadTags(file.tag(), m_infos, m_application->getLogFile("metadata"), m_fileName);
 
             break;
         }
@@ -392,9 +394,11 @@ bool CSong::loadTags(bool readProperties)
                 }
             }
 
-            loadTags(file.ID3v1Tag(true), m_infos, m_application->getLogMetadata(), m_fileName);
-            loadTags(file.ID3v2Tag(true), m_infos, m_application->getLogMetadata(), m_fileName);
-            loadTags(file.xiphComment(true), m_infos, m_application->getLogMetadata(), m_fileName);
+            QFile * logFile = m_application->getLogFile("metadata");
+
+            loadTags(file.ID3v1Tag(true), m_infos, logFile, m_fileName);
+            loadTags(file.ID3v2Tag(true), m_infos, logFile, m_fileName);
+            loadTags(file.xiphComment(true), m_infos, logFile, m_fileName);
 
             break;
         }
@@ -446,9 +450,11 @@ return false; // Lecture seule...
                 return false;
             }
 
-            //writeTags(file.APETag(false), m_infos, m_application->getLogMetadata(), m_fileName);
-            writeTags(file.ID3v1Tag(true), m_infos, m_application->getLogMetadata(), m_fileName);
-            writeTags(file.ID3v2Tag(true), m_infos, m_application->getLogMetadata(), m_fileName);
+            QFile * logFile = m_application->getLogFile("metadata");
+
+            //writeTags(file.APETag(false), m_infos, logFile, m_fileName);
+            writeTags(file.ID3v1Tag(true), m_infos, logFile, m_fileName);
+            writeTags(file.ID3v2Tag(true), m_infos, logFile, m_fileName);
 
             file.save(TagLib::MPEG::File::ID3v1 | TagLib::MPEG::File::ID3v2, true);
             m_fileSize = file.length();
@@ -474,7 +480,7 @@ return false; // Lecture seule...
                 return false;
             }
 
-            writeTags(file.tag(), m_infos, m_application->getLogMetadata(), m_fileName);
+            writeTags(file.tag(), m_infos, m_application->getLogFile("metadata"), m_fileName);
 
             file.save();
             m_fileSize = file.length();
@@ -500,9 +506,11 @@ return false; // Lecture seule...
                 return false;
             }
 
-            writeTags(file.ID3v1Tag(true), m_infos, m_application->getLogMetadata(), m_fileName);
-            writeTags(file.ID3v2Tag(true), m_infos, m_application->getLogMetadata(), m_fileName);
-            writeTags(file.xiphComment(true), m_infos, m_application->getLogMetadata(), m_fileName);
+            QFile * logFile = m_application->getLogFile("metadata");
+
+            writeTags(file.ID3v1Tag(true), m_infos, logFile, m_fileName);
+            writeTags(file.ID3v2Tag(true), m_infos, logFile, m_fileName);
+            writeTags(file.xiphComment(true), m_infos, logFile, m_fileName);
 
             file.save();
             m_fileSize = file.length();

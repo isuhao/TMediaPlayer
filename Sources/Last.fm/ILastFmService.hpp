@@ -24,8 +24,6 @@ public:
     
     QByteArray getLastFmQuery(const QMap<QByteArray, QByteArray>& args) const;
     QByteArray getLastFmSignature(const QMap<QByteArray, QByteArray>& args) const;
-    void logLastFmRequest(const QString& url, const QString& content = QString());
-    void logLastFmResponse(int code, const QString& content);
 
     static QByteArray encodeString(const QByteArray& str);
 

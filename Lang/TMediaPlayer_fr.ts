@@ -108,47 +108,47 @@ Erreur : %4</translation>
         <translation>Métadonnées</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditMetadata.cpp" line="65"/>
+        <location filename="../Sources/CDialogEditMetadata.cpp" line="127"/>
         <source>Key</source>
         <translation>Clé</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditMetadata.cpp" line="65"/>
+        <location filename="../Sources/CDialogEditMetadata.cpp" line="127"/>
         <source>Value</source>
         <translation>Valeur</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditMetadata.cpp" line="68"/>
+        <location filename="../Sources/CDialogEditMetadata.cpp" line="129"/>
         <source>Description</source>
         <translation>Description</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditMetadata.cpp" line="68"/>
+        <location filename="../Sources/CDialogEditMetadata.cpp" line="129"/>
         <source>Language</source>
         <translation>Langue</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditMetadata.cpp" line="68"/>
+        <location filename="../Sources/CDialogEditMetadata.cpp" line="129"/>
         <source>Comments</source>
         <translation>Commentaires</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditMetadata.cpp" line="73"/>
+        <location filename="../Sources/CDialogEditMetadata.cpp" line="71"/>
         <source>Save</source>
         <translation>Enregistrer</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditMetadata.cpp" line="74"/>
+        <location filename="../Sources/CDialogEditMetadata.cpp" line="72"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditMetadata.cpp" line="75"/>
+        <location filename="../Sources/CDialogEditMetadata.cpp" line="73"/>
         <source>Apply</source>
         <translation>Appliquer</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditMetadata.cpp" line="76"/>
+        <location filename="../Sources/CDialogEditMetadata.cpp" line="74"/>
         <source>Reset</source>
         <translation>Réinitialiser</translation>
     </message>
@@ -246,9 +246,9 @@ Erreur : %4</translation>
 <context>
     <name>CITunesLibrary</name>
     <message numerus="yes">
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="814"/>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="841"/>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="862"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="822"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="849"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="870"/>
         <source>%1 (%n song(s))</source>
         <translation>
             <numerusform>%1 (%n morceau)</numerusform>
@@ -256,7 +256,7 @@ Erreur : %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="814"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="822"/>
         <source>Library</source>
         <translation>Médiathèque</translation>
     </message>
@@ -264,22 +264,22 @@ Erreur : %4</translation>
 <context>
     <name>CITunesWizardPage1</name>
     <message>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="67"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="57"/>
         <source>Library localisation</source>
         <translation>Localisation de la médiathèque</translation>
     </message>
     <message>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="68"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="58"/>
         <source>Select the file which contains the iTunes library.</source>
         <translation>Sélectionnez le fichier qui contient la médiathèque de iTunes.</translation>
     </message>
     <message>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="71"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="61"/>
         <source>Library:</source>
         <translation>Fichier :</translation>
     </message>
     <message>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="77"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="67"/>
         <source>...</source>
         <translation>...</translation>
     </message>
@@ -287,14 +287,27 @@ Erreur : %4</translation>
 <context>
     <name>CITunesWizardPage2</name>
     <message>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="107"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="91"/>
         <source>Items to import</source>
         <translation>Éléments à importer</translation>
     </message>
     <message>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="108"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="92"/>
         <source>Select items you want to import in your library.</source>
         <translation>Sélectionnez les éléments que vous souhaitez importer dans votre médiathèque.</translation>
+    </message>
+</context>
+<context>
+    <name>CITunesWizardPage3</name>
+    <message>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="125"/>
+        <source>Import done</source>
+        <translation type="unfinished">Import effectué</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="126"/>
+        <source>All selected items have been imported into the library.</source>
+        <translation>Tous les éléments sélectionnés ont été importés dans la médiathèque.</translation>
     </message>
 </context>
 <context>
@@ -303,6 +316,31 @@ Erreur : %4</translation>
         <location filename="../Sources/Importer/CImporterITunes.cpp" line="25"/>
         <source>Import from iTunes</source>
         <translation>Importer depuis iTunes</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="35"/>
+        <source>&amp;Back</source>
+        <translation>&amp;Précédent</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="36"/>
+        <source>&amp;Next</source>
+        <translation>&amp;Suivant</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="37"/>
+        <source>&amp;Finish</source>
+        <translation>&amp;Terminer</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="38"/>
+        <source>&amp;Import</source>
+        <translation>&amp;Importer</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="39"/>
+        <source>Cancel</source>
+        <translation>Annuler</translation>
     </message>
 </context>
 <context>

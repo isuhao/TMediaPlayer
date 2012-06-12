@@ -7,8 +7,6 @@
 #include <QDesktopServices>
 #include <QtXml>
 
-#include <QtDebug>
-
 
 CAuthentication::CAuthentication(CApplication * application) :
     ILastFmService (application, ""),
@@ -21,7 +19,15 @@ CAuthentication::CAuthentication(CApplication * application) :
     QByteArray content = getLastFmQuery(args);
     
     QString url = QString("%1?%2").arg(m_lastFmUrl).arg(QString(content));
-    logLastFmRequest(url);
+
+    // Log
+    QFile * logFile = m_application->getLogFile("lastFm");
+    QTextStream stream(logFile);
+    stream << "========================================\n";
+    stream << "   Request 'Get Token'\n";
+    stream << "----------------------------------------\n";
+    stream << tr("Date:") << QDateTime::currentDateTime().toString() << "\n";
+    stream << tr("URL :") << "'" << url << "'\n";
 
     m_networkManager->get(QNetworkRequest(QUrl(url)));
 }
@@ -31,24 +37,31 @@ void CAuthentication::replyFinished(QNetworkReply * reply)
 {
     Q_CHECK_PTR(reply);
 
-    //qDebug() << "CAuthentication::replyFinished()";
+    QByteArray data = reply->readAll();
+
+    // Log
+    QFile * logFile = m_application->getLogFile("lastFm");
+    QTextStream stream(logFile);
+    stream << "========================================\n";
+    stream << "   Reply 'Get Token'\n";
+    stream << "----------------------------------------\n";
+    stream << tr("Date   :") << QDateTime::currentDateTime().toString() << "\n";
+    stream << tr("Code   :") << reply->error() << "\n";
+    stream << tr("Content:") << "'" << data << "'\n";
 
     Q_CHECK_PTR(reply);
 
     if (reply->error() != QNetworkReply::NoError)
     {
-        qWarning() << "CApplication::replyLastFmGetToken() : erreur HTTP avec Last.fm (" << reply->error() << ")";
+        stream << "Erreur HTTP : " << reply->error() << "\n";
     }
-
-    QByteArray data = reply->readAll();
-    logLastFmResponse(reply->error(), data);
 
     QDomDocument doc;
     
     QString error;
     if (!doc.setContent(data, &error))
     {
-        qWarning() << "CApplication::replyLastFmGetToken() : document XML invalide (" << error << ")";
+        stream << "Document XML invalide (" << error << ")\n";
         return;
     }
 
@@ -56,13 +69,13 @@ void CAuthentication::replyFinished(QNetworkReply * reply)
 
     if (racine.tagName() != "lfm")
     {
-        qWarning() << "CApplication::replyLastFmGetToken() : réponse XML incorrecte (élément 'lfm' attendu)";
+        stream << "Réponse XML incorrecte (élément 'lfm' attendu)\n";
         return;
     }
 
     if (racine.attribute("status", "failed") == "failed")
     {
-        qWarning() << "CApplication::replyLastFmGetToken() : la requête Last.fm a echouée";
+        stream << "La requête Last.fm a echouée\n";
         return;
     }
 
@@ -70,7 +83,7 @@ void CAuthentication::replyFinished(QNetworkReply * reply)
 
     if (racine.tagName() != "token")
     {
-        qWarning() << "CApplication::replyLastFmGetToken() : réponse XML incorrecte (élément 'token' attendu)";
+        stream << "Réponse XML incorrecte (élément 'token' attendu)\n";
         return;
     }
     
@@ -108,7 +121,15 @@ void CAuthentication::getLastFmSession(void)
 
     QByteArray content = getLastFmQuery(args);
     QString url = QString("%1?%2").arg(m_lastFmUrl).arg(QString(content));
-    logLastFmRequest(url);
+
+    // Log
+    QFile * logFile = m_application->getLogFile("lastFm");
+    QTextStream stream(logFile);
+    stream << "========================================\n";
+    stream << "   Request 'Get Session key'\n";
+    stream << "----------------------------------------\n";
+    stream << tr("Date: ") << QDateTime::currentDateTime().toString() << "\n";
+    stream << tr("URL:  ") << "'" << url << "'\n";
 
     manager->get(QNetworkRequest(QUrl(url)));
 
@@ -128,20 +149,29 @@ void CAuthentication::replyLastFmFinished(QNetworkReply * reply)
     Q_CHECK_PTR(reply);
     Q_CHECK_PTR(m_timerLastFm);
 
+    QByteArray data = reply->readAll();
+
+    // Log
+    QFile * logFile = m_application->getLogFile("lastFm");
+    QTextStream stream(logFile);
+    stream << "========================================\n";
+    stream << "   Reply 'Get Session key'\n";
+    stream << "----------------------------------------\n";
+    stream << tr("Date:    ") << QDateTime::currentDateTime().toString() << "\n";
+    stream << tr("Code:    ") << reply->error() << "\n";
+    stream << tr("Content: ") << data << "\n";
+
     if (reply->error() != QNetworkReply::NoError)
     {
-        qWarning() << "CApplication::replyLastFmFinished() : erreur HTTP avec Last.fm (" << reply->error() << ")";
+        stream << "Erreur HTTP : " << reply->error() << "\n";
     }
-
-    QByteArray data = reply->readAll();
-    logLastFmResponse(reply->error(), data);
 
     QDomDocument doc;
     
     QString error;
     if (!doc.setContent(data, &error))
     {
-        qWarning() << "CApplication::replyLastFmFinished() : document XML invalide (" << error << ")";
+        stream << "Document XML invalide (" << error << ")\n";
         return;
     }
 
@@ -149,13 +179,13 @@ void CAuthentication::replyLastFmFinished(QNetworkReply * reply)
 
     if (racine.tagName() != "lfm")
     {
-        qWarning() << "CApplication::replyLastFmFinished() : réponse XML incorrecte (élément 'lfm' attendu)";
+        stream << "Réponse XML incorrecte (élément 'lfm' attendu)\n";
         return;
     }
 
     if (racine.attribute("status", "failed") == "failed")
     {
-        qWarning() << "CApplication::replyLastFmFinished() : la requête Last.fm a echouée";
+        stream << "La requête Last.fm a echouée\n";
         return;
     }
     
@@ -163,7 +193,7 @@ void CAuthentication::replyLastFmFinished(QNetworkReply * reply)
 
     if (racine.tagName() != "session")
     {
-        qWarning() << "CApplication::replyLastFmGetToken() : réponse XML incorrecte (élément 'session' attendu)";
+        stream << "Réponse XML incorrecte (élément 'session' attendu)\n";
         return;
     }
 
@@ -172,7 +202,7 @@ void CAuthentication::replyLastFmFinished(QNetworkReply * reply)
 
     if (racine.isNull())
     {
-        qWarning() << "CApplication::replyLastFmFinished() : réponse XML incorrecte (élément key attendu)";
+        stream << "Réponse XML incorrecte (élément key attendu)\n";
         return;
     }
 

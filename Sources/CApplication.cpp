@@ -75,6 +75,10 @@ CApplication::CApplication(void) :
     // Chargement des paramètres de l'application
     m_settings = new QSettings(this);
 
+    m_applicationPath = QDesktopServices::storageLocation(QDesktopServices::DataLocation) + QDir::separator();
+    QDir(m_applicationPath).mkpath(".");
+
+/*
     const QString applicationPath = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
     QDir(applicationPath).mkpath(".");
 
@@ -83,6 +87,7 @@ CApplication::CApplication(void) :
     {
         qWarning() << "Erreur lors de l'ouverture du fichier metadata.log";
     }
+*/
 
     // Initialisation de l'interface graphique
     m_uiWidget->setupUi(this);
@@ -829,6 +834,27 @@ QStringList CApplication::getGenreList(void)
     genres.removeDuplicates();
     genres.sort();
     return genres;
+}
+
+
+QFile * CApplication::getLogFile(const QString& logName)
+{
+    QString fileName = logName + QDateTime::currentDateTime().toString("-yyyy-MM-dd");
+
+    if (!m_logList.contains(fileName))
+    {
+        QFile * logFile = new QFile(m_applicationPath + fileName + ".log", this);
+
+        if (!logFile->open(QIODevice::WriteOnly | QIODevice::Append))
+        {
+            qWarning() << "Erreur lors de l'ouverture du fichier de log";
+            return NULL;
+        }
+
+        m_logList[fileName] = logFile;
+    }
+
+    return m_logList.value(fileName);
 }
 
 
@@ -1718,9 +1744,10 @@ void CApplication::addPlayList(CPlayList * playList)
  * Le fichier doit être un son valide, et ne doit pas être déjà présent dans la médiathèque.
  *
  * \param fileName Fichier à charger.
+ * \return Pointeur sur le morceau.
  */
 
-void CApplication::addSong(const QString& fileName)
+CSong * CApplication::addSong(const QString& fileName)
 {
     qDebug() << "Chargement du fichier " << fileName;
 
@@ -1730,8 +1757,9 @@ void CApplication::addSong(const QString& fileName)
         m_library->addSong(song);
         updateListInformations();
         emit songAdded(song);
-        return;
     }
+
+    return song;
 }
 
 
@@ -2102,7 +2130,7 @@ void CApplication::update(void)
     {
         Q_CHECK_PTR(m_currentSongTable);
 
-        //qDebug() << "CApplication::update()";
+        qDebug() << "CApplication::update()";
         const int position = m_currentSongItem->getSong()->getPosition();
 
         if (m_lastFmEnableScrobble && (m_lastFmState == Started || m_lastFmState == Notified) && m_state == Playing)
@@ -2119,7 +2147,7 @@ void CApplication::update(void)
             {
                 if (m_lastFmTimeListened > m_delayBeforeNotification)
                 {
-                    qDebug() << "Last.fm : update";
+                    //qDebug() << "Last.fm : update";
                     CUpdateNowPlaying * query = new CUpdateNowPlaying(this, m_lastFmKey, m_currentSongItem->getSong());
                     //updateLastFmNowPlaying(m_currentSongItem->getSong());
                     m_lastFmState = Notified;
@@ -2129,7 +2157,7 @@ void CApplication::update(void)
             {
                 if (m_lastFmTimeListened > 4 * 60000 || m_lastFmTimeListened > m_currentSongItem->getSong()->getDuration() * m_percentageBeforeScrobbling / 100)
                 {
-                    qDebug() << "Last.fm : scrobble";
+                    //qDebug() << "Last.fm : scrobble";
                     CScrobble * query = new CScrobble(this, m_lastFmKey, m_currentSongItem->getSong());
                     m_lastFmState = Scrobbled;
                 }
@@ -2662,7 +2690,7 @@ void CApplication::loadDatabase(void)
 
 void CApplication::startPlay(void)
 {
-    qDebug() << "CApplication::startPlay()";
+    //qDebug() << "CApplication::startPlay()";
 
     Q_CHECK_PTR(m_currentSongItem);
     Q_CHECK_PTR(m_currentSongTable);

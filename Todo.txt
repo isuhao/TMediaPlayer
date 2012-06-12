@@ -20,7 +20,6 @@
     - Lectures : Ne pas changer, Toujours changer, Fusionner (les nombres de lecture sont additionnés, et la date de dernière lecture est la plus récente).
 
 - Tester le scrobbling Last.fm.
-  - Log dans un fichier.
 
 --------------------------------------------------
   Importance moyenne

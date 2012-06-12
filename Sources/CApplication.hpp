@@ -76,6 +76,7 @@ public:
     CPlayList * getPlayListFromId(int id) const;
     QList<CPlayList *> getPlayListsWithSong(CSong * song) const;
     QList<CPlayList *> getAllPlayLists(void) const;
+    CSong * addSong(const QString& fileName);
     void removeSongs(const QList<CSong *> songs);
 
     inline bool isPlaying(void) const;
@@ -107,10 +108,7 @@ public:
         return m_settings;
     }
 
-    inline QFile * getLogMetadata(void)
-    {
-        return &m_logMetadata;
-    }
+    QFile * getLogFile(const QString& logName);
 
 public slots:
 
@@ -191,7 +189,6 @@ protected slots:
 protected:
 
     void addPlayList(CPlayList * playList);
-    void addSong(const QString& fileName);
     QStringList addFolder(const QString& pathName);
 
     void displaySongTable(CSongTable * songTable);
@@ -223,7 +220,8 @@ private:
     int m_volume;                       ///< Volume sonore (entre 0 et 100).
     QList<CListFolder *> m_folders;     ///< Liste de l'ensemble des dossiers de listes de lecture.
     QList<CPlayList *> m_playLists;     ///< Liste de l'ensemble des listes de lectures.
-    QFile m_logMetadata;                ///< Fichier de log des métadonnées.
+    QMap<QString, QFile *> m_logList;   ///< Liste des fichiers de log ouverts.
+    QString m_applicationPath;
 
     // Last.fm
     enum TLastFmState

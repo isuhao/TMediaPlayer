@@ -7,6 +7,7 @@
 #include <QTreeView>
 #include <QLineEdit>
 #include <QWizardPage>
+#include <QUrl>
 
 #include <QtDebug>
 
@@ -26,11 +27,17 @@ CImporterITunes::CImporterITunes(CApplication * application) :
 
     m_page1 = new CITunesWizardPage1(m_library, this);
     m_page2 = new CITunesWizardPage2(m_library, this);
+    m_page3 = new CITunesWizardPage3(m_application, m_library, this);
 
     addPage(m_page1);
     addPage(m_page2);
+    addPage(m_page3);
 
-    connect(this, SIGNAL(currentIdChanged(int)), this, SLOT(onPageChanged(int)));
+    setButtonText(QWizard::BackButton, tr("&Back"));
+    setButtonText(QWizard::NextButton, tr("&Next"));
+    setButtonText(QWizard::FinishButton, tr("&Finish"));
+    setButtonText(QWizard::CommitButton, tr("&Import"));
+    setButtonText(QWizard::CancelButton, tr("Cancel"));
 }
 
     
@@ -44,19 +51,15 @@ CImporterITunes::~CImporterITunes()
 }
 
 
-void CImporterITunes::onPageChanged(int page)
+QStringList CImporterITunes::getSelectedItems(void) const
 {
-    if (page == 1)
-    {
-/*
-        qDebug() << "CImporterITunes::onPageChanged() : page 1";
-        QStandardItemModel * model = new QStandardItemModel(this);
-        m_uiWidget->treeView->setModel(model);
+    return m_page2->getSelectedItems();
+}
 
-        m_library->loadFile(m_uiWidget->editFileName->text());
-        m_library->initModelWithLists(model);
-*/
-    }
+
+bool CImporterITunes::needToImportSongs(void) const
+{
+    return m_page2->needToImportSongs();
 }
 
 
@@ -64,6 +67,8 @@ CITunesWizardPage1::CITunesWizardPage1(CITunesLibrary * library, QWidget * paren
     QWizardPage (parent),
     m_library   (library)
 {
+    Q_CHECK_PTR(library);
+
     setTitle(tr("Library localisation"));
     setSubTitle(tr("Select the file which contains the iTunes library."));
 
@@ -88,12 +93,6 @@ bool CITunesWizardPage1::isComplete(void) const
 }
 
 
-void CITunesWizardPage1::initializePage(void)
-{
-
-}
-
-
 void CITunesWizardPage1::chooseFile(void)
 {
     m_editFileName->setText(QFileDialog::getOpenFileName(this, QString(), "iTunes Music Library.xml"));
@@ -104,8 +103,11 @@ CITunesWizardPage2::CITunesWizardPage2(CITunesLibrary * library, QWidget * paren
     QWizardPage (parent),
     m_library   (library)
 {
+    Q_CHECK_PTR(library);
+
     setTitle(tr("Items to import"));
     setSubTitle(tr("Select items you want to import in your library."));
+    setCommitPage(true);
 
     m_gridLayout = new QGridLayout(this);
     m_treeView = new QTreeView(this);
@@ -113,18 +115,97 @@ CITunesWizardPage2::CITunesWizardPage2(CITunesLibrary * library, QWidget * paren
     m_treeView->setUniformRowHeights(true);
     m_treeView->header()->setVisible(false);
     m_gridLayout->addWidget(m_treeView, 0, 0, 1, 1);
+
+    m_model = new QStandardItemModel(this);
+    m_treeView->setModel(m_model);
 }
 
 
 void CITunesWizardPage2::initializePage(void)
 {
-    QStandardItemModel * model = new QStandardItemModel(this);
-    m_treeView->setModel(model);
-
     QString fileName = field("fileName").toString();
     m_library->loadFile(fileName);
-    m_library->initModelWithLists(model);
+    m_library->initModelWithLists(m_model);
 }
+
+
+void CITunesWizardPage2::cleanupPage(void)
+{
+    m_model->clear();
+}
+
+
+QStringList CITunesWizardPage2::getSelectedItems(void) const
+{
+    QStringList res;
+
+    for (int row = 1; row < m_model->rowCount(); ++row)
+    {
+        QStandardItem * item = m_model->item(row);
+
+        if (item->checkState() == Qt::Checked)
+        {
+            res.append(item->data(Qt::UserRole + 1).toString());
+        }
+    }
+
+    return res;
+}
+
+
+bool CITunesWizardPage2::needToImportSongs(void) const
+{
+    return (m_model->item(0)->checkState() == Qt::Checked);
+}
+
+
+CITunesWizardPage3::CITunesWizardPage3(CApplication * application, CITunesLibrary * library, QWidget * parent) :
+    QWizardPage   (parent),
+    m_library     (library),
+    m_application (application)
+{
+    Q_CHECK_PTR(library);
+    Q_CHECK_PTR(application);
+
+    setTitle(tr("Import done"));
+    setSubTitle(tr("All selected items have been imported into the library."));
+    setCommitPage(true);
+}
+
+
+/// \todo Implémentation.
+void CITunesWizardPage3::initializePage(void)
+{
+    QMap<int, CSong *> songs;
+
+    if (qobject_cast<CImporterITunes *>(wizard())->needToImportSongs())
+    {
+        QMap<int, CITunesLibrary::TSong> songsToLoad = m_library->getSongs();
+
+        for (QMap<int, CITunesLibrary::TSong>::const_iterator it2 = songsToLoad.begin(); it2 != songsToLoad.end(); ++it2)
+        {
+            CSong * song = m_application->getSongFromId(CSong::getId(m_application, it2->fileName));
+
+            if (song)
+            {
+                qDebug() << "CITunesWizardPage3::initializePage() : Morceau déjà présent";
+                songs[it2.key()] = song;
+            }
+            else
+            {
+                songs[it2.key()] = m_application->addSong(it2->fileName);
+            }
+        }
+    }
+
+    QStringList list = qobject_cast<CImporterITunes *>(wizard())->getSelectedItems();
+
+    for (QStringList::const_iterator it = list.begin(); it != list.end(); ++it)
+    {
+        //...
+    }
+}
+
 
 /*
 bool CITunesWizardPage1::validateCurrentPage(void)
@@ -446,7 +527,16 @@ bool CITunesLibrary::loadFile(const QString& fileName)
                         if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "string"))
                             continue;
 
-                        song.fileName = nodeListAttrValue.text();
+                        song.fileName = QUrl(nodeListAttrValue.text()).toLocalFile();
+
+                        if (song.fileName.startsWith("//localhost/"))
+                        {
+                            song.fileName = QDir::toNativeSeparators(song.fileName.mid(12));
+                        }
+                        else
+                        {
+                            qWarning() << "Nom de fichier incorrect";
+                        }
                     }
                     else if (nodeListAttr.text() == "File Folder Count")
                     {
@@ -812,6 +902,7 @@ void CITunesLibrary::initModelWithLists(QStandardItemModel * model) const
 
     // Remplissage du modèle
     QStandardItem * item = new QStandardItem(QPixmap(":/icons/library"), tr("%1 (%n song(s))", "", m_songs.size()).arg(tr("Library")));
+    item->setData("", Qt::UserRole + 1);
     item->setCheckable(true);
     item->setCheckState(Qt::Checked);
     model->appendRow(item);

@@ -1,11 +1,11 @@
 
 #include "CScrobble.hpp"
 #include "CSong.hpp"
+#include "CApplication.hpp"
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
-
-#include <QtDebug>
+#include <QTextStream>
 
 
 CScrobble::CScrobble(CApplication * application, const QByteArray& sessionKey, CSong * song) :
@@ -44,7 +44,19 @@ CScrobble::CScrobble(CApplication * application, const QByteArray& sessionKey, C
     }
 
     QByteArray content = getLastFmQuery(args);
-    logLastFmRequest(m_lastFmUrl, content);
+
+    // Log
+    QFile * logFile = m_application->getLogFile("lastFm");
+    QTextStream stream(logFile);
+    stream << "========================================\n";
+    stream << "   Request 'Scrobble'\n";
+    stream << "----------------------------------------\n";
+    stream << tr("Date:    ") << QDateTime::currentDateTime().toString() << "\n";
+    stream << tr("Title:   ") << "'" << song->getTitle() << "'\n";
+    stream << tr("Artist:  ") << "'" << song->getArtistName() << "'\n";
+    stream << tr("Album:   ") << "'" << song->getAlbumTitle() << "'\n";
+    stream << tr("URL:     ") << "'" << m_lastFmUrl << "'\n";
+    stream << tr("Content: ") << "'" << content << "'\n";
 
     QUrl url(m_lastFmUrl);
     QNetworkRequest request(url);
@@ -63,15 +75,20 @@ void CScrobble::replyFinished(QNetworkReply * reply)
 {
     Q_CHECK_PTR(reply);
 
-    //qDebug() << "CScrobble::replyFinished()";
+    // Log
+    QFile * logFile = m_application->getLogFile("lastFm");
+    QTextStream stream(logFile);
+    stream << "========================================\n";
+    stream << "   Reply 'Scrobble'\n";
+    stream << "----------------------------------------\n";
+    stream << tr("Date:    ") << QDateTime::currentDateTime().toString() << "\n";
+    stream << tr("Code:    ") << reply->error() << "\n";
+    stream << tr("Content: ") << "'" << reply->readAll() << "'\n";
 
     if (reply->error() != QNetworkReply::NoError)
     {
-        qWarning() << "CScrobble::replyFinished() : erreur HTTP avec Last.fm (" << reply->error() << ")";
+        stream << "Erreur HTTP : " << reply->error() << "\n";
     }
-
-    QByteArray data = reply->readAll();
-    logLastFmResponse(reply->error(), data);
 
     reply->deleteLater();
 }

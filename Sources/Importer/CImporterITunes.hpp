@@ -19,6 +19,7 @@ class CApplication;
 class CITunesLibrary;
 class CITunesWizardPage1;
 class CITunesWizardPage2;
+class CITunesWizardPage3;
 
 
 class CImporterITunes : public QWizard
@@ -30,9 +31,8 @@ public:
     explicit CImporterITunes(CApplication * application);
     virtual ~CImporterITunes();
 
-protected slots:
-
-    void onPageChanged(int page);
+    QStringList getSelectedItems(void) const;
+    bool needToImportSongs(void) const;
 
 private:
 
@@ -40,6 +40,7 @@ private:
     CITunesLibrary * m_library;
     CITunesWizardPage1 * m_page1;
     CITunesWizardPage2 * m_page2;
+    CITunesWizardPage3 * m_page3;
 };
 
 
@@ -52,7 +53,6 @@ public:
     explicit CITunesWizardPage1(CITunesLibrary * library, QWidget * parent = NULL);
 
     virtual bool isComplete(void) const;
-    virtual void initializePage(void);
 
 protected slots:
 
@@ -77,12 +77,34 @@ public:
     explicit CITunesWizardPage2(CITunesLibrary * library, QWidget * parent = NULL);
 
     virtual void initializePage(void);
+    virtual void cleanupPage(void);
+
+    QStringList getSelectedItems(void) const;
+    bool needToImportSongs(void) const;
 
 private:
     
     CITunesLibrary * m_library;
     QGridLayout * m_gridLayout;
     QTreeView * m_treeView;
+    QStandardItemModel * m_model;
+};
+
+
+class CITunesWizardPage3 : public QWizardPage
+{
+    Q_OBJECT
+
+public:
+
+    CITunesWizardPage3(CApplication * application, CITunesLibrary * library, QWidget * parent = NULL);
+
+    virtual void initializePage(void);
+
+private:
+    
+    CITunesLibrary * m_library;
+    CApplication * m_application;
 };
 
 
@@ -91,16 +113,6 @@ class CITunesLibrary : public QObject
     Q_OBJECT
 
 public:
-
-    CITunesLibrary(QObject * parent = NULL);
-    ~CITunesLibrary();
-
-    bool loadFile(const QString& fileName);
-    void initModelWithLists(QStandardItemModel * model) const;
-
-private:
-
-    bool testLoadingXMLElementError(const QString& element, const QString& expected) const;
 
     struct TSong
     {
@@ -114,6 +126,18 @@ private:
 
         TSong(void) : id(0), playCount(0), rating(0), enabled(true), compilation(false) { }
     };
+
+    CITunesLibrary(QObject * parent = NULL);
+    ~CITunesLibrary();
+
+    bool loadFile(const QString& fileName);
+    void initModelWithLists(QStandardItemModel * model) const;
+
+    QMap<int, TSong> getSongs(void) const { return m_songs; }
+
+private:
+
+    bool testLoadingXMLElementError(const QString& element, const QString& expected) const;
 
     struct TDynamicList
     {
