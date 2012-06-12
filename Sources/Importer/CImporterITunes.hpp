@@ -100,6 +100,8 @@ public:
 
 private:
 
+    bool testLoadingXMLElementError(const QString& element, const QString& expected) const;
+
     struct TSong
     {
         int id;               ///< Identifiant du morceau.

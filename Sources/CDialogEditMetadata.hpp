@@ -7,6 +7,15 @@
 
 
 class CSong;
+class QStandardItemModel;
+
+namespace TagLib
+{
+    namespace ID3v1 { class Tag; }
+    namespace ID3v2 { class Tag; }
+    namespace APE   { class Tag; }
+    namespace Ogg   { class XiphComment; }
+}
 
 
 /**
@@ -30,14 +39,16 @@ protected slots:
 
 protected:
 
-    //void initTabID3v1(void);
-    //void initTabID3v2(void);
-    //void initTabAPE(void);
-    //void initTabXiphComment(void);
+    void initTagID3v1(TagLib::ID3v1::Tag * tags);
+    void initTagID3v2(TagLib::ID3v2::Tag * tags);
+    void initTagAPE(TagLib::APE::Tag * tags);
+    void initTagXiphComment(TagLib::Ogg::XiphComment * tags);
 
 private:
 
     Ui::DialogEditMetadata * m_uiWidget;
+    QStandardItemModel * m_modelID3v2Text;
+    QStandardItemModel * m_modelID3v2Comments;
     CSong * m_song;
 };
 

@@ -254,418 +254,319 @@ bool CITunesLibrary::loadFile(const QString& fileName)
 
                     if (nodeListAttr.text() == "Track ID")
                     {
-                        if (nodeListAttrValue.tagName() != "integer")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'integer' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "integer"))
                             continue;
-                        }
 
                         song.id = nodeListAttrValue.text().toInt();
                     }
                     else if (nodeListAttr.text() == "Name")
                     {
-                        if (nodeListAttrValue.tagName() != "string")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'string' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "string"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Artist")
                     {
-                        if (nodeListAttrValue.tagName() != "string")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'string' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "string"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Album Artist")
                     {
-                        if (nodeListAttrValue.tagName() != "string")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'string' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "string"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Album")
                     {
-                        if (nodeListAttrValue.tagName() != "string")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'string' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "string"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Genre")
                     {
-                        if (nodeListAttrValue.tagName() != "string")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'string' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "string"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Kind")
                     {
-                        if (nodeListAttrValue.tagName() != "string")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'string' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "string"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Size")
                     {
-                        if (nodeListAttrValue.tagName() != "integer")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'integer' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "integer"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Total Time")
                     {
-                        if (nodeListAttrValue.tagName() != "integer")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'integer' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "integer"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Track Number")
                     {
-                        if (nodeListAttrValue.tagName() != "integer")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'integer' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "integer"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Track Count")
                     {
-                        if (nodeListAttrValue.tagName() != "integer")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'integer' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "integer"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Year")
                     {
-                        if (nodeListAttrValue.tagName() != "integer")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'integer' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "integer"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Date Modified")
                     {
-                        if (nodeListAttrValue.tagName() != "date")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'date' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "date"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Date Added")
                     {
-                        if (nodeListAttrValue.tagName() != "date")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'date' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "date"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Bit Rate")
                     {
-                        if (nodeListAttrValue.tagName() != "integer")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'integer' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "integer"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Sample Rate")
                     {
-                        if (nodeListAttrValue.tagName() != "integer")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'integer' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "integer"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Play Count")
                     {
-                        if (nodeListAttrValue.tagName() != "integer")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'integer' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "integer"))
                             continue;
-                        }
 
                         song.playCount = nodeListAttrValue.text().toInt();
                     }
                     else if (nodeListAttr.text() == "Play Date")
                     {
-                        if (nodeListAttrValue.tagName() != "integer")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'integer' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "integer"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Play Date UTC")
                     {
-                        if (nodeListAttrValue.tagName() != "date")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'date' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "date"))
                             continue;
-                        }
 
                         song.lastPlayed = QDateTime::fromString(nodeListAttrValue.text(), "yyyy-MM-ddTHH:mm:ssZ");
                     }
                     else if (nodeListAttr.text() == "Skip Count")
                     {
-                        if (nodeListAttrValue.tagName() != "integer")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'integer' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "integer"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Skip Date")
                     {
-                        if (nodeListAttrValue.tagName() != "date")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'date' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "date"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Rating")
                     {
-                        if (nodeListAttrValue.tagName() != "integer")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'integer' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "integer"))
                             continue;
-                        }
 
                         song.rating = nodeListAttrValue.text().toInt() / 20;
                     }
                     else if (nodeListAttr.text() == "Album Rating")
                     {
-                        if (nodeListAttrValue.tagName() != "integer")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'integer' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "integer"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Album Rating Computed")
                     {
-                        if (nodeListAttrValue.tagName() != "true")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'true' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "true"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Sort Album")
                     {
-                        if (nodeListAttrValue.tagName() != "string")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'string' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "string"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Persistent ID")
                     {
-                        if (nodeListAttrValue.tagName() != "string")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'string' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "string"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Track Type")
                     {
-                        if (nodeListAttrValue.tagName() != "string")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'string' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "string"))
                             continue;
-                        }
 
                         //File
                     }
                     else if (nodeListAttr.text() == "Location")
                     {
-                        if (nodeListAttrValue.tagName() != "string")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'string' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "string"))
                             continue;
-                        }
 
                         song.fileName = nodeListAttrValue.text();
                     }
                     else if (nodeListAttr.text() == "File Folder Count")
                     {
-                        if (nodeListAttrValue.tagName() != "integer")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'integer' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "integer"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Library Folder Count")
                     {
-                        if (nodeListAttrValue.tagName() != "integer")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'integer' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "integer"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Comments")
                     {
-                        if (nodeListAttrValue.tagName() != "string")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'string' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "string"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Grouping")
                     {
-                        if (nodeListAttrValue.tagName() != "string")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'string' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "string"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Composer")
                     {
-                        if (nodeListAttrValue.tagName() != "string")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'string' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "string"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Sort Name")
                     {
-                        if (nodeListAttrValue.tagName() != "string")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'string' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "string"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Sort Artist")
                     {
-                        if (nodeListAttrValue.tagName() != "string")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'string' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "string"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Sort Composer")
                     {
-                        if (nodeListAttrValue.tagName() != "string")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'string' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "string"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Sort Album Artist")
                     {
-                        if (nodeListAttrValue.tagName() != "string")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'string' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "string"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Disc Number")
                     {
-                        if (nodeListAttrValue.tagName() != "integer")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'integer' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "integer"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Disc Count")
                     {
-                        if (nodeListAttrValue.tagName() != "integer")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'integer' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "integer"))
                             continue;
-                        }
 
                         //...
                     }
                     else if (nodeListAttr.text() == "Disabled")
                     {
-                        if (nodeListAttrValue.tagName() != "true")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'true' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "true"))
                             continue;
-                        }
 
                         song.enabled = false;
                     }
                     else if (nodeListAttr.text() == "Compilation")
                     {
-                        if (nodeListAttrValue.tagName() != "true")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'true' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "true"))
                             continue;
-                        }
 
                         song.compilation = true;
                     }
-                    //Part Of Gapless Album
-                    //Volume Adjustment
-                    //Start Time
-                    //BPM
+                    else if (nodeListAttr.text() == "Part Of Gapless Album")
+                    {
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "true"))
+                            continue;
+
+                        //...
+                    }
+                    else if (nodeListAttr.text() == "Volume Adjustment")
+                    {
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "integer"))
+                            continue;
+
+                        //...
+                    }
+                    else if (nodeListAttr.text() == "Start Time")
+                    {
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "integer"))
+                            continue;
+
+                        //...
+                    }
+                    else if (nodeListAttr.text() == "BPM")
+                    {
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "integer"))
+                            continue;
+
+                        //...
+                    }
                     else
                     {
                         qDebug() << "CITunesLibrary::loadFile() : unknown key " << nodeListAttr.text() << " for a song";
@@ -684,12 +585,9 @@ bool CITunesLibrary::loadFile(const QString& fileName)
         else if (node.text() == "Playlists")
         {
             node = node.nextSibling().toElement();
-
-            if (node.tagName() != "array")
-            {
-                qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'array' attendu)";
+            
+            if (testLoadingXMLElementError(node.tagName(), "array"))
                 continue;
-            }
 
             QMap<QString, QString> dynamicListParents;
             QMap<QString, QString> staticListParents;
@@ -699,11 +597,8 @@ bool CITunesLibrary::loadFile(const QString& fileName)
             // Parcours des listes de lecture
             for (QDomElement nodeList = node.firstChildElement(); !nodeList.isNull(); nodeList = nodeList.nextSibling().toElement())
             {
-                if (nodeList.tagName() != "dict")
-                {
-                    qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'dict' attendu)";
+                if (testLoadingXMLElementError(nodeList.tagName(), "dict"))
                     continue;
-                }
 
                 bool playListOK = true;
                 bool isFolder = false;
@@ -716,11 +611,8 @@ bool CITunesLibrary::loadFile(const QString& fileName)
                 // Parcours des attributs de la liste de lecture
                 for (QDomElement nodeListAttr = nodeList.firstChildElement(); !nodeListAttr.isNull(); nodeListAttr = nodeListAttr.nextSibling().toElement())
                 {
-                    if (nodeListAttr.tagName() != "key")
-                    {
-                        qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'key' attendu)";
+                    if (testLoadingXMLElementError(nodeListAttr.tagName(), "key"))
                         continue;
-                    }
 
                     QDomElement nodeListAttrValue = nodeListAttr.nextSibling().toElement();
 
@@ -735,21 +627,15 @@ bool CITunesLibrary::loadFile(const QString& fileName)
                     }
                     else if (nodeListAttr.text() == "Parent Persistent ID")
                     {
-                        if (nodeListAttrValue.tagName() != "string")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'string' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "string"))
                             continue;
-                        }
 
                         folderID = nodeListAttrValue.text();
                     }
                     else if (nodeListAttr.text() == "Playlist Persistent ID")
                     {
-                        if (nodeListAttrValue.tagName() != "string")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'string' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "string"))
                             continue;
-                        }
 
                         playListID = nodeListAttrValue.text();
                     }
@@ -759,28 +645,19 @@ bool CITunesLibrary::loadFile(const QString& fileName)
                     }
                     else if (nodeListAttr.text() == "Playlist Items")
                     {
-                        if (nodeListAttrValue.tagName() != "array")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'array' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "array"))
                             continue;
-                        }
 
                         // Parcours de la liste des morceaux
                         for (QDomElement nodeListSongs = nodeListAttrValue.firstChildElement(); !nodeListSongs.isNull(); nodeListSongs = nodeListSongs.nextSibling().toElement())
                         {
-                            if (nodeListSongs.tagName() != "dict")
-                            {
-                                qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'dict' attendu)";
+                            if (testLoadingXMLElementError(nodeListSongs.tagName(), "dict"))
                                 continue;
-                            }
 
                             QDomElement nodeListSong = nodeListSongs.firstChildElement();
 
-                            if (nodeListSong.tagName() != "key")
-                            {
-                                qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'key' attendu)";
+                            if (testLoadingXMLElementError(nodeListSong.tagName(), "key"))
                                 continue;
-                            }
 
                             if (nodeListSong.text() != "Track ID")
                             {
@@ -789,23 +666,17 @@ bool CITunesLibrary::loadFile(const QString& fileName)
                             }
 
                             nodeListSong = nodeListSong.nextSibling().toElement();
-
-                            if (nodeListSong.tagName() != "integer")
-                            {
-                                qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'integer' attendu)";
+                            
+                            if (testLoadingXMLElementError(nodeListSong.tagName(), "integer"))
                                 continue;
-                            }
 
                             songs.append(nodeListSong.text().toInt());
                         }
                     }
                     else if (nodeListAttr.text() == "Name")
                     {
-                        if (nodeListAttrValue.tagName() != "string")
-                        {
-                            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'string' attendu)";
+                        if (testLoadingXMLElementError(nodeListAttrValue.tagName(), "string"))
                             continue;
-                        }
 
                         playListName = nodeListAttrValue.text();
                     }
@@ -920,20 +791,6 @@ bool CITunesLibrary::loadFile(const QString& fileName)
     return true;
 }
 
-/*
-struct TList
-{
-    QString listID;
-    QString listName;
-    QString folderID;
-    bool isFolder;
-    bool isDynamic;
-    QStandardItem * item;
-    QList<TList> children;
-
-    TList(void) : isFolder(false), isDynamic(false), item(NULL) { }
-};
-*/
 
 /**
  * Initialise un modèle avec les données de la médiathèque de iTunes.
@@ -958,257 +815,6 @@ void CITunesLibrary::initModelWithLists(QStandardItemModel * model) const
     item->setCheckable(true);
     item->setCheckState(Qt::Checked);
     model->appendRow(item);
-
-/*
-    QDomElement node = m_document.documentElement();
-
-    if (node.tagName() != "plist")
-    {
-        qWarning() << "CITunesLibrary::initModelWithLists() : le fichier n'est pas valide (élément 'plist' attendu)";
-        return;
-    }
-
-    node = node.firstChildElement();
-
-    if (node.tagName() != "dict")
-    {
-        qWarning() << "CITunesLibrary::initModelWithLists() : le fichier n'est pas valide (élément 'dict' attendu)";
-        return;
-    }
-
-
-    QMap<QString, TList> playLists;
-
-
-    for (node = node.firstChildElement(); !node.isNull(); node = node.nextSibling().toElement())
-    {
-        if (node.tagName() != "key")
-        {
-            qWarning() << "CITunesLibrary::initModelWithLists() : le fichier n'est pas valide (élément 'key' attendu)";
-            continue;
-        }
-
-        if (node.text() == "Playlists")
-        {
-            node = node.nextSibling().toElement();
-
-            if (node.tagName() != "array")
-            {
-                qWarning() << "CITunesLibrary::initModelWithLists() : le fichier n'est pas valide (élément 'array' attendu)";
-                continue;
-            }
-            
-            // Parcours des listes de lecture
-            for (QDomElement nodeList = node.firstChildElement(); !nodeList.isNull(); nodeList = nodeList.nextSibling().toElement())
-            {
-                if (nodeList.tagName() != "dict")
-                {
-                    qWarning() << "CITunesLibrary::initModelWithLists() : le fichier n'est pas valide (élément 'dict' attendu)";
-                    continue;
-                }
-
-                bool playListOK = true;
-                bool isFolder = false;
-                bool isDynamic = false;
-                QString playListName;
-                QString playListID;
-                QString folderID;
-                
-                // Parcours des attributs de la liste de lecture
-                for (QDomElement nodeListAttr = nodeList.firstChildElement(); !nodeListAttr.isNull(); nodeListAttr = nodeListAttr.nextSibling().toElement())
-                {
-                    if (nodeListAttr.tagName() == "array")
-                    {
-                        //...
-                        continue;
-                    }
-                    else if (nodeListAttr.tagName() != "key")
-                    {
-                        qWarning() << "CITunesLibrary::initModelWithLists() : le fichier n'est pas valide (élément 'key' attendu)";
-                        continue;
-                    }
-
-                    QDomElement nodeListAttrValue = nodeListAttr.nextSibling().toElement();
-
-                    if (nodeListAttr.text() == "Master" || nodeListAttr.text() == "Music")
-                    {
-                        playListOK = false;
-                        break;
-                    }
-                    else if (nodeListAttr.text() == "Folder")
-                    {
-                        isFolder = true;
-                    }
-                    else if (nodeListAttr.text() == "Parent Persistent ID")
-                    {
-                        if (nodeListAttrValue.tagName() != "string")
-                        {
-                            qWarning() << "CITunesLibrary::initModelWithLists() : le fichier n'est pas valide (élément 'string' attendu)";
-                            continue;
-                        }
-
-                        folderID = nodeListAttrValue.text();
-                    }
-                    else if (nodeListAttr.text() == "Playlist Persistent ID")
-                    {
-                        if (nodeListAttrValue.tagName() != "string")
-                        {
-                            qWarning() << "CITunesLibrary::initModelWithLists() : le fichier n'est pas valide (élément 'string' attendu)";
-                            continue;
-                        }
-
-                        playListID = nodeListAttrValue.text();
-                    }
-                    else if (nodeListAttr.text() == "Smart Info" || nodeListAttr.text() == "Smart Criteria")
-                    {
-                        isDynamic = true;
-                    }
-                    else if (nodeListAttr.text() == "Name")
-                    {
-                        if (nodeListAttrValue.tagName() != "string")
-                        {
-                            qWarning() << "CITunesLibrary::initModelWithLists() : le fichier n'est pas valide (élément 'string' attendu)";
-                            continue;
-                        }
-
-                        playListName = nodeListAttrValue.text();
-                    }
-
-                    nodeListAttr = nodeListAttr.nextSibling().toElement();
-                }
-
-                if (playListOK && !playListName.isEmpty() && !playListID.isEmpty())
-                {
-                    TList l;
-
-                    l.listName  = playListName;
-                    l.listID    = playListID;
-                    l.folderID  = folderID;
-                    l.isFolder  = isFolder;
-                    l.isDynamic = isDynamic;
-                    l.item      = new QStandardItem(playListName);
-                    l.item->setCheckable(true);
-                    l.item->setEnabled(false);
-
-                    if (isDynamic)
-                        l.item->setIcon(QPixmap(":/icons/dynamic_list"));
-                    else if (isFolder)
-                        l.item->setIcon(QPixmap(":/icons/folder_close"));
-                    else
-                        l.item->setIcon(QPixmap(":/icons/playlist"));
-
-                    playLists[playListID] = l;
-                }
-            }
-        }
-        else
-        {
-            node = node.nextSibling().toElement();
-        }
-    }
-
-    QMap<QString, TList> playListsCopy = playLists;
-
-    for (QMap<QString, TList>::const_iterator it = playListsCopy.begin(); it != playListsCopy.end(); ++it)
-    {
-        if (!it->folderID.isEmpty())
-        {
-            if (it->isFolder)
-            {
-                qWarning() << "CITunesLibrary::initModelWithLists() : un dossier ne peut pas avoir de dossier parent";
-                continue;
-            }
-            else if (!playLists[it->folderID].isFolder)
-            {
-                qWarning() << "CITunesLibrary::initModelWithLists() : dossier invalide";
-                continue;
-            }
-            else
-            {
-                playLists[it->folderID].children.append(*it);
-                playLists.remove(it.key());
-                //playLists[it->folderID].item->appendRow(it->item);
-            }
-        }
-        else
-        {
-            //model->appendRow(it->item);
-        }
-    }
-
-    // Ajout des dossiers
-    for (QMap<QString, TList>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
-    {
-        if (it->isFolder)
-        {
-            QMap<QString, TList> lists;
-
-            // Ajout des listes dynamiques
-            for (QList<TList>::const_iterator it2 = it->children.begin(); it2 != it->children.end(); ++it2)
-            {
-                if (it2->isDynamic)
-                {
-                    lists[it2->listName] = *it2;
-                }
-            }
-
-            for (QMap<QString, TList>::const_iterator it2 = lists.begin(); it2 != lists.end(); ++it2)
-            {
-                it->item->appendRow(it2->item);
-            }
-
-            lists.clear();
-
-            // Ajout des listes statiques
-            for (QList<TList>::const_iterator it2 = it->children.begin(); it2 != it->children.end(); ++it2)
-            {
-                if (!it2->isDynamic)
-                {
-                    lists[it2->listName] = *it2;
-                }
-            }
-
-            for (QMap<QString, TList>::const_iterator it2 = lists.begin(); it2 != lists.end(); ++it2)
-            {
-                it->item->appendRow(it2->item);
-            }
-
-            model->appendRow(it->item);
-        }
-    }
-
-    QMap<QString, TList> lists;
-
-    // Ajout des listes dynamiques
-    for (QMap<QString, TList>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
-    {
-        if (it->isDynamic)
-        {
-            lists[it->listName] = *it;
-        }
-    }
-
-    for (QMap<QString, TList>::const_iterator it = lists.begin(); it != lists.end(); ++it)
-    {
-        model->appendRow(it->item);
-    }
-
-    lists.clear();
-
-    // Ajout des listes statiques
-    for (QMap<QString, TList>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
-    {
-        if (!it->isFolder && !it->isDynamic)
-        {
-            lists[it->listName] = *it;
-        }
-    }
-
-    for (QMap<QString, TList>::const_iterator it = lists.begin(); it != lists.end(); ++it)
-    {
-        model->appendRow(it->item);
-    }
-*/
 
     // Dossiers
     for (QList<TFolder>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
@@ -1259,4 +865,16 @@ void CITunesLibrary::initModelWithLists(QStandardItemModel * model) const
         item->setEnabled(false);
         model->appendRow(item);
     }
+}
+
+
+bool CITunesLibrary::testLoadingXMLElementError(const QString& element, const QString& expected) const
+{
+    if (element != expected)
+    {
+        qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément " << expected << " attendu)";
+        return true;
+    }
+
+    return false;
 }

@@ -147,7 +147,7 @@
        <item>
         <widget class="QTabWidget" name="tabWidget_2">
          <property name="currentIndex">
-          <number>7</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="tabText">
           <attribute name="title">
@@ -155,18 +155,7 @@
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_3">
            <item>
-            <widget class="QTableWidget" name="tableWidget">
-             <column>
-              <property name="text">
-               <string>Key</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Value</string>
-              </property>
-             </column>
-            </widget>
+            <widget class="QTableView" name="tableID3v2Text"/>
            </item>
           </layout>
          </widget>
@@ -176,23 +165,7 @@
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_6">
            <item>
-            <widget class="QTableWidget" name="tableWidget_2">
-             <column>
-              <property name="text">
-               <string>Key</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Description</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>URL</string>
-              </property>
-             </column>
-            </widget>
+            <widget class="QTableView" name="tableID3v2URL"/>
            </item>
           </layout>
          </widget>
@@ -202,23 +175,7 @@
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
-            <widget class="QTableWidget" name="tableWidget_3">
-             <column>
-              <property name="text">
-               <string>Language</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Description</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Text</string>
-              </property>
-             </column>
-            </widget>
+            <widget class="QTableView" name="tableID3v2Lyrics"/>
            </item>
           </layout>
          </widget>
@@ -228,23 +185,7 @@
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_4">
            <item>
-            <widget class="QTableWidget" name="tableWidget_4">
-             <column>
-              <property name="text">
-               <string>Language</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Description</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Text</string>
-              </property>
-             </column>
-            </widget>
+            <widget class="QTableView" name="tableID3v2Comments"/>
            </item>
           </layout>
          </widget>
