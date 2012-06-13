@@ -8,6 +8,7 @@
 class CPlayListModel;
 class CSongTable;
 class CApplication;
+class CListFolder;
 
 
 class CPlayListView : public QTreeView
@@ -18,7 +19,8 @@ public:
 
     explicit CPlayListView(CApplication * application);
 
-    QModelIndex addSongTable(CSongTable * songTable);
+    QModelIndex addSongTable(CSongTable * songTable, const QModelIndex& parent = QModelIndex());
+    QModelIndex addFolder(CListFolder * folder, const QModelIndex& parent = QModelIndex());
     void removeSongTable(CSongTable * songTable);
     CSongTable * getSongTable(const QModelIndex& index) const;
     CSongTable * getSelectedSongTable(void) const;
@@ -42,6 +44,7 @@ private:
     CApplication * m_application;
     CPlayListModel * m_model; ///< Modèle utilisé pour afficher les listes de lecture.
     QMenu * m_menuPlaylist;   ///< Menu contextuel pour les listes de lecture.
+    QMenu * m_menuFolder;     ///< Menu contextuel pour les dossiers.
     QMenu * m_menuDefault;    ///< Menu contextuel par défaut.
 };
 

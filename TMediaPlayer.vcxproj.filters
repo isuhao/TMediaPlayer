@@ -50,6 +50,12 @@
     <Filter Include="Source Files\Importer">
       <UniqueIdentifier>{85bbc06a-5cf9-4570-ae6b-96f415dda68e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Dialog">
+      <UniqueIdentifier>{b07667cc-d6d1-423d-be19-9fb0b924d523}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Dialog">
+      <UniqueIdentifier>{59276cd2-98f4-48da-8d72-90aef7e685da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\CApplication.cpp">
@@ -60,9 +66,6 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_CApplication.cpp">
       <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\CDialogEditSong.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_CDialogEditSong.cpp">
       <Filter>Generated Files\Debug</Filter>
@@ -138,15 +141,6 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\qrc_TMediaPlayer.cpp">
       <Filter>Generated Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\CDialogEditDynamicList.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\CDialogEditSongs.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\CDialogEditStaticPlayList.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_CDialogEditDynamicList.cpp">
       <Filter>Generated Files\Debug</Filter>
@@ -247,9 +241,6 @@
     <ClCompile Include="GeneratedFiles\Release\moc_CCriteria.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\CDialogPreferences.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_CDialogPreferences.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -288,9 +279,6 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_CScrobble.cpp">
       <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\CDialogEditMetadata.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_CDialogEditMetadata.cpp">
       <Filter>Generated Files\Debug</Filter>
@@ -340,12 +328,36 @@
     <ClCompile Include="Sources\Importer\CImporterITunes.cpp">
       <Filter>Source Files\Importer</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\CDialogEditDynamicList.cpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\CDialogPreferences.cpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\CDialogEditMetadata.cpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\CDialogEditSong.cpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\CDialogEditSongs.cpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\CDialogEditStaticPlayList.cpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\CDialogEditFolder.cpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_CDialogEditFolder.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_CDialogEditFolder.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Sources\CApplication.hpp">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Sources\CDialogEditSong.hpp">
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="Sources\CDynamicPlayList.hpp">
@@ -387,15 +399,6 @@
     <CustomBuild Include="Form\DialogEditSongs.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="Sources\CDialogEditDynamicList.hpp">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Sources\CDialogEditSongs.hpp">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Sources\CDialogEditStaticPlayList.hpp">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="Sources\CSongTableHeader.hpp">
       <Filter>Header Files</Filter>
     </CustomBuild>
@@ -432,9 +435,6 @@
     <CustomBuild Include="Sources\CCriteria.hpp">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="Sources\CDialogPreferences.hpp">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="Sources\Last.fm\ILastFmService.hpp">
       <Filter>Header Files\Last.fm</Filter>
     </CustomBuild>
@@ -446,9 +446,6 @@
     </CustomBuild>
     <CustomBuild Include="Form\DialogEditMetadata.ui">
       <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Sources\CDialogEditMetadata.hpp">
-      <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="Form\WidgetControl.ui">
       <Filter>Form Files</Filter>
@@ -467,6 +464,30 @@
     </CustomBuild>
     <CustomBuild Include="Sources\Importer\CImporterITunes.hpp">
       <Filter>Header Files\Importer</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Sources\CDialogEditDynamicList.hpp">
+      <Filter>Header Files\Dialog</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Sources\CDialogPreferences.hpp">
+      <Filter>Header Files\Dialog</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Sources\CDialogEditMetadata.hpp">
+      <Filter>Header Files\Dialog</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Sources\CDialogEditSong.hpp">
+      <Filter>Header Files\Dialog</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Sources\CDialogEditSongs.hpp">
+      <Filter>Header Files\Dialog</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Sources\CDialogEditStaticPlayList.hpp">
+      <Filter>Header Files\Dialog</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Sources\CDialogEditFolder.hpp">
+      <Filter>Header Files\Dialog</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Form\DialogEditFolder.ui">
+      <Filter>Form Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -502,6 +523,9 @@
     </ClInclude>
     <ClInclude Include="Sources\CRating.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_DialogEditFolder.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

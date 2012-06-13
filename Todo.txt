@@ -29,8 +29,7 @@
   - Gérer l'option "Ajustement du volume".
 
 - Gérer les dossiers de listes de lecture.
-  - Implémenter le glisser-déposer pour déplacer les listes de lecture.
-  - Menu contextuel pour les listes de lecture : Création / Modification / Suppression.
+  - Implémenter le glisser-déposer pour déplacer les listes de lecture et les dossiers.
   - Pouvoir créer une liste directement dans un dossier.
   - Enregistrer l'état d'un dossier (expanded or not).
 

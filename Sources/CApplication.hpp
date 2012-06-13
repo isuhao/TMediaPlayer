@@ -40,6 +40,7 @@ class CApplication : public QMainWindow
         
     friend class CDialogEditStaticPlayList;
     friend class CDialogEditDynamicList;
+    friend class CDialogEditFolder;
 
 public:
 
@@ -141,11 +142,13 @@ public slots:
     void openDialogAddSongs(void);
     void openDialogAddFolder(void);
     void openDialogSongInfos(void);
-    void openDialogAddStaticPlayList(CListFolder * folder = NULL);
-    void openDialogAddDynamicList(CListFolder * folder = NULL);
+    void openDialogCreateStaticList(CListFolder * folder = NULL);
+    void openDialogCreateDynamicList(CListFolder * folder = NULL);
+    void openDialogCreateFolder(CListFolder * folder = NULL);
     void openDialogEditStaticPlayList(CStaticPlayList * playList);
     void openDialogEditDynamicList(CDynamicPlayList * playList);
     void importFromITunes(void);
+    void importFromSongbird(void);
     //void editSong(CSongTableItem * songItem);
     //void removeSong(CSongTableItem * songItem);
     void selectCurrentSong(void);
@@ -189,7 +192,10 @@ protected slots:
 protected:
 
     void addPlayList(CPlayList * playList);
-    QStringList addFolder(const QString& pathName);
+    void initPlayList(CPlayList * playList);
+    void addFolder(CListFolder * folder);
+    void initFolder(CListFolder * folder);
+    QStringList importFolder(const QString& pathName);
 
     void displaySongTable(CSongTable * songTable);
     bool initSoundSystem(void);

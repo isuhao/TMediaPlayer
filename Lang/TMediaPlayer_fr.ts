@@ -4,18 +4,18 @@
 <context>
     <name>CApplication</name>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="249"/>
+        <location filename="../Sources/CApplication.cpp" line="257"/>
         <source>Failed to init sound system with FMOD.</source>
         <translation>Le chargement du système de son avec FMOD a échoué.</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="281"/>
+        <location filename="../Sources/CApplication.cpp" line="289"/>
         <source>Failed to load database.</source>
         <translation>Erreur lors du chargement de la base de données.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="98"/>
-        <location filename="../Sources/CApplication.cpp" line="2080"/>
+        <location filename="../Sources/CApplication.cpp" line="104"/>
+        <location filename="../Sources/CApplication.cpp" line="2161"/>
         <source>%n song(s), %1</source>
         <translation>
             <numerusform>%n morceau, %1</numerusform>
@@ -23,17 +23,17 @@
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="226"/>
+        <location filename="../Sources/CApplication.cpp" line="234"/>
         <source>Playlists</source>
         <translation>Listes de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="310"/>
+        <location filename="../Sources/CApplication.cpp" line="318"/>
         <source>Database error</source>
         <translation>Erreur de base de données</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="310"/>
+        <location filename="../Sources/CApplication.cpp" line="318"/>
         <source>File: %1 (%2)
 
 Query: %3
@@ -46,39 +46,92 @@ Requête : %3
 Erreur : %4</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1543"/>
+        <location filename="../Sources/CApplication.cpp" line="1572"/>
         <source>Loading files...</source>
         <translation>Chargement des fichiers...</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1948"/>
+        <location filename="../Sources/CApplication.cpp" line="2029"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Êtes-vous sûr de vouloir supprimer cette liste de lecture ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1948"/>
+        <location filename="../Sources/CApplication.cpp" line="2029"/>
         <source>Yes</source>
         <translation>Oui</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1948"/>
+        <location filename="../Sources/CApplication.cpp" line="2029"/>
         <source>No</source>
         <translation>Non</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1493"/>
+        <location filename="../Sources/CApplication.cpp" line="1522"/>
         <source>Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)</source>
         <translation>Fichiers multimédias (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;Tous les fichiers (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1543"/>
+        <location filename="../Sources/CApplication.cpp" line="1572"/>
         <source>Abort</source>
         <translation>Interrompre</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2219"/>
+        <location filename="../Sources/CApplication.cpp" line="2300"/>
         <source>This program requires FMOD %1 or superior.</source>
         <translation>Ce programme nécessite FMOD %1 ou supérieur.</translation>
+    </message>
+</context>
+<context>
+    <name>CAuthentication</name>
+    <message>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="29"/>
+        <source>Date:</source>
+        <translation type="unfinished">Date : </translation>
+    </message>
+    <message>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="30"/>
+        <source>URL :</source>
+        <translation type="unfinished">URL : </translation>
+    </message>
+    <message>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="48"/>
+        <source>Date   :</source>
+        <translation type="unfinished">Date : </translation>
+    </message>
+    <message>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="49"/>
+        <source>Code   :</source>
+        <translation type="unfinished">Code : </translation>
+    </message>
+    <message>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="50"/>
+        <source>Content:</source>
+        <translation type="unfinished">Contenu : </translation>
+    </message>
+    <message>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="131"/>
+        <source>Date: </source>
+        <translation type="unfinished">Date : </translation>
+    </message>
+    <message>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="132"/>
+        <source>URL:  </source>
+        <translation type="unfinished">URL : </translation>
+    </message>
+    <message>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="160"/>
+        <source>Date:    </source>
+        <translation type="unfinished">Date : </translation>
+    </message>
+    <message>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="161"/>
+        <source>Code:    </source>
+        <translation type="unfinished">Code : </translation>
+    </message>
+    <message>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="162"/>
+        <source>Content: </source>
+        <translation type="unfinished">Contenu : </translation>
     </message>
 </context>
 <context>
@@ -97,6 +150,28 @@ Erreur : %4</translation>
         <location filename="../Sources/CDialogEditDynamicList.cpp" line="98"/>
         <source>You need to choose a name for the playlist.</source>
         <translation>Vous devez choisir un nom pour la liste de lecture.</translation>
+    </message>
+</context>
+<context>
+    <name>CDialogEditFolder</name>
+    <message>
+        <location filename="../Sources/CDialogEditFolder.cpp" line="29"/>
+        <source>Save</source>
+        <translation>Enregistrer</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CDialogEditFolder.cpp" line="30"/>
+        <source>Cancel</source>
+        <translation>Annuler</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CDialogEditFolder.cpp" line="53"/>
+        <source>You need to choose a name for the folder.</source>
+        <translation>Vous devez choisir un nom pour le dossier.</translation>
+    </message>
+    <message>
+        <source>You need to choose a name for the playlist.</source>
+        <translation type="obsolete">Vous devez choisir un nom pour le dossier.</translation>
     </message>
 </context>
 <context>
@@ -246,9 +321,9 @@ Erreur : %4</translation>
 <context>
     <name>CITunesLibrary</name>
     <message numerus="yes">
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="822"/>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="849"/>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="870"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="904"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="932"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="953"/>
         <source>%1 (%n song(s))</source>
         <translation>
             <numerusform>%1 (%n morceau)</numerusform>
@@ -256,7 +331,7 @@ Erreur : %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="822"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="904"/>
         <source>Library</source>
         <translation>Médiathèque</translation>
     </message>
@@ -264,22 +339,22 @@ Erreur : %4</translation>
 <context>
     <name>CITunesWizardPage1</name>
     <message>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="57"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="72"/>
         <source>Library localisation</source>
         <translation>Localisation de la médiathèque</translation>
     </message>
     <message>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="58"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="73"/>
         <source>Select the file which contains the iTunes library.</source>
         <translation>Sélectionnez le fichier qui contient la médiathèque de iTunes.</translation>
     </message>
     <message>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="61"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="76"/>
         <source>Library:</source>
         <translation>Fichier :</translation>
     </message>
     <message>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="67"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="82"/>
         <source>...</source>
         <translation>...</translation>
     </message>
@@ -287,12 +362,12 @@ Erreur : %4</translation>
 <context>
     <name>CITunesWizardPage2</name>
     <message>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="91"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="108"/>
         <source>Items to import</source>
         <translation>Éléments à importer</translation>
     </message>
     <message>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="92"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="109"/>
         <source>Select items you want to import in your library.</source>
         <translation>Sélectionnez les éléments que vous souhaitez importer dans votre médiathèque.</translation>
     </message>
@@ -300,12 +375,12 @@ Erreur : %4</translation>
 <context>
     <name>CITunesWizardPage3</name>
     <message>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="125"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="170"/>
         <source>Import done</source>
-        <translation type="unfinished">Import effectué</translation>
+        <translation>Import effectué</translation>
     </message>
     <message>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="126"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="171"/>
         <source>All selected items have been imported into the library.</source>
         <translation>Tous les éléments sélectionnés ont été importés dans la médiathèque.</translation>
     </message>
@@ -313,32 +388,32 @@ Erreur : %4</translation>
 <context>
     <name>CImporterITunes</name>
     <message>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="25"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="26"/>
         <source>Import from iTunes</source>
         <translation>Importer depuis iTunes</translation>
     </message>
     <message>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="35"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="36"/>
         <source>&amp;Back</source>
         <translation>&amp;Précédent</translation>
     </message>
     <message>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="36"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="37"/>
         <source>&amp;Next</source>
         <translation>&amp;Suivant</translation>
     </message>
     <message>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="37"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="38"/>
         <source>&amp;Finish</source>
         <translation>&amp;Terminer</translation>
     </message>
     <message>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="38"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="39"/>
         <source>&amp;Import</source>
         <translation>&amp;Importer</translation>
     </message>
     <message>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="39"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="40"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
@@ -347,28 +422,78 @@ Erreur : %4</translation>
     <name>CPlayListView</name>
     <message>
         <location filename="../Sources/CPlayListView.cpp" line="39"/>
+        <location filename="../Sources/CPlayListView.cpp" line="43"/>
         <source>Edit...</source>
         <translation>Modifier...</translation>
     </message>
     <message>
         <location filename="../Sources/CPlayListView.cpp" line="40"/>
+        <location filename="../Sources/CPlayListView.cpp" line="44"/>
         <source>Remove</source>
         <translation>Supprimer</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="44"/>
+        <location filename="../Sources/CPlayListView.cpp" line="46"/>
+        <location filename="../Sources/CPlayListView.cpp" line="52"/>
         <source>New playlist...</source>
         <translation>Nouvelle liste de lecture...</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="45"/>
+        <location filename="../Sources/CPlayListView.cpp" line="47"/>
+        <location filename="../Sources/CPlayListView.cpp" line="53"/>
         <source>New dynamic playlist...</source>
         <translation>Nouvelle liste de lecture dynamique...</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="75"/>
+        <location filename="../Sources/CPlayListView.cpp" line="48"/>
+        <location filename="../Sources/CPlayListView.cpp" line="54"/>
+        <source>New folder...</source>
+        <translation>Nouveau dossier...</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CPlayListView.cpp" line="84"/>
         <source>Library</source>
         <translation>Médiathèque</translation>
+    </message>
+</context>
+<context>
+    <name>CScrobble</name>
+    <message>
+        <location filename="../Sources/Last.fm/CScrobble.cpp" line="54"/>
+        <location filename="../Sources/Last.fm/CScrobble.cpp" line="84"/>
+        <source>Date:    </source>
+        <translation type="unfinished">Date : </translation>
+    </message>
+    <message>
+        <location filename="../Sources/Last.fm/CScrobble.cpp" line="55"/>
+        <source>Title:   </source>
+        <translation type="unfinished">Titre :   </translation>
+    </message>
+    <message>
+        <location filename="../Sources/Last.fm/CScrobble.cpp" line="56"/>
+        <source>Artist:  </source>
+        <translation type="unfinished">Artiste : </translation>
+    </message>
+    <message>
+        <location filename="../Sources/Last.fm/CScrobble.cpp" line="57"/>
+        <source>Album:   </source>
+        <translation type="unfinished">Album : </translation>
+    </message>
+    <message>
+        <location filename="../Sources/Last.fm/CScrobble.cpp" line="58"/>
+        <source>URL:     </source>
+        <translation type="unfinished">URL :                                         </translation>
+    </message>
+    <message>
+        <location filename="../Sources/Last.fm/CScrobble.cpp" line="59"/>
+        <location filename="../Sources/Last.fm/CScrobble.cpp" line="86"/>
+        <source>Content: </source>
+        <translation type="unfinished">Contenu : </translation>
+    </message>
+    <message>
+        <location filename="../Sources/Last.fm/CScrobble.cpp" line="85"/>
+        <source>Code:    </source>
+        <translation type="unfinished">Code : </translation>
     </message>
 </context>
 <context>
@@ -421,37 +546,37 @@ Erreur : %4</translation>
         <translation>Italien</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="533"/>
+        <location filename="../Sources/CSong.cpp" line="541"/>
         <source>Unknown title</source>
         <translation>Titre inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="538"/>
+        <location filename="../Sources/CSong.cpp" line="546"/>
         <source>Unknown artist</source>
         <translation>Artiste inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="543"/>
+        <location filename="../Sources/CSong.cpp" line="551"/>
         <source>Unknown album</source>
         <translation>Album inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="895"/>
+        <location filename="../Sources/CSong.cpp" line="903"/>
         <source>%1 Gio</source>
         <translation>%1 Gio</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="900"/>
+        <location filename="../Sources/CSong.cpp" line="908"/>
         <source>%1 Mio</source>
         <translation>%1 Mio</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="905"/>
+        <location filename="../Sources/CSong.cpp" line="913"/>
         <source>%1 Kio</source>
         <translation>%1 Kio</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CSong.cpp" line="909"/>
+        <location filename="../Sources/CSong.cpp" line="917"/>
         <source>%n byte(s)</source>
         <translation>
             <numerusform>%n octet</numerusform>
@@ -776,6 +901,46 @@ Voulez-vous les ajouter ?</translation>
     </message>
 </context>
 <context>
+    <name>CUpdateNowPlaying</name>
+    <message>
+        <location filename="../Sources/Last.fm/CUpdateNowPlaying.cpp" line="55"/>
+        <location filename="../Sources/Last.fm/CUpdateNowPlaying.cpp" line="81"/>
+        <source>Date:    </source>
+        <translation type="unfinished">Date : </translation>
+    </message>
+    <message>
+        <location filename="../Sources/Last.fm/CUpdateNowPlaying.cpp" line="56"/>
+        <source>Title:   </source>
+        <translation type="unfinished">Titre :   </translation>
+    </message>
+    <message>
+        <location filename="../Sources/Last.fm/CUpdateNowPlaying.cpp" line="57"/>
+        <source>Artist:  </source>
+        <translation type="unfinished">Artiste : </translation>
+    </message>
+    <message>
+        <location filename="../Sources/Last.fm/CUpdateNowPlaying.cpp" line="58"/>
+        <source>Album:   </source>
+        <translation type="unfinished">Album : </translation>
+    </message>
+    <message>
+        <location filename="../Sources/Last.fm/CUpdateNowPlaying.cpp" line="59"/>
+        <source>URL:     </source>
+        <translation type="unfinished">URL :                                         </translation>
+    </message>
+    <message>
+        <location filename="../Sources/Last.fm/CUpdateNowPlaying.cpp" line="60"/>
+        <location filename="../Sources/Last.fm/CUpdateNowPlaying.cpp" line="83"/>
+        <source>Content: </source>
+        <translation type="unfinished">Contenu : </translation>
+    </message>
+    <message>
+        <location filename="../Sources/Last.fm/CUpdateNowPlaying.cpp" line="82"/>
+        <source>Code:    </source>
+        <translation type="unfinished">Code : </translation>
+    </message>
+</context>
+<context>
     <name>CWidgetCriteria</name>
     <message>
         <location filename="../Sources/CWidgetCriteria.cpp" line="204"/>
@@ -809,6 +974,19 @@ Voulez-vous les ajouter ?</translation>
         <location filename="../Form/DialogEditDynamicPlayList.ui" line="40"/>
         <source>Name of the list:</source>
         <translation>Nom de la liste :</translation>
+    </message>
+</context>
+<context>
+    <name>DialogEditFolder</name>
+    <message>
+        <location filename="../Form/DialogEditFolder.ui" line="20"/>
+        <source>Folder</source>
+        <translation>Dossier</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEditFolder.ui" line="32"/>
+        <source>Name of the folder:</source>
+        <translation>Nom du dossier :</translation>
     </message>
 </context>
 <context>
@@ -1529,42 +1707,42 @@ Voulez-vous les ajouter ?</translation>
         <translation>TMediaPlayer</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="179"/>
+        <location filename="../Form/TMediaPlayer.ui" line="181"/>
         <source>Previous</source>
         <translation>Précédent</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="164"/>
+        <location filename="../Form/TMediaPlayer.ui" line="166"/>
         <source>Play</source>
         <translation>Lecture</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="139"/>
+        <location filename="../Form/TMediaPlayer.ui" line="141"/>
         <source>Informations...</source>
         <translation>Informations...</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="169"/>
+        <location filename="../Form/TMediaPlayer.ui" line="171"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="174"/>
+        <location filename="../Form/TMediaPlayer.ui" line="176"/>
         <source>Stop</source>
         <translation>Stop</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="184"/>
+        <location filename="../Form/TMediaPlayer.ui" line="186"/>
         <source>Next</source>
         <translation>Suivant</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="200"/>
+        <location filename="../Form/TMediaPlayer.ui" line="202"/>
         <source>Repeat</source>
         <translation>Répétition</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="192"/>
+        <location filename="../Form/TMediaPlayer.ui" line="194"/>
         <source>Shuffle</source>
         <translation>Aléatoire</translation>
     </message>
@@ -1579,81 +1757,91 @@ Voulez-vous les ajouter ?</translation>
         <translation>Importer</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="66"/>
+        <location filename="../Form/TMediaPlayer.ui" line="68"/>
         <source>&amp;Edit</source>
         <translation>É&amp;dition</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="75"/>
+        <location filename="../Form/TMediaPlayer.ui" line="77"/>
         <source>&amp;Controls</source>
         <translation>&amp;Contrôles</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="90"/>
+        <location filename="../Form/TMediaPlayer.ui" line="92"/>
         <source>&amp;Help</source>
         <translation>&amp;Aide</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="102"/>
+        <location filename="../Form/TMediaPlayer.ui" line="104"/>
         <source>Controls</source>
         <translation>Contrôles</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="119"/>
+        <location filename="../Form/TMediaPlayer.ui" line="121"/>
         <source>Add files to library...</source>
         <translation>Ajouter des fichiers à la médiathèque...</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="124"/>
+        <location filename="../Form/TMediaPlayer.ui" line="126"/>
         <source>E&amp;xit</source>
         <translation>&amp;Quitter</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="129"/>
+        <location filename="../Form/TMediaPlayer.ui" line="131"/>
         <source>New playlist...</source>
         <translation>Nouvelle liste de lecture...</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="134"/>
+        <location filename="../Form/TMediaPlayer.ui" line="136"/>
         <source>New dynamic playlist...</source>
         <translation>Nouvelle liste de lecture dynamique...</translation>
+    </message>
+    <message>
+        <location filename="../Form/TMediaPlayer.ui" line="226"/>
+        <source>New folder...</source>
+        <translation>Nouveau dossier...</translation>
+    </message>
+    <message>
+        <location filename="../Form/TMediaPlayer.ui" line="231"/>
+        <source>From Songbird...</source>
+        <translation>Depuis Songbird...</translation>
     </message>
     <message>
         <source>Informations</source>
         <translation type="obsolete">Informations</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="144"/>
+        <location filename="../Form/TMediaPlayer.ui" line="146"/>
         <source>Add folder to library...</source>
         <translation>Ajouter un dossier à la médiathèque...</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="149"/>
+        <location filename="../Form/TMediaPlayer.ui" line="151"/>
         <source>Show in explorer</source>
         <translation>Afficher dans l&apos;explorateur</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="154"/>
+        <location filename="../Form/TMediaPlayer.ui" line="156"/>
         <source>Select all</source>
         <translation>Tous sélectionner</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="159"/>
+        <location filename="../Form/TMediaPlayer.ui" line="161"/>
         <source>Select none</source>
         <translation>Ne rien sélectionner</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="209"/>
+        <location filename="../Form/TMediaPlayer.ui" line="211"/>
         <source>Preferences...</source>
         <translation>Préférences...</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="214"/>
+        <location filename="../Form/TMediaPlayer.ui" line="216"/>
         <source>About Qt...</source>
         <translation>À propos de Qt...</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="219"/>
+        <location filename="../Form/TMediaPlayer.ui" line="221"/>
         <source>From iTunes...</source>
         <translation>Depuis iTunes...</translation>
     </message>

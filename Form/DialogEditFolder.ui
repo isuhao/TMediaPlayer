@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DialogEditStaticPlayList</class>
- <widget class="QDialog" name="DialogEditStaticPlayList">
+ <class>DialogEditFolder</class>
+ <widget class="QDialog" name="DialogEditFolder">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -17,7 +17,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Static playlist</string>
+   <string>Folder</string>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -29,7 +29,7 @@
    <item row="0" column="0">
     <widget class="QLabel" name="lblName">
      <property name="text">
-      <string>Name of the list:</string>
+      <string>Name of the folder:</string>
      </property>
     </widget>
    </item>

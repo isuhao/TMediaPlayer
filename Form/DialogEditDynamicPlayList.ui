@@ -45,7 +45,11 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="editName"/>
+      <widget class="QLineEdit" name="editName">
+       <property name="maxLength">
+        <number>128</number>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

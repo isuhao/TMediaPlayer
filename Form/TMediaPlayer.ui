@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>592</height>
+    <height>600</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -47,9 +47,11 @@
       <string>Import</string>
      </property>
      <addaction name="actionImportITunes"/>
+     <addaction name="actionImportSongbird"/>
     </widget>
     <addaction name="actionNewPlayList"/>
     <addaction name="actionNewDynamicPlayList"/>
+    <addaction name="actionNewFolder"/>
     <addaction name="separator"/>
     <addaction name="actionAddFiles"/>
     <addaction name="actionAddFolder"/>
@@ -217,6 +219,16 @@
   <action name="actionImportITunes">
    <property name="text">
     <string>From iTunes...</string>
+   </property>
+  </action>
+  <action name="actionNewFolder">
+   <property name="text">
+    <string>New folder...</string>
+   </property>
+  </action>
+  <action name="actionImportSongbird">
+   <property name="text">
+    <string>From Songbird...</string>
    </property>
   </action>
  </widget>

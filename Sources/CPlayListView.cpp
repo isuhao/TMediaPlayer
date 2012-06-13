@@ -5,6 +5,7 @@
 #include "CStaticPlayList.hpp"
 #include "CDynamicPlayList.hpp"
 #include "CApplication.hpp"
+#include "CListFolder.hpp"
 #include <QHeaderView>
 #include <QMenu>
 #include <QDragMoveEvent>
@@ -39,17 +40,26 @@ CPlayListView::CPlayListView(CApplication * application) :
     m_menuPlaylist->addAction(tr("Edit..."), m_application, SLOT(editSelectedPlayList()));
     m_menuPlaylist->addAction(tr("Remove"), m_application, SLOT(removeSelectedPlayList()));
 
+    m_menuFolder = new QMenu(this);
+    m_menuFolder->addAction(tr("Edit..."), m_application, SLOT(editSelectedFolder()));
+    m_menuFolder->addAction(tr("Remove"), m_application, SLOT(removeSelectedFolder()));
+    m_menuFolder->addSeparator();
+    m_menuFolder->addAction(tr("New playlist..."), m_application, SLOT(openDialogCreateStaticList()));
+    m_menuFolder->addAction(tr("New dynamic playlist..."), m_application, SLOT(openDialogCreateDynamicList()));
+    m_menuFolder->addAction(tr("New folder..."), m_application, SLOT(openDialogCreateFolder()));
+
     m_menuDefault = new QMenu(this);
     //TODO: gérer le dossier
-    m_menuDefault->addAction(tr("New playlist..."), m_application, SLOT(openDialogAddStaticPlayList()));
-    m_menuDefault->addAction(tr("New dynamic playlist..."), m_application, SLOT(openDialogAddDynamicList()));
+    m_menuDefault->addAction(tr("New playlist..."), m_application, SLOT(openDialogCreateStaticList()));
+    m_menuDefault->addAction(tr("New dynamic playlist..."), m_application, SLOT(openDialogCreateDynamicList()));
+    m_menuDefault->addAction(tr("New folder..."), m_application, SLOT(openDialogCreateFolder()));
 
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(openCustomMenuProject(const QPoint&)));
 }
 
 
-QModelIndex CPlayListView::addSongTable(CSongTable * songTable)
+QModelIndex CPlayListView::addSongTable(CSongTable * songTable, const QModelIndex& parent)
 {
     Q_CHECK_PTR(songTable);
 
@@ -76,8 +86,76 @@ QModelIndex CPlayListView::addSongTable(CSongTable * songTable)
     }
 
     playListItem->setData(QVariant::fromValue(songTable), Qt::UserRole + 1);
-    m_model->appendRow(playListItem);
-    return playListItem->index();
+    
+    QStandardItem * itemParent = m_model->itemFromIndex(parent);
+
+    if (parent.isValid() && itemParent)
+    {
+        itemParent->appendRow(playListItem);
+    }
+    else
+    {
+        m_model->appendRow(playListItem);
+    }
+
+    QModelIndex index = playListItem->index();
+    
+    if (playList)
+    {
+        playList->m_index = index;
+    }
+
+    return index;
+}
+
+
+QModelIndex CPlayListView::addFolder(CListFolder * folder, const QModelIndex& parent)
+{
+    Q_CHECK_PTR(folder);
+
+    QStandardItem * folderItem = new QStandardItem(QPixmap(":/icons/folder_close"), folder->getName());
+    folderItem->setData(QVariant::fromValue(folder), Qt::UserRole + 2);
+
+/*
+    if (folder->isExpanded())
+    {
+        folderItem->setIcon(QPixmap(":/icons/folder_open"));
+    }
+    else
+    {
+        folderItem->setIcon(QPixmap(":/icons/folder_close"));
+    }
+*/
+
+    QStandardItem * itemParent = m_model->itemFromIndex(parent);
+
+    if (parent.isValid() && itemParent)
+    {
+        itemParent->appendRow(folderItem);
+    }
+    else
+    {
+        m_model->appendRow(folderItem);
+    }
+
+    QModelIndex index = folderItem->index();
+
+    // Dossiers enfants
+    QList<CListFolder *> folders = folder->getFolders();
+    foreach (CListFolder * child, folders)
+    {
+        child->m_index = addFolder(child, index);
+    }
+
+    // Listes enfants
+    QList<CPlayList *> playLists = folder->getPlayLists();
+    foreach (CPlayList * child, playLists)
+    {
+        child->m_index = addSongTable(child, index);
+    }
+
+    folder->m_index = index;
+    return index;
 }
 
 
@@ -226,11 +304,6 @@ void CPlayListView::dragMoveEvent(QDragMoveEvent * event)
         event->acceptProposedAction();
     }
 
-/*
-
-    event->accept();
-    event->acceptProposedAction(); //causes cursor icon to change and target item to get highlighted
-*/
     QTreeView::dragMoveEvent(event);
 }
 
@@ -249,12 +322,34 @@ void CPlayListView::openCustomMenuProject(const QPoint& point)
 
     if (index.isValid())
     {
-        m_menuPlaylist->move(mapToGlobal(point));
-        m_menuPlaylist->show();
+        QStandardItem * item = m_model->itemFromIndex(index);
+
+        if (item)
+        {
+            CSongTable * songTable = item->data(Qt::UserRole + 1).value<CSongTable *>();
+
+            if (songTable)
+            {
+                if (qobject_cast<CPlayList *>(songTable))
+                {
+                    m_menuPlaylist->move(mapToGlobal(point));
+                    m_menuPlaylist->show();
+                    return;
+                }
+            }
+            else if (item->data(Qt::UserRole + 2).value<CListFolder *>())
+            {
+                m_menuFolder->move(mapToGlobal(point));
+                m_menuFolder->show();
+                return;
+            }
+            else
+            {
+                qWarning() << "CPlayListView::openCustomMenuProject() : l'item n'est ni une liste ni un dossier";
+            }
+        }
     }
-    else
-    {
-        m_menuDefault->move(mapToGlobal(point));
-        m_menuDefault->show();
-    }
+
+    m_menuDefault->move(mapToGlobal(point));
+    m_menuDefault->show();
 }
