@@ -122,7 +122,9 @@ public slots:
     void previousSong(void);
     void nextSong(void);
     void playSong(CSongTableItem * songItem);
+    void setRepeat(void);
     void setRepeat(bool repeat);
+    void setShuffle(void);
     void setShuffle(bool shuffle);
     void setMute(bool mute);
     void toggleMute(void);

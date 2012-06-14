@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>WidgetControl</class>
  <widget class="QWidget" name="WidgetControl">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>616</width>
+    <height>46</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string notr="true"/>
   </property>
@@ -144,9 +152,19 @@
    <item>
     <widget class="QToolButton" name="btnRepeat">
      <property name="text">
-      <string>Repeat</string>
+      <string notr="true">Repeat</string>
      </property>
-     <property name="checkable">
+     <property name="icon">
+      <iconset resource="../TMediaPlayer.qrc">
+       <normaloff>:/icons/repeat_off</normaloff>:/icons/repeat_off</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>22</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="autoRaise">
       <bool>true</bool>
      </property>
     </widget>
@@ -154,9 +172,19 @@
    <item>
     <widget class="QToolButton" name="btnShuffle">
      <property name="text">
-      <string>Shuffle</string>
+      <string notr="true">Shuffle</string>
      </property>
-     <property name="checkable">
+     <property name="icon">
+      <iconset resource="../TMediaPlayer.qrc">
+       <normaloff>:/icons/shuffle_off</normaloff>:/icons/shuffle_off</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>22</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="autoRaise">
       <bool>true</bool>
      </property>
     </widget>

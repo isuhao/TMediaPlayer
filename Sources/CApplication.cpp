@@ -219,8 +219,8 @@ void CApplication::initWindow(void)
     connect(m_uiControl->btnPrevious, SIGNAL(clicked()), this, SLOT(previousSong()));
     connect(m_uiControl->btnNext, SIGNAL(clicked()), this, SLOT(nextSong()));
 
-    connect(m_uiControl->btnRepeat, SIGNAL(toggled(bool)), this, SLOT(setRepeat(bool)));
-    connect(m_uiControl->btnShuffle, SIGNAL(toggled(bool)), this, SLOT(setShuffle(bool)));
+    connect(m_uiControl->btnRepeat, SIGNAL(clicked()), this, SLOT(setRepeat()));
+    connect(m_uiControl->btnShuffle, SIGNAL(clicked()), this, SLOT(setShuffle()));
     connect(m_uiControl->btnMute, SIGNAL(clicked()), this, SLOT(toggleMute()));
 
     // Sliders
@@ -1250,14 +1250,27 @@ void CApplication::playSong(CSongTableItem * songItem)
 }
 
 
+void CApplication::setRepeat(void)
+{
+    setRepeat(!m_isRepeat);
+}
+
+
 void CApplication::setRepeat(bool repeat)
 {
     if (repeat != m_isRepeat)
     {
         m_isRepeat = repeat;
-        m_uiControl->btnRepeat->setChecked(repeat);
+        //m_uiControl->btnRepeat->setChecked(repeat);
+        m_uiControl->btnRepeat->setIcon(QPixmap(m_isRepeat ? ":/icons/repeat_on" : ":/icons/repeat_off"));
         m_uiWidget->actionRepeat->setChecked(repeat);
     }
+}
+
+
+void CApplication::setShuffle(void)
+{
+    setShuffle(!m_isShuffle);
 }
 
 
@@ -1266,7 +1279,8 @@ void CApplication::setShuffle(bool shuffle)
     if (shuffle != m_isShuffle)
     {
         m_isShuffle = shuffle;
-        m_uiControl->btnShuffle->setChecked(shuffle);
+        //m_uiControl->btnShuffle->setChecked(shuffle);
+        m_uiControl->btnShuffle->setIcon(QPixmap(m_isShuffle ? ":/icons/shuffle_on" : ":/icons/shuffle_off"));
         m_uiWidget->actionShuffle->setChecked(shuffle);
     }
 }
