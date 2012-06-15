@@ -11,6 +11,7 @@ CListFolder::CListFolder(CApplication * application, const QString& name) :
     m_application    (application),
     m_id             (-1),
     m_name           (name),
+    m_open           (false),
     m_folder         (NULL),
     m_position       (1),
     m_isModified     (false),
@@ -44,10 +45,13 @@ CListFolder::~CListFolder()
 
 void CListFolder::setName(const QString& name)
 {
+    const QString oldName = m_name;
+
     if (name != m_name)
     {
         m_name = name;
         m_isModified = true;
+        emit nameChanged(oldName, name);
     }
 }
 
@@ -142,6 +146,19 @@ void CListFolder::removeFolder(CListFolder * folder)
 }
 
 
+void CListFolder::setOpen(bool open)
+{
+    if (m_open != open)
+    {
+        m_open = open;
+        m_isModified = true;
+
+        if (open) emit folderOpened();
+        else      emit folderClosed();
+    }
+}
+
+
 bool CListFolder::updateDatabase(void)
 {
     // Insertion
@@ -170,7 +187,7 @@ bool CListFolder::updateDatabase(void)
         query.bindValue(0, m_name);
         query.bindValue(1, 0);
         query.bindValue(2, m_position);
-        query.bindValue(3, 0);
+        query.bindValue(3, (m_open ? 1 : 0));
 
         if (!query.exec())
         {
@@ -184,10 +201,11 @@ bool CListFolder::updateDatabase(void)
     else if (m_isModified)
     {
         QSqlQuery query(m_application->getDataBase());
-        query.prepare("UPDATE folder SET folder_name = ? WHERE folder_id = ?");
+        query.prepare("UPDATE folder SET folder_name = ?, folder_expanded = ? WHERE folder_id = ?");
 
         query.bindValue(0, m_name);
-        query.bindValue(1, m_id);
+        query.bindValue(1, (m_open ? 1 : 0));
+        query.bindValue(2, m_id);
 
         if (!query.exec())
         {

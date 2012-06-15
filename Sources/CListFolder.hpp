@@ -33,12 +33,24 @@ public:
 
     inline int getId(void) const;
     inline QString getName(void) const;
+    inline bool isOpen(void) const;
     inline QList<CPlayList *> getPlayLists(void) const;
     inline QList<CListFolder *> getFolders(void) const;
     inline int getNumPlayLists(void) const;
     bool isModified(void) const;
+    inline QModelIndex getModelIndex(void) const;
 
 signals:
+
+    /**
+     * Signal émis lorsque le nom du dossier change.
+     * Utilisez la méthode sender() dans le slot pour connaitre le dossier.
+     *
+     * \param oldName Ancien nom du dossier.
+     * \param newName Nouveau nom du dossier.
+     */
+
+    void nameChanged(const QString& oldName, const QString& newName);
     
     /**
      * Signal émis lorsque le dossier contenant le dossier change.
@@ -50,6 +62,9 @@ signals:
 
     void folderChanged(CListFolder * oldFolder, CListFolder * newFolder);
 
+    void folderOpened(void); ///< Signal émis lorsque le dossier est ouvert.
+    void folderClosed(void); ///< Signal émis lorsque le dossier est fermé.
+
 public slots:
 
     void setName(const QString& name);
@@ -58,6 +73,7 @@ public slots:
     void removePlayList(CPlayList * playList);
     void addFolder(CListFolder * folder);
     void removeFolder(CListFolder * folder);
+    void setOpen(bool open = true);
 
 protected slots:
 
@@ -68,6 +84,7 @@ private:
     CApplication * m_application;   ///< Pointeur sur l'application.
     int m_id;                       ///< Identifiant du dossier en base de données.
     QString m_name;                 ///< Nom du dossier.
+    bool m_open;                    ///< Indique si le dossier est ouvert ou fermé.
     CListFolder * m_folder;         ///< Dossier parent.
     int m_position;                 ///< Position dans le dossier.
     bool m_isModified;              ///< Indique si le dossier a été modifié.
@@ -98,6 +115,18 @@ inline QString CListFolder::getName(void) const
 }
 
 
+/**
+ * Indique si le dossier est ouvert ou fermé.
+ *
+ * \return Booléen.
+ */
+
+inline bool CListFolder::isOpen(void) const
+{
+    return m_open;
+}
+
+
 inline QList<CPlayList *> CListFolder::getPlayLists(void) const
 {
     return m_playLists;
@@ -113,6 +142,12 @@ inline QList<CListFolder *> CListFolder::getFolders(void) const
 inline int CListFolder::getNumPlayLists(void) const
 {
     return m_playLists.size();
+}
+
+
+inline QModelIndex CListFolder::getModelIndex(void) const
+{
+    return m_index;
 }
 
 #endif // FILE_C_LIST_FOLDER

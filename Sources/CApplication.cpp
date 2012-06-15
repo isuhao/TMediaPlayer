@@ -164,7 +164,7 @@ CApplication::~CApplication()
     // Met-à-jour et supprime tous les dossiers
     for (QList<CListFolder *>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
     {
-        //(*it)->updateDatabase();
+        (*it)->updateDatabase();
         delete *it;
     }
 
@@ -1721,6 +1721,19 @@ void CApplication::openDialogEditDynamicList(CDynamicPlayList * playList)
 
 
 /**
+ * Affiche la boite de dialogue pour modifier un dossier.
+ *
+ * \param folder Dossier à modifier.
+ */
+
+void CApplication::openDialogEditFolder(CListFolder * folder)
+{
+    CDialogEditFolder * dialog = new CDialogEditFolder(folder, this);
+    dialog->show();
+}
+
+
+/**
  * Ouvre la fenêtre pour importer la médiathèque depuis iTunes.
  */
 
@@ -1753,8 +1766,16 @@ void CApplication::addPlayList(CPlayList * playList)
 {
     Q_CHECK_PTR(playList);
 
-    initPlayList(playList);
-    playList->m_index = m_playListView->addSongTable(playList);
+    if (m_playLists.contains(playList))
+    {
+        initPlayList(playList);
+        //playList->m_index = m_playListView->addSongTable(playList);
+    }
+    else
+    {
+        initPlayList(playList);
+        playList->m_index = m_playListView->addSongTable(playList);
+    }
 }
 
 
@@ -1809,8 +1830,15 @@ void CApplication::addFolder(CListFolder * folder)
 {
     Q_CHECK_PTR(folder);
 
-    initFolder(folder);
-    folder->m_index = m_playListView->addFolder(folder);
+    if (m_folders.contains(folder))
+    {
+        initFolder(folder);
+    }
+    else
+    {
+        initFolder(folder);
+        folder->m_index = m_playListView->addFolder(folder);
+    }
 }
 
 
@@ -1824,6 +1852,7 @@ void CApplication::initFolder(CListFolder * folder)
     }
 
     m_folders.append(folder);
+    connect(folder, SIGNAL(nameChanged(const QString&, const QString&)), m_playListView, SLOT(onFolderRenamed(const QString&, const QString&)));
 
     //...
 }
@@ -2021,10 +2050,10 @@ void CApplication::openSongInExplorer(void)
 
 
 /**
- * Ouvre la boite de dialogue pour modifier la liste de lecture selectionnée dans la vue.
+ * Ouvre la boite de dialogue pour modifier la liste de lecture ou le dossier selectionné dans la vue.
  */
 
-void CApplication::editSelectedPlayList(void)
+void CApplication::editSelectedItem(void)
 {
     CPlayList * playList = qobject_cast<CPlayList *>(m_playListView->getSelectedSongTable());
 
@@ -2045,18 +2074,29 @@ void CApplication::editSelectedPlayList(void)
                 openDialogEditDynamicList(dynamicList);
             }
         }
+
+        return;
+    }
+
+    CListFolder * folder = qobject_cast<CListFolder *>(m_playListView->getSelectedFolder());
+
+    if (folder)
+    {
+        openDialogEditFolder(folder);
+        return;
     }
 }
 
 
 /**
- * Supprime la liste de lecture sélectionnée dans la vue CPlayListView.
+ * Supprime la liste de lecture ou le dossier sélectionné dans la vue CPlayListView.
  * Affiche une boite de dialogue de confirmation.
  *
+ * \todo Gérer les dossiers.
  * \todo Gérer le cas où la liste est utilisée dans un critère d'une liste dynamique.
  */
 
-void CApplication::removeSelectedPlayList(void)
+void CApplication::removeSelectedItem(void)
 {
     CPlayList * playList = qobject_cast<CPlayList *>(m_playListView->getSelectedSongTable());
 
@@ -2082,6 +2122,22 @@ void CApplication::removeSelectedPlayList(void)
         playList->romoveFromDatabase();
         m_playLists.removeOne(playList);
         delete playList;
+
+        return;
+    }
+
+    CListFolder * folder = qobject_cast<CListFolder *>(m_playListView->getSelectedFolder());
+
+    if (folder)
+    {
+        // Confirmation
+        //TODO: Case à cocher pour supprimer le contenu du dossier
+        if (QMessageBox::question(this, QString(), tr("Are you sure you want to delete this folder?"), tr("Yes"), tr("No"), 0, 1) == 1)
+        {
+            return;
+        }
+
+        //...
     }
 }
 
@@ -2665,7 +2721,7 @@ void CApplication::loadDatabase(void)
 
 
     // Création des dossiers
-    if (!query.exec("SELECT folder_id, folder_name, folder_parent, folder_position FROM folder WHERE folder_id != 0 ORDER BY folder_position"))
+    if (!query.exec("SELECT folder_id, folder_name, folder_parent, folder_position, folder_expanded FROM folder WHERE folder_id != 0 ORDER BY folder_position"))
     {
         showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
     }
@@ -2677,6 +2733,7 @@ void CApplication::loadDatabase(void)
             folder->m_id       = query.value(0).toInt();
             folder->m_folder   = reinterpret_cast<CListFolder *>(query.value(2).toInt());
             folder->m_position = query.value(3).toInt();
+            folder->m_open     = query.value(4).toBool();
 
             if (folder->m_folder < 0)
             {

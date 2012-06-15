@@ -11,6 +11,10 @@ class CApplication;
 class CListFolder;
 
 
+/**
+ * Vue utilisée pour afficher les listes de lecture sous forme d'un arbre.
+ */
+
 class CPlayListView : public QTreeView
 {
     Q_OBJECT
@@ -23,12 +27,15 @@ public:
     QModelIndex addFolder(CListFolder * folder, const QModelIndex& parent = QModelIndex());
     void removeSongTable(CSongTable * songTable);
     CSongTable * getSongTable(const QModelIndex& index) const;
+    CListFolder * getFolder(const QModelIndex& index) const;
     CSongTable * getSelectedSongTable(void) const;
+    CListFolder * getSelectedFolder(void) const;
     QModelIndex getModelIndex(CSongTable * songTable) const;
     
 public slots:
 
     void onPlayListRenamed(const QString& oldName, const QString& newName);
+    void onFolderRenamed(const QString& oldName, const QString& newName);
 
 protected:
     
@@ -38,6 +45,10 @@ protected:
 protected slots:
 
     virtual void openCustomMenuProject(const QPoint& point);
+    void onItemCollapsed(const QModelIndex& index);
+    void onItemExpanded(const QModelIndex& index);
+    void onFolderOpen(void);
+    void onFolderClose(void);
 
 private:
     

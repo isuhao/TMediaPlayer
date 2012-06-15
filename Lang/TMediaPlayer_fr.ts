@@ -15,7 +15,7 @@
     </message>
     <message numerus="yes">
         <location filename="../Sources/CApplication.cpp" line="104"/>
-        <location filename="../Sources/CApplication.cpp" line="2161"/>
+        <location filename="../Sources/CApplication.cpp" line="2240"/>
         <source>%n song(s), %1</source>
         <translation>
             <numerusform>%n morceau, %1</numerusform>
@@ -46,37 +46,44 @@ Requête : %3
 Erreur : %4</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1572"/>
+        <location filename="../Sources/CApplication.cpp" line="1586"/>
         <source>Loading files...</source>
         <translation>Chargement des fichiers...</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2029"/>
+        <location filename="../Sources/CApplication.cpp" line="2092"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Êtes-vous sûr de vouloir supprimer cette liste de lecture ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2029"/>
+        <location filename="../Sources/CApplication.cpp" line="2092"/>
+        <location filename="../Sources/CApplication.cpp" line="2121"/>
         <source>Yes</source>
         <translation>Oui</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2029"/>
+        <location filename="../Sources/CApplication.cpp" line="2092"/>
+        <location filename="../Sources/CApplication.cpp" line="2121"/>
         <source>No</source>
         <translation>Non</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1522"/>
+        <location filename="../Sources/CApplication.cpp" line="1536"/>
         <source>Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)</source>
         <translation>Fichiers multimédias (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;Tous les fichiers (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1572"/>
+        <location filename="../Sources/CApplication.cpp" line="1586"/>
         <source>Abort</source>
         <translation>Interrompre</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2300"/>
+        <location filename="../Sources/CApplication.cpp" line="2121"/>
+        <source>Are you sure you want to delete this folder?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/CApplication.cpp" line="2383"/>
         <source>This program requires FMOD %1 or superior.</source>
         <translation>Ce programme nécessite FMOD %1 ou supérieur.</translation>
     </message>
@@ -421,37 +428,37 @@ Erreur : %4</translation>
 <context>
     <name>CPlayListView</name>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="39"/>
-        <location filename="../Sources/CPlayListView.cpp" line="43"/>
+        <location filename="../Sources/CPlayListView.cpp" line="46"/>
+        <location filename="../Sources/CPlayListView.cpp" line="50"/>
         <source>Edit...</source>
         <translation>Modifier...</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="40"/>
-        <location filename="../Sources/CPlayListView.cpp" line="44"/>
+        <location filename="../Sources/CPlayListView.cpp" line="47"/>
+        <location filename="../Sources/CPlayListView.cpp" line="51"/>
         <source>Remove</source>
         <translation>Supprimer</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="46"/>
-        <location filename="../Sources/CPlayListView.cpp" line="52"/>
+        <location filename="../Sources/CPlayListView.cpp" line="53"/>
+        <location filename="../Sources/CPlayListView.cpp" line="59"/>
         <source>New playlist...</source>
         <translation>Nouvelle liste de lecture...</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="47"/>
-        <location filename="../Sources/CPlayListView.cpp" line="53"/>
+        <location filename="../Sources/CPlayListView.cpp" line="54"/>
+        <location filename="../Sources/CPlayListView.cpp" line="60"/>
         <source>New dynamic playlist...</source>
         <translation>Nouvelle liste de lecture dynamique...</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="48"/>
-        <location filename="../Sources/CPlayListView.cpp" line="54"/>
+        <location filename="../Sources/CPlayListView.cpp" line="55"/>
+        <location filename="../Sources/CPlayListView.cpp" line="61"/>
         <source>New folder...</source>
         <translation>Nouveau dossier...</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="84"/>
+        <location filename="../Sources/CPlayListView.cpp" line="91"/>
         <source>Library</source>
         <translation>Médiathèque</translation>
     </message>
@@ -1853,14 +1860,12 @@ Voulez-vous les ajouter ?</translation>
 <context>
     <name>WidgetControl</name>
     <message>
-        <location filename="../Form/WidgetControl.ui" line="147"/>
         <source>Repeat</source>
-        <translation>Répétition</translation>
+        <translation type="obsolete">Répétition</translation>
     </message>
     <message>
-        <location filename="../Form/WidgetControl.ui" line="157"/>
         <source>Shuffle</source>
-        <translation>Aléatoire</translation>
+        <translation type="obsolete">Aléatoire</translation>
     </message>
 </context>
 <context>

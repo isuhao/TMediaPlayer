@@ -149,6 +149,7 @@ public slots:
     void openDialogCreateFolder(CListFolder * folder = NULL);
     void openDialogEditStaticPlayList(CStaticPlayList * playList);
     void openDialogEditDynamicList(CDynamicPlayList * playList);
+    void openDialogEditFolder(CListFolder * folder);
     void importFromITunes(void);
     void importFromSongbird(void);
     //void editSong(CSongTableItem * songItem);
@@ -156,8 +157,8 @@ public slots:
     void selectCurrentSong(void);
     void selectSong(CSongTable * songTable, CSongTableItem * songItem);
     void openSongInExplorer(void);
-    void editSelectedPlayList(void);
-    void removeSelectedPlayList(void);
+    void editSelectedItem(void);
+    void removeSelectedItem(void);
     void onSongModified(void);
 
 signals:

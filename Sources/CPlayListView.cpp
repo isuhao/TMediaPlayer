@@ -13,6 +13,12 @@
 #include <QtDebug>
 
 
+/**
+ * Constructeur de la vue.
+ *
+ * \param application Pointeur sur l'application.
+ */
+
 CPlayListView::CPlayListView(CApplication * application) :
     QTreeView      (application),
     m_application  (application),
@@ -24,7 +30,7 @@ CPlayListView::CPlayListView(CApplication * application) :
 
     header()->setVisible(false);
     setUniformRowHeights(true);
-    setEditTriggers(QAbstractItemView::NoEditTriggers);
+    setEditTriggers(QAbstractItemView::NoEditTriggers); // TODO: pouvoir renommer directement dans la vue
     
     m_model = new CPlayListModel(m_application);
     setModel(m_model);
@@ -34,15 +40,19 @@ CPlayListView::CPlayListView(CApplication * application) :
     setAcceptDrops(true);
     //viewport()->setAcceptDrops(true);
 
+    connect(this, SIGNAL(collapsed(const QModelIndex&)), this, SLOT(onItemCollapsed(const QModelIndex&)));
+    connect(this, SIGNAL(expanded(const QModelIndex&)), this, SLOT(onItemExpanded(const QModelIndex&)));
+
     // Menus contextuels
     m_menuPlaylist = new QMenu(this);
     //m_menuPlaylist->addAction(tr("Open")); //TODO: ouvrir dans une nouvelle fenêtre
-    m_menuPlaylist->addAction(tr("Edit..."), m_application, SLOT(editSelectedPlayList()));
-    m_menuPlaylist->addAction(tr("Remove"), m_application, SLOT(removeSelectedPlayList()));
+    m_menuPlaylist->addAction(tr("Edit..."), m_application, SLOT(editSelectedItem()));
+    m_menuPlaylist->addAction(tr("Remove"), m_application, SLOT(removeSelectedItem()));
+    //TODO: Pouvoir exporter une liste de lecture
 
     m_menuFolder = new QMenu(this);
-    m_menuFolder->addAction(tr("Edit..."), m_application, SLOT(editSelectedFolder()));
-    m_menuFolder->addAction(tr("Remove"), m_application, SLOT(removeSelectedFolder()));
+    m_menuFolder->addAction(tr("Edit..."), m_application, SLOT(editSelectedItem()));
+    m_menuFolder->addAction(tr("Remove"), m_application, SLOT(removeSelectedItem()));
     m_menuFolder->addSeparator();
     m_menuFolder->addAction(tr("New playlist..."), m_application, SLOT(openDialogCreateStaticList()));
     m_menuFolder->addAction(tr("New dynamic playlist..."), m_application, SLOT(openDialogCreateDynamicList()));
@@ -113,19 +123,11 @@ QModelIndex CPlayListView::addFolder(CListFolder * folder, const QModelIndex& pa
 {
     Q_CHECK_PTR(folder);
 
+    connect(folder, SIGNAL(folderOpened()), this, SLOT(onFolderOpen()));
+    connect(folder, SIGNAL(folderClosed()), this, SLOT(onFolderClose()));
+
     QStandardItem * folderItem = new QStandardItem(QPixmap(":/icons/folder_close"), folder->getName());
     folderItem->setData(QVariant::fromValue(folder), Qt::UserRole + 2);
-
-/*
-    if (folder->isExpanded())
-    {
-        folderItem->setIcon(QPixmap(":/icons/folder_open"));
-    }
-    else
-    {
-        folderItem->setIcon(QPixmap(":/icons/folder_close"));
-    }
-*/
 
     QStandardItem * itemParent = m_model->itemFromIndex(parent);
 
@@ -139,6 +141,17 @@ QModelIndex CPlayListView::addFolder(CListFolder * folder, const QModelIndex& pa
     }
 
     QModelIndex index = folderItem->index();
+
+    if (folder->isOpen())
+    {
+        expand(index);
+        folderItem->setIcon(QPixmap(":/icons/folder_open"));
+    }
+    else
+    {
+        collapse(index);
+        folderItem->setIcon(QPixmap(":/icons/folder_close"));
+    }
 
     // Dossiers enfants
     QList<CListFolder *> folders = folder->getFolders();
@@ -169,7 +182,7 @@ void CPlayListView::removeSongTable(CSongTable * songTable)
 
 
 /**
- * Retourne la liste de morceaux à partir d'un index.
+ * Retourne la liste de morceaux correspondant à un index.
  *
  * \param index Index de la liste.
  * \return Liste de morceaux, ou NULL.
@@ -182,21 +195,41 @@ CSongTable * CPlayListView::getSongTable(const QModelIndex& index) const
 
 
 /**
+ * Retourne le dossier correspondant à un index.
+ *
+ * \param index Index du dossier.
+ * \return Dossier, ou NULL.
+ */
+
+CListFolder * CPlayListView::getFolder(const QModelIndex& index) const
+{
+    return m_model->data(index, Qt::UserRole + 2).value<CListFolder *>();
+}
+
+
+/**
  * Retourne la liste de morceaux actuellement sélectionnée.
  *
- * \return Liste de morceaux.
+ * \return Liste de morceaux sélectionnée, ou NULL.
  */
 
 CSongTable * CPlayListView::getSelectedSongTable(void) const
 {
     QModelIndex index = selectionModel()->currentIndex();
+    return (index.isValid() ? getSongTable(index) : NULL);
+}
 
-    if (index.isValid())
-    {
-        return getSongTable(index);
-    }
 
-    return NULL;
+/**
+ * Retourne le dossier actuellement sélectionnée.
+ *
+ * \return Dossier sélectionné, ou NULL.
+ */
+
+CListFolder * CPlayListView::getSelectedFolder(void) const
+{
+    QModelIndex index = selectionModel()->currentIndex();
+    return (index.isValid() ? getFolder(index) : NULL);
 }
 
 
@@ -236,6 +269,22 @@ void CPlayListView::onPlayListRenamed(const QString& oldName, const QString& new
 }
 
 
+void CPlayListView::onFolderRenamed(const QString& oldName, const QString& newName)
+{
+    CListFolder * folder = qobject_cast<CListFolder *>(sender());
+
+    if (folder)
+    {
+        QStandardItem * item = m_model->itemFromIndex(folder->m_index);
+        
+        if (item)
+        {
+            item->setText(newName);
+        }
+    }
+}
+
+
 /**
  * Gestion des touches du clavier.
  * La touche Supprimer est gérée.
@@ -250,7 +299,7 @@ void CPlayListView::keyPressEvent(QKeyEvent * event)
     if (event->key() == Qt::Key_Delete)
     {
         event->accept();
-        m_application->removeSelectedPlayList();
+        m_application->removeSelectedItem();
         return;
     }
 
@@ -352,4 +401,62 @@ void CPlayListView::openCustomMenuProject(const QPoint& point)
 
     m_menuDefault->move(mapToGlobal(point));
     m_menuDefault->show();
+}
+
+
+void CPlayListView::onItemCollapsed(const QModelIndex& index)
+{
+    CListFolder * folder = getFolder(index);
+
+    if (folder)
+    {
+        folder->setOpen(false);
+    }
+}
+
+
+void CPlayListView::onItemExpanded(const QModelIndex& index)
+{
+    CListFolder * folder = getFolder(index);
+
+    if (folder)
+    {
+        folder->setOpen(true);
+    }
+}
+
+
+void CPlayListView::onFolderOpen(void)
+{
+    CListFolder * folder = qobject_cast<CListFolder *>(sender());
+
+    if (folder)
+    {
+        QModelIndex index = folder->getModelIndex();
+        expand(index);
+
+        QStandardItem * item = m_model->itemFromIndex(index);
+        if (item)
+        {
+            item->setIcon(QPixmap(":/icons/folder_open"));
+        }
+    }
+}
+
+
+void CPlayListView::onFolderClose(void)
+{
+    CListFolder * folder = qobject_cast<CListFolder *>(sender());
+
+    if (folder)
+    {
+        QModelIndex index = folder->getModelIndex();
+        collapse(index);
+
+        QStandardItem * item = m_model->itemFromIndex(index);
+        if (item)
+        {
+            item->setIcon(QPixmap(":/icons/folder_close"));
+        }
+    }
 }
