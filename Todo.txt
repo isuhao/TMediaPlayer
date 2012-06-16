@@ -34,7 +34,6 @@
   - Pouvoir créer une liste directement dans un dossier.
 
 - Implémenter le glisser-déposer pour créer une nouvelle liste de lecture.
-- Griser les boutons indisponibles suivant l'état (lecture, pause, etc.).
 - Implémenter correctement la répétition (répétition de la liste, du morceau, etc.).
 
 - Optimisation : exécuter les requêtes SQL dans un thread séparé.
@@ -72,7 +71,6 @@
   - Afficher l'illustration principale dans l'onglet Résumé.
 
 - Moteur de recherche dans la liste de lecture.
-- Égaliseur.
 - Récupérer les paroles depuis Internet.
 - Récupérer les pochettes depuis Internet.
 - Option "Lecture seule".

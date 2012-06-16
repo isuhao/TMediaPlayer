@@ -67,6 +67,26 @@ public:
     void setDelayBeforeNotification(int delay);
     void setPercentageBeforeScrobbling(int percentage);
 
+    // Égaliseur
+    enum TEqualizerFrequency
+    {
+        EqFreq32  = 0, ///< 32 Hz.
+        EqFreq64  = 1, ///< 64 Hz.
+        EqFreq125 = 2, ///< 125 Hz.
+        EqFreq250 = 3, ///< 250 Hz.
+        EqFreq500 = 4, ///< 500 Hz.
+        EqFreq1K  = 5, ///< 1 KHz.
+        EqFreq2K  = 6, ///< 2 kHz.
+        EqFreq4K  = 7, ///< 4 kHz.
+        EqFreq8K  = 8, ///< 8 kHz.
+        EqFreq16K = 9  ///< 16 kHz.
+    };
+
+    void setEqualizerGain(TEqualizerFrequency frequency, double gain);
+    double getEqualizerGain(TEqualizerFrequency frequency);
+    void resetEqualizer(void);
+    bool isEqualizerEnabled(void) const;
+
     inline CSongTableItem * getCurrentSongItem(void) const;
     inline CSongTable * getCurrentSongTable(void) const;
     inline CSongTable * getLibrary(void) const;
@@ -130,6 +150,7 @@ public slots:
     void toggleMute(void);
     void setVolume(int volume);
     void setPosition(int position);
+    void setEqualizerEnabled(bool enabled = true);
 
     //void openPlayList(CPlayList * playList);
     //void renamePlayList(CPlayList * playList);
@@ -140,6 +161,7 @@ public slots:
     //void deleteListFolder(CListFolder * folder);
 
     void openDialogPreferences(void);
+    void openDialogEqualizer(void);
     void openDialogEditMetadata(void);
     void openDialogAddSongs(void);
     void openDialogAddFolder(void);
@@ -204,6 +226,7 @@ protected:
     bool initSoundSystem(void);
     void loadDatabase(void);
     void startPlay(void);
+    void setState(State state);
 
     virtual void keyPressEvent(QKeyEvent * event);
     virtual void closeEvent(QCloseEvent * event);
@@ -227,6 +250,8 @@ private:
     bool m_isShuffle;                   ///< Indique si la lecture aléatoire est activée.
     bool m_isMute;                      ///< Indique si le son est coupé.
     int m_volume;                       ///< Volume sonore (entre 0 et 100).
+    double m_equalizerGains[10];        ///< Gains de l'égaliseur.
+    FMOD::DSP * m_dsp[10];
     QList<CListFolder *> m_folders;     ///< Liste de l'ensemble des dossiers de listes de lecture.
     QList<CPlayList *> m_playLists;     ///< Liste de l'ensemble des listes de lectures.
     QMap<QString, QFile *> m_logList;   ///< Liste des fichiers de log ouverts.

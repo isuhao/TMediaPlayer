@@ -4,18 +4,18 @@
 <context>
     <name>CApplication</name>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="257"/>
+        <location filename="../Sources/CApplication.cpp" line="245"/>
         <source>Failed to init sound system with FMOD.</source>
         <translation>Le chargement du système de son avec FMOD a échoué.</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="289"/>
+        <location filename="../Sources/CApplication.cpp" line="295"/>
         <source>Failed to load database.</source>
         <translation>Erreur lors du chargement de la base de données.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="104"/>
-        <location filename="../Sources/CApplication.cpp" line="2240"/>
+        <location filename="../Sources/CApplication.cpp" line="94"/>
+        <location filename="../Sources/CApplication.cpp" line="2375"/>
         <source>%n song(s), %1</source>
         <translation>
             <numerusform>%n morceau, %1</numerusform>
@@ -23,17 +23,17 @@
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="234"/>
+        <location filename="../Sources/CApplication.cpp" line="222"/>
         <source>Playlists</source>
         <translation>Listes de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="318"/>
+        <location filename="../Sources/CApplication.cpp" line="325"/>
         <source>Database error</source>
         <translation>Erreur de base de données</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="318"/>
+        <location filename="../Sources/CApplication.cpp" line="325"/>
         <source>File: %1 (%2)
 
 Query: %3
@@ -46,44 +46,55 @@ Requête : %3
 Erreur : %4</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1586"/>
+        <location filename="../Sources/CApplication.cpp" line="3038"/>
+        <source>Pause</source>
+        <translation>Pause</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CApplication.cpp" line="3046"/>
+        <location filename="../Sources/CApplication.cpp" line="3054"/>
+        <source>Play</source>
+        <translation>Lecture</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CApplication.cpp" line="1707"/>
         <source>Loading files...</source>
         <translation>Chargement des fichiers...</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2092"/>
+        <location filename="../Sources/CApplication.cpp" line="2227"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Êtes-vous sûr de vouloir supprimer cette liste de lecture ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2092"/>
-        <location filename="../Sources/CApplication.cpp" line="2121"/>
+        <location filename="../Sources/CApplication.cpp" line="2227"/>
+        <location filename="../Sources/CApplication.cpp" line="2256"/>
         <source>Yes</source>
         <translation>Oui</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2092"/>
-        <location filename="../Sources/CApplication.cpp" line="2121"/>
+        <location filename="../Sources/CApplication.cpp" line="2227"/>
+        <location filename="../Sources/CApplication.cpp" line="2256"/>
         <source>No</source>
         <translation>Non</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1536"/>
+        <location filename="../Sources/CApplication.cpp" line="1657"/>
         <source>Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)</source>
         <translation>Fichiers multimédias (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;Tous les fichiers (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1586"/>
+        <location filename="../Sources/CApplication.cpp" line="1707"/>
         <source>Abort</source>
         <translation>Interrompre</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2121"/>
+        <location filename="../Sources/CApplication.cpp" line="2256"/>
         <source>Are you sure you want to delete this folder?</source>
-        <translation type="unfinished"></translation>
+        <translation>Êtes-vous sûr de vouloir supprimer ce dossier ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2383"/>
+        <location filename="../Sources/CApplication.cpp" line="2518"/>
         <source>This program requires FMOD %1 or superior.</source>
         <translation>Ce programme nécessite FMOD %1 ou supérieur.</translation>
     </message>
@@ -144,17 +155,17 @@ Erreur : %4</translation>
 <context>
     <name>CDialogEditDynamicList</name>
     <message>
-        <location filename="../Sources/CDialogEditDynamicList.cpp" line="59"/>
+        <location filename="../Sources/Dialog/CDialogEditDynamicList.cpp" line="59"/>
         <source>Save</source>
         <translation>Enregistrer</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditDynamicList.cpp" line="60"/>
+        <location filename="../Sources/Dialog/CDialogEditDynamicList.cpp" line="60"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditDynamicList.cpp" line="98"/>
+        <location filename="../Sources/Dialog/CDialogEditDynamicList.cpp" line="98"/>
         <source>You need to choose a name for the playlist.</source>
         <translation>Vous devez choisir un nom pour la liste de lecture.</translation>
     </message>
@@ -162,17 +173,17 @@ Erreur : %4</translation>
 <context>
     <name>CDialogEditFolder</name>
     <message>
-        <location filename="../Sources/CDialogEditFolder.cpp" line="29"/>
+        <location filename="../Sources/Dialog/CDialogEditFolder.cpp" line="29"/>
         <source>Save</source>
         <translation>Enregistrer</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditFolder.cpp" line="30"/>
+        <location filename="../Sources/Dialog/CDialogEditFolder.cpp" line="30"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditFolder.cpp" line="53"/>
+        <location filename="../Sources/Dialog/CDialogEditFolder.cpp" line="53"/>
         <source>You need to choose a name for the folder.</source>
         <translation>Vous devez choisir un nom pour le dossier.</translation>
     </message>
@@ -184,53 +195,53 @@ Erreur : %4</translation>
 <context>
     <name>CDialogEditMetadata</name>
     <message>
-        <location filename="../Sources/CDialogEditMetadata.cpp" line="46"/>
-        <location filename="../Sources/CDialogEditMetadata.cpp" line="50"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="46"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="50"/>
         <source>Metadata</source>
         <translation>Métadonnées</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditMetadata.cpp" line="127"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="127"/>
         <source>Key</source>
         <translation>Clé</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditMetadata.cpp" line="127"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="127"/>
         <source>Value</source>
         <translation>Valeur</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditMetadata.cpp" line="129"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="129"/>
         <source>Description</source>
         <translation>Description</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditMetadata.cpp" line="129"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="129"/>
         <source>Language</source>
         <translation>Langue</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditMetadata.cpp" line="129"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="129"/>
         <source>Comments</source>
         <translation>Commentaires</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditMetadata.cpp" line="71"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="71"/>
         <source>Save</source>
         <translation>Enregistrer</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditMetadata.cpp" line="72"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="72"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditMetadata.cpp" line="73"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="73"/>
         <source>Apply</source>
         <translation>Appliquer</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditMetadata.cpp" line="74"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="74"/>
         <source>Reset</source>
         <translation>Réinitialiser</translation>
     </message>
@@ -238,33 +249,33 @@ Erreur : %4</translation>
 <context>
     <name>CDialogEditSong</name>
     <message>
-        <location filename="../Sources/CDialogEditSong.cpp" line="218"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="218"/>
         <source>%1 kbit/s</source>
         <translation>%1 kbit/s</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditSong.cpp" line="59"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="59"/>
         <source>Save</source>
         <translation>Enregistrer</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditSong.cpp" line="60"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="60"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditSong.cpp" line="61"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="61"/>
         <source>Apply</source>
         <translation>Appliquer</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditSong.cpp" line="196"/>
-        <location filename="../Sources/CDialogEditSong.cpp" line="200"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="196"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="200"/>
         <source>Song infos</source>
         <translation>Informations</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditSong.cpp" line="221"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="221"/>
         <source>%1 Hz</source>
         <translation>%1 Hz</translation>
     </message>
@@ -272,24 +283,24 @@ Erreur : %4</translation>
 <context>
     <name>CDialogEditSongs</name>
     <message>
-        <location filename="../Sources/CDialogEditSongs.cpp" line="182"/>
-        <location filename="../Sources/CDialogEditSongs.cpp" line="1005"/>
-        <location filename="../Sources/CDialogEditSongs.cpp" line="1023"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="182"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="1005"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="1023"/>
         <source>Different values</source>
         <translation>Valeurs multiples</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditSongs.cpp" line="526"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="526"/>
         <source>Save</source>
         <translation>Enregistrer</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditSongs.cpp" line="527"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="527"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditSongs.cpp" line="528"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="528"/>
         <source>Apply</source>
         <translation>Appliquer</translation>
     </message>
@@ -297,30 +308,43 @@ Erreur : %4</translation>
 <context>
     <name>CDialogEditStaticPlayList</name>
     <message>
-        <location filename="../Sources/CDialogEditStaticPlayList.cpp" line="32"/>
+        <location filename="../Sources/Dialog/CDialogEditStaticPlayList.cpp" line="32"/>
         <source>Save</source>
         <translation>Enregistrer</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditStaticPlayList.cpp" line="33"/>
+        <location filename="../Sources/Dialog/CDialogEditStaticPlayList.cpp" line="33"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogEditStaticPlayList.cpp" line="57"/>
+        <location filename="../Sources/Dialog/CDialogEditStaticPlayList.cpp" line="57"/>
         <source>You need to choose a name for the playlist.</source>
         <translation>Vous devez choisir un nom pour la liste de lecture.</translation>
     </message>
 </context>
 <context>
-    <name>CDialogPreferences</name>
+    <name>CDialogEqualizer</name>
     <message>
-        <location filename="../Sources/CDialogPreferences.cpp" line="34"/>
+        <location filename="../Sources/Dialog/CDialogEqualizer.cpp" line="43"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../Sources/CDialogPreferences.cpp" line="35"/>
+        <location filename="../Sources/Dialog/CDialogEqualizer.cpp" line="44"/>
+        <source>Reset</source>
+        <translation>Réinitialiser</translation>
+    </message>
+</context>
+<context>
+    <name>CDialogPreferences</name>
+    <message>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="34"/>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="35"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
@@ -428,37 +452,37 @@ Erreur : %4</translation>
 <context>
     <name>CPlayListView</name>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="46"/>
-        <location filename="../Sources/CPlayListView.cpp" line="50"/>
+        <location filename="../Sources/CPlayListView.cpp" line="49"/>
+        <location filename="../Sources/CPlayListView.cpp" line="54"/>
         <source>Edit...</source>
         <translation>Modifier...</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="47"/>
-        <location filename="../Sources/CPlayListView.cpp" line="51"/>
+        <location filename="../Sources/CPlayListView.cpp" line="50"/>
+        <location filename="../Sources/CPlayListView.cpp" line="55"/>
         <source>Remove</source>
         <translation>Supprimer</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="53"/>
-        <location filename="../Sources/CPlayListView.cpp" line="59"/>
+        <location filename="../Sources/CPlayListView.cpp" line="57"/>
+        <location filename="../Sources/CPlayListView.cpp" line="63"/>
         <source>New playlist...</source>
         <translation>Nouvelle liste de lecture...</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="54"/>
-        <location filename="../Sources/CPlayListView.cpp" line="60"/>
+        <location filename="../Sources/CPlayListView.cpp" line="58"/>
+        <location filename="../Sources/CPlayListView.cpp" line="64"/>
         <source>New dynamic playlist...</source>
         <translation>Nouvelle liste de lecture dynamique...</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="55"/>
-        <location filename="../Sources/CPlayListView.cpp" line="61"/>
+        <location filename="../Sources/CPlayListView.cpp" line="59"/>
+        <location filename="../Sources/CPlayListView.cpp" line="65"/>
         <source>New folder...</source>
         <translation>Nouveau dossier...</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="91"/>
+        <location filename="../Sources/CPlayListView.cpp" line="95"/>
         <source>Library</source>
         <translation>Médiathèque</translation>
     </message>
@@ -1563,6 +1587,84 @@ Voulez-vous les ajouter ?</translation>
     </message>
 </context>
 <context>
+    <name>DialogEqualizer</name>
+    <message>
+        <location filename="../Form/DialogEqualizer.ui" line="15"/>
+        <source>Equalizer</source>
+        <translation>Égaliseur</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEqualizer.ui" line="196"/>
+        <source>Enable equalizer</source>
+        <translation>Activer l&apos;égaliseur</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEqualizer.ui" line="266"/>
+        <source>-10 dB</source>
+        <translation>-10 dB</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEqualizer.ui" line="283"/>
+        <source>0 dB</source>
+        <translation>0 dB</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEqualizer.ui" line="328"/>
+        <source>+10 dB</source>
+        <translation>+10 dB</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEqualizer.ui" line="386"/>
+        <source>32</source>
+        <translation>32</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEqualizer.ui" line="409"/>
+        <source>64</source>
+        <translation>64</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEqualizer.ui" line="432"/>
+        <source>125</source>
+        <translation>125</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEqualizer.ui" line="455"/>
+        <source>250</source>
+        <translation>250</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEqualizer.ui" line="478"/>
+        <source>500</source>
+        <translation>500</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEqualizer.ui" line="501"/>
+        <source>1K</source>
+        <translation>1K</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEqualizer.ui" line="524"/>
+        <source>2K</source>
+        <translation>2K</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEqualizer.ui" line="547"/>
+        <source>4K</source>
+        <translation>4K</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEqualizer.ui" line="570"/>
+        <source>8K</source>
+        <translation>8K</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEqualizer.ui" line="593"/>
+        <source>16K</source>
+        <translation>16K</translation>
+    </message>
+</context>
+<context>
     <name>DialogImportITunes</name>
     <message>
         <source>Import from iTunes</source>
@@ -1714,7 +1816,7 @@ Voulez-vous les ajouter ?</translation>
         <translation>TMediaPlayer</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="181"/>
+        <location filename="../Form/TMediaPlayer.ui" line="184"/>
         <source>Previous</source>
         <translation>Précédent</translation>
     </message>
@@ -1729,27 +1831,27 @@ Voulez-vous les ajouter ?</translation>
         <translation>Informations...</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="171"/>
+        <location filename="../Form/TMediaPlayer.ui" line="174"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="176"/>
+        <location filename="../Form/TMediaPlayer.ui" line="179"/>
         <source>Stop</source>
         <translation>Stop</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="186"/>
+        <location filename="../Form/TMediaPlayer.ui" line="189"/>
         <source>Next</source>
         <translation>Suivant</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="202"/>
+        <location filename="../Form/TMediaPlayer.ui" line="205"/>
         <source>Repeat</source>
         <translation>Répétition</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="194"/>
+        <location filename="../Form/TMediaPlayer.ui" line="197"/>
         <source>Shuffle</source>
         <translation>Aléatoire</translation>
     </message>
@@ -1804,14 +1906,24 @@ Voulez-vous les ajouter ?</translation>
         <translation>Nouvelle liste de lecture dynamique...</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="226"/>
+        <location filename="../Form/TMediaPlayer.ui" line="169"/>
+        <source>Space</source>
+        <translation>Espace</translation>
+    </message>
+    <message>
+        <location filename="../Form/TMediaPlayer.ui" line="229"/>
         <source>New folder...</source>
         <translation>Nouveau dossier...</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="231"/>
+        <location filename="../Form/TMediaPlayer.ui" line="234"/>
         <source>From Songbird...</source>
         <translation>Depuis Songbird...</translation>
+    </message>
+    <message>
+        <location filename="../Form/TMediaPlayer.ui" line="239"/>
+        <source>Equalizer...</source>
+        <translation>Égaliseur...</translation>
     </message>
     <message>
         <source>Informations</source>
@@ -1838,17 +1950,17 @@ Voulez-vous les ajouter ?</translation>
         <translation>Ne rien sélectionner</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="211"/>
+        <location filename="../Form/TMediaPlayer.ui" line="214"/>
         <source>Preferences...</source>
         <translation>Préférences...</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="216"/>
+        <location filename="../Form/TMediaPlayer.ui" line="219"/>
         <source>About Qt...</source>
         <translation>À propos de Qt...</translation>
     </message>
     <message>
-        <location filename="../Form/TMediaPlayer.ui" line="221"/>
+        <location filename="../Form/TMediaPlayer.ui" line="224"/>
         <source>From iTunes...</source>
         <translation>Depuis iTunes...</translation>
     </message>

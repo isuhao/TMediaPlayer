@@ -13,6 +13,7 @@
 #include "CDialogEditSongs.hpp"
 #include "CDialogEditStaticPlayList.hpp"
 #include "CDialogPreferences.hpp"
+#include "CDialogEqualizer.hpp"
 #include "CImporterITunes.hpp"
 
 // Last.fm
@@ -79,17 +80,6 @@ CApplication::CApplication(void) :
     m_applicationPath = QDesktopServices::storageLocation(QDesktopServices::DataLocation) + QDir::separator();
     QDir(m_applicationPath).mkpath(".");
 
-/*
-    const QString applicationPath = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
-    QDir(applicationPath).mkpath(".");
-
-    m_logMetadata.setFileName(applicationPath + QDir::separator() + "metadata.log");
-    if (!m_logMetadata.open(QIODevice::WriteOnly | QIODevice::Append))
-    {
-        qWarning() << "Erreur lors de l'ouverture du fichier metadata.log";
-    }
-*/
-
     // Initialisation de l'interface graphique
     m_uiWidget->setupUi(this);
 
@@ -119,15 +109,13 @@ CApplication::CApplication(void) :
     connect(m_uiWidget->actionSelectNone, SIGNAL(triggered()), this, SLOT(selectNone()));
     connect(m_uiWidget->actionPreferences, SIGNAL(triggered()), this, SLOT(openDialogPreferences()));
 
-    connect(m_uiWidget->actionPlay, SIGNAL(triggered()), this, SLOT(play()));
-    connect(m_uiWidget->actionPause, SIGNAL(triggered()), this, SLOT(pause()));
+    connect(m_uiWidget->actionPlay, SIGNAL(triggered()), this, SLOT(togglePlay()));
     connect(m_uiWidget->actionStop, SIGNAL(triggered()), this, SLOT(stop()));
-
     connect(m_uiWidget->actionPrevious, SIGNAL(triggered()), this, SLOT(previousSong()));
     connect(m_uiWidget->actionNext, SIGNAL(triggered()), this, SLOT(nextSong()));
-
     connect(m_uiWidget->actionRepeat, SIGNAL(triggered(bool)), this, SLOT(setRepeat(bool)));
     connect(m_uiWidget->actionShuffle, SIGNAL(triggered(bool)), this, SLOT(setShuffle(bool)));
+    connect(m_uiWidget->actionEqualizer, SIGNAL(triggered()), this, SLOT(openDialogEqualizer()));
 
     connect(m_uiWidget->actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 
@@ -259,6 +247,24 @@ void CApplication::initWindow(void)
     }
 
 
+    // Égaliseur
+    const float eqFrequencies[10] = {32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000};
+
+    for (int i = 0; i < 10; ++i)
+    {
+        m_equalizerGains[i] = qBound(0.05f, m_settings->value(QString("Equalizer/Gain_%1").arg(i), 1.0f).toFloat(), 3.0f);
+        FMOD_RESULT res;
+
+        res = m_soundSystem->createDSPByType(FMOD_DSP_TYPE_PARAMEQ, &m_dsp[i]);
+        res = m_dsp[i]->setParameter(FMOD_DSP_PARAMEQ_CENTER, eqFrequencies[i]);
+        res = m_dsp[i]->setParameter(FMOD_DSP_PARAMEQ_BANDWIDTH, 1.0);
+        res = m_dsp[i]->setParameter(FMOD_DSP_PARAMEQ_GAIN, m_equalizerGains[i]);
+        res = m_soundSystem->addDSP(m_dsp[i], NULL);
+    }
+
+    setEqualizerEnabled(m_settings->value("Equalizer/Enabled", false).toBool());
+
+
     // Paramètres de lecture
     setVolume(m_settings->value("Preferences/Volume", 50).toInt());
     setShuffle(m_settings->value("Preferences/Shuffle", false).toBool());
@@ -297,6 +303,7 @@ void CApplication::initWindow(void)
     m_timer->start(400);
 
     updateSongDescription(NULL);
+    setState(Stopped);
 
     init = true;
 }
@@ -397,6 +404,93 @@ void CApplication::setPercentageBeforeScrobbling(int percentage)
     percentage = qBound(50, percentage, 100);
     m_percentageBeforeScrobbling = percentage;
     m_settings->setValue("LastFm/PercentageBeforeScrobbling", percentage);
+}
+
+
+/**
+ * Modifie le gain de l'égaliseur pour une bande de fréquence.
+ *
+ * \param frequency Bande de fréquence.
+ * \param gain      Valeur du gain (entre 0.05 et 3).
+ */
+
+void CApplication::setEqualizerGain(TEqualizerFrequency frequency, double gain)
+{
+    m_equalizerGains[frequency] = qBound(0.05, gain, 3.0);
+    m_settings->setValue(QString("Equalizer/Gain_%1").arg(frequency), m_equalizerGains[frequency]);
+    FMOD_RESULT res = m_dsp[frequency]->setParameter(FMOD_DSP_PARAMEQ_GAIN, m_equalizerGains[frequency]);
+}
+
+
+/**
+ * Récupère le gain de l'égaliseur pour une bande de fréquence.
+ *
+ * \param frequency Bande de fréquence.
+ * \return Valeur du gain (entre 0.05 et 3).
+ */
+
+double CApplication::getEqualizerGain(TEqualizerFrequency frequency)
+{
+    return m_equalizerGains[frequency];
+}
+
+
+/**
+ * Réinitialise les gains de l'égaliseur.
+ * Tous les gains sont définis à 1.
+ */
+
+void CApplication::resetEqualizer(void)
+{
+    setEqualizerGain(CApplication::EqFreq32 , 1.0);
+    setEqualizerGain(CApplication::EqFreq64 , 1.0);
+    setEqualizerGain(CApplication::EqFreq125, 1.0);
+    setEqualizerGain(CApplication::EqFreq250, 1.0);
+    setEqualizerGain(CApplication::EqFreq500, 1.0);
+    setEqualizerGain(CApplication::EqFreq1K , 1.0);
+    setEqualizerGain(CApplication::EqFreq2K , 1.0);
+    setEqualizerGain(CApplication::EqFreq4K , 1.0);
+    setEqualizerGain(CApplication::EqFreq8K , 1.0);
+    setEqualizerGain(CApplication::EqFreq16K, 1.0);
+}
+
+
+/**
+ * Active ou désactive l'égaliseur.
+ *
+ * \param enabled Booléen.
+ */
+
+void CApplication::setEqualizerEnabled(bool enabled)
+{
+    m_settings->setValue(QString("Equalizer/Enabled"), enabled);
+
+    if (enabled)
+    {
+        for (int i = 0; i < 10; ++i)
+        {
+            FMOD_RESULT res = m_dsp[i]->setParameter(FMOD_DSP_PARAMEQ_GAIN, m_equalizerGains[i]);
+        }
+    }
+    else
+    {
+        for (int i = 0; i < 10; ++i)
+        {
+            FMOD_RESULT res = m_dsp[i]->setParameter(FMOD_DSP_PARAMEQ_GAIN, 1.0);
+        }
+    }
+}
+
+
+/**
+ * Indique si l'égaliseur est activé.
+ *
+ * \return Booléen.
+ */
+
+bool CApplication::isEqualizerEnabled(void) const
+{
+    return m_settings->value(QString("Equalizer/Enabled"), false).toBool();
 }
 
 
@@ -543,7 +637,7 @@ QList<CPlayList *> CApplication::getAllPlayLists(void) const
 
 void CApplication::removeSongs(const QList<CSong *> songs)
 {
-    qDebug() << "CApplication::removeSongs()";
+    //qDebug() << "CApplication::removeSongs()";
 
     m_library->removeSongsFromTable(songs);
 
@@ -868,7 +962,7 @@ QFile * CApplication::getLogFile(const QString& logName)
 
 void CApplication::connectToLastFm(void)
 {
-qDebug() << "CApplication::connectToLastFm()";
+    //qDebug() << "CApplication::connectToLastFm()";
     new CAuthentication(this);
 }
 
@@ -901,7 +995,7 @@ void CApplication::selectNone(void)
 
 void CApplication::play(void)
 {
-    qDebug() << "CApplication::play()";
+    //qDebug() << "CApplication::play()";
 
     if (m_currentSongItem)
     {
@@ -909,8 +1003,12 @@ void CApplication::play(void)
 
         if (m_state == Paused)
         {
-            qDebug() << "CApplication::play() : chanson en pause";
-            m_uiControl->btnPlay->setIcon(QPixmap(":/icons/pause"));
+            //qDebug() << "CApplication::play() : chanson en pause";
+
+            setState(Playing);
+            //m_uiControl->btnPlay->setIcon(QPixmap(":/icons/pause"));
+            //m_uiWidget->actionPlay->setText(tr("Pause"));
+
             emit songResumed(m_currentSongItem->getSong());
             m_currentSongItem->getSong()->play();
 
@@ -923,7 +1021,7 @@ void CApplication::play(void)
     {
         m_state = Stopped;
 
-        qDebug() << "CApplication::play() : lancement du premier morceau";
+        //qDebug() << "CApplication::play() : lancement du premier morceau";
         m_currentSongTable = m_displayedSongTable;
 
         // Recherche du morceau sélectionné
@@ -991,7 +1089,10 @@ void CApplication::stop(void)
 
     m_currentSongTable = NULL;
     m_state = Stopped;
-    m_uiControl->btnPlay->setIcon(QPixmap(":/icons/play"));
+
+    setState(Stopped);
+    //m_uiControl->btnPlay->setIcon(QPixmap(":/icons/play"));
+    //m_uiWidget->actionPlay->setText(tr("Play"));
 
     m_lastFmTimeListened = 0;
     m_lastFmState = NoScrobble;
@@ -1008,7 +1109,10 @@ void CApplication::pause(void)
     {
         Q_CHECK_PTR(m_currentSongTable);
 
-        m_uiControl->btnPlay->setIcon(QPixmap(":/icons/play"));
+        //m_uiControl->btnPlay->setIcon(QPixmap(":/icons/play"));
+        //m_uiWidget->actionPlay->setText(tr("Play"));
+        setState(Paused);
+
         m_currentSongItem->getSong()->pause();
         emit songPaused(m_currentSongItem->getSong());
         m_state = Paused;
@@ -1038,7 +1142,7 @@ void CApplication::togglePlay(void)
 
 void CApplication::previousSong(void)
 {
-    qDebug() << "CApplication::previousSong()";
+    //qDebug() << "CApplication::previousSong()";
 
     if (m_currentSongItem)
     {
@@ -1049,7 +1153,9 @@ void CApplication::previousSong(void)
         m_currentSongItem->getSong()->stop();
         updateSongDescription(NULL);
         m_currentSongTable->m_model->setCurrentSong(NULL);
-        m_uiControl->btnPlay->setIcon(QPixmap(":/icons/play"));
+
+        //m_uiControl->btnPlay->setIcon(QPixmap(":/icons/play"));
+        setState(Stopped);
 
         // Retour au début du morceau
         if (position > 4000)
@@ -1147,7 +1253,7 @@ void CApplication::previousSong(void)
 
 void CApplication::nextSong(void)
 {
-    qDebug() << "CApplication::nextSong()";
+    //qDebug() << "CApplication::nextSong()";
 
     if (m_currentSongItem)
     {
@@ -1156,7 +1262,9 @@ void CApplication::nextSong(void)
         m_currentSongItem->getSong()->stop();
         updateSongDescription(NULL);
         m_currentSongTable->m_model->setCurrentSong(NULL);
-        m_uiControl->btnPlay->setIcon(QPixmap(":/icons/play"));
+
+        //m_uiControl->btnPlay->setIcon(QPixmap(":/icons/play"));
+        setState(Stopped);
 
         m_currentSongItem = m_currentSongTable->getNextSong(m_currentSongItem, m_isShuffle);
 
@@ -1238,12 +1346,14 @@ void CApplication::playSong(CSongTableItem * songItem)
 
     if (m_currentSongItem->getSong()->loadSound())
     {
-        m_uiControl->btnPlay->setIcon(QPixmap(":/icons/pause"));
+        //m_uiControl->btnPlay->setIcon(QPixmap(":/icons/pause"));
+        setState(Playing);
         startPlay();
     }
     else
     {
-        m_uiControl->btnPlay->setIcon(QPixmap(":/icons/play"));
+        //m_uiControl->btnPlay->setIcon(QPixmap(":/icons/play"));
+        setState(Stopped);
         m_currentSongItem = NULL;
         m_currentSongTable = NULL;
     }
@@ -1496,6 +1606,17 @@ void CApplication::deleteListFolder(CListFolder * folder)
 void CApplication::openDialogPreferences(void)
 {
     CDialogPreferences * dialog = new CDialogPreferences(this, m_settings);
+    dialog->show();
+}
+
+
+/**
+ * Affiche la boite de dialogue pour modifier les paramètres de l'égaliseur.
+ */
+
+void CApplication::openDialogEqualizer(void)
+{
+    CDialogEqualizer * dialog = new CDialogEqualizer(this);
     dialog->show();
 }
 
@@ -2312,7 +2433,7 @@ void CApplication::update(void)
 
         if (m_currentSongItem->getSong()->isEnded())
         {
-            qDebug() << "m_currentSong->isEnded()";
+            //qDebug() << "m_currentSong->isEnded()";
             m_currentSongItem->getSong()->emitPlayEnd();
             return;
         }
@@ -2875,7 +2996,9 @@ void CApplication::startPlay(void)
     Q_CHECK_PTR(m_currentSongItem);
     Q_CHECK_PTR(m_currentSongTable);
 
-    m_uiControl->btnPlay->setIcon(QPixmap(":/icons/pause"));
+    setState(Playing);
+    //m_uiControl->btnPlay->setIcon(QPixmap(":/icons/pause"));
+
     m_currentSongItem->getSong()->play();
     emit songPlayStart(m_currentSongItem->getSong());
     connect(m_currentSongItem->getSong(), SIGNAL(playEnd()), this, SLOT(onPlayEnd()), Qt::UniqueConnection);
@@ -2899,6 +3022,37 @@ void CApplication::startPlay(void)
         {
             m_lastFmState = NoScrobble;
         }
+    }
+}
+
+
+void CApplication::setState(State state)
+{
+    switch (state)
+    {
+        case Playing:
+            m_uiControl->btnPlay->setIcon(QPixmap(":/icons/pause"));
+            m_uiControl->btnStop->setEnabled(true);
+            m_uiControl->btnPrevious->setEnabled(true);
+            m_uiControl->btnNext->setEnabled(true);
+            m_uiWidget->actionPlay->setText(tr("Pause"));
+            break;
+
+        case Paused:
+            m_uiControl->btnPlay->setIcon(QPixmap(":/icons/play"));
+            m_uiControl->btnStop->setEnabled(true);
+            m_uiControl->btnPrevious->setEnabled(true);
+            m_uiControl->btnNext->setEnabled(true);
+            m_uiWidget->actionPlay->setText(tr("Play"));
+            break;
+
+        case Stopped:
+            m_uiControl->btnPlay->setIcon(QPixmap(":/icons/play"));
+            m_uiControl->btnStop->setEnabled(false);
+            m_uiControl->btnPrevious->setEnabled(false);
+            m_uiControl->btnNext->setEnabled(false);
+            m_uiWidget->actionPlay->setText(tr("Play"));
+            break;
     }
 }
 

@@ -77,15 +77,15 @@
      <string>&amp;Controls</string>
     </property>
     <addaction name="actionPlay"/>
-    <addaction name="actionPause"/>
     <addaction name="actionStop"/>
     <addaction name="separator"/>
     <addaction name="actionPrevious"/>
     <addaction name="actionNext"/>
     <addaction name="separator"/>
     <addaction name="actionShuffle"/>
-    <addaction name="separator"/>
     <addaction name="actionRepeat"/>
+    <addaction name="separator"/>
+    <addaction name="actionEqualizer"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -165,6 +165,9 @@
    <property name="text">
     <string>Play</string>
    </property>
+   <property name="shortcut">
+    <string>Space</string>
+   </property>
   </action>
   <action name="actionPause">
    <property name="text">
@@ -229,6 +232,11 @@
   <action name="actionImportSongbird">
    <property name="text">
     <string>From Songbird...</string>
+   </property>
+  </action>
+  <action name="actionEqualizer">
+   <property name="text">
+    <string>Equalizer...</string>
    </property>
   </action>
  </widget>
