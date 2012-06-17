@@ -956,6 +956,19 @@ QFile * CApplication::getLogFile(const QString& logName)
 
 
 /**
+ * Affiche un message dans la barre d'état.
+ * Le message est affiché pendant 3 secondes.
+ *
+ * \param message Message à afficher.
+ */
+
+void CApplication::notifyInformation(const QString& message)
+{
+    statusBar()->showMessage(message, 3000);
+}
+
+
+/**
  * Lance le processus d'authentication avec Last.fm.
  * Le navigateur doit s'ouvrir pour que l'utilisateur puisse se connecter.
  */
@@ -1655,30 +1668,7 @@ void CApplication::openDialogEditMetadata(void)
 void CApplication::openDialogAddSongs(void)
 {
     QStringList fileList = QFileDialog::getOpenFileNames(this, QString(), QString(), tr("Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)"));
-
-    if (fileList.isEmpty())
-    {
-        return;
-    }
-
-    QList<CSong *> songs;
-
-    // Chargement des fichiers
-    for (QStringList::const_iterator it = fileList.begin(); it != fileList.end(); ++it)
-    {
-        CSong * song = CSong::loadFromFile(this, *it);
-        if (song) songs.append(song);
-        //addSong(*it);
-    }
-
-    // Ajout des morceaux à la médiathèque
-    for (QList<CSong *>::const_iterator it = songs.begin(); it != songs.end(); ++it)
-    {
-        m_library->addSong(*it);
-        emit songAdded(*it);
-    }
-
-    updateListInformations();
+    importSongs(fileList);
 }
 
 
@@ -1691,16 +1681,23 @@ void CApplication::openDialogAddFolder(void)
     QString folder = QFileDialog::getExistingDirectory(this);
 
     if (folder.isEmpty())
-    {
         return;
-    }
 
-    QStringList fileList = importFolder(folder);
+    importSongs(importFolder(folder));
+}
 
+
+/**
+ * Ajoute une liste de fichiers à la médiathèque.
+ * Une boite de progression est affichée si l'opération prend plusieurs secondes.
+ *
+ * \param fileList Liste des fichiers à ajouter.
+ */
+
+void CApplication::importSongs(const QStringList& fileList)
+{
     if (fileList.isEmpty())
-    {
         return;
-    }
 
     QList<CSong *> songs;
 
@@ -1716,9 +1713,7 @@ void CApplication::openDialogAddFolder(void)
         qApp->processEvents();
 
         if (progress.wasCanceled())
-        {
             break;
-        }
     }
 
     // Ajout des morceaux à la médiathèque
@@ -1727,17 +1722,14 @@ void CApplication::openDialogAddFolder(void)
         m_library->addSong(*it);
         emit songAdded(*it);
     }
-
+    
+    notifyInformation(tr("%n song(s) added to the library.", "", songs.size()));
     updateListInformations();
 }
 
 
 /**
  * Affiche une boite de dialogue pour visualiser et éditer les informations du morceau sélectionné.
- *
- * \todo Afficher toutes les informations.
- * \todo Mettre-à-jour la base de données.
- * \todo Mettre-à-jour les tags du fichier.
  */
 
 void CApplication::openDialogSongInfos(void)

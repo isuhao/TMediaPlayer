@@ -130,6 +130,7 @@ public:
     }
 
     QFile * getLogFile(const QString& logName);
+    void notifyInformation(const QString& message);
 
 public slots:
 
@@ -221,7 +222,7 @@ protected:
     void addFolder(CListFolder * folder);
     void initFolder(CListFolder * folder);
     QStringList importFolder(const QString& pathName);
-
+    void importSongs(const QStringList& fileList);
     void displaySongTable(CSongTable * songTable);
     bool initSoundSystem(void);
     void loadDatabase(void);

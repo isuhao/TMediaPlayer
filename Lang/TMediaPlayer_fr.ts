@@ -15,7 +15,7 @@
     </message>
     <message numerus="yes">
         <location filename="../Sources/CApplication.cpp" line="94"/>
-        <location filename="../Sources/CApplication.cpp" line="2375"/>
+        <location filename="../Sources/CApplication.cpp" line="2367"/>
         <source>%n song(s), %1</source>
         <translation>
             <numerusform>%n morceau, %1</numerusform>
@@ -45,56 +45,64 @@ Requête : %3
 
 Erreur : %4</translation>
     </message>
+    <message numerus="yes">
+        <location filename="../Sources/CApplication.cpp" line="1726"/>
+        <source>%n song(s) added to the library.</source>
+        <translation>
+            <numerusform>%n morceau ajouté à la médiathèque.</numerusform>
+            <numerusform>%n morceaux ajoutés à la médiathèque.</numerusform>
+        </translation>
+    </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3038"/>
+        <location filename="../Sources/CApplication.cpp" line="3030"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
+        <location filename="../Sources/CApplication.cpp" line="3038"/>
         <location filename="../Sources/CApplication.cpp" line="3046"/>
-        <location filename="../Sources/CApplication.cpp" line="3054"/>
         <source>Play</source>
         <translation>Lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1707"/>
+        <location filename="../Sources/CApplication.cpp" line="1704"/>
         <source>Loading files...</source>
         <translation>Chargement des fichiers...</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2227"/>
+        <location filename="../Sources/CApplication.cpp" line="2219"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Êtes-vous sûr de vouloir supprimer cette liste de lecture ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2227"/>
-        <location filename="../Sources/CApplication.cpp" line="2256"/>
+        <location filename="../Sources/CApplication.cpp" line="2219"/>
+        <location filename="../Sources/CApplication.cpp" line="2248"/>
         <source>Yes</source>
         <translation>Oui</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2227"/>
-        <location filename="../Sources/CApplication.cpp" line="2256"/>
+        <location filename="../Sources/CApplication.cpp" line="2219"/>
+        <location filename="../Sources/CApplication.cpp" line="2248"/>
         <source>No</source>
         <translation>Non</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1657"/>
+        <location filename="../Sources/CApplication.cpp" line="1670"/>
         <source>Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)</source>
         <translation>Fichiers multimédias (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;Tous les fichiers (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1707"/>
+        <location filename="../Sources/CApplication.cpp" line="1704"/>
         <source>Abort</source>
         <translation>Interrompre</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2256"/>
+        <location filename="../Sources/CApplication.cpp" line="2248"/>
         <source>Are you sure you want to delete this folder?</source>
         <translation>Êtes-vous sûr de vouloir supprimer ce dossier ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2518"/>
+        <location filename="../Sources/CApplication.cpp" line="2510"/>
         <source>This program requires FMOD %1 or superior.</source>
         <translation>Ce programme nécessite FMOD %1 ou supérieur.</translation>
     </message>
@@ -102,51 +110,51 @@ Erreur : %4</translation>
 <context>
     <name>CAuthentication</name>
     <message>
-        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="29"/>
         <source>Date:</source>
-        <translation type="unfinished">Date : </translation>
+        <translation type="obsolete">Date : </translation>
     </message>
     <message>
-        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="30"/>
         <source>URL :</source>
-        <translation type="unfinished">URL : </translation>
+        <translation type="obsolete">URL : </translation>
     </message>
     <message>
-        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="48"/>
         <source>Date   :</source>
-        <translation type="unfinished">Date : </translation>
+        <translation type="obsolete">Date : </translation>
     </message>
     <message>
-        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="49"/>
         <source>Code   :</source>
-        <translation type="unfinished">Code : </translation>
+        <translation type="obsolete">Code : </translation>
     </message>
     <message>
-        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="50"/>
         <source>Content:</source>
-        <translation type="unfinished">Contenu : </translation>
+        <translation type="obsolete">Contenu : </translation>
     </message>
     <message>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="29"/>
         <location filename="../Sources/Last.fm/CAuthentication.cpp" line="131"/>
         <source>Date: </source>
         <translation type="unfinished">Date : </translation>
     </message>
     <message>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="30"/>
         <location filename="../Sources/Last.fm/CAuthentication.cpp" line="132"/>
         <source>URL:  </source>
         <translation type="unfinished">URL : </translation>
     </message>
     <message>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="48"/>
         <location filename="../Sources/Last.fm/CAuthentication.cpp" line="160"/>
         <source>Date:    </source>
         <translation type="unfinished">Date : </translation>
     </message>
     <message>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="49"/>
         <location filename="../Sources/Last.fm/CAuthentication.cpp" line="161"/>
         <source>Code:    </source>
         <translation type="unfinished">Code : </translation>
     </message>
     <message>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="50"/>
         <location filename="../Sources/Last.fm/CAuthentication.cpp" line="162"/>
         <source>Content: </source>
         <translation type="unfinished">Contenu : </translation>
@@ -525,6 +533,11 @@ Erreur : %4</translation>
         <location filename="../Sources/Last.fm/CScrobble.cpp" line="85"/>
         <source>Code:    </source>
         <translation type="unfinished">Code : </translation>
+    </message>
+    <message>
+        <location filename="../Sources/Last.fm/CScrobble.cpp" line="93"/>
+        <source>Song scrobbled to Last.fm</source>
+        <translation>Morceau scrobblé à Last.fm</translation>
     </message>
 </context>
 <context>

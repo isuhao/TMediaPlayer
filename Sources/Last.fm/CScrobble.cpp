@@ -90,5 +90,7 @@ void CScrobble::replyFinished(QNetworkReply * reply)
         stream << "Erreur HTTP : " << reply->error() << "\n";
     }
 
+    m_application->notifyInformation(tr("Song scrobbled to Last.fm"));
+
     reply->deleteLater();
 }
