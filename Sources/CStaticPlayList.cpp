@@ -3,6 +3,7 @@
 #include "CApplication.hpp"
 #include "CSongTableModel.hpp"
 #include "CDynamicPlayList.hpp"
+#include "CListFolder.hpp"
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QMessageBox>
@@ -479,7 +480,7 @@ bool CStaticPlayList::updateDatabase(void)
 
         // Position dans le dossier
         query.prepare("SELECT MAX(list_position) FROM playlist WHERE folder_id = ?");
-        query.bindValue(0, 0);
+        query.bindValue(0, getFolder()->getId());
 
         if (!query.exec())
         {
@@ -496,7 +497,7 @@ bool CStaticPlayList::updateDatabase(void)
         query.prepare("INSERT INTO playlist (playlist_name, folder_id, list_position, list_columns) VALUES (?, ?, ?, ?)");
 
         query.bindValue(0, m_name);
-        query.bindValue(1, 0);
+        query.bindValue(1, getFolder()->getId());
         query.bindValue(2, m_position);
         query.bindValue(3, "0:40;1:100;2:100;3:100"); // Disposition par défaut \todo => settings
 

@@ -33,6 +33,7 @@ public:
 
     inline int getId(void) const;
     inline QString getName(void) const;
+    inline CListFolder * getFolder(void) const;
     inline bool isOpen(void) const;
     inline QList<CPlayList *> getPlayLists(void) const;
     inline QList<CListFolder *> getFolders(void) const;
@@ -112,6 +113,12 @@ inline int CListFolder::getId(void) const
 inline QString CListFolder::getName(void) const
 {
     return m_name;
+}
+
+
+inline CListFolder * CListFolder::getFolder(void) const
+{
+    return m_folder;
 }
 
 

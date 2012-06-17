@@ -54,9 +54,12 @@ CPlayListView::CPlayListView(CApplication * application) :
     m_menuFolder->addAction(tr("Edit..."), m_application, SLOT(editSelectedItem()));
     m_menuFolder->addAction(tr("Remove"), m_application, SLOT(removeSelectedItem()));
     m_menuFolder->addSeparator();
-    m_menuFolder->addAction(tr("New playlist..."), m_application, SLOT(openDialogCreateStaticList()));
-    m_menuFolder->addAction(tr("New dynamic playlist..."), m_application, SLOT(openDialogCreateDynamicList()));
-    m_menuFolder->addAction(tr("New folder..."), m_application, SLOT(openDialogCreateFolder()));
+    //m_menuFolder->addAction(tr("New playlist..."), m_application, SLOT(openDialogCreateStaticList()));
+    //m_menuFolder->addAction(tr("New dynamic playlist..."), m_application, SLOT(openDialogCreateDynamicList()));
+    //m_menuFolder->addAction(tr("New folder..."), m_application, SLOT(openDialogCreateFolder()));
+    m_menuFolder->addAction(tr("New playlist..."), this, SLOT(createStaticList()));
+    m_menuFolder->addAction(tr("New dynamic playlist..."), this, SLOT(createDynamicList()));
+    m_menuFolder->addAction(tr("New folder..."), this, SLOT(createFolder()));
 
     m_menuDefault = new QMenu(this);
     //TODO: gérer le dossier
@@ -176,7 +179,7 @@ void CPlayListView::removeSongTable(CSongTable * songTable)
 {
     Q_CHECK_PTR(songTable);
 
-    QModelIndex index = getModelIndex(songTable);
+    QModelIndex index = getSongTableModelIndex(songTable);
     m_model->removeRow(index.row(), index.parent());
 }
 
@@ -233,12 +236,17 @@ CListFolder * CPlayListView::getSelectedFolder(void) const
 }
 
 
-QModelIndex CPlayListView::getModelIndex(CSongTable * songTable) const
+/**
+ * Retourne l'index du modèle correspondant à une liste de morceaux.
+ *
+ * \param songTable Liste de morceaux à rechercher.
+ * \return Index de la liste de morceaux.
+ */
+
+QModelIndex CPlayListView::getSongTableModelIndex(CSongTable * songTable) const
 {
     if (!songTable)
-    {
         return QModelIndex();
-    }
 
     for (int row = 0; row < m_model->rowCount(); ++row)
     {
@@ -246,6 +254,111 @@ QModelIndex CPlayListView::getModelIndex(CSongTable * songTable) const
         if (item && item->data(Qt::UserRole + 1).value<CSongTable *>() == songTable)
         {
             return m_model->indexFromItem(item);
+        }
+    }
+
+    return QModelIndex();
+}
+
+
+/**
+ * Retourne l'index du modèle correspondant à un dossier.
+ *
+ * \param folder Dossier à rechercher.
+ * \return Index du dossier.
+ */
+
+QModelIndex CPlayListView::getFolderModelIndex(CListFolder * folder) const
+{
+    if (!folder)
+        return QModelIndex();
+
+    return getModelIndex(folder, QModelIndex());
+}
+
+
+/**
+ * Retourne l'index du modèle correspondant à une liste de morceaux.
+ *
+ * \param songTable Liste de morceaux à rechercher.
+ * \param parent    Index du dossier parent.
+ * \return Index de la liste de morceaux.
+ */
+
+QModelIndex CPlayListView::getModelIndex(CSongTable * songTable, const QModelIndex& parent) const
+{
+    if (!songTable)
+        return QModelIndex();
+
+    for (int row = 0; row < m_model->rowCount(parent); ++row)
+    {
+        QModelIndex child = m_model->index(row, 0, parent);
+        const QStandardItem * item = m_model->itemFromIndex(child);
+
+        if (item)
+        {
+            CSongTable * itemSongTable = item->data(Qt::UserRole + 1).value<CSongTable *>();
+
+            if (itemSongTable)
+            {
+                if (itemSongTable == songTable)
+                {
+                    return m_model->indexFromItem(item);
+                }
+            }
+            else
+            {
+                CListFolder * itemFolder = item->data(Qt::UserRole + 2).value<CListFolder *>();
+
+                if (itemFolder)
+                {
+                    QModelIndex index = getModelIndex(songTable, child);
+
+                    if (index.isValid())
+                        return index;
+                }
+            }
+        }
+    }
+
+    return QModelIndex();
+}
+
+
+/**
+ * Retourne l'index du modèle correspondant à un dossier.
+ *
+ * \param folder Dossier à rechercher.
+ * \param parent Index du dossier parent.
+ * \return Index du dossier.
+ */
+
+QModelIndex CPlayListView::getModelIndex(CListFolder * folder, const QModelIndex& parent) const
+{
+    if (!folder)
+        return QModelIndex();
+
+    for (int row = 0; row < m_model->rowCount(parent); ++row)
+    {
+        QModelIndex child = m_model->index(row, 0, parent);
+        const QStandardItem * item = m_model->itemFromIndex(child);
+
+        if (item)
+        {
+            CListFolder * itemFolder = item->data(Qt::UserRole + 2).value<CListFolder *>();
+
+            if (itemFolder)
+            {
+                if (itemFolder == folder)
+                {
+                    return m_model->indexFromItem(item);
+                }
+
+                QModelIndex index = getModelIndex(folder, child);
+
+                if (index.isValid())
+                    return index;
+            }
         }
     }
 
@@ -322,6 +435,8 @@ void CPlayListView::dragMoveEvent(QDragMoveEvent * event)
     {
         // Traitement différent si Ctrl+Glisser (par exemple pour copier OU déplacer)
         // on verra plus tard...
+        // Ctrl: Copier
+        // Shift: Déplacer
     }
 
     event->setDropAction(Qt::CopyAction);
@@ -459,4 +574,25 @@ void CPlayListView::onFolderClose(void)
             item->setIcon(QPixmap(":/icons/folder_close"));
         }
     }
+}
+
+
+void CPlayListView::createStaticList(void)
+{
+    CListFolder * folder = getSelectedFolder();
+    m_application->openDialogCreateStaticList(folder);
+}
+
+
+void CPlayListView::createDynamicList(void)
+{
+    CListFolder * folder = getSelectedFolder();
+    m_application->openDialogCreateDynamicList(folder);
+}
+
+
+void CPlayListView::createFolder(void)
+{
+    CListFolder * folder = getSelectedFolder();
+    m_application->openDialogCreateFolder(folder);
 }

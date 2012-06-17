@@ -30,7 +30,8 @@ public:
     CListFolder * getFolder(const QModelIndex& index) const;
     CSongTable * getSelectedSongTable(void) const;
     CListFolder * getSelectedFolder(void) const;
-    QModelIndex getModelIndex(CSongTable * songTable) const;
+    QModelIndex getSongTableModelIndex(CSongTable * songTable) const;
+    QModelIndex getFolderModelIndex(CListFolder * folder) const;
     
 public slots:
 
@@ -39,6 +40,8 @@ public slots:
 
 protected:
     
+    QModelIndex getModelIndex(CSongTable * songTable, const QModelIndex& parent = QModelIndex()) const;
+    QModelIndex getModelIndex(CListFolder * folder, const QModelIndex& parent = QModelIndex()) const;
     virtual void keyPressEvent(QKeyEvent * event);
     virtual void dragMoveEvent(QDragMoveEvent * event);
 
@@ -49,6 +52,9 @@ protected slots:
     void onItemExpanded(const QModelIndex& index);
     void onFolderOpen(void);
     void onFolderClose(void);
+    void createStaticList(void);
+    void createDynamicList(void);
+    void createFolder(void);
 
 private:
     

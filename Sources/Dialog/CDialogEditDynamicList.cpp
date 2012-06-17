@@ -17,12 +17,13 @@
  * \param application Pointeur sur l'application.
  */
 
-CDialogEditDynamicList::CDialogEditDynamicList(CDynamicPlayList * playList, CApplication * application) :
+CDialogEditDynamicList::CDialogEditDynamicList(CDynamicPlayList * playList, CApplication * application, CListFolder * folder) :
     QDialog           (application),
     m_uiWidget        (new Ui::DialogEditDynamicPlayList()),
     m_widgetCriterion (NULL),
     m_playList        (playList),
-    m_application     (application)
+    m_application     (application),
+    m_folder          (folder)
 {
     Q_CHECK_PTR(application);
 
@@ -100,6 +101,7 @@ void CDialogEditDynamicList::save(void)
     }
 
     m_playList->setName(name);
+    m_playList->setFolder(m_folder);
     m_playList->setCriteria(m_widgetCriterion->getCriteria());
 
     if (!m_playList->updateDatabase())

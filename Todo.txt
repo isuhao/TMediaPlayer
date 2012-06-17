@@ -31,7 +31,6 @@
 - Gérer les dossiers de listes de lecture.
   - Suppression d'un dossier : pouvoir garder ou supprimer le contenu.
   - Implémenter le glisser-déposer pour déplacer les listes de lecture et les dossiers.
-  - Pouvoir créer une liste directement dans un dossier.
 
 - Implémenter le glisser-déposer pour créer une nouvelle liste de lecture.
 - Implémenter correctement la répétition (répétition de la liste, du morceau, etc.).

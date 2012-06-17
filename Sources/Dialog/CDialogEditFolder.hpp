@@ -16,7 +16,7 @@ class CDialogEditFolder : public QDialog
 
 public:
 
-    CDialogEditFolder(CListFolder * folder, CApplication * application);
+    CDialogEditFolder(CListFolder * folder, CApplication * application, CListFolder * folderParent = NULL);
     virtual ~CDialogEditFolder();
 
 protected slots:
@@ -28,6 +28,7 @@ private:
     Ui::DialogEditFolder * m_uiWidget;
     CListFolder * m_folder;
     CApplication * m_application;
+    CListFolder * m_folderParent;
 };
 
 #endif // FILE_C_DIALOG_EDIT_FOLDER

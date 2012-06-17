@@ -9,11 +9,12 @@
 #include <QtDebug>
 
 
-CDialogEditStaticPlayList::CDialogEditStaticPlayList(CStaticPlayList * playList, CApplication * application) :
+CDialogEditStaticPlayList::CDialogEditStaticPlayList(CStaticPlayList * playList, CApplication * application, CListFolder * folder) :
     QDialog       (application),
     m_uiWidget    (new Ui::DialogEditStaticPlayList()),
     m_playList    (playList),
-    m_application (application)
+    m_application (application),
+    m_folder      (folder)
 {
     Q_CHECK_PTR(application);
 
@@ -59,6 +60,7 @@ void CDialogEditStaticPlayList::save(void)
     }
 
     m_playList->setName(name);
+    m_playList->setFolder(m_folder);
 
     if (!m_playList->updateDatabase())
     {

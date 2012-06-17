@@ -66,11 +66,9 @@ void CListFolder::setName(const QString& name)
 void CListFolder::setFolder(CListFolder * folder)
 {
     if (m_folderChanging)
-    {
         return;
-    }
 
-    CListFolder * oldFolder = folder;
+    CListFolder * oldFolder = m_folder;
     m_folderChanging = true;
 
     if (oldFolder != folder && folder != this)
@@ -168,7 +166,7 @@ bool CListFolder::updateDatabase(void)
 
         // Position dans le dossier
         query.prepare("SELECT MAX(folder_position) FROM folder WHERE folder_parent = ?");
-        query.bindValue(0, 0);
+        query.bindValue(0, m_folder->getId());
 
         if (!query.exec())
         {
@@ -185,7 +183,7 @@ bool CListFolder::updateDatabase(void)
         query.prepare("INSERT INTO folder (folder_name, folder_parent, folder_position, folder_expanded) VALUES (?, ?, ?, ?)");
 
         query.bindValue(0, m_name);
-        query.bindValue(1, 0);
+        query.bindValue(1, m_folder->getId());
         query.bindValue(2, m_position);
         query.bindValue(3, (m_open ? 1 : 0));
 

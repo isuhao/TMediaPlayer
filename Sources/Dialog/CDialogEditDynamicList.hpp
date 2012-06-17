@@ -9,6 +9,7 @@
 class CDynamicPlayList;
 class CApplication;
 class CWidgetMultiCriterion;
+class CListFolder;
 
 
 class CDialogEditDynamicList : public QDialog
@@ -17,7 +18,7 @@ class CDialogEditDynamicList : public QDialog
 
 public:
 
-    CDialogEditDynamicList(CDynamicPlayList * playList, CApplication * application);
+    CDialogEditDynamicList(CDynamicPlayList * playList, CApplication * application, CListFolder * folder = NULL);
     virtual ~CDialogEditDynamicList();
 
 public slots:
@@ -34,6 +35,7 @@ private:
     CWidgetMultiCriterion * m_widgetCriterion;
     CDynamicPlayList * m_playList;
     CApplication * m_application;
+    CListFolder * m_folder;
 };
 
 #endif // FILE_C_DIALOG_EDIT_DYNAMIC_LIST

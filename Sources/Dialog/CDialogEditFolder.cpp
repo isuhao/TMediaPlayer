@@ -6,11 +6,12 @@
 #include <QPushButton>
 
 
-CDialogEditFolder::CDialogEditFolder(CListFolder * folder, CApplication * application) :
-    QDialog       (application),
-    m_uiWidget    (new Ui::DialogEditFolder()),
-    m_folder      (folder),
-    m_application (application)
+CDialogEditFolder::CDialogEditFolder(CListFolder * folder, CApplication * application, CListFolder * folderParent) :
+    QDialog        (application),
+    m_uiWidget     (new Ui::DialogEditFolder()),
+    m_folder       (folder),
+    m_application  (application),
+    m_folderParent (folderParent)
 {
     Q_CHECK_PTR(application);
 
@@ -55,6 +56,7 @@ void CDialogEditFolder::save(void)
     }
 
     m_folder->setName(name);
+    m_folder->setFolder(m_folderParent);
 
     if (!m_folder->updateDatabase())
     {

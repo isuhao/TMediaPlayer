@@ -1770,7 +1770,7 @@ void CApplication::openDialogCreateStaticList(CListFolder * folder)
 {
     //qDebug() << "Nouvelle liste de lecture statique...";
 
-    CDialogEditStaticPlayList * dialog = new CDialogEditStaticPlayList(NULL, this);
+    CDialogEditStaticPlayList * dialog = new CDialogEditStaticPlayList(NULL, this, folder);
     dialog->show();
 }
 
@@ -1787,7 +1787,7 @@ void CApplication::openDialogCreateDynamicList(CListFolder * folder)
 {
     //qDebug() << "Nouvelle liste de lecture dynamique...";
 
-    CDialogEditDynamicList * dialog = new CDialogEditDynamicList(NULL, this);
+    CDialogEditDynamicList * dialog = new CDialogEditDynamicList(NULL, this, folder);
     dialog->show();
 }
 
@@ -1802,7 +1802,7 @@ void CApplication::openDialogCreateDynamicList(CListFolder * folder)
 
 void CApplication::openDialogCreateFolder(CListFolder * folder)
 {
-    CDialogEditFolder * dialog = new CDialogEditFolder(NULL, this);
+    CDialogEditFolder * dialog = new CDialogEditFolder(NULL, this, folder);
     dialog->show();
 }
 
@@ -1887,7 +1887,7 @@ void CApplication::addPlayList(CPlayList * playList)
     else
     {
         initPlayList(playList);
-        playList->m_index = m_playListView->addSongTable(playList);
+        playList->m_index = m_playListView->addSongTable(playList, m_playListView->getFolderModelIndex(playList->getFolder()));
     }
 }
 
@@ -1950,7 +1950,7 @@ void CApplication::addFolder(CListFolder * folder)
     else
     {
         initFolder(folder);
-        folder->m_index = m_playListView->addFolder(folder);
+        folder->m_index = m_playListView->addFolder(folder, m_playListView->getFolderModelIndex(folder->getFolder()));
     }
 }
 
@@ -2477,7 +2477,7 @@ void CApplication::displaySongTable(CSongTable * songTable)
         }
 
         m_playListView->selectionModel()->clearSelection();
-        m_playListView->selectionModel()->setCurrentIndex(m_playListView->getModelIndex(songTable), QItemSelectionModel::Select | QItemSelectionModel::Rows);
+        m_playListView->selectionModel()->setCurrentIndex(m_playListView->getSongTableModelIndex(songTable), QItemSelectionModel::Select | QItemSelectionModel::Rows);
 
         m_displayedSongTable = songTable;
         setCentralWidget(m_displayedSongTable);

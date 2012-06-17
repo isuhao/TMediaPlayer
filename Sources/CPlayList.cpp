@@ -67,11 +67,9 @@ void CPlayList::setName(const QString& name)
 void CPlayList::setFolder(CListFolder * folder)
 {
     if (m_folderChanging)
-    {
         return;
-    }
 
-    CListFolder * oldFolder = folder;
+    CListFolder * oldFolder = m_folder;
     m_folderChanging = true;
 
     if (oldFolder != folder)
