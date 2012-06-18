@@ -20,6 +20,12 @@
 #include <QtDebug>
 
 
+/**
+ * Constructeur de la vue.
+ *
+ * \param application Pointeur sur l'application.
+ */
+
 CSongTable::CSongTable(CApplication * application) :
     QTableView        (application),
     m_application     (application),
@@ -76,7 +82,7 @@ CSongTable::CSongTable(CApplication * application) :
     verticalHeader()->hide();
     verticalHeader()->setDefaultSectionSize(m_application->getRowHeight());
 
-    initColumns("");
+    initColumns("0:40;1:150;17:60;2+:150;3:150;6:50;9:60;12:50;13:120");
 }
 
 
@@ -478,6 +484,7 @@ void CSongTable::initColumns(const QString& str)
     }
 
     // Disposition par défaut
+    //0:40;1:150;17:60;2+:150;3:150;6:50;9:60;12:50;13:120
     if (!isValid)
     {
         for (int col = 0; col < ColNumber; ++col)
@@ -487,7 +494,6 @@ void CSongTable::initColumns(const QString& str)
             m_columns[col].visible = true;
         }
 
-        m_columns[0].visible = false;
         m_columnSort = ColArtist;
         m_sortOrder = Qt::AscendingOrder;
     }
@@ -877,7 +883,8 @@ QString CSongTable::getColumnsInfos(void) const
 
     if (str.isEmpty())
     {
-        str = "1:100;2+:100;3:100"; // Valeur par défaut, \todo dans SETTINGS
+        //m_application->getSettings()->value("Preferences/ColumnsDefault", "0:40;1:150;17:60;2+:150;3:150;6:50;9:60;12:50;13:120").toString();
+        str = "0:40;1:150;17:60;2+:150;3:150;6:50;9:60;12:50;13:120"; // Disposition par défaut
     }
     
     return str;

@@ -8,6 +8,12 @@
 #include <QtDebug>
 
 
+/**
+ * Constructeur du modèle.
+ *
+ * \param application Pointeur sur l'application.
+ */
+
 CPlayListModel::CPlayListModel(CApplication * application) :
     QStandardItemModel (application),
     m_application      (application)
@@ -15,6 +21,10 @@ CPlayListModel::CPlayListModel(CApplication * application) :
     Q_CHECK_PTR(application);
 }
 
+
+/**
+ * Destructeur du modèle.
+ */
 
 CPlayListModel::~CPlayListModel()
 {
@@ -52,6 +62,8 @@ bool CPlayListModel::dropMimeData(const QMimeData * data, Qt::DropAction action,
             //qDebug() << "playlist " << playList->getName();
 
             QByteArray encodedData = data->data("application/x-ted-media-songs");
+            QList<CSong *> songList = decodeData(encodedData);
+/*
             QDataStream stream(&encodedData, QIODevice::ReadOnly);
 
             int numSongs;
@@ -65,6 +77,7 @@ bool CPlayListModel::dropMimeData(const QMimeData * data, Qt::DropAction action,
                 stream >> songId;
                 songList << m_application->getSongFromId(songId);
             }
+*/
 
             playList->addSongs(songList);
 
@@ -75,18 +88,58 @@ bool CPlayListModel::dropMimeData(const QMimeData * data, Qt::DropAction action,
         return false;
     }
 
+    // Création d'une liste statique
     qDebug() << "CPlayListModel::dropMimeData() : création d'une nouvelle liste...";
+
+    QByteArray encodedData = data->data("application/x-ted-media-songs");
+    QList<CSong *> songs = decodeData(encodedData);
+
+    m_application->openDialogCreateStaticList(NULL, songs);
+
     return true;
 }
 
 
+QList<CSong *> CPlayListModel::decodeData(const QByteArray& encodedData) const
+{
+    QDataStream stream(encodedData);
+
+    int numSongs;
+    stream >> numSongs;
+
+    QList<CSong *> songList;
+
+    for (int i = 0; i < numSongs; ++i)
+    {
+        int songId;
+        stream >> songId;
+        songList << m_application->getSongFromId(songId);
+    }
+
+    return songList;
+}
+
+
+/**
+ * Retourne la liste des types MIME acceptés pour le drop.
+ *
+ * \return Liste de types.
+ */
+
 QStringList CPlayListModel::mimeTypes(void) const
 {
     QStringList types;
-    types << "application/x-ted-media-songs";
+    types << "application/x-ted-media-songs"; // Liste de morceaux
+    //types << "application/x-ted-media-list";  // Liste de lecture ou dossier
     return types;
 }
 
+
+/**
+ * Retourne la liste des actions acceptées pour le drop.
+ *
+ * \return Actions acceptées.
+ */
 
 Qt::DropActions CPlayListModel::supportedDropActions() const
 {

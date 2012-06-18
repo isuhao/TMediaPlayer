@@ -32,7 +32,6 @@
   - Suppression d'un dossier : pouvoir garder ou supprimer le contenu.
   - Implémenter le glisser-déposer pour déplacer les listes de lecture et les dossiers.
 
-- Implémenter le glisser-déposer pour créer une nouvelle liste de lecture.
 - Implémenter correctement la répétition (répétition de la liste, du morceau, etc.).
 
 - Optimisation : exécuter les requêtes SQL dans un thread séparé.

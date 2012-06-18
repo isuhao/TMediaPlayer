@@ -38,6 +38,7 @@ CPlayListView::CPlayListView(CApplication * application) :
     // Glisser-déposer
     setDropIndicatorShown(false);
     setAcceptDrops(true);
+    //setDragEnabled(true);
     //viewport()->setAcceptDrops(true);
 
     connect(this, SIGNAL(collapsed(const QModelIndex&)), this, SLOT(onItemCollapsed(const QModelIndex&)));

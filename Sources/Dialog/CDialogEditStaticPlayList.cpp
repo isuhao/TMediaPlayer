@@ -9,12 +9,13 @@
 #include <QtDebug>
 
 
-CDialogEditStaticPlayList::CDialogEditStaticPlayList(CStaticPlayList * playList, CApplication * application, CListFolder * folder) :
+CDialogEditStaticPlayList::CDialogEditStaticPlayList(CStaticPlayList * playList, CApplication * application, CListFolder * folder, const QList<CSong *>& songs) :
     QDialog       (application),
     m_uiWidget    (new Ui::DialogEditStaticPlayList()),
     m_playList    (playList),
     m_application (application),
-    m_folder      (folder)
+    m_folder      (folder),
+    m_songs       (songs)
 {
     Q_CHECK_PTR(application);
 
@@ -49,6 +50,12 @@ CDialogEditStaticPlayList::~CDialogEditStaticPlayList()
 }
 
 
+/**
+ * Enregistre les modifications.
+ *
+ * \todo Ajouter les morceaux à la liste.
+ */
+
 void CDialogEditStaticPlayList::save(void)
 {
     QString name = m_uiWidget->editName->text();
@@ -68,6 +75,9 @@ void CDialogEditStaticPlayList::save(void)
     }
 
     m_application->addPlayList(m_playList);
+
+    // Ajout des morceaux à la liste
+    m_playList->addSongs(m_songs, false);
 
     close();
 }

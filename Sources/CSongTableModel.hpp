@@ -454,8 +454,8 @@ private:
     }
 
 
-    CApplication * m_application;
-    bool m_canDrop;
+    CApplication * m_application; ///< Pointeur sur l'application.
+    bool m_canDrop;               ///< Indique si la vue peut recevoir des données (liste statique).
     int m_columnSort;             ///< Numéro de la colonne triée.
     CSongTableItem * m_currentSongItem;
     QList<CSongTableItem *> m_data;

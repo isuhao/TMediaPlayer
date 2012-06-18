@@ -132,6 +132,8 @@ public:
     QFile * getLogFile(const QString& logName);
     void notifyInformation(const QString& message);
 
+    void openDialogCreateStaticList(CListFolder * folder, const QList<CSong *>& songs = QList<CSong *>());
+
 public slots:
 
     void selectAll(void);
@@ -167,7 +169,7 @@ public slots:
     void openDialogAddSongs(void);
     void openDialogAddFolder(void);
     void openDialogSongInfos(void);
-    void openDialogCreateStaticList(CListFolder * folder = NULL);
+    void openDialogCreateStaticList(void);
     void openDialogCreateDynamicList(CListFolder * folder = NULL);
     void openDialogCreateFolder(CListFolder * folder = NULL);
     void openDialogEditStaticPlayList(CStaticPlayList * playList);

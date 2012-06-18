@@ -1760,17 +1760,26 @@ void CApplication::openDialogSongInfos(void)
 
 /**
  * Affiche la boite de dialogue pour crée une nouvelle liste de lecture statique.
- *
- * \todo Gérer le dossier.
- *
- * \param folder Pointeur sur le dossier où créer la liste.
  */
 
-void CApplication::openDialogCreateStaticList(CListFolder * folder)
+void CApplication::openDialogCreateStaticList(void)
+{
+    openDialogCreateStaticList(NULL);
+}
+
+
+/**
+ * Affiche la boite de dialogue pour crée une nouvelle liste de lecture statique.
+ *
+ * \param folder Pointeur sur le dossier où créer la liste.
+ * \param songs  Liste de morceaux à ajouter à la liste.
+ */
+
+void CApplication::openDialogCreateStaticList(CListFolder * folder, const QList<CSong *>& songs)
 {
     //qDebug() << "Nouvelle liste de lecture statique...";
 
-    CDialogEditStaticPlayList * dialog = new CDialogEditStaticPlayList(NULL, this, folder);
+    CDialogEditStaticPlayList * dialog = new CDialogEditStaticPlayList(NULL, this, folder, songs);
     dialog->show();
 }
 

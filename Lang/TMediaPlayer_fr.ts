@@ -15,7 +15,7 @@
     </message>
     <message numerus="yes">
         <location filename="../Sources/CApplication.cpp" line="94"/>
-        <location filename="../Sources/CApplication.cpp" line="2367"/>
+        <location filename="../Sources/CApplication.cpp" line="2376"/>
         <source>%n song(s), %1</source>
         <translation>
             <numerusform>%n morceau, %1</numerusform>
@@ -54,13 +54,13 @@ Erreur : %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3030"/>
+        <location filename="../Sources/CApplication.cpp" line="3039"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3038"/>
-        <location filename="../Sources/CApplication.cpp" line="3046"/>
+        <location filename="../Sources/CApplication.cpp" line="3047"/>
+        <location filename="../Sources/CApplication.cpp" line="3055"/>
         <source>Play</source>
         <translation>Lecture</translation>
     </message>
@@ -70,19 +70,19 @@ Erreur : %4</translation>
         <translation>Chargement des fichiers...</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2219"/>
+        <location filename="../Sources/CApplication.cpp" line="2228"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Êtes-vous sûr de vouloir supprimer cette liste de lecture ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2219"/>
-        <location filename="../Sources/CApplication.cpp" line="2248"/>
+        <location filename="../Sources/CApplication.cpp" line="2228"/>
+        <location filename="../Sources/CApplication.cpp" line="2257"/>
         <source>Yes</source>
         <translation>Oui</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2219"/>
-        <location filename="../Sources/CApplication.cpp" line="2248"/>
+        <location filename="../Sources/CApplication.cpp" line="2228"/>
+        <location filename="../Sources/CApplication.cpp" line="2257"/>
         <source>No</source>
         <translation>Non</translation>
     </message>
@@ -97,12 +97,12 @@ Erreur : %4</translation>
         <translation>Interrompre</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2248"/>
+        <location filename="../Sources/CApplication.cpp" line="2257"/>
         <source>Are you sure you want to delete this folder?</source>
         <translation>Êtes-vous sûr de vouloir supprimer ce dossier ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2510"/>
+        <location filename="../Sources/CApplication.cpp" line="2519"/>
         <source>This program requires FMOD %1 or superior.</source>
         <translation>Ce programme nécessite FMOD %1 ou supérieur.</translation>
     </message>
@@ -316,17 +316,17 @@ Erreur : %4</translation>
 <context>
     <name>CDialogEditStaticPlayList</name>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditStaticPlayList.cpp" line="33"/>
+        <location filename="../Sources/Dialog/CDialogEditStaticPlayList.cpp" line="34"/>
         <source>Save</source>
         <translation>Enregistrer</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditStaticPlayList.cpp" line="34"/>
+        <location filename="../Sources/Dialog/CDialogEditStaticPlayList.cpp" line="35"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditStaticPlayList.cpp" line="58"/>
+        <location filename="../Sources/Dialog/CDialogEditStaticPlayList.cpp" line="65"/>
         <source>You need to choose a name for the playlist.</source>
         <translation>Vous devez choisir un nom pour la liste de lecture.</translation>
     </message>
@@ -460,37 +460,37 @@ Erreur : %4</translation>
 <context>
     <name>CPlayListView</name>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="49"/>
-        <location filename="../Sources/CPlayListView.cpp" line="54"/>
+        <location filename="../Sources/CPlayListView.cpp" line="50"/>
+        <location filename="../Sources/CPlayListView.cpp" line="55"/>
         <source>Edit...</source>
         <translation>Modifier...</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="50"/>
-        <location filename="../Sources/CPlayListView.cpp" line="55"/>
+        <location filename="../Sources/CPlayListView.cpp" line="51"/>
+        <location filename="../Sources/CPlayListView.cpp" line="56"/>
         <source>Remove</source>
         <translation>Supprimer</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="60"/>
-        <location filename="../Sources/CPlayListView.cpp" line="66"/>
+        <location filename="../Sources/CPlayListView.cpp" line="61"/>
+        <location filename="../Sources/CPlayListView.cpp" line="67"/>
         <source>New playlist...</source>
         <translation>Nouvelle liste de lecture...</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="61"/>
-        <location filename="../Sources/CPlayListView.cpp" line="67"/>
+        <location filename="../Sources/CPlayListView.cpp" line="62"/>
+        <location filename="../Sources/CPlayListView.cpp" line="68"/>
         <source>New dynamic playlist...</source>
         <translation>Nouvelle liste de lecture dynamique...</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="62"/>
-        <location filename="../Sources/CPlayListView.cpp" line="68"/>
+        <location filename="../Sources/CPlayListView.cpp" line="63"/>
+        <location filename="../Sources/CPlayListView.cpp" line="69"/>
         <source>New folder...</source>
         <translation>Nouveau dossier...</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="98"/>
+        <location filename="../Sources/CPlayListView.cpp" line="99"/>
         <source>Library</source>
         <translation>Médiathèque</translation>
     </message>
@@ -766,74 +766,74 @@ Erreur : %4</translation>
         <translation>Sous-titre</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="766"/>
+        <location filename="../Sources/CSongTable.cpp" line="772"/>
         <source>Are you sure you want to remove the selected songs from the library?
 The files will not be deleted.</source>
         <translation>Êtes-vous sur de vouloir supprimer les morceaux sélectionnés de la médiathèque ?
 Les fichiers ne seront pas supprimés.</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="766"/>
+        <location filename="../Sources/CSongTable.cpp" line="772"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1245"/>
+        <location filename="../Sources/CSongTable.cpp" line="1252"/>
         <source>Play</source>
         <translation>Lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1249"/>
+        <location filename="../Sources/CSongTable.cpp" line="1256"/>
         <source>Informations...</source>
         <translation>Informations...</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1250"/>
+        <location filename="../Sources/CSongTable.cpp" line="1257"/>
         <source>Edit metadata</source>
         <translation>Éditer les métadonnées</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1251"/>
+        <location filename="../Sources/CSongTable.cpp" line="1258"/>
         <source>Show in explorer</source>
         <translation>Afficher dans l&apos;explorateur</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1253"/>
+        <location filename="../Sources/CSongTable.cpp" line="1260"/>
         <source>Remove from library</source>
         <translation>Enlever de la médiathèque</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1254"/>
+        <location filename="../Sources/CSongTable.cpp" line="1261"/>
         <source>Check selection</source>
         <translation>Cocher la sélection</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1255"/>
+        <location filename="../Sources/CSongTable.cpp" line="1262"/>
         <source>Uncheck selection</source>
         <translation>Décocher la sélection</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1262"/>
+        <location filename="../Sources/CSongTable.cpp" line="1269"/>
         <source>Playlists</source>
         <translation>Listes de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1264"/>
+        <location filename="../Sources/CSongTable.cpp" line="1271"/>
         <source>Library</source>
         <translation>Médiathèque</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1292"/>
+        <location filename="../Sources/CSongTable.cpp" line="1299"/>
         <source>Add to playlist</source>
         <translation>Ajouter à la liste de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1297"/>
+        <location filename="../Sources/CSongTable.cpp" line="1304"/>
         <source>There are no playlist</source>
         <translation>Il n&apos;y a pas de listes de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="766"/>
+        <location filename="../Sources/CSongTable.cpp" line="772"/>
         <source>Remove</source>
         <translation>Supprimer</translation>
     </message>
@@ -879,67 +879,67 @@ Voulez-vous les ajouter ?</translation>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="614"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="616"/>
         <source>Play</source>
         <translation>Lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="618"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="620"/>
         <source>Informations...</source>
         <translation>Informations...</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="619"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="621"/>
         <source>Edit metadata</source>
         <translation>Éditer les métadonnées</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="620"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="622"/>
         <source>Show in explorer</source>
         <translation>Afficher dans l&apos;explorateur</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="622"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="624"/>
         <source>Remove from playlist</source>
         <translation>Enlever de la liste de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="623"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="625"/>
         <source>Remove from library</source>
         <translation>Enlever de la médiathèque</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="624"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="626"/>
         <source>Check selection</source>
         <translation>Cocher la sélection</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="625"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="627"/>
         <source>Uncheck selection</source>
         <translation>Décocher la sélection</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="632"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="634"/>
         <source>Playlists</source>
         <translation>Listes de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="634"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="636"/>
         <source>Library</source>
         <translation>Médiathèque</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="662"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="664"/>
         <source>Add to playlist</source>
         <translation>Ajouter à la liste de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="667"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="669"/>
         <source>There are no playlist</source>
         <translation>Il n&apos;y a pas de listes de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="684"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="686"/>
         <source>Remove duplicates</source>
         <translation>Supprimer les doublons</translation>
     </message>
