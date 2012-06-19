@@ -9,7 +9,7 @@
   - Trier les types de critères par ordre alphabétique.
   - Vérifier qu'il n'y a pas de boucles pour le critère "Liste de lecture".
 
-- Import depuis iTunes / SongBird.
+- Import depuis iTunes.
   - Importer les morceaux.
   - Importer les listes statiques.
   - Importer les listes dynamiques.
@@ -17,6 +17,14 @@
   - Gestion des conflits (fichier XML, métadonnées, fichier déjà ajouté...).
     - Importer l'information "Skip when shuffling".
     - Note, Coché, SkipShuffle, Compilation : Ne pas changer, Toujours changer, Changer si défini.
+    - Lectures : Ne pas changer, Toujours changer, Fusionner (les nombres de lecture sont additionnés, et la date de dernière lecture est la plus récente).
+
+- Import depuis SongBird.
+  - Importer les morceaux.
+  - Importer les listes statiques.
+  - Importer les listes dynamiques.
+  - Gestion des conflits (fichier SQLite, métadonnées, fichier déjà ajouté...).
+    - Note, Compilation : Ne pas changer, Toujours changer, Changer si défini.
     - Lectures : Ne pas changer, Toujours changer, Fusionner (les nombres de lecture sont additionnés, et la date de dernière lecture est la plus récente).
 
 - Tester le scrobbling Last.fm.

@@ -86,24 +86,58 @@ void CListFolder::setFolder(CListFolder * folder)
 }
 
 
+/**
+ * Indique si les informations ou le contenu du dossier ont été modifiées.
+ *
+ * \return Booléen.
+ */
+
 bool CListFolder::isModified(void) const
 {
     return m_isModified;
 }
 
 
-void CListFolder::addPlayList(CPlayList * playList)
+/**
+ * Ajoute une liste de lecture au dossier.
+ *
+ * \param playList Liste de lecture à ajouter.
+ * \param position Position de la liste dans le dossier.
+ */
+
+void CListFolder::addPlayList(CPlayList * playList, int position)
 {
     Q_CHECK_PTR(playList);
 
+    position = qBound(-1, position, m_playLists.size());
+
     if (!m_playLists.contains(playList))
     {
-        m_playLists.append(playList);
+        //m_playLists.append(playList);
+        m_playLists.insert(position, playList);
         playList->setFolder(this);
-        m_isModified = true;
+        //m_isModified = true;
+
+        // Mise à jour des positions des listes
+        for (int pos = 0; pos < m_playLists.size(); ++pos)
+        {
+            if (m_playLists[pos]->m_position != pos)
+            {
+                m_playLists[pos]->m_position = pos;
+                m_playLists[pos]->m_isModified = true;
+            }
+        }
     }
 }
 
+
+/**
+ * Enlève une liste de lecture d'un dossier.
+ *
+ * \todo MAJ position.
+ *
+ * \param playList Liste de lecture à enlever.
+ */
 
 void CListFolder::removePlayList(CPlayList * playList)
 {
@@ -113,23 +147,63 @@ void CListFolder::removePlayList(CPlayList * playList)
     {
         m_playLists.removeAll(playList);
         playList->setFolder(NULL);
-        m_isModified = true;
+        //m_isModified = true;
+
+        // Mise à jour des positions des listes
+        for (int pos = 0; pos < m_playLists.size(); ++pos)
+        {
+            if (m_playLists[pos]->m_position != pos)
+            {
+                m_playLists[pos]->m_position = pos;
+                m_playLists[pos]->m_isModified = true;
+            }
+        }
     }
 }
 
 
-void CListFolder::addFolder(CListFolder * folder)
+/**
+ * Ajoute un dossier au dossier.
+ *
+ * \todo MAJ position.
+ *
+ * \param folder   Dossier à ajouter.
+ * \param position Position de la liste dans le dossier.
+ */
+
+void CListFolder::addFolder(CListFolder * folder, int position)
 {
     Q_CHECK_PTR(folder);
 
+    position = qBound(-1, position, m_playLists.size());
+
     if (!m_folders.contains(folder) && folder != this)
     {
-        m_folders.append(folder);
+        //m_folders.append(folder);
+        m_folders.insert(position, folder);
         folder->setFolder(this);
-        m_isModified = true;
+        //m_isModified = true;
+
+        // Mise à jour des positions des listes
+        for (int pos = 0; pos < m_folders.size(); ++pos)
+        {
+            if (m_folders[pos]->m_position != pos)
+            {
+                m_folders[pos]->m_position = pos;
+                m_folders[pos]->m_isModified = true;
+            }
+        }
     }
 }
 
+
+/**
+ * Enlève un dossier d'un dossier.
+ *
+ * \todo MAJ position.
+ *
+ * \param folder Dossier à enlever.
+ */
 
 void CListFolder::removeFolder(CListFolder * folder)
 {
@@ -139,10 +213,26 @@ void CListFolder::removeFolder(CListFolder * folder)
     {
         m_folders.removeAll(folder);
         folder->setFolder(NULL);
-        m_isModified = true;
+        //m_isModified = true;
+
+        // Mise à jour des positions des listes
+        for (int pos = 0; pos < m_folders.size(); ++pos)
+        {
+            if (m_folders[pos]->m_position != pos)
+            {
+                m_folders[pos]->m_position = pos;
+                m_folders[pos]->m_isModified = true;
+            }
+        }
     }
 }
 
+
+/**
+ * Ouvre ou ferme le dossier dans la vue.
+ *
+ * \param open Booléen indiquant si le dossier est ouvert.
+ */
 
 void CListFolder::setOpen(bool open)
 {
@@ -156,6 +246,12 @@ void CListFolder::setOpen(bool open)
     }
 }
 
+
+/**
+ * Met à jour les informations du dossier en base de données.
+ *
+ * \return Booléen indiquant le succès de l'opération.
+ */
 
 bool CListFolder::updateDatabase(void)
 {

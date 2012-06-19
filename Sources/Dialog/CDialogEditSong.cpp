@@ -4,6 +4,9 @@
 #include "CApplication.hpp"
 #include <QStandardItemModel>
 
+#include <mpegfile.h>
+#include <id3v2tag.h>
+
 #include <QtDebug>
 
 
@@ -200,6 +203,7 @@ void CDialogEditSong::updateInfos()
         setWindowTitle(tr("Song infos") + " - " + songTitle + " - " + songArtist);
     }
 
+
     // Résumé
 
     const int duration = song->getDuration();
@@ -222,6 +226,43 @@ void CDialogEditSong::updateInfos()
 
     m_uiWidget->valueLastPlayTime->setText(song->getLastPlay().toString());
     m_uiWidget->valuePlayCount->setText(QString::number(song->getNumPlays()));
+
+    // Illustration
+    if (song->getFormat() == CSong::FormatMP3)
+    {
+        TagLib::MPEG::File file(qPrintable(song->getFileName()), false);
+
+        if (file.isValid())
+        {
+            TagLib::ID3v2::Tag * tags = file.ID3v2Tag(true);
+            TagLib::ID3v2::FrameListMap tagMap = tags->frameListMap();
+            TagLib::ID3v2::FrameList tagList = tags->frameList("APIC");
+
+            // Recherche dans le dossier
+            if (tagList.isEmpty())
+            {
+                m_uiWidget->valueCover->setPixmap(QPixmap::fromImage(song->getCoverImage()));
+            }
+            // Recherche dans les métadonnées
+            else
+            {
+                //...
+                // Recherche de l'illustration la plus appropriée (s'il y en a plusieurs)
+                //m_uiWidget->valueCover->setPixmap(QImage(?));
+            }
+        }
+        else
+        {
+            qWarning() << "CDialogEditSong::updateInfos() : impossible de lire le fichier MP3 " << song->getFileName();
+            m_uiWidget->valueCover->setPixmap(QPixmap::fromImage(song->getCoverImage()));
+        }
+    }
+    else
+    {
+        m_uiWidget->valueCover->setPixmap(QPixmap::fromImage(song->getCoverImage()));
+    }
+
+    //TagLib::ID3v2::AttachedPictureFrame
     
 
     // Informations et tri
@@ -291,6 +332,7 @@ void CDialogEditSong::updateInfos()
     // Note
     m_uiWidget->editRating->setValue(song->getRating());
 
+
     // Paroles
     m_uiWidget->editLyrics->setText(song->getLyrics());
     m_uiWidget->editLanguage->setCurrentIndex(song->getLanguage());
@@ -301,6 +343,10 @@ void CDialogEditSong::updateInfos()
     m_uiWidget->editEnabled->setChecked(song->isEnabled());
     m_uiWidget->editSkipShuffle->setChecked(song->isSkipShuffle());
     m_uiWidget->editCompilation->setChecked(song->isCompilation());
+
+
+    // Illustrations
+    //...
 
 
     // Lectures

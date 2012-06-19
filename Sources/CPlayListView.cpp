@@ -249,16 +249,7 @@ QModelIndex CPlayListView::getSongTableModelIndex(CSongTable * songTable) const
     if (!songTable)
         return QModelIndex();
 
-    for (int row = 0; row < m_model->rowCount(); ++row)
-    {
-        const QStandardItem * item = m_model->item(row);
-        if (item && item->data(Qt::UserRole + 1).value<CSongTable *>() == songTable)
-        {
-            return m_model->indexFromItem(item);
-        }
-    }
-
-    return QModelIndex();
+    return getModelIndex(songTable, QModelIndex());
 }
 
 

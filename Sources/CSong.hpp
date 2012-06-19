@@ -53,7 +53,8 @@ public:
         LangEnglish = 1, ///< Anglais.
         LangFrench  = 2, ///< Français.
         LangGerman  = 3, ///< Allemand.
-        LangItalian = 4  ///< Italien.
+        LangItalian = 4, ///< Italien.
+        LangRussian = 5  ///< Russe.
     };
 
     static inline TLanguage getLanguageFromInteger(int language);
@@ -73,6 +74,7 @@ public:
     bool loadTags(bool readProperties = false);
     bool writeTags(void);
     bool moveFile(void);
+    QImage getCoverImage(void) const;
 
     inline int getId(void) const;
     inline QString getFileName(void) const;
@@ -303,6 +305,7 @@ inline CSong::TLanguage CSong::getLanguageFromInteger(int language)
         case 2: return LangFrench ;
         case 3: return LangGerman ;
         case 4: return LangItalian;
+        case 5: return LangRussian;
     }
 }
 
@@ -324,6 +327,7 @@ inline QString CSong::getLanguageName(CSong::TLanguage language)
         case LangFrench : return tr("French"                     );
         case LangGerman : return tr("German"                     );
         case LangItalian: return tr("Italian"                    );
+        case LangRussian: return tr("Russian"                    );
     }
 }
 
@@ -343,10 +347,17 @@ inline QStringList CSong::getLanguageList(void)
     langList << getLanguageName(LangFrench );
     langList << getLanguageName(LangGerman );
     langList << getLanguageName(LangItalian);
+    langList << getLanguageName(LangRussian);
 
     return langList;
 }
 
+
+/**
+ * Retourne langue correspondant à un code ISO 639-1.
+ *
+ * \param code Code ISO 639-1.
+ */
 
 inline CSong::TLanguage CSong::getLanguageForISO2Code(const QString& code)
 {
@@ -354,10 +365,17 @@ inline CSong::TLanguage CSong::getLanguageForISO2Code(const QString& code)
     if (code.toLower() == "fr") return LangFrench ;
     if (code.toLower() == "de") return LangGerman ;
     if (code.toLower() == "it") return LangItalian;
+    if (code.toLower() == "ru") return LangRussian;
 
     return LangUnknown;
 }
 
+
+/**
+ * Retourne langue correspondant à un code ISO 639-2.
+ *
+ * \param code Code ISO 639-2.
+ */
 
 inline CSong::TLanguage CSong::getLanguageForISO3Code(const QString& code)
 {
@@ -365,10 +383,15 @@ inline CSong::TLanguage CSong::getLanguageForISO3Code(const QString& code)
     if (code.toLower() == "fra") return LangFrench ;
     if (code.toLower() == "deu") return LangGerman ;
     if (code.toLower() == "ita") return LangItalian;
+    if (code.toLower() == "rus") return LangRussian;
 
     return LangUnknown;
 }
 
+
+/**
+ * Retourne le code ISO 639-1 correspondant à une langue.
+ */
 
 inline QString CSong::getISO2CodeForLanguage(CSong::TLanguage language)
 {
@@ -380,9 +403,14 @@ inline QString CSong::getISO2CodeForLanguage(CSong::TLanguage language)
         case LangFrench : return "fr";
         case LangGerman : return "de";
         case LangItalian: return "it";
+        case LangRussian: return "ru";
     }
 }
 
+
+/**
+ * Retourne le code ISO 639-2 correspondant à une langue.
+ */
 
 inline QString CSong::getISO3CodeForLanguage(CSong::TLanguage language)
 {
@@ -394,6 +422,7 @@ inline QString CSong::getISO3CodeForLanguage(CSong::TLanguage language)
         case LangFrench : return "fra";
         case LangGerman : return "deu";
         case LangItalian: return "ita";
+        case LangRussian: return "rus";
     }
 }
 

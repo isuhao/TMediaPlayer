@@ -257,33 +257,33 @@ Erreur : %4</translation>
 <context>
     <name>CDialogEditSong</name>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="218"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="222"/>
         <source>%1 kbit/s</source>
         <translation>%1 kbit/s</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="59"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="62"/>
         <source>Save</source>
         <translation>Enregistrer</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="60"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="63"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="61"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="64"/>
         <source>Apply</source>
         <translation>Appliquer</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="196"/>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="200"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="199"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="203"/>
         <source>Song infos</source>
         <translation>Informations</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="221"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="225"/>
         <source>%1 Hz</source>
         <translation>%1 Hz</translation>
     </message>
@@ -543,84 +543,89 @@ Erreur : %4</translation>
 <context>
     <name>CSong</name>
     <message>
-        <location filename="../Sources/CSong.hpp" line="275"/>
+        <location filename="../Sources/CSong.hpp" line="277"/>
         <source>Unknown</source>
         <comment>Unknown format</comment>
         <translation>Inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="276"/>
+        <location filename="../Sources/CSong.hpp" line="278"/>
         <source>MP3</source>
         <translation>MP3</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="277"/>
+        <location filename="../Sources/CSong.hpp" line="279"/>
         <source>Ogg Vorbis</source>
         <translation>Ogg Vorbis</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="278"/>
+        <location filename="../Sources/CSong.hpp" line="280"/>
         <source>FLAC</source>
         <translation>FLAC</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="322"/>
+        <location filename="../Sources/CSong.hpp" line="325"/>
         <source>Unknown</source>
         <comment>Unknown language</comment>
         <translation>Inconnue</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="323"/>
+        <location filename="../Sources/CSong.hpp" line="326"/>
         <source>English</source>
         <translation>Anglais</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="324"/>
+        <location filename="../Sources/CSong.hpp" line="327"/>
         <source>French</source>
         <translation>Français</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="325"/>
+        <location filename="../Sources/CSong.hpp" line="328"/>
         <source>German</source>
         <translation>Allemand</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="326"/>
+        <location filename="../Sources/CSong.hpp" line="329"/>
         <source>Italian</source>
         <translation>Italien</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="541"/>
+        <location filename="../Sources/CSong.hpp" line="330"/>
+        <source>Russian</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="542"/>
         <source>Unknown title</source>
         <translation>Titre inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="546"/>
+        <location filename="../Sources/CSong.cpp" line="547"/>
         <source>Unknown artist</source>
         <translation>Artiste inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="551"/>
+        <location filename="../Sources/CSong.cpp" line="552"/>
         <source>Unknown album</source>
         <translation>Album inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="903"/>
+        <location filename="../Sources/CSong.cpp" line="934"/>
         <source>%1 Gio</source>
         <translation>%1 Gio</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="908"/>
+        <location filename="../Sources/CSong.cpp" line="939"/>
         <source>%1 Mio</source>
         <translation>%1 Mio</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="913"/>
+        <location filename="../Sources/CSong.cpp" line="944"/>
         <source>%1 Kio</source>
         <translation>%1 Kio</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CSong.cpp" line="917"/>
+        <location filename="../Sources/CSong.cpp" line="948"/>
         <source>%n byte(s)</source>
         <translation>
             <numerusform>%n octet</numerusform>

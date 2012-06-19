@@ -6,6 +6,7 @@
 #include <QMessageBox>
 #include <QSettings>
 #include <QFile>
+#include <QDir>
 
 // TagLib
 #include <fileref.h>
@@ -587,6 +588,36 @@ bool CSong::moveFile(void)
     //...
 
     return true;
+}
+
+
+QImage CSong::getCoverImage(void) const
+{
+    QString fileName;
+
+    QFileInfo fileInfo(m_fileName);
+    QString pathName = QDir::toNativeSeparators(fileInfo.path()) + QDir::separator();
+
+    if (QFileInfo(pathName + "cover.jpg").exists())
+        fileName = pathName + "cover.jpg";
+    else if (QFileInfo(pathName + "cover.jpeg").exists())
+        fileName = pathName + "cover.jpeg";
+    else if (QFileInfo(pathName + "cover.png").exists())
+        fileName = pathName + "cover.png";
+
+    else if (QFileInfo(pathName + "folder.jpg").exists())
+        fileName = pathName + "folder.jpg";
+    else if (QFileInfo(pathName + "folder.jpeg").exists())
+        fileName = pathName + "folder.jpeg";
+    else if (QFileInfo(pathName + "folder.png").exists())
+        fileName = pathName + "folder.png";
+
+    if (fileName.isEmpty())
+    {
+        return QImage();
+    }
+
+    return QImage(fileName).scaled(120, 120, Qt::KeepAspectRatio);
 }
 
 
