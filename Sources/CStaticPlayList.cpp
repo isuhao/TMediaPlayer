@@ -2,8 +2,9 @@
 #include "CStaticPlayList.hpp"
 #include "CApplication.hpp"
 #include "CSongTableModel.hpp"
-#include "CDynamicPlayList.hpp"
-#include "CListFolder.hpp"
+#include "CDynamicList.hpp"
+#include "CFolder.hpp"
+#include "CLibrary.hpp"
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QMessageBox>
@@ -21,7 +22,7 @@
  */
 
 CStaticPlayList::CStaticPlayList(CApplication * application, const QString& name) :
-    CPlayList              (application, name),
+    IPlayList              (application, name),
     m_id                   (-1),
     m_isStaticListModified (false)
 {
@@ -51,7 +52,7 @@ CStaticPlayList::~CStaticPlayList()
 
 bool CStaticPlayList::isModified(void) const
 {
-    return (m_isStaticListModified || CPlayList::isModified());
+    return (m_isStaticListModified || IPlayList::isModified());
 }
 
 
@@ -541,7 +542,7 @@ bool CStaticPlayList::updateDatabase(void)
     }
 
     m_isStaticListModified = false;
-    return CPlayList::updateDatabase();
+    return IPlayList::updateDatabase();
 }
 
 
@@ -582,7 +583,7 @@ void CStaticPlayList::romoveFromDatabase(void)
     m_isStaticListModified = false;
     m_id = -1;
 
-    CPlayList::romoveFromDatabase();
+    IPlayList::romoveFromDatabase();
 }
 
 
@@ -632,22 +633,22 @@ void CStaticPlayList::openCustomMenuProject(const QPoint& point)
             // Listes de lecture contenant le morceau
             //TODO: gérer les dossiers
             QMenu * menuPlayList = menu->addMenu(tr("Playlists"));
-            CSongTable * library = m_application->getLibrary();
+            CLibrary * library = m_application->getLibrary();
             m_actionGoToSongTable[library] = menuPlayList->addAction(QPixmap(":/icons/library"), tr("Library"));
             connect(m_actionGoToSongTable[library], SIGNAL(triggered()), this, SLOT(goToSongTable()));
 
-            QList<CPlayList *> playLists = m_application->getPlayListsWithSong(m_selectedItem->getSong());
+            QList<IPlayList *> playLists = m_application->getPlayListsWithSong(m_selectedItem->getSong());
 
             if (playLists.size() > 0)
             {
                 menuPlayList->addSeparator();
 
-                for (QList<CPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
+                for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
                 {
                     m_actionGoToSongTable[*it] = menuPlayList->addAction((*it)->getName());
                     connect(m_actionGoToSongTable[*it], SIGNAL(triggered()), this, SLOT(goToSongTable()));
 
-                    if (qobject_cast<CDynamicPlayList *>(*it))
+                    if (qobject_cast<CDynamicList *>(*it))
                     {
                         m_actionGoToSongTable[*it]->setIcon(QPixmap(":/icons/dynamic_list"));
                     }
@@ -662,7 +663,7 @@ void CStaticPlayList::openCustomMenuProject(const QPoint& point)
         // Ajouter à la liste de lecture
         //TODO: gérer les dossiers
         QMenu * menuAddToPlayList = menu->addMenu(tr("Add to playlist"));
-        QList<CPlayList *> playLists = m_application->getAllPlayLists();
+        QList<IPlayList *> playLists = m_application->getAllPlayLists();
 
         if (playLists.isEmpty())
         {
@@ -671,7 +672,7 @@ void CStaticPlayList::openCustomMenuProject(const QPoint& point)
         }
         else
         {
-            for (QList<CPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
+            for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
             {
                 CStaticPlayList * staticList = qobject_cast<CStaticPlayList *>(*it);
                 if (staticList)
@@ -709,7 +710,7 @@ void CStaticPlayList::keyPressEvent(QKeyEvent * event)
         return;
     }
 
-    return CPlayList::keyPressEvent(event);
+    return IPlayList::keyPressEvent(event);
 }
 
 
@@ -722,7 +723,7 @@ void CStaticPlayList::keyPressEvent(QKeyEvent * event)
 
 void CStaticPlayList::dragMoveEvent(QDragMoveEvent * event)
 {
-    CPlayList::dragMoveEvent(event);
+    IPlayList::dragMoveEvent(event);
 
     if (event->source() != this)
     {
@@ -748,7 +749,7 @@ void CStaticPlayList::dropEvent(QDropEvent * event)
 {
     event->ignore();
 
-    CPlayList::dropEvent(event);
+    IPlayList::dropEvent(event);
 
     if (event->isAccepted())
     {
@@ -816,7 +817,7 @@ void CStaticPlayList::dropEvent(QDropEvent * event)
 
 void CStaticPlayList::paintEvent(QPaintEvent * event)
 {
-    CPlayList::paintEvent(event);
+    IPlayList::paintEvent(event);
 
     if (state() == QAbstractItemView::DraggingState
 #ifndef QT_NO_CURSOR

@@ -9,7 +9,7 @@
 #include <QtDebug>
 
 
-CDialogEditStaticPlayList::CDialogEditStaticPlayList(CStaticPlayList * playList, CApplication * application, CListFolder * folder, const QList<CSong *>& songs) :
+CDialogEditStaticPlayList::CDialogEditStaticPlayList(CStaticPlayList * playList, CApplication * application, CFolder * folder, const QList<CSong *>& songs) :
     QDialog       (application),
     m_uiWidget    (new Ui::DialogEditStaticPlayList()),
     m_playList    (playList),

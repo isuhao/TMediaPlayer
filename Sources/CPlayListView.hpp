@@ -5,10 +5,10 @@
 #include <QTreeView>
 
 
-class CPlayListModel;
+class CListModel;
 class CSongTable;
 class CApplication;
-class CListFolder;
+class CFolder;
 
 
 /**
@@ -23,25 +23,21 @@ public:
 
     explicit CPlayListView(CApplication * application);
 
-    QModelIndex addSongTable(CSongTable * songTable, const QModelIndex& parent = QModelIndex());
-    QModelIndex addFolder(CListFolder * folder, const QModelIndex& parent = QModelIndex());
-    void removeSongTable(CSongTable * songTable);
+    //QModelIndex addSongTable(CSongTable * songTable, const QModelIndex& parent = QModelIndex());
+    //QModelIndex addFolder(CFolder * folder, const QModelIndex& parent = QModelIndex());
+    //void removeSongTable(CSongTable * songTable);
     CSongTable * getSongTable(const QModelIndex& index) const;
-    CListFolder * getFolder(const QModelIndex& index) const;
+    CFolder * getFolder(const QModelIndex& index) const;
     CSongTable * getSelectedSongTable(void) const;
-    CListFolder * getSelectedFolder(void) const;
+    CFolder * getSelectedFolder(void) const;
     QModelIndex getSongTableModelIndex(CSongTable * songTable) const;
-    QModelIndex getFolderModelIndex(CListFolder * folder) const;
-    
-public slots:
-
-    void onPlayListRenamed(const QString& oldName, const QString& newName);
-    void onFolderRenamed(const QString& oldName, const QString& newName);
+    QModelIndex getFolderModelIndex(CFolder * folder) const;
+    void setModel(CListModel * model);
 
 protected:
     
-    QModelIndex getModelIndex(CSongTable * songTable, const QModelIndex& parent = QModelIndex()) const;
-    QModelIndex getModelIndex(CListFolder * folder, const QModelIndex& parent = QModelIndex()) const;
+    //QModelIndex getModelIndex(CSongTable * songTable, const QModelIndex& parent = QModelIndex()) const;
+    //QModelIndex getModelIndex(CFolder * folder, const QModelIndex& parent = QModelIndex()) const;
     virtual void keyPressEvent(QKeyEvent * event);
     virtual void dragMoveEvent(QDragMoveEvent * event);
 
@@ -58,11 +54,11 @@ protected slots:
 
 private:
     
-    CApplication * m_application;
-    CPlayListModel * m_model; ///< Modèle utilisé pour afficher les listes de lecture.
-    QMenu * m_menuPlaylist;   ///< Menu contextuel pour les listes de lecture.
-    QMenu * m_menuFolder;     ///< Menu contextuel pour les dossiers.
-    QMenu * m_menuDefault;    ///< Menu contextuel par défaut.
+    CApplication * m_application; ///< Pointeur sur l'application.
+    CListModel * m_model;         ///< Modèle utilisé pour afficher les listes de lecture.
+    QMenu * m_menuPlaylist;       ///< Menu contextuel pour les listes de lecture.
+    QMenu * m_menuFolder;         ///< Menu contextuel pour les dossiers.
+    QMenu * m_menuDefault;        ///< Menu contextuel par défaut.
 };
 
 #endif // FILE_C_PLAYLIST_VIEW

@@ -6,10 +6,10 @@
 #include "ui_DialogEditDynamicPlayList.h"
 
 
-class CDynamicPlayList;
+class CDynamicList;
 class CApplication;
 class CWidgetMultiCriterion;
-class CListFolder;
+class CFolder;
 
 
 class CDialogEditDynamicList : public QDialog
@@ -18,7 +18,7 @@ class CDialogEditDynamicList : public QDialog
 
 public:
 
-    CDialogEditDynamicList(CDynamicPlayList * playList, CApplication * application, CListFolder * folder = NULL);
+    CDialogEditDynamicList(CDynamicList * playList, CApplication * application, CFolder * folder = NULL);
     virtual ~CDialogEditDynamicList();
 
 public slots:
@@ -33,9 +33,9 @@ private:
     
     Ui::DialogEditDynamicPlayList * m_uiWidget;
     CWidgetMultiCriterion * m_widgetCriterion;
-    CDynamicPlayList * m_playList;
+    CDynamicList * m_playList;
     CApplication * m_application;
-    CListFolder * m_folder;
+    CFolder * m_folder;
 };
 
 #endif // FILE_C_DIALOG_EDIT_DYNAMIC_LIST

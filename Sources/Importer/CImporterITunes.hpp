@@ -20,6 +20,7 @@ class CITunesLibrary;
 class CITunesWizardPage1;
 class CITunesWizardPage2;
 class CITunesWizardPage3;
+class CITunesWizardPage4;
 
 
 class CImporterITunes : public QWizard
@@ -41,6 +42,7 @@ private:
     CITunesWizardPage1 * m_page1;
     CITunesWizardPage2 * m_page2;
     CITunesWizardPage3 * m_page3;
+    CITunesWizardPage4 * m_page4;
 };
 
 
@@ -97,7 +99,22 @@ class CITunesWizardPage3 : public QWizardPage
 
 public:
 
-    CITunesWizardPage3(CApplication * application, CITunesLibrary * library, QWidget * parent = NULL);
+    explicit CITunesWizardPage3(CITunesLibrary * library, QWidget * parent = NULL);
+
+private:
+    
+    CITunesLibrary * m_library;
+    //...
+};
+
+
+class CITunesWizardPage4 : public QWizardPage
+{
+    Q_OBJECT
+
+public:
+
+    CITunesWizardPage4(CApplication * application, CITunesLibrary * library, QWidget * parent = NULL);
 
     virtual void initializePage(void);
 

@@ -22,7 +22,7 @@ class CSongTable : public QTableView
     Q_OBJECT
 
     friend class CApplication;
-    friend class CListFolder;
+    friend class CFolder;
 
 public:
 
@@ -110,10 +110,6 @@ public:
     
 public slots:
 
-    virtual void addSong(CSong * song, int pos = -1);
-    virtual void addSongs(const QList<CSong *>& songs);
-    virtual void removeSong(CSong * song);
-    virtual void removeSong(int pos);
     void selectSongItem(CSongTableItem * songItem);
     void playSelectedSong(void);
 
@@ -147,7 +143,6 @@ protected:
     void removeSongFromTable(int row);
     void removeSongsFromTable(const QList<CSong *>& songs);
     void removeAllSongsFromTable(void);
-    void deleteSongs(void);
     void initShuffle(CSongTableItem * firstSong = NULL);
 
     virtual void initColumns(const QString& str);

@@ -3,19 +3,20 @@
 #define FILE_C_STATIC_PLAYLIST
 
 #include <QString>
-#include "CPlayList.hpp"
+#include "IPlayList.hpp"
 
 
-class CListFolder;
+class CFolder;
 
 
-class CStaticPlayList : public CPlayList
+class CStaticPlayList : public IPlayList
 {
     Q_OBJECT
 
     friend class CDialogEditStaticPlayList;
     friend class CApplication;
-    friend class CListFolder;
+    friend class CFolder;
+    friend class CListModel;
 
 public:
 

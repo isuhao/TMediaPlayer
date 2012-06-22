@@ -3,11 +3,12 @@
 #include "CSongTableModel.hpp"
 #include "CSong.hpp"
 #include "CApplication.hpp"
-#include "CPlayList.hpp"
+#include "IPlayList.hpp"
 #include "CSongTableHeader.hpp"
 #include "CStaticPlayList.hpp"
-#include "CDynamicPlayList.hpp"
+#include "CDynamicList.hpp"
 #include "CRatingDelegate.hpp"
+#include "CLibrary.hpp"
 #include <QStringList>
 #include <QMouseEvent>
 #include <QHeaderView>
@@ -353,21 +354,6 @@ void CSongTable::removeSongsFromTable(const QList<CSong *>& songs)
 void CSongTable::removeAllSongsFromTable(void)
 {
     m_model->clear();
-}
-
-
-/**
- * Supprime tous les morceaux de la table. La mémoire est libérée.
- */
-
-void CSongTable::deleteSongs(void)
-{
-    for (QList<CSongTableItem *>::const_iterator it = m_model->m_data.begin(); it != m_model->m_data.end(); ++it)
-    {
-        delete (*it)->getSong();
-    }
-
-    removeAllSongsFromTable();
 }
 
 
@@ -1158,54 +1144,6 @@ bool CSongTable::isModified(void) const
 }
 
 
-/**
- * Ajoute un morceau à la table.
- *
- * \todo Supprimer cette méthode ?
- */
-
-void CSongTable::addSong(CSong * song, int pos)
-{
-    addSongToTable(song, pos);
-}
-
-
-/**
- * Ajoute une liste de morceaux à la table.
- *
- * \todo Supprimer cette méthode ?
- */
-
-void CSongTable::addSongs(const QList<CSong *>& songs)
-{
-    addSongsToTable(songs);
-}
-
-
-/**
- * Enlève un morceau de la table.
- *
- * \todo Supprimer cette méthode ?
- */
-
-void CSongTable::removeSong(CSong * song)
-{
-    removeSongFromTable(song);
-}
-
-
-/**
- * Enlène un morceau de la table à partir de sa position.
- *
- * \todo Supprimer cette méthode ?
- */
-
-void CSongTable::removeSong(int pos)
-{
-    removeSongFromTable(pos);
-}
-
-
 void CSongTable::selectSongItem(CSongTableItem * songItem)
 {
     Q_CHECK_PTR(songItem);
@@ -1271,18 +1209,18 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
             m_actionGoToSongTable[library] = menuPlayList->addAction(QPixmap(":/icons/library"), tr("Library"));
             connect(m_actionGoToSongTable[library], SIGNAL(triggered()), this, SLOT(goToSongTable()));
 
-            QList<CPlayList *> playLists = m_application->getPlayListsWithSong(m_selectedItem->getSong());
+            QList<IPlayList *> playLists = m_application->getPlayListsWithSong(m_selectedItem->getSong());
 
             if (playLists.size() > 0)
             {
                 menuPlayList->addSeparator();
 
-                for (QList<CPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
+                for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
                 {
                     m_actionGoToSongTable[*it] = menuPlayList->addAction((*it)->getName());
                     connect(m_actionGoToSongTable[*it], SIGNAL(triggered()), this, SLOT(goToSongTable()));
 
-                    if (qobject_cast<CDynamicPlayList *>(*it))
+                    if (qobject_cast<CDynamicList *>(*it))
                     {
                         m_actionGoToSongTable[*it]->setIcon(QPixmap(":/icons/dynamic_list"));
                     }
@@ -1297,7 +1235,7 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
         // Ajouter à la liste de lecture
         //TODO: gérer les dossiers
         QMenu * menuAddToPlayList = menu->addMenu(tr("Add to playlist"));
-        QList<CPlayList *> playLists = m_application->getAllPlayLists();
+        QList<IPlayList *> playLists = m_application->getAllPlayLists();
 
         if (playLists.isEmpty())
         {
@@ -1306,7 +1244,7 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
         }
         else
         {
-            for (QList<CPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
+            for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
             {
                 CStaticPlayList * staticList = qobject_cast<CStaticPlayList *>(*it);
                 if (staticList)

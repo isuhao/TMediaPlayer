@@ -8,6 +8,8 @@
 #include <QLineEdit>
 #include <QWizardPage>
 #include <QUrl>
+#include <QSqlQuery>
+#include <QSqlError>
 
 #include <QtDebug>
 
@@ -27,11 +29,13 @@ CImporterITunes::CImporterITunes(CApplication * application) :
 
     m_page1 = new CITunesWizardPage1(m_library, this);
     m_page2 = new CITunesWizardPage2(m_library, this);
-    m_page3 = new CITunesWizardPage3(m_application, m_library, this);
+    m_page3 = new CITunesWizardPage3(m_library, this);
+    m_page4 = new CITunesWizardPage4(m_application, m_library, this);
 
     addPage(m_page1);
     addPage(m_page2);
     addPage(m_page3);
+    addPage(m_page4);
 
     setButtonText(QWizard::BackButton, tr("&Back"));
     setButtonText(QWizard::NextButton, tr("&Next"));
@@ -155,11 +159,28 @@ QStringList CITunesWizardPage2::getSelectedItems(void) const
 
 bool CITunesWizardPage2::needToImportSongs(void) const
 {
-    return (m_model->item(0)->checkState() == Qt::Checked);
+    if (m_model)
+        return (m_model->item(0)->checkState() == Qt::Checked);
+
+    return false;
 }
 
 
-CITunesWizardPage3::CITunesWizardPage3(CApplication * application, CITunesLibrary * library, QWidget * parent) :
+CITunesWizardPage3::CITunesWizardPage3(CITunesLibrary * library, QWidget * parent) :
+    QWizardPage (parent),
+    m_library   (library)
+{
+    Q_CHECK_PTR(library);
+
+    setTitle(tr("Solving problems"));
+    setSubTitle(tr("What do you want to deal with songs already in your library?"));
+    setCommitPage(true);
+
+    //...
+}
+
+
+CITunesWizardPage4::CITunesWizardPage4(CApplication * application, CITunesLibrary * library, QWidget * parent) :
     QWizardPage   (parent),
     m_library     (library),
     m_application (application)
@@ -174,30 +195,69 @@ CITunesWizardPage3::CITunesWizardPage3(CApplication * application, CITunesLibrar
 
 
 /// \todo Implémentation.
-void CITunesWizardPage3::initializePage(void)
+void CITunesWizardPage4::initializePage(void)
 {
     QMap<int, CSong *> songs;
 
+    // Ajout des morceaux
     if (qobject_cast<CImporterITunes *>(wizard())->needToImportSongs())
     {
         QMap<int, CITunesLibrary::TSong> songsToLoad = m_library->getSongs();
 
         for (QMap<int, CITunesLibrary::TSong>::const_iterator it2 = songsToLoad.begin(); it2 != songsToLoad.end(); ++it2)
         {
-            CSong * song = m_application->getSongFromId(CSong::getId(m_application, it2->fileName));
+            songs[it2.key()] = m_application->getSongFromId(CSong::getId(m_application, it2->fileName));
 
-            if (song)
+            if (songs[it2.key()])
             {
-                qDebug() << "CITunesWizardPage3::initializePage() : Morceau déjà présent";
-                songs[it2.key()] = song;
+                qDebug() << "CITunesWizardPage4::initializePage() : Morceau déjà présent";
+
+                //...
             }
             else
             {
                 songs[it2.key()] = m_application->addSong(it2->fileName);
+
+                QSqlQuery query(m_application->getDataBase());
+
+                query.prepare("UPDATE song SET song_enabled = ?, song_compilation = ?, song_rating = ?, song_play_count, song_play_time "
+                              "WHERE song_id = ?");
+
+                query.bindValue(0, it2->enabled);
+                query.bindValue(1, it2->compilation);
+                query.bindValue(2, it2->rating);
+                query.bindValue(3, it2->playCount);
+                query.bindValue(4, it2->lastPlayed);
+                query.bindValue(5, songs[it2.key()]->getId());
+
+                if (!query.exec())
+                {
+                    m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                    return;
+                }
+
+                // Ajout des lectures
+                query.prepare("INSERT INTO play (song_id, play_time) VALUES (?, ?)");
+                query.bindValue(0, songs[it2.key()]->getId());
+
+                for (int play = 0; play < it2->playCount; ++play)
+                {
+                    if (play == it2->playCount - 1)
+                        query.bindValue(1, it2->lastPlayed);
+                    else
+                        query.bindValue(1, QDateTime());
+
+                    if (!query.exec())
+                    {
+                        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                        return;
+                    }
+                }
             }
         }
     }
 
+    // Ajout des listes de lecture et des dossiers
     QStringList list = qobject_cast<CImporterITunes *>(wizard())->getSelectedItems();
 
     for (QStringList::const_iterator it = list.begin(); it != list.end(); ++it)

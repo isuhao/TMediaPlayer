@@ -3,9 +3,10 @@
 #include "CSong.hpp"
 #include "CSongTableModel.hpp"
 #include "CStaticPlayList.hpp"
-#include "CDynamicPlayList.hpp"
-#include "CListFolder.hpp"
+#include "CDynamicList.hpp"
+#include "CFolder.hpp"
 #include "CPlayListView.hpp"
+#include "CListModel.hpp"
 #include "CDialogEditDynamicList.hpp"
 #include "CDialogEditFolder.hpp"
 #include "CDialogEditMetadata.hpp"
@@ -15,6 +16,7 @@
 #include "CDialogPreferences.hpp"
 #include "CDialogEqualizer.hpp"
 #include "CImporterITunes.hpp"
+#include "CLibrary.hpp"
 
 // Last.fm
 #include "CAuthentication.hpp"
@@ -138,10 +140,6 @@ CApplication::~CApplication()
         delete m_timer;
     }
 
-    // Largeur de la vue pour les listes de lecture
-    //int treeWidth = m_uiWidget->splitter->sizes()[0];
-    //m_settings->setValue("Window/PlayListViewWidth", treeWidth);
-
     // Enregistrement des paramètres
     m_settings->setValue("Preferences/Volume", m_volume);
     m_settings->setValue("Preferences/Shuffle", m_isShuffle);
@@ -149,19 +147,7 @@ CApplication::~CApplication()
 
     //dumpObjectTree();
 
-    // Met-à-jour et supprime tous les dossiers
-    for (QList<CListFolder *>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
-    {
-        (*it)->updateDatabase();
-        delete *it;
-    }
-
-    // Met-à-jour et supprime toutes les listes de lecture
-    for (QList<CPlayList *>::const_iterator it = m_playLists.begin(); it != m_playLists.end(); ++it)
-    {
-        (*it)->updateDatabase();
-        delete *it;
-    }
+    delete m_listModel;
 
     m_library->updateDatabase();
     m_library->deleteSongs();
@@ -170,6 +156,8 @@ CApplication::~CApplication()
     m_dataBase.close();
 
     m_soundSystem->release();
+
+    delete m_uiWidget;
 }
 
 
@@ -223,15 +211,7 @@ void CApplication::initWindow(void)
     dockWidget->setObjectName("dock_playlists");
     dockWidget->setWidget(m_playListView);
     dockWidget->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    //addDockWidget(Qt::LeftDockWidgetArea, dockWidget);
-    //restoreDockWidget(dockWidget);
-    
-    //m_uiWidget->splitter->addWidget(m_playListView);
-    //int treeWidth = m_settings->value("Window/PlayListViewWidth", 200).toInt();
-    //m_uiWidget->splitter->setSizes(QList<int>() << treeWidth);
 
-    //m_listModel = new QStandardItemModel(this);
-    //m_playListView->setModel(m_listModel);
     connect(m_playListView, SIGNAL(clicked(const QModelIndex&)), this, SLOT(selectPlayListFromTreeView(const QModelIndex&)));
 
 
@@ -275,17 +255,19 @@ void CApplication::initWindow(void)
     m_dataBase = QSqlDatabase::addDatabase("QSQLITE");
 
     QString dbHostName = m_settings->value("Database/Host", QString("localhost")).toString();
+    int dbPort = m_settings->value("Database/Port", 0).toInt();
     QString dbBaseName = m_settings->value("Database/Base", QString("library.sqlite")).toString();
     QString dbUserName = m_settings->value("Database/UserName", QString("root")).toString();
     QString dbPassword = m_settings->value("Database/Password", QString("")).toString();
 
     m_dataBase.setHostName(dbHostName);
-    //m_dataBase.setPort(dbPort);
+    m_dataBase.setPort(dbPort);
     m_dataBase.setDatabaseName(QDesktopServices::storageLocation(QDesktopServices::DataLocation) + QDir::separator() + dbBaseName);
     m_dataBase.setUserName(dbUserName);
     m_dataBase.setPassword(dbPassword);
 
     m_settings->setValue("Database/Host", dbHostName);
+    m_settings->setValue("Database/Port", dbPort);
     m_settings->setValue("Database/Base", dbBaseName);
     m_settings->setValue("Database/UserName", dbUserName);
     m_settings->setValue("Database/Password", dbPassword);
@@ -344,9 +326,9 @@ void CApplication::setRowHeight(int height)
     // Mise à jour des vues
     m_library->verticalHeader()->setDefaultSectionSize(height);
 
-    const QList<CPlayList *> playLists = getAllPlayLists();
+    const QList<IPlayList *> playLists = getAllPlayLists();
 
-    for (QList<CPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
+    for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
     {
         (*it)->verticalHeader()->setDefaultSectionSize(height);
     }
@@ -517,9 +499,7 @@ void CApplication::setDisplayedSongTable(CSongTable * songTable)
 CSong * CApplication::getSongFromId(int id) const
 {
     if (id <= 0)
-    {
         return NULL;
-    }
 
     const QList<CSong *> songList = m_library->getSongs();
 
@@ -542,22 +522,21 @@ CSong * CApplication::getSongFromId(int id) const
  * \return Pointeur sur le dossier, ou NULL si \a id n'est pas valide.
  */
 
-CListFolder * CApplication::getFolderFromId(int id) const
+CFolder * CApplication::getFolderFromId(int id) const
 {
-    if (id <= 0)
-    {
+    return m_listModel->getFolderFromId(id);
+/*
+    if (id < 0)
         return NULL;
-    }
 
-    for (QList<CListFolder *>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
+    for (QList<CFolder *>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
     {
         if ((*it)->getId() == id)
-        {
             return (*it);
-        }
     }
 
     return NULL;
+*/
 }
 
 
@@ -568,22 +547,21 @@ CListFolder * CApplication::getFolderFromId(int id) const
  * \return Pointeur sur la liste de lecture, ou NULL si \a id n'est pas valide.
  */
 
-CPlayList *  CApplication::getPlayListFromId(int id) const
+IPlayList * CApplication::getPlayListFromId(int id) const
 {
+    return m_listModel->getPlayListFromId(id);
+/*
     if (id <= 0)
-    {
         return NULL;
-    }
 
-    for (QList<CPlayList *>::const_iterator it = m_playLists.begin(); it != m_playLists.end(); ++it)
+    for (QList<IPlayList *>::const_iterator it = m_playLists.begin(); it != m_playLists.end(); ++it)
     {
         if ((*it)->getIdPlayList() == id)
-        {
             return (*it);
-        }
     }
 
     return NULL;
+*/
 }
 
 
@@ -596,21 +574,20 @@ CPlayList *  CApplication::getPlayListFromId(int id) const
  * \return Liste des listes de lecture.
  */
 
-QList<CPlayList *> CApplication::getPlayListsWithSong(CSong * song) const
+QList<IPlayList *> CApplication::getPlayListsWithSong(CSong * song) const
 {
     Q_CHECK_PTR(song);
 
-    QList<CPlayList *> playLists;
+    const QList<IPlayList *> playLists = m_listModel->getPlayLists();
+    QList<IPlayList *> playListsRet;
 
-    for (QList<CPlayList *>::const_iterator it = m_playLists.begin(); it != m_playLists.end(); ++it)
+    for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
     {
         if ((*it)->hasSong(song))
-        {
-            playLists.append(*it);
-        }
+            playListsRet.append(*it);
     }
 
-    return playLists;
+    return playListsRet;
 }
 
 
@@ -620,9 +597,9 @@ QList<CPlayList *> CApplication::getPlayListsWithSong(CSong * song) const
  * \return Listes de lecture.
  */
 
-QList<CPlayList *> CApplication::getAllPlayLists(void) const
+QList<IPlayList *> CApplication::getAllPlayLists(void) const
 {
-    return m_playLists;
+    return m_listModel->getPlayLists();
 }
 
 
@@ -658,12 +635,12 @@ void CApplication::removeSongs(const QList<CSong *> songs)
 */
 
     // Suppression des morceaux de chaque liste statique et mise à jour des listes dynamiques
-    const QList<CPlayList *> playLists = getAllPlayLists();
+    const QList<IPlayList *> playLists = getAllPlayLists();
 
-    for (QList<CPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
+    for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
     {
         CStaticPlayList * playList = qobject_cast<CStaticPlayList *>(*it);
-        CDynamicPlayList * dynamicList = qobject_cast<CDynamicPlayList *>(*it);
+        CDynamicList * dynamicList = qobject_cast<CDynamicList *>(*it);
 
         if (playList)
         {
@@ -1485,7 +1462,7 @@ void CApplication::setPosition(int position)
 
 /*
 /// \todo Supprimer
-void CApplication::openPlayList(CPlayList * playList)
+void CApplication::openPlayList(IPlayList * playList)
 {
     Q_CHECK_PTR(playList);
 
@@ -1494,7 +1471,7 @@ void CApplication::openPlayList(CPlayList * playList)
 }
 */
 /*
-void CApplication::renamePlayList(CPlayList * playList)
+void CApplication::renamePlayList(IPlayList * playList)
 {
     Q_CHECK_PTR(playList);
 
@@ -1503,7 +1480,7 @@ void CApplication::renamePlayList(CPlayList * playList)
 }
 */
 /*
-void CApplication::editDynamicPlayList(CDynamicPlayList * playList)
+void CApplication::editDynamicPlayList(CDynamicList * playList)
 {
     if (!playList)
     {
@@ -1522,7 +1499,7 @@ void CApplication::editDynamicPlayList(CDynamicPlayList * playList)
  * \param playList Pointeur sur la liste de lecture à supprimer.
  */
 /*
-void CApplication::deletePlayList(CPlayList * playList)
+void CApplication::deletePlayList(IPlayList * playList)
 {
     Q_CHECK_PTR(playList);
 
@@ -1552,7 +1529,7 @@ void CApplication::deletePlayList(CPlayList * playList)
         return;
     }
 
-    for (QList<CPlayList *>::const_iterator it = m_playLists.begin(); it != m_playLists.end(); ++it)
+    for (QList<IPlayList *>::const_iterator it = m_playLists.begin(); it != m_playLists.end(); ++it)
     {
         if (*it == playList)
         {
@@ -1574,7 +1551,7 @@ void CApplication::addListFolder(void)
 }
 */
 /*
-void CApplication::renameListFolder(CListFolder * folder)
+void CApplication::renameListFolder(CFolder * folder)
 {
     Q_CHECK_PTR(folder);
 
@@ -1590,15 +1567,15 @@ void CApplication::renameListFolder(CListFolder * folder)
  * \param folder Pointeur sur le dossier à supprimer.
  */
 /*
-void CApplication::deleteListFolder(CListFolder * folder)
+void CApplication::deleteListFolder(CFolder * folder)
 {
     Q_CHECK_PTR(folder);
 
     //TODO: confirmation
     //TODO: maj vue
 
-    QList<CPlayList *> playLists = folder->getPlayLists();
-    for (QList<CPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
+    QList<IPlayList *> playLists = folder->getPlayLists();
+    for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
     {
         (*it)->setFolder(nullptr);
         m_playLists.append(*it);
@@ -1775,9 +1752,10 @@ void CApplication::openDialogCreateStaticList(void)
  * \param songs  Liste de morceaux à ajouter à la liste.
  */
 
-void CApplication::openDialogCreateStaticList(CListFolder * folder, const QList<CSong *>& songs)
+void CApplication::openDialogCreateStaticList(CFolder * folder, const QList<CSong *>& songs)
 {
-    //qDebug() << "Nouvelle liste de lecture statique...";
+    if (!folder)
+        folder = m_listModel->getRootFolder();
 
     CDialogEditStaticPlayList * dialog = new CDialogEditStaticPlayList(NULL, this, folder, songs);
     dialog->show();
@@ -1787,14 +1765,13 @@ void CApplication::openDialogCreateStaticList(CListFolder * folder, const QList<
 /**
  * Affiche la boite de dialogue pour créer une nouvelle liste de lecture dynamique.
  *
- * \todo Gérer le dossier.
- *
  * \param folder Pointeur sur le dossier où créer la liste.
  */
 
-void CApplication::openDialogCreateDynamicList(CListFolder * folder)
+void CApplication::openDialogCreateDynamicList(CFolder * folder)
 {
-    //qDebug() << "Nouvelle liste de lecture dynamique...";
+    if (!folder)
+        folder = m_listModel->getRootFolder();
 
     CDialogEditDynamicList * dialog = new CDialogEditDynamicList(NULL, this, folder);
     dialog->show();
@@ -1804,13 +1781,14 @@ void CApplication::openDialogCreateDynamicList(CListFolder * folder)
 /**
  * Affiche la boite de dialogue pour créer un nouveau dossier.
  *
- * \todo Gérer le dossier.
- *
  * \param folder Pointeur sur le dossier où créer le dossier.
  */
 
-void CApplication::openDialogCreateFolder(CListFolder * folder)
+void CApplication::openDialogCreateFolder(CFolder * folder)
 {
+    if (!folder)
+        folder = m_listModel->getRootFolder();
+
     CDialogEditFolder * dialog = new CDialogEditFolder(NULL, this, folder);
     dialog->show();
 }
@@ -1835,7 +1813,7 @@ void CApplication::openDialogEditStaticPlayList(CStaticPlayList * playList)
  * \param playList Liste à modifier.
  */
 
-void CApplication::openDialogEditDynamicList(CDynamicPlayList * playList)
+void CApplication::openDialogEditDynamicList(CDynamicList * playList)
 {
     CDialogEditDynamicList * dialog = new CDialogEditDynamicList(playList, this);
     dialog->show();
@@ -1848,7 +1826,7 @@ void CApplication::openDialogEditDynamicList(CDynamicPlayList * playList)
  * \param folder Dossier à modifier.
  */
 
-void CApplication::openDialogEditFolder(CListFolder * folder)
+void CApplication::openDialogEditFolder(CFolder * folder)
 {
     CDialogEditFolder * dialog = new CDialogEditFolder(folder, this);
     dialog->show();
@@ -1868,6 +1846,8 @@ void CApplication::importFromITunes(void)
 
 /**
  * Ouvre la fenêtre pour importer la médiathèque depuis Songbird.
+ *
+ * \todo Implémentation.
  */
 
 void CApplication::importFromSongbird(void)
@@ -1884,10 +1864,13 @@ void CApplication::importFromSongbird(void)
  * \param playList Pointeur sur la liste de lecture à ajouter.
  */
 
-void CApplication::addPlayList(CPlayList * playList)
+void CApplication::addPlayList(IPlayList * playList)
 {
     Q_CHECK_PTR(playList);
 
+    m_listModel->addPlayList(playList);
+
+/*
     if (m_playLists.contains(playList))
     {
         initPlayList(playList);
@@ -1898,17 +1881,18 @@ void CApplication::addPlayList(CPlayList * playList)
         initPlayList(playList);
         playList->m_index = m_playListView->addSongTable(playList, m_playListView->getFolderModelIndex(playList->getFolder()));
     }
+*/
 }
 
-
-void CApplication::initPlayList(CPlayList * playList)
+/*
+void CApplication::initPlayList(IPlayList * playList)
 {
     Q_CHECK_PTR(playList);
 
     if (m_playLists.contains(playList))
     {
         // Liste de lecture dynamique
-        CDynamicPlayList * dynamicList = qobject_cast<CDynamicPlayList *>(playList);
+        CDynamicList * dynamicList = qobject_cast<CDynamicList *>(playList);
 
         if (dynamicList)
         {
@@ -1938,7 +1922,7 @@ void CApplication::initPlayList(CPlayList * playList)
     }
 
     // Liste de lecture dynamique
-    CDynamicPlayList * dynamicList = qobject_cast<CDynamicPlayList *>(playList);
+    CDynamicList * dynamicList = qobject_cast<CDynamicList *>(playList);
 
     if (dynamicList)
     {
@@ -1946,12 +1930,14 @@ void CApplication::initPlayList(CPlayList * playList)
         dynamicList->update();
     }
 }
+*/
 
-
-void CApplication::addFolder(CListFolder * folder)
+void CApplication::addFolder(CFolder * folder)
 {
     Q_CHECK_PTR(folder);
 
+    m_listModel->addFolder(folder);
+/*
     if (m_folders.contains(folder))
     {
         initFolder(folder);
@@ -1961,10 +1947,11 @@ void CApplication::addFolder(CListFolder * folder)
         initFolder(folder);
         folder->m_index = m_playListView->addFolder(folder, m_playListView->getFolderModelIndex(folder->getFolder()));
     }
+*/
 }
 
-
-void CApplication::initFolder(CListFolder * folder)
+/*
+void CApplication::initFolder(CFolder * folder)
 {
     Q_CHECK_PTR(folder);
 
@@ -1978,7 +1965,7 @@ void CApplication::initFolder(CListFolder * folder)
 
     //...
 }
-
+*/
 
 /**
  * Ajoute un morceau à la médiathèque.
@@ -2115,11 +2102,11 @@ void CApplication::removeSong(CSongTableItem * songItem)
 
     m_library->removeSong(songItem->getSong());
 
-    for (QList<CListFolder *>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
+    for (QList<CFolder *>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
     {
-        const QList<CPlayList *> playLists = folder->getPlayLists();
+        const QList<IPlayList *> playLists = folder->getPlayLists();
 
-        for (QList<CPlayList *>::const_iterator it2 = playLists.begin(); it2 != playLists.end(); ++it2)
+        for (QList<IPlayList *>::const_iterator it2 = playLists.begin(); it2 != playLists.end(); ++it2)
         {
             CStaticPlayList * staticPlayList = dynamic_cast<CStaticPlayList *>(*it2);
 
@@ -2130,7 +2117,7 @@ void CApplication::removeSong(CSongTableItem * songItem)
         }
     }
 
-    for (QList<CPlayList *>::const_iterator it = m_playLists.begin(); it != m_playLists.end(); ++it)
+    for (QList<IPlayList *>::const_iterator it = m_playLists.begin(); it != m_playLists.end(); ++it)
     {
         CStaticPlayList * staticPlayList = dynamic_cast<CStaticPlayList *>(*it);
 
@@ -2177,7 +2164,7 @@ void CApplication::openSongInExplorer(void)
 
 void CApplication::editSelectedItem(void)
 {
-    CPlayList * playList = qobject_cast<CPlayList *>(m_playListView->getSelectedSongTable());
+    IPlayList * playList = qobject_cast<IPlayList *>(m_playListView->getSelectedSongTable());
 
     if (playList)
     {
@@ -2189,7 +2176,7 @@ void CApplication::editSelectedItem(void)
         }
         else
         {
-            CDynamicPlayList * dynamicList = qobject_cast<CDynamicPlayList *>(playList);
+            CDynamicList * dynamicList = qobject_cast<CDynamicList *>(playList);
 
             if (dynamicList)
             {
@@ -2200,7 +2187,7 @@ void CApplication::editSelectedItem(void)
         return;
     }
 
-    CListFolder * folder = qobject_cast<CListFolder *>(m_playListView->getSelectedFolder());
+    CFolder * folder = qobject_cast<CFolder *>(m_playListView->getSelectedFolder());
 
     if (folder)
     {
@@ -2220,7 +2207,7 @@ void CApplication::editSelectedItem(void)
 
 void CApplication::removeSelectedItem(void)
 {
-    CPlayList * playList = qobject_cast<CPlayList *>(m_playListView->getSelectedSongTable());
+    IPlayList * playList = qobject_cast<IPlayList *>(m_playListView->getSelectedSongTable());
 
     if (playList)
     {
@@ -2240,15 +2227,16 @@ void CApplication::removeSelectedItem(void)
             stop();
         }
 
-        m_playListView->removeSongTable(playList);
-        playList->romoveFromDatabase();
-        m_playLists.removeOne(playList);
-        delete playList;
+        //m_playListView->removeSongTable(playList);
+        //playList->romoveFromDatabase();
+        //m_playLists.removeOne(playList);
+        //delete playList;
+        m_listModel->removePlayList(playList);
 
         return;
     }
 
-    CListFolder * folder = qobject_cast<CListFolder *>(m_playListView->getSelectedFolder());
+    CFolder * folder = qobject_cast<CFolder *>(m_playListView->getSelectedFolder());
 
     if (folder)
     {
@@ -2572,7 +2560,7 @@ bool CApplication::initSoundSystem(void)
 /**
  * Charge la base de données.
  *
- * \todo Utiliser des méthodes dédiées dans les classes CSongTable et CListFolder.
+ * \todo Utiliser des méthodes dédiées dans les classes CSongTable et CFolder.
  */
 
 void CApplication::loadDatabase(void)
@@ -2816,7 +2804,7 @@ void CApplication::loadDatabase(void)
 
 
     // Création de la médiathèque
-    m_library = new CSongTable(this);
+    m_library = new CLibrary(this);
     m_library->m_idPlayList = 0;
     //m_uiWidget->splitter->addWidget(m_library);
     setCentralWidget(m_library);
@@ -2833,17 +2821,28 @@ void CApplication::loadDatabase(void)
         m_library->initColumns(query.value(0).toString());
     }
 
-    m_playListView->setCurrentIndex(m_playListView->addSongTable(m_library));
+    //m_playListView->setCurrentIndex(m_playListView->addSongTable(m_library));
 
 
     // Liste des morceaux
     QList<CSong *> songList = CSong::loadAllSongsFromDatabase(this);
     m_library->addSongsToTable(songList);
+
+
+    // Chargement des listes de lecture et des dossiers
+    m_listModel = new CListModel(this);
+    m_listModel->loadFromDatabase();
+
+    m_playListView->setModel(m_listModel);
+
+
     displaySongTable(m_library);
 
 
+#if 0
+
     // Création des dossiers
-    if (!query.exec("SELECT folder_id, folder_name, folder_parent, folder_position, folder_expanded FROM folder WHERE folder_id != 0 ORDER BY folder_position"))
+    if (!query.exec("SELECT folder_id, folder_name, folder_parent, folder_position, folder_expanded FROM folder /*WHERE folder_id != 0*/ ORDER BY folder_position"))
     {
         showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
     }
@@ -2851,9 +2850,9 @@ void CApplication::loadDatabase(void)
     {
         while (query.next())
         {
-            CListFolder * folder = new CListFolder(this, query.value(1).toString());
+            CFolder * folder = new CFolder(this, query.value(1).toString());
             folder->m_id       = query.value(0).toInt();
-            folder->m_folder   = reinterpret_cast<CListFolder *>(query.value(2).toInt());
+            folder->m_folder   = reinterpret_cast<CFolder *>(query.value(2).toInt());
             folder->m_position = query.value(3).toInt();
             folder->m_open     = query.value(4).toBool();
 
@@ -2867,15 +2866,18 @@ void CApplication::loadDatabase(void)
     }
 
     // On déplace les dossiers dans l'arborescence
-    for (QList<CListFolder *>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
+    for (QList<CFolder *>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
     {
         long folderId = reinterpret_cast<long>((*it)->m_folder);
-        if (folderId > 0)
+        if (folderId >= 0)
         {
-            (*it)->m_folder = getFolderFromId(folderId);
-            (*it)->m_folder->m_folders.append(*it);
+            if ((*it)->getId() != 0)
+            {
+                (*it)->m_folder = getFolderFromId(folderId);
+                (*it)->m_folder->m_folders.append(*it);
+            }
         }
-        else if (folderId != 0)
+        else
         {
             qWarning() << "CApplication::loadDatabase() : le dossier contenant le dossier a un identifiant invalide";
         }
@@ -2898,12 +2900,12 @@ void CApplication::loadDatabase(void)
 
         // Dossier contenant la liste
         int folderId = query.value(4).toInt();
-        if (folderId > 0)
+        if (folderId >= 0)
         {
             playList->m_folder = getFolderFromId(folderId);
             playList->m_folder->m_playLists.append(playList);
         }
-        else if (folderId != 0)
+        else
         {
             qWarning() << "CApplication::loadDatabase() : le dossier contenant la liste statique a un identifiant invalide";
         }
@@ -2944,19 +2946,19 @@ void CApplication::loadDatabase(void)
 
     while (query.next())
     {
-        CDynamicPlayList * playList = new CDynamicPlayList(this, query.value(1).toString());
+        CDynamicList * playList = new CDynamicList(this, query.value(1).toString());
         playList->m_id = query.value(0).toInt();
         playList->m_idPlayList = query.value(3).toInt();
         playList->initColumns(query.value(2).toString());
 
         // Dossier contenant la liste
         int folderId = query.value(4).toInt();
-        if (folderId > 0)
+        if (folderId >= 0)
         {
             playList->m_folder = getFolderFromId(folderId);
             playList->m_folder->m_playLists.append(playList);
         }
-        else if (folderId != 0)
+        else
         {
             qWarning() << "CApplication::loadDatabase() : le dossier contenant la liste statique a un identifiant invalide";
         }
@@ -2968,7 +2970,7 @@ void CApplication::loadDatabase(void)
 
 
     // Remplissage du modèle
-    for (QList<CListFolder *>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
+    for (QList<CFolder *>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
     {
         if (!(*it)->m_folder)
         {
@@ -2976,13 +2978,15 @@ void CApplication::loadDatabase(void)
         }
     }
 
-    for (QList<CPlayList *>::const_iterator it = m_playLists.begin(); it != m_playLists.end(); ++it)
+    for (QList<IPlayList *>::const_iterator it = m_playLists.begin(); it != m_playLists.end(); ++it)
     {
         if (!(*it)->m_folder)
         {
             /*(*it)->m_index = */m_playListView->addSongTable(*it);
         }
     }
+
+#endif
 }
 
 

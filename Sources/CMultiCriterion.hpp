@@ -45,7 +45,7 @@ public:
 
 protected:
 
-    virtual void setPlayList(CDynamicPlayList * playList);
+    virtual void setPlayList(CDynamicList * playList);
     virtual void insertIntoDatabase(CApplication * application);
 
 private:

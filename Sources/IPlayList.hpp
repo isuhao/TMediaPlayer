@@ -1,12 +1,12 @@
 
-#ifndef FILE_C_PLAYLIST
-#define FILE_C_PLAYLIST
+#ifndef FILE_I_PLAYLIST
+#define FILE_I_PLAYLIST
 
 #include <QString>
 #include "CSongTable.hpp"
 
 
-class CListFolder;
+class CFolder;
 
 
 /**
@@ -14,27 +14,28 @@ class CListFolder;
  * Gère les paramètres communs aux listes : le nom, le dossier, et la position dans le dossier.
  */
 
-class CPlayList : public CSongTable
+class IPlayList : public CSongTable
 {
     Q_OBJECT
 
     friend class CApplication;
-    friend class CListFolder;
+    friend class CFolder;
     friend class CPlayListView;
+    friend class CListModel;
 
 public:
 
-    explicit CPlayList(CApplication * application, const QString& name = QString());
-    virtual ~CPlayList() = 0;
+    explicit IPlayList(CApplication * application, const QString& name = QString());
+    virtual ~IPlayList() = 0;
 
     inline QString getName(void) const;
-    inline CListFolder * getFolder(void) const;
+    inline CFolder * getFolder(void) const;
     virtual bool isModified(void) const;
 
 public slots:
 
     void setName(const QString& name);
-    void setFolder(CListFolder * folder);
+    void setFolder(CFolder * folder);
 
 signals:
 
@@ -56,7 +57,7 @@ signals:
      * \param newFolder Pointeur sur le nouveau dossier.
      */
 
-    void folderChanged(CListFolder * oldFolder, CListFolder * newFolder);
+    void folderChanged(CFolder * oldFolder, CFolder * newFolder);
 
     /**
      * Signal émis lorsque le contenu de la liste change.
@@ -75,7 +76,7 @@ protected:
 
 private:
 
-    CListFolder * m_folder;    ///< Dossier contenant la liste.
+    CFolder * m_folder;    ///< Dossier contenant la liste.
     bool m_isPlayListModified; ///< Indique si la liste de lecture a été modifiée.
     bool m_folderChanging;     ///< Indique si le dossier est en train d'être changé.
     QModelIndex m_index;       ///< Index de la liste dans la vue.
@@ -88,7 +89,7 @@ private:
  * \return Nom de la liste.
  */
 
-inline QString CPlayList::getName(void) const
+inline QString IPlayList::getName(void) const
 {
     return m_name;
 }
@@ -100,9 +101,9 @@ inline QString CPlayList::getName(void) const
  * \return Pointeur sur le dossier, ou NULL si la liste est à la racine.
  */
 
-inline CListFolder * CPlayList::getFolder(void) const
+inline CFolder * IPlayList::getFolder(void) const
 {
     return m_folder;
 }
 
-#endif // FILE_C_PLAYLIST
+#endif // FILE_I_PLAYLIST

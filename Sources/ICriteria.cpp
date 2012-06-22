@@ -1,7 +1,7 @@
 
 #include "ICriteria.hpp"
 #include "CApplication.hpp"
-#include "CDynamicPlayList.hpp"
+#include "CDynamicList.hpp"
 #include <QMessageBox>
 #include <QSqlQuery>
 #include <QSqlError>
@@ -74,7 +74,7 @@ QList<CSong *> ICriteria::getSongs(const QList<CSong *>& from, const QList<CSong
  * \param playList Pointeur sur la nouvelle liste dynamique.
  */
 
-void ICriteria::setPlayList(CDynamicPlayList * playList)
+void ICriteria::setPlayList(CDynamicList * playList)
 {
     Q_CHECK_PTR(playList);
 

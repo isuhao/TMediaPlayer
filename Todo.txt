@@ -29,16 +29,17 @@
 
 - Tester le scrobbling Last.fm.
 
+- Vue "Listes de lecture" :
+  - Suppression d'un dossier.
+  - Glisser-déposer.
+  - Gérer correctement les positions des listes et des dossiers.
+
 --------------------------------------------------
   Importance moyenne
 --------------------------------------------------
 
 - Boite de dialogue Edit Song(s) :
   - Gérer l'option "Ajustement du volume".
-
-- Gérer les dossiers de listes de lecture.
-  - Suppression d'un dossier : pouvoir garder ou supprimer le contenu.
-  - Implémenter le glisser-déposer pour déplacer les listes de lecture et les dossiers.
 
 - Implémenter correctement la répétition (répétition de la liste, du morceau, etc.).
 

@@ -1,6 +1,6 @@
 
-#include "CPlayList.hpp"
-#include "CListFolder.hpp"
+#include "IPlayList.hpp"
+#include "CFolder.hpp"
 #include "CApplication.hpp"
 #include <QSqlQuery>
 #include <QSqlError>
@@ -8,7 +8,7 @@
 #include <QtDebug>
 
 
-CPlayList::CPlayList(CApplication * application, const QString& name) :
+IPlayList::IPlayList(CApplication * application, const QString& name) :
     CSongTable           (application),
     m_name               (name),
     m_position           (1),
@@ -20,9 +20,9 @@ CPlayList::CPlayList(CApplication * application, const QString& name) :
 }
 
 
-CPlayList::~CPlayList()
+IPlayList::~IPlayList()
 {
-    //qDebug() << "CPlayList::~CPlayList()";
+    //qDebug() << "IPlayList::~IPlayList()";
 }
 
 
@@ -32,7 +32,7 @@ CPlayList::~CPlayList()
  * \return Booléen.
  */
 
-bool CPlayList::isModified(void) const
+bool IPlayList::isModified(void) const
 {
     return (m_isPlayListModified || CSongTable::isModified());
 }
@@ -44,7 +44,7 @@ bool CPlayList::isModified(void) const
  * \param name Nouveau nom de la liste.
  */
 
-void CPlayList::setName(const QString& name)
+void IPlayList::setName(const QString& name)
 {
     const QString oldName = m_name;
 
@@ -64,12 +64,12 @@ void CPlayList::setName(const QString& name)
  *               liste n'est pas dans un dossier.
  */
 
-void CPlayList::setFolder(CListFolder * folder)
+void IPlayList::setFolder(CFolder * folder)
 {
     if (m_folderChanging)
         return;
 
-    CListFolder * oldFolder = m_folder;
+    CFolder * oldFolder = m_folder;
     m_folderChanging = true;
 
     if (oldFolder != folder)
@@ -93,13 +93,13 @@ void CPlayList::setFolder(CListFolder * folder)
  * \return Booléen indiquant le succès de l'opération.
  */
 
-bool CPlayList::updateDatabase(void)
+bool IPlayList::updateDatabase(void)
 {
     if (m_isPlayListModified)
     {
         if (m_idPlayList <= 0)
         {
-            qWarning() << "CPlayList::updateDatabase() : identifiant invalide";
+            qWarning() << "IPlayList::updateDatabase() : identifiant invalide";
         }
         else
         {
@@ -127,11 +127,11 @@ bool CPlayList::updateDatabase(void)
  * Supprime la liste de la base de données.
  */
 
-void CPlayList::romoveFromDatabase(void)
+void IPlayList::romoveFromDatabase(void)
 {
     if (m_idPlayList <= 0)
     {
-        qWarning() << "CPlayList::romoveFromDatabase() : identifiant invalide";
+        qWarning() << "IPlayList::romoveFromDatabase() : identifiant invalide";
         return;
     }
     

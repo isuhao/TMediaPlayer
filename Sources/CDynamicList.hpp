@@ -2,7 +2,7 @@
 #ifndef FILE_C_DYNAMIC_PLAYLIST
 #define FILE_C_DYNAMIC_PLAYLIST
 
-#include "CPlayList.hpp"
+#include "IPlayList.hpp"
 
 
 class ICriteria;
@@ -14,17 +14,18 @@ class CWidgetMultiCriterion;
  * Contient une liste de critères de recherche.
  */
 
-class CDynamicPlayList : public CPlayList
+class CDynamicList : public IPlayList
 {
     Q_OBJECT
 
     friend class CDialogEditDynamicList;
     friend class CApplication;
+    friend class CListModel;
 
 public:
 
-    explicit CDynamicPlayList(CApplication * application, const QString& name = QString());
-    ~CDynamicPlayList();
+    explicit CDynamicList(CApplication * application, const QString& name = QString());
+    ~CDynamicList();
 
     virtual bool isModified(void) const;
     CWidgetMultiCriterion * getWidget(void) const;
@@ -61,7 +62,7 @@ private:
 };
 
 
-inline int CDynamicPlayList::getId(void) const
+inline int CDynamicList::getId(void) const
 {
     return m_id;
 }

@@ -163,7 +163,7 @@ ICriteria::TUpdateConditions CMultiCriterion::getUpdateConditions(void) const
 }
 
 
-void CMultiCriterion::setPlayList(CDynamicPlayList * playList)
+void CMultiCriterion::setPlayList(CDynamicList * playList)
 {
     Q_CHECK_PTR(playList);
 

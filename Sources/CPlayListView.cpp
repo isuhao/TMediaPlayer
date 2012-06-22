@@ -1,11 +1,11 @@
 
 #include "CPlayListView.hpp"
-#include "CPlayListModel.hpp"
-#include "CPlayList.hpp"
+#include "CListModel.hpp"
+#include "IPlayList.hpp"
 #include "CStaticPlayList.hpp"
-#include "CDynamicPlayList.hpp"
+#include "CDynamicList.hpp"
 #include "CApplication.hpp"
-#include "CListFolder.hpp"
+#include "CFolder.hpp"
 #include <QHeaderView>
 #include <QMenu>
 #include <QDragMoveEvent>
@@ -15,6 +15,10 @@
 
 /**
  * Constructeur de la vue.
+ *
+ * \todo Pouvoir renommer les éléments dans la vue.
+ * \todo Ajouter une entrée dans le menu contextuel pour ouvrir une liste dans une nouvelle fenêtre.
+ * \todo Ajouter une entrée dans le menu contextuel pour exporter une liste.
  *
  * \param application Pointeur sur l'application.
  */
@@ -30,40 +34,34 @@ CPlayListView::CPlayListView(CApplication * application) :
 
     header()->setVisible(false);
     setUniformRowHeights(true);
-    setEditTriggers(QAbstractItemView::NoEditTriggers); // TODO: pouvoir renommer directement dans la vue
+    setEditTriggers(QAbstractItemView::NoEditTriggers);
     
-    m_model = new CPlayListModel(m_application);
-    setModel(m_model);
+    //m_model = new CListModel(m_application);
+    //setModel(m_model);
 
     // Glisser-déposer
-    setDropIndicatorShown(false);
+    setDropIndicatorShown(true);
     setAcceptDrops(true);
-    //setDragEnabled(true);
-    //viewport()->setAcceptDrops(true);
+    setDragEnabled(true);
+    viewport()->setAcceptDrops(true);
 
     connect(this, SIGNAL(collapsed(const QModelIndex&)), this, SLOT(onItemCollapsed(const QModelIndex&)));
     connect(this, SIGNAL(expanded(const QModelIndex&)), this, SLOT(onItemExpanded(const QModelIndex&)));
 
     // Menus contextuels
     m_menuPlaylist = new QMenu(this);
-    //m_menuPlaylist->addAction(tr("Open")); //TODO: ouvrir dans une nouvelle fenêtre
     m_menuPlaylist->addAction(tr("Edit..."), m_application, SLOT(editSelectedItem()));
     m_menuPlaylist->addAction(tr("Remove"), m_application, SLOT(removeSelectedItem()));
-    //TODO: Pouvoir exporter une liste de lecture
 
     m_menuFolder = new QMenu(this);
     m_menuFolder->addAction(tr("Edit..."), m_application, SLOT(editSelectedItem()));
     m_menuFolder->addAction(tr("Remove"), m_application, SLOT(removeSelectedItem()));
     m_menuFolder->addSeparator();
-    //m_menuFolder->addAction(tr("New playlist..."), m_application, SLOT(openDialogCreateStaticList()));
-    //m_menuFolder->addAction(tr("New dynamic playlist..."), m_application, SLOT(openDialogCreateDynamicList()));
-    //m_menuFolder->addAction(tr("New folder..."), m_application, SLOT(openDialogCreateFolder()));
     m_menuFolder->addAction(tr("New playlist..."), this, SLOT(createStaticList()));
     m_menuFolder->addAction(tr("New dynamic playlist..."), this, SLOT(createDynamicList()));
     m_menuFolder->addAction(tr("New folder..."), this, SLOT(createFolder()));
 
     m_menuDefault = new QMenu(this);
-    //TODO: gérer le dossier
     m_menuDefault->addAction(tr("New playlist..."), m_application, SLOT(openDialogCreateStaticList()));
     m_menuDefault->addAction(tr("New dynamic playlist..."), m_application, SLOT(openDialogCreateDynamicList()));
     m_menuDefault->addAction(tr("New folder..."), m_application, SLOT(openDialogCreateFolder()));
@@ -72,18 +70,19 @@ CPlayListView::CPlayListView(CApplication * application) :
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(openCustomMenuProject(const QPoint&)));
 }
 
-
+    /*
+/// \todo Supprimer ?
 QModelIndex CPlayListView::addSongTable(CSongTable * songTable, const QModelIndex& parent)
 {
     Q_CHECK_PTR(songTable);
 
     QStandardItem * playListItem;
-    CPlayList * playList = qobject_cast<CPlayList *>(songTable);
+    IPlayList * playList = qobject_cast<IPlayList *>(songTable);
 
     if (playList)
     {
         playListItem = new QStandardItem(playList->getName());
-        CDynamicPlayList * dynamicList = qobject_cast<CDynamicPlayList *>(playList);
+        CDynamicList * dynamicList = qobject_cast<CDynamicList *>(playList);
 
         if (dynamicList)
         {
@@ -123,7 +122,8 @@ QModelIndex CPlayListView::addSongTable(CSongTable * songTable, const QModelInde
 }
 
 
-QModelIndex CPlayListView::addFolder(CListFolder * folder, const QModelIndex& parent)
+/// \todo Supprimer ?
+QModelIndex CPlayListView::addFolder(CFolder * folder, const QModelIndex& parent)
 {
     Q_CHECK_PTR(folder);
 
@@ -158,15 +158,15 @@ QModelIndex CPlayListView::addFolder(CListFolder * folder, const QModelIndex& pa
     }
 
     // Dossiers enfants
-    QList<CListFolder *> folders = folder->getFolders();
-    foreach (CListFolder * child, folders)
+    QList<CFolder *> folders = folder->getFolders();
+    foreach (CFolder * child, folders)
     {
         child->m_index = addFolder(child, index);
     }
 
     // Listes enfants
-    QList<CPlayList *> playLists = folder->getPlayLists();
-    foreach (CPlayList * child, playLists)
+    QList<IPlayList *> playLists = folder->getPlayLists();
+    foreach (IPlayList * child, playLists)
     {
         child->m_index = addSongTable(child, index);
     }
@@ -176,6 +176,7 @@ QModelIndex CPlayListView::addFolder(CListFolder * folder, const QModelIndex& pa
 }
 
 
+/// \todo Supprimer ?
 void CPlayListView::removeSongTable(CSongTable * songTable)
 {
     Q_CHECK_PTR(songTable);
@@ -183,10 +184,12 @@ void CPlayListView::removeSongTable(CSongTable * songTable)
     QModelIndex index = getSongTableModelIndex(songTable);
     m_model->removeRow(index.row(), index.parent());
 }
-
+*/
 
 /**
  * Retourne la liste de morceaux correspondant à un index.
+ *
+ * \todo Adapter.
  *
  * \param index Index de la liste.
  * \return Liste de morceaux, ou NULL.
@@ -201,13 +204,15 @@ CSongTable * CPlayListView::getSongTable(const QModelIndex& index) const
 /**
  * Retourne le dossier correspondant à un index.
  *
+ * \todo Adapter.
+ *
  * \param index Index du dossier.
  * \return Dossier, ou NULL.
  */
 
-CListFolder * CPlayListView::getFolder(const QModelIndex& index) const
+CFolder * CPlayListView::getFolder(const QModelIndex& index) const
 {
-    return m_model->data(index, Qt::UserRole + 2).value<CListFolder *>();
+    return m_model->data(index, Qt::UserRole + 2).value<CFolder *>();
 }
 
 
@@ -230,7 +235,7 @@ CSongTable * CPlayListView::getSelectedSongTable(void) const
  * \return Dossier sélectionné, ou NULL.
  */
 
-CListFolder * CPlayListView::getSelectedFolder(void) const
+CFolder * CPlayListView::getSelectedFolder(void) const
 {
     QModelIndex index = selectionModel()->currentIndex();
     return (index.isValid() ? getFolder(index) : NULL);
@@ -249,7 +254,8 @@ QModelIndex CPlayListView::getSongTableModelIndex(CSongTable * songTable) const
     if (!songTable)
         return QModelIndex();
 
-    return getModelIndex(songTable, QModelIndex());
+    return m_model->getModelIndex(songTable);
+    //return getModelIndex(songTable, QModelIndex());
 }
 
 
@@ -260,23 +266,34 @@ QModelIndex CPlayListView::getSongTableModelIndex(CSongTable * songTable) const
  * \return Index du dossier.
  */
 
-QModelIndex CPlayListView::getFolderModelIndex(CListFolder * folder) const
+QModelIndex CPlayListView::getFolderModelIndex(CFolder * folder) const
 {
     if (!folder)
         return QModelIndex();
+    
+    return m_model->getModelIndex(folder);
+    //return getModelIndex(folder, QModelIndex());
+}
 
-    return getModelIndex(folder, QModelIndex());
+
+void CPlayListView::setModel(CListModel * model)
+{
+    Q_CHECK_PTR(model);
+    m_model = model;
+    QTreeView::setModel(model);
 }
 
 
 /**
  * Retourne l'index du modèle correspondant à une liste de morceaux.
  *
+ * \todo Adapter.
+ *
  * \param songTable Liste de morceaux à rechercher.
  * \param parent    Index du dossier parent.
  * \return Index de la liste de morceaux.
  */
-
+/*
 QModelIndex CPlayListView::getModelIndex(CSongTable * songTable, const QModelIndex& parent) const
 {
     if (!songTable)
@@ -300,7 +317,7 @@ QModelIndex CPlayListView::getModelIndex(CSongTable * songTable, const QModelInd
             }
             else
             {
-                CListFolder * itemFolder = item->data(Qt::UserRole + 2).value<CListFolder *>();
+                CFolder * itemFolder = item->data(Qt::UserRole + 2).value<CFolder *>();
 
                 if (itemFolder)
                 {
@@ -315,17 +332,19 @@ QModelIndex CPlayListView::getModelIndex(CSongTable * songTable, const QModelInd
 
     return QModelIndex();
 }
-
+*/
 
 /**
  * Retourne l'index du modèle correspondant à un dossier.
+ *
+ * \todo Adapter.
  *
  * \param folder Dossier à rechercher.
  * \param parent Index du dossier parent.
  * \return Index du dossier.
  */
-
-QModelIndex CPlayListView::getModelIndex(CListFolder * folder, const QModelIndex& parent) const
+/*
+QModelIndex CPlayListView::getModelIndex(CFolder * folder, const QModelIndex& parent) const
 {
     if (!folder)
         return QModelIndex();
@@ -337,7 +356,7 @@ QModelIndex CPlayListView::getModelIndex(CListFolder * folder, const QModelIndex
 
         if (item)
         {
-            CListFolder * itemFolder = item->data(Qt::UserRole + 2).value<CListFolder *>();
+            CFolder * itemFolder = item->data(Qt::UserRole + 2).value<CFolder *>();
 
             if (itemFolder)
             {
@@ -356,39 +375,7 @@ QModelIndex CPlayListView::getModelIndex(CListFolder * folder, const QModelIndex
 
     return QModelIndex();
 }
-
-
-void CPlayListView::onPlayListRenamed(const QString& oldName, const QString& newName)
-{
-    CPlayList * playList = qobject_cast<CPlayList *>(sender());
-
-    if (playList)
-    {
-        QStandardItem * item = m_model->itemFromIndex(playList->m_index);
-        
-        if (item)
-        {
-            item->setText(newName);
-        }
-    }
-}
-
-
-void CPlayListView::onFolderRenamed(const QString& oldName, const QString& newName)
-{
-    CListFolder * folder = qobject_cast<CListFolder *>(sender());
-
-    if (folder)
-    {
-        QStandardItem * item = m_model->itemFromIndex(folder->m_index);
-        
-        if (item)
-        {
-            item->setText(newName);
-        }
-    }
-}
-
+*/
 
 /**
  * Gestion des touches du clavier.
@@ -440,10 +427,45 @@ void CPlayListView::dragMoveEvent(QDragMoveEvent * event)
 
     if (index.isValid())
     {
-        CSongTable * songTable = m_model->data(index, Qt::UserRole + 1).value<CSongTable *>();
-        CStaticPlayList * playList = qobject_cast<CStaticPlayList *>(songTable);
+        QByteArray dataList = event->encodedData("application/x-ted-media-list");
 
-        if (songTable && playList)
+        if (dataList.isEmpty())
+        {
+            CSongTable * songTable = m_model->data(index, Qt::UserRole + 1).value<CSongTable *>();
+            //CFolder * folder = m_model->data(index, Qt::UserRole + 2).value<CFolder *>();
+            CStaticPlayList * playList = qobject_cast<CStaticPlayList *>(songTable);
+
+            if (songTable && playList)
+            {
+                qDebug() << "CPlayListView::dragMoveEvent() : move songs in playList";
+                event->accept();
+                event->acceptProposedAction();
+            }
+            /*else if (folder)
+            {
+                qDebug() << "CPlayListView::dragMoveEvent() : move in folder";
+                //...
+                event->ignore();
+                return;
+            }*/
+            else
+            {
+                event->ignore();
+                return;
+            }
+        }
+        else
+        {
+            qDebug() << "CPlayListView::dragMoveEvent() : move list...";
+            event->accept();
+            event->acceptProposedAction();
+        }
+    }
+    else
+    {
+        QByteArray dataList = event->encodedData("application/x-ted-media-list");
+
+        if (dataList.isEmpty())
         {
             event->accept();
             event->acceptProposedAction();
@@ -453,11 +475,6 @@ void CPlayListView::dragMoveEvent(QDragMoveEvent * event)
             event->ignore();
             return;
         }
-    }
-    else
-    {
-        event->accept();
-        event->acceptProposedAction();
     }
 
     QTreeView::dragMoveEvent(event);
@@ -486,14 +503,14 @@ void CPlayListView::openCustomMenuProject(const QPoint& point)
 
             if (songTable)
             {
-                if (qobject_cast<CPlayList *>(songTable))
+                if (qobject_cast<IPlayList *>(songTable))
                 {
                     m_menuPlaylist->move(mapToGlobal(point));
                     m_menuPlaylist->show();
                     return;
                 }
             }
-            else if (item->data(Qt::UserRole + 2).value<CListFolder *>())
+            else if (item->data(Qt::UserRole + 2).value<CFolder *>())
             {
                 m_menuFolder->move(mapToGlobal(point));
                 m_menuFolder->show();
@@ -513,7 +530,7 @@ void CPlayListView::openCustomMenuProject(const QPoint& point)
 
 void CPlayListView::onItemCollapsed(const QModelIndex& index)
 {
-    CListFolder * folder = getFolder(index);
+    CFolder * folder = getFolder(index);
 
     if (folder)
     {
@@ -524,7 +541,7 @@ void CPlayListView::onItemCollapsed(const QModelIndex& index)
 
 void CPlayListView::onItemExpanded(const QModelIndex& index)
 {
-    CListFolder * folder = getFolder(index);
+    CFolder * folder = getFolder(index);
 
     if (folder)
     {
@@ -535,7 +552,7 @@ void CPlayListView::onItemExpanded(const QModelIndex& index)
 
 void CPlayListView::onFolderOpen(void)
 {
-    CListFolder * folder = qobject_cast<CListFolder *>(sender());
+    CFolder * folder = qobject_cast<CFolder *>(sender());
 
     if (folder)
     {
@@ -553,7 +570,7 @@ void CPlayListView::onFolderOpen(void)
 
 void CPlayListView::onFolderClose(void)
 {
-    CListFolder * folder = qobject_cast<CListFolder *>(sender());
+    CFolder * folder = qobject_cast<CFolder *>(sender());
 
     if (folder)
     {
@@ -571,20 +588,20 @@ void CPlayListView::onFolderClose(void)
 
 void CPlayListView::createStaticList(void)
 {
-    CListFolder * folder = getSelectedFolder();
+    CFolder * folder = getSelectedFolder();
     m_application->openDialogCreateStaticList(folder);
 }
 
 
 void CPlayListView::createDynamicList(void)
 {
-    CListFolder * folder = getSelectedFolder();
+    CFolder * folder = getSelectedFolder();
     m_application->openDialogCreateDynamicList(folder);
 }
 
 
 void CPlayListView::createFolder(void)
 {
-    CListFolder * folder = getSelectedFolder();
+    CFolder * folder = getSelectedFolder();
     m_application->openDialogCreateFolder(folder);
 }

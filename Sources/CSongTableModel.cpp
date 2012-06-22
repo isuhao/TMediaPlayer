@@ -598,7 +598,7 @@ QMimeData * CSongTableModel::mimeData(const QModelIndexList& indexes) const
 
 
 /**
- * Méthode appelée lorsqu'on déposer des données dans le modèle.
+ * Méthode appelée lorsqu'on dépose des données dans le modèle.
  *
  * \param data   Données déposées.
  * \param action Action de glisser-déposer.
@@ -797,8 +797,6 @@ int CSongTableModel::getRowForSongItem(CSongTableItem * songItem) const
 /**
  * Cherche le morceau situé avant un autre dans la liste.
  *
- * \todo Implémenter la lecture aléatoire.
- *
  * \param songItem Item actuel.
  * \param shuffle  Indique si la lecture aléatoire est activée.
  * \return Item précédent.
@@ -806,7 +804,7 @@ int CSongTableModel::getRowForSongItem(CSongTableItem * songItem) const
 
 CSongTableItem * CSongTableModel::getPreviousSong(CSongTableItem * songItem, bool shuffle) const
 {
-    qDebug() << "Morceau précédant" << songItem;
+    //qDebug() << "Morceau précédant" << songItem;
 
     if (songItem && !m_data.contains(songItem))
     {
@@ -855,8 +853,6 @@ CSongTableItem * CSongTableModel::getPreviousSong(CSongTableItem * songItem, boo
 /**
  * Cherche le morceau situé après un autre dans la liste.
  *
- * \todo Implémenter la lecture aléatoire.
- *
  * \param songItem Item actuel.
  * \param shuffle  Indique si la lecture aléatoire est activée.
  * \return Item suivant.
@@ -864,7 +860,7 @@ CSongTableItem * CSongTableModel::getPreviousSong(CSongTableItem * songItem, boo
 
 CSongTableItem * CSongTableModel::getNextSong(CSongTableItem * songItem, bool shuffle) const
 {
-    qDebug() << "Morceau suivant" << songItem;
+    //qDebug() << "Morceau suivant" << songItem;
 
     if (songItem && !m_data.contains(songItem))
     {

@@ -8,7 +8,7 @@
 
 class CStaticPlayList;
 class CApplication;
-class CListFolder;
+class CFolder;
 class CSong;
 
 
@@ -22,7 +22,7 @@ class CDialogEditStaticPlayList : public QDialog
 
 public:
 
-    CDialogEditStaticPlayList(CStaticPlayList * playList, CApplication * application, CListFolder * folder = NULL, const QList<CSong *>& songs = QList<CSong *>());
+    CDialogEditStaticPlayList(CStaticPlayList * playList, CApplication * application, CFolder * folder = NULL, const QList<CSong *>& songs = QList<CSong *>());
     virtual ~CDialogEditStaticPlayList();
 
 protected slots:
@@ -34,7 +34,7 @@ private:
     Ui::DialogEditStaticPlayList * m_uiWidget;
     CStaticPlayList * m_playList; ///< Pointeur sur la liste de lecture.
     CApplication * m_application; ///< Pointeur sur l'application.
-    CListFolder * m_folder;       ///< Pointeur sur le dossier contenant la liste de lecture.
+    CFolder * m_folder;       ///< Pointeur sur le dossier contenant la liste de lecture.
     QList<CSong *> m_songs;       ///< Liste de morceaux à ajouter à la liste.
 };
 

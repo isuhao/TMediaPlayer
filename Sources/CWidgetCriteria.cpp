@@ -3,9 +3,9 @@
 #include "CCriteria.hpp"
 #include "CSong.hpp"
 #include "CApplication.hpp"
-#include "CPlayList.hpp"
+#include "IPlayList.hpp"
 #include "CStaticPlayList.hpp"
-#include "CDynamicPlayList.hpp"
+#include "CDynamicList.hpp"
 
 #include <QtDebug>
 
@@ -30,15 +30,15 @@ CWidgetCriteria::CWidgetCriteria(CApplication * application, QWidget * parent) :
     m_uiWidget->listLanguage->addItems(CSong::getLanguageList());
     m_uiWidget->listFormat->addItems(CSong::getFormatList());
 
-    QList<CPlayList *> playLists = m_application->getAllPlayLists();
+    QList<IPlayList *> playLists = m_application->getAllPlayLists();
 
-    for (QList<CPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
+    for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
     {
         if (qobject_cast<CStaticPlayList *>(*it))
         {
             m_uiWidget->listPlayList->addItem(QPixmap(":/icons/playlist"), (*it)->getName(), (*it)->getIdPlayList());
         }
-        else if (qobject_cast<CDynamicPlayList *>(*it))
+        else if (qobject_cast<CDynamicList *>(*it))
         {
             //TODO: Ne pas ajouter la liste courante
             m_uiWidget->listPlayList->addItem(QPixmap(":/icons/dynamic_list"), (*it)->getName(), (*it)->getIdPlayList());

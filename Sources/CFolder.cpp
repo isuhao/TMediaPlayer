@@ -1,12 +1,12 @@
 
-#include "CListFolder.hpp"
-#include "CPlayList.hpp"
+#include "CFolder.hpp"
+#include "IPlayList.hpp"
 #include "CApplication.hpp"
 #include <QSqlQuery>
 #include <QSqlError>
 
 
-CListFolder::CListFolder(CApplication * application, const QString& name) :
+CFolder::CFolder(CApplication * application, const QString& name) :
     QObject          (application),
     m_application    (application),
     m_id             (-1),
@@ -23,10 +23,10 @@ CListFolder::CListFolder(CApplication * application, const QString& name) :
 }
 
 
-CListFolder::~CListFolder()
+CFolder::~CFolder()
 {
 /*
-    foreach (CPlayList * playList, m_playLists)
+    foreach (IPlayList * playList, m_playLists)
     {
         playList->updateDatabase();
         delete playList;
@@ -43,8 +43,11 @@ CListFolder::~CListFolder()
  * \param name Nouveau nom du dossier.
  */
 
-void CListFolder::setName(const QString& name)
+void CFolder::setName(const QString& name)
 {
+    if (m_id == 0)
+        return;
+
     const QString oldName = m_name;
 
     if (name != m_name)
@@ -63,12 +66,15 @@ void CListFolder::setName(const QString& name)
  *               dossier n'est pas dans un dossier.
  */
 
-void CListFolder::setFolder(CListFolder * folder)
+void CFolder::setFolder(CFolder * folder)
 {
+    if (m_id == 0)
+        return;
+
     if (m_folderChanging)
         return;
 
-    CListFolder * oldFolder = m_folder;
+    CFolder * oldFolder = m_folder;
     m_folderChanging = true;
 
     if (oldFolder != folder && folder != this)
@@ -92,7 +98,7 @@ void CListFolder::setFolder(CListFolder * folder)
  * \return Booléen.
  */
 
-bool CListFolder::isModified(void) const
+bool CFolder::isModified(void) const
 {
     return m_isModified;
 }
@@ -105,13 +111,31 @@ bool CListFolder::isModified(void) const
  * \param position Position de la liste dans le dossier.
  */
 
-void CListFolder::addPlayList(CPlayList * playList, int position)
+void CFolder::addPlayList(IPlayList * playList, int position)
 {
     Q_CHECK_PTR(playList);
 
     position = qBound(-1, position, m_playLists.size());
+    if (position == -1) position = m_folders.size();
 
-    if (!m_playLists.contains(playList))
+    // Déplacement
+    if (m_playLists.contains(playList))
+    {
+        m_playLists.move(playList->m_position - 1, position);
+        playList->m_position = -1;
+
+        // Mise à jour des positions des listes
+        for (int pos = 0; pos < m_playLists.size(); ++pos)
+        {
+            if (m_playLists[pos]->m_position != pos)
+            {
+                m_playLists[pos]->m_position = pos;
+                m_playLists[pos]->m_isModified = true;
+            }
+        }
+    }
+    // Insertion
+    else
     {
         //m_playLists.append(playList);
         m_playLists.insert(position, playList);
@@ -139,7 +163,7 @@ void CListFolder::addPlayList(CPlayList * playList, int position)
  * \param playList Liste de lecture à enlever.
  */
 
-void CListFolder::removePlayList(CPlayList * playList)
+void CFolder::removePlayList(IPlayList * playList)
 {
     Q_CHECK_PTR(playList);
 
@@ -168,20 +192,43 @@ void CListFolder::removePlayList(CPlayList * playList)
  * \todo MAJ position.
  *
  * \param folder   Dossier à ajouter.
- * \param position Position de la liste dans le dossier.
+ * \param position Position du dossier dans le dossier.
  */
 
-void CListFolder::addFolder(CListFolder * folder, int position)
+void CFolder::addFolder(CFolder * folder, int position)
 {
     Q_CHECK_PTR(folder);
 
-    position = qBound(-1, position, m_playLists.size());
+    if (folder == this)
+        return;
 
-    if (!m_folders.contains(folder) && folder != this)
+    position = qBound(-1, position, m_folders.size());
+    if (position == -1) position = m_folders.size();
+
+    // Déplacement
+    if (m_folders.contains(folder))
+    {
+        Q_ASSERT(folder->m_folder == this);
+
+        m_folders.move(folder->m_position, position);
+        folder->m_position = -1;
+
+        // Mise à jour des positions des listes
+        for (int pos = 0; pos < m_folders.size(); ++pos)
+        {
+            if (m_folders[pos]->m_position != pos)
+            {
+                m_folders[pos]->m_position = pos;
+                m_folders[pos]->m_isModified = true;
+            }
+        }
+    }
+    // Insertion
+    else
     {
         //m_folders.append(folder);
         m_folders.insert(position, folder);
-        folder->setFolder(this);
+        folder->m_folder = this;
         //m_isModified = true;
 
         // Mise à jour des positions des listes
@@ -205,7 +252,7 @@ void CListFolder::addFolder(CListFolder * folder, int position)
  * \param folder Dossier à enlever.
  */
 
-void CListFolder::removeFolder(CListFolder * folder)
+void CFolder::removeFolder(CFolder * folder)
 {
     Q_CHECK_PTR(folder);
 
@@ -234,8 +281,11 @@ void CListFolder::removeFolder(CListFolder * folder)
  * \param open Booléen indiquant si le dossier est ouvert.
  */
 
-void CListFolder::setOpen(bool open)
+void CFolder::setOpen(bool open)
 {
+    if (m_id == 0)
+        return;
+
     if (m_open != open)
     {
         m_open = open;
@@ -253,16 +303,18 @@ void CListFolder::setOpen(bool open)
  * \return Booléen indiquant le succès de l'opération.
  */
 
-bool CListFolder::updateDatabase(void)
+bool CFolder::updateDatabase(void)
 {
+    int folderId = (getFolder() ? getFolder()->getId() : 0);
+
     // Insertion
-    if (m_id <= 0)
+    if (m_id < 0)
     {
         QSqlQuery query(m_application->getDataBase());
 
         // Position dans le dossier
         query.prepare("SELECT MAX(folder_position) FROM folder WHERE folder_parent = ?");
-        query.bindValue(0, m_folder->getId());
+        query.bindValue(0, folderId);
 
         if (!query.exec())
         {
@@ -279,7 +331,7 @@ bool CListFolder::updateDatabase(void)
         query.prepare("INSERT INTO folder (folder_name, folder_parent, folder_position, folder_expanded) VALUES (?, ?, ?, ?)");
 
         query.bindValue(0, m_name);
-        query.bindValue(1, m_folder->getId());
+        query.bindValue(1, folderId);
         query.bindValue(2, m_position);
         query.bindValue(3, (m_open ? 1 : 0));
 

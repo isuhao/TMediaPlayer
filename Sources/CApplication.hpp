@@ -14,11 +14,13 @@
 
 class CSong;
 class CSongTable;
-class CListFolder;
-class CPlayList;
+class CFolder;
+class IPlayList;
 class CPlayListView;
-class CDynamicPlayList;
+class CDynamicList;
 class CStaticPlayList;
+class CLibrary;
+class CListModel;
 class QStandardItemModel;
 class QSettings;
 class QNetworkReply;
@@ -89,14 +91,14 @@ public:
 
     inline CSongTableItem * getCurrentSongItem(void) const;
     inline CSongTable * getCurrentSongTable(void) const;
-    inline CSongTable * getLibrary(void) const;
+    inline CLibrary * getLibrary(void) const;
     inline CSongTable * getDisplayedSongTable(void) const;
     void setDisplayedSongTable(CSongTable * songTable);
     CSong * getSongFromId(int id) const;
-    CListFolder * getFolderFromId(int id) const;
-    CPlayList * getPlayListFromId(int id) const;
-    QList<CPlayList *> getPlayListsWithSong(CSong * song) const;
-    QList<CPlayList *> getAllPlayLists(void) const;
+    CFolder * getFolderFromId(int id) const;
+    IPlayList * getPlayListFromId(int id) const;
+    QList<IPlayList *> getPlayListsWithSong(CSong * song) const;
+    QList<IPlayList *> getAllPlayLists(void) const;
     CSong * addSong(const QString& fileName);
     void removeSongs(const QList<CSong *> songs);
 
@@ -132,7 +134,7 @@ public:
     QFile * getLogFile(const QString& logName);
     void notifyInformation(const QString& message);
 
-    void openDialogCreateStaticList(CListFolder * folder, const QList<CSong *>& songs = QList<CSong *>());
+    void openDialogCreateStaticList(CFolder * folder, const QList<CSong *>& songs = QList<CSong *>());
 
 public slots:
 
@@ -155,13 +157,13 @@ public slots:
     void setPosition(int position);
     void setEqualizerEnabled(bool enabled = true);
 
-    //void openPlayList(CPlayList * playList);
-    //void renamePlayList(CPlayList * playList);
-    //void editDynamicPlayList(CDynamicPlayList * playList);
-    //void deletePlayList(CPlayList * playList);
+    //void openPlayList(IPlayList * playList);
+    //void renamePlayList(IPlayList * playList);
+    //void editDynamicPlayList(CDynamicList * playList);
+    //void deletePlayList(IPlayList * playList);
     //void addListFolder(void);
-    //void renameListFolder(CListFolder * folder);
-    //void deleteListFolder(CListFolder * folder);
+    //void renameListFolder(CFolder * folder);
+    //void deleteListFolder(CFolder * folder);
 
     void openDialogPreferences(void);
     void openDialogEqualizer(void);
@@ -170,11 +172,11 @@ public slots:
     void openDialogAddFolder(void);
     void openDialogSongInfos(void);
     void openDialogCreateStaticList(void);
-    void openDialogCreateDynamicList(CListFolder * folder = NULL);
-    void openDialogCreateFolder(CListFolder * folder = NULL);
+    void openDialogCreateDynamicList(CFolder * folder = NULL);
+    void openDialogCreateFolder(CFolder * folder = NULL);
     void openDialogEditStaticPlayList(CStaticPlayList * playList);
-    void openDialogEditDynamicList(CDynamicPlayList * playList);
-    void openDialogEditFolder(CListFolder * folder);
+    void openDialogEditDynamicList(CDynamicList * playList);
+    void openDialogEditFolder(CFolder * folder);
     void importFromITunes(void);
     void importFromSongbird(void);
     //void editSong(CSongTableItem * songItem);
@@ -200,12 +202,12 @@ signals:
     void songStopped(CSong * song);           ///< Signal émis lorsque la lecture est stoppée.
 
     // Signaux sur les listes de lecture
-    //void listAdded(CPlayList * playList);     ///< Signal émis lorsqu'une liste est créée.
-    //void listRemoved(CPlayList * playList);   ///< Signal émis lorsqu'une liste est supprimée.
+    //void listAdded(IPlayList * playList);     ///< Signal émis lorsqu'une liste est créée.
+    //void listRemoved(IPlayList * playList);   ///< Signal émis lorsqu'une liste est supprimée.
 
     // Signaux sur les dossiers
-    //void folderAdded(CListFolder * folder);   ///< Signal émis lorsqu'un dossier est crée.
-    //void folderRemoved(CListFolder * folder); ///< Signal émis lorsqu'un dossier est supprimé.
+    //void folderAdded(CFolder * folder);   ///< Signal émis lorsqu'un dossier est crée.
+    //void folderRemoved(CFolder * folder); ///< Signal émis lorsqu'un dossier est supprimé.
 
 protected slots:
 
@@ -219,10 +221,10 @@ protected slots:
 
 protected:
 
-    void addPlayList(CPlayList * playList);
-    void initPlayList(CPlayList * playList);
-    void addFolder(CListFolder * folder);
-    void initFolder(CListFolder * folder);
+    void addPlayList(IPlayList * playList);
+    //void initPlayList(IPlayList * playList);
+    void addFolder(CFolder * folder);
+    //void initFolder(CFolder * folder);
     QStringList importFolder(const QString& pathName);
     void importSongs(const QStringList& fileList);
     void displaySongTable(CSongTable * songTable);
@@ -240,13 +242,14 @@ private:
     Ui::WidgetControl * m_uiControl;    ///< Widget représentant la barre de contrôle.
     FMOD::System * m_soundSystem;       ///< Système de son de FMOD.
     CPlayListView * m_playListView;     ///< Vue pour afficher les listes de lecture.
+    CListModel * m_listModel;           ///< Modèle contenant les listes de lecture.
     QSqlDatabase m_dataBase;            ///< Base de données.
     QSettings * m_settings;             ///< Paramètres de l'application.
     QTimer * m_timer;                   ///< Timer pour mettre à jour l'affichage.
     QLabel * m_listInfos;               ///< Label pour afficher les informations sur la liste affichée.
     CSongTableItem * m_currentSongItem; ///< Pointeur sur l'item en cours de lecture.
     CSongTable * m_currentSongTable;    ///< Liste de morceaux contenant le morceau en cours de lecture. \todo Fusion avec le précédent param.
-    CSongTable * m_library;             ///< Librairie (liste de tous les morceaux).
+    CLibrary * m_library;               ///< Librairie (liste de tous les morceaux).
     CSongTable * m_displayedSongTable;  ///< Liste de morceaux affichée.
     State m_state;                      ///< État de lecture.
     bool m_isRepeat;                    ///< Indique si la répétition est activée.
@@ -255,8 +258,8 @@ private:
     int m_volume;                       ///< Volume sonore (entre 0 et 100).
     double m_equalizerGains[10];        ///< Gains de l'égaliseur.
     FMOD::DSP * m_dsp[10];
-    QList<CListFolder *> m_folders;     ///< Liste de l'ensemble des dossiers de listes de lecture.
-    QList<CPlayList *> m_playLists;     ///< Liste de l'ensemble des listes de lectures.
+    //QList<CFolder *> m_folders;         ///< Liste de l'ensemble des dossiers de listes de lecture.
+    //QList<IPlayList *> m_playLists;     ///< Liste de l'ensemble des listes de lectures.
     QMap<QString, QFile *> m_logList;   ///< Liste des fichiers de log ouverts.
     QString m_applicationPath;
 
@@ -309,7 +312,7 @@ inline CSongTable * CApplication::getCurrentSongTable(void) const
  * \return Médiathèque, qui contient l'ensemble des morceaux.
  */
 
-inline CSongTable * CApplication::getLibrary(void) const
+inline CLibrary * CApplication::getLibrary(void) const
 {
     return m_library;
 }

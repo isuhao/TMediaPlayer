@@ -1,12 +1,20 @@
 
 #include "CDialogEditFolder.hpp"
 #include "CApplication.hpp"
-#include "CListFolder.hpp"
+#include "CFolder.hpp"
 #include <QMessageBox>
 #include <QPushButton>
 
 
-CDialogEditFolder::CDialogEditFolder(CListFolder * folder, CApplication * application, CListFolder * folderParent) :
+/**
+ * Constructeur de la boite de dialogue.
+ *
+ * \param folder       Pointeur sur le dossier à modifier, ou NULL pour créer un dossier.
+ * \param application  Pointeur sur l'application.
+ * \param folderParent Pointeur sur le dossier parent.
+ */
+
+CDialogEditFolder::CDialogEditFolder(CFolder * folder, CApplication * application, CFolder * folderParent) :
     QDialog        (application),
     m_uiWidget     (new Ui::DialogEditFolder()),
     m_folder       (folder),
@@ -14,13 +22,14 @@ CDialogEditFolder::CDialogEditFolder(CListFolder * folder, CApplication * applic
     m_folderParent (folderParent)
 {
     Q_CHECK_PTR(application);
+    Q_CHECK_PTR(folderParent);
 
     setAttribute(Qt::WA_DeleteOnClose);
     m_uiWidget->setupUi(this);
 
     if (!m_folder)
     {
-        m_folder = new CListFolder(m_application);
+        m_folder = new CFolder(m_application);
     }
 
     m_uiWidget->editName->setText(m_folder->getName());

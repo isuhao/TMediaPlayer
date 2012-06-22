@@ -1,6 +1,6 @@
 
 #include "CCriteria.hpp"
-#include "CPlayList.hpp"
+#include "IPlayList.hpp"
 #include "CApplication.hpp"
 #include "CSong.hpp"
 
@@ -296,7 +296,7 @@ QList<CSong *> CCriteria::getSongs(const QList<CSong *>& from, const QList<CSong
 
     if (m_type == ICriteria::TypePlayList)
     {
-        CPlayList * playList = m_application->getPlayListFromId(m_value1.toInt());
+        IPlayList * playList = m_application->getPlayListFromId(m_value1.toInt());
 
         if (!playList)
         {

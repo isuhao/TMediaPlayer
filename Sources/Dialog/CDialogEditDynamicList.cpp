@@ -1,6 +1,6 @@
 
 #include "CDialogEditDynamicList.hpp"
-#include "CDynamicPlayList.hpp"
+#include "CDynamicList.hpp"
 #include "CWidgetMultiCriterion.hpp"
 #include "CApplication.hpp"
 #include <QStandardItemModel>
@@ -17,7 +17,7 @@
  * \param application Pointeur sur l'application.
  */
 
-CDialogEditDynamicList::CDialogEditDynamicList(CDynamicPlayList * playList, CApplication * application, CListFolder * folder) :
+CDialogEditDynamicList::CDialogEditDynamicList(CDynamicList * playList, CApplication * application, CFolder * folder) :
     QDialog           (application),
     m_uiWidget        (new Ui::DialogEditDynamicPlayList()),
     m_widgetCriterion (NULL),
@@ -47,7 +47,7 @@ CDialogEditDynamicList::CDialogEditDynamicList(CDynamicPlayList * playList, CApp
     }
     else
     {
-        m_playList = new CDynamicPlayList(m_application);
+        m_playList = new CDynamicList(m_application);
 
         m_widgetCriterion = new CWidgetMultiCriterion(m_application, this);
         m_uiWidget->verticalLayout->insertWidget(1, m_widgetCriterion);
