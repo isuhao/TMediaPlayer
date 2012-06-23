@@ -56,7 +56,7 @@ public:
     CApplication(void);
     virtual ~CApplication();
 
-    void initWindow(void);
+    bool initWindow(void);
     void showDatabaseError(const QString& msg, const QString& query, const QString& fileName, int line);
 
     // Préférences
@@ -132,6 +132,7 @@ public:
     }
 
     QFile * getLogFile(const QString& logName);
+    void logError(const QString& message);
     void notifyInformation(const QString& message);
 
     void openDialogCreateStaticList(CFolder * folder, const QList<CSong *>& songs = QList<CSong *>());

@@ -4,18 +4,17 @@
 <context>
     <name>CApplication</name>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="225"/>
+        <location filename="../Sources/CApplication.cpp" line="229"/>
         <source>Failed to init sound system with FMOD.</source>
         <translation>Le chargement du système de son avec FMOD a échoué.</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="277"/>
         <source>Failed to load database.</source>
-        <translation>Erreur lors du chargement de la base de données.</translation>
+        <translation type="obsolete">Erreur lors du chargement de la base de données.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="96"/>
-        <location filename="../Sources/CApplication.cpp" line="2364"/>
+        <location filename="../Sources/CApplication.cpp" line="97"/>
+        <location filename="../Sources/CApplication.cpp" line="2396"/>
         <source>%n song(s), %1</source>
         <translation>
             <numerusform>%n morceau, %1</numerusform>
@@ -23,17 +22,22 @@
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="210"/>
+        <location filename="../Sources/CApplication.cpp" line="214"/>
         <source>Playlists</source>
         <translation>Listes de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="307"/>
+        <location filename="../Sources/CApplication.cpp" line="284"/>
+        <source>Failed to load database: %1.</source>
+        <translation>Erreur lors du chargement de la base de données : %1.</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CApplication.cpp" line="316"/>
         <source>Database error</source>
         <translation>Erreur de base de données</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="307"/>
+        <location filename="../Sources/CApplication.cpp" line="316"/>
         <source>File: %1 (%2)
 
 Query: %3
@@ -46,7 +50,7 @@ Requête : %3
 Erreur : %4</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="1703"/>
+        <location filename="../Sources/CApplication.cpp" line="1730"/>
         <source>%n song(s) added to the library.</source>
         <translation>
             <numerusform>%n morceau ajouté à la médiathèque.</numerusform>
@@ -54,55 +58,52 @@ Erreur : %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3043"/>
+        <location filename="../Sources/CApplication.cpp" line="3077"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3051"/>
-        <location filename="../Sources/CApplication.cpp" line="3059"/>
+        <location filename="../Sources/CApplication.cpp" line="3085"/>
+        <location filename="../Sources/CApplication.cpp" line="3093"/>
         <source>Play</source>
         <translation>Lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1681"/>
+        <location filename="../Sources/CApplication.cpp" line="1708"/>
         <source>Loading files...</source>
         <translation>Chargement des fichiers...</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2215"/>
+        <location filename="../Sources/CApplication.cpp" line="2242"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Êtes-vous sûr de vouloir supprimer cette liste de lecture ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2215"/>
-        <location filename="../Sources/CApplication.cpp" line="2245"/>
+        <location filename="../Sources/CApplication.cpp" line="2242"/>
         <source>Yes</source>
         <translation>Oui</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2215"/>
-        <location filename="../Sources/CApplication.cpp" line="2245"/>
+        <location filename="../Sources/CApplication.cpp" line="2242"/>
         <source>No</source>
         <translation>Non</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1647"/>
+        <location filename="../Sources/CApplication.cpp" line="1674"/>
         <source>Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)</source>
         <translation>Fichiers multimédias (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;Tous les fichiers (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1681"/>
+        <location filename="../Sources/CApplication.cpp" line="1708"/>
         <source>Abort</source>
         <translation>Interrompre</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2245"/>
         <source>Are you sure you want to delete this folder?</source>
-        <translation>Êtes-vous sûr de vouloir supprimer ce dossier ?</translation>
+        <translation type="obsolete">Êtes-vous sûr de vouloir supprimer ce dossier ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2507"/>
+        <location filename="../Sources/CApplication.cpp" line="2539"/>
         <source>This program requires FMOD %1 or superior.</source>
         <translation>Ce programme nécessite FMOD %1 ou supérieur.</translation>
     </message>
@@ -358,6 +359,19 @@ Erreur : %4</translation>
     </message>
 </context>
 <context>
+    <name>CDialogRemoveFolder</name>
+    <message>
+        <location filename="../Sources/Dialog/CDialogRemoveFolder.cpp" line="23"/>
+        <source>Yes</source>
+        <translation>Oui</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogRemoveFolder.cpp" line="24"/>
+        <source>No</source>
+        <translation>Non</translation>
+    </message>
+</context>
+<context>
     <name>CITunesLibrary</name>
     <message numerus="yes">
         <location filename="../Sources/Importer/CImporterITunes.cpp" line="964"/>
@@ -424,12 +438,12 @@ Erreur : %4</translation>
     <message>
         <location filename="../Sources/Importer/CImporterITunes.cpp" line="175"/>
         <source>Solving problems</source>
-        <translation type="unfinished"></translation>
+        <translation>Résolution des conflits</translation>
     </message>
     <message>
         <location filename="../Sources/Importer/CImporterITunes.cpp" line="176"/>
         <source>What do you want to deal with songs already in your library?</source>
-        <translation type="unfinished"></translation>
+        <translation>Que voulez-vous faire si un morceau est déjà présent dans votre médiathèque ?</translation>
     </message>
 </context>
 <context>
@@ -1852,6 +1866,24 @@ Voulez-vous les ajouter ?</translation>
         <location filename="../Form/DialogPreferences.ui" line="225"/>
         <source>Automatically compute sorting fields.</source>
         <translation>Déterminer automatiquement les valeurs pour le tri.</translation>
+    </message>
+</context>
+<context>
+    <name>DialogRemoveFolder</name>
+    <message>
+        <location filename="../Form/DialogRemoveFolder.ui" line="9"/>
+        <source>Remove folder</source>
+        <translation>Supprimer un dossier</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogRemoveFolder.ui" line="18"/>
+        <source>Are you sure you want to delete this folder?</source>
+        <translation>Êtes-vous sûr de vouloir supprimer ce dossier ?</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogRemoveFolder.ui" line="25"/>
+        <source>Remove the content of the folder recursively.</source>
+        <translation>Supprimer le contenu du dossier récursivement.</translation>
     </message>
 </context>
 <context>

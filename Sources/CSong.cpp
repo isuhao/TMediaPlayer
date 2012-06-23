@@ -221,7 +221,7 @@ void CSong::loadFromDatabase(void)
 
     if (!query.next())
     {
-        qWarning() << "CSong::loadFromDatabase() : l'identifiant " << m_id << " est invalide";
+        m_application->logError(QString("CSong::loadFromDatabase() : l'identifiant %1 est invalide").arg(m_id));
         return;
     }
 
@@ -295,7 +295,7 @@ bool CSong::loadTags(bool readProperties)
     switch (m_format)
     {
         default:
-            qWarning() << "CSong::loadTags() : format non géré";
+            m_application->logError(QString("CSong::loadTags() : format non géré"));
             return false;
 
         case CSong::FormatMP3:
@@ -304,7 +304,7 @@ bool CSong::loadTags(bool readProperties)
 
             if (!file.isValid())
             {
-                qWarning() << "CSong::loadTags() : impossible de lire le fichier MP3 " << m_fileName;
+                m_application->logError(QString("CSong::loadTags() : impossible de lire le fichier MP3 %1").arg(m_fileName));
                 return false;
             }
 
@@ -323,12 +323,12 @@ bool CSong::loadTags(bool readProperties)
                 }
                 else
                 {
-                    qWarning() << "CSong::loadTags() : impossible de récupérer les propriétés du fichier " << m_fileName;
+                    m_application->logError(QString("CSong::loadTags() : impossible de récupérer les propriétés du fichier %1").arg(m_fileName));
                 }
             }
 
             QFile * logFile = m_application->getLogFile("metadata");
-
+            
             loadTags(file.APETag(false), m_infos, logFile, m_fileName);
             loadTags(file.ID3v1Tag(true), m_infos, logFile, m_fileName);
             loadTags(file.ID3v2Tag(true), m_infos, logFile, m_fileName);
@@ -342,7 +342,7 @@ bool CSong::loadTags(bool readProperties)
 
             if (!file.isValid())
             {
-                qWarning() << "CSong::loadTags() : impossible de lire le fichier Ogg " << m_fileName;
+                m_application->logError(QString("CSong::loadTags() : impossible de lire le fichier Ogg %1").arg(m_fileName));
                 return false;
             }
 
@@ -359,7 +359,7 @@ bool CSong::loadTags(bool readProperties)
                 }
                 else
                 {
-                    qWarning() << "CSong::loadTags() : impossible de récupérer les propriétés du fichier " << m_fileName;
+                    m_application->logError(QString("CSong::loadTags() : impossible de récupérer les propriétés du fichier %1").arg(m_fileName));
                 }
             }
 
@@ -374,7 +374,7 @@ bool CSong::loadTags(bool readProperties)
 
             if (!file.isValid())
             {
-                qWarning() << "CSong::loadTags() : impossible de lire le fichier FLAC " << m_fileName;
+                m_application->logError(QString("CSong::loadTags() : impossible de lire le fichier FLAC %1").arg(m_fileName));
                 return false;
             }
 
@@ -391,7 +391,7 @@ bool CSong::loadTags(bool readProperties)
                 }
                 else
                 {
-                    qWarning() << "CSong::loadTags() : impossible de récupérer les propriétés du fichier " << m_fileName;
+                    m_application->logError(QString("CSong::loadTags() : impossible de récupérer les propriétés du fichier %1").arg(m_fileName));
                 }
             }
 
@@ -430,7 +430,7 @@ return false; // Lecture seule...
     switch (m_format)
     {
         default:
-            qWarning() << "CSong::writeTags() : format non géré";
+            m_application->logError(QString("CSong::writeTags() : format non géré"));
             return false;
 
         case CSong::FormatMP3:
@@ -439,14 +439,14 @@ return false; // Lecture seule...
 
             if (!file.isValid())
             {
-                qWarning() << "CSong::writeTags() : impossible de lire le fichier MP3 " << m_fileName;
+                m_application->logError(QString("CSong::writeTags() : impossible de lire le fichier MP3 %1").arg(m_fileName));
                 m_needWriteTags = true;
                 return false;
             }
 
             if (file.readOnly())
             {
-                qWarning() << "CSong::writeTags() : le fichier est ouvert en lecture seule";
+                m_application->logError(QString("CSong::writeTags() : le fichier est ouvert en lecture seule"));
                 m_needWriteTags = true;
                 return false;
             }
@@ -469,14 +469,14 @@ return false; // Lecture seule...
 
             if (!file.isValid())
             {
-                qWarning() << "CSong::writeTags() : impossible de lire le fichier Ogg " << m_fileName;
+                m_application->logError(QString("CSong::writeTags() : impossible de lire le fichier Ogg %1").arg(m_fileName));
                 m_needWriteTags = true;
                 return false;
             }
 
             if (file.readOnly())
             {
-                qWarning() << "CSong::writeTags() : le fichier est ouvert en lecture seule";
+                m_application->logError(QString("CSong::writeTags() : le fichier est ouvert en lecture seule"));
                 m_needWriteTags = true;
                 return false;
             }
@@ -495,14 +495,14 @@ return false; // Lecture seule...
 
             if (!file.isValid())
             {
-                qWarning() << "CSong::writeTags() : impossible de lire le fichier FLAC " << m_fileName;
+                m_application->logError(QString("CSong::writeTags() : impossible de lire le fichier FLAC %1").arg(m_fileName));
                 m_needWriteTags = true;
                 return false;
             }
 
             if (file.readOnly())
             {
-                qWarning() << "CSong::writeTags() : le fichier est ouvert en lecture seule";
+                m_application->logError(QString("CSong::writeTags() : le fichier est ouvert en lecture seule"));
                 m_needWriteTags = true;
                 return false;
             }
@@ -701,7 +701,7 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
 {
     if (getId(application, fileName) >= 0)
     {
-        qWarning() << "CSong::loadFromFile() : le fichier " << fileName << " est déjà dans la médiathèque";
+        application->logError(QString("CSong::loadFromFile() : le fichier %1 est déjà dans la médiathèque").arg(fileName));
         return NULL;
     }
 
@@ -713,7 +713,7 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
 
     if (res != FMOD_OK || !sound)
     {
-        qWarning() << "CSong::loadFromFile() : erreur lors du chargement du son avec FMOD";
+        application->logError(QString("CSong::loadFromFile() : erreur lors du chargement du fichier %1 avec FMOD").arg(fileName));
         return NULL;
     }
 
@@ -730,7 +730,7 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
     res = sound->getLength(reinterpret_cast<unsigned int *>(&(song->m_duration)), FMOD_TIMEUNIT_MS);
     if (res != FMOD_OK)
     {
-        qWarning() << "CSong::loadFromFile() : impossible de calculer la durée du morceau";
+        application->logError(QString("CSong::loadFromFile() : impossible de calculer la durée du morceau %1").arg(fileName));
         song->m_duration = 0;
     }
 
@@ -739,14 +739,14 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
 
     if (res != FMOD_OK)
     {
-        qWarning() << "CSong::loadFromFile() : impossible de déterminer le format du morceau";
+        application->logError(QString("CSong::loadFromFile() : impossible de déterminer le format du morceau %1").arg(fileName));
     }
     else
     {
         switch (type)
         {
             default:
-                qWarning() << "CSong::loadFromFile() : format inconnu";
+                application->logError(QString("CSong::loadFromFile() : format inconnu"));
                 delete song;
                 return NULL;
 
@@ -1473,7 +1473,7 @@ bool CSong::loadSound(void)
             // Mise à jour de la durée du morceau
             if (m_duration != length)
             {
-                qWarning() << "CSong::loadSound() : La durée du morceau doit être mise à jour.";
+                m_application->logError(QString("CSong::loadFromFile() : La durée du morceau doit être mise à jour"));
                 m_duration = length;
 
                 QSqlQuery query(m_application->getDataBase());
@@ -1493,7 +1493,7 @@ bool CSong::loadSound(void)
         }
     }
 
-    qWarning() << "CSong::loadSound() : Échec du chargement du morceau " << m_fileName;
+    m_application->logError(QString("CSong::loadFromFile() : Échec du chargement du morceau %1").arg(m_fileName));
 
     m_sound = NULL;
     m_channel = NULL;
@@ -1905,6 +1905,8 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
     stream << "----------------------------------------\n";
 
     TagLib::ID3v2::FrameListMap tagMap = tags->frameListMap();
+
+    //BUG: it = tagMap.begin() plante en mode RELEASE
     for (TagLib::ID3v2::FrameListMap::ConstIterator it = tagMap.begin(); it != tagMap.end(); ++it)
     {
         QString tagKey = QByteArray(it->first.data(), it->first.size());

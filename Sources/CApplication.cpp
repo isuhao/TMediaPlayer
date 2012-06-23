@@ -15,6 +15,7 @@
 #include "CDialogEditStaticPlayList.hpp"
 #include "CDialogPreferences.hpp"
 #include "CDialogEqualizer.hpp"
+#include "CDialogRemoveFolder.hpp"
 #include "CImporterITunes.hpp"
 #include "CLibrary.hpp"
 
@@ -149,9 +150,12 @@ CApplication::~CApplication()
 
     delete m_listModel;
 
-    m_library->updateDatabase();
-    m_library->deleteSongs();
-    delete m_library;
+    if (m_library)
+    {
+        m_library->updateDatabase();
+        m_library->deleteSongs();
+        delete m_library;
+    }
 
     m_dataBase.close();
 
@@ -165,14 +169,14 @@ CApplication::~CApplication()
  * Initialise l'interface graphique et charge les données.
  */
 
-void CApplication::initWindow(void)
+bool CApplication::initWindow(void)
 {
     static bool init = false;
 
     if (init)
     {
         qWarning() << "CApplication::initWindow() : l'application a déjà été initialisée";
-        return;
+        return true;
     }
 
 
@@ -224,6 +228,7 @@ void CApplication::initWindow(void)
     {
         QMessageBox::critical(this, QString(), tr("Failed to init sound system with FMOD."));
         QCoreApplication::exit();
+        return false;
     }
 
 
@@ -252,17 +257,19 @@ void CApplication::initWindow(void)
 
 
     // Chargement de la base de données
-    m_dataBase = QSqlDatabase::addDatabase("QSQLITE");
+    QString dbType = m_settings->value("Database/Type", QString("QSQLITE")).toString();
+    m_settings->setValue("Database/Type", dbType);
+    m_dataBase = QSqlDatabase::addDatabase(dbType);
 
     QString dbHostName = m_settings->value("Database/Host", QString("localhost")).toString();
     int dbPort = m_settings->value("Database/Port", 0).toInt();
-    QString dbBaseName = m_settings->value("Database/Base", QString("library.sqlite")).toString();
+    QString dbBaseName = m_settings->value("Database/Base", QDesktopServices::storageLocation(QDesktopServices::DataLocation) + QDir::separator() + "library.sqlite").toString();
     QString dbUserName = m_settings->value("Database/UserName", QString("root")).toString();
     QString dbPassword = m_settings->value("Database/Password", QString("")).toString();
 
     m_dataBase.setHostName(dbHostName);
     m_dataBase.setPort(dbPort);
-    m_dataBase.setDatabaseName(QDesktopServices::storageLocation(QDesktopServices::DataLocation) + QDir::separator() + dbBaseName);
+    m_dataBase.setDatabaseName(dbBaseName);
     m_dataBase.setUserName(dbUserName);
     m_dataBase.setPassword(dbPassword);
 
@@ -274,8 +281,9 @@ void CApplication::initWindow(void)
 
     if (!m_dataBase.open())
     {
-        QMessageBox::critical(this, QString(), tr("Failed to load database."));
+        QMessageBox::critical(this, QString(), tr("Failed to load database: %1.").arg(m_dataBase.lastError().text()));
         QCoreApplication::exit();
+        return false;
     }
 
     loadDatabase();
@@ -288,6 +296,7 @@ void CApplication::initWindow(void)
     setState(Stopped);
 
     init = true;
+    return true;
 }
 
 
@@ -929,6 +938,24 @@ QFile * CApplication::getLogFile(const QString& logName)
     }
 
     return m_logList.value(fileName);
+}
+
+
+void CApplication::logError(const QString& message)
+{
+    static QFile * logFile = NULL;
+
+    if (!logFile)
+    {
+        logFile = getLogFile("errors");
+    }
+
+    QTextStream stream(logFile);
+    stream << message << "\n";
+
+#ifdef QT_DEBUG
+    qWarning() << message;
+#endif
 }
 
 
@@ -1828,7 +1855,7 @@ void CApplication::openDialogEditDynamicList(CDynamicList * playList)
 
 void CApplication::openDialogEditFolder(CFolder * folder)
 {
-    CDialogEditFolder * dialog = new CDialogEditFolder(folder, this);
+    CDialogEditFolder * dialog = new CDialogEditFolder(folder, this, folder->getFolder());
     dialog->show();
 }
 
@@ -2240,12 +2267,17 @@ void CApplication::removeSelectedItem(void)
 
     if (folder)
     {
+        CDialogRemoveFolder * dialog = new CDialogRemoveFolder(this, folder);
+        dialog->show();
+
+/*
         // Confirmation
         //TODO: Case à cocher pour supprimer le contenu du dossier
         if (QMessageBox::question(this, QString(), tr("Are you sure you want to delete this folder?"), tr("Yes"), tr("No"), 0, 1) == 1)
         {
             return;
         }
+*/
 
         //...
     }
@@ -2703,6 +2735,8 @@ void CApplication::loadDatabase(void)
                             "song_lyrics TEXT NOT NULL,"
                             "song_language VARCHAR(2) NOT NULL,"
                             "song_lyricist VARCHAR NOT NULL,"
+                            "song_compilation INTEGER NOT NULL,"
+                            "song_skip_shuffle INTEGER NOT NULL,"
                             "song_play_count INTEGER NOT NULL,"
                             "song_play_time DATETIME NOT NULL"
                         ")"))

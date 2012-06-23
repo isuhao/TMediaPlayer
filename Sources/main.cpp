@@ -22,7 +22,12 @@ int main(int argc, char * argv[])
     app.installTranslator(&translator);
 
     CApplication lecteur;
-    lecteur.initWindow();
+
+    if (!lecteur.initWindow())
+    {
+        return EXIT_FAILURE;
+    }
+
     lecteur.show();
 
     return app.exec();
