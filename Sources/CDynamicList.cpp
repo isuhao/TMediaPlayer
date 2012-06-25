@@ -111,12 +111,19 @@ bool CDynamicList::updateDatabase(void)
 {
     QSqlQuery query(m_application->getDataBase());
 
+    if (!getFolder())
+    {
+        qWarning() << "CDynamicList::updateDatabase() : big problème ligne " << __LINE__;
+    }
+
     // Insertion
     if (m_id <= 0)
     {
         int folderId = (getFolder() ? getFolder()->getId() : 0);
 
         // Position dans le dossier
+        int position = getFolder()->getPosition(this);
+/*
         query.prepare("SELECT MAX(list_position) FROM playlist WHERE folder_id = ?");
         query.bindValue(0, folderId);
 
@@ -130,13 +137,14 @@ bool CDynamicList::updateDatabase(void)
         {
             m_position = query.value(0).toInt() + 1;
         }
+*/
 
         // Insertion
         query.prepare("INSERT INTO playlist (playlist_name, folder_id, list_position, list_columns) VALUES (?, ?, ?, ?)");
 
         query.bindValue(0, m_name);
         query.bindValue(1, folderId);
-        query.bindValue(2, m_position);
+        query.bindValue(2, position);
         query.bindValue(3, "0:40;1:150;17:60;2+:150;3:150;6:50;9:60;12:50;13:120"); // Disposition par défaut
 
         if (!query.exec())

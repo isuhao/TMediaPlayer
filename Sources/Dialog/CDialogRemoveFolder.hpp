@@ -27,6 +27,10 @@ class CApplication;
 class CFolder;
 
 
+/**
+ * Boite de dialogue pour la suppression d'un dossier.
+ */
+
 class CDialogRemoveFolder : public QDialog
 {
     Q_OBJECT
@@ -35,6 +39,8 @@ public:
 
     CDialogRemoveFolder(CApplication * application, CFolder * folder);
     virtual ~CDialogRemoveFolder();
+
+    inline bool isResursive(void) const;
 
 protected slots:
 
@@ -45,6 +51,13 @@ private:
     Ui::DialogRemoveFolder * m_uiWidget;
     CApplication * m_application;
     CFolder * m_folder;
+    bool m_recursive;
 };
+
+
+inline bool CDialogRemoveFolder::isResursive(void) const
+{
+    return m_recursive;
+}
 
 #endif // FILE_C_DIALOG_REMOVE_FOLDER

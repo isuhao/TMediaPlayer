@@ -90,14 +90,14 @@ protected:
     virtual void romoveFromDatabase(void);
 
     QString m_name;            ///< Nom de la liste de lecture.
-    int m_position;            ///< Position de la liste dans le dossier.
+    //int m_position;            ///< Position de la liste dans le dossier.
 
 private:
 
-    CFolder * m_folder;    ///< Dossier contenant la liste.
+    CFolder * m_folder;        ///< Dossier contenant la liste.
     bool m_isPlayListModified; ///< Indique si la liste de lecture a été modifiée.
     bool m_folderChanging;     ///< Indique si le dossier est en train d'être changé.
-    QModelIndex m_index;       ///< Index de la liste dans la vue.
+    //QModelIndex m_index;       ///< Index de la liste dans la vue.
 };
 
 

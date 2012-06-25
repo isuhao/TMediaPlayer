@@ -52,17 +52,27 @@ CListModel::CListModel(CApplication * application) :
 
 CListModel::~CListModel()
 {
-    // Met-à-jour et supprime tous les dossiers
+    // Met-à-jour tous les dossiers
     for (QList<CFolder *>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
     {
         (*it)->updateDatabase();
-        delete *it;
     }
 
-    // Met-à-jour et supprime toutes les listes de lecture
+    // Met-à-jour toutes les listes de lecture
     for (QList<IPlayList *>::const_iterator it = m_playLists.begin(); it != m_playLists.end(); ++it)
     {
         (*it)->updateDatabase();
+    }
+
+    // Supprime toutes les listes de lecture
+    for (QList<IPlayList *>::const_iterator it = m_playLists.begin(); it != m_playLists.end(); ++it)
+    {
+        delete *it;
+    }
+
+    // Supprime tous les dossiers
+    for (QList<CFolder *>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
+    {
         delete *it;
     }
 }
@@ -78,12 +88,13 @@ void CListModel::loadFromDatabase(void)
 
     QList<CFolder *> folders;
     QList<IPlayList *> playLists;
+    QMap<CFolder *, int> folderPositions;
 
     QSqlQuery query(m_application->getDataBase());
 
     // Création des dossiers
     if (!query.exec("SELECT folder_id, folder_name, folder_parent, folder_position, folder_expanded "
-                    "FROM folder /*WHERE folder_id != 0*/ "
+                    "FROM folder "
                     "ORDER BY folder_position"))
     {
         m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
@@ -93,14 +104,16 @@ void CListModel::loadFromDatabase(void)
         while (query.next())
         {
             CFolder * folder = new CFolder(m_application, query.value(1).toString());
-            folder->m_id       = query.value(0).toInt();
-            folder->m_folder   = reinterpret_cast<CFolder *>(query.value(2).toInt());
-            folder->m_position = query.value(3).toInt();
-            folder->m_open     = query.value(4).toBool();
+            folder->m_id     = query.value(0).toInt();
+            folder->m_folder = reinterpret_cast<CFolder *>(query.value(2).toInt());
+            folder->m_open   = query.value(4).toBool();
+
+            folderPositions[folder] = query.value(3).toInt();
 
             if (folder->m_folder < 0)
             {
                 qWarning() << "CApplication::loadDatabase() : le dossier parent du dossier a un identifiant invalide";
+                folder->m_folder = 0;
             }
 
             folders.append(folder);
@@ -108,10 +121,6 @@ void CListModel::loadFromDatabase(void)
             if (folder->m_id == 0)
             {
                 m_rootFolder = folder;
-            }
-            else
-            {
-                connect(folder, SIGNAL(nameChanged(const QString&, const QString&)), this, SLOT(onFolderRenamed(const QString&, const QString&)));
             }
         }
     }
@@ -128,7 +137,8 @@ void CListModel::loadFromDatabase(void)
 
                 if ((*it)->m_folder)
                 {
-                    (*it)->m_folder->m_folders.append(*it);
+                    //(*it)->m_folder->m_folders.append(*it);
+                    (*it)->m_folder->addFolderItem(*it, folderPositions[*it]);
                 }
                 else
                 {
@@ -144,63 +154,66 @@ void CListModel::loadFromDatabase(void)
 
 
     // Création des listes de lecture statiques
-    if (!query.exec("SELECT static_list_id, playlist_name, list_columns, playlist_id, folder_id "
+    if (!query.exec("SELECT static_list_id, playlist_name, list_columns, playlist_id, folder_id, list_position "
                     "FROM static_list NATURAL JOIN playlist ORDER BY list_position"))
     {
         m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
     }
-
-    while (query.next())
+    else
     {
-        CStaticPlayList * playList = new CStaticPlayList(m_application, query.value(1).toString());
-        playList->m_id = query.value(0).toInt();
-        playList->m_idPlayList = query.value(3).toInt();
-        playList->initColumns(query.value(2).toString());
-
-        // Dossier contenant la liste
-        int folderId = query.value(4).toInt();
-        if (folderId >= 0)
+        while (query.next())
         {
-            playList->m_folder = getFolderFromId(folderId, folders);
-            playList->m_folder->m_playLists.append(playList);
-        }
-        else
-        {
-            qWarning() << "CListModel::loadFromDatabase() : le dossier contenant la liste statique a un identifiant invalide";
-        }
+            CStaticPlayList * playList = new CStaticPlayList(m_application, query.value(1).toString());
+            playList->m_id = query.value(0).toInt();
+            playList->m_idPlayList = query.value(3).toInt();
+            playList->initColumns(query.value(2).toString());
 
-        // Liste des morceaux de la liste de lecture
-        QSqlQuery query2(m_application->getDataBase());
-        query2.prepare("SELECT song_id, song_position FROM static_list_song "
-                       "WHERE static_list_id = ? ORDER BY song_position");
-        query2.bindValue(0, playList->m_id);
-
-        if (!query2.exec())
-        {
-            m_application->showDatabaseError(query2.lastError().text(), query2.lastQuery(), __FILE__, __LINE__);
-            delete playList;
-            continue;
-        }
-
-        while (query2.next())
-        {
-            CSong * song = m_application->getSongFromId(query2.value(0).toInt());
-
-            if (song)
+            // Dossier contenant la liste
+            int folderId = query.value(4).toInt();
+            if (folderId >= 0)
             {
-                playList->addSongToTable(song, query2.value(1).toInt());
+                playList->m_folder = getFolderFromId(folderId, folders);
+                //playList->m_folder->m_playLists.append(playList);
+                playList->m_folder->addPlayListItem(playList, query.value(5).toInt());
             }
+            else
+            {
+                qWarning() << "CListModel::loadFromDatabase() : le dossier contenant la liste statique a un identifiant invalide";
+            }
+
+            // Liste des morceaux de la liste de lecture
+            QSqlQuery query2(m_application->getDataBase());
+            query2.prepare("SELECT song_id, song_position FROM static_list_song "
+                           "WHERE static_list_id = ? ORDER BY song_position");
+            query2.bindValue(0, playList->m_id);
+
+            if (!query2.exec())
+            {
+                m_application->showDatabaseError(query2.lastError().text(), query2.lastQuery(), __FILE__, __LINE__);
+                delete playList;
+                continue;
+            }
+
+            while (query2.next())
+            {
+                CSong * song = m_application->getSongFromId(query2.value(0).toInt());
+
+                if (song)
+                {
+                    playList->addSongToTable(song, query2.value(1).toInt());
+                }
+            }
+
+            playLists.append(playList);
+            playList->hide();
+
+            connect(playList, SIGNAL(songStarted(CSongTableItem *)), m_application, SLOT(playSong(CSongTableItem *)));
+            connect(playList, SIGNAL(nameChanged(const QString&, const QString&)), this, SLOT(onPlayListRenamed(const QString&, const QString&)));
+            connect(playList, SIGNAL(rowCountChanged()), m_application, SLOT(updateListInformations()));
+
+            connect(playList, SIGNAL(songAdded(CSong *)), m_application, SLOT(updateListInformations()));
+            connect(playList, SIGNAL(songRemoved(CSong *)), m_application, SLOT(updateListInformations()));
         }
-
-        playLists.append(playList);
-        playList->hide();
-
-        connect(playList, SIGNAL(songStarted(CSongTableItem *)), m_application, SLOT(playSong(CSongTableItem *)));
-        connect(playList, SIGNAL(nameChanged(const QString&, const QString&)), this, SLOT(onPlayListRenamed(const QString&, const QString&)));
-        connect(playList, SIGNAL(rowCountChanged()), m_application, SLOT(updateListInformations()));
-
-        connect(playList, SIGNAL(songAdded(CSong *)), m_application, SLOT(updateListInformations()));
-        connect(playList, SIGNAL(songRemoved(CSong *)), m_application, SLOT(updateListInformations()));
     }
 
 
@@ -210,37 +223,40 @@ void CListModel::loadFromDatabase(void)
     {
         m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
     }
-
-    while (query.next())
+    else
     {
-        CDynamicList * playList = new CDynamicList(m_application, query.value(1).toString());
-        playList->m_id = query.value(0).toInt();
-        playList->m_idPlayList = query.value(3).toInt();
-        playList->initColumns(query.value(2).toString());
-
-        // Dossier contenant la liste
-        int folderId = query.value(4).toInt();
-        if (folderId >= 0)
+        while (query.next())
         {
-            playList->m_folder = getFolderFromId(folderId, folders);
-            playList->m_folder->m_playLists.append(playList);
+            CDynamicList * playList = new CDynamicList(m_application, query.value(1).toString());
+            playList->m_id = query.value(0).toInt();
+            playList->m_idPlayList = query.value(3).toInt();
+            playList->initColumns(query.value(2).toString());
+
+            // Dossier contenant la liste
+            int folderId = query.value(4).toInt();
+            if (folderId >= 0)
+            {
+                playList->m_folder = getFolderFromId(folderId, folders);
+                //playList->m_folder->m_playLists.append(playList);
+                playList->m_folder->addPlayListItem(playList, query.value(5).toInt());
+            }
+            else
+            {
+                qWarning() << "CApplication::loadDatabase() : le dossier contenant la liste statique a un identifiant invalide";
+            }
+
+            playList->loadFromDatabase();
+
+            playLists.append(playList);
+            playList->hide();
+
+            connect(playList, SIGNAL(songStarted(CSongTableItem *)), this, SLOT(playSong(CSongTableItem *)));
+            connect(playList, SIGNAL(nameChanged(const QString&, const QString&)), this, SLOT(onPlayListRenamed(const QString&, const QString&)));
+            connect(playList, SIGNAL(rowCountChanged()), this, SLOT(updateListInformations()));
+            connect(playList, SIGNAL(listUpdated()), this, SLOT(updateListInformations()));
+
+            playList->update();
         }
-        else
-        {
-            qWarning() << "CApplication::loadDatabase() : le dossier contenant la liste statique a un identifiant invalide";
-        }
-
-        playList->loadFromDatabase();
-
-        playLists.append(playList);
-        playList->hide();
-
-        connect(playList, SIGNAL(songStarted(CSongTableItem *)), this, SLOT(playSong(CSongTableItem *)));
-        connect(playList, SIGNAL(nameChanged(const QString&, const QString&)), this, SLOT(onPlayListRenamed(const QString&, const QString&)));
-        connect(playList, SIGNAL(rowCountChanged()), this, SLOT(updateListInformations()));
-        connect(playList, SIGNAL(listUpdated()), this, SLOT(updateListInformations()));
-
-        playList->update();
     }
 
 
@@ -350,6 +366,11 @@ void CListModel::addFolder(CFolder * folder)
 
     m_folders.append(folder);
 
+    if (folder->m_id != 0)
+    {
+        connect(folder, SIGNAL(nameChanged(const QString&, const QString&)), this, SLOT(onFolderRenamed(const QString&, const QString&)));
+    }
+
     if (folder->m_folder)
     {
         QStandardItem * folderItem = new QStandardItem(QPixmap(":/icons/folder_close"), folder->getName());
@@ -363,7 +384,7 @@ void CListModel::addFolder(CFolder * folder)
         else
             appendRow(folderItem);
 
-        folder->m_index = folderItem->index();
+        //folder->m_index = folderItem->index();
 
         if (folder->isOpen())
         {
@@ -377,6 +398,26 @@ void CListModel::addFolder(CFolder * folder)
         }
     }
 
+    // Éléments du dossier
+    //...
+    QVector<CFolder::TFolderItem *> items = folder->getItems();
+
+    for (QVector<CFolder::TFolderItem *>::const_iterator it = items.begin(); it != items.end(); ++it)
+    {
+        if ((*it)->folder)
+        {
+            addFolder((*it)->folder);
+        }
+        else if ((*it)->playList)
+        {
+            addPlayList((*it)->playList);
+        }
+        else
+        {
+            qWarning() << "CListModel::addFolder() : big problème ligne " << __LINE__;
+        }
+    }
+/*
     // Dossiers enfants
     QList<CFolder *> folders = folder->getFolders();
     for (QList<CFolder *>::const_iterator it = folders.begin(); it != folders.end(); ++it)
@@ -390,6 +431,7 @@ void CListModel::addFolder(CFolder * folder)
     {
         addPlayList(*it);
     }
+*/
 }
 
 
@@ -424,25 +466,109 @@ void CListModel::addPlayList(IPlayList * playList)
     else
         appendRow(playListItem);
 
-    playList->m_index = playListItem->index();
+    //playList->m_index = playListItem->index();
 }
 
 
-/// \todo Implémentation.
+/**
+ * Supprime un dossier.
+ *
+ * \param folder    Pointeur sur le dossier à supprimer.
+ * \param recursive Indique si on doit supprimer le contenu du dossier ou pas.
+ */
+
 void CListModel::removeFolder(CFolder * folder, bool recursive)
 {
-    //
+    Q_CHECK_PTR(folder);
+
+    QStandardItem * item = m_folderItems.key(folder);
+
+    CFolder * parentFolder = folder->getFolder();
+    if (!parentFolder) parentFolder = m_rootFolder;
+    parentFolder->removeFolder(folder);
+
+    // Déplacement des éléments du dossier vers le dossier parent
+    if (!recursive)
+    {
+        QStandardItem * itemParent = m_folderItems.key(parentFolder);
+
+        QList<CFolder *> folders = folder->getFolders();
+
+        for (QList<CFolder *>::const_iterator it = folders.begin(); it != folders.end(); ++it)
+        {
+            parentFolder->addFolder(*it);
+            QStandardItem * itemFolder = m_folderItems.key(*it);
+
+            if (!itemFolder)
+            {
+                qWarning() << "CListModel::removeFolder() : dossier invalide";
+                continue;
+            }
+
+            item->takeRow(itemFolder->row());
+
+            if (itemParent && (*it)->m_folder != m_rootFolder)
+                itemParent->appendRow(itemFolder);
+            else
+                appendRow(itemFolder);
+        }
+
+        QList<IPlayList *> playLists = folder->getPlayLists();
+
+        for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
+        {
+            parentFolder->addPlayList(*it);
+            QStandardItem * itemPlayList = m_songTableItems.key(*it);
+
+            if (!itemPlayList)
+            {
+                qWarning() << "CListModel::removeFolder() : playlist invalide";
+                continue;
+            }
+
+            item->takeRow(itemPlayList->row());
+
+            if (itemParent && (*it)->m_folder != m_rootFolder)
+                itemParent->appendRow(itemPlayList);
+            else
+                appendRow(itemPlayList);
+        }
+    }
+
+    if (item)
+    {
+        m_folderItems.remove(item);
+        QModelIndex parent = (item->parent() ? item->parent()->index() : QModelIndex());
+        removeRow(item->row(), parent);
+    }
+
+    folder->removeFromDatabase();
+    m_folders.removeOne(folder);
+    delete folder;
 }
 
+
+/**
+ * Supprime une liste de lecture.
+ *
+ * \param playList Pointeur sur la liste de lecture à supprimer.
+ */
 
 void CListModel::removePlayList(IPlayList * playList)
 {
+    Q_CHECK_PTR(playList);
+
     QStandardItem * item = m_songTableItems.key(playList);
+
+    CFolder * parentFolder = playList->getFolder();
+    if (!parentFolder) parentFolder = m_rootFolder;
+    parentFolder->removePlayList(playList);
 
     if (item)
     {
         m_songTableItems.remove(item);
-        delete item;
+        QModelIndex parent = (item->parent() ? item->parent()->index() : QModelIndex());
+        removeRow(item->row(), parent);
     }
 
     playList->romoveFromDatabase();

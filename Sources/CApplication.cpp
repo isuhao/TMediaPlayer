@@ -2272,12 +2272,7 @@ void CApplication::removeSelectedItem(void)
             stop();
         }
 
-        //m_playListView->removeSongTable(playList);
-        //playList->romoveFromDatabase();
-        //m_playLists.removeOne(playList);
-        //delete playList;
         m_listModel->removePlayList(playList);
-
         return;
     }
 
@@ -2285,19 +2280,17 @@ void CApplication::removeSelectedItem(void)
 
     if (folder)
     {
-        CDialogRemoveFolder * dialog = new CDialogRemoveFolder(this, folder);
-        dialog->show();
-
-/*
         // Confirmation
-        //TODO: Case à cocher pour supprimer le contenu du dossier
-        if (QMessageBox::question(this, QString(), tr("Are you sure you want to delete this folder?"), tr("Yes"), tr("No"), 0, 1) == 1)
+        CDialogRemoveFolder * dialog = new CDialogRemoveFolder(this, folder);
+        
+        if (dialog->exec() == QDialog::Rejected)
         {
+            qDebug() << "Suppression du dossier annulée...";
             return;
         }
-*/
 
-        //...
+        m_listModel->removeFolder(folder, dialog->isResursive());
+        delete dialog;
     }
 }
 
@@ -2628,8 +2621,8 @@ void CApplication::loadDatabase(void)
                             "folder_name VARCHAR NOT NULL,"
                             "folder_parent INTEGER NOT NULL,"
                             "folder_position INTEGER NOT NULL,"
-                            "folder_expanded INTEGER NOT NULL,"
-                            "UNIQUE (folder_parent, folder_position)"
+                            "folder_expanded INTEGER NOT NULL"
+                            //",UNIQUE (folder_parent, folder_position)"
                         ")"))
         {
             showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
@@ -2648,8 +2641,8 @@ void CApplication::loadDatabase(void)
                             "playlist_name VARCHAR NOT NULL,"
                             "folder_id INTEGER NOT NULL,"
                             "list_position INTEGER NOT NULL,"
-                            "list_columns VARCHAR NOT NULL,"
-                            "UNIQUE (folder_id, list_position)"
+                            "list_columns VARCHAR NOT NULL"
+                            //",UNIQUE (folder_id, list_position)"
                         ")"))
         {
             showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);

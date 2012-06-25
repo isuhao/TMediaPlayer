@@ -25,16 +25,24 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QtDebug>
 
 
+/**
+ * Construit la boite de dialogue.
+ *
+ * \param application Pointeur sur l'application.
+ * \param folder      Pointeur sur le dossier à supprimer.
+ */
+
 CDialogRemoveFolder::CDialogRemoveFolder(CApplication * application, CFolder * folder) :
     QDialog       (application, Qt::MSWindowsFixedSizeDialogHint | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowCloseButtonHint),
     m_uiWidget    (new Ui::DialogRemoveFolder()),
     m_application (application),
-    m_folder      (folder)
+    m_folder      (folder),
+    m_recursive   (false)
 {
     Q_CHECK_PTR(application);
     Q_CHECK_PTR(folder);
 
-    setAttribute(Qt::WA_DeleteOnClose);
+    //setAttribute(Qt::WA_DeleteOnClose);
     m_uiWidget->setupUi(this);
     
     // Connexions des signaux des boutons
@@ -44,10 +52,12 @@ CDialogRemoveFolder::CDialogRemoveFolder(CApplication * application, CFolder * f
 
     connect(btnYes, SIGNAL(clicked()), this, SLOT(removeFolder()));
     connect(btnNo, SIGNAL(clicked()), this, SLOT(close()));
-
-    //...
 }
 
+
+/**
+ * Détruit la boite de dialogue.
+ */
 
 CDialogRemoveFolder::~CDialogRemoveFolder()
 {
@@ -55,11 +65,13 @@ CDialogRemoveFolder::~CDialogRemoveFolder()
 }
 
 
+/**
+ * Supprime le dossier et ferme la boite de dialogue.
+ */
+
 void CDialogRemoveFolder::removeFolder(void)
 {
-    qDebug() << "Suppression du dossier...";
-
-    //...
-
+    qDebug() << "CDialogRemoveFolder::removeFolder() : Suppression du dossier...";
+    m_recursive = m_uiWidget->recursive->isChecked();
     close();
 }

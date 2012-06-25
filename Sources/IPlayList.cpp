@@ -29,7 +29,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 IPlayList::IPlayList(CApplication * application, const QString& name) :
     CSongTable           (application),
     m_name               (name),
-    m_position           (1),
+    //m_position           (1),
     m_folder             (NULL),
     m_isPlayListModified (false),
     m_folderChanging     (false)
@@ -113,6 +113,11 @@ void IPlayList::setFolder(CFolder * folder)
 
 bool IPlayList::updateDatabase(void)
 {
+    if (!getFolder())
+    {
+        qWarning() << "IPlayList::updateDatabase() : big problème ligne " << __LINE__;
+    }
+
     if (m_isPlayListModified)
     {
         if (m_idPlayList <= 0)
@@ -122,10 +127,12 @@ bool IPlayList::updateDatabase(void)
         else
         {
             QSqlQuery query(m_application->getDataBase());
-            query.prepare("UPDATE playlist SET playlist_name = ? WHERE playlist_id = ?");
+            query.prepare("UPDATE playlist SET playlist_name = ?, folder_id = ?, list_position = ? WHERE playlist_id = ?");
 
             query.bindValue(0, m_name);
-            query.bindValue(1, m_idPlayList);
+            query.bindValue(1, getFolder()->getId());
+            query.bindValue(2, getFolder()->getPosition(this));
+            query.bindValue(3, m_idPlayList);
 
             if (!query.exec())
             {

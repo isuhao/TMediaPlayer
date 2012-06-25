@@ -568,10 +568,11 @@ void CPlayListView::onItemExpanded(const QModelIndex& index)
 }
 
 
+/// \todo Implémentation.
 void CPlayListView::onFolderOpen(void)
 {
     CFolder * folder = qobject_cast<CFolder *>(sender());
-
+/*
     if (folder)
     {
         QModelIndex index = folder->getModelIndex();
@@ -583,13 +584,15 @@ void CPlayListView::onFolderOpen(void)
             item->setIcon(QPixmap(":/icons/folder_open"));
         }
     }
+*/
 }
 
 
+/// \todo Implémentation.
 void CPlayListView::onFolderClose(void)
 {
     CFolder * folder = qobject_cast<CFolder *>(sender());
-
+/*
     if (folder)
     {
         QModelIndex index = folder->getModelIndex();
@@ -601,6 +604,7 @@ void CPlayListView::onFolderClose(void)
             item->setIcon(QPixmap(":/icons/folder_close"));
         }
     }
+*/
 }
 
 

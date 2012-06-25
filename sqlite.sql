@@ -5,7 +5,7 @@ CREATE TABLE folder (
     folder_parent INTEGER NOT NULL,
     folder_position INTEGER NOT NULL,
     folder_expanded INTEGER NOT NULL,
-    UNIQUE (folder_parent, folder_position)
+    -- UNIQUE (folder_parent, folder_position)
 );
 
 INSERT INTO folder VALUES (0, "", 0, 1, 1);
@@ -16,7 +16,7 @@ CREATE TABLE playlist (
     folder_id INTEGER NOT NULL,
     list_position INTEGER NOT NULL,
     list_columns VARCHAR NOT NULL,
-    UNIQUE (folder_id, list_position)
+    -- UNIQUE (folder_id, list_position)
 );
 
 INSERT INTO playlist (playlist_id, playlist_name, folder_id, list_position, list_columns)
