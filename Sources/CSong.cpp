@@ -1,3 +1,21 @@
+/*
+Copyright (C) 2012 Teddy Michel
+
+This file is part of TMediaPlayer.
+
+TMediaPlayer is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+TMediaPlayer is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
+*/
 
 #include "CSong.hpp"
 #include "CApplication.hpp"
@@ -328,7 +346,7 @@ bool CSong::loadTags(bool readProperties)
             }
 
             QFile * logFile = m_application->getLogFile("metadata");
-            
+
             loadTags(file.APETag(false), m_infos, logFile, m_fileName);
             loadTags(file.ID3v1Tag(true), m_infos, logFile, m_fileName);
             loadTags(file.ID3v2Tag(true), m_infos, logFile, m_fileName);
@@ -580,8 +598,9 @@ bool CSong::moveFile(void)
 
     switch (m_format)
     {
-        case FormatMP3:  pathName += ".mp3"; break;
-        case FormatOGG:  pathName += ".ogg"; break;
+        default: break;
+        case FormatMP3:  pathName += ".mp3";  break;
+        case FormatOGG:  pathName += ".ogg";  break;
         case FormatFLAC: pathName += ".flac"; break;
     }
 
@@ -1471,7 +1490,7 @@ bool CSong::loadSound(void)
         if (res == FMOD_OK)
         {
             // Mise à jour de la durée du morceau
-            if (m_duration != length)
+            if (m_duration != static_cast<int>(length))
             {
                 m_application->logError(QString("CSong::loadFromFile() : La durée du morceau doit être mise à jour"));
                 m_duration = length;

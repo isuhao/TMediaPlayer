@@ -1,3 +1,21 @@
+/*
+Copyright (C) 2012 Teddy Michel
+
+This file is part of TMediaPlayer.
+
+TMediaPlayer is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+TMediaPlayer is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
+*/
 
 #include "CSongTable.hpp"
 #include "CSongTableModel.hpp"
@@ -33,11 +51,11 @@ CSongTable::CSongTable(CApplication * application) :
     m_model           (NULL),
     m_idPlayList      (-1),
     m_columnSort      (ColArtist),
-    m_isModified      (false),
     m_sortOrder       (Qt::AscendingOrder),
-    m_isColumnMoving  (false),
+    m_automaticSort   (true),
     m_selectedItem    (NULL),
-    m_automaticSort   (true)
+    m_isModified      (false),
+    m_isColumnMoving  (false)
 {
     Q_CHECK_PTR(application);
 
@@ -403,7 +421,7 @@ void CSongTable::initColumns(const QString& str)
         int colPosition = 0;
 
         QStringList columnList = str.split(';', QString::SkipEmptyParts);
-    
+
         foreach (QString columnInfos, columnList)
         {
             QStringList columnInfosPart = columnInfos.split(':');
@@ -490,7 +508,7 @@ void CSongTable::initColumns(const QString& str)
     m_columns[0].visible = true;
 
     //qDebug() << "Modification des colonnes :";
-    
+
     m_isColumnMoving = true;
     CSongTableHeader * header = qobject_cast<CSongTableHeader *>(horizontalHeader());
 /*
@@ -617,7 +635,7 @@ void CSongTable::showColumn(int column, bool show)
             numColumns = 0;
             horizontalHeader()->hideSection(column);
         }
-        
+
         //QString debugStr1 = "";
         //QString debugStr2 = "";
         for (int col = 0; col < ColNumber; ++col)
@@ -626,7 +644,7 @@ void CSongTable::showColumn(int column, bool show)
             {
                 ++numColumns;
             }
-            
+
             //debugStr1 += QString::number(horizontalHeader()->visualIndex(col)) + ',';
             //debugStr2 += QString::number(m_columns[col].pos) + ',';
         }
@@ -872,7 +890,7 @@ QString CSongTable::getColumnsInfos(void) const
         //m_application->getSettings()->value("Preferences/ColumnsDefault", "0:40;1:150;17:60;2+:150;3:150;6:50;9:60;12:50;13:120").toString();
         str = "0:40;1:150;17:60;2+:150;3:150;6:50;9:60;12:50;13:120"; // Disposition par défaut
     }
-    
+
     return str;
 }
 
@@ -882,7 +900,7 @@ void CSongTable::mousePressEvent(QMouseEvent * event)
 {
     Q_CHECK_PTR(event);
 
-    if (event->button() == Qt::RightButton) 
+    if (event->button() == Qt::RightButton)
     {
         QPoint pt = event->pos();
         QModelIndex index = this->indexAt(pt);
@@ -897,7 +915,7 @@ void CSongTable::mousePressEvent(QMouseEvent * event)
             qDebug() << "Clic droit en dehors de la table";
         }
     }
-    else if (event->button() == Qt::LeftButton) 
+    else if (event->button() == Qt::LeftButton)
     {
         QPoint pt = event->pos();
         QModelIndex index = this->indexAt(pt);
@@ -1053,14 +1071,14 @@ void CSongTable::startDrag(Qt::DropActions supportedActions)
         //drag->setHotSpot(m_pressedPosition - rect.topLeft());
         drag->setHotSpot(QPoint(16, 16)); // Décalage vers le haut à gauche.
 
-        Qt::DropAction defaultDropAction0 = Qt::IgnoreAction;
+        //Qt::DropAction defaultDropAction0 = Qt::IgnoreAction;
         Qt::DropAction defaultDropAction = this->defaultDropAction();
-
+/*
         if (defaultDropAction != Qt::IgnoreAction && (supportedActions & defaultDropAction))
             defaultDropAction0 = defaultDropAction;
         else if (supportedActions & Qt::CopyAction && dragDropMode() != QAbstractItemView::InternalMove)
             defaultDropAction0 = Qt::CopyAction;
-
+*/
         drag->exec(supportedActions, defaultDropAction);
 
         //if (drag->exec(supportedActions, defaultDropAction) == Qt::MoveAction)
@@ -1110,7 +1128,7 @@ void CSongTable::mouseDoubleClickEvent(QMouseEvent * event)
 {
     Q_CHECK_PTR(event);
 
-    if (event->button() == Qt::LeftButton) 
+    if (event->button() == Qt::LeftButton)
     {
         QPoint pt = event->pos();
         QModelIndex index = indexAt(pt);
@@ -1184,7 +1202,7 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
         // Menu contextuel
         QMenu * menu = new QMenu(this);
         menu->setAttribute(Qt::WA_DeleteOnClose);
-        
+
         if (!severalSongs)
         {
             menu->addAction(tr("Play"), this, SLOT(playSelectedSong()));

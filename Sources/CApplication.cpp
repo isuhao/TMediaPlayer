@@ -1,3 +1,21 @@
+/*
+Copyright (C) 2012 Teddy Michel
+
+This file is part of TMediaPlayer.
+
+TMediaPlayer is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+TMediaPlayer is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
+*/
 
 #include "CApplication.hpp"
 #include "CSong.hpp"
@@ -7,22 +25,22 @@
 #include "CFolder.hpp"
 #include "CPlayListView.hpp"
 #include "CListModel.hpp"
-#include "CDialogEditDynamicList.hpp"
-#include "CDialogEditFolder.hpp"
-#include "CDialogEditMetadata.hpp"
-#include "CDialogEditSong.hpp"
-#include "CDialogEditSongs.hpp"
-#include "CDialogEditStaticPlayList.hpp"
-#include "CDialogPreferences.hpp"
-#include "CDialogEqualizer.hpp"
-#include "CDialogRemoveFolder.hpp"
-#include "CImporterITunes.hpp"
+#include "Dialog/CDialogEditDynamicList.hpp"
+#include "Dialog/CDialogEditFolder.hpp"
+#include "Dialog/CDialogEditMetadata.hpp"
+#include "Dialog/CDialogEditSong.hpp"
+#include "Dialog/CDialogEditSongs.hpp"
+#include "Dialog/CDialogEditStaticPlayList.hpp"
+#include "Dialog/CDialogPreferences.hpp"
+#include "Dialog/CDialogEqualizer.hpp"
+#include "Dialog/CDialogRemoveFolder.hpp"
+#include "Importer/CImporterITunes.hpp"
 #include "CLibrary.hpp"
 
 // Last.fm
-#include "CAuthentication.hpp"
-#include "CUpdateNowPlaying.hpp"
-#include "CScrobble.hpp"
+#include "Last.fm/CAuthentication.hpp"
+#include "Last.fm/CUpdateNowPlaying.hpp"
+#include "Last.fm/CScrobble.hpp"
 
 // Qt
 #include <QStandardItemModel>
@@ -189,7 +207,7 @@ bool CApplication::initWindow(void)
     m_uiWidget->toolBar->addWidget(widgetControl);
 
     m_uiControl->btnStop->setVisible(m_settings->value("Preferences/ShowButtonStop", true).toBool());
-    
+
     // Connexions des signaux et des slots
     connect(m_uiControl->songInfos, SIGNAL(clicked()), this, SLOT(selectCurrentSong()));
 
@@ -660,11 +678,11 @@ void CApplication::removeSongs(const QList<CSong *> songs)
             dynamicList->update();
         }
     }
-    
+
     // Mise à jour de la base
     QSqlQuery query(m_dataBase);
     query.prepare("DELETE FROM song WHERE song_id = ?");
-    
+
     for (QList<CSong *>::const_iterator it = songs.begin(); it != songs.end(); ++it)
     {
         int songId = (*it)->getId();
@@ -886,7 +904,7 @@ int CApplication::getGenreId(const QString& name)
 QStringList CApplication::getGenreList(void)
 {
     QStringList genres;
-    
+
     // Genres prédéfinis
     genres.append("Classical");
     genres.append("Country");
@@ -901,7 +919,7 @@ QStringList CApplication::getGenreList(void)
 
     // Liste des genres utilisés
     QSqlQuery query(m_dataBase);
-    
+
     if (query.exec("SELECT genre_name FROM genres"))
     {
         while (query.next())
@@ -1460,7 +1478,7 @@ void CApplication::setPosition(int position)
     if (m_currentSongItem)
     {
         Q_CHECK_PTR(m_currentSongTable);
-        
+
         const int songPositionBefore = m_currentSongItem->getSong()->getPosition();
         m_currentSongItem->getSong()->setPosition(position);
         const int songPosition = m_currentSongItem->getSong()->getPosition();
@@ -1726,7 +1744,7 @@ void CApplication::importSongs(const QStringList& fileList)
         m_library->addSong(*it);
         emit songAdded(*it);
     }
-    
+
     notifyInformation(tr("%n song(s) added to the library.", "", songs.size()));
     updateListInformations();
 }
