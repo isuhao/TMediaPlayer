@@ -25,6 +25,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 
 class CSong;
+class CApplication;
 class QStandardItemModel;
 
 namespace TagLib
@@ -46,7 +47,7 @@ class CDialogEditMetadata : public QDialog
 
 public:
 
-    explicit CDialogEditMetadata(CSong * song);
+    CDialogEditMetadata(CApplication * application, CSong * song);
     virtual ~CDialogEditMetadata();
 
 protected slots:
@@ -67,6 +68,7 @@ private:
     Ui::DialogEditMetadata * m_uiWidget;
     QStandardItemModel * m_modelID3v2Text;
     QStandardItemModel * m_modelID3v2Comments;
+    CApplication * m_application;
     CSong * m_song;
 };
 

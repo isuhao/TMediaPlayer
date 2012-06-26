@@ -193,7 +193,7 @@ bool CApplication::initWindow(void)
 
     if (init)
     {
-        qWarning() << "CApplication::initWindow() : l'application a déjà été initialisée";
+        logError("l'application a déjà été initialisée", __FUNCTION__, __FILE__, __LINE__);
         return true;
     }
 
@@ -948,7 +948,7 @@ QFile * CApplication::getLogFile(const QString& logName)
 
         if (!logFile->open(QIODevice::WriteOnly | QIODevice::Append))
         {
-            qWarning() << "Erreur lors de l'ouverture du fichier de log";
+            logError("erreur lors de l'ouverture du fichier de log", __FUNCTION__, __FILE__, __LINE__);
             return NULL;
         }
 
@@ -959,7 +959,15 @@ QFile * CApplication::getLogFile(const QString& logName)
 }
 
 
-void CApplication::logError(const QString& message)
+/**
+ * Gestion des messages d'erreur.
+ *
+ * \param message Message d'erreur.
+ * \param file    Nom du fichier source.
+ * \param line    Ligne dans le fichier source.
+ */
+
+void CApplication::logError(const QString& message, const QString& function, const char * file, int line)
 {
     static QFile * logFile = NULL;
 
@@ -969,10 +977,10 @@ void CApplication::logError(const QString& message)
     }
 
     QTextStream stream(logFile);
-    stream << message << "\n";
+    stream << function << ": " << message << "\n";
 
 #ifdef QT_DEBUG
-    qWarning() << message;
+    qWarning() << tr("%2 (%3 line %4): %1").arg(message).arg(function).arg(file).arg(line);
 #endif
 }
 
@@ -1677,7 +1685,7 @@ void CApplication::openDialogEditMetadata(void)
 
     if (songItem)
     {
-        CDialogEditMetadata * dialog = new CDialogEditMetadata(songItem->getSong());
+        CDialogEditMetadata * dialog = new CDialogEditMetadata(this, songItem->getSong());
         dialog->show();
     }
 }
@@ -1847,7 +1855,7 @@ void CApplication::openDialogCreateFolder(CFolder * folder)
 
 void CApplication::openDialogEditStaticPlayList(CStaticPlayList * playList)
 {
-    CDialogEditStaticPlayList * dialog = new CDialogEditStaticPlayList(playList, this);
+    CDialogEditStaticPlayList * dialog = new CDialogEditStaticPlayList(playList, this, playList->getFolder());
     dialog->show();
 }
 
@@ -1860,7 +1868,7 @@ void CApplication::openDialogEditStaticPlayList(CStaticPlayList * playList)
 
 void CApplication::openDialogEditDynamicList(CDynamicList * playList)
 {
-    CDialogEditDynamicList * dialog = new CDialogEditDynamicList(playList, this);
+    CDialogEditDynamicList * dialog = new CDialogEditDynamicList(playList, this, playList->getFolder());
     dialog->show();
 }
 
@@ -2903,7 +2911,7 @@ void CApplication::loadDatabase(void)
 
             if (folder->m_folder < 0)
             {
-                qWarning() << "CApplication::loadDatabase() : le dossier parent du dossier a un identifiant invalide";
+                logError("le dossier parent a un identifiant invalide", __FUNCTION__, __FILE__, __LINE__);
             }
 
             initFolder(folder);
@@ -2924,7 +2932,7 @@ void CApplication::loadDatabase(void)
         }
         else
         {
-            qWarning() << "CApplication::loadDatabase() : le dossier contenant le dossier a un identifiant invalide";
+            logError("le dossier parent a un identifiant invalide", __FUNCTION__, __FILE__, __LINE__);
         }
     }
 
@@ -2952,7 +2960,7 @@ void CApplication::loadDatabase(void)
         }
         else
         {
-            qWarning() << "CApplication::loadDatabase() : le dossier contenant la liste statique a un identifiant invalide";
+            logError("le dossier parent a un identifiant invalide", __FUNCTION__, __FILE__, __LINE__);
         }
 
         // Liste des morceaux de la liste de lecture
@@ -3005,7 +3013,7 @@ void CApplication::loadDatabase(void)
         }
         else
         {
-            qWarning() << "CApplication::loadDatabase() : le dossier contenant la liste statique a un identifiant invalide";
+            logError("le dossier parent a un identifiant invalide", __FUNCTION__, __FILE__, __LINE__);
         }
 
         playList->loadFromDatabase();

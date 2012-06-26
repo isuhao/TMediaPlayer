@@ -153,7 +153,7 @@ int CFolder::getPosition(IPlayList * playList) const
         }
     }
 
-    qWarning() << "CFolder::getPosition() : problème ligne " << __LINE__;
+    m_application->logError("données incohérentes", __FUNCTION__, __FILE__, __LINE__);
     return -1;
 }
 
@@ -180,7 +180,7 @@ int CFolder::getPosition(CFolder * folder) const
         }
     }
 
-    qWarning() << "CFolder::getPosition() : problème ligne " << __LINE__;
+    m_application->logError("données incohérentes", __FUNCTION__, __FILE__, __LINE__);
     return -1;
 }
 
@@ -223,9 +223,9 @@ void CFolder::addPlayList(IPlayList * playList, int position)
         }
         else if (oldPosition > position)
         {
-            for (int pos = position; pos < oldPosition; ++pos)
+            for (int pos = oldPosition; pos > position; --pos)
             {
-                m_items[pos] = m_items[pos+1];
+                m_items[pos] = m_items[pos-1];
             }
         }
 
@@ -237,7 +237,7 @@ void CFolder::addPlayList(IPlayList * playList, int position)
             if (m_items[pos] && m_items[pos]->position != pos)
             {
                 m_items[pos]->position = pos;
-                if (m_items[pos]->playList) m_items[pos]->playList->m_isModified = true;
+                if (m_items[pos]->playList) m_items[pos]->playList->m_isPlayListModified = true;
                 if (m_items[pos]->folder)   m_items[pos]->folder->m_isModified = true;
             }
         }
@@ -258,7 +258,7 @@ void CFolder::addPlayList(IPlayList * playList, int position)
             if (m_items[pos] && m_items[pos]->position != pos)
             {
                 m_items[pos]->position = pos;
-                if (m_items[pos]->playList) m_items[pos]->playList->m_isModified = true;
+                if (m_items[pos]->playList) m_items[pos]->playList->m_isPlayListModified = true;
                 if (m_items[pos]->folder)   m_items[pos]->folder->m_isModified = true;
             }
         }
@@ -287,7 +287,7 @@ void CFolder::removePlayList(IPlayList * playList)
             if (m_items[pos] && m_items[pos]->position != pos)
             {
                 m_items[pos]->position = pos;
-                if (m_items[pos]->playList) m_items[pos]->playList->m_isModified = true;
+                if (m_items[pos]->playList) m_items[pos]->playList->m_isPlayListModified = true;
                 if (m_items[pos]->folder)   m_items[pos]->folder->m_isModified = true;
             }
         }
@@ -331,9 +331,9 @@ void CFolder::addFolder(CFolder * folder, int position)
         }
         else if (oldPosition > position)
         {
-            for (int pos = position; pos < oldPosition; ++pos)
+            for (int pos = oldPosition; pos > position; --pos)
             {
-                m_items[pos] = m_items[pos+1];
+                m_items[pos] = m_items[pos-1];
             }
         }
 
@@ -345,7 +345,7 @@ void CFolder::addFolder(CFolder * folder, int position)
             if (m_items[pos] && m_items[pos]->position != pos)
             {
                 m_items[pos]->position = pos;
-                if (m_items[pos]->playList) m_items[pos]->playList->m_isModified = true;
+                if (m_items[pos]->playList) m_items[pos]->playList->m_isPlayListModified = true;
                 if (m_items[pos]->folder)   m_items[pos]->folder->m_isModified = true;
             }
         }
@@ -366,7 +366,7 @@ void CFolder::addFolder(CFolder * folder, int position)
             if (m_items[pos] && m_items[pos]->position != pos)
             {
                 m_items[pos]->position = pos;
-                if (m_items[pos]->playList) m_items[pos]->playList->m_isModified = true;
+                if (m_items[pos]->playList) m_items[pos]->playList->m_isPlayListModified = true;
                 if (m_items[pos]->folder)   m_items[pos]->folder->m_isModified = true;
             }
         }
@@ -388,7 +388,6 @@ void CFolder::removeFolder(CFolder * folder)
     {
         removeFolderItem(folder);
         folder->setFolder(NULL);
-        //m_isModified = true;
 
         // Mise à jour des positions des éléments
         for (int pos = 0; pos < m_items.size(); ++pos)
@@ -396,7 +395,7 @@ void CFolder::removeFolder(CFolder * folder)
             if (m_items[pos] && m_items[pos]->position != pos)
             {
                 m_items[pos]->position = pos;
-                if (m_items[pos]->playList) m_items[pos]->playList->m_isModified = true;
+                if (m_items[pos]->playList) m_items[pos]->playList->m_isPlayListModified = true;
                 if (m_items[pos]->folder)   m_items[pos]->folder->m_isModified = true;
             }
         }
@@ -434,35 +433,29 @@ void CFolder::setOpen(bool open)
 
 bool CFolder::updateDatabase(void)
 {
-    if (m_id != 0 && !getFolder())
-    {
-        qWarning() << "CFolder::updateDatabase() : big problème ligne " << __LINE__;
-    }
+    int folderId = 0;
+    int position = 0;
 
-    int folderId = (getFolder() ? getFolder()->getId() : 0);
+    if (m_id != 0)
+    {
+        CFolder * folderParent = getFolder();
+
+        if (folderParent)
+        {
+            folderId = folderParent->getId();
+            position = folderParent->getPosition(this);
+        }
+        else
+        {
+            m_application->logError("le dossier n'a pas de parent", __FUNCTION__, __FILE__, __LINE__);
+        }
+    }
 
     // Insertion
     if (m_id < 0)
     {
         QSqlQuery query(m_application->getDataBase());
 
-        // Position dans le dossier
-        int position = getFolder()->getPosition(this);
-/*
-        query.prepare("SELECT MAX(folder_position) FROM folder WHERE folder_parent = ?");
-        query.bindValue(0, folderId);
-
-        if (!query.exec())
-        {
-            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-            return false;
-        }
-
-        if (query.next())
-        {
-            m_position = query.value(0).toInt() + 1;
-        }
-*/
         // Insertion
         query.prepare("INSERT INTO folder (folder_name, folder_parent, folder_position, folder_expanded) VALUES (?, ?, ?, ?)");
 
@@ -488,7 +481,7 @@ bool CFolder::updateDatabase(void)
 
         query.bindValue(0, m_name);
         query.bindValue(1, folderId);
-        query.bindValue(2, getFolder()->getPosition(this));
+        query.bindValue(2, position);
         query.bindValue(3, (m_open ? 1 : 0));
         query.bindValue(4, m_id);
 
@@ -507,8 +500,6 @@ bool CFolder::updateDatabase(void)
 /**
  * Supprime le dossier de la base de données.
  *
- * \todo Gérer le contenu du dossier.
- *
  * \param recursive Indique si on doit supprimer le contenu dossier ou pas.
  */
 
@@ -516,22 +507,26 @@ void CFolder::removeFromDatabase(bool recursive)
 {
     if (m_id <= 0)
     {
-        qWarning() << "CFolder::romoveFromDatabase() : identifiant invalide";
+        m_application->logError("identifiant invalide", __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
     if (recursive)
     {
-        //...
-    }
-    else
-    {
-        //...
-    }
+        // Suppression récursive des dossiers
+        for (QList<CFolder *>::const_iterator it = m_folders0.begin(); it != m_folders0.end(); ++it)
+        {
+            (*it)->removeFromDatabase(true);
+        }
 
-    return; //TMP
+        // Suppression des listes de lecture
+        for (QList<IPlayList *>::const_iterator it = m_playLists0.begin(); it != m_playLists0.end(); ++it)
+        {
+            (*it)->removeFromDatabase();
+        }
+    }
     
-    // Suppression du dossier
+    // Suppression du dossier en base de données
     QSqlQuery query(m_application->getDataBase());
     query.prepare("DELETE FROM folder WHERE folder_id = ?");
     query.bindValue(0, m_id);
@@ -547,6 +542,28 @@ void CFolder::removeFromDatabase(bool recursive)
 }
 
 
+void CFolder::fixPositions(void)
+{
+    for (QVector<TFolderItem *>::iterator it = m_items.begin(); it != m_items.end(); )
+    {
+        if (*it)
+            ++it;
+        else
+            it = m_items.erase(it);
+    }
+
+    for (int position = 0; position < m_items.size(); ++position)
+    {
+        if (m_items[position]->position != position)
+        {
+            m_items[position]->position = position;
+            if (m_items[position]->folder)   m_items[position]->folder->m_isModified = true;
+            if (m_items[position]->playList) m_items[position]->playList->m_isPlayListModified = true;
+        }
+    }
+}
+
+
 void CFolder::addPlayListItem(IPlayList * playList, int position)
 {
     Q_CHECK_PTR(playList);
@@ -557,7 +574,7 @@ void CFolder::addPlayListItem(IPlayList * playList, int position)
     }
     else if (position < 0)
     {
-        qWarning() << "CFolder::addPlayListItem() : position inconnue";
+        m_application->logError("position inconnue", __FUNCTION__, __FILE__, __LINE__);
         position = m_items.size();
         m_items.append(NULL);
     }
@@ -577,7 +594,7 @@ void CFolder::addFolderItem(CFolder * folder, int position)
     }
     else if (position < 0)
     {
-        qWarning() << "CFolder::addPlayListItem() : position inconnue";
+        m_application->logError("position inconnue", __FUNCTION__, __FILE__, __LINE__);
         position = m_items.size();
         m_items.append(NULL);
     }
@@ -595,7 +612,7 @@ void CFolder::removePlayListItem(IPlayList * playList)
 
     for (QVector<TFolderItem *>::iterator it = m_items.begin(); it != m_items.end(); )
     {
-        if ((*it)->playList == playList)
+        if (*it && (*it)->playList == playList)
         {
             it = m_items.erase(it);
         }
@@ -615,7 +632,7 @@ void CFolder::removeFolderItem(CFolder * folder)
 
     for (QVector<TFolderItem *>::iterator it = m_items.begin(); it != m_items.end(); )
     {
-        if ((*it)->folder == folder)
+        if (*it && (*it)->folder == folder)
         {
             it = m_items.erase(it);
         }

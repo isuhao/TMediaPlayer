@@ -14,7 +14,7 @@
     </message>
     <message numerus="yes">
         <location filename="../Sources/CApplication.cpp" line="115"/>
-        <location filename="../Sources/CApplication.cpp" line="2407"/>
+        <location filename="../Sources/CApplication.cpp" line="2415"/>
         <source>%n song(s), %1</source>
         <translation>
             <numerusform>%n morceau, %1</numerusform>
@@ -49,8 +49,13 @@ Requête : %3
 
 Erreur : %4</translation>
     </message>
+    <message>
+        <location filename="../Sources/CApplication.cpp" line="983"/>
+        <source>%2 (%3 line %4): %1</source>
+        <translation>%2 (%3 ligne %4) : %1</translation>
+    </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="1748"/>
+        <location filename="../Sources/CApplication.cpp" line="1756"/>
         <source>%n song(s) added to the library.</source>
         <translation>
             <numerusform>%n morceau ajouté à la médiathèque.</numerusform>
@@ -58,43 +63,43 @@ Erreur : %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3088"/>
+        <location filename="../Sources/CApplication.cpp" line="3096"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3096"/>
         <location filename="../Sources/CApplication.cpp" line="3104"/>
+        <location filename="../Sources/CApplication.cpp" line="3112"/>
         <source>Play</source>
         <translation>Lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1726"/>
+        <location filename="../Sources/CApplication.cpp" line="1734"/>
         <source>Loading files...</source>
         <translation>Chargement des fichiers...</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2260"/>
+        <location filename="../Sources/CApplication.cpp" line="2268"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Êtes-vous sûr de vouloir supprimer cette liste de lecture ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2260"/>
+        <location filename="../Sources/CApplication.cpp" line="2268"/>
         <source>Yes</source>
         <translation>Oui</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2260"/>
+        <location filename="../Sources/CApplication.cpp" line="2268"/>
         <source>No</source>
         <translation>Non</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1692"/>
+        <location filename="../Sources/CApplication.cpp" line="1700"/>
         <source>Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)</source>
         <translation>Fichiers multimédias (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;Tous les fichiers (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1726"/>
+        <location filename="../Sources/CApplication.cpp" line="1734"/>
         <source>Abort</source>
         <translation>Interrompre</translation>
     </message>
@@ -103,7 +108,7 @@ Erreur : %4</translation>
         <translation type="obsolete">Êtes-vous sûr de vouloir supprimer ce dossier ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2550"/>
+        <location filename="../Sources/CApplication.cpp" line="2558"/>
         <source>This program requires FMOD %1 or superior.</source>
         <translation>Ce programme nécessite FMOD %1 ou supérieur.</translation>
     </message>
@@ -204,53 +209,53 @@ Erreur : %4</translation>
 <context>
     <name>CDialogEditMetadata</name>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="64"/>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="68"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="69"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="73"/>
         <source>Metadata</source>
         <translation>Métadonnées</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="145"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="150"/>
         <source>Key</source>
         <translation>Clé</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="145"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="150"/>
         <source>Value</source>
         <translation>Valeur</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="147"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="152"/>
         <source>Description</source>
         <translation>Description</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="147"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="152"/>
         <source>Language</source>
         <translation>Langue</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="147"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="152"/>
         <source>Comments</source>
         <translation>Commentaires</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="89"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="94"/>
         <source>Save</source>
         <translation>Enregistrer</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="90"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="95"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="91"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="96"/>
         <source>Apply</source>
         <translation>Appliquer</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="92"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="97"/>
         <source>Reset</source>
         <translation>Réinitialiser</translation>
     </message>
@@ -495,7 +500,7 @@ Erreur : %4</translation>
 <context>
     <name>CListModel</name>
     <message>
-        <location filename="../Sources/CListModel.cpp" line="297"/>
+        <location filename="../Sources/CListModel.cpp" line="284"/>
         <source>Library</source>
         <translation>Médiathèque</translation>
     </message>

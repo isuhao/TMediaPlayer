@@ -88,126 +88,9 @@ CPlayListView::CPlayListView(CApplication * application) :
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(openCustomMenuProject(const QPoint&)));
 }
 
-    /*
-/// \todo Supprimer ?
-QModelIndex CPlayListView::addSongTable(CSongTable * songTable, const QModelIndex& parent)
-{
-    Q_CHECK_PTR(songTable);
-
-    QStandardItem * playListItem;
-    IPlayList * playList = qobject_cast<IPlayList *>(songTable);
-
-    if (playList)
-    {
-        playListItem = new QStandardItem(playList->getName());
-        CDynamicList * dynamicList = qobject_cast<CDynamicList *>(playList);
-
-        if (dynamicList)
-        {
-            playListItem->setIcon(QPixmap(":/icons/dynamic_list"));
-        }
-        else if (qobject_cast<CStaticPlayList *>(playList))
-        {
-            playListItem->setIcon(QPixmap(":/icons/playlist"));
-        }
-    }
-    else
-    {
-        playListItem = new QStandardItem(QPixmap(":/icons/library"), tr("Library"));
-    }
-
-    playListItem->setData(QVariant::fromValue(songTable), Qt::UserRole + 1);
-    
-    QStandardItem * itemParent = m_model->itemFromIndex(parent);
-
-    if (parent.isValid() && itemParent)
-    {
-        itemParent->appendRow(playListItem);
-    }
-    else
-    {
-        m_model->appendRow(playListItem);
-    }
-
-    QModelIndex index = playListItem->index();
-    
-    if (playList)
-    {
-        playList->m_index = index;
-    }
-
-    return index;
-}
-
-
-/// \todo Supprimer ?
-QModelIndex CPlayListView::addFolder(CFolder * folder, const QModelIndex& parent)
-{
-    Q_CHECK_PTR(folder);
-
-    connect(folder, SIGNAL(folderOpened()), this, SLOT(onFolderOpen()));
-    connect(folder, SIGNAL(folderClosed()), this, SLOT(onFolderClose()));
-
-    QStandardItem * folderItem = new QStandardItem(QPixmap(":/icons/folder_close"), folder->getName());
-    folderItem->setData(QVariant::fromValue(folder), Qt::UserRole + 2);
-
-    QStandardItem * itemParent = m_model->itemFromIndex(parent);
-
-    if (parent.isValid() && itemParent)
-    {
-        itemParent->appendRow(folderItem);
-    }
-    else
-    {
-        m_model->appendRow(folderItem);
-    }
-
-    QModelIndex index = folderItem->index();
-
-    if (folder->isOpen())
-    {
-        expand(index);
-        folderItem->setIcon(QPixmap(":/icons/folder_open"));
-    }
-    else
-    {
-        collapse(index);
-        folderItem->setIcon(QPixmap(":/icons/folder_close"));
-    }
-
-    // Dossiers enfants
-    QList<CFolder *> folders = folder->getFolders();
-    foreach (CFolder * child, folders)
-    {
-        child->m_index = addFolder(child, index);
-    }
-
-    // Listes enfants
-    QList<IPlayList *> playLists = folder->getPlayLists();
-    foreach (IPlayList * child, playLists)
-    {
-        child->m_index = addSongTable(child, index);
-    }
-
-    folder->m_index = index;
-    return index;
-}
-
-
-/// \todo Supprimer ?
-void CPlayListView::removeSongTable(CSongTable * songTable)
-{
-    Q_CHECK_PTR(songTable);
-
-    QModelIndex index = getSongTableModelIndex(songTable);
-    m_model->removeRow(index.row(), index.parent());
-}
-*/
 
 /**
  * Retourne la liste de morceaux correspondant à un index.
- *
- * \todo Adapter.
  *
  * \param index Index de la liste.
  * \return Liste de morceaux, ou NULL.
@@ -221,8 +104,6 @@ CSongTable * CPlayListView::getSongTable(const QModelIndex& index) const
 
 /**
  * Retourne le dossier correspondant à un index.
- *
- * \todo Adapter.
  *
  * \param index Index du dossier.
  * \return Dossier, ou NULL.
@@ -273,7 +154,6 @@ QModelIndex CPlayListView::getSongTableModelIndex(CSongTable * songTable) const
         return QModelIndex();
 
     return m_model->getModelIndex(songTable);
-    //return getModelIndex(songTable, QModelIndex());
 }
 
 
@@ -290,110 +170,30 @@ QModelIndex CPlayListView::getFolderModelIndex(CFolder * folder) const
         return QModelIndex();
     
     return m_model->getModelIndex(folder);
-    //return getModelIndex(folder, QModelIndex());
 }
 
+
+/**
+ * Modifie le modèle utilisé par la vue.
+ *
+ * \param model Pointeur sur le modèle à utiliser.
+ */
 
 void CPlayListView::setModel(CListModel * model)
 {
     Q_CHECK_PTR(model);
     m_model = model;
     QTreeView::setModel(model);
-}
 
+    // Ouverture des dossiers
+    QList<CFolder *> folders = m_model->getFolders();
 
-/**
- * Retourne l'index du modèle correspondant à une liste de morceaux.
- *
- * \todo Adapter.
- *
- * \param songTable Liste de morceaux à rechercher.
- * \param parent    Index du dossier parent.
- * \return Index de la liste de morceaux.
- */
-/*
-QModelIndex CPlayListView::getModelIndex(CSongTable * songTable, const QModelIndex& parent) const
-{
-    if (!songTable)
-        return QModelIndex();
-
-    for (int row = 0; row < m_model->rowCount(parent); ++row)
+    for (QList<CFolder *>::const_iterator it = folders.begin(); it != folders.end(); ++it)
     {
-        QModelIndex child = m_model->index(row, 0, parent);
-        const QStandardItem * item = m_model->itemFromIndex(child);
-
-        if (item)
-        {
-            CSongTable * itemSongTable = item->data(Qt::UserRole + 1).value<CSongTable *>();
-
-            if (itemSongTable)
-            {
-                if (itemSongTable == songTable)
-                {
-                    return m_model->indexFromItem(item);
-                }
-            }
-            else
-            {
-                CFolder * itemFolder = item->data(Qt::UserRole + 2).value<CFolder *>();
-
-                if (itemFolder)
-                {
-                    QModelIndex index = getModelIndex(songTable, child);
-
-                    if (index.isValid())
-                        return index;
-                }
-            }
-        }
+        setExpanded(m_model->getModelIndex(*it), (*it)->isOpen());
     }
-
-    return QModelIndex();
 }
-*/
 
-/**
- * Retourne l'index du modèle correspondant à un dossier.
- *
- * \todo Adapter.
- *
- * \param folder Dossier à rechercher.
- * \param parent Index du dossier parent.
- * \return Index du dossier.
- */
-/*
-QModelIndex CPlayListView::getModelIndex(CFolder * folder, const QModelIndex& parent) const
-{
-    if (!folder)
-        return QModelIndex();
-
-    for (int row = 0; row < m_model->rowCount(parent); ++row)
-    {
-        QModelIndex child = m_model->index(row, 0, parent);
-        const QStandardItem * item = m_model->itemFromIndex(child);
-
-        if (item)
-        {
-            CFolder * itemFolder = item->data(Qt::UserRole + 2).value<CFolder *>();
-
-            if (itemFolder)
-            {
-                if (itemFolder == folder)
-                {
-                    return m_model->indexFromItem(item);
-                }
-
-                QModelIndex index = getModelIndex(folder, child);
-
-                if (index.isValid())
-                    return index;
-            }
-        }
-    }
-
-    return QModelIndex();
-}
-*/
 
 /**
  * Gestion des touches du clavier.
@@ -455,7 +255,7 @@ void CPlayListView::dragMoveEvent(QDragMoveEvent * event)
 
             if (songTable && playList)
             {
-                qDebug() << "CPlayListView::dragMoveEvent() : move songs in playList";
+                //qDebug() << "CPlayListView::dragMoveEvent() : move songs in playList";
                 event->accept();
                 event->acceptProposedAction();
             }
@@ -474,7 +274,7 @@ void CPlayListView::dragMoveEvent(QDragMoveEvent * event)
         }
         else
         {
-            qDebug() << "CPlayListView::dragMoveEvent() : move list...";
+            //qDebug() << "CPlayListView::dragMoveEvent() : move list...";
             event->accept();
             event->acceptProposedAction();
         }
@@ -507,8 +307,6 @@ void CPlayListView::dragMoveEvent(QDragMoveEvent * event)
 
 void CPlayListView::openCustomMenuProject(const QPoint& point)
 {
-    //qDebug() << "CPlayListView::openCustomMenuProject()";
-
     QModelIndex index = indexAt(point);
 
     if (index.isValid())
@@ -536,7 +334,7 @@ void CPlayListView::openCustomMenuProject(const QPoint& point)
             }
             else
             {
-                qWarning() << "CPlayListView::openCustomMenuProject() : l'item n'est ni une liste ni un dossier";
+                m_application->logError("l'item n'est ni une liste ni un dossier", __FUNCTION__, __FILE__, __LINE__);
             }
         }
     }
@@ -548,63 +346,13 @@ void CPlayListView::openCustomMenuProject(const QPoint& point)
 
 void CPlayListView::onItemCollapsed(const QModelIndex& index)
 {
-    CFolder * folder = getFolder(index);
-
-    if (folder)
-    {
-        folder->setOpen(false);
-    }
+    m_model->openFolder(index, false);
 }
 
 
 void CPlayListView::onItemExpanded(const QModelIndex& index)
 {
-    CFolder * folder = getFolder(index);
-
-    if (folder)
-    {
-        folder->setOpen(true);
-    }
-}
-
-
-/// \todo Implémentation.
-void CPlayListView::onFolderOpen(void)
-{
-    CFolder * folder = qobject_cast<CFolder *>(sender());
-/*
-    if (folder)
-    {
-        QModelIndex index = folder->getModelIndex();
-        expand(index);
-
-        QStandardItem * item = m_model->itemFromIndex(index);
-        if (item)
-        {
-            item->setIcon(QPixmap(":/icons/folder_open"));
-        }
-    }
-*/
-}
-
-
-/// \todo Implémentation.
-void CPlayListView::onFolderClose(void)
-{
-    CFolder * folder = qobject_cast<CFolder *>(sender());
-/*
-    if (folder)
-    {
-        QModelIndex index = folder->getModelIndex();
-        collapse(index);
-
-        QStandardItem * item = m_model->itemFromIndex(index);
-        if (item)
-        {
-            item->setIcon(QPixmap(":/icons/folder_close"));
-        }
-    }
-*/
+    m_model->openFolder(index, true);
 }
 
 

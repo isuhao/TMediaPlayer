@@ -87,7 +87,7 @@ signals:
 protected:
 
     virtual bool updateDatabase(void);
-    virtual void romoveFromDatabase(void);
+    virtual void removeFromDatabase(void);
 
     QString m_name;            ///< Nom de la liste de lecture.
     //int m_position;            ///< Position de la liste dans le dossier.

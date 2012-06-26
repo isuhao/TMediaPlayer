@@ -116,6 +116,7 @@ protected:
     
     virtual bool updateDatabase(void);
     virtual void removeFromDatabase(bool recursive = false);
+    void fixPositions(void);
 
 private:
     

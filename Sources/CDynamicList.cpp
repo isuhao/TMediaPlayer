@@ -274,7 +274,7 @@ void CDynamicList::romoveFromDatabase(void)
     m_isDynamicListModified = false;
     m_id = -1;
 
-    IPlayList::romoveFromDatabase();
+    IPlayList::removeFromDatabase();
 }
 
 

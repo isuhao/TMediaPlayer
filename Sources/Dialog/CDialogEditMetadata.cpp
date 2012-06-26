@@ -19,6 +19,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CDialogEditMetadata.hpp"
 #include "CSong.hpp"
+#include "CApplication.hpp"
 #include <QPushButton>
 #include <QStandardItemModel>
 
@@ -44,13 +45,17 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 /**
  * Construit la boite de dialogue.
  *
- * \param song Morceau dont on veut afficher les métadonnées.
+ * \param application Pointeur sur l'application.
+ * \param song        Morceau dont on veut afficher les métadonnées.
  */
 
-CDialogEditMetadata::CDialogEditMetadata(CSong * song) :
-    m_uiWidget (new Ui::DialogEditMetadata()),
-    m_song     (song)
+CDialogEditMetadata::CDialogEditMetadata(CApplication * application, CSong * song) :
+    QDialog       (application),
+    m_uiWidget    (new Ui::DialogEditMetadata()),
+    m_application (application),
+    m_song        (song)
 {
+    Q_CHECK_PTR(application);
     Q_CHECK_PTR(song);
 
     setAttribute(Qt::WA_DeleteOnClose);
@@ -149,7 +154,7 @@ void CDialogEditMetadata::reset(void)
     switch (m_song->getFormat())
     {
         default:
-            qWarning() << "CDialogEditMetadata::reset() : format non géré";
+            m_application->logError("format non géré", __FUNCTION__, __FILE__, __LINE__);
             return;
 
         case CSong::FormatMP3:
@@ -158,7 +163,7 @@ void CDialogEditMetadata::reset(void)
 
             if (!file.isValid())
             {
-                qWarning() << "CDialogEditMetadata::reset() : impossible de lire le fichier MP3 " << m_song->getFileName();
+                m_application->logError(QString("impossible de lire le fichier MP3 %1").arg(m_song->getFileName()), __FUNCTION__, __FILE__, __LINE__);
                 return;
             }
 

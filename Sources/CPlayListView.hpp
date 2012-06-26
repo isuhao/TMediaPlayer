@@ -41,9 +41,6 @@ public:
 
     explicit CPlayListView(CApplication * application);
 
-    //QModelIndex addSongTable(CSongTable * songTable, const QModelIndex& parent = QModelIndex());
-    //QModelIndex addFolder(CFolder * folder, const QModelIndex& parent = QModelIndex());
-    //void removeSongTable(CSongTable * songTable);
     CSongTable * getSongTable(const QModelIndex& index) const;
     CFolder * getFolder(const QModelIndex& index) const;
     CSongTable * getSelectedSongTable(void) const;
@@ -53,9 +50,7 @@ public:
     void setModel(CListModel * model);
 
 protected:
-    
-    //QModelIndex getModelIndex(CSongTable * songTable, const QModelIndex& parent = QModelIndex()) const;
-    //QModelIndex getModelIndex(CFolder * folder, const QModelIndex& parent = QModelIndex()) const;
+
     virtual void keyPressEvent(QKeyEvent * event);
     virtual void dragMoveEvent(QDragMoveEvent * event);
 
@@ -64,8 +59,6 @@ protected slots:
     virtual void openCustomMenuProject(const QPoint& point);
     void onItemCollapsed(const QModelIndex& index);
     void onItemExpanded(const QModelIndex& index);
-    void onFolderOpen(void);
-    void onFolderClose(void);
     void createStaticList(void);
     void createDynamicList(void);
     void createFolder(void);

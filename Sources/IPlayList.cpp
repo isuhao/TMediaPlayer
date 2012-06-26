@@ -23,8 +23,6 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QSqlQuery>
 #include <QSqlError>
 
-#include <QtDebug>
-
 
 IPlayList::IPlayList(CApplication * application, const QString& name) :
     CSongTable           (application),
@@ -113,25 +111,35 @@ void IPlayList::setFolder(CFolder * folder)
 
 bool IPlayList::updateDatabase(void)
 {
-    if (!getFolder())
-    {
-        qWarning() << "IPlayList::updateDatabase() : big problème ligne " << __LINE__;
-    }
-
     if (m_isPlayListModified)
     {
         if (m_idPlayList <= 0)
         {
-            qWarning() << "IPlayList::updateDatabase() : identifiant invalide";
+            m_application->logError("identifiant invalide", __FUNCTION__, __FILE__, __LINE__);
         }
         else
         {
+            int folderId = 0;
+            int position = 0;
+            CFolder * folderParent = getFolder();
+
+            if (folderParent)
+            {
+                folderId = folderParent->getId();
+                position = folderParent->getPosition(this);
+            }
+            else
+            {
+                m_application->logError("la liste de lecture n'a pas de dossier parent", __FUNCTION__, __FILE__, __LINE__);
+                return false;
+            }
+
             QSqlQuery query(m_application->getDataBase());
             query.prepare("UPDATE playlist SET playlist_name = ?, folder_id = ?, list_position = ? WHERE playlist_id = ?");
 
             query.bindValue(0, m_name);
-            query.bindValue(1, getFolder()->getId());
-            query.bindValue(2, getFolder()->getPosition(this));
+            query.bindValue(1, folderId);
+            query.bindValue(2, position);
             query.bindValue(3, m_idPlayList);
 
             if (!query.exec())
@@ -152,11 +160,11 @@ bool IPlayList::updateDatabase(void)
  * Supprime la liste de la base de données.
  */
 
-void IPlayList::romoveFromDatabase(void)
+void IPlayList::removeFromDatabase(void)
 {
     if (m_idPlayList <= 0)
     {
-        qWarning() << "IPlayList::romoveFromDatabase() : identifiant invalide";
+        m_application->logError("identifiant invalide", __FUNCTION__, __FILE__, __LINE__);
         return;
     }
     

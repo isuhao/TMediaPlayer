@@ -608,7 +608,7 @@ void CStaticPlayList::romoveFromDatabase(void)
     m_isStaticListModified = false;
     m_id = -1;
 
-    IPlayList::romoveFromDatabase();
+    IPlayList::removeFromDatabase();
 }
 
 

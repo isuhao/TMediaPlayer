@@ -40,7 +40,7 @@ class CDialogEditStaticPlayList : public QDialog
 
 public:
 
-    CDialogEditStaticPlayList(CStaticPlayList * playList, CApplication * application, CFolder * folder = NULL, const QList<CSong *>& songs = QList<CSong *>());
+    CDialogEditStaticPlayList(CStaticPlayList * playList, CApplication * application, CFolder * folder, const QList<CSong *>& songs = QList<CSong *>());
     virtual ~CDialogEditStaticPlayList();
 
 protected slots:

@@ -53,6 +53,7 @@ public:
     IPlayList * getPlayListFromId(int id) const;
     QModelIndex getModelIndex(CFolder * folder) const;
     QModelIndex getModelIndex(CSongTable * songTable) const;
+    void openFolder(const QModelIndex& index, bool open);
 
     void addFolder(CFolder * folder);
     void addPlayList(IPlayList * playList);

@@ -150,7 +150,7 @@ public:
     }
 
     QFile * getLogFile(const QString& logName);
-    void logError(const QString& message);
+    void logError(const QString& message, const QString& function, const char * file, int line);
     void notifyInformation(const QString& message);
 
     void openDialogCreateStaticList(CFolder * folder, const QList<CSong *>& songs = QList<CSong *>());

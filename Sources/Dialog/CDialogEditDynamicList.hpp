@@ -30,13 +30,17 @@ class CWidgetMultiCriterion;
 class CFolder;
 
 
+/**
+ * Boite de dialogue pour créer ou modifier une liste de lecture dynamique.
+ */
+
 class CDialogEditDynamicList : public QDialog
 {
     Q_OBJECT
 
 public:
 
-    CDialogEditDynamicList(CDynamicList * playList, CApplication * application, CFolder * folder = NULL);
+    CDialogEditDynamicList(CDynamicList * playList, CApplication * application, CFolder * folder);
     virtual ~CDialogEditDynamicList();
 
 public slots:

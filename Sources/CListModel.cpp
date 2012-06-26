@@ -112,7 +112,7 @@ void CListModel::loadFromDatabase(void)
 
             if (folder->m_folder < 0)
             {
-                qWarning() << "CApplication::loadDatabase() : le dossier parent du dossier a un identifiant invalide";
+                m_application->logError("le dossier parent a un identifiant invalide", __FUNCTION__, __FILE__, __LINE__);
                 folder->m_folder = 0;
             }
 
@@ -142,13 +142,13 @@ void CListModel::loadFromDatabase(void)
                 }
                 else
                 {
-                    qWarning() << "CListFolder::loadFromDatabase() : identifiant invalide";
+                    m_application->logError("identifiant invalide", __FUNCTION__, __FILE__, __LINE__);
                 }
             }
         }
         else
         {
-            qWarning() << "CListFolder::loadFromDatabase() : le dossier contenant le dossier a un identifiant invalide";
+            m_application->logError("le dossier contenant le dossier a un identifiant invalide", __FUNCTION__, __FILE__, __LINE__);
         }
     }
 
@@ -178,7 +178,7 @@ void CListModel::loadFromDatabase(void)
             }
             else
             {
-                qWarning() << "CListModel::loadFromDatabase() : le dossier contenant la liste statique a un identifiant invalide";
+                m_application->logError("le dossier contenant la liste statique a un identifiant invalide", __FUNCTION__, __FILE__, __LINE__);
             }
 
             // Liste des morceaux de la liste de lecture
@@ -242,7 +242,7 @@ void CListModel::loadFromDatabase(void)
             }
             else
             {
-                qWarning() << "CApplication::loadDatabase() : le dossier contenant la liste statique a un identifiant invalide";
+                m_application->logError("le dossier contenant la liste statique a un identifiant invalide", __FUNCTION__, __FILE__, __LINE__);
             }
 
             playList->loadFromDatabase();
@@ -259,26 +259,13 @@ void CListModel::loadFromDatabase(void)
         }
     }
 
-
-    addFolder(m_rootFolder);
-/*
-    // Remplissage du modèle
+    // On corrige les éventuelles erreurs de position dans les dossiers
     for (QList<CFolder *>::const_iterator it = folders.begin(); it != folders.end(); ++it)
     {
-        if (!(*it)->m_folder)
-        {
-            addFolder(*it);
-        }
+        (*it)->fixPositions();
     }
 
-    for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
-    {
-        if (!(*it)->m_folder)
-        {
-            addPlayList(*it);
-        }
-    }
-*/
+    addFolder(m_rootFolder);
 }
 
 
@@ -352,6 +339,29 @@ QModelIndex CListModel::getModelIndex(CSongTable * songTable) const
 
 
 /**
+ * Ouvre ou ferme un dossier.
+ *
+ * \param index Index du dossier à ouvrir ou fermer.
+ * \param open  Indique si le dossier doit être ouvert ou fermé.
+ */
+
+void CListModel::openFolder(const QModelIndex& index, bool open)
+{
+    CFolder * folder = this->data(index, Qt::UserRole + 2).value<CFolder *>();
+
+    if (folder)
+    {
+        folder->setOpen(open);
+
+        if (open)
+            itemFromIndex(index)->setIcon(QPixmap(":/icons/folder_open"));
+        else
+            itemFromIndex(index)->setIcon(QPixmap(":/icons/folder_close"));
+    }
+}
+
+
+/**
  * Ajoute un dossier au modèle.
  *
  * \param folder Dossier à ajouter.
@@ -384,54 +394,45 @@ void CListModel::addFolder(CFolder * folder)
         else
             appendRow(folderItem);
 
-        //folder->m_index = folderItem->index();
-
         if (folder->isOpen())
-        {
-            //expand(index);
             folderItem->setIcon(QPixmap(":/icons/folder_open"));
-        }
         else
-        {
-            //collapse(index);
             folderItem->setIcon(QPixmap(":/icons/folder_close"));
-        }
     }
 
     // Éléments du dossier
-    //...
+    bool invalidPosition = false;
     QVector<CFolder::TFolderItem *> items = folder->getItems();
 
     for (QVector<CFolder::TFolderItem *>::const_iterator it = items.begin(); it != items.end(); ++it)
     {
-        if ((*it)->folder)
+        if (*it)
         {
-            addFolder((*it)->folder);
-        }
-        else if ((*it)->playList)
-        {
-            addPlayList((*it)->playList);
+            if ((*it)->folder)
+            {
+                addFolder((*it)->folder);
+
+                if (invalidPosition)
+                    (*it)->folder->m_isModified = true;
+            }
+            else if ((*it)->playList)
+            {
+                addPlayList((*it)->playList);
+
+                if (invalidPosition)
+                    (*it)->playList->m_isPlayListModified = true;
+            }
+            else
+            {
+                m_application->logError("l'élément n'est ni un dossier, ni une liste de lecture", __FUNCTION__, __FILE__, __LINE__);
+            }
         }
         else
         {
-            qWarning() << "CListModel::addFolder() : big problème ligne " << __LINE__;
+            m_application->logError("position incorrecte dans un dossier", __FUNCTION__, __FILE__, __LINE__);
+            invalidPosition = true;
         }
     }
-/*
-    // Dossiers enfants
-    QList<CFolder *> folders = folder->getFolders();
-    for (QList<CFolder *>::const_iterator it = folders.begin(); it != folders.end(); ++it)
-    {
-        addFolder(*it);
-    }
-
-    // Listes enfants
-    QList<IPlayList *> playLists = folder->getPlayLists();
-    for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
-    {
-        addPlayList(*it);
-    }
-*/
 }
 
 
@@ -465,8 +466,6 @@ void CListModel::addPlayList(IPlayList * playList)
         itemParent->appendRow(playListItem);
     else
         appendRow(playListItem);
-
-    //playList->m_index = playListItem->index();
 }
 
 
@@ -501,7 +500,7 @@ void CListModel::removeFolder(CFolder * folder, bool recursive)
 
             if (!itemFolder)
             {
-                qWarning() << "CListModel::removeFolder() : dossier invalide";
+                m_application->logError("dossier invalide", __FUNCTION__, __FILE__, __LINE__);
                 continue;
             }
 
@@ -522,7 +521,7 @@ void CListModel::removeFolder(CFolder * folder, bool recursive)
 
             if (!itemPlayList)
             {
-                qWarning() << "CListModel::removeFolder() : playlist invalide";
+                m_application->logError("liste de lecture invalide", __FUNCTION__, __FILE__, __LINE__);
                 continue;
             }
 
@@ -542,7 +541,7 @@ void CListModel::removeFolder(CFolder * folder, bool recursive)
         removeRow(item->row(), parent);
     }
 
-    folder->removeFromDatabase();
+    folder->removeFromDatabase(recursive);
     m_folders.removeOne(folder);
     delete folder;
 }
@@ -571,7 +570,7 @@ void CListModel::removePlayList(IPlayList * playList)
         removeRow(item->row(), parent);
     }
 
-    playList->romoveFromDatabase();
+    playList->removeFromDatabase();
     m_playLists.removeOne(playList);
     delete playList;
 }
@@ -582,25 +581,22 @@ bool CListModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int
     Q_CHECK_PTR(data);
 
     if (action == Qt::IgnoreAction)
-    {
         return true;
-    }
     
     if (data->hasFormat("application/x-ted-media-list"))
     {
-        qDebug() << "CListModel::dropMimeData() : drop liste";
+        //qDebug() << "CListModel::dropMimeData() : drop liste";
 
         int playListId, folderId;
         QByteArray encodedData = data->data("application/x-ted-media-list");
 
         if (!decodeDataList(encodedData, &playListId, &folderId))
         {
-            qDebug() << "CListModel::dropMimeData() : erreur lors du décodage";
+            //qDebug() << "CListModel::dropMimeData() : erreur lors du décodage";
             return false;
         }
 
-        CFolder * folderParent = NULL;
-        //CFolder * folderParentOld = NULL;
+        CFolder * folderParent = m_rootFolder;
         int position = row;
 
         if (parent.isValid())
@@ -609,7 +605,7 @@ bool CListModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int
 
             if (!folderParent)
             {
-                qDebug() << "CListModel::dropMimeData() : folderParent invalide";
+                m_application->logError("dossier invalide", __FUNCTION__, __FILE__, __LINE__);
                 return false;
             }
         }
@@ -620,22 +616,31 @@ bool CListModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int
 
             if (!playList)
             {
-                qDebug() << "CListModel::dropMimeData() : playList invalide";
+                m_application->logError("liste de lecture invalide", __FUNCTION__, __FILE__, __LINE__);
                 return false;
             }
-
-            //folderParentOld = playList->getFolder();
             
             emit layoutAboutToBeChanged();
 
-            if (folderParent)
-            {
+            if (parent.isValid())
                 folderParent->addPlayList(playList, position);
-            }
             else
-            {
-                playList->setParent(NULL);
-            }
+                folderParent->addPlayList(playList, position - 1);
+            
+            // Modification du modèle
+            QStandardItem * item = m_songTableItems.key(playList);
+            Q_CHECK_PTR(item);
+
+            if (item->parent())
+                item->parent()->takeRow(item->row());
+            else
+                invisibleRootItem()->takeRow(item->row());
+
+            QStandardItem * itemParent = m_folderItems.key(folderParent);
+            if (!itemParent)
+                itemParent = invisibleRootItem();
+
+            itemParent->insertRow(position, item);
 
             emit layoutChanged();
 
@@ -645,33 +650,40 @@ bool CListModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int
         {
             CFolder * folder = m_application->getFolderFromId(folderId);
 
-            //itemFromIndex(index(?, 0, ?));
-
             if (!folder)
             {
-                qDebug() << "CListModel::dropMimeData() : folder invalide";
+                m_application->logError("dossier invalide", __FUNCTION__, __FILE__, __LINE__);
                 return false;
             }
 
-            //folderParentOld = folder->getFolder();
-            
             emit layoutAboutToBeChanged();
 
-            if (folderParent)
-            {
+            if (parent.isValid())
                 folderParent->addFolder(folder, position);
-            }
             else
-            {
-                folder->setParent(NULL);
-            }
+                folderParent->addFolder(folder, position - 1);
+            
+            // Modification du modèle
+            QStandardItem * item = m_folderItems.key(folder);
+            Q_CHECK_PTR(item);
+
+            if (item->parent())
+                item->parent()->takeRow(item->row());
+            else
+                invisibleRootItem()->takeRow(item->row());
+
+            QStandardItem * itemParent = m_folderItems.key(folderParent);
+            if (!itemParent)
+                itemParent = invisibleRootItem();
+
+            itemParent->insertRow(position, item);
 
             emit layoutChanged();
 
             return true;
         }
 
-        qWarning() << "CPlayListModel::dropMimeData() : ni playlist ni folder";
+        m_application->logError("l'élément n'est ni un dossier, ni une liste de lecture", __FUNCTION__, __FILE__, __LINE__);
         return false;
     }
     else if (data->hasFormat("application/x-ted-media-songs"))
@@ -699,7 +711,7 @@ bool CListModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int
         }
 
         // Création d'une liste statique
-        qDebug() << "CPlayListModel::dropMimeData() : création d'une nouvelle liste...";
+        //qDebug() << "CPlayListModel::dropMimeData() : création d'une nouvelle liste...";
 
         QByteArray encodedData = data->data("application/x-ted-media-songs");
         QList<CSong *> songs = decodeDataSongs(encodedData);

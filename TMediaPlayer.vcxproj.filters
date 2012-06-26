@@ -373,14 +373,14 @@
     <ClCompile Include="Sources\IPlayList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Dialog\CDialogRemoveFolder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_CDialogRemoveFolder.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_CDialogRemoveFolder.cpp">
       <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Dialog\CDialogRemoveFolder.cpp">
+      <Filter>Source Files\Dialog</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -529,7 +529,7 @@
       <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="Sources\Dialog\CDialogRemoveFolder.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Dialog</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
