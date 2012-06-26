@@ -103,6 +103,7 @@ public:
     inline TFormat getFormat(void) const;
     inline int getNumChannels(void) const;
     inline int getDuration(void) const;
+    inline bool getFileStatus(void) const;
     inline QDateTime getCreationDate(void) const;
     inline QDateTime getModificationDate(void) const;
 
@@ -266,6 +267,7 @@ private:
     TFormat m_format;             ///< Format de fichier.
     int m_numChannels;            ///< Nombre de canaux.
     int m_duration;               ///< Durée du morceau en millisecondes.
+    bool m_fileStatus;            ///< Indique si le fichier est accessible.
     QDateTime m_creation;         ///< Date de création (ajout à la médiathèque).
     QDateTime m_modification;     ///< Date de la dernière modication.
     TSongInfos m_infos;           ///< Informations modifiables
@@ -539,6 +541,18 @@ inline int CSong::getNumChannels(void) const
 inline int CSong::getDuration(void) const
 {
     return m_duration;
+}
+
+
+/**
+ * Retourne le status du fichier.
+ *
+ * \return Booléen valant true si le fichier est accessible, false sinon.
+ */
+
+inline bool CSong::getFileStatus(void) const
+{
+    return m_fileStatus;
 }
 
 

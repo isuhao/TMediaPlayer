@@ -98,7 +98,8 @@ CSong::CSong(CApplication * application) :
     m_sampleRate    (0),
     m_format        (FormatUnknown),
     m_numChannels   (0),
-    m_duration      (0)
+    m_duration      (0),
+    m_fileStatus    (true)
 {
     Q_CHECK_PTR(application);
 }
@@ -127,20 +128,17 @@ CSong::CSong(const QString& fileName, CApplication * application) :
     m_sampleRate    (0),
     m_format        (FormatUnknown),
     m_numChannels   (0),
-    m_duration      (0)
+    m_duration      (0),
+    m_fileStatus    (true)
 {
     Q_CHECK_PTR(application);
 
     m_id = getId(application, fileName);
 
     if (m_id >= 0)
-    {
         loadFromDatabase();
-    }
     else
-    {
         loadTags();
-    }
 }
 
 
@@ -163,9 +161,7 @@ CSong::~CSong()
 
     // Mise à jour du fichier
     if (m_needWriteTags)
-    {
         writeTags();
-    }
 
     // Mise à jour de la base de données
     updateDatabase();
@@ -180,9 +176,7 @@ CSong::~CSong()
 void CSong::loadFromDatabase(void)
 {
     if (m_id <= 0)
-    {
         return;
-    }
 
     QSqlQuery query(m_application->getDataBase());
 
@@ -322,10 +316,12 @@ bool CSong::loadTags(bool readProperties)
 
             if (!file.isValid())
             {
+                m_fileStatus = false;
                 m_application->logError(QString("impossible de lire le fichier MP3 %1").arg(m_fileName), __FUNCTION__, __FILE__, __LINE__);
                 return false;
             }
 
+            m_fileStatus = true;
             m_fileSize = file.length();
 
             // Propriétés du morceau
@@ -360,10 +356,12 @@ bool CSong::loadTags(bool readProperties)
 
             if (!file.isValid())
             {
+                m_fileStatus = false;
                 m_application->logError(QString("impossible de lire le fichier Ogg %1").arg(m_fileName), __FUNCTION__, __FILE__, __LINE__);
                 return false;
             }
 
+            m_fileStatus = true;
             m_fileSize = file.length();
 
             // Propriétés du morceau
@@ -392,10 +390,12 @@ bool CSong::loadTags(bool readProperties)
 
             if (!file.isValid())
             {
+                m_fileStatus = false;
                 m_application->logError(QString("impossible de lire le fichier FLAC %1").arg(m_fileName), __FUNCTION__, __FILE__, __LINE__);
                 return false;
             }
 
+            m_fileStatus = true;
             m_fileSize = file.length();
 
             // Propriétés du morceau
@@ -457,10 +457,13 @@ return false; // Lecture seule...
 
             if (!file.isValid())
             {
+                m_fileStatus = false;
                 m_application->logError(QString("impossible de lire le fichier MP3 %1").arg(m_fileName), __FUNCTION__, __FILE__, __LINE__);
                 m_needWriteTags = true;
                 return false;
             }
+
+            m_fileStatus = true;
 
             if (file.readOnly())
             {
@@ -487,10 +490,13 @@ return false; // Lecture seule...
 
             if (!file.isValid())
             {
+                m_fileStatus = false;
                 m_application->logError(QString("impossible de lire le fichier Ogg %1").arg(m_fileName), __FUNCTION__, __FILE__, __LINE__);
                 m_needWriteTags = true;
                 return false;
             }
+
+            m_fileStatus = true;
 
             if (file.readOnly())
             {
@@ -513,10 +519,13 @@ return false; // Lecture seule...
 
             if (!file.isValid())
             {
+                m_fileStatus = false;
                 m_application->logError(QString("impossible de lire le fichier FLAC %1").arg(m_fileName), __FUNCTION__, __FILE__, __LINE__);
                 m_needWriteTags = true;
                 return false;
             }
+
+            m_fileStatus = true;
 
             if (file.readOnly())
             {
@@ -679,7 +688,7 @@ bool CSong::isEnded(void) const
 
 
 /**
- * Cherche l'identifiant d'un fichier  en base de données.
+ * Cherche l'identifiant d'un fichier en base de données.
  *
  * \param fileName Nom du fichier, doit être un chemin absolu simplifié.
  * \return Identifiant du fichier, ou -1 s'il n'existe pas.
@@ -1411,12 +1420,14 @@ void CSong::startPlay(void)
 
         res = m_channel->setPaused(false);
         Q_ASSERT(res == FMOD_OK);
+
+        m_fileStatus = true;
     }
     else
     {
+        m_fileStatus = false;
         m_sound = NULL;
         m_channel = NULL;
-        return;
     }
 }
 
@@ -1472,9 +1483,7 @@ bool CSong::loadSound(void)
 {
     // Déjà initialisé
     if (m_sound && m_channel)
-    {
         return true;
-    }
 
     FMOD_RESULT res;
 
@@ -1507,9 +1516,18 @@ bool CSong::loadSound(void)
                     m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 }
             }
-
+            
+            m_fileStatus = true;
             return true;
         }
+        else
+        {
+            m_fileStatus = false;
+        }
+    }
+    else
+    {
+        m_fileStatus = false;
     }
 
     m_application->logError(QString("échec du chargement du morceau %1").arg(m_fileName), __FUNCTION__, __FILE__, __LINE__);
@@ -1527,9 +1545,7 @@ bool CSong::loadSound(void)
 void CSong::play(void)
 {
     if (!m_sound)
-    {
         return;
-    }
 
     FMOD_RESULT res;
 

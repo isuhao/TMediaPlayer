@@ -138,9 +138,7 @@ bool CSongTableModel::hasSong(CSong * song) const
     foreach (CSongTableItem * songItem, m_data)
     {
         if (songItem->getSong() == song)
-        {
             return true;
-        }
     }
 
     return false;
@@ -170,9 +168,7 @@ int CSongTableModel::columnCount(const QModelIndex& parent) const
 QVariant CSongTableModel::data(const QModelIndex& index, int role) const
 {
     if (index.row() >= m_data.size())
-    {
         return QVariant::Invalid;
-    }
 
     if (role == Qt::FontRole)
     {
@@ -361,6 +357,13 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
         if (index.column() == CSongTable::ColTitle)
         {
             return (m_data.at(index.row())->getSong()->isEnabled() ? Qt::Checked : Qt::Unchecked);
+        }
+    }
+    else if (role == Qt::ForegroundRole)
+    {
+        if (m_data.at(index.row())->getSong()->getFileStatus() == false)
+        {
+            return QBrush(Qt::darkGray);
         }
     }
 

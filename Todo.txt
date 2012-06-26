@@ -3,12 +3,6 @@
   Importance élevée
 --------------------------------------------------
 
-- Listes de lecture dynamiques :
-  - Vérifier que les champs ne sont pas vides.
-  - Si un multi-critères ne contient qu'un enfant, on peut remonter celui-ci au niveau supérieur.
-  - Trier les types de critères par ordre alphabétique.
-  - Vérifier qu'il n'y a pas de boucles pour le critère "Liste de lecture".
-
 - Import depuis iTunes.
   - Importer les morceaux.
   - Importer les listes statiques.
@@ -33,23 +27,29 @@
   Importance moyenne
 --------------------------------------------------
 
+- Listes de lecture dynamiques :
+  - Vérifier que les champs ne sont pas vides.
+  - Si un multi-critères ne contient qu'un enfant, on peut remonter celui-ci au niveau supérieur.
+  - Trier les types de critères par ordre alphabétique.
+  - Vérifier qu'il n'y a pas de boucles pour le critère "Liste de lecture".
+
 - Améliorer la gestion du glisser-déposer dans la vue des listes de lecture (affichage de l'indicateur).
-- Gérer l'ouverture et la fermeture des dossiers.
 
 - Boite de dialogue Edit Song(s) :
-  - Gérer l'option "Ajustement du volume".
+  - Gérer l'option "Ajustement du volume" (calculer le volume "moyen", et amplifier ou atténuer le volume selon le morceau).
 
 - Implémenter correctement la répétition (répétition de la liste, du morceau, etc.).
 
 - Optimisation : exécuter les requêtes SQL dans un thread séparé.
   - Utiliser des transactions.
+  - Tester avec MySQL.
 
-- Organiser automatiquement les fichiers.
+- Organiser automatiquement les fichiers :
   - Pouvoir préciser le schéma du nom ("%ARTIST%/%ALBUM%/{{%DISC%-}%TRACK% }%TITLE%")
   - Ajouter une option pour tronquer les noms (40 caractères pour iTunes).
 
 - Barre d'état :
-  - Afficher les informations sur les morceaux sélectionnés.
+  - Afficher les informations sur les morceaux sélectionnés (nombre et durée).
 
 --------------------------------------------------
   Importance faible
@@ -64,7 +64,7 @@
 
 - Enregistrer l'heure UTC de lecture.
 
-- Créer la boite de dialogue Édition des métadonnées.
+- Créer la boite de dialogue Édition des métadonnées :
   - Lire les métadonnées à l'ouverture de cette vue.
   - Gérer les différents types de tags (ID3v1, ID3v2, xiphComment, APE).
   - Gérer les tags binaires pour le ID3v2.
@@ -77,5 +77,4 @@
 - Moteur de recherche dans la liste de lecture.
 - Récupérer les paroles depuis Internet.
 - Récupérer les pochettes depuis Internet.
-- Option "Lecture seule".
-- Égaliser le volume sonore d'un morceau.
+- Option "Lecture seule" (désactiver l'écriture des métadonnées et le déplacement des fichiers).
