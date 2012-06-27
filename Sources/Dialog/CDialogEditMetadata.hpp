@@ -67,9 +67,11 @@ private:
 
     Ui::DialogEditMetadata * m_uiWidget;
     QStandardItemModel * m_modelID3v2Text;
+    QStandardItemModel * m_modelID3v2URL;
+    QStandardItemModel * m_modelID3v2Lyrics;
     QStandardItemModel * m_modelID3v2Comments;
-    CApplication * m_application;
-    CSong * m_song;
+    CApplication * m_application; ///< Pointeur sur l'application.
+    CSong * m_song;               ///< Pointeur sur le morceau.
 };
 
 #endif // FILE_C_DIALOG_EDIT_METADATA

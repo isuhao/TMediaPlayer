@@ -210,52 +210,61 @@ Erreur : %4</translation>
     <name>CDialogEditMetadata</name>
     <message>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="69"/>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="73"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="71"/>
         <source>Metadata</source>
         <translation>Métadonnées</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="150"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="151"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="153"/>
         <source>Key</source>
         <translation>Clé</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="150"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="151"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="153"/>
         <source>Value</source>
         <translation>Valeur</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="152"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="155"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="157"/>
         <source>Description</source>
         <translation>Description</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="152"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="155"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="157"/>
         <source>Language</source>
         <translation>Langue</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="152"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="155"/>
+        <source>Lyrics</source>
+        <translation>Paroles</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="157"/>
         <source>Comments</source>
         <translation>Commentaires</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="94"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="95"/>
         <source>Save</source>
         <translation>Enregistrer</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="95"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="96"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="96"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="97"/>
         <source>Apply</source>
         <translation>Appliquer</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="97"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="98"/>
         <source>Reset</source>
         <translation>Réinitialiser</translation>
     </message>
@@ -590,89 +599,89 @@ Erreur : %4</translation>
 <context>
     <name>CSong</name>
     <message>
-        <location filename="../Sources/CSong.hpp" line="296"/>
+        <location filename="../Sources/CSong.hpp" line="298"/>
         <source>Unknown</source>
         <comment>Unknown format</comment>
         <translation>Inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="297"/>
+        <location filename="../Sources/CSong.hpp" line="299"/>
         <source>MP3</source>
         <translation>MP3</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="298"/>
+        <location filename="../Sources/CSong.hpp" line="300"/>
         <source>Ogg Vorbis</source>
         <translation>Ogg Vorbis</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="299"/>
+        <location filename="../Sources/CSong.hpp" line="301"/>
         <source>FLAC</source>
         <translation>FLAC</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="344"/>
+        <location filename="../Sources/CSong.hpp" line="346"/>
         <source>Unknown</source>
         <comment>Unknown language</comment>
         <translation>Inconnue</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="345"/>
+        <location filename="../Sources/CSong.hpp" line="347"/>
         <source>English</source>
         <translation>Anglais</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="346"/>
+        <location filename="../Sources/CSong.hpp" line="348"/>
         <source>French</source>
         <translation>Français</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="347"/>
+        <location filename="../Sources/CSong.hpp" line="349"/>
         <source>German</source>
         <translation>Allemand</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="348"/>
+        <location filename="../Sources/CSong.hpp" line="350"/>
         <source>Italian</source>
         <translation>Italien</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="349"/>
+        <location filename="../Sources/CSong.hpp" line="351"/>
         <source>Russian</source>
         <translation>Russe</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="560"/>
+        <location filename="../Sources/CSong.cpp" line="569"/>
         <source>Unknown title</source>
         <translation>Titre inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="565"/>
+        <location filename="../Sources/CSong.cpp" line="574"/>
         <source>Unknown artist</source>
         <translation>Artiste inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="570"/>
+        <location filename="../Sources/CSong.cpp" line="579"/>
         <source>Unknown album</source>
         <translation>Album inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="953"/>
+        <location filename="../Sources/CSong.cpp" line="962"/>
         <source>%1 Gio</source>
         <translation>%1 Gio</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="958"/>
+        <location filename="../Sources/CSong.cpp" line="967"/>
         <source>%1 Mio</source>
         <translation>%1 Mio</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="963"/>
+        <location filename="../Sources/CSong.cpp" line="972"/>
         <source>%1 Kio</source>
         <translation>%1 Kio</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CSong.cpp" line="967"/>
+        <location filename="../Sources/CSong.cpp" line="976"/>
         <source>%n byte(s)</source>
         <translation>
             <numerusform>%n octet</numerusform>
@@ -893,12 +902,12 @@ Les fichiers ne seront pas supprimés.</translation>
 <context>
     <name>CSongTableModel</name>
     <message>
-        <location filename="../Sources/CSongTableModel.cpp" line="282"/>
+        <location filename="../Sources/CSongTableModel.cpp" line="278"/>
         <source>%1 kbit/s</source>
         <translation>%1 kbit/s</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTableModel.cpp" line="300"/>
+        <location filename="../Sources/CSongTableModel.cpp" line="296"/>
         <source>%1 Hz</source>
         <translation>%1 Hz</translation>
     </message>
@@ -1151,71 +1160,75 @@ Voulez-vous les ajouter ?</translation>
         <translation type="obsolete">Valeur</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditMetadata.ui" line="164"/>
+        <location filename="../Form/DialogEditMetadata.ui" line="180"/>
         <source>URL</source>
         <translation>URL</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditMetadata.ui" line="201"/>
+        <location filename="../Form/DialogEditMetadata.ui" line="206"/>
+        <source>Lyrics</source>
+        <translation>Paroles</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEditMetadata.ui" line="277"/>
         <source>Description</source>
         <translation>Description</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditMetadata.ui" line="174"/>
         <source>Unsynchronized lyrics</source>
-        <translation type="unfinished">Paroles</translation>
+        <translation type="obsolete">Paroles</translation>
     </message>
     <message>
         <source>Language</source>
         <translation type="obsolete">Langue</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditMetadata.ui" line="184"/>
+        <location filename="../Form/DialogEditMetadata.ui" line="232"/>
         <source>Comments</source>
         <translation>Commentaires</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditMetadata.ui" line="194"/>
+        <location filename="../Form/DialogEditMetadata.ui" line="258"/>
         <source>Pictures</source>
         <translation>Illustrations</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditMetadata.ui" line="206"/>
+        <location filename="../Form/DialogEditMetadata.ui" line="282"/>
         <source>Type</source>
         <translation>Type</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditMetadata.ui" line="211"/>
+        <location filename="../Form/DialogEditMetadata.ui" line="287"/>
         <source>Format</source>
         <translation>Format</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditMetadata.ui" line="216"/>
+        <location filename="../Form/DialogEditMetadata.ui" line="292"/>
         <source>Size</source>
         <translation>Taille</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditMetadata.ui" line="260"/>
+        <location filename="../Form/DialogEditMetadata.ui" line="336"/>
         <source>Popularimeter</source>
         <translation type="unfinished">Popularité</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditMetadata.ui" line="265"/>
+        <location filename="../Form/DialogEditMetadata.ui" line="341"/>
         <source>Object</source>
         <translation type="unfinished">Objet</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditMetadata.ui" line="270"/>
+        <location filename="../Form/DialogEditMetadata.ui" line="346"/>
         <source>Unknown</source>
         <translation>Inconnu</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditMetadata.ui" line="284"/>
+        <location filename="../Form/DialogEditMetadata.ui" line="360"/>
         <source>Xiph Comment</source>
         <translation>Xiph Comment</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditMetadata.ui" line="279"/>
+        <location filename="../Form/DialogEditMetadata.ui" line="355"/>
         <source>APE</source>
         <translation>APE</translation>
     </message>

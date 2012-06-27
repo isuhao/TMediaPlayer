@@ -35,9 +35,10 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <id3v2tag.h>
 #include <apetag.h>
 #include <xiphcomment.h>
-#include <commentsframe.h>
-#include <unsynchronizedlyricsframe.h>
 #include <textidentificationframe.h>
+#include <urllinkframe.h>
+#include <unsynchronizedlyricsframe.h>
+#include <commentsframe.h>
 
 #include <QtDebug>
 
@@ -65,13 +66,9 @@ CDialogEditMetadata::CDialogEditMetadata(CApplication * application, CSong * son
     const QString songArtist = m_song->getArtistName();
 
     if (songArtist.isEmpty())
-    {
         setWindowTitle(tr("Metadata") + " - " + songTitle);
-    }
     else
-    {
         setWindowTitle(tr("Metadata") + " - " + songTitle + " - " + songArtist);
-    }
 
 
     // Genres ID3v1
@@ -86,6 +83,10 @@ CDialogEditMetadata::CDialogEditMetadata(CApplication * application, CSong * son
     // Modèles
     m_modelID3v2Text = new QStandardItemModel(this);
     m_uiWidget->tableID3v2Text->setModel(m_modelID3v2Text);
+    m_modelID3v2URL = new QStandardItemModel(this);
+    m_uiWidget->tableID3v2URL->setModel(m_modelID3v2URL);
+    m_modelID3v2Lyrics = new QStandardItemModel(this);
+    m_uiWidget->tableID3v2Lyrics->setModel(m_modelID3v2Lyrics);
     m_modelID3v2Comments = new QStandardItemModel(this);
     m_uiWidget->tableID3v2Comments->setModel(m_modelID3v2Comments);
 
@@ -148,6 +149,10 @@ void CDialogEditMetadata::reset(void)
 {
     m_modelID3v2Text->clear();
     m_modelID3v2Text->setHorizontalHeaderLabels(QStringList() << tr("Key") << tr("Value"));
+    m_modelID3v2URL->clear();
+    m_modelID3v2URL->setHorizontalHeaderLabels(QStringList() << tr("Key") << tr("Value"));
+    m_modelID3v2Lyrics->clear();
+    m_modelID3v2Lyrics->setHorizontalHeaderLabels(QStringList() << tr("Description") << tr("Language") << tr("Lyrics"));
     m_modelID3v2Comments->clear();
     m_modelID3v2Comments->setHorizontalHeaderLabels(QStringList() << tr("Description") << tr("Language") << tr("Comments"));
 
@@ -181,7 +186,7 @@ void CDialogEditMetadata::reset(void)
 
             if (!file.isValid())
             {
-                qWarning() << "CDialogEditMetadata::reset() : impossible de lire le fichier Ogg " << m_song->getFileName();
+                m_application->logError(QString("impossible de lire le fichier Ogg %1").arg(m_song->getFileName()), __FUNCTION__, __FILE__, __LINE__);
                 return;
             }
             
@@ -199,7 +204,7 @@ void CDialogEditMetadata::reset(void)
 
             if (!file.isValid())
             {
-                qWarning() << "CDialogEditMetadata::reset() : impossible de lire le fichier FLAC " << m_song->getFileName();
+                m_application->logError(QString("impossible de lire le fichier FLAC %1").arg(m_song->getFileName()), __FUNCTION__, __FILE__, __LINE__);
                 return;
             }
             
@@ -213,6 +218,12 @@ void CDialogEditMetadata::reset(void)
     }
 }
 
+
+/**
+ * Initialise l'onglet avec les tags ID3 version 1.
+ *
+ * \param tags Tags à afficher.
+ */
 
 void CDialogEditMetadata::initTagID3v1(TagLib::ID3v1::Tag * tags)
 {
@@ -229,7 +240,14 @@ void CDialogEditMetadata::initTagID3v1(TagLib::ID3v1::Tag * tags)
 }
 
 
-/// \todo Implémentation.
+/**
+ * Initialise l'onglet avec les tags ID3 version 2.
+ *
+ * \todo Implémentation complète.
+ *
+ * \param tags Tags à afficher.
+ */
+
 void CDialogEditMetadata::initTagID3v2(TagLib::ID3v2::Tag * tags)
 {
     if (!tags)
@@ -244,22 +262,66 @@ void CDialogEditMetadata::initTagID3v2(TagLib::ID3v2::Tag * tags)
 
         for (TagLib::ID3v2::FrameList::ConstIterator it2 = it->second.begin(); it2 != it->second.end(); ++it2)
         {
-            TagLib::ID3v2::CommentsFrame * commentsFrame = dynamic_cast<TagLib::ID3v2::CommentsFrame *>(*it2);
-            if (commentsFrame)
+            // Texte
             {
-                QList<QStandardItem *> itemList;
+                TagLib::ID3v2::TextIdentificationFrame * frame = dynamic_cast<TagLib::ID3v2::TextIdentificationFrame *>(*it2);
+                if (frame)
+                {
+                    QList<QStandardItem *> itemList;
 
-                itemList.append(new QStandardItem(QString::fromUtf8(commentsFrame->description().toCString(true))));
-                itemList.append(new QStandardItem(CSong::getLanguageName(CSong::getLanguageForISO3Code(QByteArray(commentsFrame->language().data(), 3)))));
-                itemList.append(new QStandardItem(QString::fromUtf8(commentsFrame->text().toCString(true))));
+                    itemList.append(new QStandardItem(tagKey));
+                    itemList.append(new QStandardItem(QString::fromUtf8(frame->toString().toCString(true))));
 
-                m_modelID3v2Comments->appendRow(itemList);
+                    m_modelID3v2Text->appendRow(itemList);
+                    continue;
+                }
             }
 
-            TagLib::ID3v2::UnsynchronizedLyricsFrame * lyricsFrame = dynamic_cast<TagLib::ID3v2::UnsynchronizedLyricsFrame *>(*it2);
-            if (lyricsFrame)
+            // URL
             {
-                //...
+                TagLib::ID3v2::UrlLinkFrame * frame = dynamic_cast<TagLib::ID3v2::UrlLinkFrame *>(*it2);
+                if (frame)
+                {
+                    QList<QStandardItem *> itemList;
+
+                    itemList.append(new QStandardItem(tagKey));
+                    itemList.append(new QStandardItem(QString::fromUtf8(frame->url().toCString(true))));
+
+                    m_modelID3v2URL->appendRow(itemList);
+                    continue;
+                }
+            }
+
+            // Paroles
+            {
+                TagLib::ID3v2::UnsynchronizedLyricsFrame * frame = dynamic_cast<TagLib::ID3v2::UnsynchronizedLyricsFrame *>(*it2);
+                if (frame)
+                {
+                    QList<QStandardItem *> itemList;
+
+                    itemList.append(new QStandardItem(QString::fromUtf8(frame->description().toCString(true))));
+                    itemList.append(new QStandardItem(CSong::getLanguageName(CSong::getLanguageForISO3Code(QByteArray(frame->language().data(), 3)))));
+                    itemList.append(new QStandardItem(QString::fromUtf8(frame->text().toCString(true))));
+
+                    m_modelID3v2Lyrics->appendRow(itemList);
+                    continue;
+                }
+            }
+
+            // Commentaires
+            {
+                TagLib::ID3v2::CommentsFrame * frame = dynamic_cast<TagLib::ID3v2::CommentsFrame *>(*it2);
+                if (frame)
+                {
+                    QList<QStandardItem *> itemList;
+
+                    itemList.append(new QStandardItem(QString::fromUtf8(frame->description().toCString(true))));
+                    itemList.append(new QStandardItem(CSong::getLanguageName(CSong::getLanguageForISO3Code(QByteArray(frame->language().data(), 3)))));
+                    itemList.append(new QStandardItem(QString::fromUtf8(frame->text().toCString(true))));
+
+                    m_modelID3v2Comments->appendRow(itemList);
+                    continue;
+                }
             }
 
             //...
