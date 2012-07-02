@@ -66,6 +66,9 @@ public:
     QStringList mimeTypes(void) const;
     Qt::DropActions supportedDropActions() const;
     
+    QList<CSong *> decodeDataSongs(const QByteArray& encodedData) const;
+    static bool decodeDataList(const QByteArray& encodedData, int * playList, int * folder);
+    
 private slots:
 
     void onPlayListRenamed(const QString& oldName, const QString& newName);
@@ -75,10 +78,6 @@ private:
 
     CFolder * getFolderFromId(int id, const QList<CFolder *> folders) const;
     IPlayList * getPlayListFromId(int id, const QList<IPlayList *> playLists) const;
-    
-    // Glisser-déposer
-    QList<CSong *> decodeDataSongs(const QByteArray& encodedData) const;
-    bool decodeDataList(const QByteArray& encodedData, int * playList, int * folder) const;
 
     CApplication * m_application; ///< Pointeur sur l'application.
     CFolder * m_rootFolder;       ///< Dossier principal.

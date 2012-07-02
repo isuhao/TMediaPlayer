@@ -275,6 +275,39 @@ void CPlayListView::dragMoveEvent(QDragMoveEvent * event)
         else
         {
             //qDebug() << "CPlayListView::dragMoveEvent() : move list...";
+            
+            int playListId;
+            int folderId;
+
+            CListModel::decodeDataList(dataList, &playListId, &folderId);
+
+            if (folderId > 0)
+            {
+                CFolder * folderSelected = m_application->getFolderFromId(folderId);
+
+                CFolder * folder = m_model->data(index, Qt::UserRole + 2).value<CFolder *>();
+
+                if (folder && folder->hasAncestor(folderSelected))
+                {
+                    event->ignore();
+                    return;
+                }
+
+                CSongTable * songTable = m_model->data(index, Qt::UserRole + 1).value<CSongTable *>();
+
+                if (songTable)
+                {
+                    event->ignore();
+                    return;
+                }
+                /*
+                if (folderId == folder->getId())
+                {
+                    event->ignore();
+                    return;
+                }*/
+            }
+
             event->accept();
             event->acceptProposedAction();
         }

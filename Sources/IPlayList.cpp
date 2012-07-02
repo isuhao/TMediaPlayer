@@ -42,6 +42,14 @@ IPlayList::~IPlayList()
 }
 
 
+bool IPlayList::hasAncestor(CFolder * folder) const
+{
+    if (!folder) return false;
+
+    return (m_folder ? m_folder->hasAncestor(folder) : false);
+}
+
+
 /**
  * Indique si la liste de lecture a été modifiée et doit être mise à jour.
  *

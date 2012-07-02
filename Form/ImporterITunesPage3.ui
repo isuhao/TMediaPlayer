@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ImporterITunesPage3</class>
+ <widget class="QWizardPage" name="ImporterITunesPage3">
+  <property name="windowTitle">
+   <string>ImporterITunesPage3</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="groupData">
+     <property name="title">
+      <string>Données différentes</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QRadioButton" name="dataNeverChange">
+        <property name="text">
+         <string>Conserver les données existantes.</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="dataAlwaysChange">
+        <property name="text">
+         <string>Utiliser les données de iTunes.</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="dataChangeWhenNeeded">
+        <property name="text">
+         <string>Utiliser les données de iTunes si les données existantes sont indéfinies.</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupPlays">
+     <property name="title">
+      <string>Lectures</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <widget class="QRadioButton" name="playsNeverChange">
+        <property name="text">
+         <string>Conserver les données existantes.</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="playsAlwaysChange">
+        <property name="text">
+         <string>Utiliser les données de iTunes.</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="playsMerge">
+        <property name="text">
+         <string>Fusionner les données existantes avec les données de iTunes.</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

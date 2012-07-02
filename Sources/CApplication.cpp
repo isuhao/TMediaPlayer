@@ -1886,6 +1886,112 @@ void CApplication::openDialogEditFolder(CFolder * folder)
 }
 
 
+void CApplication::relocateSong(void)
+{
+    Q_CHECK_PTR(m_displayedSongTable);
+
+    // Liste des morceaux sélectionnés
+    QList<CSongTableItem *> songItemList = m_displayedSongTable->getSelectedSongItems();
+
+    if (songItemList.size() > 1)
+    {
+        logError("plusieurs morceaux sélectionnés", __FUNCTION__, __FILE__, __LINE__);
+        return;
+    }
+
+    // Recherche du morceau sélectionné
+    CSongTableItem * songItem = m_displayedSongTable->getSelectedSongItem();
+
+    if (!songItem)
+    {
+        return;
+    }
+
+    CSong * song = songItem->getSong();
+
+    if (song)
+    {
+        QString fileName = QFileDialog::getOpenFileName(this, QString(), QString(), tr("Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)"));
+
+        if (fileName.isEmpty())
+        {
+            return;
+        }
+
+        // Le fichier est déjà dans la médiathèque
+        if (CSong::getId(this, fileName) >= 0)
+        {
+            logError(QString("le fichier %1 est déjà dans la médiathèque").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
+            return;
+        }
+
+        song->m_fileName = fileName;
+        song->m_isModified = true;
+
+        // Recherche de la durée du morceau
+        FMOD_SOUND_TYPE type;
+        FMOD_RESULT res;
+        FMOD::Sound * sound;
+
+        // Chargement du son
+        res = m_soundSystem->createStream(qPrintable(fileName), FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, NULL, &sound);
+
+        if (res != FMOD_OK || !sound)
+        {
+            logError(QString("erreur lors du chargement du fichier %1 avec FMOD").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
+            return;
+        }
+
+        res = sound->getLength(reinterpret_cast<unsigned int *>(&(song->m_duration)), FMOD_TIMEUNIT_MS);
+        if (res != FMOD_OK)
+        {
+            logError(QString("impossible de calculer la durée du morceau %1").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
+            song->m_duration = 0;
+        }
+
+        // Recherche du format du morceau
+        res = sound->getFormat(&type, NULL, NULL, NULL);
+
+        if (res != FMOD_OK)
+        {
+            logError(QString("impossible de déterminer le format du morceau %1").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
+        }
+        else
+        {
+            switch (type)
+            {
+                default:
+                    logError("format inconnu", __FUNCTION__, __FILE__, __LINE__);
+                    return;
+
+                case FMOD_SOUND_TYPE_MPEG:
+                    song->m_format = CSong::FormatMP3;
+                    break;
+
+                case FMOD_SOUND_TYPE_OGGVORBIS:
+                    song->m_format = CSong::FormatOGG;
+                    break;
+
+                case FMOD_SOUND_TYPE_FLAC:
+                    song->m_format = CSong::FormatFLAC;
+                    break;
+            }
+        }
+
+        sound->release();
+
+        // Chargement des métadonnées
+        if (!song->loadTags(true))
+        {
+            return;
+        }
+
+        song->m_fileStatus = true;
+        song->updateDatabase();
+    }
+}
+
+
 /**
  * Ouvre la fenêtre pour importer la médiathèque depuis iTunes.
  */
@@ -2409,10 +2515,17 @@ void CApplication::updateSongDescription(CSong * song)
 
 void CApplication::updateListInformations(void)
 {
-    // Barre d'état
     QTime duration(0, 0);
-    duration = duration.addMSecs(m_displayedSongTable->getTotalDuration());
-    m_listInfos->setText(tr("%n song(s), %1", "", m_displayedSongTable->getNumSongs()).arg(duration.toString()));
+    int numSongs = 0;
+
+    if (m_displayedSongTable)
+    {
+        duration = duration.addMSecs(m_displayedSongTable->getTotalDuration());
+        numSongs = m_displayedSongTable->getNumSongs();
+    }
+    
+    // Barre d'état
+    m_listInfos->setText(tr("%n song(s), %1", "", numSongs).arg(duration.toString()));
 }
 
 

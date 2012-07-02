@@ -14,7 +14,7 @@
     </message>
     <message numerus="yes">
         <location filename="../Sources/CApplication.cpp" line="115"/>
-        <location filename="../Sources/CApplication.cpp" line="2415"/>
+        <location filename="../Sources/CApplication.cpp" line="2528"/>
         <source>%n song(s), %1</source>
         <translation>
             <numerusform>%n morceau, %1</numerusform>
@@ -63,13 +63,13 @@ Erreur : %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3096"/>
+        <location filename="../Sources/CApplication.cpp" line="3209"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3104"/>
-        <location filename="../Sources/CApplication.cpp" line="3112"/>
+        <location filename="../Sources/CApplication.cpp" line="3217"/>
+        <location filename="../Sources/CApplication.cpp" line="3225"/>
         <source>Play</source>
         <translation>Lecture</translation>
     </message>
@@ -79,22 +79,23 @@ Erreur : %4</translation>
         <translation>Chargement des fichiers...</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2268"/>
+        <location filename="../Sources/CApplication.cpp" line="2374"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Êtes-vous sûr de vouloir supprimer cette liste de lecture ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2268"/>
+        <location filename="../Sources/CApplication.cpp" line="2374"/>
         <source>Yes</source>
         <translation>Oui</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2268"/>
+        <location filename="../Sources/CApplication.cpp" line="2374"/>
         <source>No</source>
         <translation>Non</translation>
     </message>
     <message>
         <location filename="../Sources/CApplication.cpp" line="1700"/>
+        <location filename="../Sources/CApplication.cpp" line="1914"/>
         <source>Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)</source>
         <translation>Fichiers multimédias (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;Tous les fichiers (*.*)</translation>
     </message>
@@ -108,7 +109,7 @@ Erreur : %4</translation>
         <translation type="obsolete">Êtes-vous sûr de vouloir supprimer ce dossier ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2558"/>
+        <location filename="../Sources/CApplication.cpp" line="2671"/>
         <source>This program requires FMOD %1 or superior.</source>
         <translation>Ce programme nécessite FMOD %1 ou supérieur.</translation>
     </message>
@@ -169,17 +170,17 @@ Erreur : %4</translation>
 <context>
     <name>CDialogEditDynamicList</name>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditDynamicList.cpp" line="78"/>
+        <location filename="../Sources/Dialog/CDialogEditDynamicList.cpp" line="76"/>
         <source>Save</source>
         <translation>Enregistrer</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditDynamicList.cpp" line="79"/>
+        <location filename="../Sources/Dialog/CDialogEditDynamicList.cpp" line="77"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditDynamicList.cpp" line="117"/>
+        <location filename="../Sources/Dialog/CDialogEditDynamicList.cpp" line="115"/>
         <source>You need to choose a name for the playlist.</source>
         <translation>Vous devez choisir un nom pour la liste de lecture.</translation>
     </message>
@@ -388,9 +389,9 @@ Erreur : %4</translation>
 <context>
     <name>CITunesLibrary</name>
     <message numerus="yes">
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="982"/>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="1010"/>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="1031"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="997"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="1025"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="1046"/>
         <source>%1 (%n song(s))</source>
         <translation>
             <numerusform>%1 (%n morceau)</numerusform>
@@ -398,7 +399,7 @@ Erreur : %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="982"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="997"/>
         <source>Library</source>
         <translation>Médiathèque</translation>
     </message>
@@ -450,12 +451,12 @@ Erreur : %4</translation>
         <translation type="obsolete">Tous les éléments sélectionnés ont été importés dans la médiathèque.</translation>
     </message>
     <message>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="193"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="194"/>
         <source>Solving problems</source>
         <translation>Résolution des conflits</translation>
     </message>
     <message>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="194"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="195"/>
         <source>What do you want to deal with songs already in your library?</source>
         <translation>Que voulez-vous faire si un morceau est déjà présent dans votre médiathèque ?</translation>
     </message>
@@ -463,12 +464,12 @@ Erreur : %4</translation>
 <context>
     <name>CITunesWizardPage4</name>
     <message>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="209"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="224"/>
         <source>Import done</source>
         <translation>Import effectué</translation>
     </message>
     <message>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="210"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="225"/>
         <source>All selected items have been imported into the library.</source>
         <translation>Tous les éléments sélectionnés ont été importés dans la médiathèque.</translation>
     </message>
@@ -849,47 +850,52 @@ Les fichiers ne seront pas supprimés.</translation>
         <translation>Informations...</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1213"/>
+        <location filename="../Sources/CSongTable.cpp" line="1216"/>
         <source>Edit metadata</source>
         <translation>Éditer les métadonnées</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1214"/>
+        <location filename="../Sources/CSongTable.cpp" line="1217"/>
         <source>Show in explorer</source>
         <translation>Afficher dans l&apos;explorateur</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1216"/>
+        <location filename="../Sources/CSongTable.cpp" line="1221"/>
+        <source>Relocate</source>
+        <translation>Relocaliser</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSongTable.cpp" line="1226"/>
         <source>Remove from library</source>
         <translation>Enlever de la médiathèque</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1217"/>
+        <location filename="../Sources/CSongTable.cpp" line="1227"/>
         <source>Check selection</source>
         <translation>Cocher la sélection</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1218"/>
+        <location filename="../Sources/CSongTable.cpp" line="1228"/>
         <source>Uncheck selection</source>
         <translation>Décocher la sélection</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1225"/>
+        <location filename="../Sources/CSongTable.cpp" line="1235"/>
         <source>Playlists</source>
         <translation>Listes de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1227"/>
+        <location filename="../Sources/CSongTable.cpp" line="1237"/>
         <source>Library</source>
         <translation>Médiathèque</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1255"/>
+        <location filename="../Sources/CSongTable.cpp" line="1265"/>
         <source>Add to playlist</source>
         <translation>Ajouter à la liste de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1260"/>
+        <location filename="../Sources/CSongTable.cpp" line="1270"/>
         <source>There are no playlist</source>
         <translation>Il n&apos;y a pas de listes de lecture</translation>
     </message>
@@ -1902,6 +1908,46 @@ Voulez-vous les ajouter ?</translation>
         <location filename="../Form/DialogRemoveFolder.ui" line="25"/>
         <source>Remove the content of the folder recursively.</source>
         <translation>Supprimer le contenu du dossier récursivement.</translation>
+    </message>
+</context>
+<context>
+    <name>ImporterITunesPage3</name>
+    <message>
+        <location filename="../Form/ImporterITunesPage3.ui" line="6"/>
+        <source>ImporterITunesPage3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <location filename="../Form/ImporterITunesPage3.ui" line="12"/>
+        <source>Données différentes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <location filename="../Form/ImporterITunesPage3.ui" line="18"/>
+        <location filename="../Form/ImporterITunesPage3.ui" line="51"/>
+        <source>Conserver les données existantes.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <location filename="../Form/ImporterITunesPage3.ui" line="28"/>
+        <location filename="../Form/ImporterITunesPage3.ui" line="61"/>
+        <source>Utiliser les données de iTunes.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <location filename="../Form/ImporterITunesPage3.ui" line="35"/>
+        <source>Utiliser les données de iTunes si les données existantes sont indéfinies.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Form/ImporterITunesPage3.ui" line="45"/>
+        <source>Lectures</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <location filename="../Form/ImporterITunesPage3.ui" line="68"/>
+        <source>Fusionner les données existantes avec les données de iTunes.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

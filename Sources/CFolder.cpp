@@ -119,6 +119,15 @@ void CFolder::setFolder(CFolder * folder)
 }
 
 
+bool CFolder::hasAncestor(CFolder * folder) const
+{
+    if (!folder) return false;
+    if (folder == this) return true;
+
+    return (m_folder ? m_folder->hasAncestor(folder) : false);
+}
+
+
 /**
  * Indique si les informations ou le contenu du dossier ont été modifiées.
  *

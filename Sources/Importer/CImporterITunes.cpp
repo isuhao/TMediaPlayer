@@ -186,7 +186,8 @@ bool CITunesWizardPage2::needToImportSongs(void) const
 
 CITunesWizardPage3::CITunesWizardPage3(CITunesLibrary * library, QWidget * parent) :
     QWizardPage (parent),
-    m_library   (library)
+    m_library   (library),
+    m_uiWidget  (new Ui::ImporterITunesPage3())
 {
     Q_CHECK_PTR(library);
 
@@ -194,7 +195,21 @@ CITunesWizardPage3::CITunesWizardPage3(CITunesLibrary * library, QWidget * paren
     setSubTitle(tr("What do you want to deal with songs already in your library?"));
     setCommitPage(true);
 
-    //...
+    m_uiWidget->setupUi(this);
+
+    registerField("dataNeverChange", m_uiWidget->dataNeverChange);
+    registerField("dataAlwaysChange", m_uiWidget->dataAlwaysChange);
+    registerField("dataChangeWhenNeeded", m_uiWidget->dataChangeWhenNeeded);
+
+    registerField("playsNeverChange", m_uiWidget->playsNeverChange);
+    registerField("playsAlwaysChange", m_uiWidget->playsAlwaysChange);
+    registerField("playsMerge", m_uiWidget->playsMerge);
+}
+
+
+CITunesWizardPage3::~CITunesWizardPage3()
+{
+    delete m_uiWidget;
 }
 
 

@@ -196,6 +196,7 @@ public slots:
     void openDialogEditStaticPlayList(CStaticPlayList * playList);
     void openDialogEditDynamicList(CDynamicList * playList);
     void openDialogEditFolder(CFolder * folder);
+    void relocateSong(void);
     void importFromITunes(void);
     void importFromSongbird(void);
     //void editSong(CSongTableItem * songItem);

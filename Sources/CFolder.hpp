@@ -67,6 +67,7 @@ public:
     inline int getId(void) const;
     inline QString getName(void) const;
     inline CFolder * getFolder(void) const;
+    bool hasAncestor(CFolder * folder) const;
     inline bool isOpen(void) const;
     inline QList<IPlayList *> getPlayLists(void) const;
     inline QList<CFolder *> getFolders(void) const;

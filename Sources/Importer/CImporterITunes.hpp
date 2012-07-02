@@ -25,6 +25,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QDateTime>
 #include <QWizard>
 #include <QMap>
+#include "ui_ImporterITunesPage3.h"
 
 
 class QGridLayout;
@@ -118,11 +119,12 @@ class CITunesWizardPage3 : public QWizardPage
 public:
 
     explicit CITunesWizardPage3(CITunesLibrary * library, QWidget * parent = NULL);
+    virtual ~CITunesWizardPage3();
 
 private:
     
     CITunesLibrary * m_library;
-    //...
+    Ui::ImporterITunesPage3 * m_uiWidget;
 };
 
 

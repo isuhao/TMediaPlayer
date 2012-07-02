@@ -48,6 +48,7 @@ public:
 
     inline QString getName(void) const;
     inline CFolder * getFolder(void) const;
+    bool hasAncestor(CFolder * folder) const;
     virtual bool isModified(void) const;
 
 public slots:

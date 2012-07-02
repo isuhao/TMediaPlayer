@@ -29,8 +29,6 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 /**
  * Constructeur de la boite de dialogue d'édition des listes de lecture dynamiques.
  *
- * \todo Charger les critères si la liste existe déjà.
- *
  * \param playList    Pointeur sur la liste à modifier, ou NULL pour une nouvelle liste.
  * \param application Pointeur sur l'application.
  */
@@ -128,6 +126,7 @@ void CDialogEditDynamicList::save(void)
     }
 
     m_application->addPlayList(m_playList);
+    m_playList->update();
 
     close();
 }

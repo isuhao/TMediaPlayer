@@ -531,6 +531,9 @@
     <CustomBuild Include="Sources\Dialog\CDialogRemoveFolder.hpp">
       <Filter>Header Files\Dialog</Filter>
     </CustomBuild>
+    <CustomBuild Include="Form\ImporterITunesPage3.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_DialogEditDynamicPlayList.h">
@@ -573,6 +576,9 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_DialogRemoveFolder.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_ImporterITunesPage3.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -250,10 +250,10 @@ void CListModel::loadFromDatabase(void)
             playLists.append(playList);
             playList->hide();
 
-            connect(playList, SIGNAL(songStarted(CSongTableItem *)), this, SLOT(playSong(CSongTableItem *)));
+            connect(playList, SIGNAL(songStarted(CSongTableItem *)), m_application, SLOT(playSong(CSongTableItem *)));
             connect(playList, SIGNAL(nameChanged(const QString&, const QString&)), this, SLOT(onPlayListRenamed(const QString&, const QString&)));
-            connect(playList, SIGNAL(rowCountChanged()), this, SLOT(updateListInformations()));
-            connect(playList, SIGNAL(listUpdated()), this, SLOT(updateListInformations()));
+            connect(playList, SIGNAL(rowCountChanged()), m_application, SLOT(updateListInformations()));
+            connect(playList, SIGNAL(listUpdated()), m_application, SLOT(updateListInformations()));
 
             playList->update();
         }
@@ -745,7 +745,7 @@ QList<CSong *> CListModel::decodeDataSongs(const QByteArray& encodedData) const
 }
 
 
-bool CListModel::decodeDataList(const QByteArray& encodedData, int * playList, int * folder) const
+bool CListModel::decodeDataList(const QByteArray& encodedData, int * playList, int * folder)
 {
     Q_CHECK_PTR(playList);
     Q_CHECK_PTR(folder);
