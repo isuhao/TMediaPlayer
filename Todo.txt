@@ -23,6 +23,8 @@
 
 - Tester le scrobbling Last.fm.
 
+- Améliorer la gestion du glisser-déposer dans la vue des listes de lecture (affichage de l'indicateur).
+
 --------------------------------------------------
   Importance moyenne
 --------------------------------------------------
@@ -32,8 +34,6 @@
   - Si un multi-critères ne contient qu'un enfant, on peut remonter celui-ci au niveau supérieur.
   - Trier les types de critères par ordre alphabétique.
   - Vérifier qu'il n'y a pas de boucles pour le critère "Liste de lecture".
-
-- Améliorer la gestion du glisser-déposer dans la vue des listes de lecture (affichage de l'indicateur).
 
 - Boite de dialogue Edit Song(s) :
   - Gérer l'option "Ajustement du volume" (calculer le volume "moyen", et amplifier ou atténuer le volume selon le morceau).

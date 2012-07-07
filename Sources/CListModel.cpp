@@ -640,7 +640,10 @@ bool CListModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int
             if (!itemParent)
                 itemParent = invisibleRootItem();
 
-            itemParent->insertRow(position, item);
+            if (position < 0)
+                itemParent->appendRow(item);
+            else
+                itemParent->insertRow(position, item);
 
             emit layoutChanged();
 
@@ -675,8 +678,11 @@ bool CListModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int
             QStandardItem * itemParent = m_folderItems.key(folderParent);
             if (!itemParent)
                 itemParent = invisibleRootItem();
-
-            itemParent->insertRow(position, item);
+            
+            if (position < 0)
+                itemParent->appendRow(item);
+            else
+                itemParent->insertRow(position, item);
 
             emit layoutChanged();
 

@@ -230,6 +230,7 @@ CITunesWizardPage4::CITunesWizardPage4(CApplication * application, CITunesLibrar
 /// \todo Implémentation.
 void CITunesWizardPage4::initializePage(void)
 {
+    QSqlQuery query(m_application->getDataBase());
     QMap<int, CSong *> songs;
 
     // Ajout des morceaux
@@ -245,15 +246,127 @@ void CITunesWizardPage4::initializePage(void)
             {
                 qDebug() << "CITunesWizardPage4::initializePage() : Morceau déjà présent";
 
-                //...
+                if (field("dataAlwaysChange").toBool())
+                {
+                    query.prepare("UPDATE song SET song_enabled = ?, song_compilation = ?, song_rating = ? "
+                                  "WHERE song_id = ?");
+
+                    query.bindValue(0, it2->enabled);
+                    query.bindValue(1, it2->compilation);
+                    query.bindValue(2, it2->rating);
+                    query.bindValue(3, songs[it2.key()]->getId());
+
+                    if (!query.exec())
+                    {
+                        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                        return;
+                    }
+                }
+                else if (field("dataChangeWhenNeeded").toBool())
+                {
+                    query.prepare("UPDATE song SET song_enabled = ?, song_compilation = ?, song_rating = ? "
+                                  "WHERE song_id = ?");
+
+                    bool songEnable = songs[it2.key()]->isEnabled();
+                    bool songCompilation = songs[it2.key()]->isCompilation();
+                    int songRating = songs[it2.key()]->getRating();
+
+                    query.bindValue(0, songEnable ? true : it2->enabled);
+                    query.bindValue(1, songCompilation ? true : it2->compilation);
+                    query.bindValue(2, songRating != 0 ? songRating : it2->rating);
+                    query.bindValue(3, songs[it2.key()]->getId());
+
+                    if (!query.exec())
+                    {
+                        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                        return;
+                    }
+                }
+
+                if (field("playsAlwaysChange").toBool())
+                {
+                    query.prepare("UPDATE song SET song_play_count = ?, song_play_time = ? "
+                                  "WHERE song_id = ?");
+
+                    query.bindValue(0, it2->playCount);
+                    query.bindValue(1, it2->lastPlayed);
+                    query.bindValue(2, songs[it2.key()]->getId());
+
+                    if (!query.exec())
+                    {
+                        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                        return;
+                    }
+                    
+                    // Ajout des lectures
+                    query.prepare("DELETE FROM play WHERE song_id = ?");
+                    query.bindValue(0, songs[it2.key()]->getId());
+
+                    if (!query.exec())
+                    {
+                        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                        return;
+                    }
+
+                    query.prepare("INSERT INTO play (song_id, play_time) VALUES (?, ?)");
+                    query.bindValue(0, songs[it2.key()]->getId());
+
+                    for (int play = 0; play < it2->playCount; ++play)
+                    {
+                        if (play == it2->playCount - 1)
+                            query.bindValue(1, it2->lastPlayed);
+                        else
+                            query.bindValue(1, QDateTime());
+
+                        if (!query.exec())
+                        {
+                            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                            return;
+                        }
+                    }
+                }
+                else if (field("playsMerge").toBool())
+                {
+                    int songPlayCount = songs[it2.key()]->getNumPlays() + it2->playCount;
+                    QDateTime songPlayTime = qMax(songs[it2.key()]->getLastPlay(), it2->lastPlayed);
+                    
+                    query.prepare("UPDATE song SET song_play_count = ?, song_play_time = ? "
+                                  "WHERE song_id = ?");
+
+                    query.bindValue(0, songPlayCount);
+                    query.bindValue(1, songPlayTime);
+                    query.bindValue(2, songs[it2.key()]->getId());
+
+                    if (!query.exec())
+                    {
+                        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                        return;
+                    }
+
+                    // Ajout des lectures
+                    query.prepare("INSERT INTO play (song_id, play_time) VALUES (?, ?)");
+                    query.bindValue(0, songs[it2.key()]->getId());
+
+                    for (int play = 0; play < it2->playCount; ++play)
+                    {
+                        if (play == it2->playCount - 1)
+                            query.bindValue(1, it2->lastPlayed);
+                        else
+                            query.bindValue(1, QDateTime());
+
+                        if (!query.exec())
+                        {
+                            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                            return;
+                        }
+                    }
+                }
             }
             else
             {
                 songs[it2.key()] = m_application->addSong(it2->fileName);
 
-                QSqlQuery query(m_application->getDataBase());
-
-                query.prepare("UPDATE song SET song_enabled = ?, song_compilation = ?, song_rating = ?, song_play_count, song_play_time "
+                query.prepare("UPDATE song SET song_enabled = ?, song_compilation = ?, song_rating = ?, song_play_count = ?, song_play_time = ? "
                               "WHERE song_id = ?");
 
                 query.bindValue(0, it2->enabled);
@@ -287,6 +400,9 @@ void CITunesWizardPage4::initializePage(void)
                     }
                 }
             }
+
+            // Rechargement du morceau
+            songs[it2.key()]->loadFromDatabase();
         }
     }
 
