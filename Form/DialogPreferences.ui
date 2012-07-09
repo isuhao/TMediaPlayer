@@ -51,6 +51,9 @@
          <property name="text">
           <string>Row height:</string>
          </property>
+         <property name="buddy">
+          <cstring>editRowHeight</cstring>
+         </property>
         </widget>
        </item>
        <item row="1" column="1">
@@ -68,6 +71,121 @@
           <number>19</number>
          </property>
         </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabDatabase">
+      <attribute name="title">
+       <string>Database</string>
+      </attribute>
+      <layout class="QFormLayout" name="formLayout_4">
+       <item row="1" column="0">
+        <widget class="QLabel" name="lblDBDriver">
+         <property name="text">
+          <string>Driver:</string>
+         </property>
+         <property name="buddy">
+          <cstring>editDBDriver</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QComboBox" name="editDBDriver">
+         <item>
+          <property name="text">
+           <string>SQLite version 3 or above</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>SQLite version 2</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>PostgreSQL</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>MySQL</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>ODBC</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="7" column="1">
+        <widget class="QLineEdit" name="editDBUserName"/>
+       </item>
+       <item row="7" column="0">
+        <widget class="QLabel" name="lblDBUserName">
+         <property name="text">
+          <string>Username:</string>
+         </property>
+         <property name="buddy">
+          <cstring>editDBUserName</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="0">
+        <widget class="QLabel" name="lblDBPassword">
+         <property name="text">
+          <string>Password:</string>
+         </property>
+         <property name="buddy">
+          <cstring>editDBPassword</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="0">
+        <widget class="QLabel" name="lblDBDatabase">
+         <property name="text">
+          <string>Database:</string>
+         </property>
+         <property name="buddy">
+          <cstring>editDBDatabase</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="1">
+        <widget class="QLineEdit" name="editDBDatabase"/>
+       </item>
+       <item row="5" column="1">
+        <widget class="QSpinBox" name="editDBPort">
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLineEdit" name="editDBHost"/>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="lblDBPort">
+         <property name="text">
+          <string>Port:</string>
+         </property>
+         <property name="buddy">
+          <cstring>editDBPort</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="lblDBHost">
+         <property name="text">
+          <string>Host:</string>
+         </property>
+         <property name="buddy">
+          <cstring>editDBHost</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="1">
+        <widget class="QLineEdit" name="editDBPassword"/>
        </item>
       </layout>
      </widget>
@@ -238,6 +356,26 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>editShowButtonStop</tabstop>
+  <tabstop>editRowHeight</tabstop>
+  <tabstop>editDBDriver</tabstop>
+  <tabstop>editDBHost</tabstop>
+  <tabstop>editDBPort</tabstop>
+  <tabstop>editDBUserName</tabstop>
+  <tabstop>editDBPassword</tabstop>
+  <tabstop>editDBDatabase</tabstop>
+  <tabstop>groupUseLastFm</tabstop>
+  <tabstop>btnLastFm</tabstop>
+  <tabstop>editLastFmDelayBeforeNotification</tabstop>
+  <tabstop>editLastFmPercentageBeforeScrobbling</tabstop>
+  <tabstop>checkBox</tabstop>
+  <tabstop>checkBox_2</tabstop>
+  <tabstop>checkBox_3</tabstop>
+  <tabstop>checkBox_4</tabstop>
+  <tabstop>buttonBox</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

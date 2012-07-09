@@ -1704,7 +1704,7 @@ void CSong::updateDatabase(void)
             query.bindValue(numValue++, (m_infos.compilation ? 1 : 0));
             query.bindValue(numValue++, (m_infos.skipShuffle ? 1 : 0));
             query.bindValue(numValue++, 0);  // Play count
-            query.bindValue(numValue++, ""); // Last play time
+            query.bindValue(numValue++, QDateTime()); // Last play time
 
             if (!query.exec())
             {

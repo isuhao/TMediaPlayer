@@ -41,6 +41,7 @@ public:
 protected slots:
 
     void save(void);
+    void onDriverChange(const QString& name);
 
 private:
 

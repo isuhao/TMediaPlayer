@@ -4,8 +4,8 @@ CREATE TABLE folder (
     folder_name VARCHAR NOT NULL,
     folder_parent INTEGER NOT NULL,
     folder_position INTEGER NOT NULL,
-    folder_expanded INTEGER NOT NULL,
-    -- UNIQUE (folder_parent, folder_position)
+    folder_expanded INTEGER NOT NULL
+    -- ,UNIQUE (folder_parent, folder_position)
 );
 
 INSERT INTO folder VALUES (0, "", 0, 1, 1);
@@ -15,12 +15,12 @@ CREATE TABLE playlist (
     playlist_name VARCHAR NOT NULL,
     folder_id INTEGER NOT NULL,
     list_position INTEGER NOT NULL,
-    list_columns VARCHAR NOT NULL,
-    -- UNIQUE (folder_id, list_position)
+    list_columns VARCHAR NOT NULL
+    -- ,UNIQUE (folder_id, list_position)
 );
 
 INSERT INTO playlist (playlist_id, playlist_name, folder_id, list_position, list_columns)
-VALUES (0, "Library", 0, 0, "1:100;17:50;2+:100;3:100;9:60");
+VALUES (0, "Library", 0, -1, "0:40;1:150;17:60;2+:150;3:150;6:50;9:60;12:50;13:120");
 
 CREATE TABLE dynamic_list (
     dynamic_list_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,

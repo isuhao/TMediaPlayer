@@ -363,12 +363,48 @@ Erreur : %4</translation>
 <context>
     <name>CDialogPreferences</name>
     <message>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="52"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="54"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="55"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="123"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="151"/>
+        <source>SQLite version 2</source>
+        <translation>SQLite version 2</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="59"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="60"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="125"/>
+        <source>PostgreSQL</source>
+        <translation>PostgreSQL</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="64"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="65"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="127"/>
+        <source>MySQL</source>
+        <translation>MySQL</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="69"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="70"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="129"/>
+        <source>ODBC</source>
+        <translation>ODBC</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="74"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="75"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="151"/>
+        <source>SQLite version 3 or above</source>
+        <translation>SQLite version 3 ou supérieure</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="89"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="53"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="90"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
@@ -389,9 +425,9 @@ Erreur : %4</translation>
 <context>
     <name>CITunesLibrary</name>
     <message numerus="yes">
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="997"/>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="1025"/>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="1046"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="1113"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="1141"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="1162"/>
         <source>%1 (%n song(s))</source>
         <translation>
             <numerusform>%1 (%n morceau)</numerusform>
@@ -399,7 +435,7 @@ Erreur : %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/Importer/CImporterITunes.cpp" line="997"/>
+        <location filename="../Sources/Importer/CImporterITunes.cpp" line="1113"/>
         <source>Library</source>
         <translation>Médiathèque</translation>
     </message>
@@ -1808,86 +1844,146 @@ Voulez-vous les ajouter ?</translation>
     </message>
     <message>
         <location filename="../Form/DialogPreferences.ui" line="76"/>
+        <source>Database</source>
+        <translation>Base de données</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="82"/>
+        <source>Driver:</source>
+        <translation>Pilote :</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="90"/>
+        <source>SQLite version 3 or above</source>
+        <translation>SQLite version 3 ou supérieure</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="95"/>
+        <source>SQLite version 2</source>
+        <translation>SQLite version 2</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="100"/>
+        <source>PostgreSQL</source>
+        <translation>PostgreSQL</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="105"/>
+        <source>MySQL</source>
+        <translation>MySQL</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="110"/>
+        <source>ODBC</source>
+        <translation>ODBC</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="121"/>
+        <source>Username:</source>
+        <translation>Utilisateur :</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="128"/>
+        <source>Password:</source>
+        <translation>Mot de passe :</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="135"/>
+        <source>Database:</source>
+        <translation>Base de données :</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="155"/>
+        <source>Port:</source>
+        <translation>Port :</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="162"/>
+        <source>Host:</source>
+        <translation>Serveur :</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="173"/>
         <source>Last.fm</source>
         <translation>Last.fm</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="82"/>
+        <location filename="../Form/DialogPreferences.ui" line="179"/>
         <source>Use Last.fm</source>
         <translation>Utiliser Last.fm</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="94"/>
+        <location filename="../Form/DialogPreferences.ui" line="191"/>
         <source>If this is not yet done, you must connect your account to the application. Use this button to open a navigator, and perform the connection:</source>
         <translation>Si ce n&apos;est pas encore fait, vous devez connecter votre compte à l&apos;application. Utilisez ce bouton pour ouvrir un navigateur, et effectuer la connexion :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="104"/>
+        <location filename="../Form/DialogPreferences.ui" line="201"/>
         <source>Connect to Last.fm</source>
         <translation>Se connecter à Last.fm</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="124"/>
+        <location filename="../Form/DialogPreferences.ui" line="221"/>
         <source>Percentage of reading before scrobbling:</source>
         <translation>Pourcentage de lecture avant de scrobbler :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="131"/>
+        <location filename="../Form/DialogPreferences.ui" line="228"/>
         <source> %</source>
         <translation>%</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="147"/>
+        <location filename="../Form/DialogPreferences.ui" line="244"/>
         <source>Delay before notify that a new song has started:</source>
         <translation>Délai avant de signaler qu&apos;un nouveau morceau a commencé :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="222"/>
+        <location filename="../Form/DialogPreferences.ui" line="319"/>
         <source>When you add a file into the library, if there are no sorting fields, they will be automatically compute. For example, if a title starts with &quot;The &quot;.</source>
         <translation>Quand vous ajoutez unfichier à la médiathèque, s&apos;il n&apos;y a pas de valeurs pour le tri, elles sont automatiquement déterminées. Par exemple, si un titre commence par &quot;Le &quot;.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="154"/>
+        <location filename="../Form/DialogPreferences.ui" line="251"/>
         <source>When you start playing a song, a notification is send to Last.fm to update your profile. This value represent the delay in seconds before sending the information. It must be between 2s and 20s.</source>
         <translation>Lorsque vous démarrez la lecture d&apos;un morceau, une notification est envoyée à Last.fm pour mettre à jour votre profil. Cette valeur correspond au délai en secondes avant d&apos;envoyer l&apos;information. Elle doit être comprise entre 2s et 20s.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="157"/>
+        <location filename="../Form/DialogPreferences.ui" line="254"/>
         <source>s</source>
         <translation>s</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="177"/>
+        <location filename="../Form/DialogPreferences.ui" line="274"/>
         <source>Metadata</source>
         <translation>Métadonnées</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="183"/>
+        <location filename="../Form/DialogPreferences.ui" line="280"/>
         <source>Saving</source>
         <translation>Enregistrement</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="192"/>
+        <location filename="../Form/DialogPreferences.ui" line="289"/>
         <source>Write song duration.</source>
         <translation>Écrire la durée du morceau.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="199"/>
+        <location filename="../Form/DialogPreferences.ui" line="296"/>
         <source>Write play count.</source>
         <translation>Écrire le nombre de lectures.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="206"/>
+        <location filename="../Form/DialogPreferences.ui" line="303"/>
         <source>Write rating.</source>
         <translation>Écrire la note.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="216"/>
+        <location filename="../Form/DialogPreferences.ui" line="313"/>
         <source>Loading</source>
         <translation>Chargement</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="225"/>
+        <location filename="../Form/DialogPreferences.ui" line="322"/>
         <source>Automatically compute sorting fields.</source>
         <translation>Déterminer automatiquement les valeurs pour le tri.</translation>
     </message>
