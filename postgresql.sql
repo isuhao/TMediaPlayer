@@ -1,7 +1,7 @@
 
 CREATE TABLE folder (
     folder_id SERIAL PRIMARY KEY,
-    folder_name VARCHAR(150) NOT NULL,
+    folder_name VARCHAR(512) NOT NULL,
     folder_parent INTEGER NOT NULL,
     folder_position INTEGER NOT NULL,
     folder_expanded INTEGER NOT NULL
@@ -12,10 +12,10 @@ INSERT INTO folder VALUES (0, '', 0, 1, 1);
 
 CREATE TABLE playlist (
     playlist_id SERIAL PRIMARY KEY,
-    playlist_name VARCHAR(150) NOT NULL,
+    playlist_name VARCHAR(512) NOT NULL,
     folder_id INTEGER NOT NULL,
     list_position INTEGER NOT NULL,
-    list_columns VARCHAR(150) NOT NULL
+    list_columns VARCHAR(512) NOT NULL
     -- ,UNIQUE (folder_id, list_position)
 ) WITH OIDS;
 
@@ -36,8 +36,8 @@ CREATE TABLE criteria (
     criteria_position INTEGER NOT NULL,
     criteria_type INTEGER NOT NULL,
     criteria_condition INTEGER NOT NULL,
-    criteria_value1 VARCHAR(150),
-    criteria_value2 VARCHAR(150),
+    criteria_value1 VARCHAR(512),
+    criteria_value2 VARCHAR(512),
     UNIQUE (dynamic_list_id, criteria_parent, criteria_position)
 ) WITH OIDS;
 
@@ -56,7 +56,7 @@ CREATE TABLE static_list_song (
 
 CREATE TABLE song (
     song_id SERIAL PRIMARY KEY,
-    song_filename VARCHAR(150) NOT NULL UNIQUE,
+    song_filename VARCHAR(512) NOT NULL UNIQUE,
     song_filesize INTEGER NOT NULL,
     song_bitrate INTEGER NOT NULL,
     song_sample_rate INTEGER NOT NULL,
@@ -66,15 +66,15 @@ CREATE TABLE song (
     song_creation TIMESTAMP NOT NULL,
     song_modification TIMESTAMP NOT NULL,
     song_enabled INTEGER NOT NULL,
-    song_title VARCHAR(150) NOT NULL,
-    song_title_sort VARCHAR(150) NOT NULL,
-    song_subtitle VARCHAR(150) NOT NULL,
-    song_grouping VARCHAR(150) NOT NULL,
+    song_title VARCHAR(512) NOT NULL,
+    song_title_sort VARCHAR(512) NOT NULL,
+    song_subtitle VARCHAR(512) NOT NULL,
+    song_grouping VARCHAR(512) NOT NULL,
     artist_id INTEGER NOT NULL,
     album_id INTEGER NOT NULL,
     album_artist_id INTEGER NOT NULL,
-    song_composer VARCHAR(150) NOT NULL,
-    song_composer_sort VARCHAR(150) NOT NULL,
+    song_composer VARCHAR(512) NOT NULL,
+    song_composer_sort VARCHAR(512) NOT NULL,
     song_year INTEGER NOT NULL,
     song_track_number INTEGER NOT NULL,
     song_track_count INTEGER NOT NULL,
@@ -82,11 +82,11 @@ CREATE TABLE song (
     song_disc_count INTEGER NOT NULL,
     genre_id INTEGER NOT NULL,
     song_rating INTEGER NOT NULL,
-    song_comments VARCHAR(150) NOT NULL,
+    song_comments TEXT NOT NULL,
     song_bpm INTEGER NOT NULL,
     song_lyrics TEXT NOT NULL,
     song_language CHAR(2) NOT NULL,
-    song_lyricist VARCHAR(150) NOT NULL,
+    song_lyricist VARCHAR(512) NOT NULL,
     song_compilation INTEGER NOT NULL,
     song_skip_shuffle INTEGER NOT NULL,
     song_play_count INTEGER NOT NULL,
@@ -95,8 +95,8 @@ CREATE TABLE song (
 
 CREATE TABLE album (
     album_id SERIAL PRIMARY KEY,
-    album_title VARCHAR(150) NOT NULL,
-    album_title_sort VARCHAR(150),
+    album_title VARCHAR(512) NOT NULL,
+    album_title_sort VARCHAR(512),
     UNIQUE (album_title, album_title_sort)
 ) WITH OIDS;
 
@@ -104,8 +104,8 @@ INSERT INTO album (album_id, album_title, album_title_sort) VALUES (0, '', '');
 
 CREATE TABLE artist (
     artist_id SERIAL PRIMARY KEY,
-    artist_name VARCHAR(150) NOT NULL,
-    artist_name_sort VARCHAR(150),
+    artist_name VARCHAR(512) NOT NULL,
+    artist_name_sort VARCHAR(512),
     UNIQUE (artist_name, artist_name_sort)
 ) WITH OIDS;
 
@@ -113,7 +113,7 @@ INSERT INTO artist (artist_id, artist_name, artist_name_sort) VALUES (0, '', '')
 
 CREATE TABLE genre (
     genre_id SERIAL PRIMARY KEY,
-    genre_name VARCHAR(150) NOT NULL UNIQUE
+    genre_name VARCHAR(512) NOT NULL UNIQUE
 ) WITH OIDS;
 
 INSERT INTO genre (genre_id, genre_name) VALUES (0, '');

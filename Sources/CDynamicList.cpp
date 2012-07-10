@@ -153,7 +153,30 @@ bool CDynamicList::updateDatabase(void)
             return false;
         }
 
-        m_idPlayList = query.lastInsertId().toInt();
+        if (m_application->getDataBase().driverName() == "QPSQL")
+        {
+            query.prepare("SELECT currval('playlist_playlist_id_seq')");
+
+            if (!query.exec())
+            {
+                m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                return false;
+            }
+
+            if (query.next())
+            {
+                m_idPlayList = query.value(0).toInt();
+            }
+            else
+            {
+                m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                return false;
+            }
+        }
+        else
+        {
+            m_idPlayList = query.lastInsertId().toInt();
+        }
 
         query.prepare("INSERT INTO dynamic_list (criteria_id, playlist_id) VALUES (?, ?)");
         
@@ -166,7 +189,30 @@ bool CDynamicList::updateDatabase(void)
             return false;
         }
 
-        m_id = query.lastInsertId().toInt();
+        if (m_application->getDataBase().driverName() == "QPSQL")
+        {
+            query.prepare("SELECT currval('dynamic_list_dynamic_list_id_seq')");
+
+            if (!query.exec())
+            {
+                m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                return false;
+            }
+
+            if (query.next())
+            {
+                m_id = query.value(0).toInt();
+            }
+            else
+            {
+                m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                return false;
+            }
+        }
+        else
+        {
+            m_id = query.lastInsertId().toInt();
+        }
 
         // Insertion des nouveaux critères
         m_mainCriteria->insertIntoDatabase(m_application);
@@ -389,7 +435,7 @@ void CDynamicList::loadFromDatabase(void)
 
     if (conditions.testFlag(ICriteria::UpdateOnSongAdded))
     {
-        connect(m_application, SIGNAL(songAdded(CSong *)), this, SLOT(update()), Qt::UniqueConnection);
+        connect(m_application, SIGNAL(songsAdded()), this, SLOT(update()), Qt::UniqueConnection);
     }
 
     if (conditions.testFlag(ICriteria::UpdateOnSongRemoved))
@@ -438,7 +484,7 @@ void CDynamicList::setCriteria(ICriteria * criteria)
 
 
     // Conditions de mise à jour
-    disconnect(m_application, SIGNAL(songAdded(CSong *)), this, SLOT(update()));
+    disconnect(m_application, SIGNAL(songsAdded()), this, SLOT(update()));
     disconnect(m_application, SIGNAL(songRemoved(CSong *)), this, SLOT(update()));
     disconnect(m_application, SIGNAL(songModified(CSong *)), this, SLOT(update()));
     disconnect(m_application, SIGNAL(songMoved(CSong *)), this, SLOT(update()));
@@ -449,7 +495,7 @@ void CDynamicList::setCriteria(ICriteria * criteria)
 
     if (conditions.testFlag(ICriteria::UpdateOnSongAdded))
     {
-        connect(m_application, SIGNAL(songAdded(CSong *)), this, SLOT(update()), Qt::UniqueConnection);
+        connect(m_application, SIGNAL(songsAdded()), this, SLOT(update()), Qt::UniqueConnection);
     }
 
     if (conditions.testFlag(ICriteria::UpdateOnSongRemoved))

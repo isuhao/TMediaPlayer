@@ -479,7 +479,30 @@ bool CFolder::updateDatabase(void)
             return false;
         }
 
-        m_id = query.lastInsertId().toInt();
+        if (m_application->getDataBase().driverName() == "QPSQL")
+        {
+            query.prepare("SELECT currval('folder_folder_id_seq')");
+
+            if (!query.exec())
+            {
+                m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                return false;
+            }
+
+            if (query.next())
+            {
+                m_id = query.value(0).toInt();
+            }
+            else
+            {
+                m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                return false;
+            }
+        }
+        else
+        {
+            m_id = query.lastInsertId().toInt();
+        }
     }
     // Mise à jour
     else if (m_isModified)

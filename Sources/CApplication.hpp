@@ -212,6 +212,7 @@ signals:
 
     // Signaux sur les morceaux
     void songAdded(CSong * song);             ///< Signal émis lorsqu'un morceau est ajouté à la médiathèque.
+    void songsAdded(void);                    ///< Signal émis lorsqu'un ou plusieurs morceaux sont ajoutés à la médiathèque.
     void songModified(CSong * song);          ///< Signal émis lorsque les informations d'un morceau sont modifiées.
     void songRemoved(CSong * song);           ///< Signal émis lorsqu'un morceau est retiré de la médiathèque.
   //void songMoved(CSong * song);             ///< Signal émis lorsque le fichier d'un morceau est déplacé.

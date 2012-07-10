@@ -806,7 +806,30 @@ int CApplication::getArtistId(const QString& name, const QString& nameSort)
         return -1;
     }
 
-    return query.lastInsertId().toInt();
+    if (m_dataBase.driverName() == "QPSQL")
+    {
+        query.prepare("SELECT currval('artist_artist_id_seq')");
+
+        if (!query.exec())
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            return -1;
+        }
+
+        if (query.next())
+        {
+            return query.value(0).toInt();
+        }
+        else
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            return -1;
+        }
+    }
+    else
+    {
+        return query.lastInsertId().toInt();
+    }
 }
 
 
@@ -849,7 +872,30 @@ int CApplication::getAlbumId(const QString& title, const QString& titleSort)
         return -1;
     }
 
-    return query.lastInsertId().toInt();
+    if (m_dataBase.driverName() == "QPSQL")
+    {
+        query.prepare("SELECT currval('album_album_id_seq')");
+
+        if (!query.exec())
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            return -1;
+        }
+
+        if (query.next())
+        {
+            return query.value(0).toInt();
+        }
+        else
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            return -1;
+        }
+    }
+    else
+    {
+        return query.lastInsertId().toInt();
+    }
 }
 
 
@@ -888,7 +934,30 @@ int CApplication::getGenreId(const QString& name)
         return -1;
     }
 
-    return query.lastInsertId().toInt();
+    if (m_dataBase.driverName() == "QPSQL")
+    {
+        query.prepare("SELECT currval('genre_genre_id_seq')");
+
+        if (!query.exec())
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            return -1;
+        }
+
+        if (query.next())
+        {
+            return query.value(0).toInt();
+        }
+        else
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            return -1;
+        }
+    }
+    else
+    {
+        return query.lastInsertId().toInt();
+    }
 }
 
 
@@ -1745,13 +1814,16 @@ void CApplication::importSongs(const QStringList& fileList)
         if (progress.wasCanceled())
             break;
     }
-
+/*
     // Ajout des morceaux à la médiathèque
     for (QList<CSong *>::const_iterator it = songs.begin(); it != songs.end(); ++it)
     {
         m_library->addSong(*it);
         emit songAdded(*it);
     }
+*/
+    m_library->addSongs(songs);
+    emit songsAdded();
 
     notifyInformation(tr("%n song(s) added to the library.", "", songs.size()));
     updateListInformations();
@@ -2076,7 +2148,7 @@ void CApplication::initPlayList(IPlayList * playList)
 
     if (staticList)
     {
-        connect(staticList, SIGNAL(songAdded(CSong *)), this, SLOT(updateListInformations()));
+        connect(staticList, SIGNAL(songsAdded()), this, SLOT(updateListInformations()));
         connect(staticList, SIGNAL(songRemoved(CSong *)), this, SLOT(updateListInformations()));
     }
 
@@ -2144,6 +2216,7 @@ CSong * CApplication::addSong(const QString& fileName)
         m_library->addSong(song);
         updateListInformations();
         emit songAdded(song);
+        emit songsAdded();
     }
 
     return song;

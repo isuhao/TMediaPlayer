@@ -586,5 +586,8 @@
     <None Include="Lang\TMediaPlayer_fr.ts">
       <Filter>Translation Files</Filter>
     </None>
+    <None Include="Lang\TMediaPlayer_en.ts">
+      <Filter>Translation Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

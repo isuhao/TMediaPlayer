@@ -178,7 +178,30 @@ void ICriteria::insertIntoDatabase(CApplication * application)
         return;
     }
 
-    m_id = query.lastInsertId().toInt();
+    if (m_application->getDataBase().driverName() == "QPSQL")
+    {
+        query.prepare("SELECT currval('criteria_criteria_id_seq')");
+
+        if (!query.exec())
+        {
+            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            return;
+        }
+
+        if (query.next())
+        {
+            m_id = query.value(0).toInt();
+        }
+        else
+        {
+            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            return;
+        }
+    }
+    else
+    {
+        m_id = query.lastInsertId().toInt();
+    }
 }
 
 /*
