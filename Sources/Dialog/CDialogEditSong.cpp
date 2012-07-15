@@ -369,12 +369,15 @@ void CDialogEditSong::updateInfos()
 
     // Lectures
 
-    QStandardItemModel * model = new QStandardItemModel();
+    QStandardItemModel * model = new QStandardItemModel(this);
+    model->setHorizontalHeaderLabels(QStringList() << tr("Local time") << tr("UTC"));
     m_uiWidget->listPlays->setModel(model);
 
-    for (QList<QDateTime>::const_iterator it = song->m_plays.begin(); it != song->m_plays.end(); ++it)
+    for (QList<CSong::TSongPlay>::const_iterator it = song->m_plays.begin(); it != song->m_plays.end(); ++it)
     {
-        QStandardItem * item = new QStandardItem(it->toString());
-        model->appendRow(item);
+        QList<QStandardItem *> itemList;
+        itemList << new QStandardItem(it->time.toString());
+        itemList << new QStandardItem(it->timeUTC.toString());
+        model->appendRow(itemList);
     }
 }

@@ -237,6 +237,12 @@ private:
         TSongInfos(void);
     };
 
+    struct TSongPlay
+    {
+        QDateTime time;
+        QDateTime timeUTC;
+    };
+
 
     // Copie interdite
     CSong(const CSong&);
@@ -271,7 +277,7 @@ private:
     QDateTime m_creation;         ///< Date de création (ajout à la médiathèque).
     QDateTime m_modification;     ///< Date de la dernière modication.
     TSongInfos m_infos;           ///< Informations modifiables
-    QList<QDateTime> m_plays;     ///< Liste des dates de lecture.
+    QList<TSongPlay> m_plays;     ///< Liste des dates de lecture.
 };
 
 Q_DECLARE_METATYPE(CSong *)
@@ -773,7 +779,7 @@ inline int CSong::getNumPlays(void) const
 
 inline QDateTime CSong::getLastPlay(void) const
 {
-    return (m_plays.isEmpty() ? QDateTime() : m_plays.last());
+    return (m_plays.isEmpty() ? QDateTime() : m_plays.last().timeUTC);
 }
 
 #endif // FILE_C_SONG

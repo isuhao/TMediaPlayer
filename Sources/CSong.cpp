@@ -277,7 +277,7 @@ void CSong::loadFromDatabase(void)
     m_infos.skipShuffle     = query.value(numValue++).toBool();
 
     // Lectures
-    query.prepare("SELECT play_time FROM play WHERE song_id = ? ORDER BY play_time DESC");
+    query.prepare("SELECT play_time, play_time_utc FROM play WHERE song_id = ? ORDER BY play_time_utc DESC");
     query.bindValue(0, m_id);
 
     if (!query.exec())
@@ -288,7 +288,11 @@ void CSong::loadFromDatabase(void)
 
     while (query.next())
     {
-        m_plays.append(query.value(0).toDateTime());
+        TSongPlay playTime;
+        playTime.time = query.value(0).toDateTime();
+        playTime.timeUTC = query.value(1).toDateTime();
+        playTime.timeUTC.setTimeSpec(Qt::UTC);
+        m_plays.append(playTime);
     }
 
     //TODO: trier les dates de lecture
@@ -916,7 +920,7 @@ QList<CSong *> CSong::loadAllSongsFromDatabase(CApplication * application)
         // Lectures
         QSqlQuery query2(application->getDataBase());
 
-        query2.prepare("SELECT play_time FROM play WHERE song_id = ? ORDER BY play_time DESC");
+        query2.prepare("SELECT play_time, play_time_utc FROM play WHERE song_id = ? ORDER BY play_time_utc DESC");
         query2.bindValue(0, song->m_id);
 
         if (!query2.exec())
@@ -927,7 +931,11 @@ QList<CSong *> CSong::loadAllSongsFromDatabase(CApplication * application)
         {
             while (query2.next())
             {
-                song->m_plays.append(query2.value(0).toDateTime());
+                TSongPlay playTime;
+                playTime.time = query2.value(0).toDateTime();
+                playTime.timeUTC = query2.value(1).toDateTime();
+                playTime.timeUTC.setTimeSpec(Qt::UTC);
+                song->m_plays.append(playTime);
             }
         }
 
@@ -1665,8 +1673,9 @@ void CSong::updateDatabase(void)
                               "song_compilation, "
                               "song_skip_shuffle, "
                               "song_play_count, "
-                              "song_play_time"
-                          ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                              "song_play_time, "
+                              "song_play_time_utc"
+                          ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
             int numValue = 0;
 
@@ -1705,6 +1714,7 @@ void CSong::updateDatabase(void)
             query.bindValue(numValue++, (m_infos.skipShuffle ? 1 : 0));
             query.bindValue(numValue++, 0);  // Play count
             query.bindValue(numValue++, QDateTime()); // Last play time
+            query.bindValue(numValue++, QDateTime()); // Last play time UTC
 
             if (!query.exec())
             {
@@ -1842,15 +1852,18 @@ void CSong::updateFileInfos(void)
 void CSong::emitPlayEnd(void)
 {
     const QDateTime currentTime = QDateTime::currentDateTime();
+    const QDateTime currentTimeUTC = QDateTime::currentDateTimeUtc();
 
     QSqlQuery query(m_application->getDataBase());
     query.prepare("UPDATE song SET "
-                      "song_play_count = song_play_count + 1,"
-                      "song_play_time  = ? "
+                      "song_play_count    = song_play_count + 1,"
+                      "song_play_time     = ?,"
+                      "song_play_time_utc = ? "
                   "WHERE song_id = ?");
 
     query.bindValue(0, currentTime);
-    query.bindValue(1, m_id);
+    query.bindValue(1, currentTimeUTC);
+    query.bindValue(2, m_id);
 
     if (!query.exec())
     {
@@ -1858,17 +1871,23 @@ void CSong::emitPlayEnd(void)
         return;
     }
 
-    query.prepare("INSERT INTO play (song_id, play_time) VALUES (?, ?)");
+    query.prepare("INSERT INTO play (song_id, play_time, play_time_utc) VALUES (?, ?, ?)");
     query.bindValue(0, m_id);
     query.bindValue(1, currentTime);
+    query.bindValue(2, currentTimeUTC);
 
     if (!query.exec())
     {
         m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        return;
     }
-
-    m_plays.append(currentTime);
+    else
+    {
+        TSongPlay playTime;
+        playTime.time = currentTime;
+        playTime.timeUTC = currentTimeUTC;
+        playTime.timeUTC.setTimeSpec(Qt::UTC);
+        m_plays.append(playTime);
+    }
 
     emit playEnd();
 }

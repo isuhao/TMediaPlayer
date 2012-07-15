@@ -63,8 +63,8 @@ CREATE TABLE song (
     song_format INTEGER NOT NULL,
     song_channels INTEGER NOT NULL,
     song_duration INTEGER NOT NULL,
-    song_creation DATETIME NOT NULL,
-    song_modification DATETIME NOT NULL,
+    song_creation TIMESTAMP NOT NULL,
+    song_modification TIMESTAMP NOT NULL,
     song_enabled INTEGER NOT NULL,
     song_title VARCHAR(512) NOT NULL,
     song_title_sort VARCHAR(512) NOT NULL,
@@ -90,7 +90,8 @@ CREATE TABLE song (
     song_compilation INTEGER NOT NULL,
     song_skip_shuffle INTEGER NOT NULL,
     song_play_count INTEGER NOT NULL,
-    song_play_time DATETIME NOT NULL
+    song_play_time TIMESTAMP,
+    song_play_time_utc TIMESTAMP
 );
 
 CREATE TABLE album (
@@ -119,8 +120,10 @@ CREATE TABLE genre (
 INSERT INTO genre (genre_id, genre_name) VALUES (0, "");
 
 CREATE TABLE play (
+    play_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,
     song_id INTEGER NOT NULL,
-    play_time DATETIME NOT NULL
+    play_time TIMESTAMP,
+    play_time_utc TIMESTAMP
 );
 
 

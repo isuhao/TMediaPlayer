@@ -2469,7 +2469,7 @@ void CApplication::removeSelectedItem(void)
     {
         // Confirmation
         CDialogRemoveFolder * dialog = new CDialogRemoveFolder(this, folder);
-        
+
         if (dialog->exec() == QDialog::Rejected)
         {
             qDebug() << "Suppression du dossier annulée...";
@@ -2596,7 +2596,7 @@ void CApplication::updateListInformations(void)
         duration = duration.addMSecs(m_displayedSongTable->getTotalDuration());
         numSongs = m_displayedSongTable->getNumSongs();
     }
-    
+
     // Barre d'état
     m_listInfos->setText(tr("%n song(s), %1", "", numSongs).arg(duration.toString()));
 }
@@ -2808,208 +2808,422 @@ void CApplication::loadDatabase(void)
     // Création des relations
     QStringList tables = m_dataBase.tables(QSql::Tables);
 
-    if (!tables.contains("folder"))
+    if (m_dataBase.driverName() == "QSQLITE")
     {
-        if (!query.exec("CREATE TABLE folder ("
-                            "folder_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                            "folder_name VARCHAR NOT NULL,"
-                            "folder_parent INTEGER NOT NULL,"
-                            "folder_position INTEGER NOT NULL,"
-                            "folder_expanded INTEGER NOT NULL"
-                            //",UNIQUE (folder_parent, folder_position)"
-                        ")"))
+        if (!tables.contains("folder"))
         {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            if (!query.exec("CREATE TABLE folder ("
+                                "folder_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+                                "folder_name VARCHAR NOT NULL,"
+                                "folder_parent INTEGER NOT NULL,"
+                                "folder_position INTEGER NOT NULL,"
+                                "folder_expanded INTEGER NOT NULL"
+                                //",UNIQUE (folder_parent, folder_position)"
+                            ")"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
+
+            if (!query.exec("INSERT INTO folder VALUES (0, '', 0, 1, 1)"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
         }
 
-        if (!query.exec("INSERT INTO folder VALUES (0, \"\", 0, 1, 1)"))
+        if (!tables.contains("playlist"))
         {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            if (!query.exec("CREATE TABLE playlist ("
+                                "playlist_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+                                "playlist_name VARCHAR NOT NULL,"
+                                "folder_id INTEGER NOT NULL,"
+                                "list_position INTEGER NOT NULL,"
+                                "list_columns VARCHAR NOT NULL"
+                                //",UNIQUE (folder_id, list_position)"
+                            ")"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
+
+            if (!query.exec("INSERT INTO playlist (playlist_id, playlist_name, folder_id, list_position, list_columns) "
+                            "VALUES (0, 'Library', 0, 0, '')"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
+        }
+
+        if (!tables.contains("dynamic_list"))
+        {
+            if (!query.exec("CREATE TABLE dynamic_list ("
+                                "dynamic_list_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+                                "criteria_id INTEGER NOT NULL,"
+                                "playlist_id INTEGER NOT NULL,"
+                                "UNIQUE (playlist_id)"
+                            ")"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
+        }
+
+        if (!tables.contains("criteria"))
+        {
+            if (!query.exec("CREATE TABLE criteria ("
+                                "criteria_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+                                "dynamic_list_id INTEGER NOT NULL,"
+                                "criteria_parent INTEGER NOT NULL,"
+                                "criteria_position INTEGER NOT NULL,"
+                                "criteria_type INTEGER NOT NULL,"
+                                "criteria_condition INTEGER NOT NULL,"
+                                "criteria_value1 VARCHAR,"
+                                "criteria_value2 VARCHAR,"
+                                "UNIQUE (dynamic_list_id, criteria_parent, criteria_position)"
+                            ")"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
+        }
+
+        if (!tables.contains("static_list"))
+        {
+            if (!query.exec("CREATE TABLE static_list ("
+                                "static_list_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+                                "playlist_id INTEGER NOT NULL,"
+                                "UNIQUE (playlist_id)"
+                            ")"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
+        }
+
+        if (!tables.contains("static_list_song"))
+        {
+            if (!query.exec("CREATE TABLE static_list_song ("
+                                "static_list_id INTEGER NOT NULL,"
+                                "song_id INTEGER NOT NULL,"
+                                "song_position INTEGER NOT NULL,"
+                                "UNIQUE (static_list_id, song_position)"
+                            ")"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
+        }
+
+        if (!tables.contains("song"))
+        {
+            if (!query.exec("CREATE TABLE song ("
+                                "song_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+                                "song_filename VARCHAR NOT NULL UNIQUE,"
+                                "song_filesize INTEGER NOT NULL,"
+                                "song_bitrate INTEGER NOT NULL,"
+                                "song_sample_rate INTEGER NOT NULL,"
+                                "song_format INTEGER NOT NULL,"
+                                "song_channels INTEGER NOT NULL,"
+                                "song_duration INTEGER NOT NULL,"
+                                "song_creation DATETIME NOT NULL,"
+                                "song_modification DATETIME NOT NULL,"
+                                "song_enabled INTEGER NOT NULL,"
+                                "song_title VARCHAR NOT NULL,"
+                                "song_title_sort VARCHAR NOT NULL,"
+                                "song_subtitle VARCHAR NOT NULL,"
+                                "song_grouping VARCHAR NOT NULL,"
+                                "artist_id INTEGER NOT NULL,"
+                                "album_id INTEGER NOT NULL,"
+                                "album_artist_id INTEGER NOT NULL,"
+                                "song_composer VARCHAR NOT NULL,"
+                                "song_composer_sort VARCHAR NOT NULL,"
+                                "song_year INTEGER NOT NULL,"
+                                "song_track_number INTEGER NOT NULL,"
+                                "song_track_count INTEGER NOT NULL,"
+                                "song_disc_number INTEGER NOT NULL,"
+                                "song_disc_count INTEGER NOT NULL,"
+                                "genre_id INTEGER NOT NULL,"
+                                "song_rating INTEGER NOT NULL,"
+                                "song_comments VARCHAR NOT NULL,"
+                                "song_bpm INTEGER NOT NULL,"
+                                "song_lyrics TEXT NOT NULL,"
+                                "song_language VARCHAR(2) NOT NULL,"
+                                "song_lyricist VARCHAR NOT NULL,"
+                                "song_compilation INTEGER NOT NULL,"
+                                "song_skip_shuffle INTEGER NOT NULL,"
+                                "song_play_count INTEGER NOT NULL,"
+                                "song_play_time TIMESTAMP,"
+                                "song_play_time_utc TIMESTAMP"
+                            ")"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
+        }
+
+        if (!tables.contains("album"))
+        {
+            if (!query.exec("CREATE TABLE album ("
+                                "album_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+                                "album_title VARCHAR NOT NULL,"
+                                "album_title_sort VARCHAR,"
+                                "UNIQUE (album_title, album_title_sort)"
+                            ")"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
+
+            if (!query.exec("INSERT INTO album (album_id, album_title, album_title_sort) VALUES (0, '', '')"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
+        }
+
+        if (!tables.contains("artist"))
+        {
+            if (!query.exec("CREATE TABLE artist ("
+                                "artist_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+                                "artist_name VARCHAR NOT NULL,"
+                                "artist_name_sort VARCHAR,"
+                                "UNIQUE (artist_name, artist_name_sort)"
+                            ")"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
+
+            if (!query.exec("INSERT INTO artist (artist_id, artist_name, artist_name_sort) VALUES (0, '', '')"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
+        }
+
+        if (!tables.contains("genre"))
+        {
+            if (!query.exec("CREATE TABLE genre ("
+                                "genre_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+                                "genre_name VARCHAR NOT NULL UNIQUE"
+                            ")"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
+
+            if (!query.exec("INSERT INTO genre (genre_id, genre_name) VALUES (0, '')"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
+        }
+
+        if (!tables.contains("play"))
+        {
+            if (!query.exec("CREATE TABLE play ("
+                                "song_id INTEGER NOT NULL,"
+                                "play_time TIMESTAMP,"
+                                "play_time_utc TIMESTAMP"
+                            ")"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
         }
     }
-
-    if (!tables.contains("playlist"))
+    else if (m_dataBase.driverName() == "QMYSQL")
     {
-        if (!query.exec("CREATE TABLE playlist ("
-                            "playlist_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                            "playlist_name VARCHAR NOT NULL,"
-                            "folder_id INTEGER NOT NULL,"
-                            "list_position INTEGER NOT NULL,"
-                            "list_columns VARCHAR NOT NULL"
-                            //",UNIQUE (folder_id, list_position)"
-                        ")"))
+        if (!tables.contains("folder"))
         {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            if (!query.exec("CREATE TABLE folder ("
+                                "folder_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
+                                "folder_name VARCHAR NOT NULL,"
+                                "folder_parent INTEGER NOT NULL,"
+                                "folder_position INTEGER NOT NULL,"
+                                "folder_expanded INTEGER NOT NULL"
+                                //",UNIQUE (folder_parent, folder_position)"
+                            ")"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
+
+            if (!query.exec("INSERT INTO folder VALUES (0, '', 0, 1, 1)"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
         }
 
-        if (!query.exec("INSERT INTO playlist (playlist_id, playlist_name, folder_id, list_position, list_columns) "
-                        "VALUES (0, \"Library\", 0, 0, \"\")"))
+        if (!tables.contains("playlist"))
         {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
+            if (!query.exec("CREATE TABLE playlist ("
+                                "playlist_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
+                                "playlist_name VARCHAR NOT NULL,"
+                                "folder_id INTEGER NOT NULL,"
+                                "list_position INTEGER NOT NULL,"
+                                "list_columns VARCHAR NOT NULL"
+                                //",UNIQUE (folder_id, list_position)"
+                            ")"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
 
-    if (!tables.contains("dynamic_list"))
-    {
-        if (!query.exec("CREATE TABLE dynamic_list ("
-                            "dynamic_list_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                            "criteria_id INTEGER NOT NULL,"
-                            "playlist_id INTEGER NOT NULL,"
-                            "UNIQUE (playlist_id)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("criteria"))
-    {
-        if (!query.exec("CREATE TABLE criteria ("
-                            "criteria_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                            "dynamic_list_id INTEGER NOT NULL,"
-                            "criteria_parent INTEGER NOT NULL,"
-                            "criteria_position INTEGER NOT NULL,"
-                            "criteria_type INTEGER NOT NULL,"
-                            "criteria_condition INTEGER NOT NULL,"
-                            "criteria_value1 VARCHAR,"
-                            "criteria_value2 VARCHAR,"
-                            "UNIQUE (dynamic_list_id, criteria_parent, criteria_position)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("static_list"))
-    {
-        if (!query.exec("CREATE TABLE static_list ("
-                            "static_list_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                            "playlist_id INTEGER NOT NULL,"
-                            "UNIQUE (playlist_id)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("static_list_song"))
-    {
-        if (!query.exec("CREATE TABLE static_list_song ("
-                            "static_list_id INTEGER NOT NULL,"
-                            "song_id INTEGER NOT NULL,"
-                            "song_position INTEGER NOT NULL,"
-                            "UNIQUE (static_list_id, song_position)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("song"))
-    {
-        if (!query.exec("CREATE TABLE song ("
-                            "song_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                            "song_filename VARCHAR NOT NULL UNIQUE,"
-                            "song_filesize INTEGER NOT NULL,"
-                            "song_bitrate INTEGER NOT NULL,"
-                            "song_sample_rate INTEGER NOT NULL,"
-                            "song_format INTEGER NOT NULL,"
-                            "song_channels INTEGER NOT NULL,"
-                            "song_duration INTEGER NOT NULL,"
-                            "song_creation DATETIME NOT NULL,"
-                            "song_modification DATETIME NOT NULL,"
-                            "song_enabled INTEGER NOT NULL,"
-                            "song_title VARCHAR NOT NULL,"
-                            "song_title_sort VARCHAR NOT NULL,"
-                            "song_subtitle VARCHAR NOT NULL,"
-                            "song_grouping VARCHAR NOT NULL,"
-                            "artist_id INTEGER NOT NULL,"
-                            "album_id INTEGER NOT NULL,"
-                            "album_artist_id INTEGER NOT NULL,"
-                            "song_composer VARCHAR NOT NULL,"
-                            "song_composer_sort VARCHAR NOT NULL,"
-                            "song_year INTEGER NOT NULL,"
-                            "song_track_number INTEGER NOT NULL,"
-                            "song_track_count INTEGER NOT NULL,"
-                            "song_disc_number INTEGER NOT NULL,"
-                            "song_disc_count INTEGER NOT NULL,"
-                            "genre_id INTEGER NOT NULL,"
-                            "song_rating INTEGER NOT NULL,"
-                            "song_comments VARCHAR NOT NULL,"
-                            "song_bpm INTEGER NOT NULL,"
-                            "song_lyrics TEXT NOT NULL,"
-                            "song_language VARCHAR(2) NOT NULL,"
-                            "song_lyricist VARCHAR NOT NULL,"
-                            "song_compilation INTEGER NOT NULL,"
-                            "song_skip_shuffle INTEGER NOT NULL,"
-                            "song_play_count INTEGER NOT NULL,"
-                            "song_play_time DATETIME NOT NULL"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("album"))
-    {
-        if (!query.exec("CREATE TABLE album ("
-                            "album_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                            "album_title VARCHAR NOT NULL,"
-                            "album_title_sort VARCHAR,"
-                            "UNIQUE (album_title, album_title_sort)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            if (!query.exec("INSERT INTO playlist (playlist_id, playlist_name, folder_id, list_position, list_columns) "
+                            "VALUES (0, 'Library', 0, 0, '')"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
         }
 
-        if (!query.exec("INSERT INTO album (album_id, album_title, album_title_sort) VALUES (0, \"\", \"\")"))
+        if (!tables.contains("dynamic_list"))
         {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("artist"))
-    {
-        if (!query.exec("CREATE TABLE artist ("
-                            "artist_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                            "artist_name VARCHAR NOT NULL,"
-                            "artist_name_sort VARCHAR,"
-                            "UNIQUE (artist_name, artist_name_sort)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            if (!query.exec("CREATE TABLE dynamic_list ("
+                                "dynamic_list_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
+                                "criteria_id INTEGER NOT NULL,"
+                                "playlist_id INTEGER NOT NULL,"
+                                "UNIQUE (playlist_id)"
+                            ")"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
         }
 
-        if (!query.exec("INSERT INTO artist (artist_id, artist_name, artist_name_sort) VALUES (0, \"\", \"\")"))
+        if (!tables.contains("criteria"))
         {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            if (!query.exec("CREATE TABLE criteria ("
+                                "criteria_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
+                                "dynamic_list_id INTEGER NOT NULL,"
+                                "criteria_parent INTEGER NOT NULL,"
+                                "criteria_position INTEGER NOT NULL,"
+                                "criteria_type INTEGER NOT NULL,"
+                                "criteria_condition INTEGER NOT NULL,"
+                                "criteria_value1 VARCHAR,"
+                                "criteria_value2 VARCHAR,"
+                                "UNIQUE (dynamic_list_id, criteria_parent, criteria_position)"
+                            ")"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
         }
-    }
 
-    if (!tables.contains("genre"))
-    {
-        if (!query.exec("CREATE TABLE genre ("
-                            "genre_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                            "genre_name VARCHAR NOT NULL UNIQUE"
-                        ")"))
+        if (!tables.contains("static_list"))
         {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            if (!query.exec("CREATE TABLE static_list ("
+                                "static_list_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
+                                "playlist_id INTEGER NOT NULL,"
+                                "UNIQUE (playlist_id)"
+                            ")"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
         }
 
-        if (!query.exec("INSERT INTO genre (genre_id, genre_name) VALUES (0, \"\")"))
+        if (!tables.contains("static_list_song"))
         {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            if (!query.exec("CREATE TABLE static_list_song ("
+                                "static_list_id INTEGER NOT NULL,"
+                                "song_id INTEGER NOT NULL,"
+                                "song_position INTEGER NOT NULL,"
+                                "UNIQUE (static_list_id, song_position)"
+                            ")"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
         }
-    }
 
-    if (!tables.contains("play"))
-    {
-        if (!query.exec("CREATE TABLE play ("
-                            "song_id INTEGER NOT NULL,"
-                            "play_time DATETIME NOT NULL"
-                        ")"))
+        if (!tables.contains("song"))
         {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            if (!query.exec("CREATE TABLE song ("
+                                "song_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
+                                "song_filename VARCHAR NOT NULL UNIQUE,"
+                                "song_filesize INTEGER NOT NULL,"
+                                "song_bitrate INTEGER NOT NULL,"
+                                "song_sample_rate INTEGER NOT NULL,"
+                                "song_format INTEGER NOT NULL,"
+                                "song_channels INTEGER NOT NULL,"
+                                "song_duration INTEGER NOT NULL,"
+                                "song_creation DATETIME NOT NULL,"
+                                "song_modification DATETIME NOT NULL,"
+                                "song_enabled INTEGER NOT NULL,"
+                                "song_title VARCHAR NOT NULL,"
+                                "song_title_sort VARCHAR NOT NULL,"
+                                "song_subtitle VARCHAR NOT NULL,"
+                                "song_grouping VARCHAR NOT NULL,"
+                                "artist_id INTEGER NOT NULL,"
+                                "album_id INTEGER NOT NULL,"
+                                "album_artist_id INTEGER NOT NULL,"
+                                "song_composer VARCHAR NOT NULL,"
+                                "song_composer_sort VARCHAR NOT NULL,"
+                                "song_year INTEGER NOT NULL,"
+                                "song_track_number INTEGER NOT NULL,"
+                                "song_track_count INTEGER NOT NULL,"
+                                "song_disc_number INTEGER NOT NULL,"
+                                "song_disc_count INTEGER NOT NULL,"
+                                "genre_id INTEGER NOT NULL,"
+                                "song_rating INTEGER NOT NULL,"
+                                "song_comments VARCHAR NOT NULL,"
+                                "song_bpm INTEGER NOT NULL,"
+                                "song_lyrics TEXT NOT NULL,"
+                                "song_language VARCHAR(2) NOT NULL,"
+                                "song_lyricist VARCHAR NOT NULL,"
+                                "song_compilation INTEGER NOT NULL,"
+                                "song_skip_shuffle INTEGER NOT NULL,"
+                                "song_play_count INTEGER NOT NULL,"
+                                "song_play_time TIMESTAMP,"
+                                "song_play_time_utc TIMESTAMP"
+                            ")"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
+        }
+
+        if (!tables.contains("album"))
+        {
+            if (!query.exec("CREATE TABLE album ("
+                                "album_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
+                                "album_title VARCHAR NOT NULL,"
+                                "album_title_sort VARCHAR,"
+                                "UNIQUE (album_title, album_title_sort)"
+                            ")"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
+
+            if (!query.exec("INSERT INTO album (album_id, album_title, album_title_sort) VALUES (0, '', '')"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
+        }
+
+        if (!tables.contains("artist"))
+        {
+            if (!query.exec("CREATE TABLE artist ("
+                                "artist_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
+                                "artist_name VARCHAR NOT NULL,"
+                                "artist_name_sort VARCHAR,"
+                                "UNIQUE (artist_name, artist_name_sort)"
+                            ")"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
+
+            if (!query.exec("INSERT INTO artist (artist_id, artist_name, artist_name_sort) VALUES (0, '', '')"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
+        }
+
+        if (!tables.contains("genre"))
+        {
+            if (!query.exec("CREATE TABLE genre ("
+                                "genre_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
+                                "genre_name VARCHAR NOT NULL UNIQUE"
+                            ")"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
+
+            if (!query.exec("INSERT INTO genre (genre_id, genre_name) VALUES (0, '')"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
+        }
+
+        if (!tables.contains("play"))
+        {
+            if (!query.exec("CREATE TABLE play ("
+                                "song_id INTEGER NOT NULL,"
+                                "play_time TIMESTAMP,"
+                                "play_time_utc TIMESTAMP"
+                            ")"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
         }
     }
 

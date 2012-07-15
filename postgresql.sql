@@ -90,7 +90,8 @@ CREATE TABLE song (
     song_compilation INTEGER NOT NULL,
     song_skip_shuffle INTEGER NOT NULL,
     song_play_count INTEGER NOT NULL,
-    song_play_time TIMESTAMP
+    song_play_time TIMESTAMP,
+    song_play_time_utc TIMESTAMP
 ) WITH OIDS;
 
 CREATE TABLE album (
@@ -119,8 +120,10 @@ CREATE TABLE genre (
 INSERT INTO genre (genre_id, genre_name) VALUES (0, '');
 
 CREATE TABLE play (
+    play_id SERIAL PRIMARY KEY,
     song_id INTEGER NOT NULL,
-    play_time TIMESTAMP NOT NULL
+    play_time TIMESTAMP,
+    play_time_utc TIMESTAMP
 );
 
 

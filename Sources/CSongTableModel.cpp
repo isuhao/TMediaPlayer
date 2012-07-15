@@ -270,7 +270,7 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
             case CSongTable::ColRating      : return QVariant::fromValue<CRating>(m_data.at(index.row())->getSong()->getRating());
             case CSongTable::ColComments    : return m_data.at(index.row())->getSong()->getComments();
             case CSongTable::ColPlayCount   : return m_data.at(index.row())->getSong()->getNumPlays();
-            case CSongTable::ColLastPlayTime: return m_data.at(index.row())->getSong()->getLastPlay();
+            case CSongTable::ColLastPlayTime: return m_data.at(index.row())->getSong()->getLastPlay().toLocalTime();
             case CSongTable::ColFileName    : return m_data.at(index.row())->getSong()->getFileName();
 
             // Débit
