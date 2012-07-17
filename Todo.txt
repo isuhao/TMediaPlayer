@@ -36,7 +36,7 @@
   - Vérifier qu'il n'y a pas de boucles pour le critère "Liste de lecture".
 
 - Boite de dialogue Edit Song(s) :
-  - Gérer l'option "Ajustement du volume" (calculer le volume "moyen", et amplifier ou atténuer le volume selon le morceau).
+  - Gérer l'option "Ajustement du volume" (calculer le volume "moyen", et amplifier ou atténuer le volume selon le morceau : Replay Gain).
 
 - Implémenter correctement la répétition (répétition de la liste, du morceau, etc.).
 

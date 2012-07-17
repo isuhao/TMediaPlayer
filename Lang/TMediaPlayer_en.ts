@@ -15,7 +15,7 @@
     <message>
         <location filename="../Sources/CApplication.cpp" line="232"/>
         <source>Playlists</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Playlists</translation>
     </message>
     <message>
         <location filename="../Sources/CApplication.cpp" line="247"/>
@@ -30,7 +30,7 @@
     <message>
         <location filename="../Sources/CApplication.cpp" line="334"/>
         <source>Database error</source>
-        <translation type="unfinished"></translation>
+        <translation>Database error</translation>
     </message>
     <message>
         <location filename="../Sources/CApplication.cpp" line="334"/>
@@ -73,7 +73,7 @@ Error: %4</source>
     <message>
         <location filename="../Sources/CApplication.cpp" line="2447"/>
         <source>Are you sure you want to delete this playlist?</source>
-        <translation type="unfinished"></translation>
+        <translation>Are you sure you want to delete this playlist?</translation>
     </message>
     <message>
         <location filename="../Sources/CApplication.cpp" line="2447"/>
@@ -88,16 +88,16 @@ Error: %4</source>
     <message>
         <location filename="../Sources/CApplication.cpp" line="2744"/>
         <source>This program requires FMOD %1 or superior.</source>
-        <translation type="unfinished"></translation>
+        <translation>This program requires FMOD %1 or superior.</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3282"/>
+        <location filename="../Sources/CApplication.cpp" line="3496"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3290"/>
-        <location filename="../Sources/CApplication.cpp" line="3298"/>
+        <location filename="../Sources/CApplication.cpp" line="3504"/>
+        <location filename="../Sources/CApplication.cpp" line="3512"/>
         <source>Play</source>
         <translation>Play</translation>
     </message>
@@ -106,33 +106,29 @@ Error: %4</source>
     <name>CAuthentication</name>
     <message>
         <location filename="../Sources/Last.fm/CAuthentication.cpp" line="47"/>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="66"/>
         <location filename="../Sources/Last.fm/CAuthentication.cpp" line="149"/>
-        <source>Date: </source>
-        <translation type="unfinished"></translation>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="178"/>
+        <source>Date:</source>
+        <translation>Date:</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CAuthentication.cpp" line="48"/>
         <location filename="../Sources/Last.fm/CAuthentication.cpp" line="150"/>
-        <source>URL:  </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="66"/>
-        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="178"/>
-        <source>Date:    </source>
-        <translation type="unfinished"></translation>
+        <source>URL:</source>
+        <translation>URL:</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CAuthentication.cpp" line="67"/>
         <location filename="../Sources/Last.fm/CAuthentication.cpp" line="179"/>
-        <source>Code:    </source>
-        <translation type="unfinished"></translation>
+        <source>Code:</source>
+        <translation>Code:</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CAuthentication.cpp" line="68"/>
         <location filename="../Sources/Last.fm/CAuthentication.cpp" line="180"/>
-        <source>Content: </source>
-        <translation type="unfinished"></translation>
+        <source>Content:</source>
+        <translation>Content:</translation>
     </message>
 </context>
 <context>
@@ -140,17 +136,17 @@ Error: %4</source>
     <message>
         <location filename="../Sources/Dialog/CDialogEditDynamicList.cpp" line="76"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Save</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEditDynamicList.cpp" line="77"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Cancel</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEditDynamicList.cpp" line="115"/>
         <source>You need to choose a name for the playlist.</source>
-        <translation type="unfinished"></translation>
+        <translation>You need to choose a name for the playlist.</translation>
     </message>
 </context>
 <context>
@@ -158,17 +154,17 @@ Error: %4</source>
     <message>
         <location filename="../Sources/Dialog/CDialogEditFolder.cpp" line="57"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Save</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEditFolder.cpp" line="58"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Cancel</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEditFolder.cpp" line="81"/>
         <source>You need to choose a name for the folder.</source>
-        <translation type="unfinished"></translation>
+        <translation>You need to choose a name for the folder.</translation>
     </message>
 </context>
 <context>
@@ -177,61 +173,61 @@ Error: %4</source>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="69"/>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="71"/>
         <source>Metadata</source>
-        <translation type="unfinished"></translation>
+        <translation>Metadata</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="95"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Save</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="96"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Cancel</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="97"/>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Apply</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="98"/>
         <source>Reset</source>
-        <translation type="unfinished"></translation>
+        <translation>Reset</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="151"/>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="153"/>
         <source>Key</source>
-        <translation type="unfinished"></translation>
+        <translation>Key</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="151"/>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="153"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <translation>Value</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="155"/>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="157"/>
         <source>Description</source>
-        <translation type="unfinished"></translation>
+        <translation>Description</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="155"/>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="157"/>
         <source>Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Language</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="155"/>
         <source>Lyrics</source>
-        <translation type="unfinished"></translation>
+        <translation>Lyrics</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="157"/>
         <source>Comments</source>
-        <translation type="unfinished"></translation>
+        <translation>Comments</translation>
     </message>
 </context>
 <context>
@@ -239,33 +235,49 @@ Error: %4</source>
     <message>
         <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="80"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Save</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="81"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Cancel</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="82"/>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Apply</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="217"/>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="221"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="220"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="224"/>
         <source>Song infos</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="240"/>
-        <source>%1 kbit/s</source>
-        <translation type="unfinished"></translation>
+        <translation>Song infos</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="243"/>
+        <source>%1 kbit/s</source>
+        <translation>%1 kbit/s</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="246"/>
         <source>%1 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 Hz</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="368"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="370"/>
+        <source>%1 dB</source>
+        <translation>%1 dB</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="381"/>
+        <source>Local time</source>
+        <translation>Local time</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="381"/>
+        <source>UTC</source>
+        <translation>UTC</translation>
     </message>
 </context>
 <context>
@@ -275,22 +287,22 @@ Error: %4</source>
         <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="1023"/>
         <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="1041"/>
         <source>Different values</source>
-        <translation type="unfinished"></translation>
+        <translation>Different values</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="544"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Save</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="545"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Cancel</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="546"/>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Apply</translation>
     </message>
 </context>
 <context>
@@ -298,17 +310,17 @@ Error: %4</source>
     <message>
         <location filename="../Sources/Dialog/CDialogEditStaticPlayList.cpp" line="52"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Save</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEditStaticPlayList.cpp" line="53"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Cancel</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEditStaticPlayList.cpp" line="83"/>
         <source>You need to choose a name for the playlist.</source>
-        <translation type="unfinished"></translation>
+        <translation>You need to choose a name for the playlist.</translation>
     </message>
 </context>
 <context>
@@ -316,12 +328,12 @@ Error: %4</source>
     <message>
         <location filename="../Sources/Dialog/CDialogEqualizer.cpp" line="61"/>
         <source>OK</source>
-        <translation type="unfinished"></translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEqualizer.cpp" line="62"/>
         <source>Reset</source>
-        <translation type="unfinished"></translation>
+        <translation>Reset</translation>
     </message>
 </context>
 <context>
@@ -332,45 +344,45 @@ Error: %4</source>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="123"/>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="151"/>
         <source>SQLite version 2</source>
-        <translation type="unfinished"></translation>
+        <translation>SQLite version 2</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="59"/>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="60"/>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="125"/>
         <source>PostgreSQL</source>
-        <translation type="unfinished"></translation>
+        <translation>PostgreSQL</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="64"/>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="65"/>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="127"/>
         <source>MySQL</source>
-        <translation type="unfinished"></translation>
+        <translation>MySQL</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="69"/>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="70"/>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="129"/>
         <source>ODBC</source>
-        <translation type="unfinished"></translation>
+        <translation>ODBC</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="74"/>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="75"/>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="151"/>
         <source>SQLite version 3 or above</source>
-        <translation type="unfinished"></translation>
+        <translation>SQLite version 3 or above</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="89"/>
         <source>OK</source>
-        <translation type="unfinished"></translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="90"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Cancel</translation>
     </message>
 </context>
 <context>
@@ -378,12 +390,12 @@ Error: %4</source>
     <message>
         <location filename="../Sources/Dialog/CDialogRemoveFolder.cpp" line="49"/>
         <source>Yes</source>
-        <translation type="unfinished">Yes</translation>
+        <translation>Yes</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogRemoveFolder.cpp" line="50"/>
         <source>No</source>
-        <translation type="unfinished">No</translation>
+        <translation>No</translation>
     </message>
 </context>
 <context>
@@ -393,15 +405,15 @@ Error: %4</source>
         <location filename="../Sources/Importer/CImporterITunes.cpp" line="1141"/>
         <location filename="../Sources/Importer/CImporterITunes.cpp" line="1162"/>
         <source>%1 (%n song(s))</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%1 (%n song)</numerusform>
+            <numerusform>%1 (%n songs)</numerusform>
         </translation>
     </message>
     <message>
         <location filename="../Sources/Importer/CImporterITunes.cpp" line="1113"/>
         <source>Library</source>
-        <translation type="unfinished"></translation>
+        <translation>Library</translation>
     </message>
 </context>
 <context>
@@ -409,22 +421,22 @@ Error: %4</source>
     <message>
         <location filename="../Sources/Importer/CImporterITunes.cpp" line="94"/>
         <source>Library localisation</source>
-        <translation type="unfinished"></translation>
+        <translation>Library localisation</translation>
     </message>
     <message>
         <location filename="../Sources/Importer/CImporterITunes.cpp" line="95"/>
         <source>Select the file which contains the iTunes library.</source>
-        <translation type="unfinished"></translation>
+        <translation>Select the file which contains the iTunes library.</translation>
     </message>
     <message>
         <location filename="../Sources/Importer/CImporterITunes.cpp" line="98"/>
         <source>Library:</source>
-        <translation type="unfinished"></translation>
+        <translation>Library:</translation>
     </message>
     <message>
         <location filename="../Sources/Importer/CImporterITunes.cpp" line="104"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation>...</translation>
     </message>
 </context>
 <context>
@@ -432,12 +444,12 @@ Error: %4</source>
     <message>
         <location filename="../Sources/Importer/CImporterITunes.cpp" line="130"/>
         <source>Items to import</source>
-        <translation type="unfinished"></translation>
+        <translation>Items to import</translation>
     </message>
     <message>
         <location filename="../Sources/Importer/CImporterITunes.cpp" line="131"/>
         <source>Select items you want to import in your library.</source>
-        <translation type="unfinished"></translation>
+        <translation>Select items you want to import in your library.</translation>
     </message>
 </context>
 <context>
@@ -445,12 +457,12 @@ Error: %4</source>
     <message>
         <location filename="../Sources/Importer/CImporterITunes.cpp" line="194"/>
         <source>Solving problems</source>
-        <translation type="unfinished"></translation>
+        <translation>Solving problems</translation>
     </message>
     <message>
         <location filename="../Sources/Importer/CImporterITunes.cpp" line="195"/>
         <source>What do you want to deal with songs already in your library?</source>
-        <translation type="unfinished"></translation>
+        <translation>What do you want to deal with songs already in your library?</translation>
     </message>
 </context>
 <context>
@@ -458,12 +470,12 @@ Error: %4</source>
     <message>
         <location filename="../Sources/Importer/CImporterITunes.cpp" line="224"/>
         <source>Import done</source>
-        <translation type="unfinished"></translation>
+        <translation>Import done</translation>
     </message>
     <message>
         <location filename="../Sources/Importer/CImporterITunes.cpp" line="225"/>
         <source>All selected items have been imported into the library.</source>
-        <translation type="unfinished"></translation>
+        <translation>All selected items have been imported into the library.</translation>
     </message>
 </context>
 <context>
@@ -471,32 +483,32 @@ Error: %4</source>
     <message>
         <location filename="../Sources/Importer/CImporterITunes.cpp" line="46"/>
         <source>Import from iTunes</source>
-        <translation type="unfinished"></translation>
+        <translation>Import from iTunes</translation>
     </message>
     <message>
         <location filename="../Sources/Importer/CImporterITunes.cpp" line="58"/>
         <source>&amp;Back</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Back</translation>
     </message>
     <message>
         <location filename="../Sources/Importer/CImporterITunes.cpp" line="59"/>
         <source>&amp;Next</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Next</translation>
     </message>
     <message>
         <location filename="../Sources/Importer/CImporterITunes.cpp" line="60"/>
         <source>&amp;Finish</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Finish</translation>
     </message>
     <message>
         <location filename="../Sources/Importer/CImporterITunes.cpp" line="61"/>
         <source>&amp;Import</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Import</translation>
     </message>
     <message>
         <location filename="../Sources/Importer/CImporterITunes.cpp" line="62"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Cancel</translation>
     </message>
 </context>
 <context>
@@ -504,7 +516,7 @@ Error: %4</source>
     <message>
         <location filename="../Sources/CListModel.cpp" line="284"/>
         <source>Library</source>
-        <translation type="unfinished"></translation>
+        <translation>Library</translation>
     </message>
 </context>
 <context>
@@ -513,31 +525,31 @@ Error: %4</source>
         <location filename="../Sources/CPlayListView.cpp" line="71"/>
         <location filename="../Sources/CPlayListView.cpp" line="75"/>
         <source>Edit...</source>
-        <translation type="unfinished"></translation>
+        <translation>Edit...</translation>
     </message>
     <message>
         <location filename="../Sources/CPlayListView.cpp" line="72"/>
         <location filename="../Sources/CPlayListView.cpp" line="76"/>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>Remove</translation>
     </message>
     <message>
         <location filename="../Sources/CPlayListView.cpp" line="78"/>
         <location filename="../Sources/CPlayListView.cpp" line="83"/>
         <source>New playlist...</source>
-        <translation type="unfinished"></translation>
+        <translation>New playlist...</translation>
     </message>
     <message>
         <location filename="../Sources/CPlayListView.cpp" line="79"/>
         <location filename="../Sources/CPlayListView.cpp" line="84"/>
         <source>New dynamic playlist...</source>
-        <translation type="unfinished"></translation>
+        <translation>New dynamic playlist...</translation>
     </message>
     <message>
         <location filename="../Sources/CPlayListView.cpp" line="80"/>
         <location filename="../Sources/CPlayListView.cpp" line="85"/>
         <source>New folder...</source>
-        <translation type="unfinished"></translation>
+        <translation>New folder...</translation>
     </message>
 </context>
 <context>
@@ -545,137 +557,202 @@ Error: %4</source>
     <message>
         <location filename="../Sources/Last.fm/CScrobble.cpp" line="72"/>
         <location filename="../Sources/Last.fm/CScrobble.cpp" line="102"/>
-        <source>Date:    </source>
-        <translation type="unfinished"></translation>
+        <source>Date:</source>
+        <translation>Date:</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CScrobble.cpp" line="73"/>
-        <source>Title:   </source>
-        <translation type="unfinished"></translation>
+        <source>Title:</source>
+        <translation>Title:</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CScrobble.cpp" line="74"/>
-        <source>Artist:  </source>
-        <translation type="unfinished"></translation>
+        <source>Artist:</source>
+        <translation>Artist:</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CScrobble.cpp" line="75"/>
-        <source>Album:   </source>
-        <translation type="unfinished"></translation>
+        <source>Album:</source>
+        <translation>Album:</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CScrobble.cpp" line="76"/>
-        <source>URL:     </source>
-        <translation type="unfinished"></translation>
+        <source>URL:</source>
+        <translation>URL:</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CScrobble.cpp" line="77"/>
         <location filename="../Sources/Last.fm/CScrobble.cpp" line="104"/>
-        <source>Content: </source>
-        <translation type="unfinished"></translation>
+        <source>Content:</source>
+        <translation>Content:</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CScrobble.cpp" line="103"/>
-        <source>Code:    </source>
-        <translation type="unfinished"></translation>
+        <source>Code:</source>
+        <translation>Code:</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CScrobble.cpp" line="111"/>
         <source>Song scrobbled to Last.fm</source>
-        <translation type="unfinished"></translation>
+        <translation>Song scrobbled to Last.fm</translation>
     </message>
 </context>
 <context>
     <name>CSong</name>
     <message>
-        <location filename="../Sources/CSong.hpp" line="298"/>
+        <location filename="../Sources/CSong.hpp" line="317"/>
         <source>Unknown</source>
         <comment>Unknown format</comment>
-        <translation type="unfinished"></translation>
+        <translation>Unknown</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="299"/>
+        <location filename="../Sources/CSong.hpp" line="318"/>
         <source>MP3</source>
-        <translation type="unfinished"></translation>
+        <translation>MP3</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="300"/>
+        <location filename="../Sources/CSong.hpp" line="319"/>
         <source>Ogg Vorbis</source>
-        <translation type="unfinished"></translation>
+        <translation>Ogg Vorbis</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="301"/>
+        <location filename="../Sources/CSong.hpp" line="320"/>
         <source>FLAC</source>
-        <translation type="unfinished"></translation>
+        <translation>FLAC</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="346"/>
+        <location filename="../Sources/CSong.hpp" line="365"/>
         <source>Unknown</source>
         <comment>Unknown language</comment>
-        <translation type="unfinished"></translation>
+        <translation>Unknown</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="347"/>
+        <location filename="../Sources/CSong.hpp" line="366"/>
         <source>English</source>
-        <translation type="unfinished"></translation>
+        <translation>English</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="348"/>
+        <location filename="../Sources/CSong.hpp" line="367"/>
         <source>French</source>
-        <translation type="unfinished"></translation>
+        <translation>French</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="349"/>
+        <location filename="../Sources/CSong.hpp" line="368"/>
         <source>German</source>
-        <translation type="unfinished"></translation>
+        <translation>German</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="350"/>
+        <location filename="../Sources/CSong.hpp" line="369"/>
         <source>Italian</source>
-        <translation type="unfinished"></translation>
+        <translation>Italian</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="351"/>
+        <location filename="../Sources/CSong.hpp" line="370"/>
         <source>Russian</source>
-        <translation type="unfinished"></translation>
+        <translation>Russian</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="569"/>
+        <location filename="../Sources/CSong.cpp" line="587"/>
         <source>Unknown title</source>
-        <translation type="unfinished"></translation>
+        <translation>Unknown title</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="574"/>
+        <location filename="../Sources/CSong.cpp" line="592"/>
         <source>Unknown artist</source>
-        <translation type="unfinished"></translation>
+        <translation>Unknown artist</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="579"/>
+        <location filename="../Sources/CSong.cpp" line="597"/>
         <source>Unknown album</source>
-        <translation type="unfinished"></translation>
+        <translation>Unknown album</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="962"/>
+        <location filename="../Sources/CSong.cpp" line="984"/>
         <source>%1 Gio</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 Gio</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="967"/>
+        <location filename="../Sources/CSong.cpp" line="989"/>
         <source>%1 Mio</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 Mio</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="972"/>
+        <location filename="../Sources/CSong.cpp" line="994"/>
         <source>%1 Kio</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 Kio</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CSong.cpp" line="976"/>
+        <location filename="../Sources/CSong.cpp" line="998"/>
         <source>%n byte(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n byte</numerusform>
+            <numerusform>%n bytes</numerusform>
         </translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="1930"/>
+        <source>Chargement des tags ID3v1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="1932"/>
+        <location filename="../Sources/CSong.cpp" line="1994"/>
+        <location filename="../Sources/CSong.cpp" line="2418"/>
+        <location filename="../Sources/CSong.cpp" line="2598"/>
+        <location filename="../Sources/CSong.cpp" line="2831"/>
+        <location filename="../Sources/CSong.cpp" line="2866"/>
+        <location filename="../Sources/CSong.cpp" line="3079"/>
+        <location filename="../Sources/CSong.cpp" line="3205"/>
+        <source>File:</source>
+        <translation>File:</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="1933"/>
+        <location filename="../Sources/CSong.cpp" line="1995"/>
+        <location filename="../Sources/CSong.cpp" line="2419"/>
+        <location filename="../Sources/CSong.cpp" line="2599"/>
+        <location filename="../Sources/CSong.cpp" line="2832"/>
+        <location filename="../Sources/CSong.cpp" line="2867"/>
+        <location filename="../Sources/CSong.cpp" line="3080"/>
+        <location filename="../Sources/CSong.cpp" line="3206"/>
+        <source>Date:</source>
+        <translation>Date:</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="1992"/>
+        <source>Chargement des tags ID3v2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="2416"/>
+        <source>Chargement des tags APE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="2510"/>
+        <location filename="../Sources/CSong.cpp" line="2513"/>
+        <location filename="../Sources/CSong.cpp" line="2517"/>
+        <location filename="../Sources/CSong.cpp" line="2525"/>
+        <location filename="../Sources/CSong.cpp" line="2543"/>
+        <location filename="../Sources/CSong.cpp" line="2546"/>
+        <location filename="../Sources/CSong.cpp" line="2550"/>
+        <location filename="../Sources/CSong.cpp" line="2558"/>
+        <location filename="../Sources/CSong.cpp" line="2685"/>
+        <location filename="../Sources/CSong.cpp" line="2699"/>
+        <location filename="../Sources/CSong.cpp" line="2717"/>
+        <location filename="../Sources/CSong.cpp" line="2731"/>
+        <location filename="../Sources/CSong.cpp" line="2749"/>
+        <source>Error: invalid tag &apos;%1&apos;</source>
+        <translation>Error: invalid tag &apos;%1&apos;</translation>
+    </message>
+    <message>
+        <source>Error : invalid tag &apos;%1&apos;</source>
+        <translation type="obsolete">Error : invalid tag &apos;%1&apos;</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="2864"/>
+        <source>Enregistrement des tags ID3v2</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -683,213 +760,214 @@ Error: %4</source>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="239"/>
         <source>Title</source>
-        <translation type="unfinished"></translation>
+        <translation>Title</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="240"/>
         <source>Artist</source>
-        <translation type="unfinished"></translation>
+        <translation>Artist</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="241"/>
         <source>Album</source>
-        <translation type="unfinished"></translation>
+        <translation>Album</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="242"/>
         <source>Album artist</source>
-        <translation type="unfinished"></translation>
+        <translation>Album artist</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="243"/>
         <source>Composer</source>
-        <translation type="unfinished"></translation>
+        <translation>Composer</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="244"/>
         <source>Year</source>
-        <translation type="unfinished"></translation>
+        <translation>Year</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="245"/>
         <source>Track</source>
-        <translation type="unfinished"></translation>
+        <translation>Track</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="246"/>
         <source>Disc</source>
-        <translation type="unfinished"></translation>
+        <translation>Disc</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="247"/>
         <source>Genre</source>
-        <translation type="unfinished"></translation>
+        <translation>Genre</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="248"/>
         <source>Rating</source>
-        <translation type="unfinished"></translation>
+        <translation>Rating</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="249"/>
         <source>Comments</source>
-        <translation type="unfinished"></translation>
+        <translation>Comments</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="250"/>
         <source>Plays</source>
-        <translation type="unfinished"></translation>
+        <translation>Plays</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="251"/>
         <source>Last played</source>
-        <translation type="unfinished"></translation>
+        <translation>Last played</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="252"/>
         <source>File name</source>
-        <translation type="unfinished"></translation>
+        <translation>File name</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="253"/>
         <source>Bit rate</source>
-        <translation type="unfinished"></translation>
+        <translation>Bit rate</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="254"/>
         <source>Format</source>
-        <translation type="unfinished"></translation>
+        <translation>Format</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="255"/>
         <source>Duration</source>
-        <translation type="unfinished"></translation>
+        <translation>Duration</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="256"/>
         <source>Sample rate</source>
-        <translation type="unfinished"></translation>
+        <translation>Sample rate</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="257"/>
         <source>Creation date</source>
-        <translation type="unfinished"></translation>
+        <translation>Creation date</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="258"/>
         <source>Modification date</source>
-        <translation type="unfinished"></translation>
+        <translation>Modification date</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="259"/>
         <source>Channels</source>
-        <translation type="unfinished"></translation>
+        <translation>Channels</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="260"/>
         <source>File size</source>
-        <translation type="unfinished"></translation>
+        <translation>File size</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="261"/>
         <source>Lyrics</source>
-        <translation type="unfinished"></translation>
+        <translation>Lyrics</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="262"/>
         <source>Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Language</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="263"/>
         <source>Lyricist</source>
-        <translation type="unfinished"></translation>
+        <translation>Lyricist</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="264"/>
         <source>Grouping</source>
-        <translation type="unfinished"></translation>
+        <translation>Grouping</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="265"/>
         <source>Subtitle</source>
-        <translation type="unfinished"></translation>
+        <translation>Subtitle</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.cpp" line="776"/>
         <source>Are you sure you want to remove the selected songs from the library?
 The files will not be deleted.</source>
-        <translation type="unfinished"></translation>
+        <translation>Are you sure you want to remove the selected songs from the library?
+The files will not be deleted.</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.cpp" line="776"/>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>Remove</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.cpp" line="776"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Cancel</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.cpp" line="1208"/>
         <source>Play</source>
-        <translation type="unfinished">Play</translation>
+        <translation>Play</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.cpp" line="1212"/>
         <source>Informations...</source>
-        <translation type="unfinished"></translation>
+        <translation>Informations...</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.cpp" line="1216"/>
-        <source>Edit metadata</source>
-        <translation type="unfinished"></translation>
+        <source>Edit metadata...</source>
+        <translation>Edit metadata...</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.cpp" line="1217"/>
         <source>Show in explorer</source>
-        <translation type="unfinished"></translation>
+        <translation>Show in explorer</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.cpp" line="1221"/>
         <source>Relocate</source>
-        <translation type="unfinished"></translation>
+        <translation>Relocate</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.cpp" line="1226"/>
         <source>Remove from library</source>
-        <translation type="unfinished"></translation>
+        <translation>Remove from library</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.cpp" line="1227"/>
         <source>Check selection</source>
-        <translation type="unfinished"></translation>
+        <translation>Check selection</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.cpp" line="1228"/>
         <source>Uncheck selection</source>
-        <translation type="unfinished"></translation>
+        <translation>Uncheck selection</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.cpp" line="1235"/>
         <source>Playlists</source>
-        <translation type="unfinished"></translation>
+        <translation>Playlists</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.cpp" line="1237"/>
         <source>Library</source>
-        <translation type="unfinished"></translation>
+        <translation>Library</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.cpp" line="1265"/>
         <source>Add to playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Add to playlist</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.cpp" line="1270"/>
         <source>There are no playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>There are no playlist</translation>
     </message>
 </context>
 <context>
@@ -897,12 +975,12 @@ The files will not be deleted.</source>
     <message>
         <location filename="../Sources/CSongTableModel.cpp" line="278"/>
         <source>%1 kbit/s</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 kbit/s</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTableModel.cpp" line="296"/>
         <source>%1 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 Hz</translation>
     </message>
 </context>
 <context>
@@ -923,23 +1001,23 @@ Would you like to add them?</source>
         <location filename="../Sources/CStaticPlayList.cpp" line="265"/>
         <location filename="../Sources/CStaticPlayList.cpp" line="352"/>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>Remove</translation>
     </message>
     <message>
         <location filename="../Sources/CStaticPlayList.cpp" line="265"/>
         <location filename="../Sources/CStaticPlayList.cpp" line="352"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Cancel</translation>
     </message>
     <message>
         <location filename="../Sources/CStaticPlayList.cpp" line="688"/>
         <source>Play</source>
-        <translation type="unfinished">Play</translation>
+        <translation>Play</translation>
     </message>
     <message>
         <location filename="../Sources/CStaticPlayList.cpp" line="692"/>
         <source>Informations...</source>
-        <translation type="unfinished"></translation>
+        <translation>Informations...</translation>
     </message>
     <message>
         <location filename="../Sources/CStaticPlayList.cpp" line="693"/>
@@ -949,7 +1027,7 @@ Would you like to add them?</source>
     <message>
         <location filename="../Sources/CStaticPlayList.cpp" line="694"/>
         <source>Show in explorer</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Show in explorer</translation>
     </message>
     <message>
         <location filename="../Sources/CStaticPlayList.cpp" line="696"/>
@@ -959,37 +1037,37 @@ Would you like to add them?</source>
     <message>
         <location filename="../Sources/CStaticPlayList.cpp" line="697"/>
         <source>Remove from library</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Remove from library</translation>
     </message>
     <message>
         <location filename="../Sources/CStaticPlayList.cpp" line="698"/>
         <source>Check selection</source>
-        <translation type="unfinished"></translation>
+        <translation>Check selection</translation>
     </message>
     <message>
         <location filename="../Sources/CStaticPlayList.cpp" line="699"/>
         <source>Uncheck selection</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Uncheck selection</translation>
     </message>
     <message>
         <location filename="../Sources/CStaticPlayList.cpp" line="706"/>
         <source>Playlists</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Playlists</translation>
     </message>
     <message>
         <location filename="../Sources/CStaticPlayList.cpp" line="708"/>
         <source>Library</source>
-        <translation type="unfinished"></translation>
+        <translation>Library</translation>
     </message>
     <message>
         <location filename="../Sources/CStaticPlayList.cpp" line="736"/>
         <source>Add to playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Add to playlist</translation>
     </message>
     <message>
         <location filename="../Sources/CStaticPlayList.cpp" line="741"/>
         <source>There are no playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>There are no playlist</translation>
     </message>
     <message>
         <location filename="../Sources/CStaticPlayList.cpp" line="758"/>
@@ -1002,39 +1080,39 @@ Would you like to add them?</source>
     <message>
         <location filename="../Sources/Last.fm/CUpdateNowPlaying.cpp" line="73"/>
         <location filename="../Sources/Last.fm/CUpdateNowPlaying.cpp" line="99"/>
-        <source>Date:    </source>
-        <translation type="unfinished"></translation>
+        <source>Date:</source>
+        <translation>Date:</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CUpdateNowPlaying.cpp" line="74"/>
-        <source>Title:   </source>
-        <translation type="unfinished"></translation>
+        <source>Title:</source>
+        <translation>Title:</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CUpdateNowPlaying.cpp" line="75"/>
-        <source>Artist:  </source>
-        <translation type="unfinished"></translation>
+        <source>Artist:</source>
+        <translation>Artist:</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CUpdateNowPlaying.cpp" line="76"/>
-        <source>Album:   </source>
-        <translation type="unfinished"></translation>
+        <source>Album:</source>
+        <translation>Album:</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CUpdateNowPlaying.cpp" line="77"/>
-        <source>URL:     </source>
-        <translation type="unfinished"></translation>
+        <source>URL:</source>
+        <translation>URL:</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CUpdateNowPlaying.cpp" line="78"/>
         <location filename="../Sources/Last.fm/CUpdateNowPlaying.cpp" line="101"/>
-        <source>Content: </source>
-        <translation type="unfinished"></translation>
+        <source>Content:</source>
+        <translation>Content:</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CUpdateNowPlaying.cpp" line="100"/>
-        <source>Code:    </source>
-        <translation type="unfinished"></translation>
+        <source>Code:</source>
+        <translation>Code:</translation>
     </message>
 </context>
 <context>
@@ -1043,13 +1121,13 @@ Would you like to add them?</source>
         <location filename="../Sources/CWidgetCriteria.cpp" line="222"/>
         <location filename="../Sources/CWidgetCriteria.cpp" line="223"/>
         <source> kbit/s</source>
-        <translation type="unfinished"></translation>
+        <translation> kbit/s</translation>
     </message>
     <message>
         <location filename="../Sources/CWidgetCriteria.cpp" line="227"/>
         <location filename="../Sources/CWidgetCriteria.cpp" line="228"/>
         <source> Hz</source>
-        <translation type="unfinished"></translation>
+        <translation> Hz</translation>
     </message>
 </context>
 <context>
@@ -1057,7 +1135,7 @@ Would you like to add them?</source>
     <message>
         <location filename="../Sources/CWidgetMultiCriterion.cpp" line="189"/>
         <source>-</source>
-        <translation type="unfinished"></translation>
+        <translation>-</translation>
     </message>
 </context>
 <context>
@@ -1065,12 +1143,12 @@ Would you like to add them?</source>
     <message>
         <location filename="../Form/DialogEditDynamicPlayList.ui" line="26"/>
         <source>Dynamic playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Dynamic playlist</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditDynamicPlayList.ui" line="40"/>
         <source>Name of the list:</source>
-        <translation type="unfinished"></translation>
+        <translation>Name of the list:</translation>
     </message>
 </context>
 <context>
@@ -1078,12 +1156,12 @@ Would you like to add them?</source>
     <message>
         <location filename="../Form/DialogEditFolder.ui" line="20"/>
         <source>Folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Folder</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditFolder.ui" line="32"/>
         <source>Name of the folder:</source>
-        <translation type="unfinished"></translation>
+        <translation>Name of the folder:</translation>
     </message>
 </context>
 <context>
@@ -1091,97 +1169,97 @@ Would you like to add them?</source>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="20"/>
         <source>Metadata</source>
-        <translation type="unfinished"></translation>
+        <translation>Metadata</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="30"/>
         <source>ID3v1</source>
-        <translation type="unfinished"></translation>
+        <translation>ID3v1</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="39"/>
         <source>Title:</source>
-        <translation type="unfinished"></translation>
+        <translation>Title:</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="53"/>
         <source>Artist:</source>
-        <translation type="unfinished"></translation>
+        <translation>Artist:</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="67"/>
         <source>Album:</source>
-        <translation type="unfinished"></translation>
+        <translation>Album:</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="81"/>
         <source>Year:</source>
-        <translation type="unfinished"></translation>
+        <translation>Year:</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="98"/>
         <source>Comments:</source>
-        <translation type="unfinished"></translation>
+        <translation>Comments:</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="112"/>
         <source>Track number:</source>
-        <translation type="unfinished"></translation>
+        <translation>Track number:</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="126"/>
         <source>Genre:</source>
-        <translation type="unfinished"></translation>
+        <translation>Genre:</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="144"/>
         <source>ID3v2</source>
-        <translation type="unfinished"></translation>
+        <translation>ID3v2</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="154"/>
         <source>Text</source>
-        <translation type="unfinished"></translation>
+        <translation>Text</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="180"/>
         <source>URL</source>
-        <translation type="unfinished"></translation>
+        <translation>URL</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="206"/>
         <source>Lyrics</source>
-        <translation type="unfinished"></translation>
+        <translation>Lyrics</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="232"/>
         <source>Comments</source>
-        <translation type="unfinished"></translation>
+        <translation>Comments</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="258"/>
         <source>Pictures</source>
-        <translation type="unfinished"></translation>
+        <translation>Pictures</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="277"/>
         <source>Description</source>
-        <translation type="unfinished"></translation>
+        <translation>Description</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="282"/>
         <source>Type</source>
-        <translation type="unfinished"></translation>
+        <translation>Type</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="287"/>
         <source>Format</source>
-        <translation type="unfinished"></translation>
+        <translation>Format</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="292"/>
         <source>Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Size</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="336"/>
@@ -1196,17 +1274,17 @@ Would you like to add them?</source>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="346"/>
         <source>Unknown</source>
-        <translation type="unfinished"></translation>
+        <translation>Unknown</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="355"/>
         <source>APE</source>
-        <translation type="unfinished"></translation>
+        <translation>APE</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="360"/>
         <source>Xiph Comment</source>
-        <translation type="unfinished"></translation>
+        <translation>Xiph Comment</translation>
     </message>
 </context>
 <context>
@@ -1214,248 +1292,278 @@ Would you like to add them?</source>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="23"/>
         <source>Song infos</source>
-        <translation type="unfinished"></translation>
+        <translation>Song infos</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="74"/>
         <source>Summary</source>
-        <translation type="unfinished"></translation>
+        <translation>Summary</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="170"/>
         <source>The last modification date of the song.</source>
-        <translation type="unfinished"></translation>
+        <translation>The last modification date of the song.</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="190"/>
         <source>Format:</source>
-        <translation type="unfinished"></translation>
+        <translation>Format:</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="204"/>
         <source>Creation date:</source>
-        <translation type="unfinished"></translation>
+        <translation>Creation date:</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="238"/>
         <source>File name:</source>
-        <translation type="unfinished"></translation>
+        <translation>File name:</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="252"/>
         <source>File size:</source>
-        <translation type="unfinished"></translation>
+        <translation>File size:</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="266"/>
         <source>Modification date:</source>
-        <translation type="unfinished"></translation>
+        <translation>Modification date:</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="273"/>
         <source>The creation date of the song in the library.</source>
-        <translation type="unfinished"></translation>
+        <translation>The creation date of the song in the library.</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="300"/>
         <source>Sample rate:</source>
-        <translation type="unfinished"></translation>
+        <translation>Sample rate:</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="324"/>
         <source>Channels:</source>
-        <translation type="unfinished"></translation>
+        <translation>Channels:</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="345"/>
         <source>Bit rate:</source>
-        <translation type="unfinished"></translation>
+        <translation>Bit rate:</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="359"/>
         <source>Play count:</source>
-        <translation type="unfinished"></translation>
+        <translation>Play count:</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="373"/>
         <source>Last play time:</source>
-        <translation type="unfinished"></translation>
+        <translation>Last play time:</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="380"/>
         <source>The last time this song was played.</source>
-        <translation type="unfinished"></translation>
+        <translation>The last time this song was played.</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="449"/>
         <source>Informations</source>
-        <translation type="unfinished"></translation>
+        <translation>Informations</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="458"/>
         <location filename="../Form/DialogEditSong.ui" line="465"/>
         <source>/</source>
-        <translation type="unfinished"></translation>
+        <translation>/</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="511"/>
         <source>Track number</source>
-        <translation type="unfinished"></translation>
+        <translation>Track number</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="528"/>
         <location filename="../Form/DialogEditSong.ui" line="896"/>
         <source>Artist</source>
-        <translation type="unfinished"></translation>
+        <translation>Artist</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="545"/>
         <location filename="../Form/DialogEditSong.ui" line="947"/>
         <source>Album</source>
-        <translation type="unfinished"></translation>
+        <translation>Album</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="562"/>
         <location filename="../Form/DialogEditSong.ui" line="879"/>
         <source>Album artist</source>
-        <translation type="unfinished"></translation>
+        <translation>Album artist</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="608"/>
         <source>Year</source>
-        <translation type="unfinished"></translation>
+        <translation>Year</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="660"/>
         <source>Disc number</source>
-        <translation type="unfinished"></translation>
+        <translation>Disc number</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="680"/>
         <location filename="../Form/DialogEditSong.ui" line="984"/>
         <source>Composer</source>
-        <translation type="unfinished"></translation>
+        <translation>Composer</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="697"/>
         <source>Genre</source>
-        <translation type="unfinished"></translation>
+        <translation>Genre</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="717"/>
         <source>Comments</source>
-        <translation type="unfinished"></translation>
+        <translation>Comments</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="734"/>
         <source>Rating</source>
-        <translation type="unfinished"></translation>
+        <translation>Rating</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="766"/>
         <source>Subtitle</source>
-        <translation type="unfinished"></translation>
+        <translation>Subtitle</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="786"/>
         <location filename="../Form/DialogEditSong.ui" line="930"/>
         <source>Title</source>
-        <translation type="unfinished"></translation>
+        <translation>Title</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="808"/>
         <source>BPM</source>
-        <translation type="unfinished"></translation>
+        <translation>BPM</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="822"/>
         <source>Grouping</source>
-        <translation type="unfinished"></translation>
+        <translation>Grouping</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="836"/>
         <source>Sorting</source>
-        <translation type="unfinished"></translation>
+        <translation>Sorting</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="913"/>
         <source>Sort Composer</source>
-        <translation type="unfinished"></translation>
+        <translation>Sort Composer</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="964"/>
         <source>Sort Album artist</source>
-        <translation type="unfinished"></translation>
+        <translation>Sort Album artist</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="1001"/>
         <source>Sort Title</source>
-        <translation type="unfinished"></translation>
+        <translation>Sort Title</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="1018"/>
         <source>Sort Artist</source>
-        <translation type="unfinished"></translation>
+        <translation>Sort Artist</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="1035"/>
         <source>Sort Album</source>
-        <translation type="unfinished"></translation>
+        <translation>Sort Album</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="1059"/>
         <source>Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Options</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="1072"/>
         <source>Volume adjustment:</source>
-        <translation type="unfinished"></translation>
+        <translation>Volume adjustment:</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="1082"/>
         <source>%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Form/DialogEditSong.ui" line="1105"/>
-        <source>Song is enabled.</source>
-        <translation type="unfinished"></translation>
+        <translation>%</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="1119"/>
+        <source>Song is enabled.</source>
+        <translation>Song is enabled.</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEditSong.ui" line="1105"/>
         <source>Skip when shuffling.</source>
-        <translation type="unfinished"></translation>
+        <translation>Skip when shuffling.</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSong.ui" line="1133"/>
         <source>Part of a compilation.</source>
-        <translation type="unfinished"></translation>
+        <translation>Part of a compilation.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1154"/>
+        <location filename="../Form/DialogEditSong.ui" line="1163"/>
+        <source>Replay Gain</source>
+        <translation>Replay Gain</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEditSong.ui" line="1176"/>
+        <source>Track gain:</source>
+        <translation>Track gain:</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEditSong.ui" line="1197"/>
+        <source>Album gain:</source>
+        <translation>Album gain:</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEditSong.ui" line="1218"/>
+        <source>Track peak:</source>
+        <translation>Track peak:</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEditSong.ui" line="1239"/>
+        <source>Album peak:</source>
+        <translation>Album peak:</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEditSong.ui" line="1275"/>
+        <source>Compute</source>
+        <translation>Compute</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEditSong.ui" line="1299"/>
         <source>Lyrics</source>
-        <translation type="unfinished"></translation>
+        <translation>Lyrics</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1170"/>
+        <location filename="../Form/DialogEditSong.ui" line="1315"/>
         <source>Language:</source>
-        <translation type="unfinished"></translation>
+        <translation>Language:</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1190"/>
+        <location filename="../Form/DialogEditSong.ui" line="1335"/>
         <source>Author:</source>
-        <translation type="unfinished"></translation>
+        <translation>Author:</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1204"/>
+        <location filename="../Form/DialogEditSong.ui" line="1349"/>
         <source>Covers</source>
-        <translation type="unfinished"></translation>
+        <translation>Covers</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1221"/>
+        <location filename="../Form/DialogEditSong.ui" line="1366"/>
         <source>Plays</source>
-        <translation type="unfinished"></translation>
+        <translation>Plays</translation>
     </message>
 </context>
 <context>
@@ -1468,133 +1576,133 @@ Would you like to add them?</source>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="33"/>
         <source>Informations</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Informations</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="79"/>
         <source>Track number</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Track number</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="96"/>
         <location filename="../Form/DialogEditSongs.ui" line="582"/>
         <source>Artist</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Artist</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="113"/>
         <location filename="../Form/DialogEditSongs.ui" line="633"/>
         <source>Album</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Album</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="130"/>
         <location filename="../Form/DialogEditSongs.ui" line="565"/>
         <source>Album artist</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Album artist</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="176"/>
         <source>Year</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Year</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="208"/>
         <location filename="../Form/DialogEditSongs.ui" line="215"/>
         <source>/</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">/</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="258"/>
         <source>Disc number</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Disc number</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="278"/>
         <location filename="../Form/DialogEditSongs.ui" line="670"/>
         <source>Composer</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Composer</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="295"/>
         <source>Genre</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Genre</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="315"/>
         <source>Comments</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Comments</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="332"/>
         <source>Rating</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Rating</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="424"/>
         <location filename="../Form/DialogEditSongs.ui" line="616"/>
         <source>Title</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Title</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="461"/>
         <source>Subtitle</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Subtitle</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="480"/>
         <source>Grouping</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Grouping</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="494"/>
         <source>BPM</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">BPM</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="522"/>
         <source>Sorting</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Sorting</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="599"/>
         <source>Sort Composer</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Sort Composer</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="650"/>
         <source>Sort Album artist</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Sort Album artist</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="687"/>
         <source>Sort Title</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Sort Title</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="704"/>
         <source>Sort Artist</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Sort Artist</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="721"/>
         <source>Sort Album</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Sort Album</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="875"/>
         <source>Options</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Options</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="901"/>
         <source>Volume adjustment:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Volume adjustment:</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="911"/>
         <source>%</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="934"/>
@@ -1604,27 +1712,27 @@ Would you like to add them?</source>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="951"/>
         <source>Skip when shuffling.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Skip when shuffling.</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="968"/>
         <source>Part of a compilation.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Part of a compilation.</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="992"/>
         <source>Lyrics</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Lyrics</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="1034"/>
         <source>Language:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Language:</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="1067"/>
         <source>Author:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Author:</translation>
     </message>
 </context>
 <context>
@@ -1632,12 +1740,12 @@ Would you like to add them?</source>
     <message>
         <location filename="../Form/DialogEditStaticPlayList.ui" line="20"/>
         <source>Static playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Static playlist</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditStaticPlayList.ui" line="32"/>
         <source>Name of the list:</source>
-        <translation type="unfinished"></translation>
+        <translation>Name of the list:</translation>
     </message>
 </context>
 <context>
@@ -1645,77 +1753,77 @@ Would you like to add them?</source>
     <message>
         <location filename="../Form/DialogEqualizer.ui" line="15"/>
         <source>Equalizer</source>
-        <translation type="unfinished"></translation>
+        <translation>Equalizer</translation>
     </message>
     <message>
         <location filename="../Form/DialogEqualizer.ui" line="196"/>
         <source>Enable equalizer</source>
-        <translation type="unfinished"></translation>
+        <translation>Enable equalizer</translation>
     </message>
     <message>
         <location filename="../Form/DialogEqualizer.ui" line="266"/>
         <source>-10 dB</source>
-        <translation type="unfinished"></translation>
+        <translation>-10 dB</translation>
     </message>
     <message>
         <location filename="../Form/DialogEqualizer.ui" line="283"/>
         <source>0 dB</source>
-        <translation type="unfinished"></translation>
+        <translation>0 dB</translation>
     </message>
     <message>
         <location filename="../Form/DialogEqualizer.ui" line="328"/>
         <source>+10 dB</source>
-        <translation type="unfinished"></translation>
+        <translation>+10 dB</translation>
     </message>
     <message>
         <location filename="../Form/DialogEqualizer.ui" line="386"/>
         <source>32</source>
-        <translation type="unfinished"></translation>
+        <translation>32</translation>
     </message>
     <message>
         <location filename="../Form/DialogEqualizer.ui" line="409"/>
         <source>64</source>
-        <translation type="unfinished"></translation>
+        <translation>64</translation>
     </message>
     <message>
         <location filename="../Form/DialogEqualizer.ui" line="432"/>
         <source>125</source>
-        <translation type="unfinished"></translation>
+        <translation>125</translation>
     </message>
     <message>
         <location filename="../Form/DialogEqualizer.ui" line="455"/>
         <source>250</source>
-        <translation type="unfinished"></translation>
+        <translation>250</translation>
     </message>
     <message>
         <location filename="../Form/DialogEqualizer.ui" line="478"/>
         <source>500</source>
-        <translation type="unfinished"></translation>
+        <translation>500</translation>
     </message>
     <message>
         <location filename="../Form/DialogEqualizer.ui" line="501"/>
         <source>1K</source>
-        <translation type="unfinished"></translation>
+        <translation>1K</translation>
     </message>
     <message>
         <location filename="../Form/DialogEqualizer.ui" line="524"/>
         <source>2K</source>
-        <translation type="unfinished"></translation>
+        <translation>2K</translation>
     </message>
     <message>
         <location filename="../Form/DialogEqualizer.ui" line="547"/>
         <source>4K</source>
-        <translation type="unfinished"></translation>
+        <translation>4K</translation>
     </message>
     <message>
         <location filename="../Form/DialogEqualizer.ui" line="570"/>
         <source>8K</source>
-        <translation type="unfinished"></translation>
+        <translation>8K</translation>
     </message>
     <message>
         <location filename="../Form/DialogEqualizer.ui" line="593"/>
         <source>16K</source>
-        <translation type="unfinished"></translation>
+        <translation>16K</translation>
     </message>
 </context>
 <context>
@@ -1728,7 +1836,7 @@ Would you like to add them?</source>
     <message>
         <location filename="../Form/DialogPreferences.ui" line="33"/>
         <source>Appearance</source>
-        <translation type="unfinished"></translation>
+        <translation>Appearance</translation>
     </message>
     <message>
         <location filename="../Form/DialogPreferences.ui" line="42"/>
@@ -1753,32 +1861,32 @@ Would you like to add them?</source>
     <message>
         <location filename="../Form/DialogPreferences.ui" line="85"/>
         <source>Driver:</source>
-        <translation type="unfinished"></translation>
+        <translation>Driver:</translation>
     </message>
     <message>
         <location filename="../Form/DialogPreferences.ui" line="96"/>
         <source>SQLite version 3 or above</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">SQLite version 3 or above</translation>
     </message>
     <message>
         <location filename="../Form/DialogPreferences.ui" line="101"/>
         <source>SQLite version 2</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">SQLite version 2</translation>
     </message>
     <message>
         <location filename="../Form/DialogPreferences.ui" line="106"/>
         <source>PostgreSQL</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">PostgreSQL</translation>
     </message>
     <message>
         <location filename="../Form/DialogPreferences.ui" line="111"/>
         <source>MySQL</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">MySQL</translation>
     </message>
     <message>
         <location filename="../Form/DialogPreferences.ui" line="116"/>
         <source>ODBC</source>
-        <translation type="unfinished"></translation>
+        <translation>ODBC</translation>
     </message>
     <message>
         <location filename="../Form/DialogPreferences.ui" line="127"/>
@@ -1803,12 +1911,12 @@ Would you like to add them?</source>
     <message>
         <location filename="../Form/DialogPreferences.ui" line="180"/>
         <source>Host:</source>
-        <translation type="unfinished"></translation>
+        <translation>Host:</translation>
     </message>
     <message>
         <location filename="../Form/DialogPreferences.ui" line="194"/>
         <source>Last.fm</source>
-        <translation type="unfinished"></translation>
+        <translation>Last.fm</translation>
     </message>
     <message>
         <location filename="../Form/DialogPreferences.ui" line="200"/>
@@ -1818,7 +1926,7 @@ Would you like to add them?</source>
     <message>
         <location filename="../Form/DialogPreferences.ui" line="212"/>
         <source>If this is not yet done, you must connect your account to the application. Use this button to open a navigator, and perform the connection:</source>
-        <translation type="unfinished"></translation>
+        <translation>If this is not yet done, you must connect your account to the application. Use this button to open a navigator, and perform the connection:</translation>
     </message>
     <message>
         <location filename="../Form/DialogPreferences.ui" line="222"/>
@@ -1838,7 +1946,7 @@ Would you like to add them?</source>
     <message>
         <location filename="../Form/DialogPreferences.ui" line="265"/>
         <source>Delay before notify that a new song has started:</source>
-        <translation type="unfinished"></translation>
+        <translation>Delay before notify that a new song has started:</translation>
     </message>
     <message>
         <location filename="../Form/DialogPreferences.ui" line="272"/>
@@ -1853,7 +1961,7 @@ Would you like to add them?</source>
     <message>
         <location filename="../Form/DialogPreferences.ui" line="295"/>
         <source>Metadata</source>
-        <translation type="unfinished"></translation>
+        <translation>Metadata</translation>
     </message>
     <message>
         <location filename="../Form/DialogPreferences.ui" line="301"/>
@@ -1878,7 +1986,7 @@ Would you like to add them?</source>
     <message>
         <location filename="../Form/DialogPreferences.ui" line="334"/>
         <source>Loading</source>
-        <translation type="unfinished"></translation>
+        <translation>Loading</translation>
     </message>
     <message>
         <location filename="../Form/DialogPreferences.ui" line="340"/>
@@ -1888,7 +1996,7 @@ Would you like to add them?</source>
     <message>
         <location filename="../Form/DialogPreferences.ui" line="343"/>
         <source>Automatically compute sorting fields.</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatically compute sorting fields.</translation>
     </message>
 </context>
 <context>
@@ -1896,17 +2004,17 @@ Would you like to add them?</source>
     <message>
         <location filename="../Form/DialogRemoveFolder.ui" line="9"/>
         <source>Remove folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Remove folder</translation>
     </message>
     <message>
         <location filename="../Form/DialogRemoveFolder.ui" line="18"/>
         <source>Are you sure you want to delete this folder?</source>
-        <translation type="unfinished"></translation>
+        <translation>Are you sure you want to delete this folder?</translation>
     </message>
     <message>
         <location filename="../Form/DialogRemoveFolder.ui" line="25"/>
         <source>Remove the content of the folder recursively.</source>
-        <translation type="unfinished"></translation>
+        <translation>Remove the content of the folder recursively.</translation>
     </message>
 </context>
 <context>
@@ -1954,32 +2062,32 @@ Would you like to add them?</source>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="20"/>
         <source>TMediaPlayer</source>
-        <translation type="unfinished"></translation>
+        <translation>TMediaPlayer</translation>
     </message>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="43"/>
         <source>&amp;File</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;File</translation>
     </message>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="47"/>
         <source>Import</source>
-        <translation type="unfinished"></translation>
+        <translation>Import</translation>
     </message>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="68"/>
         <source>&amp;Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Edit</translation>
     </message>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="77"/>
         <source>&amp;Controls</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Controls</translation>
     </message>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="92"/>
         <source>&amp;Help</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Help</translation>
     </message>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="104"/>
@@ -1999,17 +2107,17 @@ Would you like to add them?</source>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="131"/>
         <source>New playlist...</source>
-        <translation type="unfinished"></translation>
+        <translation>New playlist...</translation>
     </message>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="136"/>
         <source>New dynamic playlist...</source>
-        <translation type="unfinished"></translation>
+        <translation>New dynamic playlist...</translation>
     </message>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="141"/>
         <source>Informations...</source>
-        <translation type="unfinished"></translation>
+        <translation>Informations...</translation>
     </message>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="146"/>
@@ -2019,7 +2127,7 @@ Would you like to add them?</source>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="151"/>
         <source>Show in explorer</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Show in explorer</translation>
     </message>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="156"/>
@@ -2034,7 +2142,7 @@ Would you like to add them?</source>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="166"/>
         <source>Play</source>
-        <translation type="unfinished">Play</translation>
+        <translation>Play</translation>
     </message>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="169"/>
@@ -2044,7 +2152,7 @@ Would you like to add them?</source>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="174"/>
         <source>Pause</source>
-        <translation type="unfinished">Pause</translation>
+        <translation>Pause</translation>
     </message>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="179"/>
@@ -2089,17 +2197,17 @@ Would you like to add them?</source>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="229"/>
         <source>New folder...</source>
-        <translation type="unfinished"></translation>
+        <translation>New folder...</translation>
     </message>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="234"/>
         <source>From Songbird...</source>
-        <translation type="unfinished"></translation>
+        <translation>From Songbird...</translation>
     </message>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="239"/>
         <source>Equalizer...</source>
-        <translation type="unfinished"></translation>
+        <translation>Equalizer...</translation>
     </message>
 </context>
 <context>
@@ -2107,72 +2215,72 @@ Would you like to add them?</source>
     <message>
         <location filename="../Form/WidgetCriteria.ui" line="52"/>
         <source>Title</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Title</translation>
     </message>
     <message>
         <location filename="../Form/WidgetCriteria.ui" line="57"/>
         <source>Artist</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Artist</translation>
     </message>
     <message>
         <location filename="../Form/WidgetCriteria.ui" line="62"/>
         <source>Album</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Album</translation>
     </message>
     <message>
         <location filename="../Form/WidgetCriteria.ui" line="67"/>
         <source>Album artist</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Album artist</translation>
     </message>
     <message>
         <location filename="../Form/WidgetCriteria.ui" line="72"/>
         <source>Composer</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Composer</translation>
     </message>
     <message>
         <location filename="../Form/WidgetCriteria.ui" line="77"/>
         <source>Genre</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Genre</translation>
     </message>
     <message>
         <location filename="../Form/WidgetCriteria.ui" line="82"/>
         <source>Comments</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Comments</translation>
     </message>
     <message>
         <location filename="../Form/WidgetCriteria.ui" line="87"/>
         <source>Lyrics</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Lyrics</translation>
     </message>
     <message>
         <location filename="../Form/WidgetCriteria.ui" line="92"/>
         <source>File name</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">File name</translation>
     </message>
     <message>
         <location filename="../Form/WidgetCriteria.ui" line="97"/>
         <source>Year</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Year</translation>
     </message>
     <message>
         <location filename="../Form/WidgetCriteria.ui" line="102"/>
         <source>Track</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Track</translation>
     </message>
     <message>
         <location filename="../Form/WidgetCriteria.ui" line="107"/>
         <source>Disc</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Disc</translation>
     </message>
     <message>
         <location filename="../Form/WidgetCriteria.ui" line="112"/>
         <source>Bit rate</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bit rate</translation>
     </message>
     <message>
         <location filename="../Form/WidgetCriteria.ui" line="117"/>
         <source>Sample rate</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Sample rate</translation>
     </message>
     <message>
         <location filename="../Form/WidgetCriteria.ui" line="122"/>
@@ -2182,27 +2290,27 @@ Would you like to add them?</source>
     <message>
         <location filename="../Form/WidgetCriteria.ui" line="127"/>
         <source>Channels</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Channels</translation>
     </message>
     <message>
         <location filename="../Form/WidgetCriteria.ui" line="132"/>
         <source>Rating</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Rating</translation>
     </message>
     <message>
         <location filename="../Form/WidgetCriteria.ui" line="137"/>
         <source>File size</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">File size</translation>
     </message>
     <message>
         <location filename="../Form/WidgetCriteria.ui" line="142"/>
         <source>Duration</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Duration</translation>
     </message>
     <message>
         <location filename="../Form/WidgetCriteria.ui" line="147"/>
         <source>Last played</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Last played</translation>
     </message>
     <message>
         <location filename="../Form/WidgetCriteria.ui" line="152"/>
@@ -2217,7 +2325,7 @@ Would you like to add them?</source>
     <message>
         <location filename="../Form/WidgetCriteria.ui" line="162"/>
         <source>Language</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Language</translation>
     </message>
     <message>
         <location filename="../Form/WidgetCriteria.ui" line="167"/>
@@ -2227,7 +2335,7 @@ Would you like to add them?</source>
     <message>
         <location filename="../Form/WidgetCriteria.ui" line="172"/>
         <source>Format</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Format</translation>
     </message>
     <message>
         <location filename="../Form/WidgetCriteria.ui" line="201"/>
@@ -2349,37 +2457,37 @@ Would you like to add them?</source>
     <message>
         <location filename="../Form/WidgetMultiCriterion.ui" line="50"/>
         <source>Match </source>
-        <translation type="unfinished"></translation>
+        <translation>Match </translation>
     </message>
     <message>
         <location filename="../Form/WidgetMultiCriterion.ui" line="58"/>
         <source>one condition</source>
-        <translation type="unfinished"></translation>
+        <translation>one condition</translation>
     </message>
     <message>
         <location filename="../Form/WidgetMultiCriterion.ui" line="63"/>
         <source>all conditions</source>
-        <translation type="unfinished"></translation>
+        <translation>all conditions</translation>
     </message>
     <message>
         <location filename="../Form/WidgetMultiCriterion.ui" line="101"/>
         <source>Add a criteria</source>
-        <translation type="unfinished"></translation>
+        <translation>Add a criteria</translation>
     </message>
     <message>
         <location filename="../Form/WidgetMultiCriterion.ui" line="104"/>
         <source>+</source>
-        <translation type="unfinished"></translation>
+        <translation>+</translation>
     </message>
     <message>
         <location filename="../Form/WidgetMultiCriterion.ui" line="117"/>
         <source>Add a multi-criterion</source>
-        <translation type="unfinished"></translation>
+        <translation>Add a multi-criterion</translation>
     </message>
     <message>
         <location filename="../Form/WidgetMultiCriterion.ui" line="120"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation>...</translation>
     </message>
 </context>
 </TS>

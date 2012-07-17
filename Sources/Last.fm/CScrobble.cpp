@@ -69,12 +69,12 @@ CScrobble::CScrobble(CApplication * application, const QByteArray& sessionKey, C
     stream << "========================================\n";
     stream << "   Request 'Scrobble'\n";
     stream << "----------------------------------------\n";
-    stream << tr("Date:    ") << QDateTime::currentDateTime().toString() << "\n";
-    stream << tr("Title:   ") << "'" << song->getTitle() << "'\n";
-    stream << tr("Artist:  ") << "'" << song->getArtistName() << "'\n";
-    stream << tr("Album:   ") << "'" << song->getAlbumTitle() << "'\n";
-    stream << tr("URL:     ") << "'" << m_lastFmUrl << "'\n";
-    stream << tr("Content: ") << "'" << content << "'\n";
+    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString() << "\n";
+    stream << tr("Title:") << ' ' << "'" << song->getTitle() << "'\n";
+    stream << tr("Artist:") << ' ' << "'" << song->getArtistName() << "'\n";
+    stream << tr("Album:") << ' ' << "'" << song->getAlbumTitle() << "'\n";
+    stream << tr("URL:") << ' ' << "'" << m_lastFmUrl << "'\n";
+    stream << tr("Content:") << ' ' << "'" << content << "'\n";
 
     QUrl url(m_lastFmUrl);
     QNetworkRequest request(url);
@@ -99,9 +99,9 @@ void CScrobble::replyFinished(QNetworkReply * reply)
     stream << "========================================\n";
     stream << "   Reply 'Scrobble'\n";
     stream << "----------------------------------------\n";
-    stream << tr("Date:    ") << QDateTime::currentDateTime().toString() << "\n";
-    stream << tr("Code:    ") << reply->error() << "\n";
-    stream << tr("Content: ") << "'" << reply->readAll() << "'\n";
+    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString() << "\n";
+    stream << tr("Code:") << ' ' << reply->error() << "\n";
+    stream << tr("Content:") << ' ' << "'" << reply->readAll() << "'\n";
 
     if (reply->error() != QNetworkReply::NoError)
     {

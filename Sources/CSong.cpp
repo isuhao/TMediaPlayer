@@ -72,7 +72,11 @@ CSong::TSongInfos::TSongInfos(void) :
     language        (LangUnknown),
     lyricist        (""),
     compilation     (false),
-    skipShuffle     (false)
+    skipShuffle     (false),
+    trackGain       (0.0f),
+    trackPeak       (1.0f),
+    albumGain       (0.0f),
+    albumPeak       (1.0f)
 {
 
 }
@@ -180,42 +184,46 @@ void CSong::loadFromDatabase(void)
 
     QSqlQuery query(m_application->getDataBase());
 
-    query.prepare("SELECT"
-                      " song_filename,"
-                      " song_filesize,"
-                      " song_bitrate,"
-                      " song_sample_rate,"
-                      " song_format,"
-                      " song_channels, "
-                      " song_duration,"
-                      " song_creation,"
-                      " song_modification,"
-                      " song_enabled,"
-                      " song_title,"
-                      " song_title_sort,"
-                      " song_artist.artist_name,"
-                      " song_artist.artist_name_sort,"
-                      " album_title,"
-                      " album_title_sort,"
-                      " album_subtitle,"
-                      " album_grouping,"
-                      " album_artist.artist_name,"
-                      " album_artist.artist_name_sort,"
-                      " song_composer,"
-                      " song_composer_sort,"
-                      " song_year,"
-                      " song_track_number,"
-                      " song_track_count,"
-                      " song_disc_number,"
-                      " song_disc_count,"
-                      " genre_name,"
-                      " song_rating,"
-                      " song_comments,"
-                      " song_lyrics,"
-                      " song_language,"
-                      " song_lyricist,"
-                      " song_compilation,"
-                      " song_skip_shuffle"
+    query.prepare("SELECT "
+                      "song_filename,"
+                      "song_filesize,"
+                      "song_bitrate,"
+                      "song_sample_rate,"
+                      "song_format,"
+                      "song_channels, "
+                      "song_duration,"
+                      "song_creation,"
+                      "song_modification,"
+                      "song_enabled,"
+                      "song_title,"
+                      "song_title_sort,"
+                      "song_artist.artist_name,"
+                      "song_artist.artist_name_sort,"
+                      "album_title,"
+                      "album_title_sort,"
+                      "album_subtitle,"
+                      "album_grouping,"
+                      "album_artist.artist_name,"
+                      "album_artist.artist_name_sort,"
+                      "song_composer,"
+                      "song_composer_sort,"
+                      "song_year,"
+                      "song_track_number,"
+                      "song_track_count,"
+                      "song_disc_number,"
+                      "song_disc_count,"
+                      "genre_name,"
+                      "song_rating,"
+                      "song_comments,"
+                      "song_lyrics,"
+                      "song_language,"
+                      "song_lyricist,"
+                      "song_compilation,"
+                      "song_skip_shuffle" //"song_skip_shuffle,"
+                      //"song_track_gain,"
+                      //"song_track_peak,"
+                      //"song_album_gain,"
+                      //"song_album_peak"
                   " FROM song"
                   " NATURAL JOIN artist AS song_artist"
                   " NATURAL JOIN album"
@@ -275,6 +283,12 @@ void CSong::loadFromDatabase(void)
     m_infos.lyricist        = query.value(numValue++).toString();
     m_infos.compilation     = query.value(numValue++).toBool();
     m_infos.skipShuffle     = query.value(numValue++).toBool();
+
+    // Replay Gain
+    //m_infos.trackGain       = query.value(numValue++).toFloat();
+    //m_infos.trackPeak       = query.value(numValue++).toFloat();
+    //m_infos.albumGain       = query.value(numValue++).toFloat();
+    //m_infos.albumPeak       = query.value(numValue++).toFloat();
 
     // Lectures
     query.prepare("SELECT play_time, play_time_utc FROM play WHERE song_id = ? ORDER BY play_time_utc DESC");
@@ -1913,10 +1927,10 @@ bool CSong::loadTags(TagLib::ID3v1::Tag * tags, TSongInfos& infos, QFile * logFi
     // Log
     QTextStream stream(logFile);
     stream << "========================================\n";
-    stream << "   Chargement des tags ID3v1\n";
+    stream << "   " << tr("Chargement des tags ID3v1") << '\n';
     stream << "----------------------------------------\n";
-    stream << " Fichier : " << fileName << '\n';
-    stream << " Date    : " << QDateTime::currentDateTime().toString() << '\n';
+    stream << tr("File:") << ' ' << fileName << '\n';
+    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString("dd/MM/yyyy HH:mm:ss") << '\n';
 
     TagLib::String str;
 
@@ -1975,10 +1989,10 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
     // Log
     QTextStream stream(logFile);
     stream << "========================================\n";
-    stream << "   Chargement des tags ID3v2\n";
+    stream << "   " << tr("Chargement des tags ID3v2") << '\n';
     stream << "----------------------------------------\n";
-    stream << " Fichier : " << fileName << '\n';
-    stream << " Date    : " << QDateTime::currentDateTime().toString() << '\n';
+    stream << tr("File:") << ' ' << fileName << '\n';
+    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString("dd/MM/yyyy HH:mm:ss") << '\n';
     stream << "----------------------------------------\n";
 
     TagLib::ID3v2::FrameListMap tagMap = tags->frameListMap();
@@ -2011,7 +2025,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
     if (!tagList.isEmpty())
     {
         if (tagList.size() > 1)
-            stream << "Erreur : plusieurs tags TIT2\n";
+            stream << "Erreur : plusieurs tags TIT2" << '\n';
         infos.title = QString::fromUtf8(tagList.front()->toString().toCString(true));
     }
 
@@ -2020,7 +2034,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
     if (!tagList.isEmpty())
     {
         if (tagList.size() > 1)
-            stream << "Erreur : plusieurs tags TIT3\n";
+            stream << "Erreur : plusieurs tags TIT3" << '\n';
         infos.subTitle = QString::fromUtf8(tagList.front()->toString().toCString(true));
     }
 
@@ -2029,7 +2043,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
     if (!tagList.isEmpty())
     {
         if (tagList.size() > 1)
-            stream << "Erreur : plusieurs tags TPE1\n";
+            stream << "Erreur : plusieurs tags TPE1" << '\n';
         infos.artistName = QString::fromUtf8(tagList.front()->toString().toCString(true));
     }
 
@@ -2038,7 +2052,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
     if (!tagList.isEmpty())
     {
         if (tagList.size() > 1)
-            stream << "Erreur : plusieurs tags TALB\n";
+            stream << "Erreur : plusieurs tags TALB" << '\n';
         infos.albumTitle = QString::fromUtf8(tagList.front()->toString().toCString(true));
     }
 
@@ -2047,7 +2061,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
     if (!tagList.isEmpty())
     {
         if (tagList.size() > 1)
-            stream << "Erreur : plusieurs tags TPE2\n";
+            stream << "Erreur : plusieurs tags TPE2" << '\n';
         infos.albumArtist = QString::fromUtf8(tagList.front()->toString().toCString(true));
     }
 
@@ -2056,7 +2070,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
     if (!tagList.isEmpty())
     {
         if (tagList.size() > 1)
-            stream << "Erreur : plusieurs tags TCOM\n";
+            stream << "Erreur : plusieurs tags TCOM" << '\n';
         infos.composer = QString::fromUtf8(tagList.front()->toString().toCString(true));
     }
 
@@ -2065,7 +2079,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
     if (!tagList.isEmpty())
     {
         if (tagList.size() > 1)
-            stream << "Erreur : plusieurs tags TSOT\n";
+            stream << "Erreur : plusieurs tags TSOT" << '\n';
         infos.titleSort = QString::fromUtf8(tagList.front()->toString().toCString(true));
     }
 
@@ -2074,7 +2088,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
     if (!tagList.isEmpty())
     {
         if (tagList.size() > 1)
-            stream << "Erreur : plusieurs tags TSOP\n";
+            stream << "Erreur : plusieurs tags TSOP" << '\n';
         infos.artistNameSort = QString::fromUtf8(tagList.front()->toString().toCString(true));
     }
 
@@ -2083,7 +2097,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
     if (!tagList.isEmpty())
     {
         if (tagList.size() > 1)
-            stream << "Erreur : plusieurs tags TSOA\n";
+            stream << "Erreur : plusieurs tags TSOA" << '\n';
         infos.albumTitleSort = QString::fromUtf8(tagList.front()->toString().toCString(true));
     }
 
@@ -2092,7 +2106,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
     if (!tagList.isEmpty())
     {
         if (tagList.size() > 1)
-            stream << "Erreur : plusieurs tags TSO2\n";
+            stream << "Erreur : plusieurs tags TSO2" << '\n';
         infos.albumArtistSort = QString::fromUtf8(tagList.front()->toString().toCString(true));
     }
 
@@ -2101,7 +2115,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
     if (!tagList.isEmpty())
     {
         if (tagList.size() > 1)
-            stream << "Erreur : plusieurs tags TDRC\n";
+            stream << "Erreur : plusieurs tags TDRC" << '\n';
         TagLib::String str = tagList.front()->toString();
 
         if (!str.isNull() && str.size() >= 4)
@@ -2110,7 +2124,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
             infos.year = str.substr(0, 4).toInt(&ok);
             if (!ok)
             {
-                stream << "Erreur : tag TDRC invalide\n";
+                stream << "Erreur : tag TDRC invalide" << '\n';
                 infos.year = 0;
             }
         }
@@ -2121,7 +2135,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
     if (!tagList.isEmpty())
     {
         if (tagList.size() > 1)
-            stream << "Erreur : plusieurs tags TIT1\n";
+            stream << "Erreur : plusieurs tags TIT1" << '\n';
         infos.grouping = QString::fromUtf8(tagList.front()->toString().toCString(true));
     }
 
@@ -2130,7 +2144,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
     if (!tagList.isEmpty())
     {
         if (tagList.size() > 1)
-            stream << "Erreur : plusieurs tags TRCK\n";
+            stream << "Erreur : plusieurs tags TRCK" << '\n';
 
         QString str = QString::fromUtf8(tagList.front()->toString().toCString(true));
 
@@ -2143,14 +2157,14 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
                 bool ok;
                 infos.trackNumber = strSplit[0].toInt(&ok);
                 if (!ok)
-                    stream << "Erreur : tag TRCK invalide\n";
+                    stream << "Erreur : tag TRCK invalide" << '\n';
                 infos.trackCount = strSplit[1].toInt(&ok);
                 if (!ok)
-                    stream << "Erreur : tag TRCK invalide\n";
+                    stream << "Erreur : tag TRCK invalide" << '\n';
             }
             else
             {
-                stream << "Erreur : tag TRCK invalide\n";
+                stream << "Erreur : tag TRCK invalide" << '\n';
             }
         }
         else
@@ -2158,7 +2172,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
             bool ok;
             infos.trackNumber = str.toInt(&ok);
             if (!ok)
-                stream << "Erreur : tag TRCK invalide\n";
+                stream << "Erreur : tag TRCK invalide" << '\n';
         }
     }
 
@@ -2167,7 +2181,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
     if (!tagList.isEmpty())
     {
         if (tagList.size() > 1)
-            stream << "Erreur : plusieurs tags TPOS\n";
+            stream << "Erreur : plusieurs tags TPOS" << '\n';
         QString str = QString::fromUtf8(tagList.front()->toString().toCString(true));
 
         if (str.contains('/'))
@@ -2179,14 +2193,14 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
                 bool ok;
                 infos.discNumber = strSplit[0].toInt(&ok);
                 if (!ok)
-                    stream << "Erreur : tag TPOS invalide\n";
+                    stream << "Erreur : tag TPOS invalide" << '\n';
                 infos.discCount = strSplit[1].toInt(&ok);
                 if (!ok)
-                    stream << "Erreur : tag TPOS invalide\n";
+                    stream << "Erreur : tag TPOS invalide" << '\n';
             }
             else
             {
-                stream << "Erreur : tag TPOS invalide\n";
+                stream << "Erreur : tag TPOS invalide" << '\n';
             }
         }
         else
@@ -2194,7 +2208,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
             bool ok;
             infos.discNumber = str.toInt(&ok);
             if (!ok)
-                stream << "Erreur : tag TPOS invalide\n";
+                stream << "Erreur : tag TPOS invalide" << '\n';
         }
     }
 
@@ -2210,7 +2224,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
     if (!tagList.isEmpty())
     {
         if (tagList.size() > 1)
-            stream << "Erreur : plusieurs tags COMM\n";
+            stream << "Erreur : plusieurs tags COMM" << '\n';
 
         TagLib::ID3v2::CommentsFrame * frame = dynamic_cast<TagLib::ID3v2::CommentsFrame *>(tagList.front());
 
@@ -2225,13 +2239,13 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
     if (!tagList.isEmpty())
     {
         if (tagList.size() > 1)
-            stream << "Erreur : plusieurs tags TBPM\n";
+            stream << "Erreur : plusieurs tags TBPM" << '\n';
         QString str = QString::fromUtf8(tagList.front()->toString().toCString(true));
 
         bool ok;
         infos.bpm = str.toInt(&ok);
         if (!ok)
-            stream << "Erreur : tag TBPM invalide\n";
+            stream << "Erreur : tag TBPM invalide" << '\n';
     }
 
     // Paroles
@@ -2239,7 +2253,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
     if (!tagList.isEmpty())
     {
         if (tagList.size() > 1)
-            stream << "Erreur : plusieurs tags USLT\n";
+            stream << "Erreur : plusieurs tags USLT" << '\n';
 
         TagLib::ID3v2::UnsynchronizedLyricsFrame * frame = dynamic_cast<TagLib::ID3v2::UnsynchronizedLyricsFrame *>(tagList.front());
 
@@ -2250,7 +2264,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
 
             if (lng.size() != 3)
             {
-                stream << "Erreur : langue du tag USLT invalide\n";
+                stream << "Erreur : langue du tag USLT invalide" << '\n';
             }
             else
             {
@@ -2264,13 +2278,13 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
     if (!tagList.isEmpty())
     {
         if (tagList.size() > 1)
-            stream << "Erreur : plusieurs tags TLAN\n";
+            stream << "Erreur : plusieurs tags TLAN" << '\n';
 
         QString str = QString::fromUtf8(tagList.front()->toString().toCString(false));
 
         if (str.size() != 3)
         {
-            stream << "Erreur : tag TLAN invalide\n";
+            stream << "Erreur : tag TLAN invalide" << '\n';
         }
         else
         {
@@ -2278,7 +2292,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
 
             if (infos.language != LangUnknown && lng != infos.language)
             {
-                stream << "Erreur : la langue des paroles et différente de la langue du morceau\n";
+                stream << "Erreur : la langue des paroles et différente de la langue du morceau" << '\n';
             }
 
             infos.language = lng;
@@ -2290,10 +2304,89 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFi
     if (!tagList.isEmpty())
     {
         if (tagList.size() > 1)
-            stream << "Erreur : plusieurs tags TEXT";
+            stream << "Erreur : plusieurs tags TEXT" << '\n';
         infos.lyricist = QString::fromUtf8(tagList.front()->toString().toCString(true));
     }
 
+    // Replay Gain
+    tagList = tags->frameList("TXXX");
+
+    if (!tagList.isEmpty())
+    {
+        for (TagLib::ID3v2::FrameList::ConstIterator it = tagList.begin(); it != tagList.end(); ++it)
+        {
+            TagLib::ID3v2::UserTextIdentificationFrame * frame = dynamic_cast<TagLib::ID3v2::UserTextIdentificationFrame *>(*it);
+
+            if (!frame)
+            {
+                stream << "Erreur : tag TXXX incorrect" << '\n';
+                continue;
+            }
+
+            TagLib::StringList fl = frame->fieldList();
+
+            if (fl.size() != 2)
+            {
+                stream << "Erreur : tag TXXX avec plusieurs champs" << '\n';
+                continue;
+            }
+
+            QString val = QString::fromUtf8(fl[1].toCString(true));
+            QString frameName = QString::fromUtf8(frame->description().toCString(true));
+
+            if (frameName.compare("REPLAYGAIN_TRACK_GAIN", Qt::CaseInsensitive) == 0)
+            {
+                if (val.endsWith("dB", Qt::CaseInsensitive))
+                {
+                    val.chop(2);
+                    bool ok;
+                    infos.trackGain = val.toFloat(&ok);
+                    if (!ok)
+                        stream << "Erreur : tag TXXX [REPLAYGAIN_TRACK_GAIN] incorrect" << '\n';
+                }
+                else
+                {
+                    stream << "Erreur : tag TXXX [REPLAYGAIN_TRACK_GAIN] incorrect" << '\n';
+                }
+            }
+            else if (frameName.compare("REPLAYGAIN_TRACK_PEAK", Qt::CaseInsensitive) == 0)
+            {
+                bool ok;
+                infos.trackPeak = val.toFloat(&ok);
+                if (!ok)
+                    stream << "Erreur : tag TXXX [REPLAYGAIN_TRACK_PEAK] incorrect" << '\n';
+            }
+            else if (frameName.compare("REPLAYGAIN_ALBUM_GAIN", Qt::CaseInsensitive) == 0)
+            {
+                if (val.endsWith("dB", Qt::CaseInsensitive))
+                {
+                    val.chop(2);
+                    bool ok;
+                    infos.albumGain = val.toFloat(&ok);
+                    if (!ok)
+                        stream << "Erreur : tag TXXX [REPLAYGAIN_ALBUM_GAIN] incorrect" << '\n';
+                }
+                else
+                {
+                    stream << "Erreur : tag TXXX [REPLAYGAIN_ALBUM_GAIN] incorrect" << '\n';
+                }
+            }
+            else if (frameName.compare("REPLAYGAIN_ALBUM_PEAK", Qt::CaseInsensitive) == 0)
+            {
+                bool ok;
+                infos.albumPeak = val.toFloat(&ok);
+                if (!ok)
+                    stream << "Erreur : tag TXXX [REPLAYGAIN_ALBUM_PEAK] incorrect" << '\n';
+            }
+        }
+    }
+
+/*
+Track replay gain 	    REPLAYGAIN_TRACK_GAIN 	[-]a.bb dB
+Peak track amplitude 	REPLAYGAIN_TRACK_PEAK 	c.dddddd
+Album replay gain 	    REPLAYGAIN_ALBUM_GAIN 	[-]a.bb dB
+Peak album amplitude 	REPLAYGAIN_ALBUM_PEAK 	c.dddddd 
+*/
     return true;
 }
 
@@ -2320,10 +2413,10 @@ bool CSong::loadTags(TagLib::APE::Tag * tags, TSongInfos& infos, QFile * logFile
     // Log
     QTextStream stream(logFile);
     stream << "========================================\n";
-    stream << "   Chargement des tags APE\n";
+    stream << "   " << tr("Chargement des tags APE") << '\n';
     stream << "----------------------------------------\n";
-    stream << " Fichier : " << fileName << '\n';
-    stream << " Date    : " << QDateTime::currentDateTime().toString() << '\n';
+    stream << tr("File:") << ' ' << fileName << '\n';
+    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString("dd/MM/yyyy HH:mm:ss") << '\n';
     stream << "----------------------------------------\n";
 
     for (TagLib::APE::ItemListMap::ConstIterator it = tagMap.begin(); it != tagMap.end(); ++it)
@@ -2414,14 +2507,14 @@ bool CSong::loadTags(TagLib::APE::Tag * tags, TSongInfos& infos, QFile * logFile
                 bool ok;
                 infos.trackNumber = strSplit[0].toInt(&ok);
                 if (!ok)
-                    stream << "Erreur : tag TRACK invalide\n";
+                    stream << tr("Error: invalid tag '%1'").arg("TRACK") << '\n';
                 infos.trackCount = strSplit[1].toInt(&ok);
                 if (!ok)
-                    stream << "Erreur : tag TRACK invalide\n";
+                    stream << tr("Error: invalid tag '%1'").arg("TRACK") << '\n';
             }
             else
             {
-                stream << "Erreur : tag TRACK invalide";
+                stream << tr("Error: invalid tag '%1'").arg("TRACK") << '\n';
             }
         }
         else
@@ -2429,7 +2522,7 @@ bool CSong::loadTags(TagLib::APE::Tag * tags, TSongInfos& infos, QFile * logFile
             bool ok;
             infos.trackNumber = str.toInt(&ok);
             if (!ok)
-                stream << "Erreur : tag TRACK invalide\n";
+                stream << tr("Error: invalid tag '%1'").arg("TRACK") << '\n';
         }
     }
 
@@ -2447,14 +2540,14 @@ bool CSong::loadTags(TagLib::APE::Tag * tags, TSongInfos& infos, QFile * logFile
                 bool ok;
                 infos.discNumber = strSplit[0].toInt(&ok);
                 if (!ok)
-                    stream << "Erreur : tag MEDIA invalide\n";
+                    stream << tr("Error: invalid tag '%1'").arg("MEDIA") << '\n';
                 infos.discCount = strSplit[1].toInt(&ok);
                 if (!ok)
-                    stream << "Erreur : tag MEDIA invalide\n";
+                    stream << tr("Error: invalid tag '%1'").arg("MEDIA") << '\n';
             }
             else
             {
-                stream << "Erreur : tag MEDIA invalide\n";
+                stream << tr("Error: invalid tag '%1'").arg("MEDIA") << '\n';
             }
         }
         else
@@ -2462,14 +2555,14 @@ bool CSong::loadTags(TagLib::APE::Tag * tags, TSongInfos& infos, QFile * logFile
             bool ok;
             infos.discNumber = str.toInt(&ok);
             if (!ok)
-                stream << "Erreur : tag MEDIA invalide\n";
+                stream << tr("Error: invalid tag '%1'").arg("MEDIA") << '\n';
         }
     }
 
     // Langue
     if (!tagMap["LANGUAGE"].isEmpty())
     {
-        stream << "Erreur : tag LANGUAGE non géré";
+        stream << "Erreur : tag LANGUAGE non géré" << '\n';
         qDebug() << "CSong::loadTags() : APE : langue = " << QString::fromUtf8(tagMap["LANGUAGE"].toString().toCString(true));
         //infos.language = QString::fromUtf8(tagMap["LANGUAGE"].toString().toCString(true));
     }
@@ -2502,8 +2595,8 @@ bool CSong::loadTags(TagLib::Ogg::XiphComment * tags, TSongInfos& infos, QFile *
     stream << "========================================\n";
     stream << "   Chargement des tags XiphComment\n";
     stream << "----------------------------------------\n";
-    stream << " Fichier : " << fileName << '\n';
-    stream << " Date    : " << QDateTime::currentDateTime().toString() << '\n';
+    stream << tr("File:") << ' ' << fileName << '\n';
+    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString("dd/MM/yyyy HH:mm:ss") << '\n';
     stream << "----------------------------------------\n";
 
     for (TagLib::Ogg::FieldListMap::ConstIterator it = tagMap.begin(); it != tagMap.end(); ++it)
@@ -2589,7 +2682,7 @@ bool CSong::loadTags(TagLib::Ogg::XiphComment * tags, TSongInfos& infos, QFile *
 
         if (!ok || infos.trackNumber <= 0)
         {
-            stream << "Erreur : tag TRACKNUMBER invalide\n";
+            stream << tr("Error: invalid tag '%1'").arg("TRACKNUMBER") << '\n';
             infos.trackNumber = 0;
         }
     }
@@ -2603,7 +2696,7 @@ bool CSong::loadTags(TagLib::Ogg::XiphComment * tags, TSongInfos& infos, QFile *
 
         if (!ok || infos.trackCount <= 0)
         {
-            stream << "Erreur : tag TRACKTOTAL invalide\n";
+            stream << tr("Error: invalid tag '%1'").arg("TRACKTOTAL") << '\n';
             infos.trackCount = 0;
         }
     }
@@ -2621,7 +2714,7 @@ bool CSong::loadTags(TagLib::Ogg::XiphComment * tags, TSongInfos& infos, QFile *
 
         if (!ok || infos.trackCount <= 0)
         {
-            stream << "Erreur : tag TOTALTRACKS invalide\n";
+            stream << tr("Error: invalid tag '%1'").arg("TOTALTRACKS") << '\n';
             infos.trackCount = 0;
         }
     }
@@ -2635,7 +2728,7 @@ bool CSong::loadTags(TagLib::Ogg::XiphComment * tags, TSongInfos& infos, QFile *
 
         if (!ok || infos.bpm <= 0)
         {
-            stream << "Erreur : tag TEMPO invalide\n";
+            stream << tr("Error: invalid tag '%1'").arg("TEMPO") << '\n';
             infos.bpm = 0;
         }
     }
@@ -2653,7 +2746,7 @@ bool CSong::loadTags(TagLib::Ogg::XiphComment * tags, TSongInfos& infos, QFile *
 
         if (!ok || infos.bpm <= 0)
         {
-            stream << "Erreur : tag BPM invalide\n";
+            stream << tr("Error: invalid tag '%1'").arg("BPM") << '\n';
             infos.bpm = 0;
         }
     }
@@ -2735,8 +2828,8 @@ bool CSong::writeTags(TagLib::ID3v1::Tag * tags, const TSongInfos& infos, QFile 
     stream << "========================================\n";
     stream << "   Enregistrement des tags ID3v1\n";
     stream << "----------------------------------------\n";
-    stream << " Fichier : " << fileName << '\n';
-    stream << " Date    : " << QDateTime::currentDateTime().toString() << '\n';
+    stream << tr("File:") << ' ' << fileName << '\n';
+    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString("dd/MM/yyyy HH:mm:ss") << '\n';
 
     tags->setTitle(infos.title.toUtf8().constData());
     tags->setArtist(infos.artistName.toUtf8().constData());
@@ -2768,10 +2861,10 @@ bool CSong::writeTags(TagLib::ID3v2::Tag * tags, const TSongInfos& infos, QFile 
     // Log
     QTextStream stream(logFile);
     stream << "========================================\n";
-    stream << "   Enregistrement des tags ID3v2\n";
+    stream << "   " << tr("Enregistrement des tags ID3v2") << '\n';
     stream << "----------------------------------------\n";
-    stream << " Fichier : " << fileName << '\n';
-    stream << " Date    : " << QDateTime::currentDateTime().toString() << '\n';
+    stream << tr("File:") << ' ' << fileName << '\n';
+    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString("dd/MM/yyyy HH:mm:ss") << '\n';
     stream << "----------------------------------------\n";
 
     // Titre
@@ -2983,8 +3076,8 @@ bool CSong::writeTags(TagLib::APE::Tag * tags, const TSongInfos& infos, QFile * 
     stream << "========================================\n";
     stream << "   Enregistrement des tags APE\n";
     stream << "----------------------------------------\n";
-    stream << " Fichier : " << fileName << '\n';
-    stream << " Date    : " << QDateTime::currentDateTime().toString() << '\n';
+    stream << tr("File:") << ' ' << fileName << '\n';
+    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString("dd/MM/yyyy HH:mm:ss") << '\n';
     stream << "----------------------------------------\n";
 
     // Titre
@@ -2994,7 +3087,7 @@ bool CSong::writeTags(TagLib::APE::Tag * tags, const TSongInfos& infos, QFile * 
     tags->addValue("SUBTITLE", infos.subTitle.toUtf8().constData());
 
     // Regroupement
-    stream << "Aucun tag pour enregistrer le regroupement\n";
+    stream << "Aucun tag pour enregistrer le regroupement" << '\n';
 
     // Artiste
     tags->addValue("ARTIST", infos.artistName.toUtf8().constData());
@@ -3003,25 +3096,25 @@ bool CSong::writeTags(TagLib::APE::Tag * tags, const TSongInfos& infos, QFile * 
     tags->addValue("ALBUM", infos.albumTitle.toUtf8().constData());
 
     // Artiste de l'album
-    stream << "Aucun tag pour enregistrer l'artiste de l'album\n";
+    stream << "Aucun tag pour enregistrer l'artiste de l'album" << '\n';
 
     // Compositeur
     tags->addValue("COMPOSER", infos.composer.toUtf8().constData());
 
     // Titre pour le tri
-    stream << "Aucun tag pour enregistrer le titre pour le tri\n";
+    stream << "Aucun tag pour enregistrer le titre pour le tri" << '\n';
 
     // Artiste pour le tri
-    stream << "Aucun tag pour enregistrer l'artiste pour le tri\n";
+    stream << "Aucun tag pour enregistrer l'artiste pour le tri" << '\n';
 
     // Album pour le tri
-    stream << "Aucun tag pour enregistrer l'album pour le tri\n";
+    stream << "Aucun tag pour enregistrer l'album pour le tri" << '\n';
 
     // Artiste de l'album pour le tri
-    stream << "Aucun tag pour enregistrer l'artiste pour le tri\n";
+    stream << "Aucun tag pour enregistrer l'artiste pour le tri" << '\n';
 
     // Compositeur pour le tri
-    stream << "Aucun tag pour enregistrer le compositeur pour le tri\n";
+    stream << "Aucun tag pour enregistrer le compositeur pour le tri" << '\n';
 
     // Année
     if (infos.year > 0)
@@ -3074,16 +3167,16 @@ bool CSong::writeTags(TagLib::APE::Tag * tags, const TSongInfos& infos, QFile * 
     tags->addValue("COMMENT", infos.comments.toUtf8().constData());
 
     // BPM
-    stream << "Aucun tag pour enregistrer le nombre de battements par minute\n";
+    stream << "Aucun tag pour enregistrer le nombre de battements par minute" << '\n';
 
     // Paroles
-    stream << "Aucun tag pour enregistrer les paroles\n";
+    stream << "Aucun tag pour enregistrer les paroles" << '\n';
 
     // Langue
     tags->addValue("LANGUAGE", CSong::getISO3CodeForLanguage(infos.language).toUtf8().constData());
 
     // Parolier
-    stream << "Aucun tag pour enregistrer le parolier\n";
+    stream << "Aucun tag pour enregistrer le parolier" << '\n';
 
     return true;
 }
@@ -3109,18 +3202,18 @@ bool CSong::writeTags(TagLib::Ogg::XiphComment * tags, const TSongInfos& infos, 
     stream << "========================================\n";
     stream << "   Enregistrement des tags Xiph Comment\n";
     stream << "----------------------------------------\n";
-    stream << " Fichier : " << fileName << '\n';
-    stream << " Date    : " << QDateTime::currentDateTime().toString() << '\n';
+    stream << tr("File:") << ' ' << fileName << '\n';
+    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString("dd/MM/yyyy HH:mm:ss") << '\n';
     stream << "----------------------------------------\n";
 
     // Titre
     tags->addField("TITLE", infos.title.toUtf8().constData());
 
     // Sous-titre
-    stream << "Aucun tag pour enregistrer le sous-titre\n";
+    stream << "Aucun tag pour enregistrer le sous-titre" << '\n';
 
     // Regroupement
-    stream << "Aucun tag pour enregistrer le regroupement\n";
+    stream << "Aucun tag pour enregistrer le regroupement" << '\n';
 
     // Artiste
     tags->addField("ARTIST", infos.artistName.toUtf8().constData());
@@ -3135,19 +3228,19 @@ bool CSong::writeTags(TagLib::Ogg::XiphComment * tags, const TSongInfos& infos, 
     tags->addField("COMPOSER", infos.composer.toUtf8().constData());
 
     // Titre pour le tri
-    stream << "Aucun tag pour enregistrer le titre pour le tri\n";
+    stream << "Aucun tag pour enregistrer le titre pour le tri" << '\n';
 
     // Artiste pour le tri
     tags->addField("ARTISTSORT", infos.artistNameSort.toUtf8().constData());
 
     // Album pour le tri
-    stream << "Aucun tag pour enregistrer l'album pour le tri\n";
+    stream << "Aucun tag pour enregistrer l'album pour le tri" << '\n';
 
     // Artiste de l'album pour le tri
-    stream << "Aucun tag pour enregistrer l'artiste pour le tri\n";
+    stream << "Aucun tag pour enregistrer l'artiste pour le tri" << '\n';
 
     // Compositeur pour le tri
-    stream << "Aucun tag pour enregistrer le compositeur pour le tri\n";
+    stream << "Aucun tag pour enregistrer le compositeur pour le tri" << '\n';
 
     // Année
     if (infos.year > 0)
@@ -3219,10 +3312,10 @@ bool CSong::writeTags(TagLib::Ogg::XiphComment * tags, const TSongInfos& infos, 
     tags->addField("LYRICS", infos.lyrics.toUtf8().constData());
 
     // Langue
-    stream << "Aucun tag pour enregistrer la langue\n";
+    stream << "Aucun tag pour enregistrer la langue" << '\n';
 
     // Parolier
-    stream << "Aucun tag pour enregistrer le parolier\n";
+    stream << "Aucun tag pour enregistrer le parolier" << '\n';
 
     return true;
 }

@@ -1213,7 +1213,7 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
         
         if (!severalSongs)
         {
-            menu->addAction(tr("Edit metadata"), m_application, SLOT(openDialogEditMetadata()));
+            menu->addAction(tr("Edit metadata..."), m_application, SLOT(openDialogEditMetadata()));
             menu->addAction(tr("Show in explorer"), m_application, SLOT(openSongInExplorer()));
 
             if (m_selectedItem->getSong()->getFileStatus() == false)

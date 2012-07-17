@@ -44,8 +44,8 @@ CAuthentication::CAuthentication(CApplication * application) :
     stream << "========================================\n";
     stream << "   Request 'Get Token'\n";
     stream << "----------------------------------------\n";
-    stream << tr("Date: ") << QDateTime::currentDateTime().toString() << "\n";
-    stream << tr("URL:  ") << "'" << url << "'\n";
+    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString() << '\n';
+    stream << tr("URL:") << ' ' << "'" << url << "'\n";
 
     m_networkManager->get(QNetworkRequest(QUrl(url)));
 }
@@ -63,9 +63,9 @@ void CAuthentication::replyFinished(QNetworkReply * reply)
     stream << "========================================\n";
     stream << "   Reply 'Get Token'\n";
     stream << "----------------------------------------\n";
-    stream << tr("Date:    ") << QDateTime::currentDateTime().toString() << "\n";
-    stream << tr("Code:    ") << reply->error() << "\n";
-    stream << tr("Content: ") << "'" << data << "'\n";
+    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString() << '\n';
+    stream << tr("Code:") << ' ' << reply->error() << '\n';
+    stream << tr("Content:") << ' ' << "'" << data << "'\n";
 
     Q_CHECK_PTR(reply);
 
@@ -146,8 +146,8 @@ void CAuthentication::getLastFmSession(void)
     stream << "========================================\n";
     stream << "   Request 'Get Session key'\n";
     stream << "----------------------------------------\n";
-    stream << tr("Date: ") << QDateTime::currentDateTime().toString() << "\n";
-    stream << tr("URL:  ") << "'" << url << "'\n";
+    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString() << '\n';
+    stream << tr("URL:") << ' ' << "'" << url << "'\n";
 
     manager->get(QNetworkRequest(QUrl(url)));
 
@@ -175,9 +175,9 @@ void CAuthentication::replyLastFmFinished(QNetworkReply * reply)
     stream << "========================================\n";
     stream << "   Reply 'Get Session key'\n";
     stream << "----------------------------------------\n";
-    stream << tr("Date:    ") << QDateTime::currentDateTime().toString() << "\n";
-    stream << tr("Code:    ") << reply->error() << "\n";
-    stream << tr("Content: ") << data << "\n";
+    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString() << "\n";
+    stream << tr("Code:") << ' ' << reply->error() << "\n";
+    stream << tr("Content:") << ' ' << data << "\n";
 
     if (reply->error() != QNetworkReply::NoError)
     {

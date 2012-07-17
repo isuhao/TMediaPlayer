@@ -63,13 +63,13 @@ Erreur : %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3282"/>
+        <location filename="../Sources/CApplication.cpp" line="3496"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3290"/>
-        <location filename="../Sources/CApplication.cpp" line="3298"/>
+        <location filename="../Sources/CApplication.cpp" line="3504"/>
+        <location filename="../Sources/CApplication.cpp" line="3512"/>
         <source>Play</source>
         <translation>Lecture</translation>
     </message>
@@ -117,8 +117,24 @@ Erreur : %4</translation>
 <context>
     <name>CAuthentication</name>
     <message>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="47"/>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="66"/>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="149"/>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="178"/>
         <source>Date:</source>
-        <translation type="obsolete">Date : </translation>
+        <translation>Date : </translation>
+    </message>
+    <message>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="48"/>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="150"/>
+        <source>URL:</source>
+        <translation>URL :</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="67"/>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="179"/>
+        <source>Code:</source>
+        <translation>Code :</translation>
     </message>
     <message>
         <source>URL :</source>
@@ -133,38 +149,30 @@ Erreur : %4</translation>
         <translation type="obsolete">Code : </translation>
     </message>
     <message>
-        <source>Content:</source>
-        <translation type="obsolete">Contenu : </translation>
-    </message>
-    <message>
-        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="47"/>
-        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="149"/>
-        <source>Date: </source>
-        <translation type="unfinished">Date : </translation>
-    </message>
-    <message>
-        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="48"/>
-        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="150"/>
-        <source>URL:  </source>
-        <translation type="unfinished">URL : </translation>
-    </message>
-    <message>
-        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="66"/>
-        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="178"/>
-        <source>Date:    </source>
-        <translation type="unfinished">Date : </translation>
-    </message>
-    <message>
-        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="67"/>
-        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="179"/>
-        <source>Code:    </source>
-        <translation type="unfinished">Code : </translation>
-    </message>
-    <message>
         <location filename="../Sources/Last.fm/CAuthentication.cpp" line="68"/>
         <location filename="../Sources/Last.fm/CAuthentication.cpp" line="180"/>
+        <source>Content:</source>
+        <translation>Contenu : </translation>
+    </message>
+    <message>
+        <source>Date: </source>
+        <translation type="obsolete">Date : </translation>
+    </message>
+    <message>
+        <source>URL:  </source>
+        <translation type="obsolete">URL : </translation>
+    </message>
+    <message>
+        <source>Date:    </source>
+        <translation type="obsolete">Date : </translation>
+    </message>
+    <message>
+        <source>Code:    </source>
+        <translation type="obsolete">Code : </translation>
+    </message>
+    <message>
         <source>Content: </source>
-        <translation type="unfinished">Contenu : </translation>
+        <translation type="obsolete">Contenu : </translation>
     </message>
 </context>
 <context>
@@ -273,7 +281,7 @@ Erreur : %4</translation>
 <context>
     <name>CDialogEditSong</name>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="240"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="243"/>
         <source>%1 kbit/s</source>
         <translation>%1 kbit/s</translation>
     </message>
@@ -293,15 +301,31 @@ Erreur : %4</translation>
         <translation>Appliquer</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="217"/>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="221"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="220"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="224"/>
         <source>Song infos</source>
         <translation>Informations</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="243"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="246"/>
         <source>%1 Hz</source>
         <translation>%1 Hz</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="368"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="370"/>
+        <source>%1 dB</source>
+        <translation>%1 dB</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="381"/>
+        <source>Local time</source>
+        <translation>Heure locale</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="381"/>
+        <source>UTC</source>
+        <translation>UTC</translation>
     </message>
 </context>
 <context>
@@ -591,41 +615,69 @@ Erreur : %4</translation>
 <context>
     <name>CScrobble</name>
     <message>
+        <source>Date:    </source>
+        <translation type="obsolete">Date : </translation>
+    </message>
+    <message>
+        <source>Title:   </source>
+        <translation type="obsolete">Titre :   </translation>
+    </message>
+    <message>
+        <source>Artist:  </source>
+        <translation type="obsolete">Artiste : </translation>
+    </message>
+    <message>
+        <source>Album:   </source>
+        <translation type="obsolete">Album : </translation>
+    </message>
+    <message>
+        <source>URL:     </source>
+        <translation type="obsolete">URL :                                         </translation>
+    </message>
+    <message>
+        <source>Content: </source>
+        <translation type="obsolete">Contenu : </translation>
+    </message>
+    <message>
+        <source>Code:    </source>
+        <translation type="obsolete">Code : </translation>
+    </message>
+    <message>
         <location filename="../Sources/Last.fm/CScrobble.cpp" line="72"/>
         <location filename="../Sources/Last.fm/CScrobble.cpp" line="102"/>
-        <source>Date:    </source>
-        <translation type="unfinished">Date : </translation>
+        <source>Date:</source>
+        <translation>Date :</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CScrobble.cpp" line="73"/>
-        <source>Title:   </source>
-        <translation type="unfinished">Titre :   </translation>
+        <source>Title:</source>
+        <translation>Titre :</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CScrobble.cpp" line="74"/>
-        <source>Artist:  </source>
-        <translation type="unfinished">Artiste : </translation>
+        <source>Artist:</source>
+        <translation>Artiste :</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CScrobble.cpp" line="75"/>
-        <source>Album:   </source>
-        <translation type="unfinished">Album : </translation>
+        <source>Album:</source>
+        <translation>Album :</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CScrobble.cpp" line="76"/>
-        <source>URL:     </source>
-        <translation type="unfinished">URL :                                         </translation>
+        <source>URL:</source>
+        <translation>URL :</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CScrobble.cpp" line="77"/>
         <location filename="../Sources/Last.fm/CScrobble.cpp" line="104"/>
-        <source>Content: </source>
-        <translation type="unfinished">Contenu : </translation>
+        <source>Content:</source>
+        <translation>Contenu :</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CScrobble.cpp" line="103"/>
-        <source>Code:    </source>
-        <translation type="unfinished">Code : </translation>
+        <source>Code:</source>
+        <translation>Code :</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CScrobble.cpp" line="111"/>
@@ -636,94 +688,159 @@ Erreur : %4</translation>
 <context>
     <name>CSong</name>
     <message>
-        <location filename="../Sources/CSong.hpp" line="298"/>
+        <location filename="../Sources/CSong.hpp" line="317"/>
         <source>Unknown</source>
         <comment>Unknown format</comment>
         <translation>Inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="299"/>
+        <location filename="../Sources/CSong.hpp" line="318"/>
         <source>MP3</source>
         <translation>MP3</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="300"/>
+        <location filename="../Sources/CSong.hpp" line="319"/>
         <source>Ogg Vorbis</source>
         <translation>Ogg Vorbis</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="301"/>
+        <location filename="../Sources/CSong.hpp" line="320"/>
         <source>FLAC</source>
         <translation>FLAC</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="346"/>
+        <location filename="../Sources/CSong.hpp" line="365"/>
         <source>Unknown</source>
         <comment>Unknown language</comment>
         <translation>Inconnue</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="347"/>
+        <location filename="../Sources/CSong.hpp" line="366"/>
         <source>English</source>
         <translation>Anglais</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="348"/>
+        <location filename="../Sources/CSong.hpp" line="367"/>
         <source>French</source>
         <translation>Français</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="349"/>
+        <location filename="../Sources/CSong.hpp" line="368"/>
         <source>German</source>
         <translation>Allemand</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="350"/>
+        <location filename="../Sources/CSong.hpp" line="369"/>
         <source>Italian</source>
         <translation>Italien</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="351"/>
+        <location filename="../Sources/CSong.hpp" line="370"/>
         <source>Russian</source>
         <translation>Russe</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="569"/>
+        <location filename="../Sources/CSong.cpp" line="587"/>
         <source>Unknown title</source>
         <translation>Titre inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="574"/>
+        <location filename="../Sources/CSong.cpp" line="592"/>
         <source>Unknown artist</source>
         <translation>Artiste inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="579"/>
+        <location filename="../Sources/CSong.cpp" line="597"/>
         <source>Unknown album</source>
         <translation>Album inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="962"/>
+        <location filename="../Sources/CSong.cpp" line="984"/>
         <source>%1 Gio</source>
         <translation>%1 Gio</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="967"/>
+        <location filename="../Sources/CSong.cpp" line="989"/>
         <source>%1 Mio</source>
         <translation>%1 Mio</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="972"/>
+        <location filename="../Sources/CSong.cpp" line="994"/>
         <source>%1 Kio</source>
         <translation>%1 Kio</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CSong.cpp" line="976"/>
+        <location filename="../Sources/CSong.cpp" line="998"/>
         <source>%n byte(s)</source>
         <translation>
             <numerusform>%n octet</numerusform>
             <numerusform>%n octets</numerusform>
         </translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="1930"/>
+        <source>Chargement des tags ID3v1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="1932"/>
+        <location filename="../Sources/CSong.cpp" line="1994"/>
+        <location filename="../Sources/CSong.cpp" line="2418"/>
+        <location filename="../Sources/CSong.cpp" line="2598"/>
+        <location filename="../Sources/CSong.cpp" line="2831"/>
+        <location filename="../Sources/CSong.cpp" line="2866"/>
+        <location filename="../Sources/CSong.cpp" line="3079"/>
+        <location filename="../Sources/CSong.cpp" line="3205"/>
+        <source>File:</source>
+        <translation>Fichier :</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="1933"/>
+        <location filename="../Sources/CSong.cpp" line="1995"/>
+        <location filename="../Sources/CSong.cpp" line="2419"/>
+        <location filename="../Sources/CSong.cpp" line="2599"/>
+        <location filename="../Sources/CSong.cpp" line="2832"/>
+        <location filename="../Sources/CSong.cpp" line="2867"/>
+        <location filename="../Sources/CSong.cpp" line="3080"/>
+        <location filename="../Sources/CSong.cpp" line="3206"/>
+        <source>Date:</source>
+        <translation>Date :</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="1992"/>
+        <source>Chargement des tags ID3v2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="2416"/>
+        <source>Chargement des tags APE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="2510"/>
+        <location filename="../Sources/CSong.cpp" line="2513"/>
+        <location filename="../Sources/CSong.cpp" line="2517"/>
+        <location filename="../Sources/CSong.cpp" line="2525"/>
+        <location filename="../Sources/CSong.cpp" line="2543"/>
+        <location filename="../Sources/CSong.cpp" line="2546"/>
+        <location filename="../Sources/CSong.cpp" line="2550"/>
+        <location filename="../Sources/CSong.cpp" line="2558"/>
+        <location filename="../Sources/CSong.cpp" line="2685"/>
+        <location filename="../Sources/CSong.cpp" line="2699"/>
+        <location filename="../Sources/CSong.cpp" line="2717"/>
+        <location filename="../Sources/CSong.cpp" line="2731"/>
+        <location filename="../Sources/CSong.cpp" line="2749"/>
+        <source>Error: invalid tag &apos;%1&apos;</source>
+        <translation>Erreur : tag &apos;%1&apos; invalide</translation>
+    </message>
+    <message>
+        <source>Error : invalid tag &apos;%1&apos;</source>
+        <translation type="obsolete">Erreur : tag &apos;%1&apos; invalide</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="2864"/>
+        <source>Enregistrement des tags ID3v2</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -886,9 +1003,13 @@ Les fichiers ne seront pas supprimés.</translation>
         <translation>Informations...</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1216"/>
         <source>Edit metadata</source>
-        <translation>Éditer les métadonnées</translation>
+        <translation type="obsolete">Éditer les métadonnées</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSongTable.cpp" line="1216"/>
+        <source>Edit metadata...</source>
+        <translation>Éditer les métadonnées...</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.cpp" line="1217"/>
@@ -1050,41 +1171,69 @@ Voulez-vous les ajouter ?</translation>
 <context>
     <name>CUpdateNowPlaying</name>
     <message>
+        <source>Date:    </source>
+        <translation type="obsolete">Date : </translation>
+    </message>
+    <message>
+        <source>Title:   </source>
+        <translation type="obsolete">Titre :   </translation>
+    </message>
+    <message>
+        <source>Artist:  </source>
+        <translation type="obsolete">Artiste : </translation>
+    </message>
+    <message>
+        <source>Album:   </source>
+        <translation type="obsolete">Album : </translation>
+    </message>
+    <message>
+        <source>URL:     </source>
+        <translation type="obsolete">URL :                                         </translation>
+    </message>
+    <message>
+        <source>Content: </source>
+        <translation type="obsolete">Contenu : </translation>
+    </message>
+    <message>
+        <source>Code:    </source>
+        <translation type="obsolete">Code : </translation>
+    </message>
+    <message>
         <location filename="../Sources/Last.fm/CUpdateNowPlaying.cpp" line="73"/>
         <location filename="../Sources/Last.fm/CUpdateNowPlaying.cpp" line="99"/>
-        <source>Date:    </source>
-        <translation type="unfinished">Date : </translation>
+        <source>Date:</source>
+        <translation>Date :</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CUpdateNowPlaying.cpp" line="74"/>
-        <source>Title:   </source>
-        <translation type="unfinished">Titre :   </translation>
+        <source>Title:</source>
+        <translation>Titre :</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CUpdateNowPlaying.cpp" line="75"/>
-        <source>Artist:  </source>
-        <translation type="unfinished">Artiste : </translation>
+        <source>Artist:</source>
+        <translation>Artiste :</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CUpdateNowPlaying.cpp" line="76"/>
-        <source>Album:   </source>
-        <translation type="unfinished">Album : </translation>
+        <source>Album:</source>
+        <translation>Album :</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CUpdateNowPlaying.cpp" line="77"/>
-        <source>URL:     </source>
-        <translation type="unfinished">URL :                                         </translation>
+        <source>URL:</source>
+        <translation>URL :</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CUpdateNowPlaying.cpp" line="78"/>
         <location filename="../Sources/Last.fm/CUpdateNowPlaying.cpp" line="101"/>
-        <source>Content: </source>
-        <translation type="unfinished">Contenu : </translation>
+        <source>Content:</source>
+        <translation>Contenu :</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CUpdateNowPlaying.cpp" line="100"/>
-        <source>Code:    </source>
-        <translation type="unfinished">Code : </translation>
+        <source>Code:</source>
+        <translation>Code :</translation>
     </message>
 </context>
 <context>
@@ -1484,12 +1633,12 @@ Voulez-vous les ajouter ?</translation>
         <translation>%</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1105"/>
+        <location filename="../Form/DialogEditSong.ui" line="1119"/>
         <source>Song is enabled.</source>
         <translation>Le morceau est coché.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1119"/>
+        <location filename="../Form/DialogEditSong.ui" line="1105"/>
         <source>Skip when shuffling.</source>
         <translation>Ne pas lire en lecture aléatoire.</translation>
     </message>
@@ -1499,27 +1648,57 @@ Voulez-vous les ajouter ?</translation>
         <translation>Fait partie d&apos;une compilation.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1154"/>
+        <location filename="../Form/DialogEditSong.ui" line="1163"/>
+        <source>Replay Gain</source>
+        <translation>Replay Gain</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEditSong.ui" line="1176"/>
+        <source>Track gain:</source>
+        <translation>Gain de la piste :</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEditSong.ui" line="1197"/>
+        <source>Album gain:</source>
+        <translation>Gain de l&apos;album :</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEditSong.ui" line="1218"/>
+        <source>Track peak:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEditSong.ui" line="1239"/>
+        <source>Album peak:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEditSong.ui" line="1275"/>
+        <source>Compute</source>
+        <translation>Calculer</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEditSong.ui" line="1299"/>
         <source>Lyrics</source>
         <translation>Paroles</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1170"/>
+        <location filename="../Form/DialogEditSong.ui" line="1315"/>
         <source>Language:</source>
         <translation>Langue :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1190"/>
+        <location filename="../Form/DialogEditSong.ui" line="1335"/>
         <source>Author:</source>
         <translation>Parolier :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1221"/>
+        <location filename="../Form/DialogEditSong.ui" line="1366"/>
         <source>Plays</source>
         <translation>Lectures</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1204"/>
+        <location filename="../Form/DialogEditSong.ui" line="1349"/>
         <source>Covers</source>
         <translation>Illustrations</translation>
     </message>

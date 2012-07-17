@@ -209,6 +209,9 @@ void CDialogEditSong::updateInfos()
 {
     CSong * song = m_songItem->getSong();
 
+    // Rechargement des métadonnées
+    song->loadTags();
+
     const QString songTitle = song->getTitle();
     const QString songArtist = song->getArtistName();
 
@@ -361,6 +364,11 @@ void CDialogEditSong::updateInfos()
     m_uiWidget->editEnabled->setChecked(song->isEnabled());
     m_uiWidget->editSkipShuffle->setChecked(song->isSkipShuffle());
     m_uiWidget->editCompilation->setChecked(song->isCompilation());
+
+    m_uiWidget->editTrackGain->setText(tr("%1 dB").arg(song->getTrackGain()));
+    m_uiWidget->editTrackPeak->setText(QString::number(song->getTrackPeak()));
+    m_uiWidget->editAlbumGain->setText(tr("%1 dB").arg(song->getAlbumGain()));
+    m_uiWidget->editAlbumPeak->setText(QString::number(song->getAlbumPeak()));
 
 
     // Illustrations

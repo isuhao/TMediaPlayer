@@ -94,6 +94,7 @@ public:
     bool writeTags(void);
     bool moveFile(void);
     QImage getCoverImage(void) const;
+    //void computeReplayGain(void);
 
     inline int getId(void) const;
     inline QString getFileName(void) const;
@@ -134,6 +135,12 @@ public:
     inline QString getLyricist(void) const;
     inline bool isCompilation(void) const;
     inline bool isSkipShuffle(void) const;
+
+    // Replay Gain
+    inline float getTrackGain(void) const;
+    inline float getTrackPeak(void) const;
+    inline float getAlbumGain(void) const;
+    inline float getAlbumPeak(void) const;
 
     int getPosition(void) const;
     bool isEnded(void) const;
@@ -233,6 +240,12 @@ private:
         QString lyricist;        ///< Auteur des paroles.
         bool compilation;        ///< Indique si le morceau fait partie d'une compilation.
         bool skipShuffle;        ///< Indique si on ne doit pas lire le morceau en mode aléatoire.
+
+        // Replay Gain
+        float trackGain;
+        float trackPeak;
+        float albumGain;
+        float albumPeak;
 
         TSongInfos(void);
     };
@@ -622,17 +635,35 @@ inline QString CSong::getSubTitle(void) const
 }
 
 
+/**
+ * Retourne le regroupement du morceau.
+ *
+ * \return Regroupement du morceau.
+ */
+
 inline QString CSong::getGrouping(void) const
 {
     return m_infos.grouping;
 }
 
 
+/**
+ * Return le nom de l'artiste du morceau.
+ *
+ * \return Nom de l'artiste du morceau.
+ */
+
 inline QString CSong::getArtistName(void) const
 {
     return m_infos.artistName;
 }
 
+
+/**
+ * Return le titre de l'album.
+ *
+ * \return Titre de l'album.
+ */
 
 inline QString CSong::getAlbumTitle(void) const
 {
@@ -723,6 +754,12 @@ inline QString CSong::getGenre(void) const
 }
 
 
+/**
+ * Retourne la note du morceau.
+ *
+ * \return Note du morceau (entre 0 et 5).
+ */
+
 inline int CSong::getRating(void) const
 {
     return m_infos.rating;
@@ -768,6 +805,30 @@ inline bool CSong::isCompilation(void) const
 inline bool CSong::isSkipShuffle(void) const
 {
     return m_infos.skipShuffle;
+}
+
+
+inline float CSong::getTrackGain(void) const
+{
+    return m_infos.trackGain;
+}
+
+
+inline float CSong::getTrackPeak(void) const
+{
+    return m_infos.trackPeak;
+}
+
+
+inline float CSong::getAlbumGain(void) const
+{
+    return m_infos.albumGain;
+}
+
+
+inline float CSong::getAlbumPeak(void) const
+{
+    return m_infos.albumPeak;
 }
 
 

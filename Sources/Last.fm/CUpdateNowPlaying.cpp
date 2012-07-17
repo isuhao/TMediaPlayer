@@ -70,12 +70,12 @@ CUpdateNowPlaying::CUpdateNowPlaying(CApplication * application, const QByteArra
     stream << "========================================\n";
     stream << "   Request 'Update Now Playing'\n";
     stream << "----------------------------------------\n";
-    stream << tr("Date:    ") << QDateTime::currentDateTime().toString() << "\n";
-    stream << tr("Title:   ") << "'" << song->getTitle() << "'\n";
-    stream << tr("Artist:  ") << "'" << song->getArtistName() << "'\n";
-    stream << tr("Album:   ") << "'" << song->getAlbumTitle() << "'\n";
-    stream << tr("URL:     ") << "'" << m_lastFmUrl << "'\n";
-    stream << tr("Content: ") << "'" << content << "'\n";
+    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString() << "\n";
+    stream << tr("Title:") << ' ' << "'" << song->getTitle() << "'\n";
+    stream << tr("Artist:") << ' ' << "'" << song->getArtistName() << "'\n";
+    stream << tr("Album:") << ' ' << "'" << song->getAlbumTitle() << "'\n";
+    stream << tr("URL:") << ' ' << "'" << m_lastFmUrl << "'\n";
+    stream << tr("Content:") << ' ' << "'" << content << "'\n";
 
     QUrl url(m_lastFmUrl);
     QNetworkRequest request(url);
@@ -96,9 +96,9 @@ void CUpdateNowPlaying::replyFinished(QNetworkReply * reply)
     stream << "========================================\n";
     stream << "   Reply 'Update Now Playing'\n";
     stream << "----------------------------------------\n";
-    stream << tr("Date:    ") << QDateTime::currentDateTime().toString() << "\n";
-    stream << tr("Code:    ") << reply->error() << "\n";
-    stream << tr("Content: ") << "'" << reply->readAll() << "'\n";
+    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString() << "\n";
+    stream << tr("Code:") << ' ' << reply->error() << "\n";
+    stream << tr("Content:") << ' ' << "'" << reply->readAll() << "'\n";
 
     if (reply->error() != QNetworkReply::NoError)
     {
