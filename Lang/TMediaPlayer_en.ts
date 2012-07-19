@@ -176,58 +176,181 @@ Error: %4</source>
         <translation>Metadata</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="95"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="100"/>
         <source>Save</source>
         <translation>Save</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="96"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="101"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="97"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="102"/>
         <source>Apply</source>
         <translation>Apply</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="98"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="103"/>
         <source>Reset</source>
         <translation>Reset</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="151"/>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="153"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="157"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="159"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="168"/>
         <source>Key</source>
         <translation>Key</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="151"/>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="153"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="157"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="159"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="168"/>
         <source>Value</source>
         <translation>Value</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="155"/>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="157"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="161"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="163"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="165"/>
         <source>Description</source>
         <translation>Description</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="155"/>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="157"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="161"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="163"/>
         <source>Language</source>
         <translation>Language</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="155"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="161"/>
         <source>Lyrics</source>
         <translation>Lyrics</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="157"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="163"/>
         <source>Comments</source>
         <translation>Comments</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="165"/>
+        <source>Type</source>
+        <translation type="unfinished">Type</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="165"/>
+        <source>Format</source>
+        <translation type="unfinished">Format</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="165"/>
+        <source>Size</source>
+        <translation type="unfinished">Size</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="366"/>
+        <source>Other</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="367"/>
+        <source>FileIcon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="368"/>
+        <source>OtherFileIcon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="369"/>
+        <source>FrontCover</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="370"/>
+        <source>BackCover</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="371"/>
+        <source>LeafletPage</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="372"/>
+        <source>Media</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="373"/>
+        <source>LeadArtist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="374"/>
+        <source>Artist</source>
+        <translation type="unfinished">Artist</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="375"/>
+        <source>Conductor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="376"/>
+        <source>Band</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="377"/>
+        <source>Composer</source>
+        <translation type="unfinished">Composer</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="378"/>
+        <source>Lyricist</source>
+        <translation type="unfinished">Lyricist</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="379"/>
+        <source>RecordingLocation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="380"/>
+        <source>DuringRecording</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="381"/>
+        <source>DuringPerformance</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="382"/>
+        <source>MovieScreenCapture</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="383"/>
+        <source>ColouredFish</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="384"/>
+        <source>Illustration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="385"/>
+        <source>BandLogo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="386"/>
+        <source>PublisherLogo</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -746,6 +869,89 @@ Error: %4</source>
         <translation>Error: invalid tag &apos;%1&apos;</translation>
     </message>
     <message>
+        <location filename="../Sources/CSong.cpp" line="2740"/>
+        <source>Erreur : les tags TEMPO et BPM sont prÃ©sents tous les deux</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="2775"/>
+        <source>Erreur : tag DISCNUMBER invalide</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="2789"/>
+        <source>Erreur : tag DISCTOTAL invalide</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="2829"/>
+        <source>Enregistrement des tags ID3v1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="2959"/>
+        <location filename="../Sources/CSong.cpp" line="3117"/>
+        <source>Aucun tag pour enregistrer le compositeur pour le tri</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="3077"/>
+        <source>Enregistrement des tags APE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="3090"/>
+        <location filename="../Sources/CSong.cpp" line="3216"/>
+        <source>Aucun tag pour enregistrer le regroupement</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="3099"/>
+        <source>Aucun tag pour enregistrer l&apos;artiste de l&apos;album</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="3105"/>
+        <source>Aucun tag pour enregistrer le titre pour le tri</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="3108"/>
+        <location filename="../Sources/CSong.cpp" line="3114"/>
+        <source>Aucun tag pour enregistrer l&apos;artiste pour le tri</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="3111"/>
+        <source>Aucun tag pour enregistrer l&apos;album pour le tri</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="3170"/>
+        <source>Aucun tag pour enregistrer le nombre de battements par minute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="3173"/>
+        <source>Aucun tag pour enregistrer les paroles</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="3179"/>
+        <source>Aucun tag pour enregistrer le parolier</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="3203"/>
+        <source>Enregistrement des tags Xiph Comment</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="3213"/>
+        <source>Aucun tag pour enregistrer le sous-titre</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Error : invalid tag &apos;%1&apos;</source>
         <translation type="obsolete">Error : invalid tag &apos;%1&apos;</translation>
     </message>
@@ -1242,47 +1448,43 @@ Would you like to add them?</source>
         <translation>Pictures</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditMetadata.ui" line="277"/>
         <source>Description</source>
-        <translation>Description</translation>
+        <translation type="obsolete">Description</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditMetadata.ui" line="282"/>
         <source>Type</source>
-        <translation>Type</translation>
+        <translation type="obsolete">Type</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditMetadata.ui" line="287"/>
         <source>Format</source>
-        <translation>Format</translation>
+        <translation type="obsolete">Format</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditMetadata.ui" line="292"/>
         <source>Size</source>
-        <translation>Size</translation>
+        <translation type="obsolete">Size</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditMetadata.ui" line="336"/>
+        <location filename="../Form/DialogEditMetadata.ui" line="319"/>
         <source>Popularimeter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditMetadata.ui" line="341"/>
-        <source>Object</source>
+        <location filename="../Form/DialogEditMetadata.ui" line="324"/>
+        <source>Objects</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditMetadata.ui" line="346"/>
+        <location filename="../Form/DialogEditMetadata.ui" line="329"/>
         <source>Unknown</source>
         <translation>Unknown</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditMetadata.ui" line="355"/>
+        <location filename="../Form/DialogEditMetadata.ui" line="338"/>
         <source>APE</source>
         <translation>APE</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditMetadata.ui" line="360"/>
+        <location filename="../Form/DialogEditMetadata.ui" line="364"/>
         <source>Xiph Comment</source>
         <translation>Xiph Comment</translation>
     </message>

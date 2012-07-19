@@ -258,42 +258,6 @@
            <string>Pictures</string>
           </attribute>
           <layout class="QGridLayout" name="gridLayout">
-           <item row="0" column="0" rowspan="2">
-            <widget class="QTableWidget" name="tableWidget_5">
-             <attribute name="horizontalHeaderMinimumSectionSize">
-              <number>100</number>
-             </attribute>
-             <attribute name="verticalHeaderVisible">
-              <bool>false</bool>
-             </attribute>
-             <attribute name="verticalHeaderDefaultSectionSize">
-              <number>20</number>
-             </attribute>
-             <attribute name="verticalHeaderMinimumSectionSize">
-              <number>20</number>
-             </attribute>
-             <column>
-              <property name="text">
-               <string>Description</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Type</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Format</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Size</string>
-              </property>
-             </column>
-            </widget>
-           </item>
            <item row="0" column="1">
             <widget class="QFrame" name="framePicture">
              <property name="minimumSize">
@@ -329,6 +293,25 @@
              </property>
             </spacer>
            </item>
+           <item row="0" column="0" rowspan="2">
+            <widget class="QTableView" name="tableID3v2Pictures">
+             <attribute name="horizontalHeaderMinimumSectionSize">
+              <number>100</number>
+             </attribute>
+             <attribute name="horizontalHeaderStretchLastSection">
+              <bool>true</bool>
+             </attribute>
+             <attribute name="verticalHeaderVisible">
+              <bool>false</bool>
+             </attribute>
+             <attribute name="verticalHeaderDefaultSectionSize">
+              <number>20</number>
+             </attribute>
+             <attribute name="verticalHeaderMinimumSectionSize">
+              <number>20</number>
+             </attribute>
+            </widget>
+           </item>
           </layout>
          </widget>
          <widget class="QWidget" name="tabPopularimeter">
@@ -336,9 +319,9 @@
            <string>Popularimeter</string>
           </attribute>
          </widget>
-         <widget class="QWidget" name="tab_2">
+         <widget class="QWidget" name="tabObjects">
           <attribute name="title">
-           <string>Object</string>
+           <string>Objects</string>
           </attribute>
          </widget>
          <widget class="QWidget" name="tabUnknown">
@@ -354,6 +337,27 @@
       <attribute name="title">
        <string>APE</string>
       </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_7">
+       <item>
+        <widget class="QTableView" name="tableAPE">
+         <attribute name="horizontalHeaderMinimumSectionSize">
+          <number>100</number>
+         </attribute>
+         <attribute name="horizontalHeaderStretchLastSection">
+          <bool>true</bool>
+         </attribute>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
+         <attribute name="verticalHeaderDefaultSectionSize">
+          <number>20</number>
+         </attribute>
+         <attribute name="verticalHeaderMinimumSectionSize">
+          <number>20</number>
+         </attribute>
+        </widget>
+       </item>
+      </layout>
      </widget>
      <widget class="QWidget" name="tagXiph">
       <attribute name="title">

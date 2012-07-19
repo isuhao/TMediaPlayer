@@ -22,6 +22,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include <QDialog>
 #include "ui_DialogEditMetadata.h"
+#include <attachedpictureframe.h>
 
 
 class CSong;
@@ -62,6 +63,7 @@ protected:
     void initTagID3v2(TagLib::ID3v2::Tag * tags);
     void initTagAPE(TagLib::APE::Tag * tags);
     void initTagXiphComment(TagLib::Ogg::XiphComment * tags);
+    QString pictureType(TagLib::ID3v2::AttachedPictureFrame::Type type) const;
 
 private:
 
@@ -70,6 +72,8 @@ private:
     QStandardItemModel * m_modelID3v2URL;
     QStandardItemModel * m_modelID3v2Lyrics;
     QStandardItemModel * m_modelID3v2Comments;
+    QStandardItemModel * m_modelID3v2Pictures;
+    QStandardItemModel * m_modelAPE;
     CApplication * m_application; ///< Pointeur sur l'application.
     CSong * m_song;               ///< Pointeur sur le morceau.
 };

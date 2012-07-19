@@ -2737,7 +2737,7 @@ bool CSong::loadTags(TagLib::Ogg::XiphComment * tags, TSongInfos& infos, QFile *
     {
         if (!tagMap["TEMPO"].isEmpty())
         {
-            stream << "Erreur : les tags TEMPO et BPM sont présents tous les deux\n";
+            stream << tr("Erreur : les tags TEMPO et BPM sont présents tous les deux") << '\n';
         }
 
         QString bpm = QString::fromUtf8(tagMap["BPM"].toString().toCString(true));
@@ -2772,7 +2772,7 @@ bool CSong::loadTags(TagLib::Ogg::XiphComment * tags, TSongInfos& infos, QFile *
 
         if (!ok || infos.discNumber <= 0)
         {
-            stream << "Erreur : tag DISCNUMBER invalide\n";
+            stream << tr("Erreur : tag DISCNUMBER invalide") << '\n';
             infos.discNumber = 0;
         }
     }
@@ -2786,7 +2786,7 @@ bool CSong::loadTags(TagLib::Ogg::XiphComment * tags, TSongInfos& infos, QFile *
 
         if (!ok || infos.discCount <= 0)
         {
-            stream << "Erreur : tag DISCTOTAL invalide\n";
+            stream << tr("Erreur : tag DISCTOTAL invalide") << '\n';
             infos.discCount = 0;
         }
     }
@@ -2826,7 +2826,7 @@ bool CSong::writeTags(TagLib::ID3v1::Tag * tags, const TSongInfos& infos, QFile 
     // Log
     QTextStream stream(logFile);
     stream << "========================================\n";
-    stream << "   Enregistrement des tags ID3v1\n";
+    stream << "   " << tr("Enregistrement des tags ID3v1") << '\n';
     stream << "----------------------------------------\n";
     stream << tr("File:") << ' ' << fileName << '\n';
     stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString("dd/MM/yyyy HH:mm:ss") << '\n';
@@ -2956,7 +2956,7 @@ bool CSong::writeTags(TagLib::ID3v2::Tag * tags, const TSongInfos& infos, QFile 
     }
 
     // Compositeur pour le tri
-    stream << "Aucun tag pour enregistrer le compositeur pour le tri\n";
+    stream << tr("Aucun tag pour enregistrer le compositeur pour le tri") << '\n';
 
     // Année
     tags->removeFrames("TDRC");
@@ -3074,7 +3074,7 @@ bool CSong::writeTags(TagLib::APE::Tag * tags, const TSongInfos& infos, QFile * 
     // Log
     QTextStream stream(logFile);
     stream << "========================================\n";
-    stream << "   Enregistrement des tags APE\n";
+    stream << "   " << tr("Enregistrement des tags APE") << '\n';
     stream << "----------------------------------------\n";
     stream << tr("File:") << ' ' << fileName << '\n';
     stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString("dd/MM/yyyy HH:mm:ss") << '\n';
@@ -3087,7 +3087,7 @@ bool CSong::writeTags(TagLib::APE::Tag * tags, const TSongInfos& infos, QFile * 
     tags->addValue("SUBTITLE", infos.subTitle.toUtf8().constData());
 
     // Regroupement
-    stream << "Aucun tag pour enregistrer le regroupement" << '\n';
+    stream << tr("Aucun tag pour enregistrer le regroupement") << '\n';
 
     // Artiste
     tags->addValue("ARTIST", infos.artistName.toUtf8().constData());
@@ -3096,25 +3096,25 @@ bool CSong::writeTags(TagLib::APE::Tag * tags, const TSongInfos& infos, QFile * 
     tags->addValue("ALBUM", infos.albumTitle.toUtf8().constData());
 
     // Artiste de l'album
-    stream << "Aucun tag pour enregistrer l'artiste de l'album" << '\n';
+    stream << tr("Aucun tag pour enregistrer l'artiste de l'album") << '\n';
 
     // Compositeur
     tags->addValue("COMPOSER", infos.composer.toUtf8().constData());
 
     // Titre pour le tri
-    stream << "Aucun tag pour enregistrer le titre pour le tri" << '\n';
+    stream << tr("Aucun tag pour enregistrer le titre pour le tri") << '\n';
 
     // Artiste pour le tri
-    stream << "Aucun tag pour enregistrer l'artiste pour le tri" << '\n';
+    stream << tr("Aucun tag pour enregistrer l'artiste pour le tri") << '\n';
 
     // Album pour le tri
-    stream << "Aucun tag pour enregistrer l'album pour le tri" << '\n';
+    stream << tr("Aucun tag pour enregistrer l'album pour le tri") << '\n';
 
     // Artiste de l'album pour le tri
-    stream << "Aucun tag pour enregistrer l'artiste pour le tri" << '\n';
+    stream << tr("Aucun tag pour enregistrer l'artiste pour le tri") << '\n';
 
     // Compositeur pour le tri
-    stream << "Aucun tag pour enregistrer le compositeur pour le tri" << '\n';
+    stream << tr("Aucun tag pour enregistrer le compositeur pour le tri") << '\n';
 
     // Année
     if (infos.year > 0)
@@ -3167,16 +3167,16 @@ bool CSong::writeTags(TagLib::APE::Tag * tags, const TSongInfos& infos, QFile * 
     tags->addValue("COMMENT", infos.comments.toUtf8().constData());
 
     // BPM
-    stream << "Aucun tag pour enregistrer le nombre de battements par minute" << '\n';
+    stream << tr("Aucun tag pour enregistrer le nombre de battements par minute") << '\n';
 
     // Paroles
-    stream << "Aucun tag pour enregistrer les paroles" << '\n';
+    stream << tr("Aucun tag pour enregistrer les paroles") << '\n';
 
     // Langue
     tags->addValue("LANGUAGE", CSong::getISO3CodeForLanguage(infos.language).toUtf8().constData());
 
     // Parolier
-    stream << "Aucun tag pour enregistrer le parolier" << '\n';
+    stream << tr("Aucun tag pour enregistrer le parolier") << '\n';
 
     return true;
 }
@@ -3200,7 +3200,7 @@ bool CSong::writeTags(TagLib::Ogg::XiphComment * tags, const TSongInfos& infos, 
     // Log
     QTextStream stream(logFile);
     stream << "========================================\n";
-    stream << "   Enregistrement des tags Xiph Comment\n";
+    stream << "   " << tr("Enregistrement des tags Xiph Comment") << '\n';
     stream << "----------------------------------------\n";
     stream << tr("File:") << ' ' << fileName << '\n';
     stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString("dd/MM/yyyy HH:mm:ss") << '\n';
@@ -3210,10 +3210,10 @@ bool CSong::writeTags(TagLib::Ogg::XiphComment * tags, const TSongInfos& infos, 
     tags->addField("TITLE", infos.title.toUtf8().constData());
 
     // Sous-titre
-    stream << "Aucun tag pour enregistrer le sous-titre" << '\n';
+    stream << tr("Aucun tag pour enregistrer le sous-titre") << '\n';
 
     // Regroupement
-    stream << "Aucun tag pour enregistrer le regroupement" << '\n';
+    stream << tr("Aucun tag pour enregistrer le regroupement") << '\n';
 
     // Artiste
     tags->addField("ARTIST", infos.artistName.toUtf8().constData());

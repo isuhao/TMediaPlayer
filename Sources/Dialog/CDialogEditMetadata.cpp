@@ -89,6 +89,11 @@ CDialogEditMetadata::CDialogEditMetadata(CApplication * application, CSong * son
     m_uiWidget->tableID3v2Lyrics->setModel(m_modelID3v2Lyrics);
     m_modelID3v2Comments = new QStandardItemModel(this);
     m_uiWidget->tableID3v2Comments->setModel(m_modelID3v2Comments);
+    m_modelID3v2Pictures = new QStandardItemModel(this);
+    m_uiWidget->tableID3v2Pictures->setModel(m_modelID3v2Pictures);
+
+    m_modelAPE = new QStandardItemModel(this);
+    m_uiWidget->tableAPE->setModel(m_modelAPE);
 
     
     // Connexions des signaux des boutons
@@ -147,6 +152,7 @@ void CDialogEditMetadata::save(void)
 
 void CDialogEditMetadata::reset(void)
 {
+    // Titres des colonnes
     m_modelID3v2Text->clear();
     m_modelID3v2Text->setHorizontalHeaderLabels(QStringList() << tr("Key") << tr("Value"));
     m_modelID3v2URL->clear();
@@ -155,6 +161,11 @@ void CDialogEditMetadata::reset(void)
     m_modelID3v2Lyrics->setHorizontalHeaderLabels(QStringList() << tr("Description") << tr("Language") << tr("Lyrics"));
     m_modelID3v2Comments->clear();
     m_modelID3v2Comments->setHorizontalHeaderLabels(QStringList() << tr("Description") << tr("Language") << tr("Comments"));
+    m_modelID3v2Pictures->clear();
+    m_modelID3v2Pictures->setHorizontalHeaderLabels(QStringList() << tr("Description") << tr("Type") << tr("Format") << tr("Size"));
+
+    m_modelAPE->clear();
+    m_modelAPE->setHorizontalHeaderLabels(QStringList() << tr("Key") << tr("Value"));
 
     switch (m_song->getFormat())
     {
@@ -324,23 +335,108 @@ void CDialogEditMetadata::initTagID3v2(TagLib::ID3v2::Tag * tags)
                 }
             }
 
+            // Illustrations
+            {
+                TagLib::ID3v2::AttachedPictureFrame * frame = dynamic_cast<TagLib::ID3v2::AttachedPictureFrame *>(*it2);
+                if (frame)
+                {
+                    QList<QStandardItem *> itemList;
+
+                    itemList.append(new QStandardItem(QString::fromUtf8(frame->description().toCString(true))));
+                    itemList.append(new QStandardItem(pictureType(frame->type())));
+                    itemList.append(new QStandardItem(QString::fromUtf8(frame->mimeType().toCString(true))));
+                    itemList.append(new QStandardItem(QString::number(frame->picture().size())));
+
+                    m_modelID3v2Pictures->appendRow(itemList);
+                    continue;
+                }
+            }
+
             //...
         }
     }
 }
 
 
-/// \todo Implémentation.
+QString CDialogEditMetadata::pictureType(TagLib::ID3v2::AttachedPictureFrame::Type type) const
+{
+    switch (type)
+    {
+        default:
+        case TagLib::ID3v2::AttachedPictureFrame::Other:              return tr("Other");
+        case TagLib::ID3v2::AttachedPictureFrame::FileIcon:           return tr("FileIcon");
+        case TagLib::ID3v2::AttachedPictureFrame::OtherFileIcon:      return tr("OtherFileIcon");
+        case TagLib::ID3v2::AttachedPictureFrame::FrontCover:         return tr("FrontCover");
+        case TagLib::ID3v2::AttachedPictureFrame::BackCover:          return tr("BackCover");
+        case TagLib::ID3v2::AttachedPictureFrame::LeafletPage:        return tr("LeafletPage");
+        case TagLib::ID3v2::AttachedPictureFrame::Media:              return tr("Media");
+        case TagLib::ID3v2::AttachedPictureFrame::LeadArtist:         return tr("LeadArtist");
+        case TagLib::ID3v2::AttachedPictureFrame::Artist:             return tr("Artist");
+        case TagLib::ID3v2::AttachedPictureFrame::Conductor:          return tr("Conductor");
+        case TagLib::ID3v2::AttachedPictureFrame::Band:               return tr("Band");
+        case TagLib::ID3v2::AttachedPictureFrame::Composer:           return tr("Composer");
+        case TagLib::ID3v2::AttachedPictureFrame::Lyricist:           return tr("Lyricist");
+        case TagLib::ID3v2::AttachedPictureFrame::RecordingLocation:  return tr("RecordingLocation");
+        case TagLib::ID3v2::AttachedPictureFrame::DuringRecording:    return tr("DuringRecording");
+        case TagLib::ID3v2::AttachedPictureFrame::DuringPerformance:  return tr("DuringPerformance");
+        case TagLib::ID3v2::AttachedPictureFrame::MovieScreenCapture: return tr("MovieScreenCapture");
+        case TagLib::ID3v2::AttachedPictureFrame::ColouredFish:       return tr("ColouredFish");
+        case TagLib::ID3v2::AttachedPictureFrame::Illustration:       return tr("Illustration");
+        case TagLib::ID3v2::AttachedPictureFrame::BandLogo:           return tr("BandLogo");
+        case TagLib::ID3v2::AttachedPictureFrame::PublisherLogo:      return tr("PublisherLogo");
+    }
+}
+
+
+/**
+ * Initialise l'onglet avec les tags APE.
+ *
+ * \todo Afficher les tags binaires et locator.
+ *
+ * \param tags Tags APE.
+ */
+
 void CDialogEditMetadata::initTagAPE(TagLib::APE::Tag * tags)
 {
     if (!tags)
         return;
 
-    //...
+    TagLib::APE::ItemListMap tagMap = tags->itemListMap();
+
+    // Liste des tags
+    for (TagLib::APE::ItemListMap::ConstIterator it = tagMap.begin(); it != tagMap.end(); ++it)
+    {
+        switch (it->second.type())
+        {
+            case TagLib::APE::Item::Text:
+            {
+                QList<QStandardItem *> itemList;
+
+                itemList.append(new QStandardItem(QString::fromUtf8(it->first.toCString(true))));
+                itemList.append(new QStandardItem(QString::fromUtf8(it->second.values().toString().toCString(true))));
+
+                m_modelAPE->appendRow(itemList);
+                break;
+            }
+
+            case TagLib::APE::Item::Binary:
+                break;
+
+            case TagLib::APE::Item::Locator:
+                break;
+        }
+    }
 }
 
 
-/// \todo Implémentation.
+/**
+ * Initialise l'onglet avec les tags xiphComment.
+ *
+ * \todo Implémentation.
+ *
+ * \param tags Tags xiphComment.
+ */
+
 void CDialogEditMetadata::initTagXiphComment(TagLib::Ogg::XiphComment * tags)
 {
     if (!tags)
