@@ -330,6 +330,16 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
             // Sous-titre
             case CSongTable::ColSubTitle:
                 return m_data.at(index.row())->getSong()->getSubTitle();
+
+            // BPM
+            case CSongTable::ColBPM:
+                return m_data.at(index.row())->getSong()->getBPM();
+
+            // Replay Gain
+            case CSongTable::ColTrackGain: return tr("%1 dB").arg(m_data.at(index.row())->getSong()->getTrackGain());
+            case CSongTable::ColTrackPeak: return m_data.at(index.row())->getSong()->getTrackPeak();
+            case CSongTable::ColAlbumGain: return tr("%1 dB").arg(m_data.at(index.row())->getSong()->getAlbumGain());
+            case CSongTable::ColAlbumPeak: return m_data.at(index.row())->getSong()->getAlbumPeak();
         }
     }
     else if (role == Qt::TextAlignmentRole)
@@ -349,6 +359,7 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
             case CSongTable::ColDuration:
             case CSongTable::ColSampleRate:
             case CSongTable::ColFileSize:
+            case CSongTable::ColBPM:
                 return QVariant(Qt::AlignVCenter | Qt::AlignRight);
         }
     }
@@ -461,6 +472,11 @@ void CSongTableModel::sort(int column, Qt::SortOrder order)
             case CSongTable::ColLyricist        : qSort(m_data.begin(), m_data.end(), cmpSongLyricistAsc        ); break;
             case CSongTable::ColGrouping        : qSort(m_data.begin(), m_data.end(), cmpSongGroupingAsc        ); break;
             case CSongTable::ColSubTitle        : qSort(m_data.begin(), m_data.end(), cmpSongSubTitleAsc        ); break;
+            case CSongTable::ColTrackGain       : qSort(m_data.begin(), m_data.end(), cmpSongTrackGainAsc       ); break;
+            case CSongTable::ColTrackPeak       : qSort(m_data.begin(), m_data.end(), cmpSongTrackPeakAsc       ); break;
+            case CSongTable::ColAlbumGain       : qSort(m_data.begin(), m_data.end(), cmpSongAlbumGainAsc       ); break;
+            case CSongTable::ColAlbumPeak       : qSort(m_data.begin(), m_data.end(), cmpSongAlbumPeakAsc       ); break;
+            case CSongTable::ColBPM             : qSort(m_data.begin(), m_data.end(), cmpSongBPMAsc             ); break;
         }
     }
     else
@@ -495,6 +511,11 @@ void CSongTableModel::sort(int column, Qt::SortOrder order)
             case CSongTable::ColLyricist        : qSort(m_data.begin(), m_data.end(), cmpSongLyricistDesc        ); break;
             case CSongTable::ColGrouping        : qSort(m_data.begin(), m_data.end(), cmpSongGroupingDesc        ); break;
             case CSongTable::ColSubTitle        : qSort(m_data.begin(), m_data.end(), cmpSongSubTitleDesc        ); break;
+            case CSongTable::ColTrackGain       : qSort(m_data.begin(), m_data.end(), cmpSongTrackGainDesc       ); break;
+            case CSongTable::ColTrackPeak       : qSort(m_data.begin(), m_data.end(), cmpSongTrackPeakDesc       ); break;
+            case CSongTable::ColAlbumGain       : qSort(m_data.begin(), m_data.end(), cmpSongAlbumGainDesc       ); break;
+            case CSongTable::ColAlbumPeak       : qSort(m_data.begin(), m_data.end(), cmpSongAlbumPeakDesc       ); break;
+            case CSongTable::ColBPM             : qSort(m_data.begin(), m_data.end(), cmpSongBPMDesc             ); break;
         }
     }
 

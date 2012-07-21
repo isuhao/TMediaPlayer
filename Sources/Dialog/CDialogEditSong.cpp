@@ -211,18 +211,15 @@ void CDialogEditSong::updateInfos()
 
     // Rechargement des métadonnées
     song->loadTags();
+    song->updateDatabase();
 
     const QString songTitle = song->getTitle();
     const QString songArtist = song->getArtistName();
 
     if (songArtist.isEmpty())
-    {
         setWindowTitle(tr("Song infos") + " - " + songTitle);
-    }
     else
-    {
         setWindowTitle(tr("Song infos") + " - " + songTitle + " - " + songArtist);
-    }
 
 
     // Résumé

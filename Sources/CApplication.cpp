@@ -2946,7 +2946,11 @@ void CApplication::loadDatabase(void)
                                 "song_skip_shuffle INTEGER NOT NULL,"
                                 "song_play_count INTEGER NOT NULL,"
                                 "song_play_time TIMESTAMP,"
-                                "song_play_time_utc TIMESTAMP"
+                                "song_play_time_utc TIMESTAMP,"
+                                "song_track_gain FLOAT,"
+                                "song_track_peak FLOAT,"
+                                "song_album_gain FLOAT,"
+                                "song_album_peak FLOAT"
                             ")"))
             {
                 showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
@@ -3155,7 +3159,11 @@ void CApplication::loadDatabase(void)
                                 "song_skip_shuffle INTEGER NOT NULL,"
                                 "song_play_count INTEGER NOT NULL,"
                                 "song_play_time TIMESTAMP,"
-                                "song_play_time_utc TIMESTAMP"
+                                "song_play_time_utc TIMESTAMP,"
+                                "song_track_gain FLOAT,"
+                                "song_track_peak FLOAT,"
+                                "song_album_gain FLOAT,"
+                                "song_album_peak FLOAT"
                             ")"))
             {
                 showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);

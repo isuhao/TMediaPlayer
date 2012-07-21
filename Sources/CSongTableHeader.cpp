@@ -25,14 +25,17 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QtDebug>
 
 
-#define T_CREATE_ACTION(colName, colType) \
-    m_actionShowCol[colType] = m_contextMenu->addAction(CSongTable::getColumnTypeName(CSongTable::getColumnTypeFromInteger(colType)), this, SLOT(showCol##colName(bool))); \
+#define T_CREATE_ACTION(menu, colName, colType) \
+    m_actionShowCol[colType] = menu->addAction(CSongTable::getColumnTypeName(CSongTable::getColumnTypeFromInteger(colType)), this, SLOT(showCol##colName(bool))); \
     m_actionShowCol[colType]->setCheckable(true);
 
 
 CSongTableHeader::CSongTableHeader(QWidget * parent) :
     QHeaderView             (Qt::Horizontal, parent),
-    m_contextMenu           (NULL)
+    m_contextMenu           (NULL),
+    m_menuInfos             (NULL),
+    m_menuProperties        (NULL),
+    m_menuReplayGain        (NULL)
 {
     setClickable(true);
     setMovable(true);
@@ -40,34 +43,54 @@ CSongTableHeader::CSongTableHeader(QWidget * parent) :
 
     m_contextMenu = new QMenu(this);
     m_actionShowCol[0] = NULL;
+    
+    m_menuInfos = new QMenu(tr("Informations"), this);
+    m_menuProperties = new QMenu(tr("Properties"), this);
+    m_menuReplayGain = new QMenu(tr("Replay Gain"), this);
 
-    T_CREATE_ACTION(Title           , CSongTable::ColTitle           );
-    T_CREATE_ACTION(Artist          , CSongTable::ColArtist          );
-    T_CREATE_ACTION(Album           , CSongTable::ColAlbum           );
-    T_CREATE_ACTION(AlbumArtist     , CSongTable::ColAlbumArtist     );
-    T_CREATE_ACTION(Composer        , CSongTable::ColComposer        );
-    T_CREATE_ACTION(Year            , CSongTable::ColYear            );
-    T_CREATE_ACTION(TrackNumber     , CSongTable::ColTrackNumber     );
-    T_CREATE_ACTION(DiscNumber      , CSongTable::ColDiscNumber      );
-    T_CREATE_ACTION(Genre           , CSongTable::ColGenre           );
-    T_CREATE_ACTION(Rating          , CSongTable::ColRating          );
-    T_CREATE_ACTION(Comments        , CSongTable::ColComments        );
-    T_CREATE_ACTION(PlayCount       , CSongTable::ColPlayCount       );
-    T_CREATE_ACTION(LastPlayTime    , CSongTable::ColLastPlayTime    );
-    T_CREATE_ACTION(FileName        , CSongTable::ColFileName        );
-    T_CREATE_ACTION(BitRate         , CSongTable::ColBitRate         );
-    T_CREATE_ACTION(Format          , CSongTable::ColFormat          );
-    T_CREATE_ACTION(Duration        , CSongTable::ColDuration        );
-    T_CREATE_ACTION(SampleRate      , CSongTable::ColSampleRate      );
-    T_CREATE_ACTION(CreationDate    , CSongTable::ColCreationDate    );
-    T_CREATE_ACTION(ModificationDate, CSongTable::ColModificationDate);
-    T_CREATE_ACTION(Channels        , CSongTable::ColChannels        );
-    T_CREATE_ACTION(FileSize        , CSongTable::ColFileSize        );
-    T_CREATE_ACTION(Lyrics          , CSongTable::ColLyrics          );
-    T_CREATE_ACTION(Language        , CSongTable::ColLanguage        );
-    T_CREATE_ACTION(Lyricist        , CSongTable::ColLyricist        );
-    T_CREATE_ACTION(Grouping        , CSongTable::ColGrouping        );
-    T_CREATE_ACTION(SubTitle        , CSongTable::ColSubTitle        );
+    // Remarque : la hauteur d'un menu est limitée à 600px, soit 27 items
+
+    // Informations
+    T_CREATE_ACTION(m_menuInfos, Title      , CSongTable::ColTitle      );
+    T_CREATE_ACTION(m_menuInfos, Artist     , CSongTable::ColArtist     );
+    T_CREATE_ACTION(m_menuInfos, Album      , CSongTable::ColAlbum      );
+    T_CREATE_ACTION(m_menuInfos, AlbumArtist, CSongTable::ColAlbumArtist);
+    T_CREATE_ACTION(m_menuInfos, Composer   , CSongTable::ColComposer   );
+    T_CREATE_ACTION(m_menuInfos, Year       , CSongTable::ColYear       );
+    T_CREATE_ACTION(m_menuInfos, TrackNumber, CSongTable::ColTrackNumber);
+    T_CREATE_ACTION(m_menuInfos, DiscNumber , CSongTable::ColDiscNumber );
+    T_CREATE_ACTION(m_menuInfos, Genre      , CSongTable::ColGenre      );
+    T_CREATE_ACTION(m_menuInfos, Rating     , CSongTable::ColRating     );
+    T_CREATE_ACTION(m_menuInfos, Comments   , CSongTable::ColComments   );
+    T_CREATE_ACTION(m_menuInfos, Lyrics     , CSongTable::ColLyrics     );
+    T_CREATE_ACTION(m_menuInfos, Language   , CSongTable::ColLanguage   );
+    T_CREATE_ACTION(m_menuInfos, Lyricist   , CSongTable::ColLyricist   );
+    T_CREATE_ACTION(m_menuInfos, Grouping   , CSongTable::ColGrouping   );
+    T_CREATE_ACTION(m_menuInfos, SubTitle   , CSongTable::ColSubTitle   );
+    T_CREATE_ACTION(m_menuInfos, BPM        , CSongTable::ColBPM        );
+
+    // Propriétés
+    T_CREATE_ACTION(m_menuProperties, PlayCount       , CSongTable::ColPlayCount       );
+    T_CREATE_ACTION(m_menuProperties, LastPlayTime    , CSongTable::ColLastPlayTime    );
+    T_CREATE_ACTION(m_menuProperties, FileName        , CSongTable::ColFileName        );
+    T_CREATE_ACTION(m_menuProperties, BitRate         , CSongTable::ColBitRate         );
+    T_CREATE_ACTION(m_menuProperties, Format          , CSongTable::ColFormat          );
+    T_CREATE_ACTION(m_menuProperties, Duration        , CSongTable::ColDuration        );
+    T_CREATE_ACTION(m_menuProperties, SampleRate      , CSongTable::ColSampleRate      );
+    T_CREATE_ACTION(m_menuProperties, CreationDate    , CSongTable::ColCreationDate    );
+    T_CREATE_ACTION(m_menuProperties, ModificationDate, CSongTable::ColModificationDate);
+    T_CREATE_ACTION(m_menuProperties, Channels        , CSongTable::ColChannels        );
+    T_CREATE_ACTION(m_menuProperties, FileSize        , CSongTable::ColFileSize        );
+
+    // Replay Gain
+    T_CREATE_ACTION(m_menuReplayGain, TrackGain, CSongTable::ColTrackGain);
+    T_CREATE_ACTION(m_menuReplayGain, TrackPeak, CSongTable::ColTrackPeak);
+    T_CREATE_ACTION(m_menuReplayGain, AlbumGain, CSongTable::ColAlbumGain);
+    T_CREATE_ACTION(m_menuReplayGain, AlbumPeak, CSongTable::ColAlbumPeak);
+
+    m_contextMenu->addMenu(m_menuInfos);
+    m_contextMenu->addMenu(m_menuProperties);
+    m_contextMenu->addMenu(m_menuReplayGain);
 }
 
 

@@ -91,7 +91,11 @@ CREATE TABLE song (
     song_skip_shuffle INTEGER NOT NULL,
     song_play_count INTEGER NOT NULL,
     song_play_time TIMESTAMP,
-    song_play_time_utc TIMESTAMP
+    song_play_time_utc TIMESTAMP,
+    song_track_gain FLOAT NOT NULL,
+    song_track_peak FLOAT NOT NULL,
+    song_album_gain FLOAT NOT NULL,
+    song_album_peak FLOAT NOT NULL
 ) WITH OIDS;
 
 CREATE TABLE album (

@@ -52,10 +52,10 @@ public:
      * - Incrémenter la valeur de ColNumber dans l'énumération TColumnType.
      * - Modifier la méthode CSongTable::getColumnTypeFromInteger.
      * - Modifier la méthode CSongTable::getColumnTypeName.
-     * - Modifier la méthode CSongTableModel::data pour afficher les données.
-     * - Modifier la méthode CSongTableModel::sort pour trier les données.
      * - Dans la liste des slots de CSongTableHeader, ajouter le slot "showColBidule".
      * - Dans le constructeur de CSongTableHeader, ajouter la ligne "T_CREATE_ACTION(ColBidule)".
+     * - Modifier la méthode CSongTableModel::data pour afficher les données.
+     * - Modifier la méthode CSongTableModel::sort pour trier les données.
      */
 
     enum TColumnType
@@ -90,8 +90,13 @@ public:
         ColLyricist         = 25, ///< Parolier.
         ColGrouping         = 26, ///< Regroupement.
         ColSubTitle         = 27, ///< Sous-titre.
+        ColTrackGain        = 28, ///< Gain de la piste.
+        ColTrackPeak        = 29, ///< Pic de la piste.
+        ColAlbumGain        = 30, ///< Gain de l'album.
+        ColAlbumPeak        = 31, ///< Pic de l'album.
+        ColBPM              = 32, ///< Battements par minute.
 
-        ColNumber           = 28  ///< Nombre de types de colonnes.
+        ColNumber           = 33  ///< Nombre de types de colonnes.
     };
 
     static inline TColumnType getColumnTypeFromInteger(int column);
@@ -226,6 +231,11 @@ inline CSongTable::TColumnType CSongTable::getColumnTypeFromInteger(int column)
         case 25: return ColLyricist        ;
         case 26: return ColGrouping        ;
         case 27: return ColSubTitle        ;
+        case 28: return ColTrackGain       ;
+        case 29: return ColTrackPeak       ;
+        case 30: return ColAlbumGain       ;
+        case 31: return ColAlbumPeak       ;
+        case 32: return ColBPM             ;
     }
 }
 
@@ -263,6 +273,11 @@ inline QString CSongTable::getColumnTypeName(CSongTable::TColumnType column)
         case ColLyricist        : return tr("Lyricist"         );
         case ColGrouping        : return tr("Grouping"         );
         case ColSubTitle        : return tr("Subtitle"         );
+        case ColTrackGain       : return tr("Track gain"       );
+        case ColTrackPeak       : return tr("Track peak"       );
+        case ColAlbumGain       : return tr("Album gain"       );
+        case ColAlbumPeak       : return tr("Album peak"       );
+        case ColBPM             : return tr("BPM"              );
     }
 }
 

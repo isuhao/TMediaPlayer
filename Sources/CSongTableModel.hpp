@@ -429,9 +429,7 @@ private:
         CSong::TLanguage lang2 = song2->getSong()->getLanguage();
 
         if (lang1 == lang2)
-        {
             return cmpSongArtistAsc(song1, song2);
-        }
 
         return (CSong::getLanguageName(lang1) < CSong::getLanguageName(lang2));
     }
@@ -443,7 +441,13 @@ private:
 
     static inline bool cmpSongLyricistAsc(CSongTableItem * song1, CSongTableItem * song2)
     {
-        return (song1->getSong()->getLyricist() < song2->getSong()->getLyricist());
+        QString author1 = song1->getSong()->getLyricist();
+        QString author2 = song2->getSong()->getLyricist();
+
+        if (author1 < author2) return true;
+        if (author1 > author2) return false;
+
+        return cmpSongArtistAsc(song1, song2);
     }
 
     static inline bool cmpSongLyricistDesc(CSongTableItem * song1, CSongTableItem * song2)
@@ -453,7 +457,13 @@ private:
 
     static inline bool cmpSongGroupingAsc(CSongTableItem * song1, CSongTableItem * song2)
     {
-        return (song1->getSong()->getGrouping() < song2->getSong()->getGrouping());
+        QString grouping1 = song1->getSong()->getGrouping();
+        QString grouping2 = song2->getSong()->getGrouping();
+
+        if (grouping1 < grouping2) return true;
+        if (grouping1 > grouping2) return false;
+
+        return cmpSongArtistAsc(song1, song2);
     }
 
     static inline bool cmpSongGroupingDesc(CSongTableItem * song1, CSongTableItem * song2)
@@ -463,12 +473,92 @@ private:
 
     static inline bool cmpSongSubTitleAsc(CSongTableItem * song1, CSongTableItem * song2)
     {
-        return (song1->getSong()->getSubTitle() < song2->getSong()->getSubTitle());
+        QString subTitle1 = song1->getSong()->getSubTitle();
+        QString subTitle2 = song2->getSong()->getSubTitle();
+
+        if (subTitle1 < subTitle2) return true;
+        if (subTitle1 > subTitle2) return false;
+
+        return cmpSongArtistAsc(song1, song2);
     }
 
     static inline bool cmpSongSubTitleDesc(CSongTableItem * song1, CSongTableItem * song2)
     {
         return cmpSongSubTitleAsc(song2, song1);
+    }
+
+    static inline bool cmpSongTrackGainAsc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        float gain1 = song1->getSong()->getTrackGain();
+        float gain2 = song2->getSong()->getTrackGain();
+
+        if (gain1 < gain2) return true;
+        if (gain1 > gain2) return false;
+
+        return cmpSongArtistAsc(song1, song2);
+    }
+
+    static inline bool cmpSongTrackGainDesc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return cmpSongTrackGainAsc(song2, song1);
+    }
+
+    static inline bool cmpSongTrackPeakAsc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        float peak1 = song1->getSong()->getTrackPeak();
+        float peak2 = song2->getSong()->getTrackPeak();
+
+        if (peak1 < peak2) return true;
+        if (peak1 > peak2) return false;
+
+        return cmpSongArtistAsc(song1, song2);
+    }
+
+    static inline bool cmpSongTrackPeakDesc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return cmpSongTrackGainAsc(song2, song1);
+    }
+
+    static inline bool cmpSongAlbumGainAsc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        float gain1 = song1->getSong()->getAlbumGain();
+        float gain2 = song2->getSong()->getAlbumGain();
+
+        if (gain1 < gain2) return true;
+        if (gain1 > gain2) return false;
+
+        return cmpSongArtistAsc(song1, song2);
+    }
+
+    static inline bool cmpSongAlbumGainDesc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return cmpSongAlbumGainAsc(song2, song1);
+    }
+
+    static inline bool cmpSongAlbumPeakAsc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        float peak1 = song1->getSong()->getAlbumPeak();
+        float peak2 = song2->getSong()->getAlbumPeak();
+
+        if (peak1 < peak2) return true;
+        if (peak1 > peak2) return false;
+
+        return cmpSongArtistAsc(song1, song2);
+    }
+
+    static inline bool cmpSongAlbumPeakDesc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return cmpSongAlbumGainAsc(song2, song1);
+    }
+
+    static inline bool cmpSongBPMAsc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return (song1->getSong()->getBPM() < song2->getSong()->getBPM());
+    }
+
+    static inline bool cmpSongBPMDesc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return cmpSongBPMAsc(song2, song1);
     }
 
 

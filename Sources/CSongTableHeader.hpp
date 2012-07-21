@@ -75,10 +75,18 @@ protected slots:
     inline void showColLyricist        (bool show = true) { emit columnShown(CSongTable::ColLyricist        , show); }
     inline void showColGrouping        (bool show = true) { emit columnShown(CSongTable::ColGrouping        , show); }
     inline void showColSubTitle        (bool show = true) { emit columnShown(CSongTable::ColSubTitle        , show); }
+    inline void showColTrackGain       (bool show = true) { emit columnShown(CSongTable::ColTrackGain       , show); }
+    inline void showColTrackPeak       (bool show = true) { emit columnShown(CSongTable::ColTrackPeak       , show); }
+    inline void showColAlbumGain       (bool show = true) { emit columnShown(CSongTable::ColAlbumGain       , show); }
+    inline void showColAlbumPeak       (bool show = true) { emit columnShown(CSongTable::ColAlbumPeak       , show); }
+    inline void showColBPM             (bool show = true) { emit columnShown(CSongTable::ColBPM             , show); }
 
 private:
 
     QMenu * m_contextMenu;
+    QMenu * m_menuInfos;
+    QMenu * m_menuProperties;
+    QMenu * m_menuReplayGain;
     QAction * m_actionShowCol[CSongTable::ColNumber];
 };
 

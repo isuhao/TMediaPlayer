@@ -63,9 +63,8 @@
   - Option "Illustrations : image dans le dossier".
 
 - Créer la boite de dialogue Édition des métadonnées :
-  - Lire les métadonnées à l'ouverture de cette vue.
   - Gérer les différents types de tags :
-    - ID3v2 : pictures, ..
+    - ID3v2 : pictures, ...
     - xiphComment.
     - APE.
   - Ajouter une option "Vérifier la cohérence des données" (tags duppliqués, valeurs identiques pour les différents formats de tags...).
