@@ -847,6 +847,13 @@ void CDialogEditSongs::onLyricsChange(void)
 }
 
 
+void CDialogEditSongs::onLyricistChange(void)
+{
+    m_uiWidget->editLyricist->setPlaceholderText(QString());
+    m_uiWidget->chLyricist->setChecked(true);
+}
+
+
 void CDialogEditSongs::onLanguageChange(const QString& language)
 {
     m_uiWidget->chLanguage->setChecked(true);
@@ -995,6 +1002,12 @@ void CDialogEditSongs::onLyricsChecked(bool checked)
         m_uiWidget->editLyrics->setText(QString());
         m_differentLyrics = false;
     }
+}
+
+
+void CDialogEditSongs::onLyricistChecked(bool checked)
+{
+    m_uiWidget->editLyricist->setPlaceholderText(QString());
 }
 
 

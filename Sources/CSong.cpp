@@ -449,7 +449,7 @@ bool CSong::loadTags(bool readProperties)
 /**
  * Met à jour les métadonnées du fichier.
  * Pour le format MP3, les tags ID3v1 et ID3v2 sont écrits, et les tags APE enlevés.
- * Pour le format FLAC, les tags xiphComment, ID3v1 et ID3v2 sont écrits.
+ * Pour le format FLAC, les tags xiphComment sont écrits.
  * Seuls les tags gérés par l'application sont mis à jour, les autres sont conservés.
  *
  * \todo Activer l'écriture.
@@ -462,7 +462,7 @@ bool CSong::writeTags(void)
 {
     //qDebug() << "CSong::writeTags()";
 
-return false; // Lecture seule...
+    //return false; // Lecture seule...
 
     switch (m_format)
     {
@@ -555,8 +555,8 @@ return false; // Lecture seule...
 
             QFile * logFile = m_application->getLogFile("metadata");
 
-            writeTags(file.ID3v1Tag(true), m_infos, logFile, m_fileName);
-            writeTags(file.ID3v2Tag(true), m_infos, logFile, m_fileName);
+            writeTags(file.ID3v1Tag(false), m_infos, logFile, m_fileName);
+            writeTags(file.ID3v2Tag(false), m_infos, logFile, m_fileName);
             writeTags(file.xiphComment(true), m_infos, logFile, m_fileName);
 
             file.save();
@@ -1452,6 +1452,10 @@ void CSong::setSkipShuffle(bool skipShuffle)
 void CSong::startPlay(void)
 {
     Q_CHECK_PTR(m_sound);
+    
+    // Rechargement des métadonnées
+    loadTags();
+    updateDatabase();
 
     FMOD_RESULT res;
     res = m_application->getSoundSystem()->playSound(FMOD_CHANNEL_FREE, m_sound, true, &m_channel);
@@ -2659,10 +2663,28 @@ bool CSong::loadTags(TagLib::Ogg::XiphComment * tags, TSongInfos& infos, QFile *
         infos.title = QString::fromUtf8(tagMap["TITLE"].toString().toCString(true));
     }
 
+    // Sous-titre
+    if (!tagMap["SUBTITLE"].isEmpty())
+    {
+        infos.subTitle = QString::fromUtf8(tagMap["SUBTITLE"].toString().toCString(true));
+    }
+
+    // Regroupement
+    if (!tagMap["GROUPING"].isEmpty())
+    {
+        infos.grouping = QString::fromUtf8(tagMap["GROUPING"].toString().toCString(true));
+    }
+
     // Album
     if (!tagMap["ALBUM"].isEmpty())
     {
         infos.albumTitle = QString::fromUtf8(tagMap["ALBUM"].toString().toCString(true));
+    }
+
+    // Album pour le tri
+    if (!tagMap["ALBUMSORT"].isEmpty())
+    {
+        infos.albumTitleSort = QString::fromUtf8(tagMap["ALBUMSORT"].toString().toCString(true));
     }
 
     // Artiste
@@ -2681,6 +2703,12 @@ bool CSong::loadTags(TagLib::Ogg::XiphComment * tags, TSongInfos& infos, QFile *
     if (!tagMap["ALBUMARTIST"].isEmpty())
     {
         infos.albumArtist = QString::fromUtf8(tagMap["ALBUMARTIST"].toString().toCString(true));
+    }
+
+    // Artiste de l'album pour le tri
+    if (!tagMap["ALBUMARTISTSORT"].isEmpty())
+    {
+        infos.albumArtistSort = QString::fromUtf8(tagMap["ALBUMARTISTSORT"].toString().toCString(true));
     }
 
     // Genre
@@ -2791,10 +2819,38 @@ bool CSong::loadTags(TagLib::Ogg::XiphComment * tags, TSongInfos& infos, QFile *
         infos.lyrics = QString::fromUtf8(tagMap["LYRICS"].toString().toCString(true));
     }
 
+    // Parolier
+    if (!tagMap["LYRICIST"].isEmpty())
+    {
+        infos.lyricist = QString::fromUtf8(tagMap["LYRICIST"].toString().toCString(true));
+    }
+
+    // Langue
+    if (!tagMap["LANGUAGE"].isEmpty())
+    {
+        QString str = QString::fromUtf8(tagMap["LANGUAGE"].toString().toCString(true));
+
+        if (str.size() != 3)
+        {
+            stream << tr("Erreur : tag %1 invalide").arg("LANGUAGE") << '\n';
+        }
+        else
+        {
+            TLanguage lng = getLanguageForISO3Code(qPrintable(str));
+            infos.language = lng;
+        }
+    }
+
     // Compositeur
     if (!tagMap["COMPOSER"].isEmpty())
     {
         infos.composer = QString::fromUtf8(tagMap["COMPOSER"].toString().toCString(true));
+    }
+
+    // Compositeur pour le tri
+    if (!tagMap["COMPOSERSORT"].isEmpty())
+    {
+        infos.composerSort = QString::fromUtf8(tagMap["COMPOSERSORT"].toString().toCString(true));
     }
 
     // Numéro de disque
@@ -2884,13 +2940,6 @@ bool CSong::loadTags(TagLib::Ogg::XiphComment * tags, TSongInfos& infos, QFile *
             stream << tr("Erreur : tag REPLAYGAIN_ALBUM_PEAK incorrect") << '\n';
     }
 
-/*
-    Autres tags :
-    - "ALBUM ARTIST"
-    - "ENCODER"
-    - "ENSEMBLE"
-*/
-
     return false;
 }
 
@@ -2965,16 +3014,18 @@ bool CSong::writeTags(TagLib::ID3v2::Tag * tags, const TSongInfos& infos, QFile 
     }
 
     // Sous-titre
+    tags->removeFrames("TIT3");
+    if (!infos.subTitle.isEmpty())
     {
-        tags->removeFrames("TIT3");
         TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TIT3", TagLib::String::UTF8);
         frame->setText(infos.subTitle.toUtf8().constData());
         tags->addFrame(frame);
     }
 
     // Regroupement
+    tags->removeFrames("TIT1");
+    if (!infos.grouping.isEmpty())
     {
-        tags->removeFrames("TIT1");
         TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TIT1", TagLib::String::UTF8);
         frame->setText(infos.grouping.toUtf8().constData());
         tags->addFrame(frame);
@@ -2989,56 +3040,63 @@ bool CSong::writeTags(TagLib::ID3v2::Tag * tags, const TSongInfos& infos, QFile 
     }
 
     // Album
+    tags->removeFrames("TALB");
+    if (!infos.albumTitle.isEmpty())
     {
-        tags->removeFrames("TALB");
         TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TALB", TagLib::String::UTF8);
         frame->setText(infos.albumTitle.toUtf8().constData());
         tags->addFrame(frame);
     }
 
     // Artiste de l'album
+    tags->removeFrames("TPE2");
+    if (!infos.albumArtist.isEmpty())
     {
-        tags->removeFrames("TPE2");
         TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TPE2", TagLib::String::UTF8);
         frame->setText(infos.albumArtist.toUtf8().constData());
         tags->addFrame(frame);
     }
 
     // Compositeur
+    tags->removeFrames("TCOM");
+    if (!infos.composer.isEmpty())
     {
-        tags->removeFrames("TCOM");
         TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TCOM", TagLib::String::UTF8);
         frame->setText(infos.composer.toUtf8().constData());
         tags->addFrame(frame);
     }
 
     // Titre pour le tri
+    tags->removeFrames("TSOT");
+    if (!infos.titleSort.isEmpty())
     {
-        tags->removeFrames("TSOT");
         TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TSOT", TagLib::String::UTF8);
         frame->setText(infos.titleSort.toUtf8().constData());
         tags->addFrame(frame);
     }
 
     // Artiste pour le tri
+    tags->removeFrames("TSOP");
+    if (!infos.artistNameSort.isEmpty())
     {
-        tags->removeFrames("TSOP");
         TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TSOP", TagLib::String::UTF8);
         frame->setText(infos.artistNameSort.toUtf8().constData());
         tags->addFrame(frame);
     }
 
     // Album pour le tri
+    tags->removeFrames("TSOA");
+    if (!infos.albumTitleSort.isEmpty())
     {
-        tags->removeFrames("TSOA");
         TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TSOA", TagLib::String::UTF8);
         frame->setText(infos.albumTitleSort.toUtf8().constData());
         tags->addFrame(frame);
     }
 
     // Artiste de l'album pour le tri
+    tags->removeFrames("TSO2");
+    if (!infos.albumArtistSort.isEmpty())
     {
-        tags->removeFrames("TSO2");
         TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TSO2", TagLib::String::UTF8);
         frame->setText(infos.albumArtistSort.toUtf8().constData());
         tags->addFrame(frame);
@@ -3093,32 +3151,36 @@ bool CSong::writeTags(TagLib::ID3v2::Tag * tags, const TSongInfos& infos, QFile 
     }
 
     // Genre
+    tags->removeFrames("TCON");
+    if (!infos.genre.isEmpty())
     {
-        tags->removeFrames("TCON");
         TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TCON", TagLib::String::UTF8);
         frame->setText(infos.genre.toUtf8().constData());
         tags->addFrame(frame);
     }
 
     // Commentaires
+    tags->removeFrames("COMM"); // <= Garder les commentaires multiples ?
+    if (!infos.comments.isEmpty())
     {
-        tags->removeFrames("COMM");
         TagLib::ID3v2::CommentsFrame * frame = new TagLib::ID3v2::CommentsFrame(TagLib::String::UTF8);
         frame->setText(infos.comments.toUtf8().constData());
         tags->addFrame(frame);
     }
 
     // BPM
+    tags->removeFrames("TBPM");
+    if (infos.bpm > 0)
     {
-        tags->removeFrames("TBPM");
         TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TBPM", TagLib::String::UTF8);
         frame->setText(TagLib::String::number(infos.bpm));
         tags->addFrame(frame);
     }
 
     // Paroles
+    tags->removeFrames("USLT");
+    if (!infos.lyrics.isEmpty())
     {
-        tags->removeFrames("USLT");
         TagLib::ID3v2::UnsynchronizedLyricsFrame * frame = new TagLib::ID3v2::UnsynchronizedLyricsFrame(TagLib::String::UTF8);
         frame->setText(infos.lyrics.toUtf8().constData());
         frame->setLanguage(CSong::getISO3CodeForLanguage(infos.language).toLatin1().constData());
@@ -3126,16 +3188,18 @@ bool CSong::writeTags(TagLib::ID3v2::Tag * tags, const TSongInfos& infos, QFile 
     }
 
     // Langue
+    tags->removeFrames("TLAN");
+    if (infos.language != CSong::LangUnknown)
     {
-        tags->removeFrames("TLAN");
         TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TLAN", TagLib::String::UTF8);
         frame->setText(CSong::getISO3CodeForLanguage(infos.language).toLatin1().constData());
         tags->addFrame(frame);
     }
 
     // Parolier
+    tags->removeFrames("TEXT");
+    if (!infos.lyricist.isEmpty())
     {
-        tags->removeFrames("TEXT");
         TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TEXT", TagLib::String::UTF8);
         frame->setText(infos.lyricist.toUtf8().constData());
         tags->addFrame(frame);
@@ -3308,118 +3372,144 @@ bool CSong::writeTags(TagLib::Ogg::XiphComment * tags, const TSongInfos& infos, 
     tags->addField("TITLE", infos.title.toUtf8().constData());
 
     // Sous-titre
-    stream << tr("Aucun tag pour enregistrer le sous-titre") << '\n';
+    if (infos.subTitle.isEmpty())
+        tags->removeField("SUBTITLE");
+    else
+        tags->addField("SUBTITLE", infos.subTitle.toUtf8().constData());
 
     // Regroupement
-    stream << tr("Aucun tag pour enregistrer le regroupement") << '\n';
+    if (infos.grouping.isEmpty())
+        tags->removeField("GROUPING");
+    else
+        tags->addField("GROUPING", infos.grouping.toUtf8().constData());
 
     // Artiste
-    tags->addField("ARTIST", infos.artistName.toUtf8().constData());
+    if (infos.artistName.isEmpty())
+        tags->removeField("ARTIST");
+    else
+        tags->addField("ARTIST", infos.artistName.toUtf8().constData());
 
     // Album
-    tags->addField("ALBUM", infos.albumTitle.toUtf8().constData());
+    if (infos.albumTitle.isEmpty())
+        tags->removeField("ALBUM");
+    else
+        tags->addField("ALBUM", infos.albumTitle.toUtf8().constData());
 
     // Artiste de l'album
-    tags->addField("ALBUMARTIST", infos.albumArtist.toUtf8().constData());
+    if (infos.albumArtist.isEmpty())
+        tags->removeField("ALBUMARTIST");
+    else
+        tags->addField("ALBUMARTIST", infos.albumArtist.toUtf8().constData());
 
     // Compositeur
-    tags->addField("COMPOSER", infos.composer.toUtf8().constData());
+    if (infos.composer.isEmpty())
+        tags->removeField("COMPOSER");
+    else
+        tags->addField("COMPOSER", infos.composer.toUtf8().constData());
 
     // Titre pour le tri
-    stream << tr("Aucun tag pour enregistrer le titre pour le tri") << '\n';
+    if (infos.titleSort.isEmpty())
+        tags->removeField("TITLESORT");
+    else
+        tags->addField("TITLESORT", infos.titleSort.toUtf8().constData());
 
     // Artiste pour le tri
-    tags->addField("ARTISTSORT", infos.artistNameSort.toUtf8().constData());
+    if (infos.artistNameSort.isEmpty())
+        tags->removeField("ARTISTSORT");
+    else
+        tags->addField("ARTISTSORT", infos.artistNameSort.toUtf8().constData());
 
     // Album pour le tri
-    stream << tr("Aucun tag pour enregistrer l'album pour le tri") << '\n';
+    if (infos.albumTitleSort.isEmpty())
+        tags->removeField("ALBUMSORT");
+    else
+        tags->addField("ALBUMSORT", infos.albumTitleSort.toUtf8().constData());
 
     // Artiste de l'album pour le tri
-    stream << tr("Aucun tag pour enregistrer l'artiste pour le tri") << '\n';
+    if (infos.albumArtistSort.isEmpty())
+        tags->removeField("ALBUMARTISTSORT");
+    else
+        tags->addField("ALBUMARTISTSORT", infos.albumArtistSort.toUtf8().constData());
 
     // Compositeur pour le tri
-    stream << tr("Aucun tag pour enregistrer le compositeur pour le tri") << '\n';
+    if (infos.composerSort.isEmpty())
+        tags->removeField("COMPOSERSORT");
+    else
+        tags->addField("COMPOSERSORT", infos.composerSort.toUtf8().constData());
 
     // Année
     if (infos.year > 0)
-    {
         tags->addField("DATE", TagLib::String::number(infos.year));
-    }
     else
-    {
         tags->removeField("DATE");
-    }
 
     // Numéro de piste
     if (infos.trackNumber > 0)
-    {
         tags->addField("TRACKNUMBER", TagLib::String::number(infos.trackNumber));
-    }
     else
-    {
         tags->removeField("TRACKNUMBER");
-    }
 
     // Nombre de pistes
     if (infos.trackCount > 0)
-    {
         tags->addField("TRACKTOTAL", TagLib::String::number(infos.trackCount));
-    }
     else
-    {
         tags->removeField("TRACKTOTAL");
-    }
 
     // Numéro de disque
     if (infos.discNumber > 0)
-    {
         tags->addField("DISCNUMBER", TagLib::String::number(infos.discNumber));
-    }
     else
-    {
         tags->removeField("DISCNUMBER");
-    }
 
     // Nombre de disques
     if (infos.discCount > 0)
-    {
         tags->addField("DISCTOTAL", TagLib::String::number(infos.discCount));
-    }
     else
-    {
         tags->removeField("DISCTOTAL");
-    }
 
     // Genre
-    tags->addField("GENRE", infos.genre.toUtf8().constData());
+    if (infos.genre.isEmpty())
+        tags->removeField("GENRE");
+    else
+        tags->addField("GENRE", infos.genre.toUtf8().constData());
 
     // Commentaires
-    tags->addField("COMMENT", infos.comments.toUtf8().constData());
+    if (infos.comments.isEmpty())
+        tags->removeField("COMMENT");
+    else
+        tags->addField("COMMENT", infos.comments.toUtf8().constData());
 
     // BPM
     if (infos.bpm > 0)
-    {
         tags->addField("TEMPO", TagLib::String::number(infos.bpm));
-    }
     else
-    {
         tags->removeField("TEMPO");
-    }
 
     // Paroles
-    tags->addField("LYRICS", infos.lyrics.toUtf8().constData());
+    if (infos.lyrics.isEmpty())
+        tags->removeField("LYRICS");
+    else
+        tags->addField("LYRICS", infos.lyrics.toUtf8().constData());
 
     // Langue
-    stream << tr("Aucun tag pour enregistrer la langue") << '\n';
+    if (infos.language == CSong::LangUnknown)
+        tags->removeField("LANGUAGE");
+    else
+        tags->addField("LANGUAGE", CSong::getISO3CodeForLanguage(infos.language).toLatin1().constData());
 
     // Parolier
-    stream << tr("Aucun tag pour enregistrer le parolier") << '\n';
+    if (infos.lyricist.isEmpty())
+        tags->removeField("LYRICIST");
+    else
+        tags->addField("LYRICIST", infos.lyricist.toUtf8().constData());
 
+/*
     // Replay Gain
     tags->addField("REPLAYGAIN_ALBUM_GAIN", QString("%1 db").arg(infos.albumGain).toUtf8().constData());
     tags->addField("REPLAYGAIN_ALBUM_PEAK", QString::number(infos.albumPeak).toUtf8().constData());
     tags->addField("REPLAYGAIN_TRACK_GAIN", QString("%1 dB").arg(infos.trackGain).toUtf8().constData());
     tags->addField("REPLAYGAIN_TRACK_PEAK", QString::number(infos.trackPeak).toUtf8().constData());
+*/
 
     return true;
 }

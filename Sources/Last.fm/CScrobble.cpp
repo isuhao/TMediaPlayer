@@ -83,7 +83,7 @@ CScrobble::CScrobble(CApplication * application, const QByteArray& sessionKey, C
     request.setRawHeader("Content-Type", "application/x-www-form-urlencoded");
 
 
-    return; // Pas de scrobble pour le moment !
+    //return; // Pas de scrobble
 
     m_networkManager->post(request, content);
 }

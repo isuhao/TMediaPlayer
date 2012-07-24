@@ -69,6 +69,7 @@ protected slots:
     void onGenreChange(const QString& genre);
     void onRatingChange(int rating);
     void onLyricsChange(void);
+    void onLyricistChange(void);
     void onLanguageChange(const QString& language);
 
     void onTitleChecked(bool checked);
@@ -93,6 +94,7 @@ protected slots:
     void onGenreChecked(bool checked);
     void onRatingChecked(bool checked);
     void onLyricsChecked(bool checked);
+    void onLyricistChecked(bool checked);
     void onLanguageChecked(bool checked);
 
     void onFocusChange(QWidget * old, QWidget * now);
