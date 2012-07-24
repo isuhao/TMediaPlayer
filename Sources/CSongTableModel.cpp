@@ -200,8 +200,8 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
             {
                 if (m_canDrop)
                 {
-                    return m_data.at(index.row())->getPosition();
-                    //return index.row();
+                    //return m_data.at(index.row())->getPosition();
+                    return index.row() + 1;
                 }
 
                 break;
@@ -742,6 +742,7 @@ void CSongTableModel::insertRow(CSong * song, int pos)
 
     if (pos < 0 || pos >= m_data.size())
     {
+        songItem->m_position = m_data.size() - 1;
         m_data.append(songItem);
     }
     else

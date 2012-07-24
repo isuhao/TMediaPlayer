@@ -89,6 +89,12 @@ CDialogEditSong::CDialogEditSong(CSongTableItem * songItem, CSongTable * songTab
     connect(btnApply, SIGNAL(clicked()), this, SLOT(apply()));
 
     updateInfos();
+
+    CSongTableItem * songItemTest = m_songTable->getPreviousSong(m_songItem, false);
+    m_uiWidget->btnPrevious->setEnabled(songItemTest);
+
+    songItemTest = m_songTable->getNextSong(m_songItem, false);
+    m_uiWidget->btnNext->setEnabled(songItemTest);
 }
 
 

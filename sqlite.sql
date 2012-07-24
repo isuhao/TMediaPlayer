@@ -1,26 +1,26 @@
 
 CREATE TABLE folder (
     folder_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    folder_name VARCHAR NOT NULL,
+    folder_name VARCHAR(512) NOT NULL,
     folder_parent INTEGER NOT NULL,
     folder_position INTEGER NOT NULL,
     folder_expanded INTEGER NOT NULL
     -- ,UNIQUE (folder_parent, folder_position)
 );
 
-INSERT INTO folder VALUES (0, "", 0, 1, 1);
+INSERT INTO folder VALUES (0, '', 0, 1, 1);
 
 CREATE TABLE playlist (
     playlist_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    playlist_name VARCHAR NOT NULL,
+    playlist_name VARCHAR(512) NOT NULL,
     folder_id INTEGER NOT NULL,
     list_position INTEGER NOT NULL,
-    list_columns VARCHAR NOT NULL
+    list_columns VARCHAR(512) NOT NULL
     -- ,UNIQUE (folder_id, list_position)
 );
 
 INSERT INTO playlist (playlist_id, playlist_name, folder_id, list_position, list_columns)
-VALUES (0, "Library", 0, -1, "0:40;1:150;17:60;2+:150;3:150;6:50;9:60;12:50;13:120");
+VALUES (0, 'Library', 0, -1, '0:40;1:150;17:60;2+:150;3:150;6:50;9:60;12:50;13:120');
 
 CREATE TABLE dynamic_list (
     dynamic_list_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -36,8 +36,8 @@ CREATE TABLE criteria (
     criteria_position INTEGER NOT NULL,
     criteria_type INTEGER NOT NULL,
     criteria_condition INTEGER NOT NULL,
-    criteria_value1 VARCHAR,
-    criteria_value2 VARCHAR,
+    criteria_value1 VARCHAR(512),
+    criteria_value2 VARCHAR(512),
     UNIQUE (dynamic_list_id, criteria_parent, criteria_position)
 );
 
@@ -56,7 +56,7 @@ CREATE TABLE static_list_song (
 
 CREATE TABLE song (
     song_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    song_filename VARCHAR NOT NULL UNIQUE,
+    song_filename VARCHAR(512) NOT NULL UNIQUE,
     song_filesize INTEGER NOT NULL,
     song_bitrate INTEGER NOT NULL,
     song_sample_rate INTEGER NOT NULL,
@@ -66,15 +66,15 @@ CREATE TABLE song (
     song_creation TIMESTAMP NOT NULL,
     song_modification TIMESTAMP NOT NULL,
     song_enabled INTEGER NOT NULL,
-    song_title VARCHAR NOT NULL,
-    song_title_sort VARCHAR NOT NULL,
-    song_subtitle VARCHAR NOT NULL,
-    song_grouping VARCHAR NOT NULL,
+    song_title VARCHAR(512) NOT NULL,
+    song_title_sort VARCHAR(512) NOT NULL,
+    song_subtitle VARCHAR(512) NOT NULL,
+    song_grouping VARCHAR(512) NOT NULL,
     artist_id INTEGER NOT NULL,
     album_id INTEGER NOT NULL,
     album_artist_id INTEGER NOT NULL,
-    song_composer VARCHAR NOT NULL,
-    song_composer_sort VARCHAR NOT NULL,
+    song_composer VARCHAR(512) NOT NULL,
+    song_composer_sort VARCHAR(512) NOT NULL,
     song_year INTEGER NOT NULL,
     song_track_number INTEGER NOT NULL,
     song_track_count INTEGER NOT NULL,
@@ -82,11 +82,11 @@ CREATE TABLE song (
     song_disc_count INTEGER NOT NULL,
     genre_id INTEGER NOT NULL,
     song_rating INTEGER NOT NULL,
-    song_comments VARCHAR NOT NULL,
+    song_comments TEXT NOT NULL,
     song_bpm INTEGER NOT NULL,
     song_lyrics TEXT NOT NULL,
     song_language VARCHAR(2) NOT NULL,
-    song_lyricist VARCHAR NOT NULL,
+    song_lyricist VARCHAR(512) NOT NULL,
     song_compilation INTEGER NOT NULL,
     song_skip_shuffle INTEGER NOT NULL,
     song_play_count INTEGER NOT NULL,
@@ -100,28 +100,28 @@ CREATE TABLE song (
 
 CREATE TABLE album (
     album_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    album_title VARCHAR NOT NULL,
-    album_title_sort VARCHAR,
+    album_title VARCHAR(512) NOT NULL,
+    album_title_sort VARCHAR(512),
     UNIQUE (album_title, album_title_sort)
 );
 
-INSERT INTO album (album_id, album_title, album_title_sort) VALUES (0, "", "");
+INSERT INTO album (album_id, album_title, album_title_sort) VALUES (0, '', '');
 
 CREATE TABLE artist (
     artist_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    artist_name VARCHAR NOT NULL,
-    artist_name_sort VARCHAR,
+    artist_name VARCHAR(512) NOT NULL,
+    artist_name_sort VARCHAR(512),
     UNIQUE (artist_name, artist_name_sort)
 );
 
-INSERT INTO artist (artist_id, artist_name, artist_name_sort) VALUES (0, "", "");
+INSERT INTO artist (artist_id, artist_name, artist_name_sort) VALUES (0, '', '');
 
 CREATE TABLE genre (
     genre_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    genre_name VARCHAR NOT NULL UNIQUE
+    genre_name VARCHAR(512) NOT NULL UNIQUE
 );
 
-INSERT INTO genre (genre_id, genre_name) VALUES (0, "");
+INSERT INTO genre (genre_id, genre_name) VALUES (0, '');
 
 CREATE TABLE play (
     play_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,

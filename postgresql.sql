@@ -6,7 +6,7 @@ CREATE TABLE folder (
     folder_position INTEGER NOT NULL,
     folder_expanded INTEGER NOT NULL
     -- ,UNIQUE (folder_parent, folder_position)
-) WITH OIDS;
+);
 
 INSERT INTO folder VALUES (0, '', 0, 1, 1);
 
@@ -17,7 +17,7 @@ CREATE TABLE playlist (
     list_position INTEGER NOT NULL,
     list_columns VARCHAR(512) NOT NULL
     -- ,UNIQUE (folder_id, list_position)
-) WITH OIDS;
+);
 
 INSERT INTO playlist (playlist_id, playlist_name, folder_id, list_position, list_columns)
 VALUES (0, 'Library', 0, -1, '0:40;1:150;17:60;2+:150;3:150;6:50;9:60;12:50;13:120');
@@ -27,7 +27,7 @@ CREATE TABLE dynamic_list (
     criteria_id INTEGER NOT NULL,
     playlist_id INTEGER NOT NULL,
     UNIQUE (playlist_id)
-) WITH OIDS;
+);
 
 CREATE TABLE criteria (
     criteria_id SERIAL PRIMARY KEY,
@@ -39,13 +39,13 @@ CREATE TABLE criteria (
     criteria_value1 VARCHAR(512),
     criteria_value2 VARCHAR(512),
     UNIQUE (dynamic_list_id, criteria_parent, criteria_position)
-) WITH OIDS;
+);
 
 CREATE TABLE static_list (
     static_list_id SERIAL PRIMARY KEY,
     playlist_id INTEGER NOT NULL,
     UNIQUE (playlist_id)
-) WITH OIDS;
+);
 
 CREATE TABLE static_list_song (
     static_list_id INTEGER NOT NULL,
@@ -96,14 +96,14 @@ CREATE TABLE song (
     song_track_peak FLOAT NOT NULL,
     song_album_gain FLOAT NOT NULL,
     song_album_peak FLOAT NOT NULL
-) WITH OIDS;
+);
 
 CREATE TABLE album (
     album_id SERIAL PRIMARY KEY,
     album_title VARCHAR(512) NOT NULL,
     album_title_sort VARCHAR(512),
     UNIQUE (album_title, album_title_sort)
-) WITH OIDS;
+);
 
 INSERT INTO album (album_id, album_title, album_title_sort) VALUES (0, '', '');
 
@@ -112,14 +112,14 @@ CREATE TABLE artist (
     artist_name VARCHAR(512) NOT NULL,
     artist_name_sort VARCHAR(512),
     UNIQUE (artist_name, artist_name_sort)
-) WITH OIDS;
+);
 
 INSERT INTO artist (artist_id, artist_name, artist_name_sort) VALUES (0, '', '');
 
 CREATE TABLE genre (
     genre_id SERIAL PRIMARY KEY,
     genre_name VARCHAR(512) NOT NULL UNIQUE
-) WITH OIDS;
+);
 
 INSERT INTO genre (genre_id, genre_name) VALUES (0, '');
 

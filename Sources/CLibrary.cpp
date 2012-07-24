@@ -41,6 +41,7 @@ void CLibrary::deleteSongs(void)
     }
 
     removeAllSongsFromTable();
+    m_songs.clear();
 }
 
 
@@ -53,6 +54,7 @@ void CLibrary::deleteSongs(void)
 void CLibrary::addSong(CSong * song, int pos)
 {
     addSongToTable(song, pos);
+    m_songs[song->getId()] = song;
 }
 
 
@@ -65,6 +67,12 @@ void CLibrary::addSong(CSong * song, int pos)
 void CLibrary::addSongs(const QList<CSong *>& songs)
 {
     addSongsToTable(songs);
+
+    for (QList<CSong *>::const_iterator song = songs.begin(); song != songs.end(); ++song)
+    {
+        Q_CHECK_PTR(*song);
+        m_songs[(*song)->getId()] = *song;
+    }
 }
 
 
@@ -77,6 +85,7 @@ void CLibrary::addSongs(const QList<CSong *>& songs)
 void CLibrary::removeSong(CSong * song)
 {
     removeSongFromTable(song);
+    m_songs.remove(song->getId());
 }
 
 
@@ -89,4 +98,14 @@ void CLibrary::removeSong(CSong * song)
 void CLibrary::removeSong(int pos)
 {
     removeSongFromTable(pos);
+
+    CSongTableItem * item = m_model->getSongItem(pos);
+
+    if (item)
+    {
+        CSong * song = item->getSong();
+
+        if (song)
+            m_songs.remove(song->getId());
+    }
 }

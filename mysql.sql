@@ -8,7 +8,7 @@ CREATE TABLE folder (
     -- ,UNIQUE (folder_parent, folder_position)
 );
 
-INSERT INTO folder VALUES (0, "", 0, 1, 1);
+INSERT INTO folder VALUES (0, '', 0, 1, 1);
 
 CREATE TABLE playlist (
     playlist_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -20,7 +20,7 @@ CREATE TABLE playlist (
 );
 
 INSERT INTO playlist (playlist_id, playlist_name, folder_id, list_position, list_columns)
-VALUES (0, "Library", 0, -1, "0:40;1:150;17:60;2+:150;3:150;6:50;9:60;12:50;13:120");
+VALUES (0, 'Library', 0, -1, '0:40;1:150;17:60;2+:150;3:150;6:50;9:60;12:50;13:120');
 
 CREATE TABLE dynamic_list (
     dynamic_list_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -105,7 +105,7 @@ CREATE TABLE album (
     UNIQUE (album_title, album_title_sort)
 );
 
-INSERT INTO album (album_id, album_title, album_title_sort) VALUES (0, "", "");
+INSERT INTO album (album_id, album_title, album_title_sort) VALUES (0, '', '');
 
 CREATE TABLE artist (
     artist_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -114,14 +114,14 @@ CREATE TABLE artist (
     UNIQUE (artist_name, artist_name_sort)
 );
 
-INSERT INTO artist (artist_id, artist_name, artist_name_sort) VALUES (0, "", "");
+INSERT INTO artist (artist_id, artist_name, artist_name_sort) VALUES (0, '', '');
 
 CREATE TABLE genre (
     genre_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,
     genre_name VARCHAR(512) NOT NULL UNIQUE
 );
 
-INSERT INTO genre (genre_id, genre_name) VALUES (0, "");
+INSERT INTO genre (genre_id, genre_name) VALUES (0, '');
 
 CREATE TABLE play (
     play_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,

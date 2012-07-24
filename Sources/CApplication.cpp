@@ -528,8 +528,9 @@ CSong * CApplication::getSongFromId(int id) const
     if (id <= 0)
         return NULL;
 
-    const QList<CSong *> songList = m_library->getSongs();
-
+    const QMap<int, CSong *> songList = m_library->getSongsMap();
+    return songList.value(id);
+/*
     for (QList<CSong *>::const_iterator it = songList.begin(); it != songList.end(); ++it)
     {
         if ((*it)->getId() == id)
@@ -539,6 +540,7 @@ CSong * CApplication::getSongFromId(int id) const
     }
 
     return NULL;
+*/
 }
 
 
@@ -3287,7 +3289,7 @@ void CApplication::loadDatabase(void)
 
     // Liste des morceaux
     QList<CSong *> songList = CSong::loadAllSongsFromDatabase(this);
-    m_library->addSongsToTable(songList);
+    m_library->addSongs(songList);
 
 
     // Chargement des listes de lecture et des dossiers

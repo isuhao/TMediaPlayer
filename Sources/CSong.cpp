@@ -845,6 +845,10 @@ QList<CSong *> CSong::loadAllSongsFromDatabase(CApplication * application)
 
     QSqlQuery query(application->getDataBase());
 
+    // Remarque : on peut éventuellement différer le chargement des lectures de chaque morceau
+    QSqlQuery query2(application->getDataBase());
+    query2.prepare("SELECT play_time, play_time_utc FROM play WHERE song_id = ? ORDER BY play_time_utc DESC");
+
     // Liste des morceaux
     if (!query.exec("SELECT "
                         "song_id,"
@@ -949,9 +953,6 @@ QList<CSong *> CSong::loadAllSongsFromDatabase(CApplication * application)
         song->m_infos.albumPeak       = query.value(numValue++).toFloat();
 
         // Lectures
-        QSqlQuery query2(application->getDataBase());
-
-        query2.prepare("SELECT play_time, play_time_utc FROM play WHERE song_id = ? ORDER BY play_time_utc DESC");
         query2.bindValue(0, song->m_id);
 
         if (!query2.exec())
@@ -2830,6 +2831,59 @@ bool CSong::loadTags(TagLib::Ogg::XiphComment * tags, TSongInfos& infos, QFile *
         infos.comments = QString::fromUtf8(tagMap["COMMENT"].toString().toCString(true));
     }
 
+    // Replay Gain
+    if (!tagMap["REPLAYGAIN_TRACK_GAIN"].isEmpty())
+    {
+        QString val = QString::fromUtf8(tagMap["REPLAYGAIN_TRACK_GAIN"].toString().toCString(true));
+
+        if (val.endsWith("dB", Qt::CaseInsensitive))
+        {
+            val.chop(2);
+            bool ok;
+            infos.trackGain = val.toFloat(&ok);
+            if (!ok)
+                stream << tr("Erreur : tag REPLAYGAIN_TRACK_GAIN incorrect") << '\n';
+        }
+        else
+        {
+            stream << tr("Erreur : tag REPLAYGAIN_TRACK_GAIN incorrect") << '\n';
+        }
+    }
+
+    if (!tagMap["REPLAYGAIN_TRACK_PEAK"].isEmpty())
+    {
+        bool ok;
+        infos.trackPeak = QString::fromUtf8(tagMap["REPLAYGAIN_TRACK_PEAK"].toString().toCString(true)).toFloat(&ok);
+        if (!ok)
+            stream << tr("Erreur : tag REPLAYGAIN_TRACK_PEAK incorrect") << '\n';
+    }
+
+    if (!tagMap["REPLAYGAIN_ALBUM_GAIN"].isEmpty())
+    {
+        QString val = QString::fromUtf8(tagMap["REPLAYGAIN_ALBUM_GAIN"].toString().toCString(true));
+
+        if (val.endsWith("dB", Qt::CaseInsensitive))
+        {
+            val.chop(2);
+            bool ok;
+            infos.albumGain = val.toFloat(&ok);
+            if (!ok)
+                stream << tr("Erreur : tag REPLAYGAIN_ALBUM_GAIN incorrect") << '\n';
+        }
+        else
+        {
+            stream << tr("Erreur : tag REPLAYGAIN_ALBUM_GAIN incorrect") << '\n';
+        }
+    }
+
+    if (!tagMap["REPLAYGAIN_ALBUM_PEAK"].isEmpty())
+    {
+        bool ok;
+        infos.albumPeak = QString::fromUtf8(tagMap["REPLAYGAIN_ALBUM_PEAK"].toString().toCString(true)).toFloat(&ok);
+        if (!ok)
+            stream << tr("Erreur : tag REPLAYGAIN_ALBUM_PEAK incorrect") << '\n';
+    }
+
 /*
     Autres tags :
     - "ALBUM ARTIST"
@@ -3229,8 +3283,6 @@ bool CSong::writeTags(TagLib::APE::Tag * tags, const TSongInfos& infos, QFile * 
 /**
  * Écrit les informations d'un morceau dans les tags Xiph Comment.
  *
- * \todo Écrire les valeurs de Replay Gain.
- *
  * \param tags     Métadonnées à modifier.
  * \param infos    Informations à écrire.
  * \param logFile  Fichier de log.
@@ -3364,7 +3416,10 @@ bool CSong::writeTags(TagLib::Ogg::XiphComment * tags, const TSongInfos& infos, 
     stream << tr("Aucun tag pour enregistrer le parolier") << '\n';
 
     // Replay Gain
-    //...
+    tags->addField("REPLAYGAIN_ALBUM_GAIN", QString("%1 db").arg(infos.albumGain).toUtf8().constData());
+    tags->addField("REPLAYGAIN_ALBUM_PEAK", QString::number(infos.albumPeak).toUtf8().constData());
+    tags->addField("REPLAYGAIN_TRACK_GAIN", QString("%1 dB").arg(infos.trackGain).toUtf8().constData());
+    tags->addField("REPLAYGAIN_TRACK_PEAK", QString::number(infos.trackPeak).toUtf8().constData());
 
     return true;
 }

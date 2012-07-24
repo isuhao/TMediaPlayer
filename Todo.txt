@@ -3,27 +3,14 @@
   Importance élevée
 --------------------------------------------------
 
-- Import depuis iTunes.
-  - Importer les morceaux.
-  - Importer les listes statiques.
-  - Importer les listes dynamiques.
-  - Importer les dossiers.
-  - Importer l'information "Skip when shuffling".
-  - Gestion des conflits (fichier XML, métadonnées, fichier déjà ajouté...).
-    - Note, Coché, SkipShuffle, Compilation : Ne pas changer, Toujours changer, Changer si défini.
-    - Lectures : Ne pas changer, Toujours changer, Fusionner (les nombres de lecture sont additionnés, et la date de dernière lecture est la plus récente).
-
-- Import depuis SongBird.
-  - Importer les morceaux.
-  - Importer les listes statiques.
-  - Importer les listes dynamiques.
-  - Gestion des conflits (fichier SQLite, métadonnées, fichier déjà ajouté...).
-    - Note, Compilation : Ne pas changer, Toujours changer, Changer si défini.
-    - Lectures : Ne pas changer, Toujours changer, Fusionner (les nombres de lecture sont additionnés, et la date de dernière lecture est la plus récente).
-
 - Tester le scrobbling Last.fm.
 
 - Améliorer la gestion du glisser-déposer dans la vue des listes de lecture (affichage de l'indicateur).
+
+- Pouvoir fusionner deux morceaux.
+- Si on relocalise un morceau, vérifier que le fichier sélectionné n'est pas déjà utilisé, et le cas échéant proposer une fusion.
+- Corriger les noms de fichier automatiquement.
+- Lire les métadonnées lors du lancement d'un morceau.
 
 --------------------------------------------------
   Importance moyenne
@@ -50,6 +37,25 @@
 
 - Barre d'état :
   - Afficher les informations sur les morceaux sélectionnés (nombre et durée).
+  - Le nombre de jours n'est pas affiché si la durée d'une liste est supérieure à 24h.
+
+- Import depuis iTunes.
+  - Importer les morceaux.
+  - Importer les listes statiques.
+  - Importer les listes dynamiques.
+  - Importer les dossiers.
+  - Importer l'information "Skip when shuffling".
+  - Gestion des conflits (fichier XML, métadonnées, fichier déjà ajouté...).
+    - Note, Coché, SkipShuffle, Compilation : Ne pas changer, Toujours changer, Changer si défini.
+    - Lectures : Ne pas changer, Toujours changer, Fusionner (les nombres de lecture sont additionnés, et la date de dernière lecture est la plus récente).
+
+- Import depuis SongBird.
+  - Importer les morceaux.
+  - Importer les listes statiques.
+  - Importer les listes dynamiques.
+  - Gestion des conflits (fichier SQLite, métadonnées, fichier déjà ajouté...).
+    - Note, Compilation : Ne pas changer, Toujours changer, Changer si défini.
+    - Lectures : Ne pas changer, Toujours changer, Fusionner (les nombres de lecture sont additionnés, et la date de dernière lecture est la plus récente).
 
 --------------------------------------------------
   Importance faible

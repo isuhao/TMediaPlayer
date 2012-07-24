@@ -290,10 +290,10 @@ void CSongTable::addSongToTable(CSong * song, int pos)
 
 void CSongTable::addSongsToTable(const QList<CSong *>& songs)
 {
-    foreach (CSong * song, songs)
+    for (QList<CSong *>::const_iterator song = songs.begin(); song != songs.end(); ++song)
     {
-        Q_CHECK_PTR(song);
-        m_model->insertRow(song);
+        Q_CHECK_PTR(*song);
+        m_model->insertRow(*song);
     }
 
     if (m_automaticSort)

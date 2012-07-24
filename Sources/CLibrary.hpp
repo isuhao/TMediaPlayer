@@ -34,6 +34,7 @@ public:
     explicit CLibrary(CApplication * application);
     
     void deleteSongs(void);
+    inline QMap<int, CSong *> getSongsMap(void) const;
     
 public slots:
 
@@ -41,6 +42,16 @@ public slots:
     virtual void addSongs(const QList<CSong *>& songs);
     virtual void removeSong(CSong * song);
     virtual void removeSong(int pos);
+
+private:
+
+    QMap<int, CSong *> m_songs;
 };
+
+
+inline QMap<int, CSong *> CLibrary::getSongsMap(void) const
+{
+    return m_songs;
+}
 
 #endif // FILE_C_LIBRARY

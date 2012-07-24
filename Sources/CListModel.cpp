@@ -194,15 +194,20 @@ void CListModel::loadFromDatabase(void)
                 continue;
             }
 
+            QList<CSong *> songs;
+
             while (query2.next())
             {
                 CSong * song = m_application->getSongFromId(query2.value(0).toInt());
 
                 if (song)
                 {
-                    playList->addSongToTable(song, query2.value(1).toInt());
+                    songs.append(song);
+                    //playList->addSongToTable(song, query2.value(1).toInt());
                 }
             }
+
+            playList->addSongsToTable(songs);
 
             playLists.append(playList);
             playList->hide();
