@@ -28,7 +28,7 @@ CLibrary::CLibrary(CApplication * application) :
 
 
 /**
- * Supprime tous les morceaux de la table. La mémoire est libérée.
+ * Supprime tous les morceaux de la table. La mÃ©moire est libÃ©rÃ©e.
  */
 
 void CLibrary::deleteSongs(void)
@@ -46,9 +46,9 @@ void CLibrary::deleteSongs(void)
 
 
 /**
- * Ajoute un morceau à la table.
+ * Ajoute un morceau Ã  la table.
  *
- * \todo Supprimer cette méthode ?
+ * \todo Supprimer cette mÃ©thode ?
  */
 
 void CLibrary::addSong(CSong * song, int pos)
@@ -59,9 +59,9 @@ void CLibrary::addSong(CSong * song, int pos)
 
 
 /**
- * Ajoute une liste de morceaux à la table.
+ * Ajoute une liste de morceaux Ã  la table.
  *
- * \todo Supprimer cette méthode ?
+ * \todo Supprimer cette mÃ©thode ?
  */
 
 void CLibrary::addSongs(const QList<CSong *>& songs)
@@ -77,9 +77,9 @@ void CLibrary::addSongs(const QList<CSong *>& songs)
 
 
 /**
- * Enlève un morceau de la table.
+ * EnlÃ¨ve un morceau de la table.
  *
- * \todo Supprimer cette méthode ?
+ * \todo Supprimer cette mÃ©thode ?
  */
 
 void CLibrary::removeSong(CSong * song)
@@ -90,9 +90,9 @@ void CLibrary::removeSong(CSong * song)
 
 
 /**
- * Enlène un morceau de la table à partir de sa position.
+ * EnlÃ¨ne un morceau de la table Ã  partir de sa position.
  *
- * \todo Supprimer cette méthode ?
+ * \todo Supprimer cette mÃ©thode ?
  */
 
 void CLibrary::removeSong(int pos)

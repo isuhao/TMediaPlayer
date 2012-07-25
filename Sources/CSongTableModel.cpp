@@ -228,20 +228,14 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
                 const int trackNumber = m_data.at(index.row())->getSong()->getTrackNumber();
 
                 if (trackNumber <= 0)
-                {
                     return QString();
-                }
 
                 const int trackCount = m_data.at(index.row())->getSong()->getTrackCount();
 
                 if (trackCount >= trackNumber)
-                {
                     return QString("%1/%2").arg(trackNumber).arg(trackCount);
-                }
                 else
-                {
                     return trackNumber;
-                }
             }
 
             // Numéro de disque
@@ -250,20 +244,14 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
                 const int discNumber = m_data.at(index.row())->getSong()->getDiscNumber();
 
                 if (discNumber <= 0)
-                {
                     return QString();
-                }
 
                 const int discCount = m_data.at(index.row())->getSong()->getDiscCount();
 
                 if (discCount >= discNumber)
-                {
                     return QString("%1/%2").arg(discNumber).arg(discCount);
-                }
                 else
-                {
                     return discNumber;
-                }
             }
 
             case CSongTable::ColGenre       : return m_data.at(index.row())->getSong()->getGenre();
@@ -336,10 +324,45 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
                 return m_data.at(index.row())->getSong()->getBPM();
 
             // Replay Gain
-            case CSongTable::ColTrackGain: return tr("%1 dB").arg(m_data.at(index.row())->getSong()->getTrackGain());
-            case CSongTable::ColTrackPeak: return m_data.at(index.row())->getSong()->getTrackPeak();
-            case CSongTable::ColAlbumGain: return tr("%1 dB").arg(m_data.at(index.row())->getSong()->getAlbumGain());
-            case CSongTable::ColAlbumPeak: return m_data.at(index.row())->getSong()->getAlbumPeak();
+            case CSongTable::ColTrackGain:
+            {
+                float gain = m_data.at(index.row())->getSong()->getTrackGain();
+
+                if (gain == std::numeric_limits<float>::infinity())
+                    return QVariant::Invalid;
+                else
+                    return tr("%1 dB").arg(gain);
+            }
+
+            case CSongTable::ColTrackPeak:
+            {
+                float peak = m_data.at(index.row())->getSong()->getTrackPeak();
+
+                if (peak == std::numeric_limits<float>::infinity())
+                    return QVariant::Invalid;
+                else
+                    return peak;
+            }
+
+            case CSongTable::ColAlbumGain:
+            {
+                float gain = m_data.at(index.row())->getSong()->getAlbumGain();
+
+                if (gain == std::numeric_limits<float>::infinity())
+                    return QVariant::Invalid;
+                else
+                    return tr("%1 dB").arg(gain);
+            }
+
+            case CSongTable::ColAlbumPeak:
+            {
+                float peak = m_data.at(index.row())->getSong()->getAlbumPeak();
+
+                if (peak == std::numeric_limits<float>::infinity())
+                    return QVariant::Invalid;
+                else
+                    return peak;
+            }
         }
     }
     else if (role == Qt::TextAlignmentRole)
@@ -654,9 +677,7 @@ bool CSongTableModel::dropMimeData(const QMimeData * data, Qt::DropAction action
     Q_CHECK_PTR(data);
 
     if (action == Qt::IgnoreAction)
-    {
         return true;
-    }
 
     // Fichiers à ajouter à la médiathèque
     if (data->hasFormat("text/uri-list"))
@@ -686,7 +707,7 @@ bool CSongTableModel::dropMimeData(const QMimeData * data, Qt::DropAction action
 
 void CSongTableModel::moveRows(const QList<int>& rows, int rowDest)
 {
-    qDebug() << "M" << rows << " -> " << rowDest;
+    //qDebug() << "M" << rows << " -> " << rowDest;
 
     if (rows.isEmpty() || rowDest < 0 || rowDest > m_data.size())
     {

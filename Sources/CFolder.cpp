@@ -49,7 +49,7 @@ CFolder::CFolder(CApplication * application, const QString& name) :
 
 
 /**
- * DÈtruit le dossier.
+ * D√©truit le dossier.
  */
 
 CFolder::~CFolder()
@@ -129,9 +129,9 @@ bool CFolder::hasAncestor(CFolder * folder) const
 
 
 /**
- * Indique si les informations ou le contenu du dossier ont ÈtÈ modifiÈes.
+ * Indique si les informations ou le contenu du dossier ont √©t√© modifi√©es.
  *
- * \return BoolÈen.
+ * \return Bool√©en.
  */
 
 bool CFolder::isModified(void) const
@@ -141,10 +141,10 @@ bool CFolder::isModified(void) const
 
 
 /**
- * Retourne la position d'une liste de lecture ‡ l'intÈrieur du dossier.
+ * Retourne la position d'une liste de lecture √† l'int√©rieur du dossier.
  *
- * \param playList Pointeur sur la liste de lecture ‡ rechercher
- * \return Position de la liste de lecture (‡ partir de 0), ou -1 en cas d'erreur.
+ * \param playList Pointeur sur la liste de lecture √† rechercher
+ * \return Position de la liste de lecture (√† partir de 0), ou -1 en cas d'erreur.
  */
 
 int CFolder::getPosition(IPlayList * playList) const
@@ -162,16 +162,16 @@ int CFolder::getPosition(IPlayList * playList) const
         }
     }
 
-    m_application->logError("donnÈes incohÈrentes", __FUNCTION__, __FILE__, __LINE__);
+    m_application->logError("donn√©es incoh√©rentes", __FUNCTION__, __FILE__, __LINE__);
     return -1;
 }
 
 
 /**
- * Retourne la position d'un dossier ‡ l'intÈrieur du dossier.
+ * Retourne la position d'un dossier √† l'int√©rieur du dossier.
  *
- * \param folder Pointeur sur le dossier ‡ rechercher
- * \return Position du dossier (‡ partir de 0), ou -1 en cas d'erreur.
+ * \param folder Pointeur sur le dossier √† rechercher
+ * \return Position du dossier (√† partir de 0), ou -1 en cas d'erreur.
  */
 
 int CFolder::getPosition(CFolder * folder) const
@@ -189,7 +189,7 @@ int CFolder::getPosition(CFolder * folder) const
         }
     }
 
-    m_application->logError("donnÈes incohÈrentes", __FUNCTION__, __FILE__, __LINE__);
+    m_application->logError("donn√©es incoh√©rentes", __FUNCTION__, __FILE__, __LINE__);
     return -1;
 }
 
@@ -197,7 +197,7 @@ int CFolder::getPosition(CFolder * folder) const
 /**
  * Ajoute une liste de lecture au dossier.
  *
- * \param playList Liste de lecture ‡ ajouter.
+ * \param playList Liste de lecture √† ajouter.
  * \param position Position de la liste dans le dossier.
  */
 
@@ -214,7 +214,7 @@ void CFolder::addPlayList(IPlayList * playList, int position)
         position = -1;
     }
 
-    // DÈplacement
+    // D√©placement
     if (m_playLists0.contains(playList))
     {
         if (position < 0)
@@ -240,7 +240,7 @@ void CFolder::addPlayList(IPlayList * playList, int position)
 
         m_items[position] = item;
 
-        // Mise ‡ jour des positions des ÈlÈments
+        // Mise √† jour des positions des √©l√©ments
         for (int pos = 0; pos < m_items.size(); ++pos)
         {
             if (m_items[pos] && m_items[pos]->position != pos)
@@ -261,7 +261,7 @@ void CFolder::addPlayList(IPlayList * playList, int position)
         m_items.insert(position, new TFolderItem(-42, playList));
         playList->setFolder(this);
 
-        // Mise ‡ jour des positions des ÈlÈments
+        // Mise √† jour des positions des √©l√©ments
         for (int pos = 0; pos < m_items.size(); ++pos)
         {
             if (m_items[pos] && m_items[pos]->position != pos)
@@ -276,9 +276,9 @@ void CFolder::addPlayList(IPlayList * playList, int position)
 
 
 /**
- * EnlËve une liste de lecture d'un dossier.
+ * Enl√®ve une liste de lecture d'un dossier.
  *
- * \param playList Liste de lecture ‡ enlever.
+ * \param playList Liste de lecture √† enlever.
  */
 
 void CFolder::removePlayList(IPlayList * playList)
@@ -290,7 +290,7 @@ void CFolder::removePlayList(IPlayList * playList)
         removePlayListItem(playList);
         playList->setFolder(NULL);
 
-        // Mise ‡ jour des positions des listes
+        // Mise √† jour des positions des listes
         for (int pos = 0; pos < m_items.size(); ++pos)
         {
             if (m_items[pos] && m_items[pos]->position != pos)
@@ -307,7 +307,7 @@ void CFolder::removePlayList(IPlayList * playList)
 /**
  * Ajoute un dossier au dossier.
  *
- * \param folder   Dossier ‡ ajouter.
+ * \param folder   Dossier √† ajouter.
  * \param position Position du dossier dans le dossier.
  */
 
@@ -320,7 +320,7 @@ void CFolder::addFolder(CFolder * folder, int position)
 
     position = qBound(-1, position, m_items.size() - 1);
 
-    // DÈplacement
+    // D√©placement
     if (m_folders0.contains(folder))
     {
         Q_ASSERT(folder->m_folder == this);
@@ -348,7 +348,7 @@ void CFolder::addFolder(CFolder * folder, int position)
 
         m_items[position] = item;
 
-        // Mise ‡ jour des positions des ÈlÈments
+        // Mise √† jour des positions des √©l√©ments
         for (int pos = 0; pos < m_items.size(); ++pos)
         {
             if (m_items[pos] && m_items[pos]->position != pos)
@@ -369,7 +369,7 @@ void CFolder::addFolder(CFolder * folder, int position)
         m_items.insert(position, new TFolderItem(-42, folder));
         folder->m_folder = this;
 
-        // Mise ‡ jour des positions des listes
+        // Mise √† jour des positions des listes
         for (int pos = 0; pos < m_items.size(); ++pos)
         {
             if (m_items[pos] && m_items[pos]->position != pos)
@@ -384,9 +384,9 @@ void CFolder::addFolder(CFolder * folder, int position)
 
 
 /**
- * EnlËve un dossier d'un dossier.
+ * Enl√®ve un dossier d'un dossier.
  *
- * \param folder Dossier ‡ enlever.
+ * \param folder Dossier √† enlever.
  */
 
 void CFolder::removeFolder(CFolder * folder)
@@ -398,7 +398,7 @@ void CFolder::removeFolder(CFolder * folder)
         removeFolderItem(folder);
         folder->setFolder(NULL);
 
-        // Mise ‡ jour des positions des ÈlÈments
+        // Mise √† jour des positions des √©l√©ments
         for (int pos = 0; pos < m_items.size(); ++pos)
         {
             if (m_items[pos] && m_items[pos]->position != pos)
@@ -415,7 +415,7 @@ void CFolder::removeFolder(CFolder * folder)
 /**
  * Ouvre ou ferme le dossier dans la vue.
  *
- * \param open BoolÈen indiquant si le dossier est ouvert.
+ * \param open Bool√©en indiquant si le dossier est ouvert.
  */
 
 void CFolder::setOpen(bool open)
@@ -435,9 +435,9 @@ void CFolder::setOpen(bool open)
 
 
 /**
- * Met ‡ jour les informations du dossier en base de donnÈes.
+ * Met √† jour les informations du dossier en base de donn√©es.
  *
- * \return BoolÈen indiquant le succËs de l'opÈration.
+ * \return Bool√©en indiquant le succ√®s de l'op√©ration.
  */
 
 bool CFolder::updateDatabase(void)
@@ -504,7 +504,7 @@ bool CFolder::updateDatabase(void)
             m_id = query.lastInsertId().toInt();
         }
     }
-    // Mise ‡ jour
+    // Mise √† jour
     else if (m_isModified)
     {
         QSqlQuery query(m_application->getDataBase());
@@ -530,7 +530,7 @@ bool CFolder::updateDatabase(void)
 
 
 /**
- * Supprime le dossier de la base de donnÈes.
+ * Supprime le dossier de la base de donn√©es.
  *
  * \param recursive Indique si on doit supprimer le contenu dossier ou pas.
  */
@@ -545,7 +545,7 @@ void CFolder::removeFromDatabase(bool recursive)
 
     if (recursive)
     {
-        // Suppression rÈcursive des dossiers
+        // Suppression r√©cursive des dossiers
         for (QList<CFolder *>::const_iterator it = m_folders0.begin(); it != m_folders0.end(); ++it)
         {
             (*it)->removeFromDatabase(true);
@@ -558,7 +558,7 @@ void CFolder::removeFromDatabase(bool recursive)
         }
     }
     
-    // Suppression du dossier en base de donnÈes
+    // Suppression du dossier en base de donn√©es
     QSqlQuery query(m_application->getDataBase());
     query.prepare("DELETE FROM folder WHERE folder_id = ?");
     query.bindValue(0, m_id);

@@ -1999,8 +1999,8 @@ void CApplication::relocateSong(void)
             return;
         }
 
-        song->m_fileName = fileName;
-        song->m_isModified = true;
+        song->m_properties.fileName = fileName;
+        //song->m_isModified = true;
 
         // Recherche de la durée du morceau
         FMOD_SOUND_TYPE type;
@@ -2016,11 +2016,11 @@ void CApplication::relocateSong(void)
             return;
         }
 
-        res = sound->getLength(reinterpret_cast<unsigned int *>(&(song->m_duration)), FMOD_TIMEUNIT_MS);
+        res = sound->getLength(reinterpret_cast<unsigned int *>(&(song->m_properties.duration)), FMOD_TIMEUNIT_MS);
         if (res != FMOD_OK)
         {
             logError(QString("impossible de calculer la durée du morceau %1").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
-            song->m_duration = 0;
+            song->m_properties.duration = 0;
         }
 
         // Recherche du format du morceau
@@ -2039,15 +2039,15 @@ void CApplication::relocateSong(void)
                     return;
 
                 case FMOD_SOUND_TYPE_MPEG:
-                    song->m_format = CSong::FormatMP3;
+                    song->m_properties.format = CSong::FormatMP3;
                     break;
 
                 case FMOD_SOUND_TYPE_OGGVORBIS:
-                    song->m_format = CSong::FormatOGG;
+                    song->m_properties.format = CSong::FormatOGG;
                     break;
 
                 case FMOD_SOUND_TYPE_FLAC:
-                    song->m_format = CSong::FormatFLAC;
+                    song->m_properties.format = CSong::FormatFLAC;
                     break;
             }
         }

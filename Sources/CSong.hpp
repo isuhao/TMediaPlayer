@@ -73,7 +73,8 @@ public:
         LangFrench  = 2, ///< Français.
         LangGerman  = 3, ///< Allemand.
         LangItalian = 4, ///< Italien.
-        LangRussian = 5  ///< Russe.
+        LangRussian = 5, ///< Russe.
+        LangSpanish = 6  ///< Espagnol.
     };
 
     static inline TLanguage getLanguageFromInteger(int language);
@@ -98,7 +99,7 @@ public:
 
     inline int getId(void) const;
     inline QString getFileName(void) const;
-    inline int getFileSize(void) const;
+    inline qlonglong getFileSize(void) const;
     inline int getBitRate(void) const;
     inline int getSampleRate(void) const;
     inline TFormat getFormat(void) const;
@@ -183,11 +184,22 @@ public slots:
     void setCompilation(bool compilation);
     void setSkipShuffle(bool skipShuffle);
 
+    // Replay Gain
+    void setTrackGain(float gain);
+    void setTrackPeak(float peak);
+    void setAlbumGain(float gain);
+    void setAlbumPeak(float peak);
+
 protected:
 
     void startPlay(void);
     void updateDatabase(void);
     void updateFileInfos(void);
+
+    void setFileSize(qlonglong fileSize);
+    void setBitRate(int bitRate);
+    void setSampleRate(int sampleRate);
+    void setNumChannels(int numChannels);
 
 protected slots:
 
@@ -206,6 +218,40 @@ signals:
     void playEnd(void);      ///< Signal émis lorsque la lecture se termine.
 
 private:
+
+    /**
+     * Contient toutes les propriétés d'un morceau.
+     */
+
+    struct TSongProperties
+    {
+        QString fileName;   ///< Fichier audio.
+        qlonglong fileSize; ///< Taille du fichier en octets.
+        int bitRate;        ///< Débit binaire.
+        int sampleRate;     ///< Fréquence d'échantillonnage.
+        TFormat format;     ///< Format de fichier.
+        int numChannels;    ///< Nombre de canaux.
+        int duration;       ///< Durée du morceau en millisecondes.
+
+        TSongProperties(void);
+
+        inline bool operator==(const TSongProperties& other)
+        {
+            return (other.fileName    == fileName    &&
+                    other.fileSize    == fileSize    &&
+                    other.bitRate     == bitRate     &&
+                    other.sampleRate  == sampleRate  &&
+                    other.format      == format      &&
+                    other.numChannels == numChannels &&
+                    other.duration    == duration);
+        }
+
+        inline bool operator!=(const TSongProperties& other)
+        {
+            return !(operator==(other));
+        }
+    };
+
 
     /**
      * Contient toutes les informations modifiables d'un morceau.
@@ -248,6 +294,47 @@ private:
         float albumPeak;
 
         TSongInfos(void);
+
+        inline bool operator==(const TSongInfos& other)
+        {
+            return (other.isEnabled       == isEnabled       &&
+                    other.title           == title           &&
+                    other.subTitle        == subTitle        &&
+                    other.grouping        == grouping        &&
+                    other.artistName      == artistName      &&
+                    other.albumTitle      == albumTitle      &&
+                    other.albumArtist     == albumArtist     &&
+                    other.composer        == composer        &&
+                    other.titleSort       == titleSort       &&
+                    other.artistNameSort  == artistNameSort  &&
+                    other.albumTitleSort  == albumTitleSort  &&
+                    other.albumArtistSort == albumArtistSort &&
+                    other.composerSort    == composerSort    &&
+                    other.year            == year            &&
+                    other.trackNumber     == trackNumber     &&
+                    other.trackCount      == trackCount      &&
+                    other.discNumber      == discNumber      &&
+                    other.discCount       == discCount       &&
+                    other.genre           == genre           &&
+                    other.rating          == rating          &&
+                    other.comments        == comments        &&
+                    other.bpm             == bpm             &&
+                    other.lyrics          == lyrics          &&
+                    other.language        == language        &&
+                    other.lyricist        == lyricist        &&
+                    other.compilation     == compilation     &&
+                    other.skipShuffle     == skipShuffle     &&
+
+                    ((trackGain == std::numeric_limits<float>::infinity() && other.trackGain == trackGain) || qAbs(other.trackGain - trackGain) < 0.001f) &&
+                    ((trackPeak == std::numeric_limits<float>::infinity() && other.trackPeak == trackPeak) || qAbs(other.trackPeak - trackPeak) < 0.001f) &&
+                    ((albumGain == std::numeric_limits<float>::infinity() && other.albumGain == albumGain) || qAbs(other.albumGain - albumGain) < 0.001f) &&
+                    ((albumPeak == std::numeric_limits<float>::infinity() && other.albumPeak == albumPeak) || qAbs(other.albumPeak - albumPeak) < 0.001f));
+        }
+
+        inline bool operator!=(const TSongInfos& other)
+        {
+            return !(operator==(other));
+        }
     };
 
     struct TSongPlay
@@ -262,10 +349,10 @@ private:
     CSong& operator=(const CSong&);
 
     // Lecture et écriture des métadonnées
-    static bool loadTags(TagLib::ID3v1::Tag * tags, TSongInfos& infos, QFile * logFile, const QString& fileName);
-    static bool loadTags(TagLib::ID3v2::Tag * tags, TSongInfos& infos, QFile * logFile, const QString& fileName);
-    static bool loadTags(TagLib::APE::Tag * tags, TSongInfos& infos, QFile * logFile, const QString& fileName);
-    static bool loadTags(TagLib::Ogg::XiphComment * tags, TSongInfos& infos, QFile * logFile, const QString& fileName);
+    bool loadTags(TagLib::ID3v1::Tag * tags);
+    bool loadTags(TagLib::ID3v2::Tag * tags);
+    bool loadTags(TagLib::APE::Tag * tags);
+    bool loadTags(TagLib::Ogg::XiphComment * tags);
 
     static bool writeTags(TagLib::ID3v1::Tag * tags, const TSongInfos& infos, QFile * logFile, const QString& fileName);
     static bool writeTags(TagLib::ID3v2::Tag * tags, const TSongInfos& infos, QFile * logFile, const QString& fileName);
@@ -273,24 +360,32 @@ private:
     static bool writeTags(TagLib::Ogg::XiphComment * tags, const TSongInfos& infos, QFile * logFile, const QString& fileName);
 
 
-    CApplication * m_application; ///< Pointeur sur l'application.
-    FMOD::Sound * m_sound;        ///< Pointeur sur la structure de FMOD.
-    FMOD::Channel * m_channel;    ///< Canal audio.
-    bool m_isModified;            ///< Indique si les données ont été modifiées.
-    mutable bool m_needWriteTags; ///< Indique si les métadonnées doivent être mises à jour.
-    int m_id;                     ///< Identifiant du morceau en base de données.
-    QString m_fileName;           ///< Fichier audio.
-    int m_fileSize;               ///< Taille du fichier en octets.
-    int m_bitRate;                ///< Débit binaire.
-    int m_sampleRate;             ///< Fréquence d'échantillonnage.
-    TFormat m_format;             ///< Format de fichier.
-    int m_numChannels;            ///< Nombre de canaux.
-    int m_duration;               ///< Durée du morceau en millisecondes.
-    bool m_fileStatus;            ///< Indique si le fichier est accessible.
-    QDateTime m_creation;         ///< Date de création (ajout à la médiathèque).
-    QDateTime m_modification;     ///< Date de la dernière modication.
-    TSongInfos m_infos;           ///< Informations modifiables
-    QList<TSongPlay> m_plays;     ///< Liste des dates de lecture.
+    CApplication * m_application;   ///< Pointeur sur l'application.
+    FMOD::Sound * m_sound;          ///< Pointeur sur la structure de FMOD.
+    FMOD::Channel * m_channel;      ///< Canal audio.
+    bool m_isModified;              ///< Indique si les données ont été modifiées.
+    mutable bool m_needWriteTags;   ///< Indique si les métadonnées doivent être mises à jour.
+    bool m_fileStatus;              ///< Indique si le fichier est accessible.
+
+    int m_id;                       ///< Identifiant du morceau en base de données.
+    QDateTime m_creation;           ///< Date de création (ajout à la médiathèque).
+    QDateTime m_modification;       ///< Date de la dernière modication.
+/*
+    QString m_fileName;             ///< Fichier audio.
+    qlonglong m_fileSize;           ///< Taille du fichier en octets.
+    int m_bitRate;                  ///< Débit binaire.
+    int m_sampleRate;               ///< Fréquence d'échantillonnage.
+    TFormat m_format;               ///< Format de fichier.
+    int m_numChannels;              ///< Nombre de canaux.
+    int m_duration;                 ///< Durée du morceau en millisecondes.
+*/
+    TSongProperties m_properties;   ///< Propriétés du morceau.
+    TSongInfos m_infos;             ///< Informations modifiables.
+
+    TSongProperties m_propertiesDB; ///< Propriétés du morceau en base de données.
+    TSongInfos m_infosDB;           ///< Informations modifiables en base de données.
+
+    QList<TSongPlay> m_plays;       ///< Liste des dates de lecture.
 };
 
 Q_DECLARE_METATYPE(CSong *)
@@ -346,6 +441,7 @@ inline CSong::TLanguage CSong::getLanguageFromInteger(int language)
         case 3: return LangGerman ;
         case 4: return LangItalian;
         case 5: return LangRussian;
+        case 6: return LangSpanish;
     }
 }
 
@@ -368,6 +464,7 @@ inline QString CSong::getLanguageName(CSong::TLanguage language)
         case LangGerman : return tr("German"                     );
         case LangItalian: return tr("Italian"                    );
         case LangRussian: return tr("Russian"                    );
+        case LangSpanish: return tr("Spanish"                    );
     }
 }
 
@@ -388,6 +485,7 @@ inline QStringList CSong::getLanguageList(void)
     langList << getLanguageName(LangGerman );
     langList << getLanguageName(LangItalian);
     langList << getLanguageName(LangRussian);
+    langList << getLanguageName(LangSpanish);
 
     return langList;
 }
@@ -401,11 +499,14 @@ inline QStringList CSong::getLanguageList(void)
 
 inline CSong::TLanguage CSong::getLanguageForISO2Code(const QString& code)
 {
-    if (code.toLower() == "en") return LangEnglish;
-    if (code.toLower() == "fr") return LangFrench ;
-    if (code.toLower() == "de") return LangGerman ;
-    if (code.toLower() == "it") return LangItalian;
-    if (code.toLower() == "ru") return LangRussian;
+    const QString codeLower = code.toLower();
+
+    if (codeLower == "en") return LangEnglish;
+    if (codeLower == "fr") return LangFrench ;
+    if (codeLower == "de") return LangGerman ;
+    if (codeLower == "it") return LangItalian;
+    if (codeLower == "ru") return LangRussian;
+    if (codeLower == "es") return LangSpanish;
 
     return LangUnknown;
 }
@@ -419,11 +520,14 @@ inline CSong::TLanguage CSong::getLanguageForISO2Code(const QString& code)
 
 inline CSong::TLanguage CSong::getLanguageForISO3Code(const QString& code)
 {
-    if (code.toLower() == "eng") return LangEnglish;
-    if (code.toLower() == "fra") return LangFrench ;
-    if (code.toLower() == "deu") return LangGerman ;
-    if (code.toLower() == "ita") return LangItalian;
-    if (code.toLower() == "rus") return LangRussian;
+    const QString codeLower = code.toLower();
+
+    if (codeLower == "eng") return LangEnglish;
+    if (codeLower == "fra") return LangFrench ;
+    if (codeLower == "deu") return LangGerman ;
+    if (codeLower == "ita") return LangItalian;
+    if (codeLower == "rus") return LangRussian;
+    if (codeLower == "spa") return LangSpanish;
 
     return LangUnknown;
 }
@@ -444,6 +548,7 @@ inline QString CSong::getISO2CodeForLanguage(CSong::TLanguage language)
         case LangGerman : return "de";
         case LangItalian: return "it";
         case LangRussian: return "ru";
+        case LangSpanish: return "es";
     }
 }
 
@@ -463,6 +568,7 @@ inline QString CSong::getISO3CodeForLanguage(CSong::TLanguage language)
         case LangGerman : return "deu";
         case LangItalian: return "ita";
         case LangRussian: return "rus";
+        case LangSpanish: return "spa";
     }
 }
 
@@ -487,7 +593,7 @@ inline int CSong::getId(void) const
 
 inline QString CSong::getFileName(void) const
 {
-    return m_fileName;
+    return m_properties.fileName;
 }
 
 
@@ -497,9 +603,9 @@ inline QString CSong::getFileName(void) const
  * \return Taille du fichier en octets.
  */
 
-inline int CSong::getFileSize(void) const
+inline qlonglong CSong::getFileSize(void) const
 {
-    return m_fileSize;
+    return m_properties.fileSize;
 }
 
 
@@ -511,7 +617,7 @@ inline int CSong::getFileSize(void) const
 
 inline int CSong::getBitRate(void) const
 {
-    return m_bitRate;
+    return m_properties.bitRate;
 }
 
 
@@ -523,7 +629,7 @@ inline int CSong::getBitRate(void) const
 
 inline int CSong::getSampleRate(void) const
 {
-    return m_sampleRate;
+    return m_properties.sampleRate;
 }
 
 
@@ -535,7 +641,7 @@ inline int CSong::getSampleRate(void) const
 
 inline CSong::TFormat CSong::getFormat(void) const
 {
-    return m_format;
+    return m_properties.format;
 }
 
 
@@ -547,7 +653,7 @@ inline CSong::TFormat CSong::getFormat(void) const
 
 inline int CSong::getNumChannels(void) const
 {
-    return m_numChannels;
+    return m_properties.numChannels;
 }
 
 
@@ -559,7 +665,7 @@ inline int CSong::getNumChannels(void) const
 
 inline int CSong::getDuration(void) const
 {
-    return m_duration;
+    return m_properties.duration;
 }
 
 

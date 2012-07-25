@@ -30,7 +30,7 @@ class IPlayList;
 
 
 /**
- * Modèle permettant de stocker les listes de lecture et les dossiers.
+ * ModÃ¨le permettant de stocker les listes de lecture et les dossiers.
  */
 
 class CListModel : public QStandardItemModel
@@ -60,7 +60,7 @@ public:
     void removeFolder(CFolder * folder, bool recursive = false);
     void removePlayList(IPlayList * playList);
 
-    // Glisser-déposer
+    // Glisser-dÃ©poser
     QMimeData * mimeData(const QModelIndexList& indexes) const;
     bool dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex& parent);
     QStringList mimeTypes(void) const;

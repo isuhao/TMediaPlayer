@@ -1184,7 +1184,7 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
+          <item row="2" column="0">
            <widget class="QLabel" name="lblAlbumGain">
             <property name="font">
              <font>
@@ -1198,29 +1198,8 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="1" colspan="2">
-           <widget class="QLabel" name="editAlbumGain">
-            <property name="text">
-             <string notr="true">-</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="lblTrackPeak">
-            <property name="font">
-             <font>
-              <pointsize>7</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>Track peak:</string>
-            </property>
-           </widget>
-          </item>
           <item row="2" column="1" colspan="2">
-           <widget class="QLabel" name="editTrackPeak">
+           <widget class="QLabel" name="editAlbumGain">
             <property name="text">
              <string notr="true">-</string>
             </property>
@@ -1273,6 +1252,27 @@
             </property>
             <property name="text">
              <string>Compute</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="lblTrackPeak">
+            <property name="font">
+             <font>
+              <pointsize>7</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Track peak:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLabel" name="editTrackPeak">
+            <property name="text">
+             <string notr="true">-</string>
             </property>
            </widget>
           </item>

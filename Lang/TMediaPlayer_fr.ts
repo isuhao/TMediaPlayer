@@ -404,7 +404,7 @@ Erreur : %4</translation>
 <context>
     <name>CDialogEditSong</name>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="246"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="250"/>
         <source>%1 kbit/s</source>
         <translation>%1 kbit/s</translation>
     </message>
@@ -424,29 +424,29 @@ Erreur : %4</translation>
         <translation>Appliquer</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="226"/>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="228"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="230"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="232"/>
         <source>Song infos</source>
         <translation>Informations</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="249"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="253"/>
         <source>%1 Hz</source>
         <translation>%1 Hz</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="371"/>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="373"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="379"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="391"/>
         <source>%1 dB</source>
         <translation>%1 dB</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="384"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="407"/>
         <source>Local time</source>
         <translation>Heure locale</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="384"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="407"/>
         <source>UTC</source>
         <translation>UTC</translation>
     </message>
@@ -811,89 +811,94 @@ Erreur : %4</translation>
 <context>
     <name>CSong</name>
     <message>
-        <location filename="../Sources/CSong.hpp" line="317"/>
+        <location filename="../Sources/CSong.hpp" line="412"/>
         <source>Unknown</source>
         <comment>Unknown format</comment>
         <translation>Inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="318"/>
+        <location filename="../Sources/CSong.hpp" line="413"/>
         <source>MP3</source>
         <translation>MP3</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="319"/>
+        <location filename="../Sources/CSong.hpp" line="414"/>
         <source>Ogg Vorbis</source>
         <translation>Ogg Vorbis</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="320"/>
+        <location filename="../Sources/CSong.hpp" line="415"/>
         <source>FLAC</source>
         <translation>FLAC</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="365"/>
+        <location filename="../Sources/CSong.hpp" line="461"/>
         <source>Unknown</source>
         <comment>Unknown language</comment>
         <translation>Inconnue</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="366"/>
+        <location filename="../Sources/CSong.hpp" line="462"/>
         <source>English</source>
         <translation>Anglais</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="367"/>
+        <location filename="../Sources/CSong.hpp" line="463"/>
         <source>French</source>
         <translation>Français</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="368"/>
+        <location filename="../Sources/CSong.hpp" line="464"/>
         <source>German</source>
         <translation>Allemand</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="369"/>
+        <location filename="../Sources/CSong.hpp" line="465"/>
         <source>Italian</source>
         <translation>Italien</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.hpp" line="370"/>
+        <location filename="../Sources/CSong.hpp" line="466"/>
         <source>Russian</source>
         <translation>Russe</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="595"/>
+        <location filename="../Sources/CSong.hpp" line="467"/>
+        <source>Spanish</source>
+        <translation>Espagnol</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="638"/>
         <source>Unknown title</source>
         <translation>Titre inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="600"/>
+        <location filename="../Sources/CSong.cpp" line="643"/>
         <source>Unknown artist</source>
         <translation>Artiste inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="605"/>
+        <location filename="../Sources/CSong.cpp" line="648"/>
         <source>Unknown album</source>
         <translation>Album inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="998"/>
+        <location filename="../Sources/CSong.cpp" line="1051"/>
         <source>%1 Gio</source>
         <translation>%1 Gio</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="1004"/>
+        <location filename="../Sources/CSong.cpp" line="1057"/>
         <source>%1 Mio</source>
         <translation>%1 Mio</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="1010"/>
+        <location filename="../Sources/CSong.cpp" line="1063"/>
         <source>%1 Kio</source>
         <translation>%1 Kio</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CSong.cpp" line="1015"/>
+        <location filename="../Sources/CSong.cpp" line="1068"/>
         <source>%n byte(s)</source>
         <translation>
             <numerusform>%n octet</numerusform>
@@ -901,267 +906,244 @@ Erreur : %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="1974"/>
+        <location filename="../Sources/CSong.cpp" line="2104"/>
         <source>Chargement des tags ID3v1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="1976"/>
-        <location filename="../Sources/CSong.cpp" line="2038"/>
-        <location filename="../Sources/CSong.cpp" line="2456"/>
-        <location filename="../Sources/CSong.cpp" line="2636"/>
-        <location filename="../Sources/CSong.cpp" line="2967"/>
-        <location filename="../Sources/CSong.cpp" line="3004"/>
-        <location filename="../Sources/CSong.cpp" line="3241"/>
-        <location filename="../Sources/CSong.cpp" line="3367"/>
+        <location filename="../Sources/CSong.cpp" line="2106"/>
+        <location filename="../Sources/CSong.cpp" line="2164"/>
+        <location filename="../Sources/CSong.cpp" line="2598"/>
+        <location filename="../Sources/CSong.cpp" line="2774"/>
+        <location filename="../Sources/CSong.cpp" line="3129"/>
+        <location filename="../Sources/CSong.cpp" line="3166"/>
+        <location filename="../Sources/CSong.cpp" line="3403"/>
+        <location filename="../Sources/CSong.cpp" line="3525"/>
         <source>File:</source>
         <translation>Fichier :</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="1977"/>
-        <location filename="../Sources/CSong.cpp" line="2039"/>
-        <location filename="../Sources/CSong.cpp" line="2457"/>
-        <location filename="../Sources/CSong.cpp" line="2637"/>
-        <location filename="../Sources/CSong.cpp" line="2968"/>
-        <location filename="../Sources/CSong.cpp" line="3005"/>
-        <location filename="../Sources/CSong.cpp" line="3242"/>
-        <location filename="../Sources/CSong.cpp" line="3368"/>
+        <location filename="../Sources/CSong.cpp" line="2107"/>
+        <location filename="../Sources/CSong.cpp" line="2165"/>
+        <location filename="../Sources/CSong.cpp" line="2599"/>
+        <location filename="../Sources/CSong.cpp" line="2775"/>
+        <location filename="../Sources/CSong.cpp" line="3130"/>
+        <location filename="../Sources/CSong.cpp" line="3167"/>
+        <location filename="../Sources/CSong.cpp" line="3404"/>
+        <location filename="../Sources/CSong.cpp" line="3526"/>
         <source>Date:</source>
         <translation>Date :</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2036"/>
+        <location filename="../Sources/CSong.cpp" line="2162"/>
         <source>Chargement des tags ID3v2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2072"/>
-        <location filename="../Sources/CSong.cpp" line="2081"/>
-        <location filename="../Sources/CSong.cpp" line="2090"/>
-        <location filename="../Sources/CSong.cpp" line="2099"/>
-        <location filename="../Sources/CSong.cpp" line="2108"/>
-        <location filename="../Sources/CSong.cpp" line="2117"/>
-        <location filename="../Sources/CSong.cpp" line="2126"/>
-        <location filename="../Sources/CSong.cpp" line="2135"/>
-        <location filename="../Sources/CSong.cpp" line="2144"/>
-        <location filename="../Sources/CSong.cpp" line="2153"/>
-        <location filename="../Sources/CSong.cpp" line="2162"/>
-        <location filename="../Sources/CSong.cpp" line="2182"/>
-        <location filename="../Sources/CSong.cpp" line="2191"/>
-        <location filename="../Sources/CSong.cpp" line="2228"/>
-        <location filename="../Sources/CSong.cpp" line="2325"/>
-        <location filename="../Sources/CSong.cpp" line="2351"/>
-        <source>Erreur : plusieurs tags %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Sources/CSong.cpp" line="2171"/>
-        <location filename="../Sources/CSong.cpp" line="2204"/>
-        <location filename="../Sources/CSong.cpp" line="2207"/>
-        <location filename="../Sources/CSong.cpp" line="2211"/>
-        <location filename="../Sources/CSong.cpp" line="2219"/>
-        <location filename="../Sources/CSong.cpp" line="2240"/>
-        <location filename="../Sources/CSong.cpp" line="2243"/>
-        <location filename="../Sources/CSong.cpp" line="2247"/>
-        <location filename="../Sources/CSong.cpp" line="2255"/>
-        <location filename="../Sources/CSong.cpp" line="2331"/>
-        <location filename="../Sources/CSong.cpp" line="2835"/>
-        <source>Erreur : tag %1 invalide</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Sources/CSong.cpp" line="2271"/>
-        <source>Erreur : plusieurs tags COMM</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Sources/CSong.cpp" line="2286"/>
-        <source>Erreur : plusieurs tags TBPM</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Sources/CSong.cpp" line="2292"/>
-        <source>Erreur : tag TBPM invalide</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Sources/CSong.cpp" line="2300"/>
-        <source>Erreur : plusieurs tags USLT</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Sources/CSong.cpp" line="2311"/>
-        <source>Erreur : langue du tag USLT invalide</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Sources/CSong.cpp" line="2339"/>
+        <location filename="../Sources/CSong.cpp" line="2467"/>
         <source>Erreur : la langue des paroles et diffÃ©rente de la langue du morceau</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2366"/>
-        <source>Erreur : tag %1 incorrect</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Sources/CSong.cpp" line="2374"/>
+        <location filename="../Sources/CSong.cpp" line="2502"/>
         <source>Erreur : tag %1 avec plusieurs champs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2389"/>
-        <location filename="../Sources/CSong.cpp" line="2393"/>
+        <location filename="../Sources/CSong.cpp" line="2519"/>
+        <location filename="../Sources/CSong.cpp" line="2525"/>
         <source>Erreur : tag TXXX [REPLAYGAIN_TRACK_GAIN] incorrect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2401"/>
+        <location filename="../Sources/CSong.cpp" line="2535"/>
         <source>Erreur : tag TXXX [REPLAYGAIN_TRACK_PEAK] incorrect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2411"/>
-        <location filename="../Sources/CSong.cpp" line="2415"/>
+        <location filename="../Sources/CSong.cpp" line="2549"/>
+        <location filename="../Sources/CSong.cpp" line="2555"/>
         <source>Erreur : tag TXXX [REPLAYGAIN_ALBUM_GAIN] incorrect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2423"/>
+        <location filename="../Sources/CSong.cpp" line="2565"/>
         <source>Erreur : tag TXXX [REPLAYGAIN_ALBUM_PEAK] incorrect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2454"/>
+        <location filename="../Sources/CSong.cpp" line="2596"/>
         <source>Chargement des tags APE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2548"/>
-        <location filename="../Sources/CSong.cpp" line="2551"/>
-        <location filename="../Sources/CSong.cpp" line="2555"/>
-        <location filename="../Sources/CSong.cpp" line="2563"/>
-        <location filename="../Sources/CSong.cpp" line="2581"/>
-        <location filename="../Sources/CSong.cpp" line="2584"/>
-        <location filename="../Sources/CSong.cpp" line="2588"/>
-        <location filename="../Sources/CSong.cpp" line="2596"/>
-        <location filename="../Sources/CSong.cpp" line="2747"/>
-        <location filename="../Sources/CSong.cpp" line="2761"/>
-        <location filename="../Sources/CSong.cpp" line="2779"/>
-        <location filename="../Sources/CSong.cpp" line="2793"/>
-        <location filename="../Sources/CSong.cpp" line="2811"/>
+        <location filename="../Sources/CSong.cpp" line="2297"/>
+        <location filename="../Sources/CSong.cpp" line="2332"/>
+        <location filename="../Sources/CSong.cpp" line="2335"/>
+        <location filename="../Sources/CSong.cpp" line="2339"/>
+        <location filename="../Sources/CSong.cpp" line="2347"/>
+        <location filename="../Sources/CSong.cpp" line="2368"/>
+        <location filename="../Sources/CSong.cpp" line="2371"/>
+        <location filename="../Sources/CSong.cpp" line="2375"/>
+        <location filename="../Sources/CSong.cpp" line="2383"/>
+        <location filename="../Sources/CSong.cpp" line="2420"/>
+        <location filename="../Sources/CSong.cpp" line="2459"/>
+        <location filename="../Sources/CSong.cpp" line="2494"/>
+        <location filename="../Sources/CSong.cpp" line="2690"/>
+        <location filename="../Sources/CSong.cpp" line="2693"/>
+        <location filename="../Sources/CSong.cpp" line="2697"/>
+        <location filename="../Sources/CSong.cpp" line="2705"/>
+        <location filename="../Sources/CSong.cpp" line="2723"/>
+        <location filename="../Sources/CSong.cpp" line="2726"/>
+        <location filename="../Sources/CSong.cpp" line="2730"/>
+        <location filename="../Sources/CSong.cpp" line="2738"/>
         <location filename="../Sources/CSong.cpp" line="2865"/>
-        <location filename="../Sources/CSong.cpp" line="2879"/>
+        <location filename="../Sources/CSong.cpp" line="2872"/>
+        <location filename="../Sources/CSong.cpp" line="2885"/>
+        <location filename="../Sources/CSong.cpp" line="2899"/>
+        <location filename="../Sources/CSong.cpp" line="2917"/>
+        <location filename="../Sources/CSong.cpp" line="2931"/>
+        <location filename="../Sources/CSong.cpp" line="2951"/>
+        <location filename="../Sources/CSong.cpp" line="2977"/>
+        <location filename="../Sources/CSong.cpp" line="3007"/>
+        <location filename="../Sources/CSong.cpp" line="3023"/>
         <source>Error: invalid tag &apos;%1&apos;</source>
         <translation>Erreur : tag &apos;%1&apos; invalide</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2603"/>
+        <location filename="../Sources/CSong.cpp" line="357"/>
+        <source>Unknown format</source>
+        <translation>Format inconnu</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="2197"/>
+        <location filename="../Sources/CSong.cpp" line="2206"/>
+        <location filename="../Sources/CSong.cpp" line="2215"/>
+        <location filename="../Sources/CSong.cpp" line="2224"/>
+        <location filename="../Sources/CSong.cpp" line="2233"/>
+        <location filename="../Sources/CSong.cpp" line="2242"/>
+        <location filename="../Sources/CSong.cpp" line="2251"/>
+        <location filename="../Sources/CSong.cpp" line="2260"/>
+        <location filename="../Sources/CSong.cpp" line="2269"/>
+        <location filename="../Sources/CSong.cpp" line="2278"/>
+        <location filename="../Sources/CSong.cpp" line="2287"/>
+        <location filename="../Sources/CSong.cpp" line="2310"/>
+        <location filename="../Sources/CSong.cpp" line="2319"/>
+        <location filename="../Sources/CSong.cpp" line="2356"/>
+        <location filename="../Sources/CSong.cpp" line="2399"/>
+        <location filename="../Sources/CSong.cpp" line="2414"/>
+        <location filename="../Sources/CSong.cpp" line="2428"/>
+        <location filename="../Sources/CSong.cpp" line="2453"/>
+        <location filename="../Sources/CSong.cpp" line="2479"/>
+        <source>Error: several tags &apos;%1&apos;</source>
+        <translation>Erreur : plusieurs tags &apos;%1&apos;</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="2439"/>
+        <source>Error: language of tag &apos;USLT&apos; invalid</source>
+        <translation>Erreur : la langue du tag &apos;USLT&apos; est invalide</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="2745"/>
         <source>Erreur : tag LANGUAGE non gÃ©rÃ©</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2634"/>
+        <location filename="../Sources/CSong.cpp" line="2772"/>
         <source>Chargement des tags XiphComment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2727"/>
-        <location filename="../Sources/CSong.cpp" line="2734"/>
-        <source>Erreur : tag DATE invalide</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Sources/CSong.cpp" line="2770"/>
+        <location filename="../Sources/CSong.cpp" line="2908"/>
         <source>Erreur : les tags TRACKTOTAL et TOTALTRACKS sont prÃ©sents tous les deux</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2802"/>
+        <location filename="../Sources/CSong.cpp" line="2942"/>
         <source>Erreur : les tags TEMPO et BPM sont prÃ©sents tous les deux</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2901"/>
-        <location filename="../Sources/CSong.cpp" line="2905"/>
+        <location filename="../Sources/CSong.cpp" line="3049"/>
+        <location filename="../Sources/CSong.cpp" line="3055"/>
         <source>Erreur : tag REPLAYGAIN_TRACK_GAIN incorrect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2914"/>
+        <location filename="../Sources/CSong.cpp" line="3066"/>
         <source>Erreur : tag REPLAYGAIN_TRACK_PEAK incorrect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2927"/>
-        <location filename="../Sources/CSong.cpp" line="2931"/>
+        <location filename="../Sources/CSong.cpp" line="3083"/>
+        <location filename="../Sources/CSong.cpp" line="3089"/>
         <source>Erreur : tag REPLAYGAIN_ALBUM_GAIN incorrect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2940"/>
+        <location filename="../Sources/CSong.cpp" line="3100"/>
         <source>Erreur : tag REPLAYGAIN_ALBUM_PEAK incorrect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2965"/>
+        <location filename="../Sources/CSong.cpp" line="3127"/>
         <source>Enregistrement des tags ID3v1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3106"/>
-        <location filename="../Sources/CSong.cpp" line="3279"/>
+        <location filename="../Sources/CSong.cpp" line="3268"/>
+        <location filename="../Sources/CSong.cpp" line="3441"/>
         <source>Aucun tag pour enregistrer le compositeur pour le tri</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3239"/>
+        <location filename="../Sources/CSong.cpp" line="3401"/>
         <source>Enregistrement des tags APE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3252"/>
+        <location filename="../Sources/CSong.cpp" line="3414"/>
         <source>Aucun tag pour enregistrer le regroupement</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3261"/>
+        <location filename="../Sources/CSong.cpp" line="3423"/>
         <source>Aucun tag pour enregistrer l&apos;artiste de l&apos;album</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3267"/>
+        <location filename="../Sources/CSong.cpp" line="3429"/>
         <source>Aucun tag pour enregistrer le titre pour le tri</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3270"/>
-        <location filename="../Sources/CSong.cpp" line="3276"/>
+        <location filename="../Sources/CSong.cpp" line="3432"/>
+        <location filename="../Sources/CSong.cpp" line="3438"/>
         <source>Aucun tag pour enregistrer l&apos;artiste pour le tri</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3273"/>
+        <location filename="../Sources/CSong.cpp" line="3435"/>
         <source>Aucun tag pour enregistrer l&apos;album pour le tri</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3332"/>
+        <location filename="../Sources/CSong.cpp" line="3490"/>
         <source>Aucun tag pour enregistrer le nombre de battements par minute</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3335"/>
+        <location filename="../Sources/CSong.cpp" line="3493"/>
         <source>Aucun tag pour enregistrer les paroles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3341"/>
+        <location filename="../Sources/CSong.cpp" line="3499"/>
         <source>Aucun tag pour enregistrer le parolier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3365"/>
+        <location filename="../Sources/CSong.cpp" line="3523"/>
         <source>Enregistrement des tags Xiph Comment</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1170,7 +1152,7 @@ Erreur : %4</translation>
         <translation type="obsolete">Erreur : tag &apos;%1&apos; invalide</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3002"/>
+        <location filename="../Sources/CSong.cpp" line="3164"/>
         <source>Enregistrement des tags ID3v2</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1320,7 +1302,7 @@ Erreur : %4</translation>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="277"/>
         <source>Track peak</source>
-        <translation type="unfinished"></translation>
+        <translation>Pic de la piste</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="278"/>
@@ -1330,7 +1312,7 @@ Erreur : %4</translation>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="279"/>
         <source>Album peak</source>
-        <translation type="unfinished"></translation>
+        <translation>Pic de l&apos;album</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="280"/>
@@ -1440,18 +1422,18 @@ Les fichiers ne seront pas supprimés.</translation>
 <context>
     <name>CSongTableModel</name>
     <message>
-        <location filename="../Sources/CSongTableModel.cpp" line="278"/>
+        <location filename="../Sources/CSongTableModel.cpp" line="266"/>
         <source>%1 kbit/s</source>
         <translation>%1 kbit/s</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTableModel.cpp" line="296"/>
+        <location filename="../Sources/CSongTableModel.cpp" line="284"/>
         <source>%1 Hz</source>
         <translation>%1 Hz</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTableModel.cpp" line="339"/>
-        <location filename="../Sources/CSongTableModel.cpp" line="341"/>
+        <location filename="../Sources/CSongTableModel.cpp" line="334"/>
+        <location filename="../Sources/CSongTableModel.cpp" line="354"/>
         <source>%1 dB</source>
         <translation>%1 dB</translation>
     </message>
@@ -2044,17 +2026,17 @@ Voulez-vous les ajouter ?</translation>
         <translation>Gain de l&apos;album :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1218"/>
+        <location filename="../Form/DialogEditSong.ui" line="1268"/>
         <source>Track peak:</source>
-        <translation type="unfinished"></translation>
+        <translation>Pic de la piste :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1239"/>
+        <location filename="../Form/DialogEditSong.ui" line="1218"/>
         <source>Album peak:</source>
-        <translation type="unfinished"></translation>
+        <translation>Pic de l&apos;album :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1275"/>
+        <location filename="../Form/DialogEditSong.ui" line="1254"/>
         <source>Compute</source>
         <translation>Calculer</translation>
     </message>
@@ -2490,7 +2472,7 @@ Voulez-vous les ajouter ?</translation>
     <message>
         <location filename="../Form/DialogPreferences.ui" line="249"/>
         <source> %</source>
-        <translation>%</translation>
+        <translation> %</translation>
     </message>
     <message>
         <location filename="../Form/DialogPreferences.ui" line="265"/>

@@ -114,6 +114,8 @@ CDialogEditSong::~CDialogEditSong()
 
 void CDialogEditSong::previousSong(void)
 {
+    //apply(); // Comportement iTunes et Songbird
+
     CSongTableItem * songItem = m_songTable->getPreviousSong(m_songItem, false);
 
     if (songItem)
@@ -134,6 +136,8 @@ void CDialogEditSong::previousSong(void)
 
 void CDialogEditSong::nextSong(void)
 {
+    //apply(); // Comportement iTunes et Songbird
+
     CSongTableItem * songItem = m_songTable->getNextSong(m_songItem, false);
 
     if (songItem)
@@ -368,10 +372,29 @@ void CDialogEditSong::updateInfos()
     m_uiWidget->editSkipShuffle->setChecked(song->isSkipShuffle());
     m_uiWidget->editCompilation->setChecked(song->isCompilation());
 
-    m_uiWidget->editTrackGain->setText(tr("%1 dB").arg(song->getTrackGain()));
-    m_uiWidget->editTrackPeak->setText(QString::number(song->getTrackPeak()));
-    m_uiWidget->editAlbumGain->setText(tr("%1 dB").arg(song->getAlbumGain()));
-    m_uiWidget->editAlbumPeak->setText(QString::number(song->getAlbumPeak()));
+    float trackGain = song->getTrackGain();
+    if (trackGain == std::numeric_limits<float>::infinity())
+        m_uiWidget->editTrackGain->setText(QString());
+    else
+        m_uiWidget->editTrackGain->setText(tr("%1 dB").arg(trackGain));
+
+    float trackPeak = song->getTrackPeak();
+    if (trackPeak == std::numeric_limits<float>::infinity())
+        m_uiWidget->editTrackPeak->setText(QString());
+    else
+        m_uiWidget->editTrackPeak->setText(QString::number(trackPeak));
+
+    float albumGain = song->getAlbumGain();
+    if (albumGain == std::numeric_limits<float>::infinity())
+        m_uiWidget->editAlbumGain->setText(QString());
+    else
+        m_uiWidget->editAlbumGain->setText(tr("%1 dB").arg(albumGain));
+
+    float albumPeak = song->getAlbumPeak();
+    if (albumPeak == std::numeric_limits<float>::infinity())
+        m_uiWidget->editAlbumPeak->setText(QString());
+    else
+        m_uiWidget->editAlbumPeak->setText(QString::number(albumPeak));
 
 
     // Illustrations

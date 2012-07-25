@@ -31,7 +31,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 
 /**
- * Constructeur du modèle.
+ * Constructeur du modÃ¨le.
  *
  * \param application Pointeur sur l'application.
  */
@@ -46,19 +46,19 @@ CListModel::CListModel(CApplication * application) :
 
 
 /**
- * Détruit le modèle.
+ * DÃ©truit le modÃ¨le.
  * Enregistre les modifications sur les dossiers et les listes de lecture.
  */
 
 CListModel::~CListModel()
 {
-    // Met-à-jour tous les dossiers
+    // Met-Ã -jour tous les dossiers
     for (QList<CFolder *>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
     {
         (*it)->updateDatabase();
     }
 
-    // Met-à-jour toutes les listes de lecture
+    // Met-Ã -jour toutes les listes de lecture
     for (QList<IPlayList *>::const_iterator it = m_playLists.begin(); it != m_playLists.end(); ++it)
     {
         (*it)->updateDatabase();
@@ -79,7 +79,7 @@ CListModel::~CListModel()
 
 
 /**
- * Charge le modèle depuis la base de données.
+ * Charge le modÃ¨le depuis la base de donnÃ©es.
  */
 
 void CListModel::loadFromDatabase(void)
@@ -92,7 +92,7 @@ void CListModel::loadFromDatabase(void)
 
     QSqlQuery query(m_application->getDataBase());
 
-    // Création des dossiers
+    // CrÃ©ation des dossiers
     if (!query.exec("SELECT folder_id, folder_name, folder_parent, folder_position, folder_expanded "
                     "FROM folder "
                     "ORDER BY folder_position"))
@@ -125,7 +125,7 @@ void CListModel::loadFromDatabase(void)
         }
     }
 
-    // On déplace les dossiers dans l'arborescence
+    // On dÃ©place les dossiers dans l'arborescence
     for (QList<CFolder *>::const_iterator it = folders.begin(); it != folders.end(); ++it)
     {
         long folderId = reinterpret_cast<long>((*it)->m_folder);
@@ -153,7 +153,7 @@ void CListModel::loadFromDatabase(void)
     }
 
 
-    // Création des listes de lecture statiques
+    // CrÃ©ation des listes de lecture statiques
     if (!query.exec("SELECT static_list_id, playlist_name, list_columns, playlist_id, folder_id, list_position "
                     "FROM static_list NATURAL JOIN playlist ORDER BY list_position"))
     {
@@ -222,7 +222,7 @@ void CListModel::loadFromDatabase(void)
     }
 
 
-    // Création des listes de lecture dynamiques
+    // CrÃ©ation des listes de lecture dynamiques
     if (!query.exec("SELECT dynamic_list_id, playlist_name, list_columns, playlist_id, folder_id, list_position "
                     "FROM dynamic_list NATURAL JOIN playlist ORDER BY list_position"))
     {
@@ -264,7 +264,7 @@ void CListModel::loadFromDatabase(void)
         }
     }
 
-    // On corrige les éventuelles erreurs de position dans les dossiers
+    // On corrige les Ã©ventuelles erreurs de position dans les dossiers
     for (QList<CFolder *>::const_iterator it = folders.begin(); it != folders.end(); ++it)
     {
         (*it)->fixPositions();
@@ -285,7 +285,7 @@ void CListModel::clear(void)
 
     m_rootFolder = NULL;
 
-    // Ajout de la médiathèque au modèle
+    // Ajout de la mÃ©diathÃ¨que au modÃ¨le
     QStandardItem * libraryItem = new QStandardItem(QPixmap(":/icons/library"), tr("Library"));
     libraryItem->setData(QVariant::fromValue(qobject_cast<CSongTable *>(m_application->getLibrary())), Qt::UserRole + 1);
 
@@ -296,7 +296,7 @@ void CListModel::clear(void)
 
 
 /**
- * Retourne le dossier correspondant à un identifiant.
+ * Retourne le dossier correspondant Ã  un identifiant.
  *
  * \param id Identifiant du dossier.
  * \return Pointeur sur le dossier, ou NULL si \a id n'est pas valide.
@@ -309,7 +309,7 @@ CFolder * CListModel::getFolderFromId(int id) const
 
 
 /**
- * Retourne la liste de lecture correspondant à un identifiant.
+ * Retourne la liste de lecture correspondant Ã  un identifiant.
  *
  * \param id Identifiant de la liste.
  * \return Pointeur sur la liste de lecture, ou NULL si \a id n'est pas valide.
@@ -346,8 +346,8 @@ QModelIndex CListModel::getModelIndex(CSongTable * songTable) const
 /**
  * Ouvre ou ferme un dossier.
  *
- * \param index Index du dossier à ouvrir ou fermer.
- * \param open  Indique si le dossier doit être ouvert ou fermé.
+ * \param index Index du dossier Ã  ouvrir ou fermer.
+ * \param open  Indique si le dossier doit Ãªtre ouvert ou fermÃ©.
  */
 
 void CListModel::openFolder(const QModelIndex& index, bool open)
@@ -367,9 +367,9 @@ void CListModel::openFolder(const QModelIndex& index, bool open)
 
 
 /**
- * Ajoute un dossier au modèle.
+ * Ajoute un dossier au modÃ¨le.
  *
- * \param folder Dossier à ajouter.
+ * \param folder Dossier Ã  ajouter.
  */
 
 void CListModel::addFolder(CFolder * folder)
@@ -405,7 +405,7 @@ void CListModel::addFolder(CFolder * folder)
             folderItem->setIcon(QPixmap(":/icons/folder_close"));
     }
 
-    // Éléments du dossier
+    // Ã‰lÃ©ments du dossier
     bool invalidPosition = false;
     QVector<CFolder::TFolderItem *> items = folder->getItems();
 
@@ -429,7 +429,7 @@ void CListModel::addFolder(CFolder * folder)
             }
             else
             {
-                m_application->logError("l'élément n'est ni un dossier, ni une liste de lecture", __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError("l'Ã©lÃ©ment n'est ni un dossier, ni une liste de lecture", __FUNCTION__, __FILE__, __LINE__);
             }
         }
         else
@@ -442,9 +442,9 @@ void CListModel::addFolder(CFolder * folder)
 
 
 /**
- * Ajoute une liste de lecture au modèle.
+ * Ajoute une liste de lecture au modÃ¨le.
  *
- * \param playList Liste de lecture à ajouter.
+ * \param playList Liste de lecture Ã  ajouter.
  */
 
 void CListModel::addPlayList(IPlayList * playList)
@@ -477,7 +477,7 @@ void CListModel::addPlayList(IPlayList * playList)
 /**
  * Supprime un dossier.
  *
- * \param folder    Pointeur sur le dossier à supprimer.
+ * \param folder    Pointeur sur le dossier Ã  supprimer.
  * \param recursive Indique si on doit supprimer le contenu du dossier ou pas.
  */
 
@@ -491,7 +491,7 @@ void CListModel::removeFolder(CFolder * folder, bool recursive)
     if (!parentFolder) parentFolder = m_rootFolder;
     parentFolder->removeFolder(folder);
 
-    // Déplacement des éléments du dossier vers le dossier parent
+    // DÃ©placement des Ã©lÃ©ments du dossier vers le dossier parent
     if (!recursive)
     {
         QStandardItem * itemParent = m_folderItems.key(parentFolder);
@@ -555,7 +555,7 @@ void CListModel::removeFolder(CFolder * folder, bool recursive)
 /**
  * Supprime une liste de lecture.
  *
- * \param playList Pointeur sur la liste de lecture à supprimer.
+ * \param playList Pointeur sur la liste de lecture Ã  supprimer.
  */
 
 void CListModel::removePlayList(IPlayList * playList)
@@ -597,7 +597,7 @@ bool CListModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int
 
         if (!decodeDataList(encodedData, &playListId, &folderId))
         {
-            //qDebug() << "CListModel::dropMimeData() : erreur lors du décodage";
+            //qDebug() << "CListModel::dropMimeData() : erreur lors du dÃ©codage";
             return false;
         }
 
@@ -632,7 +632,7 @@ bool CListModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int
             else
                 folderParent->addPlayList(playList, position - 1);
             
-            // Modification du modèle
+            // Modification du modÃ¨le
             QStandardItem * item = m_songTableItems.key(playList);
             Q_CHECK_PTR(item);
 
@@ -671,7 +671,7 @@ bool CListModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int
             else
                 folderParent->addFolder(folder, position - 1);
             
-            // Modification du modèle
+            // Modification du modÃ¨le
             QStandardItem * item = m_folderItems.key(folder);
             Q_CHECK_PTR(item);
 
@@ -694,14 +694,14 @@ bool CListModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int
             return true;
         }
 
-        m_application->logError("l'élément n'est ni un dossier, ni une liste de lecture", __FUNCTION__, __FILE__, __LINE__);
+        m_application->logError("l'Ã©lÃ©ment n'est ni un dossier, ni une liste de lecture", __FUNCTION__, __FILE__, __LINE__);
         return false;
     }
     else if (data->hasFormat("application/x-ted-media-songs"))
     {
         if (parent.isValid())
         {
-            //qDebug() << "CPlayListModel::dropMimeData() : ajout à une liste...";
+            //qDebug() << "CPlayListModel::dropMimeData() : ajout Ã  une liste...";
 
             CSongTable * songTable = this->data(parent, Qt::UserRole + 1).value<CSongTable *>();
             CStaticPlayList * playList = qobject_cast<CStaticPlayList *>(songTable);
@@ -721,8 +721,8 @@ bool CListModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int
             return false;
         }
 
-        // Création d'une liste statique
-        //qDebug() << "CPlayListModel::dropMimeData() : création d'une nouvelle liste...";
+        // CrÃ©ation d'une liste statique
+        //qDebug() << "CPlayListModel::dropMimeData() : crÃ©ation d'une nouvelle liste...";
 
         QByteArray encodedData = data->data("application/x-ted-media-songs");
         QList<CSong *> songs = decodeDataSongs(encodedData);
@@ -790,7 +790,7 @@ bool CListModel::decodeDataList(const QByteArray& encodedData, int * playList, i
 
 
 /**
- * Retourne la liste des types MIME acceptés pour le drop.
+ * Retourne la liste des types MIME acceptÃ©s pour le drop.
  *
  * \return Liste de types.
  */
@@ -814,7 +814,7 @@ QMimeData * CListModel::mimeData(const QModelIndexList& indexes) const
     QByteArray data;
     QDataStream streamData(&data, QIODevice::WriteOnly);
 
-    // Médiathèque
+    // MÃ©diathÃ¨que
     if (indexes[0].row() == 0 && !indexes[0].parent().isValid())
         return NULL;
 
@@ -841,9 +841,9 @@ QMimeData * CListModel::mimeData(const QModelIndexList& indexes) const
 
 
 /**
- * Retourne la liste des actions acceptées pour le drop.
+ * Retourne la liste des actions acceptÃ©es pour le drop.
  *
- * \return Actions acceptées.
+ * \return Actions acceptÃ©es.
  */
 
 Qt::DropActions CListModel::supportedDropActions() const

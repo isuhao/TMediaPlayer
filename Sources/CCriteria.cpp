@@ -187,7 +187,7 @@ bool CCriteria::matchCriteria(CSong * song) const
             case CondNumberNotEqual   : return (num != m_value1.toInt());
             case CondNumberLessThan   : return (num < m_value1.toInt());
             case CondNumberGreaterThan: return (num > m_value1.toInt());
-            case CondNumberBetween    : return (num > m_value1.toInt() && num < m_value2.toInt());
+            case CondNumberBetween    : return (num >= m_value1.toInt() && num <= m_value2.toInt());
         }
     }
     else if ((m_type >> 8) == ICriteria::TypeMaskTime)
@@ -219,7 +219,7 @@ bool CCriteria::matchCriteria(CSong * song) const
             case CondTimeIsNot      : return (time != m_value1.toTime());
             case CondTimeLessThan   : return (time < m_value1.toTime());
             case CondTimeGreaterThan: return (time > m_value1.toTime());
-            case CondTimeBetween    : return (time > m_value1.toTime() && time < m_value2.toTime());
+            case CondTimeBetween    : return (time >= m_value1.toTime() && time <= m_value2.toTime());
         }
     }
     else if ((m_type >> 8) == ICriteria::TypeMaskDate)
@@ -253,7 +253,7 @@ bool CCriteria::matchCriteria(CSong * song) const
             case CondDateIsNot    : return (date != m_value1.toDateTime());
             case CondDateBefore   : return (date < m_value1.toDateTime());
             case CondDateAfter    : return (date > m_value1.toDateTime());
-            case CondDateBetween  : return (date > m_value1.toDateTime() && date < m_value2.toDateTime());
+            case CondDateBetween  : return (date >= m_value1.toDateTime() && date <= m_value2.toDateTime());
 
             case CondDateInLast:
             {
