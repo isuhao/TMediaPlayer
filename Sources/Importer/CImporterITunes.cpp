@@ -740,7 +740,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
 
                         if (song.fileName.startsWith("//localhost/"))
                         {
-                            song.fileName = QDir::toNativeSeparators(song.fileName.mid(12));
+                            song.fileName = song.fileName.mid(12).replace('\\', '/');
                         }
                         else
                         {

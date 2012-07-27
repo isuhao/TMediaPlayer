@@ -70,6 +70,11 @@ CDialogEditDynamicList::CDialogEditDynamicList(CDynamicList * playList, CApplica
     }
 
     m_uiWidget->editName->setText(m_playList->getName());
+    m_uiWidget->editLimit->setChecked(m_playList->getNumItems() > 0);
+    m_uiWidget->editNumItems->setValue(m_playList->getNumItems());
+  //m_uiWidget->editOnlyChecked->setChecked(m_playList->getOnlyChecked());
+    m_uiWidget->editUpdate->setChecked(m_playList->isAutoUpdate());
+
     resizeWindow();
 
     // Connexions des signaux des boutons
@@ -126,7 +131,7 @@ void CDialogEditDynamicList::save(void)
     }
 
     m_application->addPlayList(m_playList);
-    m_playList->update();
+    m_playList->updateList();
 
     close();
 }

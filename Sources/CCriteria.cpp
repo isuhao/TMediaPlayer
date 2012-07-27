@@ -508,7 +508,7 @@ IWidgetCriteria * CCriteria::getWidget(void) const
         }
 
         widget->m_uiWidget->editValue1Number->setValue(m_value1.toInt());
-        widget->m_uiWidget->editValue1Number->setValue(m_value2.toInt());
+        widget->m_uiWidget->editValue2Number->setValue(m_value2.toInt());
     }
     else if ((m_type >> 8) == TypeMaskTime)
     {

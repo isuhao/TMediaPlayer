@@ -125,12 +125,13 @@ public:
     QList<CSongTableItem *> getSelectedSongItems(void) const;
     CSongTableItem * getPreviousSong(CSongTableItem * songItem, bool shuffle) const;
     CSongTableItem * getNextSong(CSongTableItem * songItem, bool shuffle) const;
-    int getTotalDuration(void) const;
+    CSongTableItem * getLastSong(bool shuffle) const;
+    qlonglong getTotalDuration(void) const;
     inline bool hasSong(CSong * song) const;
     virtual bool isModified(void) const;
 
     inline int getIdPlayList(void) const;
-    
+
 public slots:
 
     void selectSongItem(CSongTableItem * songItem);
@@ -142,7 +143,7 @@ signals:
     void songStarted(CSongTableItem *);  ///< Signal émis quand un morceau est lancé (double-clic).
     void columnChanged(void);            ///< Signal émis lorsque les colonnes sont modifiées.
     void rowCountChanged(void);          ///< Signal émis lorsque le nombre de morceaux de la liste change.
-    
+
 protected slots:
 
     virtual void columnMoved(int logicalIndex, int oldVisualIndex, int newVisualIndex);
@@ -190,7 +191,7 @@ protected:
     QMap<CStaticPlayList *, QAction *> m_actionAddToPlayList;
 
 private:
-    
+
     bool m_isModified;            ///< Indique si les informations de la liste ont été modifiées.
     bool m_isColumnMoving;        ///< Indique si les colonnes sont en cours de positionnement.
 };

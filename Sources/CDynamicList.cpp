@@ -42,7 +42,10 @@ CDynamicList::CDynamicList(CApplication * application, const QString& name) :
     IPlayList               (application, name),
     m_id                    (-1),
     m_mainCriteria          (NULL),
-    m_isDynamicListModified (false)
+    m_isDynamicListModified (false),
+    m_autoUpdate            (true),
+    m_onlyChecked           (false),
+    m_numItems              (0)
 {
     m_mainCriteria = new CMultiCriterion(m_application, this);
 }
@@ -85,15 +88,35 @@ CWidgetMultiCriterion * CDynamicList::getWidget(void) const
 
 /**
  * Met à jour la liste des morceaux.
+ *
+ * \todo Pouvoir limiter le nombre de morceaux.
+ * \todo Corriger le bug avec le passage au morceau suivant.
  */
 
-void CDynamicList::update(void)
+void CDynamicList::updateList(void)
 {
-    //qDebug() << "CDynamicList::update()";
-    QList<CSong *> songs = m_mainCriteria->getSongs(m_application->getLibrary()->getSongs());
+    // Si on est en train de lire un morceau de la liste, il faut mettre à jour les informations sur le morceau courant
+    CSongTableItem * currentItem = m_model->getCurrentSongItem();
+    CSong * currentSong = (currentItem ? currentItem->getSong() : NULL);
+
+    QList<CSong *> songs = m_mainCriteria->getSongs(m_application->getLibrary()->getSongs(), QList<CSong *>(), m_onlyChecked);
+
+    //TODO: nombre d'éléments
+    //1) Trier la liste selon le critère demandé
+    //2) Conserver les N premiers éléments
+    //3) le sortByColumn ci-dessous n'est pas nécessaire si le critère de tri et l'ordre sont les mêmes
+    //4) Si seul l'ordre diffère, il suffit de renverser la liste (swap des N/2 premiers éléments avec les N/2 derniers)
 
     m_model->setSongs(songs);
     sortByColumn(m_columnSort, m_sortOrder);
+
+    // On change le morceau courant affiché dans la liste
+    if (currentItem)
+    {
+        CSongTableItem * currentItemAfter = getFirstSongItem(currentSong);
+        m_model->setCurrentSong(currentItemAfter);
+        m_application->m_currentSongItem = currentItemAfter;
+    }
 
     emit listUpdated();
 }
@@ -101,8 +124,6 @@ void CDynamicList::update(void)
 
 /**
  * Met à jour les informations de la liste en base de données.
- *
- * \todo Gérer les critères.
  *
  * \return Booléen indiquant le succès de l'opération.
  */
@@ -179,7 +200,7 @@ bool CDynamicList::updateDatabase(void)
         }
 
         query.prepare("INSERT INTO dynamic_list (criteria_id, playlist_id) VALUES (?, ?)");
-        
+
         query.bindValue(0, 0);
         query.bindValue(1, m_idPlayList);
 
@@ -218,7 +239,7 @@ bool CDynamicList::updateDatabase(void)
         m_mainCriteria->insertIntoDatabase(m_application);
 
         query.prepare("UPDATE dynamic_list SET criteria_id = ? WHERE dynamic_list_id = ?");
-        
+
         query.bindValue(0, m_mainCriteria->getId());
         query.bindValue(1, m_id);
 
@@ -232,7 +253,7 @@ bool CDynamicList::updateDatabase(void)
     else if (m_isDynamicListModified)
     {
         query.prepare("UPDATE dynamic_list SET criteria_id = ? WHERE dynamic_list_id = ?");
-        
+
         query.bindValue(0, 0);
         query.bindValue(1, m_id);
 
@@ -267,7 +288,7 @@ bool CDynamicList::updateDatabase(void)
         m_mainCriteria->insertIntoDatabase(m_application);
 
         query.prepare("UPDATE dynamic_list SET criteria_id = ? WHERE dynamic_list_id = ?");
-        
+
         query.bindValue(0, m_mainCriteria->getId());
         query.bindValue(1, m_id);
 
@@ -287,7 +308,7 @@ bool CDynamicList::updateDatabase(void)
  * Supprime la liste de la base de données.
  */
 
-void CDynamicList::romoveFromDatabase(void)
+void CDynamicList::removeFromDatabase(void)
 {
     if (m_id <= 0)
     {
@@ -429,38 +450,28 @@ void CDynamicList::loadFromDatabase(void)
         }
     }
 
-
     // Conditions de mise à jour
-    ICriteria::TUpdateConditions conditions = m_mainCriteria->getUpdateConditions();
-
-    if (conditions.testFlag(ICriteria::UpdateOnSongAdded))
+    if (m_autoUpdate)
     {
-        connect(m_application, SIGNAL(songsAdded()), this, SLOT(update()), Qt::UniqueConnection);
-    }
+        ICriteria::TUpdateConditions conditions = m_mainCriteria->getUpdateConditions();
 
-    if (conditions.testFlag(ICriteria::UpdateOnSongRemoved))
-    {
-        connect(m_application, SIGNAL(songRemoved(CSong *)), this, SLOT(update()), Qt::UniqueConnection);
-    }
+        if (conditions.testFlag(ICriteria::UpdateOnSongAdded))
+            connect(m_application, SIGNAL(songsAdded()), this, SLOT(updateList()), Qt::UniqueConnection);
 
-    if (conditions.testFlag(ICriteria::UpdateOnSongModified))
-    {
-        connect(m_application, SIGNAL(songModified(CSong *)), this, SLOT(update()), Qt::UniqueConnection);
-    }
+        if (conditions.testFlag(ICriteria::UpdateOnSongRemoved))
+            connect(m_application, SIGNAL(songRemoved(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
 
-    if (conditions.testFlag(ICriteria::UpdateOnSongMoved))
-    {
-        connect(m_application, SIGNAL(songMoved(CSong *)), this, SLOT(update()), Qt::UniqueConnection);
-    }
+        if (conditions.testFlag(ICriteria::UpdateOnSongModified))
+            connect(m_application, SIGNAL(songModified(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
 
-    if (conditions.testFlag(ICriteria::UpdateOnSongPlayEnd))
-    {
-        connect(m_application, SIGNAL(songPlayEnd(CSong *)), this, SLOT(update()), Qt::UniqueConnection);
-    }
+        if (conditions.testFlag(ICriteria::UpdateOnSongMoved))
+            connect(m_application, SIGNAL(songMoved(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
 
-    if (conditions.testFlag(ICriteria::UpdateOnListModified))
-    {
-        connect(m_application, SIGNAL(listModified()), this, SLOT(update()), Qt::UniqueConnection);
+        if (conditions.testFlag(ICriteria::UpdateOnSongPlayEnd))
+            connect(m_application, SIGNAL(songPlayEnd(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
+
+        if (conditions.testFlag(ICriteria::UpdateOnListModified))
+            connect(m_application, SIGNAL(listModified()), this, SLOT(updateList()), Qt::UniqueConnection);
     }
 }
 
@@ -482,45 +493,35 @@ void CDynamicList::setCriteria(ICriteria * criteria)
     m_mainCriteria = criteria;
     m_isDynamicListModified = true;
 
-
     // Conditions de mise à jour
-    disconnect(m_application, SIGNAL(songsAdded()), this, SLOT(update()));
-    disconnect(m_application, SIGNAL(songRemoved(CSong *)), this, SLOT(update()));
-    disconnect(m_application, SIGNAL(songModified(CSong *)), this, SLOT(update()));
-    disconnect(m_application, SIGNAL(songMoved(CSong *)), this, SLOT(update()));
-    disconnect(m_application, SIGNAL(songPlayEnd(CSong *)), this, SLOT(update()));
-    disconnect(m_application, SIGNAL(listModified()), this, SLOT(update()));
-
-    ICriteria::TUpdateConditions conditions = m_mainCriteria->getUpdateConditions();
-
-    if (conditions.testFlag(ICriteria::UpdateOnSongAdded))
+    if (m_autoUpdate)
     {
-        connect(m_application, SIGNAL(songsAdded()), this, SLOT(update()), Qt::UniqueConnection);
-    }
+        disconnect(m_application, SIGNAL(songsAdded()         ), this, SLOT(updateList()));
+        disconnect(m_application, SIGNAL(songRemoved(CSong *) ), this, SLOT(updateList()));
+        disconnect(m_application, SIGNAL(songModified(CSong *)), this, SLOT(updateList()));
+        disconnect(m_application, SIGNAL(songMoved(CSong *)   ), this, SLOT(updateList()));
+        disconnect(m_application, SIGNAL(songPlayEnd(CSong *) ), this, SLOT(updateList()));
+        disconnect(m_application, SIGNAL(listModified()       ), this, SLOT(updateList()));
 
-    if (conditions.testFlag(ICriteria::UpdateOnSongRemoved))
-    {
-        connect(m_application, SIGNAL(songRemoved(CSong *)), this, SLOT(update()), Qt::UniqueConnection);
-    }
+        ICriteria::TUpdateConditions conditions = m_mainCriteria->getUpdateConditions();
 
-    if (conditions.testFlag(ICriteria::UpdateOnSongModified))
-    {
-        connect(m_application, SIGNAL(songModified(CSong *)), this, SLOT(update()), Qt::UniqueConnection);
-    }
+        if (conditions.testFlag(ICriteria::UpdateOnSongAdded))
+            connect(m_application, SIGNAL(songsAdded()), this, SLOT(updateList()), Qt::UniqueConnection);
 
-    if (conditions.testFlag(ICriteria::UpdateOnSongMoved))
-    {
-        connect(m_application, SIGNAL(songMoved(CSong *)), this, SLOT(update()), Qt::UniqueConnection);
-    }
+        if (conditions.testFlag(ICriteria::UpdateOnSongRemoved))
+            connect(m_application, SIGNAL(songRemoved(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
 
-    if (conditions.testFlag(ICriteria::UpdateOnSongPlayEnd))
-    {
-        connect(m_application, SIGNAL(songPlayEnd(CSong *)), this, SLOT(update()), Qt::UniqueConnection);
-    }
+        if (conditions.testFlag(ICriteria::UpdateOnSongModified))
+            connect(m_application, SIGNAL(songModified(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
 
-    if (conditions.testFlag(ICriteria::UpdateOnListModified))
-    {
-        connect(m_application, SIGNAL(listModified()), this, SLOT(update()), Qt::UniqueConnection);
+        if (conditions.testFlag(ICriteria::UpdateOnSongMoved))
+            connect(m_application, SIGNAL(songMoved(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
+
+        if (conditions.testFlag(ICriteria::UpdateOnSongPlayEnd))
+            connect(m_application, SIGNAL(songPlayEnd(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
+
+        if (conditions.testFlag(ICriteria::UpdateOnListModified))
+            connect(m_application, SIGNAL(listModified()), this, SLOT(updateList()), Qt::UniqueConnection);
     }
 
     emit listModified();

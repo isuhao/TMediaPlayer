@@ -946,7 +946,7 @@ inline int CSong::getNumPlays(void) const
 
 inline QDateTime CSong::getLastPlay(void) const
 {
-    return (m_plays.isEmpty() ? QDateTime() : m_plays.last().timeUTC);
+    return (m_plays.isEmpty() ? QDateTime() : m_plays.first().timeUTC);
 }
 
 #endif // FILE_C_SONG

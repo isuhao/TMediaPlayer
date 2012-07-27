@@ -82,6 +82,7 @@ CApplication::CApplication(void) :
     m_library              (NULL),
     m_displayedSongTable   (NULL),
     m_state                (Stopped),
+    m_showRemainingTime    (false),
     m_isRepeat             (false),
     m_isShuffle            (false),
     m_isMute               (false),
@@ -207,6 +208,8 @@ bool CApplication::initWindow(void)
     m_uiWidget->toolBar->addWidget(widgetControl);
 
     m_uiControl->btnStop->setVisible(m_settings->value("Preferences/ShowButtonStop", true).toBool());
+    
+    m_showRemainingTime = m_settings->value("Preferences/ShowRemainingTime", false).toBool();
 
     // Connexions des signaux et des slots
     connect(m_uiControl->songInfos, SIGNAL(clicked()), this, SLOT(selectCurrentSong()));
@@ -307,8 +310,8 @@ bool CApplication::initWindow(void)
     loadDatabase();
 
     m_timer = new QTimer(this);
-    connect(m_timer, SIGNAL(timeout()), this, SLOT(update()));
-    m_timer->start(400);
+    connect(m_timer, SIGNAL(timeout()), this, SLOT(updateTimer()));
+    m_timer->start(250);
 
     updateSongDescription(NULL);
     setState(Stopped);
@@ -384,6 +387,13 @@ void CApplication::showButtonStop(bool show)
 {
     m_settings->setValue("Preferences/ShowButtonStop", show);
     m_uiControl->btnStop->setVisible(show);
+}
+
+
+void CApplication::showRemainingTime(bool show)
+{
+    m_settings->setValue("Preferences/ShowRemainingTime", show);
+    m_showRemainingTime = show;
 }
 
 
@@ -677,7 +687,7 @@ void CApplication::removeSongs(const QList<CSong *> songs)
         }
         else if (dynamicList)
         {
-            dynamicList->update();
+            dynamicList->updateList();
         }
     }
 
@@ -1292,27 +1302,37 @@ void CApplication::previousSong(void)
         // Premier morceau de la liste
         if (!songItem)
         {
-/*
-            m_currentSongItem = NULL;
-            m_currentSongTable = NULL;
-            m_state = Stopped;
-*/
-            if (m_state == Paused)
+            if (m_isRepeat)
             {
-                startPlay();
-                pause();
+                CSongTableItem * songItem = m_currentSongTable->getLastSong(m_isShuffle);
+
+                if (!songItem)
+                {
+                    m_currentSongTable = NULL;
+                    m_currentSongItem = NULL;
+                    m_state = Stopped;
+                    return;
+                }
             }
             else
             {
-                startPlay();
-            }
+                if (m_state == Paused)
+                {
+                    startPlay();
+                    pause();
+                }
+                else
+                {
+                    startPlay();
+                }
 
-            return;
+                return;
+            }
         }
 
         m_currentSongItem = songItem;
 
-        if (m_currentSongItem && !m_currentSongItem->getSong()->isEnabled())
+        if (!m_currentSongItem->getSong()->isEnabled())
         {
             previousSong();
             return;
@@ -1342,21 +1362,6 @@ void CApplication::previousSong(void)
             m_state = Stopped;
             return;
         }
-/*
-        m_currentSongItem = m_currentSongTable->getPreviousSong(m_currentSongItem, m_isShuffle);
-
-        if (m_currentSongItem && m_currentSongItem->getSong()->loadSound())
-        {
-            play();
-        }
-        else
-        {
-            m_currentSongItem = NULL;
-            m_currentSongTable = NULL;
-            m_state = Stopped;
-            updateSongDescription(NULL);
-        }
-*/
     }
     else
     {
@@ -1377,7 +1382,6 @@ void CApplication::nextSong(void)
         updateSongDescription(NULL);
         m_currentSongTable->m_model->setCurrentSong(NULL);
 
-        //m_uiControl->btnPlay->setIcon(QPixmap(":/icons/play"));
         setState(Stopped);
 
         m_currentSongItem = m_currentSongTable->getNextSong(m_currentSongItem, m_isShuffle);
@@ -2129,7 +2133,7 @@ void CApplication::initPlayList(IPlayList * playList)
 
         if (dynamicList)
         {
-            dynamicList->update();
+            dynamicList->updateList();
         }
 
         return;
@@ -2160,7 +2164,7 @@ void CApplication::initPlayList(IPlayList * playList)
     if (dynamicList)
     {
         connect(dynamicList, SIGNAL(listUpdated()), this, SLOT(updateListInformations()));
-        dynamicList->update();
+        dynamicList->updateList();
     }
 }
 */
@@ -2245,9 +2249,7 @@ void CApplication::selectCurrentSong(void)
 void CApplication::selectSong(CSongTable * songTable, CSongTableItem * songItem)
 {
     if (!songTable || !songItem)
-    {
         return;
-    }
 
     displaySongTable(songTable);
     songTable->selectSongItem(songItem);
@@ -2294,7 +2296,7 @@ QStringList CApplication::importFolder(const QString& pathName)
 
     for (QStringList::const_iterator it = fileDirList.begin(); it != fileDirList.end(); ++it)
     {
-        fileList.append(QDir::toNativeSeparators(dir.absoluteFilePath(*it)));
+        fileList.append(dir.absoluteFilePath(*it).replace('\\', '/'));
     }
 
     return fileList;
@@ -2492,58 +2494,14 @@ void CApplication::onPlayEnd(void)
 {
     if (m_currentSongItem)
     {
-        //qDebug() << "CApplication::onPlayEnd()";
-        emit songPlayEnd(m_currentSongItem->getSong());
+        CSong * currentSong = m_currentSongItem->getSong();
+
         updateSongDescription(NULL);
-        //TODO: maj vue
-        //m_currentSong->addOnePlay();
+        nextSong();
 
-        if (m_isRepeat)
-        {
-            m_currentSongItem->getSong()->setPosition(0);
-            play();
-        }
-        else
-        {
-            //Q_CHECK_PTR(m_displayedSongTable);
+        emit songPlayEnd(currentSong);
 
-            //m_currentSongIndex = m_displayedSongTable->getNextSong(m_currentSongIndex, m_isShuffle);
-            //m_currentSong = m_displayedSongTable->getSongForIndex(m_currentSongIndex);
-            nextSong();
-        }
-
-        m_library->update();
-/*
-        if (m_currentSong)
-        {
-            m_currentSongTable = m_displayedSongTable;
-            m_isPlaying = true;
-
-            if (!m_currentSong->loadSound())
-            {
-                m_currentSong = NULL;
-                m_currentSongIndex = -1;
-                m_currentSongTable = NULL;
-
-                m_isPlaying = false;
-                m_isPaused = false;
-
-                return;
-            }
-
-            m_currentSong->setVolume(m_volume);
-            m_currentSong->setMute(m_isMute);
-            m_currentSong->play();
-
-            emit songPlayStart(m_currentSong);
-            connect(m_currentSong, SIGNAL(playEnd()), this, SLOT(onPlayEnd()));
-        }
-        else
-        {
-            m_currentSongTable = nullptr;
-            m_isPlaying = false;
-        }
-*/
+        //m_library->update(); // Why ???
     }
 }
 
@@ -2592,15 +2550,25 @@ void CApplication::updateListInformations(void)
 {
     QTime duration(0, 0);
     int numSongs = 0;
+    qlonglong durationMS = 0;
 
     if (m_displayedSongTable)
     {
-        duration = duration.addMSecs(m_displayedSongTable->getTotalDuration());
+        durationMS = m_displayedSongTable->getTotalDuration();
+        duration = duration.addMSecs(static_cast<int>(durationMS % 86400000));
         numSongs = m_displayedSongTable->getNumSongs();
     }
-
+    
     // Barre d'état
-    m_listInfos->setText(tr("%n song(s), %1", "", numSongs).arg(duration.toString()));
+    if (durationMS > 86400000)
+    {
+        int numDays = static_cast<int>(durationMS / 86400000);
+        m_listInfos->setText(tr("%n song(s), %1", "", numSongs).arg(tr("%n day(s) %1", "", numDays).arg(duration.toString())));
+    }
+    else
+    {
+        m_listInfos->setText(tr("%n song(s), %1", "", numSongs).arg(duration.toString()));
+    }
 }
 
 
@@ -2619,13 +2587,13 @@ void CApplication::updatePosition(void)
  * et pour passer au morceau suivant si nécessaire.
  */
 
-void CApplication::update(void)
+void CApplication::updateTimer(void)
 {
     if (m_currentSongItem)
     {
         Q_CHECK_PTR(m_currentSongTable);
 
-        //qDebug() << "CApplication::update()";
+        //qDebug() << "CApplication::updateTimer()";
         const int position = m_currentSongItem->getSong()->getPosition();
 
         if (m_lastFmEnableScrobble && (m_lastFmState == Started || m_lastFmState == Notified) && m_state == Playing)
@@ -2676,6 +2644,15 @@ void CApplication::update(void)
             QTime positionTime(0, 0);
             positionTime = positionTime.addMSecs(position);
             m_uiControl->lblPosition->setText(positionTime.toString("m:ss"));
+            
+            // Mise à jour du temps restant
+            if (m_showRemainingTime)
+            {
+                int duration = m_currentSongItem->getSong()->getDuration() - position;
+                QTime remainingTime(0, 0);
+                remainingTime = remainingTime.addMSecs(duration);
+                m_uiControl->lblTime->setText(remainingTime.toString("m:ss"));
+            }
         }
     }
 }

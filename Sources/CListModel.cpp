@@ -260,7 +260,7 @@ void CListModel::loadFromDatabase(void)
             connect(playList, SIGNAL(rowCountChanged()), m_application, SLOT(updateListInformations()));
             connect(playList, SIGNAL(listUpdated()), m_application, SLOT(updateListInformations()));
 
-            playList->update();
+            playList->updateList();
         }
     }
 
@@ -324,7 +324,7 @@ IPlayList * CListModel::getPlayListFromId(int id) const
 QModelIndex CListModel::getModelIndex(CFolder * folder) const
 {
     QStandardItem * item = m_folderItems.key(folder);
-    
+
     if (item)
         return item->index();
 
@@ -335,7 +335,7 @@ QModelIndex CListModel::getModelIndex(CFolder * folder) const
 QModelIndex CListModel::getModelIndex(CSongTable * songTable) const
 {
     QStandardItem * item = m_songTableItems.key(songTable);
-    
+
     if (item)
         return item->index();
 
@@ -460,10 +460,31 @@ void CListModel::addPlayList(IPlayList * playList)
     playListItem->setData(QVariant::fromValue(qobject_cast<CSongTable *>(playList)), Qt::UserRole + 1);
     m_songTableItems[playListItem] = playList;
 
-    if (qobject_cast<CDynamicList *>(playList))
+    CDynamicList * dynamicList = qobject_cast<CDynamicList *>(playList);
+
+    if (dynamicList)
+    {
         playListItem->setIcon(QPixmap(":/icons/dynamic_list"));
-    else if (qobject_cast<CStaticPlayList *>(playList))
-        playListItem->setIcon(QPixmap(":/icons/playlist"));
+
+
+        connect(dynamicList, SIGNAL(listUpdated()), m_application, SLOT(updateListInformations()));
+    }
+    else
+    {
+        CStaticPlayList * staticList = qobject_cast<CStaticPlayList *>(playList);
+
+        if (staticList)
+        {
+            playListItem->setIcon(QPixmap(":/icons/playlist"));
+
+            connect(staticList, SIGNAL(songAdded(CSong *)), m_application, SLOT(updateListInformations()));
+            connect(staticList, SIGNAL(songRemoved(CSong *)), m_application, SLOT(updateListInformations()));
+        }
+    }
+
+    connect(playList, SIGNAL(nameChanged(const QString&, const QString&)), this, SLOT(onPlayListRenamed(const QString&, const QString&)));
+    connect(playList, SIGNAL(songStarted(CSongTableItem *)), m_application, SLOT(playSong(CSongTableItem *)));
+    connect(playList, SIGNAL(rowCountChanged()), m_application, SLOT(updateListInformations()));
 
     QStandardItem * itemParent = m_folderItems.key(playList->m_folder);
 
@@ -587,7 +608,7 @@ bool CListModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int
 
     if (action == Qt::IgnoreAction)
         return true;
-    
+
     if (data->hasFormat("application/x-ted-media-list"))
     {
         //qDebug() << "CListModel::dropMimeData() : drop liste";
@@ -624,14 +645,14 @@ bool CListModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int
                 m_application->logError("liste de lecture invalide", __FUNCTION__, __FILE__, __LINE__);
                 return false;
             }
-            
+
             emit layoutAboutToBeChanged();
 
             if (parent.isValid())
                 folderParent->addPlayList(playList, position);
             else
                 folderParent->addPlayList(playList, position - 1);
-            
+
             // Modification du modèle
             QStandardItem * item = m_songTableItems.key(playList);
             Q_CHECK_PTR(item);
@@ -670,7 +691,7 @@ bool CListModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int
                 folderParent->addFolder(folder, position);
             else
                 folderParent->addFolder(folder, position - 1);
-            
+
             // Modification du modèle
             QStandardItem * item = m_folderItems.key(folder);
             Q_CHECK_PTR(item);
@@ -683,7 +704,7 @@ bool CListModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int
             QStandardItem * itemParent = m_folderItems.key(folderParent);
             if (!itemParent)
                 itemParent = invisibleRootItem();
-            
+
             if (position < 0)
                 itemParent->appendRow(item);
             else
@@ -889,7 +910,7 @@ void CListModel::onPlayListRenamed(const QString& oldName, const QString& newNam
     if (playList)
     {
         QStandardItem * item = m_songTableItems.key(playList);
-        
+
         if (item)
             item->setText(newName);
     }
@@ -903,7 +924,7 @@ void CListModel::onFolderRenamed(const QString& oldName, const QString& newName)
     if (folder)
     {
         QStandardItem * item = m_folderItems.key(folder);
-        
+
         if (item)
             item->setText(newName);
     }

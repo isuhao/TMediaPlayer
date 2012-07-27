@@ -241,19 +241,25 @@ CSongTableItem * CSongTable::getNextSong(CSongTableItem * songItem, bool shuffle
 }
 
 
+CSongTableItem * CSongTable::getLastSong(bool shuffle) const
+{
+    return m_model->getLastSong(shuffle);
+}
+
+
 /**
  * Calcule la durée totale des morceaux présents dans la liste.
  *
  * \return Durée totale en millisecondes.
  */
 
-int CSongTable::getTotalDuration(void) const
+qlonglong CSongTable::getTotalDuration(void) const
 {
-    int duration = 0;
+    qlonglong duration = 0;
 
-    foreach (CSongTableItem * songItem, m_model->m_data)
+    for (QList<CSongTableItem *>::const_iterator songItem = m_model->m_data.begin(); songItem != m_model->m_data.end(); ++songItem)
     {
-        duration += songItem->getSong()->getDuration();
+        duration += (*songItem)->getSong()->getDuration();
     }
 
     return duration;
@@ -422,9 +428,9 @@ void CSongTable::initColumns(const QString& str)
 
         QStringList columnList = str.split(';', QString::SkipEmptyParts);
 
-        foreach (QString columnInfos, columnList)
+        for (QStringList::const_iterator columnInfos = columnList.begin(); columnInfos != columnList.end(); ++columnInfos)
         {
-            QStringList columnInfosPart = columnInfos.split(':');
+            QStringList columnInfosPart = columnInfos->split(':');
 
             if (columnInfosPart.size() != 2)
             {
@@ -1162,12 +1168,22 @@ bool CSongTable::isModified(void) const
 }
 
 
+/**
+ * Sélectionne un morceau dans la liste.
+ *
+ * \param songItem Morceau à sélectionner.
+ */
+
 void CSongTable::selectSongItem(CSongTableItem * songItem)
 {
-    Q_CHECK_PTR(songItem);
-
     selectionModel()->clearSelection();
-    selectionModel()->setCurrentIndex(m_model->index(m_model->getRowForSongItem(songItem), 0), QItemSelectionModel::Select | QItemSelectionModel::Rows);
+
+    if (songItem)
+    {
+        QModelIndex index = m_model->index(m_model->getRowForSongItem(songItem), 0);
+        selectionModel()->setCurrentIndex(index, QItemSelectionModel::Select | QItemSelectionModel::Rows);
+        scrollTo(index/*, QAbstractItemView::PositionAtTop*/);
+    }
 }
 
 
@@ -1210,7 +1226,7 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
         }
 
         menu->addAction(tr("Informations..."), m_application, SLOT(openDialogSongInfos()));
-        
+
         if (!severalSongs)
         {
             menu->addAction(tr("Edit metadata..."), m_application, SLOT(openDialogEditMetadata()));

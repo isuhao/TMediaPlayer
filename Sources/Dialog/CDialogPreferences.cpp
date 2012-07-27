@@ -45,6 +45,7 @@ CDialogPreferences::CDialogPreferences(CApplication * application, QSettings * s
     // Récupération des paramètres
     m_uiWidget->editRowHeight->setValue(m_settings->value("Preferences/RowHeight", 19).toInt());
     m_uiWidget->editShowButtonStop->setChecked(m_settings->value("Preferences/ShowButtonStop", true).toBool());
+    m_uiWidget->editShowRemainingTime->setChecked(m_settings->value("Preferences/ShowRemainingTime", false).toBool());
 
     QString driver = m_settings->value("Database/Type", QString("QSQLITE")).toString();
     connect(m_uiWidget->editDBDriver, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onDriverChange(const QString&)));
@@ -116,6 +117,7 @@ void CDialogPreferences::save(void)
 {
     m_application->setRowHeight(m_uiWidget->editRowHeight->value());
     m_application->showButtonStop(m_uiWidget->editShowButtonStop->isChecked());
+    m_application->showRemainingTime(m_uiWidget->editShowRemainingTime->isChecked());
 
     // Database
     QString driver = m_uiWidget->editDBDriver->currentText();

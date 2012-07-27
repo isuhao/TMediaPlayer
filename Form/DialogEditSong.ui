@@ -1406,6 +1406,8 @@
  </widget>
  <tabstops>
   <tabstop>tabWidget</tabstop>
+  <tabstop>editTitle</tabstop>
+  <tabstop>editSubTitle</tabstop>
   <tabstop>editArtist</tabstop>
   <tabstop>editYear</tabstop>
   <tabstop>editAlbum</tabstop>
@@ -1414,6 +1416,8 @@
   <tabstop>editAlbumArtist</tabstop>
   <tabstop>editDiscNumber</tabstop>
   <tabstop>editDiscCount</tabstop>
+  <tabstop>editGrouping</tabstop>
+  <tabstop>editBPM</tabstop>
   <tabstop>editComposer</tabstop>
   <tabstop>editComments</tabstop>
   <tabstop>editGenre</tabstop>
@@ -1428,7 +1432,17 @@
   <tabstop>editAlbumArtistSort</tabstop>
   <tabstop>editComposer_2</tabstop>
   <tabstop>editComposerSort</tabstop>
+  <tabstop>editVolume</tabstop>
+  <tabstop>editSkipShuffle</tabstop>
+  <tabstop>editEnabled</tabstop>
+  <tabstop>editCompilation</tabstop>
+  <tabstop>pushButton</tabstop>
+  <tabstop>editLyrics</tabstop>
   <tabstop>editLanguage</tabstop>
+  <tabstop>editLyricist</tabstop>
+  <tabstop>listPlays</tabstop>
+  <tabstop>btnPrevious</tabstop>
+  <tabstop>btnNext</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources/>

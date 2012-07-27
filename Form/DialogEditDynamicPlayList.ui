@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>600</width>
-    <height>100</height>
+    <height>120</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>400</width>
-    <height>100</height>
+    <height>120</height>
    </size>
   </property>
   <property name="maximumSize">
@@ -52,6 +52,141 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QCheckBox" name="editLimit">
+       <property name="text">
+        <string>Limit to</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="editNumItems">
+       <property name="maximum">
+        <number>999999</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="editItemsType">
+       <item>
+        <property name="text">
+         <string>songs</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>minutes</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>hours</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Mio</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Gio</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>selected by</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="editSelected">
+       <item>
+        <property name="text">
+         <string>title</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>artist</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>album</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>genre</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>highest rating</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>lowest rating</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>most recently played</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>least recently played</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>most often played</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>least often played</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="editOnlyChecked">
+     <property name="text">
+      <string>Match only checked items.</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="editUpdate">
+     <property name="text">
+      <string>Live updating.</string>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox"/>

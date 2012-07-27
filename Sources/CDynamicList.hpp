@@ -49,10 +49,12 @@ public:
     CWidgetMultiCriterion * getWidget(void) const;
 
     inline int getId(void) const;
+    inline bool isAutoUpdate(void) const;
+    inline int getNumItems(void) const;
 
 public slots:
 
-    void update(void);
+    void updateList(void);
 
 protected slots:
 
@@ -66,23 +68,44 @@ signals:
 protected:
     
     virtual bool updateDatabase(void);
-    virtual void romoveFromDatabase(void);
+    virtual void removeFromDatabase(void);
     void loadFromDatabase(void);
     void setCriteria(ICriteria * criteria);
 
 private:
     
-    int m_id; ///< Identifiant de la liste en base de données.
-    ICriteria * m_mainCriteria;
+    int m_id;                     ///< Identifiant de la liste en base de données.
+    ICriteria * m_mainCriteria;   ///< Critère parent de la liste.
     bool m_isDynamicListModified; ///< Indique si la liste a été modifiée.
-    //QList<critères>
-    //conditions de maj
+    bool m_autoUpdate;            ///< Indique si la liste doit être mise à jour automatiquement.
+    bool m_onlyChecked;           ///< Indique si on doit utiliser uniquement les morceaux cochés.
+    int m_numItems;
+  //int m_itemsType;
+  //int m_itemsSort;
 };
 
+
+/**
+ * Retourne l'identifiant de la liste dynamique.
+ *
+ * \return Identifiant de la liste.
+ */
 
 inline int CDynamicList::getId(void) const
 {
     return m_id;
+}
+
+
+inline bool CDynamicList::isAutoUpdate(void) const
+{
+    return m_autoUpdate;
+}
+
+
+inline int CDynamicList::getNumItems(void) const
+{
+    return m_numItems;
 }
 
 #endif // FILE_C_DYNAMIC_PLAYLIST

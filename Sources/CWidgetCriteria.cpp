@@ -42,7 +42,7 @@ CWidgetCriteria::CWidgetCriteria(CApplication * application, QWidget * parent) :
 {
     m_uiWidget->setupUi(this);
 
-    //TODO: remplir la liste de type ici !
+    //TODO: remplir la liste de types ici !
 
     // Remplissage des listes
     m_uiWidget->listLanguage->addItems(CSong::getLanguageList());

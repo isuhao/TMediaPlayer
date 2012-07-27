@@ -276,7 +276,7 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
 
                 QTime durationTime(0, 0);
                 durationTime = durationTime.addMSecs(duration);
-                return durationTime.toString("m:ss"); /// \todo Stocker le format dans les paramètres.
+                return durationTime.toString(tr("m:ss", "Duration format")); /// \todo Stocker le format dans les paramètres.
             }
 
             // Fréquence d'échantillonnage
@@ -792,9 +792,7 @@ void CSongTableModel::removeRow(int row)
 void CSongTableModel::removeSongs(const QList<CSong *>& songs)
 {
     if (songs.isEmpty())
-    {
         return;
-    }
 
     emit layoutAboutToBeChanged();
 
@@ -868,11 +866,9 @@ int CSongTableModel::getRowForSongItem(CSongTableItem * songItem) const
 
 CSongTableItem * CSongTableModel::getPreviousSong(CSongTableItem * songItem, bool shuffle) const
 {
-    //qDebug() << "Morceau précédant" << songItem;
-
     if (songItem && !m_data.contains(songItem))
     {
-        qWarning() << "CSongTableModel::getPreviousSong() : l'item demandé n'est pas dans la table";
+        m_application->logError(tr("l'item demandé n'est pas dans la table"), __FUNCTION__, __FILE__, __LINE__);
         songItem = NULL;
     }
 
@@ -882,14 +878,14 @@ CSongTableItem * CSongTableModel::getPreviousSong(CSongTableItem * songItem, boo
         {
             if (m_data.size() != m_dataShuffle.size())
             {
-                qWarning() << "CSongTableModel::getPreviousSong() : la liste des morceaux aléatoires est incorrecte";
+                m_application->logError(tr("la liste des morceaux aléatoires est incorrecte"), __FUNCTION__, __FILE__, __LINE__);
             }
 
             const int row = m_dataShuffle.indexOf(songItem);
 
             if (row < 0)
             {
-                qWarning() << "CSongTableModel::getPreviousSong() : l'item demandé n'est pas dans la liste des morceaux aléatoires";
+                m_application->logError(tr("l'item demandé n'est pas dans la liste des morceaux aléatoires"), __FUNCTION__, __FILE__, __LINE__);
                 return NULL;
             }
 
@@ -924,11 +920,9 @@ CSongTableItem * CSongTableModel::getPreviousSong(CSongTableItem * songItem, boo
 
 CSongTableItem * CSongTableModel::getNextSong(CSongTableItem * songItem, bool shuffle) const
 {
-    //qDebug() << "Morceau suivant" << songItem;
-
     if (songItem && !m_data.contains(songItem))
     {
-        qWarning() << "CSongTableModel::getNextSong() : l'item demandé n'est pas dans la table";
+        m_application->logError(tr("l'item demandé n'est pas dans la table"), __FUNCTION__, __FILE__, __LINE__);
         songItem = NULL;
     }
 
@@ -938,14 +932,14 @@ CSongTableItem * CSongTableModel::getNextSong(CSongTableItem * songItem, bool sh
         {
             if (m_data.size() != m_dataShuffle.size())
             {
-                qWarning() << "CSongTableModel::getNextSong() : la liste des morceaux aléatoires est incorrecte";
+                m_application->logError(tr("la liste des morceaux aléatoires est incorrecte"), __FUNCTION__, __FILE__, __LINE__);
             }
 
             const int row = m_dataShuffle.indexOf(songItem);
 
             if (row < 0)
             {
-                qWarning() << "CSongTableModel::getNextSong() : l'item demandé n'est pas dans la liste des morceaux aléatoires";
+                m_application->logError(tr("l'item demandé n'est pas dans la liste des morceaux aléatoires"), __FUNCTION__, __FILE__, __LINE__);
                 return NULL;
             }
 
@@ -969,7 +963,7 @@ CSongTableItem * CSongTableModel::getNextSong(CSongTableItem * songItem, bool sh
         {
             if (m_data.size() != m_dataShuffle.size())
             {
-                qWarning() << "CSongTableModel::getNextSong() : la liste des morceaux aléatoires est incorrecte";
+                m_application->logError(tr("la liste des morceaux aléatoires est incorrecte"), __FUNCTION__, __FILE__, __LINE__);
                 return NULL;
             }
 
@@ -986,6 +980,30 @@ CSongTableItem * CSongTableModel::getNextSong(CSongTableItem * songItem, bool sh
             return (m_data.isEmpty() ? NULL : m_data.at(0));
         }
     }
+}
+
+
+CSongTableItem * CSongTableModel::getLastSong(bool shuffle) const
+{
+    if (m_data.isEmpty())
+        return NULL;
+
+    if (shuffle)
+    {
+        for (QList<CSongTableItem *>::const_iterator it = m_dataShuffle.end(); it != m_dataShuffle.begin(); --it)
+        {
+            if (!(*it)->getSong()->isSkipShuffle())
+            {
+                return *it;
+            }
+        }
+    }
+    else
+    {
+        return m_data.last();
+    }
+
+    return NULL;
 }
 
 

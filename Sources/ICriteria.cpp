@@ -64,13 +64,14 @@ ICriteria::~ICriteria()
  * Cette implémentation de base parcourt la liste \a from et utilise la méthode matchCriteria
  * pour tester si le morceau vérifie le critère.
  *
- * \param from Liste de morceaux à analyser.
- * \param with Liste de morceaux à ajouter dans la liste.
+ * \param from        Liste de morceaux à analyser.
+ * \param with        Liste de morceaux à ajouter dans la liste.
+ * \param onlyChecked Indique si on doit prendre uniquement les morceaux cochés.
  * \return Liste de morceaux qui vérifient le critère, sans doublons, avec tous les
  *         éléments de \a with.
  */
 
-QList<CSong *> ICriteria::getSongs(const QList<CSong *>& from, const QList<CSong *>& with) const
+QList<CSong *> ICriteria::getSongs(const QList<CSong *>& from, const QList<CSong *>& with, bool onlyChecked) const
 {
     QList<CSong *> songList = with;
 
@@ -78,7 +79,15 @@ QList<CSong *> ICriteria::getSongs(const QList<CSong *>& from, const QList<CSong
     {
         if (matchCriteria(*it) && !songList.contains(*it))
         {
-            songList.append(*it);
+            if (onlyChecked)
+            {
+                if ((*it)->isEnabled())
+                    songList.append(*it);
+            }
+            else
+            {
+                songList.append(*it);
+            }
         }
     }
 
@@ -95,7 +104,6 @@ QList<CSong *> ICriteria::getSongs(const QList<CSong *>& from, const QList<CSong
 void ICriteria::setPlayList(CDynamicList * playList)
 {
     Q_CHECK_PTR(playList);
-
     m_playList = playList;
 }
 

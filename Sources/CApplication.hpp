@@ -61,6 +61,7 @@ class CApplication : public QMainWindow
     friend class CDialogEditStaticPlayList;
     friend class CDialogEditDynamicList;
     friend class CDialogEditFolder;
+    friend class CDynamicList;
 
 public:
 
@@ -81,6 +82,7 @@ public:
     void setRowHeight(int height);
     int getRowHeight(void) const;
     void showButtonStop(bool show = true);
+    void showRemainingTime(bool show = true);
 
     // Last.fm
     void enableScrobbling(bool enable = true);
@@ -236,7 +238,7 @@ protected slots:
     void updateSongDescription(CSong * song);
     void updateListInformations(void);
     void updatePosition(void);
-    void update(void);
+    void updateTimer(void);
     void selectPlayListFromTreeView(const QModelIndex& index);
     void connectToLastFm(void);
 
@@ -269,10 +271,11 @@ private:
     QTimer * m_timer;                   ///< Timer pour mettre à jour l'affichage.
     QLabel * m_listInfos;               ///< Label pour afficher les informations sur la liste affichée.
     CSongTableItem * m_currentSongItem; ///< Pointeur sur l'item en cours de lecture.
-    CSongTable * m_currentSongTable;    ///< Liste de morceaux contenant le morceau en cours de lecture. \todo Fusion avec le précédent param.
+    CSongTable * m_currentSongTable;    ///< Liste de morceaux contenant le morceau en cours de lecture.
     CLibrary * m_library;               ///< Librairie (liste de tous les morceaux).
     CSongTable * m_displayedSongTable;  ///< Liste de morceaux affichée.
     State m_state;                      ///< État de lecture.
+    bool m_showRemainingTime;           ///< Indique si on doit afficher le temps restant ou la durée du morceau en cours de lecture.
     bool m_isRepeat;                    ///< Indique si la répétition est activée.
     bool m_isShuffle;                   ///< Indique si la lecture aléatoire est activée.
     bool m_isMute;                      ///< Indique si le son est coupé.

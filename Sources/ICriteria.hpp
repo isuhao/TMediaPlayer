@@ -171,10 +171,7 @@ public:
     inline CDynamicList * getPlayList(void) const;
 
     virtual bool matchCriteria(CSong * song) const = 0;
-    virtual QList<CSong *> getSongs(const QList<CSong *>& from, const QList<CSong *>& with = QList<CSong *>()) const;
-    //virtual QList<int> getValidTypes(void) const;
-    //virtual bool isValidType(int type) const;
-    //virtual QList<int> getValidConditions(void) const;
+    virtual QList<CSong *> getSongs(const QList<CSong *>& from, const QList<CSong *>& with = QList<CSong *>(), bool onlyChecked = false) const;
     virtual inline TUpdateConditions getUpdateConditions(void) const;
 
     virtual IWidgetCriteria * getWidget(void) const = 0;

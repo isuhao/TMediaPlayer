@@ -115,8 +115,10 @@ public:
     int getRowForSongItem(CSongTableItem * songItem) const;
     CSongTableItem * getPreviousSong(CSongTableItem * songItem, bool shuffle) const;
     CSongTableItem * getNextSong(CSongTableItem * songItem, bool shuffle) const;
+    CSongTableItem * getLastSong(bool shuffle) const;
     void setCurrentSong(CSongTableItem * songItem);
     void initShuffle(CSongTableItem * firstSong = NULL);
+    inline CSongTableItem * getCurrentSongItem(void) const;
 
 signals:
 
@@ -574,6 +576,12 @@ private:
 inline int CSongTableModel::getNumSongs(void) const
 {
     return m_data.size();
+}
+
+
+inline CSongTableItem * CSongTableModel::getCurrentSongItem(void) const
+{
+    return m_currentSongItem;
 }
 
 #endif // FILE_C_SONG_TABLE_MODEL
