@@ -9,10 +9,17 @@
 - Corriger les noms de fichier automatiquement.
 
 - Problème graphique : si on modifie les informations d'un morceau, il faut mettre à jour la vue courante.
+- Problème graphique : lorsqu'on sélectionne une liste de lecture, il faut donner le focus à la vue.
+- Problème graphique : lorsqu'une liste dynamique est mise à jour, la sélection doit être modifiée.
 
 --------------------------------------------------
   Importance moyenne
 --------------------------------------------------
+
+- Ajouter une vue pour voir la liste des dernières lectures.
+
+- Ajouter une vue pour afficher les paroles.
+- Ajouter une vue pour afficher l'illustration principale.
 
 - Listes de lecture dynamiques :
   - Vérifier que les champs ne sont pas vides.
@@ -65,6 +72,7 @@
   - Écrire la note (POPM)
   - Option "Déterminer automatiquement les valeurs pour le tri".
   - Option "Illustrations : image dans le dossier".
+  - Option "Enregistrer les modifications quand on passe au morceau suivant ou précédent dans la vue Edit Song".
 
 - Créer la boite de dialogue Édition des métadonnées :
   - Gérer les différents types de tags :

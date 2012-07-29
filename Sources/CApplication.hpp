@@ -41,6 +41,7 @@ class CLibrary;
 class CListModel;
 class QStandardItemModel;
 class QSettings;
+class QTextEdit;
 class QNetworkReply;
 
 namespace FMOD
@@ -274,6 +275,7 @@ private:
     CSongTable * m_currentSongTable;    ///< Liste de morceaux contenant le morceau en cours de lecture.
     CLibrary * m_library;               ///< Librairie (liste de tous les morceaux).
     CSongTable * m_displayedSongTable;  ///< Liste de morceaux affichée.
+    QTextEdit * m_lyricsEdit;           ///< Zone de texte pour les paroles.
     State m_state;                      ///< État de lecture.
     bool m_showRemainingTime;           ///< Indique si on doit afficher le temps restant ou la durée du morceau en cours de lecture.
     bool m_isRepeat;                    ///< Indique si la répétition est activée.

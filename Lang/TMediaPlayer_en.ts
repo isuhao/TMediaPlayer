@@ -4,9 +4,9 @@
 <context>
     <name>CApplication</name>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="116"/>
-        <location filename="../Sources/CApplication.cpp" line="2566"/>
-        <location filename="../Sources/CApplication.cpp" line="2570"/>
+        <location filename="../Sources/CApplication.cpp" line="117"/>
+        <location filename="../Sources/CApplication.cpp" line="2581"/>
+        <location filename="../Sources/CApplication.cpp" line="2585"/>
         <source>%n song(s), %1</source>
         <translation>
             <numerusform>%n song, %1</numerusform>
@@ -14,27 +14,32 @@
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="235"/>
+        <location filename="../Sources/CApplication.cpp" line="236"/>
         <source>Playlists</source>
         <translation>Playlists</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="250"/>
+        <location filename="../Sources/CApplication.cpp" line="248"/>
+        <source>Lyrics</source>
+        <translation>Lyrics</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CApplication.cpp" line="261"/>
         <source>Failed to init sound system with FMOD.</source>
         <translation>Failed to init sound system with FMOD.</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="305"/>
+        <location filename="../Sources/CApplication.cpp" line="316"/>
         <source>Failed to load database: %1.</source>
         <translation>Failed to load database: %1.</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="337"/>
+        <location filename="../Sources/CApplication.cpp" line="348"/>
         <source>Database error</source>
         <translation>Database error</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="337"/>
+        <location filename="../Sources/CApplication.cpp" line="348"/>
         <source>File: %1 (%2)
 
 Query: %3
@@ -47,28 +52,28 @@ Query: %3
 Error: %4</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1064"/>
+        <location filename="../Sources/CApplication.cpp" line="1075"/>
         <source>%2 (%3 line %4): %1</source>
         <translation>%2 (%3 line %4): %1</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1775"/>
-        <location filename="../Sources/CApplication.cpp" line="1992"/>
+        <location filename="../Sources/CApplication.cpp" line="1786"/>
+        <location filename="../Sources/CApplication.cpp" line="2003"/>
         <source>Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)</source>
         <translation>Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1809"/>
+        <location filename="../Sources/CApplication.cpp" line="1820"/>
         <source>Loading files...</source>
         <translation>Loading files...</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1809"/>
+        <location filename="../Sources/CApplication.cpp" line="1820"/>
         <source>Abort</source>
         <translation>Abort</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="1834"/>
+        <location filename="../Sources/CApplication.cpp" line="1845"/>
         <source>%n song(s) added to the library.</source>
         <translation>
             <numerusform>%n song added to the library.</numerusform>
@@ -76,22 +81,22 @@ Error: %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2451"/>
+        <location filename="../Sources/CApplication.cpp" line="2462"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Are you sure you want to delete this playlist?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2451"/>
+        <location filename="../Sources/CApplication.cpp" line="2462"/>
         <source>Yes</source>
         <translation>Yes</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2451"/>
+        <location filename="../Sources/CApplication.cpp" line="2462"/>
         <source>No</source>
         <translation>No</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="2566"/>
+        <location filename="../Sources/CApplication.cpp" line="2581"/>
         <source>%n day(s) %1</source>
         <translation>
             <numerusform>%n day %1</numerusform>
@@ -106,18 +111,18 @@ Error: %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2723"/>
+        <location filename="../Sources/CApplication.cpp" line="2738"/>
         <source>This program requires FMOD %1 or superior.</source>
         <translation>This program requires FMOD %1 or superior.</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3483"/>
+        <location filename="../Sources/CApplication.cpp" line="3498"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3491"/>
-        <location filename="../Sources/CApplication.cpp" line="3499"/>
+        <location filename="../Sources/CApplication.cpp" line="3506"/>
+        <location filename="../Sources/CApplication.cpp" line="3514"/>
         <source>Play</source>
         <translation>Play</translation>
     </message>

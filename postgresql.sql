@@ -26,6 +26,8 @@ CREATE TABLE dynamic_list (
     dynamic_list_id SERIAL PRIMARY KEY,
     criteria_id INTEGER NOT NULL,
     playlist_id INTEGER NOT NULL,
+    auto_update INTEGER NOT NULL,
+    only_checked INTEGER NOT NULL,
     UNIQUE (playlist_id)
 );
 

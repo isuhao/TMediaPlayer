@@ -81,6 +81,7 @@ CApplication::CApplication(void) :
     m_currentSongTable     (NULL),
     m_library              (NULL),
     m_displayedSongTable   (NULL),
+    m_lyricsEdit           (NULL),
     m_state                (Stopped),
     m_showRemainingTime    (false),
     m_isRepeat             (false),
@@ -232,12 +233,22 @@ bool CApplication::initWindow(void)
     // Dock "Playlists"
     m_playListView = new CPlayListView(this);
 
-    QDockWidget * dockWidget = new QDockWidget(tr("Playlists"), this);
-    dockWidget->setObjectName("dock_playlists");
-    dockWidget->setWidget(m_playListView);
-    dockWidget->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+    QDockWidget * dockPlayLists = new QDockWidget(tr("Playlists"), this);
+    dockPlayLists->setObjectName("dock_playlists");
+    dockPlayLists->setWidget(m_playListView);
+    dockPlayLists->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
 
     connect(m_playListView, SIGNAL(clicked(const QModelIndex&)), this, SLOT(selectPlayListFromTreeView(const QModelIndex&)));
+
+
+    // Dock "Lyrics"
+    m_lyricsEdit = new QTextEdit(this);
+    m_lyricsEdit->setReadOnly(true);
+
+    QDockWidget * dockLyrics = new QDockWidget(tr("Lyrics"), this);
+    dockLyrics->setObjectName("dock_lyrics");
+    dockLyrics->setWidget(m_lyricsEdit);
+    dockLyrics->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetClosable);
 
 
     restoreGeometry(m_settings->value("Window/WindowGeometry").toByteArray());
@@ -540,17 +551,6 @@ CSong * CApplication::getSongFromId(int id) const
 
     const QMap<int, CSong *> songList = m_library->getSongsMap();
     return songList.value(id);
-/*
-    for (QList<CSong *>::const_iterator it = songList.begin(); it != songList.end(); ++it)
-    {
-        if ((*it)->getId() == id)
-        {
-            return (*it);
-        }
-    }
-
-    return NULL;
-*/
 }
 
 
@@ -564,18 +564,6 @@ CSong * CApplication::getSongFromId(int id) const
 CFolder * CApplication::getFolderFromId(int id) const
 {
     return m_listModel->getFolderFromId(id);
-/*
-    if (id < 0)
-        return NULL;
-
-    for (QList<CFolder *>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
-    {
-        if ((*it)->getId() == id)
-            return (*it);
-    }
-
-    return NULL;
-*/
 }
 
 
@@ -589,18 +577,6 @@ CFolder * CApplication::getFolderFromId(int id) const
 IPlayList * CApplication::getPlayListFromId(int id) const
 {
     return m_listModel->getPlayListFromId(id);
-/*
-    if (id <= 0)
-        return NULL;
-
-    for (QList<IPlayList *>::const_iterator it = m_playLists.begin(); it != m_playLists.end(); ++it)
-    {
-        if ((*it)->getIdPlayList() == id)
-            return (*it);
-    }
-
-    return NULL;
-*/
 }
 
 
@@ -646,15 +622,11 @@ QList<IPlayList *> CApplication::getAllPlayLists(void) const
  * Enlève une liste de morceaux de la médiathèque.
  * La liste ne doit pas contenir de doublons.
  *
- * \todo Implémentation.
- *
  * \param songs Liste des morceaux à enlever.
  */
 
 void CApplication::removeSongs(const QList<CSong *> songs)
 {
-    //qDebug() << "CApplication::removeSongs()";
-
     m_library->removeSongsFromTable(songs);
 
     for (QList<CSong *>::const_iterator it = songs.begin(); it != songs.end(); ++it)
@@ -662,16 +634,6 @@ void CApplication::removeSongs(const QList<CSong *> songs)
         Q_CHECK_PTR(*it);
         emit songRemoved(*it);
     }
-/*
-    m_library->m_automaticSort = false;
-    for (QList<CSong *>::const_iterator it = songs.begin(); it != songs.end(); ++it)
-    {
-        Q_CHECK_PTR(*it);
-        m_library->removeSongFromTable(*it);
-        emit songRemoved(*it);
-    }
-    m_library->m_automaticSort = true;
-*/
 
     // Suppression des morceaux de chaque liste statique et mise à jour des listes dynamiques
     const QList<IPlayList *> playLists = getAllPlayLists();
@@ -692,8 +654,11 @@ void CApplication::removeSongs(const QList<CSong *> songs)
     }
 
     // Mise à jour de la base
-    QSqlQuery query(m_dataBase);
-    query.prepare("DELETE FROM song WHERE song_id = ?");
+    QSqlQuery query1(m_dataBase);
+    query1.prepare("DELETE FROM song WHERE song_id = ?");
+
+    QSqlQuery query2(m_dataBase);
+    query2.prepare("DELETE FROM play WHERE song_id = ?");
 
     for (QList<CSong *>::const_iterator it = songs.begin(); it != songs.end(); ++it)
     {
@@ -701,11 +666,18 @@ void CApplication::removeSongs(const QList<CSong *> songs)
 
         if (songId > 0)
         {
-            query.bindValue(0, songId);
+            query1.bindValue(0, songId);
+            query2.bindValue(0, songId);
 
-            if (!query.exec())
+            if (!query1.exec())
             {
-                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                showDatabaseError(query1.lastError().text(), query1.lastQuery(), __FILE__, __LINE__);
+                continue;
+            }
+
+            if (!query2.exec())
+            {
+                showDatabaseError(query2.lastError().text(), query2.lastQuery(), __FILE__, __LINE__);
                 continue;
             }
         }
@@ -1086,7 +1058,6 @@ void CApplication::notifyInformation(const QString& message)
 
 void CApplication::connectToLastFm(void)
 {
-    //qDebug() << "CApplication::connectToLastFm()";
     new CAuthentication(this);
 }
 
@@ -1119,19 +1090,13 @@ void CApplication::selectNone(void)
 
 void CApplication::play(void)
 {
-    //qDebug() << "CApplication::play()";
-
     if (m_currentSongItem)
     {
         Q_CHECK_PTR(m_currentSongTable);
 
         if (m_state == Paused)
         {
-            //qDebug() << "CApplication::play() : chanson en pause";
-
             setState(Playing);
-            //m_uiControl->btnPlay->setIcon(QPixmap(":/icons/pause"));
-            //m_uiWidget->actionPlay->setText(tr("Pause"));
 
             emit songResumed(m_currentSongItem->getSong());
             m_currentSongItem->getSong()->play();
@@ -1145,7 +1110,6 @@ void CApplication::play(void)
     {
         m_state = Stopped;
 
-        //qDebug() << "CApplication::play() : lancement du premier morceau";
         m_currentSongTable = m_displayedSongTable;
 
         // Recherche du morceau sélectionné
@@ -1215,8 +1179,6 @@ void CApplication::stop(void)
     m_state = Stopped;
 
     setState(Stopped);
-    //m_uiControl->btnPlay->setIcon(QPixmap(":/icons/play"));
-    //m_uiWidget->actionPlay->setText(tr("Play"));
 
     m_lastFmTimeListened = 0;
     m_lastFmState = NoScrobble;
@@ -1233,8 +1195,6 @@ void CApplication::pause(void)
     {
         Q_CHECK_PTR(m_currentSongTable);
 
-        //m_uiControl->btnPlay->setIcon(QPixmap(":/icons/play"));
-        //m_uiWidget->actionPlay->setText(tr("Play"));
         setState(Paused);
 
         m_currentSongItem->getSong()->pause();
@@ -1266,8 +1226,6 @@ void CApplication::togglePlay(void)
 
 void CApplication::previousSong(void)
 {
-    //qDebug() << "CApplication::previousSong()";
-
     if (m_currentSongItem)
     {
         Q_CHECK_PTR(m_currentSongTable);
@@ -1278,7 +1236,6 @@ void CApplication::previousSong(void)
         updateSongDescription(NULL);
         m_currentSongTable->m_model->setCurrentSong(NULL);
 
-        //m_uiControl->btnPlay->setIcon(QPixmap(":/icons/play"));
         setState(Stopped);
 
         // Retour au début du morceau
@@ -1372,8 +1329,6 @@ void CApplication::previousSong(void)
 
 void CApplication::nextSong(void)
 {
-    //qDebug() << "CApplication::nextSong()";
-
     if (m_currentSongItem)
     {
         Q_CHECK_PTR(m_currentSongTable);
@@ -1464,13 +1419,11 @@ void CApplication::playSong(CSongTableItem * songItem)
 
     if (m_currentSongItem->getSong()->loadSound())
     {
-        //m_uiControl->btnPlay->setIcon(QPixmap(":/icons/pause"));
         setState(Playing);
         startPlay();
     }
     else
     {
-        //m_uiControl->btnPlay->setIcon(QPixmap(":/icons/play"));
         setState(Stopped);
         m_currentSongItem = NULL;
         m_currentSongTable = NULL;
@@ -1489,7 +1442,6 @@ void CApplication::setRepeat(bool repeat)
     if (repeat != m_isRepeat)
     {
         m_isRepeat = repeat;
-        //m_uiControl->btnRepeat->setChecked(repeat);
         m_uiControl->btnRepeat->setIcon(QPixmap(m_isRepeat ? ":/icons/repeat_on" : ":/icons/repeat_off"));
         m_uiWidget->actionRepeat->setChecked(repeat);
     }
@@ -2214,9 +2166,8 @@ void CApplication::initFolder(CFolder * folder)
 
 CSong * CApplication::addSong(const QString& fileName)
 {
-    //qDebug() << "Chargement du fichier " << fileName;
-
     CSong * song = CSong::loadFromFile(this, fileName);
+
     if (song)
     {
         m_library->addSong(song);
@@ -2528,14 +2479,18 @@ void CApplication::updateSongDescription(CSong * song)
             durationTime = durationTime.addMSecs(duration);
             m_uiControl->lblTime->setText(durationTime.toString("m:ss")); /// \todo Stocker dans les settings
         }
+
+        m_lyricsEdit->setText(song->getLyrics());
     }
     else
     {
-        m_uiControl->songInfos->setText(""); // "Pas de morceau en cours de lecture..."
+        m_uiControl->songInfos->setText(QString()); // "Pas de morceau en cours de lecture..."
         m_uiControl->sliderPosition->setEnabled(false);
         m_uiControl->sliderPosition->setRange(0, 1000);
         m_uiControl->lblPosition->setText("0:00");
         m_uiControl->lblTime->setText("0:00");
+
+        m_lyricsEdit->setText(QString());
     }
 
     m_uiControl->sliderPosition->setValue(0);
@@ -2593,26 +2548,19 @@ void CApplication::updateTimer(void)
     {
         Q_CHECK_PTR(m_currentSongTable);
 
-        //qDebug() << "CApplication::updateTimer()";
         const int position = m_currentSongItem->getSong()->getPosition();
 
         if (m_lastFmEnableScrobble && (m_lastFmState == Started || m_lastFmState == Notified) && m_state == Playing)
         {
-            //m_lastFmLastPosition
             int elapsedTime = position - m_lastFmLastPosition;
-            //qDebug() << "elapsed =" << elapsedTime;
             m_lastFmTimeListened += elapsedTime;
             m_lastFmLastPosition = position;
-
-            //qDebug() << "Last.fm time = " << m_lastFmTimeListened;
 
             if (m_lastFmState == Started)
             {
                 if (m_lastFmTimeListened > m_delayBeforeNotification)
                 {
-                    //qDebug() << "Last.fm : update";
                     CUpdateNowPlaying * query = new CUpdateNowPlaying(this, m_lastFmKey, m_currentSongItem->getSong());
-                    //updateLastFmNowPlaying(m_currentSongItem->getSong());
                     m_lastFmState = Notified;
                 }
             }
@@ -2620,7 +2568,6 @@ void CApplication::updateTimer(void)
             {
                 if (m_lastFmTimeListened > 4 * 60000 || m_lastFmTimeListened > m_currentSongItem->getSong()->getDuration() * m_percentageBeforeScrobbling / 100)
                 {
-                    //qDebug() << "Last.fm : scrobble";
                     CScrobble * query = new CScrobble(this, m_lastFmKey, m_currentSongItem->getSong());
                     m_lastFmState = Scrobbled;
                 }
@@ -2629,7 +2576,6 @@ void CApplication::updateTimer(void)
 
         if (m_currentSongItem->getSong()->isEnded())
         {
-            //qDebug() << "m_currentSong->isEnded()";
             m_currentSongItem->getSong()->emitPlayEnd();
             return;
         }
@@ -2660,8 +2606,6 @@ void CApplication::updateTimer(void)
 
 void CApplication::selectPlayListFromTreeView(const QModelIndex& index)
 {
-    //qDebug() << "Changement de liste...";
-
     CSongTable * songTable = m_playListView->getSongTable(index);
 
     if (songTable)
@@ -2685,7 +2629,6 @@ void CApplication::displaySongTable(CSongTable * songTable)
     {
         if (m_displayedSongTable)
         {
-            //m_displayedSongTable->hide();
             m_displayedSongTable->setParent(NULL);
         }
 

@@ -4,7 +4,7 @@
 <context>
     <name>CApplication</name>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="250"/>
+        <location filename="../Sources/CApplication.cpp" line="261"/>
         <source>Failed to init sound system with FMOD.</source>
         <translation>Le chargement du système de son avec FMOD a échoué.</translation>
     </message>
@@ -13,9 +13,9 @@
         <translation type="obsolete">Erreur lors du chargement de la base de données.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="116"/>
-        <location filename="../Sources/CApplication.cpp" line="2566"/>
-        <location filename="../Sources/CApplication.cpp" line="2570"/>
+        <location filename="../Sources/CApplication.cpp" line="117"/>
+        <location filename="../Sources/CApplication.cpp" line="2581"/>
+        <location filename="../Sources/CApplication.cpp" line="2585"/>
         <source>%n song(s), %1</source>
         <translation>
             <numerusform>%n morceau, %1</numerusform>
@@ -23,22 +23,27 @@
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="235"/>
+        <location filename="../Sources/CApplication.cpp" line="236"/>
         <source>Playlists</source>
         <translation>Listes de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="305"/>
+        <location filename="../Sources/CApplication.cpp" line="248"/>
+        <source>Lyrics</source>
+        <translation>Paroles</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CApplication.cpp" line="316"/>
         <source>Failed to load database: %1.</source>
         <translation>Erreur lors du chargement de la base de données : %1.</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="337"/>
+        <location filename="../Sources/CApplication.cpp" line="348"/>
         <source>Database error</source>
         <translation>Erreur de base de données</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="337"/>
+        <location filename="../Sources/CApplication.cpp" line="348"/>
         <source>File: %1 (%2)
 
 Query: %3
@@ -51,12 +56,12 @@ Requête : %3
 Erreur : %4</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1064"/>
+        <location filename="../Sources/CApplication.cpp" line="1075"/>
         <source>%2 (%3 line %4): %1</source>
         <translation>%2 (%3 ligne %4) : %1</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="1834"/>
+        <location filename="../Sources/CApplication.cpp" line="1845"/>
         <source>%n song(s) added to the library.</source>
         <translation>
             <numerusform>%n morceau ajouté à la médiathèque.</numerusform>
@@ -64,7 +69,7 @@ Erreur : %4</translation>
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="2566"/>
+        <location filename="../Sources/CApplication.cpp" line="2581"/>
         <source>%n day(s) %1</source>
         <translation>
             <numerusform>%n jour %1</numerusform>
@@ -79,44 +84,44 @@ Erreur : %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3483"/>
+        <location filename="../Sources/CApplication.cpp" line="3498"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3491"/>
-        <location filename="../Sources/CApplication.cpp" line="3499"/>
+        <location filename="../Sources/CApplication.cpp" line="3506"/>
+        <location filename="../Sources/CApplication.cpp" line="3514"/>
         <source>Play</source>
         <translation>Lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1809"/>
+        <location filename="../Sources/CApplication.cpp" line="1820"/>
         <source>Loading files...</source>
         <translation>Chargement des fichiers...</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2451"/>
+        <location filename="../Sources/CApplication.cpp" line="2462"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Êtes-vous sûr de vouloir supprimer cette liste de lecture ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2451"/>
+        <location filename="../Sources/CApplication.cpp" line="2462"/>
         <source>Yes</source>
         <translation>Oui</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2451"/>
+        <location filename="../Sources/CApplication.cpp" line="2462"/>
         <source>No</source>
         <translation>Non</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1775"/>
-        <location filename="../Sources/CApplication.cpp" line="1992"/>
+        <location filename="../Sources/CApplication.cpp" line="1786"/>
+        <location filename="../Sources/CApplication.cpp" line="2003"/>
         <source>Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)</source>
         <translation>Fichiers multimédias (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;Tous les fichiers (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1809"/>
+        <location filename="../Sources/CApplication.cpp" line="1820"/>
         <source>Abort</source>
         <translation>Interrompre</translation>
     </message>
@@ -125,7 +130,7 @@ Erreur : %4</translation>
         <translation type="obsolete">Êtes-vous sûr de vouloir supprimer ce dossier ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2723"/>
+        <location filename="../Sources/CApplication.cpp" line="2738"/>
         <source>This program requires FMOD %1 or superior.</source>
         <translation>Ce programme nécessite FMOD %1 ou supérieur.</translation>
     </message>
