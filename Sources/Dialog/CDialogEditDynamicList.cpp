@@ -72,7 +72,7 @@ CDialogEditDynamicList::CDialogEditDynamicList(CDynamicList * playList, CApplica
     m_uiWidget->editName->setText(m_playList->getName());
     m_uiWidget->editLimit->setChecked(m_playList->getNumItems() > 0);
     m_uiWidget->editNumItems->setValue(m_playList->getNumItems());
-  //m_uiWidget->editOnlyChecked->setChecked(m_playList->getOnlyChecked());
+    m_uiWidget->editOnlyChecked->setChecked(m_playList->getOnlyChecked());
     m_uiWidget->editUpdate->setChecked(m_playList->isAutoUpdate());
 
     resizeWindow();
@@ -124,6 +124,8 @@ void CDialogEditDynamicList::save(void)
     m_playList->setName(name);
     m_playList->setFolder(m_folder);
     m_playList->setCriteria(m_widgetCriterion->getCriteria());
+    m_playList->setAutoUpdate(m_uiWidget->editUpdate->isChecked());
+    m_playList->setOnlyChecked(m_uiWidget->editOnlyChecked->isChecked());
 
     if (!m_playList->updateDatabase())
     {

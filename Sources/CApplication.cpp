@@ -1261,7 +1261,7 @@ void CApplication::previousSong(void)
         {
             if (m_isRepeat)
             {
-                CSongTableItem * songItem = m_currentSongTable->getLastSong(m_isShuffle);
+                songItem = m_currentSongTable->getLastSong(m_isShuffle);
 
                 if (!songItem)
                 {
@@ -2779,6 +2779,8 @@ void CApplication::loadDatabase(void)
                                 "dynamic_list_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
                                 "criteria_id INTEGER NOT NULL,"
                                 "playlist_id INTEGER NOT NULL,"
+                                "auto_update INTEGER NOT NULL,"
+                                "only_checked INTEGER NOT NULL,"
                                 "UNIQUE (playlist_id)"
                             ")"))
             {
@@ -2992,6 +2994,8 @@ void CApplication::loadDatabase(void)
                                 "dynamic_list_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
                                 "criteria_id INTEGER NOT NULL,"
                                 "playlist_id INTEGER NOT NULL,"
+                                "auto_update INTEGER NOT NULL,"
+                                "only_checked INTEGER NOT NULL,"
                                 "UNIQUE (playlist_id)"
                             ")"))
             {
@@ -3220,156 +3224,6 @@ void CApplication::loadDatabase(void)
 
 
     displaySongTable(m_library);
-
-
-#if 0
-
-    // Création des dossiers
-    if (!query.exec("SELECT folder_id, folder_name, folder_parent, folder_position, folder_expanded FROM folder /*WHERE folder_id != 0*/ ORDER BY folder_position"))
-    {
-        showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-    }
-    else
-    {
-        while (query.next())
-        {
-            CFolder * folder = new CFolder(this, query.value(1).toString());
-            folder->m_id       = query.value(0).toInt();
-            folder->m_folder   = reinterpret_cast<CFolder *>(query.value(2).toInt());
-            folder->m_position = query.value(3).toInt();
-            folder->m_open     = query.value(4).toBool();
-
-            if (folder->m_folder < 0)
-            {
-                logError("le dossier parent a un identifiant invalide", __FUNCTION__, __FILE__, __LINE__);
-            }
-
-            initFolder(folder);
-        }
-    }
-
-    // On déplace les dossiers dans l'arborescence
-    for (QList<CFolder *>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
-    {
-        long folderId = reinterpret_cast<long>((*it)->m_folder);
-        if (folderId >= 0)
-        {
-            if ((*it)->getId() != 0)
-            {
-                (*it)->m_folder = getFolderFromId(folderId);
-                (*it)->m_folder->m_folders.append(*it);
-            }
-        }
-        else
-        {
-            logError("le dossier parent a un identifiant invalide", __FUNCTION__, __FILE__, __LINE__);
-        }
-    }
-
-
-    // Création des listes de lecture statiques
-    if (!query.exec("SELECT static_list_id, playlist_name, list_columns, playlist_id, folder_id "
-                    "FROM static_list NATURAL JOIN playlist ORDER BY list_position"))
-    {
-        showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-    }
-
-    while (query.next())
-    {
-        CStaticPlayList * playList = new CStaticPlayList(this, query.value(1).toString());
-        playList->m_id = query.value(0).toInt();
-        playList->m_idPlayList = query.value(3).toInt();
-        playList->initColumns(query.value(2).toString());
-
-        // Dossier contenant la liste
-        int folderId = query.value(4).toInt();
-        if (folderId >= 0)
-        {
-            playList->m_folder = getFolderFromId(folderId);
-            playList->m_folder->m_playLists.append(playList);
-        }
-        else
-        {
-            logError("le dossier parent a un identifiant invalide", __FUNCTION__, __FILE__, __LINE__);
-        }
-
-        // Liste des morceaux de la liste de lecture
-        QSqlQuery query2(m_dataBase);
-        query2.prepare("SELECT song_id, song_position FROM static_list_song "
-                       "WHERE static_list_id = ? ORDER BY song_position");
-        query2.bindValue(0, playList->m_id);
-
-        if (!query2.exec())
-        {
-            showDatabaseError(query2.lastError().text(), query2.lastQuery(), __FILE__, __LINE__);
-            delete playList;
-            continue;
-        }
-
-        while (query2.next())
-        {
-            CSong * song = getSongFromId(query2.value(0).toInt());
-
-            if (song)
-            {
-                playList->addSongToTable(song, query2.value(1).toInt());
-            }
-        }
-
-        initPlayList(playList);
-    }
-
-
-    // Création des listes de lecture dynamiques
-    if (!query.exec("SELECT dynamic_list_id, playlist_name, list_columns, playlist_id, folder_id, list_position "
-                    "FROM dynamic_list NATURAL JOIN playlist ORDER BY list_position"))
-    {
-        showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-    }
-
-    while (query.next())
-    {
-        CDynamicList * playList = new CDynamicList(this, query.value(1).toString());
-        playList->m_id = query.value(0).toInt();
-        playList->m_idPlayList = query.value(3).toInt();
-        playList->initColumns(query.value(2).toString());
-
-        // Dossier contenant la liste
-        int folderId = query.value(4).toInt();
-        if (folderId >= 0)
-        {
-            playList->m_folder = getFolderFromId(folderId);
-            playList->m_folder->m_playLists.append(playList);
-        }
-        else
-        {
-            logError("le dossier parent a un identifiant invalide", __FUNCTION__, __FILE__, __LINE__);
-        }
-
-        playList->loadFromDatabase();
-
-        initPlayList(playList);
-    }
-
-
-    // Remplissage du modèle
-    for (QList<CFolder *>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
-    {
-        if (!(*it)->m_folder)
-        {
-            /*(*it)->m_index = */m_playListView->addFolder(*it);
-        }
-    }
-
-    for (QList<IPlayList *>::const_iterator it = m_playLists.begin(); it != m_playLists.end(); ++it)
-    {
-        if (!(*it)->m_folder)
-        {
-            /*(*it)->m_index = */m_playListView->addSongTable(*it);
-        }
-    }
-
-#endif
 }
 
 

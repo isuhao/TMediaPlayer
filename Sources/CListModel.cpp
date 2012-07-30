@@ -223,7 +223,7 @@ void CListModel::loadFromDatabase(void)
 
 
     // Création des listes de lecture dynamiques
-    if (!query.exec("SELECT dynamic_list_id, playlist_name, list_columns, playlist_id, folder_id, list_position "
+    if (!query.exec("SELECT dynamic_list_id, playlist_name, list_columns, playlist_id, folder_id, list_position, auto_update, only_checked "
                     "FROM dynamic_list NATURAL JOIN playlist ORDER BY list_position"))
     {
         m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
@@ -234,6 +234,8 @@ void CListModel::loadFromDatabase(void)
         {
             CDynamicList * playList = new CDynamicList(m_application, query.value(1).toString());
             playList->m_id = query.value(0).toInt();
+            playList->m_autoUpdate = query.value(6).toBool();
+            playList->m_onlyChecked = query.value(7).toBool();
             playList->m_idPlayList = query.value(3).toInt();
             playList->initColumns(query.value(2).toString());
 

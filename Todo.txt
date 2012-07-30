@@ -18,7 +18,6 @@
 
 - Ajouter une vue pour voir la liste des dernières lectures.
 
-- Ajouter une vue pour afficher les paroles.
 - Ajouter une vue pour afficher l'illustration principale.
 
 - Listes de lecture dynamiques :
@@ -26,12 +25,12 @@
   - Si un multi-critères ne contient qu'un enfant, on peut remonter celui-ci au niveau supérieur.
   - Trier les types de critères par ordre alphabétique.
   - Vérifier qu'il n'y a pas de boucles pour le critère "Liste de lecture".
-  - Pouvoir désactiver la mise à jour automatique.
+  - Limiter le nombre de morceaux dans la liste.
 
 - Boite de dialogue Edit Song(s) :
   - Gérer l'option "Ajustement du volume" (calculer le volume "moyen", et amplifier ou atténuer le volume selon le morceau : Replay Gain).
 
-- Implémenter correctement la répétition (répétition de la liste, du morceau, etc.).
+- Implémenter la répétition d'un morceau.
 
 - Optimisation : exécuter les requêtes SQL dans un thread séparé.
   - Utiliser des transactions.

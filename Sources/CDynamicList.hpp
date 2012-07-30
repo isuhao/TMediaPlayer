@@ -50,6 +50,7 @@ public:
 
     inline int getId(void) const;
     inline bool isAutoUpdate(void) const;
+    inline bool getOnlyChecked(void) const;
     inline int getNumItems(void) const;
 
 public slots:
@@ -71,6 +72,8 @@ protected:
     virtual void removeFromDatabase(void);
     void loadFromDatabase(void);
     void setCriteria(ICriteria * criteria);
+    void setAutoUpdate(bool autoUpdate = true);
+    void setOnlyChecked(bool onlyChecked = true);
 
 private:
     
@@ -100,6 +103,12 @@ inline int CDynamicList::getId(void) const
 inline bool CDynamicList::isAutoUpdate(void) const
 {
     return m_autoUpdate;
+}
+
+
+inline bool CDynamicList::getOnlyChecked(void) const
+{
+    return m_onlyChecked;
 }
 
 

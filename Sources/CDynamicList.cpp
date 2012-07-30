@@ -199,10 +199,12 @@ bool CDynamicList::updateDatabase(void)
             m_idPlayList = query.lastInsertId().toInt();
         }
 
-        query.prepare("INSERT INTO dynamic_list (criteria_id, playlist_id) VALUES (?, ?)");
+        query.prepare("INSERT INTO dynamic_list (criteria_id, playlist_id, auto_update, only_checked) VALUES (?, ?, ?, ?)");
 
         query.bindValue(0, 0);
         query.bindValue(1, m_idPlayList);
+        query.bindValue(2, m_autoUpdate ? 1 : 0);
+        query.bindValue(3, m_onlyChecked ? 1 : 0);
 
         if (!query.exec())
         {
@@ -252,10 +254,12 @@ bool CDynamicList::updateDatabase(void)
     // Mise à jour
     else if (m_isDynamicListModified)
     {
-        query.prepare("UPDATE dynamic_list SET criteria_id = ? WHERE dynamic_list_id = ?");
+        query.prepare("UPDATE dynamic_list SET criteria_id = ?, auto_update = ?, only_checked = ? WHERE dynamic_list_id = ?");
 
         query.bindValue(0, 0);
         query.bindValue(1, m_id);
+        query.bindValue(2, m_autoUpdate ? 1 : 0);
+        query.bindValue(3, m_onlyChecked ? 1 : 0);
 
         if (!query.exec())
         {
@@ -525,4 +529,32 @@ void CDynamicList::setCriteria(ICriteria * criteria)
     }
 
     emit listModified();
+}
+
+
+void CDynamicList::setAutoUpdate(bool autoUpdate)
+{
+    if (m_autoUpdate != autoUpdate)
+    {
+        m_autoUpdate = autoUpdate;
+        m_isDynamicListModified = true;
+        emit listModified();
+
+        if (m_autoUpdate)
+            updateList(); // est-ce nécessaire ?
+    }
+}
+
+
+void CDynamicList::setOnlyChecked(bool onlyChecked)
+{
+    if (m_onlyChecked != onlyChecked)
+    {
+        m_onlyChecked = onlyChecked;
+        m_isDynamicListModified = true;
+        emit listModified();
+
+        if (m_autoUpdate)
+            updateList(); // est-ce nécessaire ?
+    }
 }
