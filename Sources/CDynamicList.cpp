@@ -107,8 +107,28 @@ void CDynamicList::updateList(void)
     //3) le sortByColumn ci-dessous n'est pas nécessaire si le critère de tri et l'ordre sont les mêmes
     //4) Si seul l'ordre diffère, il suffit de renverser la liste (swap des N/2 premiers éléments avec les N/2 derniers)
 
+    // Liste des morceaux sélectionnés
+    QModelIndexList indexList = selectionModel()->selectedRows();
+    QList<CSong *> selectedSongs;
+
+    for (QModelIndexList::const_iterator index = indexList.begin(); index != indexList.end(); ++index)
+    {
+        CSong * song = getSongItemForRow(index->row())->getSong();
+
+        if (!selectedSongs.contains(song))
+            selectedSongs.append(song);
+    }
+
     m_model->setSongs(songs);
     sortByColumn(m_columnSort, m_sortOrder);
+
+    // Sélection des morceaux précédemment sélectionnés
+    for (QList<CSong *>::const_iterator song = selectedSongs.begin(); song != selectedSongs.end(); ++song)
+    {
+        CSongTableItem * songItem = getFirstSongItem(*song);
+
+        selectionModel()->select(m_model->index(m_model->getRowForSongItem(songItem), 0), QItemSelectionModel::Current | QItemSelectionModel::Select | QItemSelectionModel::Rows);
+    }
 
     // On change le morceau courant affiché dans la liste
     if (currentItem)

@@ -2112,7 +2112,7 @@ bool CSong::loadTags(TagLib::ID3v1::Tag * tags)
     stream << "   " << tr("Chargement des tags ID3v1") << '\n';
     stream << "----------------------------------------\n";
     stream << tr("File:") << ' ' << m_properties.fileName << '\n';
-    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString("dd/MM/yyyy HH:mm:ss") << '\n';
+    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString(tr("dd/MM/yyyy HH:mm:ss")) << '\n';
 
     TagLib::String str;
 
@@ -2170,7 +2170,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags)
     stream << "   " << tr("Chargement des tags ID3v2") << '\n';
     stream << "----------------------------------------\n";
     stream << tr("File:") << ' ' << m_properties.fileName << '\n';
-    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString("dd/MM/yyyy HH:mm:ss") << '\n';
+    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString(tr("dd/MM/yyyy HH:mm:ss")) << '\n';
     stream << "----------------------------------------\n";
 
     TagLib::ID3v2::FrameListMap tagMap = tags->frameListMap();
@@ -2604,7 +2604,7 @@ bool CSong::loadTags(TagLib::APE::Tag * tags)
     stream << "   " << tr("Chargement des tags APE") << '\n';
     stream << "----------------------------------------\n";
     stream << tr("File:") << ' ' << m_properties.fileName << '\n';
-    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString("dd/MM/yyyy HH:mm:ss") << '\n';
+    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString(tr("dd/MM/yyyy HH:mm:ss")) << '\n';
     stream << "----------------------------------------\n";
 
     for (TagLib::APE::ItemListMap::ConstIterator it = tagMap.begin(); it != tagMap.end(); ++it)
@@ -2780,7 +2780,7 @@ bool CSong::loadTags(TagLib::Ogg::XiphComment * tags)
     stream << "   " << tr("Chargement des tags XiphComment") << '\n';
     stream << "----------------------------------------\n";
     stream << tr("File:") << ' ' << m_properties.fileName << '\n';
-    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString("dd/MM/yyyy HH:mm:ss") << '\n';
+    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString(tr("dd/MM/yyyy HH:mm:ss")) << '\n';
     stream << "----------------------------------------\n";
 
     for (TagLib::Ogg::FieldListMap::ConstIterator it = tagMap.begin(); it != tagMap.end(); ++it)
@@ -3135,7 +3135,7 @@ bool CSong::writeTags(TagLib::ID3v1::Tag * tags, const TSongInfos& infos, QFile 
     stream << "   " << tr("Enregistrement des tags ID3v1") << '\n';
     stream << "----------------------------------------\n";
     stream << tr("File:") << ' ' << fileName << '\n';
-    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString("dd/MM/yyyy HH:mm:ss") << '\n';
+    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString(tr("dd/MM/yyyy HH:mm:ss")) << '\n';
 
     tags->setTitle(TagLib::String(infos.title.toUtf8().constData(), TagLib::String::UTF8));
     tags->setArtist(TagLib::String(infos.artistName.toUtf8().constData(), TagLib::String::UTF8));
@@ -3172,7 +3172,7 @@ bool CSong::writeTags(TagLib::ID3v2::Tag * tags, const TSongInfos& infos, QFile 
     stream << "   " << tr("Enregistrement des tags ID3v2") << '\n';
     stream << "----------------------------------------\n";
     stream << tr("File:") << ' ' << fileName << '\n';
-    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString("dd/MM/yyyy HH:mm:ss") << '\n';
+    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString(tr("dd/MM/yyyy HH:mm:ss")) << '\n';
     stream << "----------------------------------------\n";
 
     // Titre
@@ -3409,7 +3409,7 @@ bool CSong::writeTags(TagLib::APE::Tag * tags, const TSongInfos& infos, QFile * 
     stream << "   " << tr("Enregistrement des tags APE") << '\n';
     stream << "----------------------------------------\n";
     stream << tr("File:") << ' ' << fileName << '\n';
-    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString("dd/MM/yyyy HH:mm:ss") << '\n';
+    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString(tr("dd/MM/yyyy HH:mm:ss")) << '\n';
     stream << "----------------------------------------\n";
 
     // Titre
@@ -3531,7 +3531,7 @@ bool CSong::writeTags(TagLib::Ogg::XiphComment * tags, const TSongInfos& infos, 
     stream << "   " << tr("Enregistrement des tags Xiph Comment") << '\n';
     stream << "----------------------------------------\n";
     stream << tr("File:") << ' ' << fileName << '\n';
-    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString("dd/MM/yyyy HH:mm:ss") << '\n';
+    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString(tr("dd/MM/yyyy HH:mm:ss")) << '\n';
     stream << "----------------------------------------\n";
 
     // Titre

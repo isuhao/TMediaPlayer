@@ -158,8 +158,6 @@ void CDialogEditSong::nextSong(void)
 
 void CDialogEditSong::apply(void)
 {
-    //qDebug() << "CDialogEditSong::apply";
-
     CSong * song = m_songItem->getSong();
 
     song->setTitle(m_uiWidget->editTitle->text());
@@ -410,8 +408,8 @@ void CDialogEditSong::updateInfos()
     for (QList<CSong::TSongPlay>::const_iterator it = song->m_plays.begin(); it != song->m_plays.end(); ++it)
     {
         QList<QStandardItem *> itemList;
-        itemList << new QStandardItem(it->time.toString());
-        itemList << new QStandardItem(it->timeUTC.toString());
+        itemList << new QStandardItem(it->time.toString(tr("dd/MM/yyyy HH:mm:ss")));
+        itemList << new QStandardItem(it->timeUTC.toString(tr("dd/MM/yyyy HH:mm:ss")));
         model->appendRow(itemList);
     }
 }

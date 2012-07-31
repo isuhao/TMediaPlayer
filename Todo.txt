@@ -10,7 +10,6 @@
 
 - Problème graphique : si on modifie les informations d'un morceau, il faut mettre à jour la vue courante.
 - Problème graphique : lorsqu'on sélectionne une liste de lecture, il faut donner le focus à la vue.
-- Problème graphique : lorsqu'une liste dynamique est mise à jour, la sélection doit être modifiée.
 
 --------------------------------------------------
   Importance moyenne

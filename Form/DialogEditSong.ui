@@ -804,6 +804,9 @@
            <bold>true</bold>
           </font>
          </property>
+         <property name="toolTip">
+          <string>Beats per minute</string>
+         </property>
          <property name="text">
           <string>BPM</string>
          </property>

@@ -881,7 +881,7 @@ void CStaticPlayList::dropEvent(QDropEvent * event)
         // Modification de la sélection
         QItemSelection selection;
         selection.select(m_model->index(row - numRowsBeforeDest, 0), m_model->index(row - numRowsBeforeDest + numSongs - 1, 0));
-        selectionModel()->select(selection, QItemSelectionModel::Current | QItemSelectionModel::Select  | QItemSelectionModel::Rows);
+        selectionModel()->select(selection, QItemSelectionModel::Current | QItemSelectionModel::Select | QItemSelectionModel::Rows);
     }
 }
 
