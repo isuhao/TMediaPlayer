@@ -106,4 +106,5 @@ void CUpdateNowPlaying::replyFinished(QNetworkReply * reply)
     }
 
     reply->deleteLater();
+    deleteLater();
 }

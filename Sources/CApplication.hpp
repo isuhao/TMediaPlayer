@@ -210,6 +210,7 @@ public slots:
     void editSelectedItem(void);
     void removeSelectedItem(void);
     void onSongModified(void);
+    void findLyrics(void);
 
 signals:
 

@@ -25,6 +25,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CFolder.hpp"
 #include "CPlayListView.hpp"
 #include "CListModel.hpp"
+#include "CLyricWiki.hpp"
 #include "Dialog/CDialogEditDynamicList.hpp"
 #include "Dialog/CDialogEditFolder.hpp"
 #include "Dialog/CDialogEditMetadata.hpp"
@@ -242,12 +243,26 @@ bool CApplication::initWindow(void)
 
 
     // Dock "Lyrics"
-    m_lyricsEdit = new QTextEdit(this);
+    m_lyricsEdit = new QTextEdit();
     m_lyricsEdit->setReadOnly(true);
+
+    QPushButton * lyricsFind = new QPushButton(tr("Find"));
+    connect(lyricsFind, SIGNAL(clicked()), this, SLOT(findLyrics()));
+
+    QPushButton * lyricsEdit = new QPushButton(tr("Edit"));
+
+    QGridLayout * lyricsLayout = new QGridLayout();
+    lyricsLayout->setMargin(0);
+    lyricsLayout->addWidget(m_lyricsEdit, 0, 0, 1, 2);
+    lyricsLayout->addWidget(lyricsFind, 1, 0);
+    lyricsLayout->addWidget(lyricsEdit, 1, 1);
+    
+    QWidget * lyricsWidget = new QWidget(this);
+    lyricsWidget->setLayout(lyricsLayout);
 
     QDockWidget * dockLyrics = new QDockWidget(tr("Lyrics"), this);
     dockLyrics->setObjectName("dock_lyrics");
-    dockLyrics->setWidget(m_lyricsEdit);
+    dockLyrics->setWidget(lyricsWidget);
     dockLyrics->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetClosable);
 
 
@@ -2220,6 +2235,18 @@ void CApplication::onSongModified(void)
     if (song)
     {
         emit songModified(song);
+    }
+}
+
+
+void CApplication::findLyrics(void)
+{
+    if (m_currentSongItem)
+    {
+        CSong * song = m_currentSongItem->getSong();
+        CLyricWiki * query = new CLyricWiki(this, song);
+        connect(query, SIGNAL(lyricsFound(const QString&)), song, SLOT(setLyrics(const QString&)));
+        connect(query, SIGNAL(lyricsFound(const QString&)), m_lyricsEdit, SLOT(setText(const QString&)));
     }
 }
 

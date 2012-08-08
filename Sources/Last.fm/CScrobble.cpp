@@ -111,4 +111,5 @@ void CScrobble::replyFinished(QNetworkReply * reply)
     m_application->notifyInformation(tr("Song scrobbled to Last.fm"));
 
     reply->deleteLater();
+    deleteLater();
 }

@@ -220,7 +220,7 @@ void CAuthentication::replyLastFmFinished(QNetworkReply * reply)
 
     if (racine.isNull())
     {
-        stream << "Réponse XML incorrecte (élément key attendu)\n";
+        stream << "Réponse XML incorrecte (élément 'key' attendu)\n";
         return;
     }
 
@@ -230,6 +230,7 @@ void CAuthentication::replyLastFmFinished(QNetworkReply * reply)
     m_application->getSettings()->setValue("LastFm/SessionKey", m_sessionKey);
 
     reply->deleteLater();
+    deleteLater();
 
     m_timerLastFm->stop();
     delete m_timerLastFm;
