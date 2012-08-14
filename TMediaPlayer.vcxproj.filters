@@ -593,6 +593,9 @@
     <ClInclude Include="GeneratedFiles\ui_ImporterITunesPage3.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Lang\TMediaPlayer_fr.ts">
@@ -601,5 +604,13 @@
     <None Include="Lang\TMediaPlayer_en.ts">
       <Filter>Translation Files</Filter>
     </None>
+    <None Include="Resources\TMediaPlayer.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TMediaPlayer.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

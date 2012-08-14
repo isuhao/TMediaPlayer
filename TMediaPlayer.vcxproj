@@ -581,6 +581,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_SQL_LIB -DQT_NETWORK_LIB -DQT_XML_LIB -DQT_DLL -DQT_WEBKIT_LIB  "-I.\GeneratedFiles" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I.\Sources" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtSql" "-ID:\Ressources\Libraries\taglib-1.7.2\include" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtXml" "-I.\Sources\Last.fm" "-I." "-I.\Sources\Importer" "-I.\Sources\Dialog" "-I$(QTDIR)\include\QtWebKit"</Command>
     </CustomBuild>
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Sources\CRating.hpp" />
     <CustomBuild Include="Sources\Importer\CImporterITunes.hpp">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
@@ -905,6 +906,10 @@
     </CustomBuild>
     <None Include="Lang\TMediaPlayer_en.ts" />
     <None Include="Lang\TMediaPlayer_fr.ts" />
+    <None Include="Resources\TMediaPlayer.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TMediaPlayer.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
