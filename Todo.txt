@@ -10,6 +10,7 @@
 
 - Problème graphique : si on modifie les informations d'un morceau, il faut mettre à jour la vue courante.
 - Problème graphique : lorsqu'on sélectionne une liste de lecture, il faut donner le focus à la vue.
+- Bug : morceau terminé mais la lecture n'est pas comptabilisée.
 
 --------------------------------------------------
   Importance moyenne

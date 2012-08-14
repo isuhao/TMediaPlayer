@@ -784,6 +784,36 @@ int CSong::getId(CApplication * application, const QString& fileName)
         return query.value(0).toInt();
     }
 
+#ifdef Q_OS_WIN32
+
+    query.prepare("SELECT song_id FROM song WHERE song_filename ILIKE ?");
+    query.bindValue(0, fileName);
+
+    if (!query.exec())
+    {
+        application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        return -1;
+    }
+
+    if (query.next())
+    {
+        int songId = query.value(0).toInt();
+
+        // Mise-à-jour du nom de fichier sous Windows (insensible à la casse)
+        query.prepare("UPDATE song SET song_filename = ? WHERE song_id = ?");
+        query.bindValue(0, fileName);
+        query.bindValue(1, songId);
+
+        if (!query.exec())
+        {
+            application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+
+        return songId;
+    }
+
+#endif
+
     return -1;
 }
 

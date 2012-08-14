@@ -132,6 +132,11 @@ CREATE TABLE play (
     play_time_utc TIMESTAMP
 );
 
+CREATE TABLE libpath (
+    path_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    path_location VARCHAR(512) NOT NULL UNIQUE
+);
+
 
 CREATE VIEW albums AS SELECT DISTINCT(album_title) FROM album NATURAL JOIN song WHERE song_id IS NOT NULL;
 

@@ -1779,9 +1779,13 @@ void CApplication::importSongs(const QStringList& fileList)
     for (QStringList::const_iterator it = fileList.begin(); it != fileList.end(); ++it)
     {
         progress.setValue(i++);
-        CSong * song = CSong::loadFromFile(this, *it);
+
+        QString fileName = *it;
+        fileName.replace('\\', '/');
+        CSong * song = CSong::loadFromFile(this, fileName);
         if (song) songs.append(song);
         //addSong(*it);
+
         qApp->processEvents();
 
         if (progress.wasCanceled())
