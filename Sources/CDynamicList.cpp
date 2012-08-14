@@ -127,7 +127,8 @@ void CDynamicList::updateList(void)
     {
         CSongTableItem * songItem = getFirstSongItem(*song);
 
-        selectionModel()->select(m_model->index(m_model->getRowForSongItem(songItem), 0), QItemSelectionModel::Current | QItemSelectionModel::Select | QItemSelectionModel::Rows);
+        if (songItem)
+            selectionModel()->select(m_model->index(m_model->getRowForSongItem(songItem), 0), QItemSelectionModel::Current | QItemSelectionModel::Select | QItemSelectionModel::Rows);
     }
 
     // On change le morceau courant affiché dans la liste

@@ -643,13 +643,13 @@ QList<IPlayList *> CApplication::getAllPlayLists(void) const
 void CApplication::removeSongs(const QList<CSong *> songs)
 {
     m_library->removeSongsFromTable(songs);
-
+/*
     for (QList<CSong *>::const_iterator it = songs.begin(); it != songs.end(); ++it)
     {
         Q_CHECK_PTR(*it);
         emit songRemoved(*it);
     }
-
+*/
     // Suppression des morceaux de chaque liste statique et mise à jour des listes dynamiques
     const QList<IPlayList *> playLists = getAllPlayLists();
 
