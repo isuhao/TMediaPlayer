@@ -1585,7 +1585,7 @@ void CSong::startPlay(void)
     Q_CHECK_PTR(m_sound);
 
     // Rechargement des métadonnées
-    loadTags();
+    loadTags(true);
     updateDatabase();
 
     FMOD_RESULT res;
@@ -1935,6 +1935,12 @@ void CSong::updateDatabase(void)
         else
         {
             query.prepare("UPDATE song SET "
+                              "song_filesize      = ?,"
+                              "song_bitrate       = ?,"
+                              "song_sample_rate   = ?,"
+                              "song_format        = ?,"
+                              "song_channels      = ?,"
+                              "song_duration      = ?,"
                               "song_modification  = ?,"
                               "song_enabled       = ?,"
                               "song_title         = ?,"
@@ -1967,7 +1973,13 @@ void CSong::updateDatabase(void)
                           "WHERE song_id = ?");
 
             int numValue = 0;
-
+            
+            query.bindValue(numValue++, m_properties.fileSize);
+            query.bindValue(numValue++, m_properties.bitRate);
+            query.bindValue(numValue++, m_properties.sampleRate);
+            query.bindValue(numValue++, m_properties.format);
+            query.bindValue(numValue++, m_properties.numChannels);
+            query.bindValue(numValue++, m_properties.duration);
             query.bindValue(numValue++, m_modification);
             query.bindValue(numValue++, m_infos.isEnabled ? 1 : 0);
             query.bindValue(numValue++, m_infos.title);

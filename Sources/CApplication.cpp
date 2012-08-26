@@ -1935,6 +1935,12 @@ void CApplication::openDialogEditFolder(CFolder * folder)
 }
 
 
+/**
+ * Affiche une boite de dialogue pour relocaliser un morceau.
+ *
+ * \todo Pouvoir fusionner deux morceaux.
+ */
+
 void CApplication::relocateSong(void)
 {
     Q_CHECK_PTR(m_displayedSongTable);
@@ -1970,6 +1976,13 @@ void CApplication::relocateSong(void)
         // Le fichier est déjà dans la médiathèque
         if (CSong::getId(this, fileName) >= 0)
         {
+            //TODO: FUSION
+            //Afficher une boite de dialogue avec la question "Le fichier sélectionné est déjà dans la médiathèque. Voulez-vous fusionner les deux morceaux ?"
+            //Si oui : changer l'identifiant des lectures du morceau 2.
+            //Remplacer les références au morceau 2 par le morceau 1 (listes statiques).
+            //Supprimer le morceau 2.
+            //Mettre-à-jour les listes dynamiques.
+            //Attention : si le morceau est en cours de lecture.
             logError(QString("le fichier %1 est déjà dans la médiathèque").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
             return;
         }
@@ -2498,7 +2511,19 @@ void CApplication::updateSongDescription(CSong * song)
 {
     if (song)
     {
-        m_uiControl->songInfos->setText(song->getTitle() + " - " + song->getArtistName() + " - " + song->getAlbumTitle());
+        // Description du morceau
+        QString artistName = song->getArtistName();
+        QString albumTitle = song->getAlbumTitle();
+
+        QString description = song->getTitle();
+
+        if (!artistName.isEmpty())
+            description += " - " + artistName;
+
+        if (!albumTitle.isEmpty())
+            description += " - " + albumTitle;
+        
+        m_uiControl->songInfos->setText(description.replace('&', "&&"));
         m_uiControl->sliderPosition->setEnabled(true);
 
         const int duration = song->getDuration();

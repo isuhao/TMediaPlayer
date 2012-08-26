@@ -14,8 +14,8 @@
     </message>
     <message numerus="yes">
         <location filename="../Sources/CApplication.cpp" line="118"/>
-        <location filename="../Sources/CApplication.cpp" line="2552"/>
-        <location filename="../Sources/CApplication.cpp" line="2556"/>
+        <location filename="../Sources/CApplication.cpp" line="2565"/>
+        <location filename="../Sources/CApplication.cpp" line="2569"/>
         <source>%n song(s), %1</source>
         <translation>
             <numerusform>%n morceau, %1</numerusform>
@@ -79,7 +79,7 @@ Erreur : %4</translation>
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="2552"/>
+        <location filename="../Sources/CApplication.cpp" line="2565"/>
         <source>%n day(s) %1</source>
         <translation>
             <numerusform>%n jour %1</numerusform>
@@ -94,13 +94,13 @@ Erreur : %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3311"/>
+        <location filename="../Sources/CApplication.cpp" line="3324"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3319"/>
-        <location filename="../Sources/CApplication.cpp" line="3327"/>
+        <location filename="../Sources/CApplication.cpp" line="3332"/>
+        <location filename="../Sources/CApplication.cpp" line="3340"/>
         <source>Play</source>
         <translation>Lecture</translation>
     </message>
@@ -110,23 +110,23 @@ Erreur : %4</translation>
         <translation>Chargement des fichiers...</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2433"/>
+        <location filename="../Sources/CApplication.cpp" line="2446"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Êtes-vous sûr de vouloir supprimer cette liste de lecture ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2433"/>
+        <location filename="../Sources/CApplication.cpp" line="2446"/>
         <source>Yes</source>
         <translation>Oui</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2433"/>
+        <location filename="../Sources/CApplication.cpp" line="2446"/>
         <source>No</source>
         <translation>Non</translation>
     </message>
     <message>
         <location filename="../Sources/CApplication.cpp" line="1742"/>
-        <location filename="../Sources/CApplication.cpp" line="1963"/>
+        <location filename="../Sources/CApplication.cpp" line="1969"/>
         <source>Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)</source>
         <translation>Fichiers multimédias (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;Tous les fichiers (*.*)</translation>
     </message>
@@ -140,7 +140,7 @@ Erreur : %4</translation>
         <translation type="obsolete">Êtes-vous sûr de vouloir supprimer ce dossier ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2697"/>
+        <location filename="../Sources/CApplication.cpp" line="2710"/>
         <source>This program requires FMOD %1 or superior.</source>
         <translation>Ce programme nécessite FMOD %1 ou supérieur.</translation>
     </message>

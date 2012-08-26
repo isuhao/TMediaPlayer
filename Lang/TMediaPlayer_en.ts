@@ -5,8 +5,8 @@
     <name>CApplication</name>
     <message numerus="yes">
         <location filename="../Sources/CApplication.cpp" line="118"/>
-        <location filename="../Sources/CApplication.cpp" line="2552"/>
-        <location filename="../Sources/CApplication.cpp" line="2556"/>
+        <location filename="../Sources/CApplication.cpp" line="2565"/>
+        <location filename="../Sources/CApplication.cpp" line="2569"/>
         <source>%n song(s), %1</source>
         <translation>
             <numerusform>%n song, %1</numerusform>
@@ -68,7 +68,7 @@ Error: %4</translation>
     </message>
     <message>
         <location filename="../Sources/CApplication.cpp" line="1742"/>
-        <location filename="../Sources/CApplication.cpp" line="1963"/>
+        <location filename="../Sources/CApplication.cpp" line="1969"/>
         <source>Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)</source>
         <translation>Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)</translation>
     </message>
@@ -91,22 +91,22 @@ Error: %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2433"/>
+        <location filename="../Sources/CApplication.cpp" line="2446"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Are you sure you want to delete this playlist?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2433"/>
+        <location filename="../Sources/CApplication.cpp" line="2446"/>
         <source>Yes</source>
         <translation>Yes</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2433"/>
+        <location filename="../Sources/CApplication.cpp" line="2446"/>
         <source>No</source>
         <translation>No</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="2552"/>
+        <location filename="../Sources/CApplication.cpp" line="2565"/>
         <source>%n day(s) %1</source>
         <translation>
             <numerusform>%n day %1</numerusform>
@@ -121,18 +121,18 @@ Error: %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2697"/>
+        <location filename="../Sources/CApplication.cpp" line="2710"/>
         <source>This program requires FMOD %1 or superior.</source>
         <translation>This program requires FMOD %1 or superior.</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3311"/>
+        <location filename="../Sources/CApplication.cpp" line="3324"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3319"/>
-        <location filename="../Sources/CApplication.cpp" line="3327"/>
+        <location filename="../Sources/CApplication.cpp" line="3332"/>
+        <location filename="../Sources/CApplication.cpp" line="3340"/>
         <source>Play</source>
         <translation>Play</translation>
     </message>
