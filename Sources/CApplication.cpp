@@ -1976,6 +1976,15 @@ void CApplication::relocateSong(void)
         // Le fichier est déjà dans la médiathèque
         if (CSong::getId(this, fileName) >= 0)
         {
+            QMessageBox::StandardButton res = QMessageBox::question(this, QString(), tr("This file is already in the library. Do you want to merge the two songs?"), QMessageBox::Yes | QMessageBox::No);
+
+            if (res == QMessageBox::No)
+            {
+                return;
+            }
+
+            //...
+
             //TODO: FUSION
             //Afficher une boite de dialogue avec la question "Le fichier sélectionné est déjà dans la médiathèque. Voulez-vous fusionner les deux morceaux ?"
             //Si oui : changer l'identifiant des lectures du morceau 2.

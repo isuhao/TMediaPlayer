@@ -14,8 +14,8 @@
     </message>
     <message numerus="yes">
         <location filename="../Sources/CApplication.cpp" line="118"/>
-        <location filename="../Sources/CApplication.cpp" line="2565"/>
-        <location filename="../Sources/CApplication.cpp" line="2569"/>
+        <location filename="../Sources/CApplication.cpp" line="2586"/>
+        <location filename="../Sources/CApplication.cpp" line="2590"/>
         <source>%n song(s), %1</source>
         <translation>
             <numerusform>%n morceau, %1</numerusform>
@@ -78,8 +78,13 @@ Erreur : %4</translation>
             <numerusform>%n morceaux ajoutés à la médiathèque.</numerusform>
         </translation>
     </message>
+    <message>
+        <location filename="../Sources/CApplication.cpp" line="1979"/>
+        <source>This file is already in the library. Do you want to merge the two songs?</source>
+        <translation>Le fichier sélectionné est déjà dans la médiathèque. Voulez-vous fusionner les deux morceaux ?</translation>
+    </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="2565"/>
+        <location filename="../Sources/CApplication.cpp" line="2586"/>
         <source>%n day(s) %1</source>
         <translation>
             <numerusform>%n jour %1</numerusform>
@@ -94,13 +99,13 @@ Erreur : %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3324"/>
+        <location filename="../Sources/CApplication.cpp" line="3345"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3332"/>
-        <location filename="../Sources/CApplication.cpp" line="3340"/>
+        <location filename="../Sources/CApplication.cpp" line="3353"/>
+        <location filename="../Sources/CApplication.cpp" line="3361"/>
         <source>Play</source>
         <translation>Lecture</translation>
     </message>
@@ -110,17 +115,17 @@ Erreur : %4</translation>
         <translation>Chargement des fichiers...</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2446"/>
+        <location filename="../Sources/CApplication.cpp" line="2455"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Êtes-vous sûr de vouloir supprimer cette liste de lecture ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2446"/>
+        <location filename="../Sources/CApplication.cpp" line="2455"/>
         <source>Yes</source>
         <translation>Oui</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2446"/>
+        <location filename="../Sources/CApplication.cpp" line="2455"/>
         <source>No</source>
         <translation>Non</translation>
     </message>
@@ -140,7 +145,7 @@ Erreur : %4</translation>
         <translation type="obsolete">Êtes-vous sûr de vouloir supprimer ce dossier ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2710"/>
+        <location filename="../Sources/CApplication.cpp" line="2731"/>
         <source>This program requires FMOD %1 or superior.</source>
         <translation>Ce programme nécessite FMOD %1 ou supérieur.</translation>
     </message>
@@ -549,46 +554,61 @@ Erreur : %4</translation>
     <message>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="55"/>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="56"/>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="125"/>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="153"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="143"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="171"/>
         <source>SQLite version 2</source>
         <translation>SQLite version 2</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="60"/>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="61"/>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="127"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="145"/>
         <source>PostgreSQL</source>
         <translation>PostgreSQL</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="65"/>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="66"/>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="129"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="147"/>
         <source>MySQL</source>
         <translation>MySQL</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="70"/>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="71"/>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="131"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="149"/>
         <source>ODBC</source>
         <translation>ODBC</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="75"/>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="76"/>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="153"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="171"/>
         <source>SQLite version 3 or above</source>
         <translation>SQLite version 3 ou supérieure</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="90"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="100"/>
+        <source>Unknown title</source>
+        <translation type="unfinished">Titre inconnu</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="101"/>
+        <source>Unknown artist</source>
+        <translation type="unfinished">Artiste inconnu</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="102"/>
+        <source>Unknown album</source>
+        <translation type="unfinished">Album inconnu</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="108"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="91"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="109"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
@@ -943,107 +963,107 @@ Erreur : %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2142"/>
+        <location filename="../Sources/CSong.cpp" line="2154"/>
         <source>Chargement des tags ID3v1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2144"/>
-        <location filename="../Sources/CSong.cpp" line="2202"/>
-        <location filename="../Sources/CSong.cpp" line="2636"/>
-        <location filename="../Sources/CSong.cpp" line="2812"/>
-        <location filename="../Sources/CSong.cpp" line="3167"/>
-        <location filename="../Sources/CSong.cpp" line="3204"/>
-        <location filename="../Sources/CSong.cpp" line="3441"/>
-        <location filename="../Sources/CSong.cpp" line="3563"/>
+        <location filename="../Sources/CSong.cpp" line="2156"/>
+        <location filename="../Sources/CSong.cpp" line="2214"/>
+        <location filename="../Sources/CSong.cpp" line="2648"/>
+        <location filename="../Sources/CSong.cpp" line="2824"/>
+        <location filename="../Sources/CSong.cpp" line="3179"/>
+        <location filename="../Sources/CSong.cpp" line="3216"/>
+        <location filename="../Sources/CSong.cpp" line="3453"/>
+        <location filename="../Sources/CSong.cpp" line="3575"/>
         <source>File:</source>
         <translation>Fichier :</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2145"/>
-        <location filename="../Sources/CSong.cpp" line="2203"/>
-        <location filename="../Sources/CSong.cpp" line="2637"/>
-        <location filename="../Sources/CSong.cpp" line="2813"/>
-        <location filename="../Sources/CSong.cpp" line="3168"/>
-        <location filename="../Sources/CSong.cpp" line="3205"/>
-        <location filename="../Sources/CSong.cpp" line="3442"/>
-        <location filename="../Sources/CSong.cpp" line="3564"/>
+        <location filename="../Sources/CSong.cpp" line="2157"/>
+        <location filename="../Sources/CSong.cpp" line="2215"/>
+        <location filename="../Sources/CSong.cpp" line="2649"/>
+        <location filename="../Sources/CSong.cpp" line="2825"/>
+        <location filename="../Sources/CSong.cpp" line="3180"/>
+        <location filename="../Sources/CSong.cpp" line="3217"/>
+        <location filename="../Sources/CSong.cpp" line="3454"/>
+        <location filename="../Sources/CSong.cpp" line="3576"/>
         <source>Date:</source>
         <translation>Date :</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2200"/>
+        <location filename="../Sources/CSong.cpp" line="2212"/>
         <source>Chargement des tags ID3v2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2505"/>
+        <location filename="../Sources/CSong.cpp" line="2517"/>
         <source>Erreur : la langue des paroles et diffÃ©rente de la langue du morceau</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2540"/>
+        <location filename="../Sources/CSong.cpp" line="2552"/>
         <source>Erreur : tag %1 avec plusieurs champs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2557"/>
-        <location filename="../Sources/CSong.cpp" line="2563"/>
+        <location filename="../Sources/CSong.cpp" line="2569"/>
+        <location filename="../Sources/CSong.cpp" line="2575"/>
         <source>Erreur : tag TXXX [REPLAYGAIN_TRACK_GAIN] incorrect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2573"/>
+        <location filename="../Sources/CSong.cpp" line="2585"/>
         <source>Erreur : tag TXXX [REPLAYGAIN_TRACK_PEAK] incorrect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2587"/>
-        <location filename="../Sources/CSong.cpp" line="2593"/>
+        <location filename="../Sources/CSong.cpp" line="2599"/>
+        <location filename="../Sources/CSong.cpp" line="2605"/>
         <source>Erreur : tag TXXX [REPLAYGAIN_ALBUM_GAIN] incorrect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2603"/>
+        <location filename="../Sources/CSong.cpp" line="2615"/>
         <source>Erreur : tag TXXX [REPLAYGAIN_ALBUM_PEAK] incorrect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2634"/>
+        <location filename="../Sources/CSong.cpp" line="2646"/>
         <source>Chargement des tags APE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2335"/>
-        <location filename="../Sources/CSong.cpp" line="2370"/>
-        <location filename="../Sources/CSong.cpp" line="2373"/>
-        <location filename="../Sources/CSong.cpp" line="2377"/>
+        <location filename="../Sources/CSong.cpp" line="2347"/>
+        <location filename="../Sources/CSong.cpp" line="2382"/>
         <location filename="../Sources/CSong.cpp" line="2385"/>
-        <location filename="../Sources/CSong.cpp" line="2406"/>
-        <location filename="../Sources/CSong.cpp" line="2409"/>
-        <location filename="../Sources/CSong.cpp" line="2413"/>
+        <location filename="../Sources/CSong.cpp" line="2389"/>
+        <location filename="../Sources/CSong.cpp" line="2397"/>
+        <location filename="../Sources/CSong.cpp" line="2418"/>
         <location filename="../Sources/CSong.cpp" line="2421"/>
-        <location filename="../Sources/CSong.cpp" line="2458"/>
-        <location filename="../Sources/CSong.cpp" line="2497"/>
-        <location filename="../Sources/CSong.cpp" line="2532"/>
-        <location filename="../Sources/CSong.cpp" line="2728"/>
-        <location filename="../Sources/CSong.cpp" line="2731"/>
-        <location filename="../Sources/CSong.cpp" line="2735"/>
+        <location filename="../Sources/CSong.cpp" line="2425"/>
+        <location filename="../Sources/CSong.cpp" line="2433"/>
+        <location filename="../Sources/CSong.cpp" line="2470"/>
+        <location filename="../Sources/CSong.cpp" line="2509"/>
+        <location filename="../Sources/CSong.cpp" line="2544"/>
+        <location filename="../Sources/CSong.cpp" line="2740"/>
         <location filename="../Sources/CSong.cpp" line="2743"/>
-        <location filename="../Sources/CSong.cpp" line="2761"/>
-        <location filename="../Sources/CSong.cpp" line="2764"/>
-        <location filename="../Sources/CSong.cpp" line="2768"/>
+        <location filename="../Sources/CSong.cpp" line="2747"/>
+        <location filename="../Sources/CSong.cpp" line="2755"/>
+        <location filename="../Sources/CSong.cpp" line="2773"/>
         <location filename="../Sources/CSong.cpp" line="2776"/>
-        <location filename="../Sources/CSong.cpp" line="2903"/>
-        <location filename="../Sources/CSong.cpp" line="2910"/>
-        <location filename="../Sources/CSong.cpp" line="2923"/>
-        <location filename="../Sources/CSong.cpp" line="2937"/>
-        <location filename="../Sources/CSong.cpp" line="2955"/>
-        <location filename="../Sources/CSong.cpp" line="2969"/>
-        <location filename="../Sources/CSong.cpp" line="2989"/>
-        <location filename="../Sources/CSong.cpp" line="3015"/>
-        <location filename="../Sources/CSong.cpp" line="3045"/>
-        <location filename="../Sources/CSong.cpp" line="3061"/>
+        <location filename="../Sources/CSong.cpp" line="2780"/>
+        <location filename="../Sources/CSong.cpp" line="2788"/>
+        <location filename="../Sources/CSong.cpp" line="2915"/>
+        <location filename="../Sources/CSong.cpp" line="2922"/>
+        <location filename="../Sources/CSong.cpp" line="2935"/>
+        <location filename="../Sources/CSong.cpp" line="2949"/>
+        <location filename="../Sources/CSong.cpp" line="2967"/>
+        <location filename="../Sources/CSong.cpp" line="2981"/>
+        <location filename="../Sources/CSong.cpp" line="3001"/>
+        <location filename="../Sources/CSong.cpp" line="3027"/>
+        <location filename="../Sources/CSong.cpp" line="3057"/>
+        <location filename="../Sources/CSong.cpp" line="3073"/>
         <source>Error: invalid tag &apos;%1&apos;</source>
         <translation>Erreur : tag &apos;%1&apos; invalide</translation>
     </message>
@@ -1053,146 +1073,146 @@ Erreur : %4</translation>
         <translation>Format inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2145"/>
-        <location filename="../Sources/CSong.cpp" line="2203"/>
-        <location filename="../Sources/CSong.cpp" line="2637"/>
-        <location filename="../Sources/CSong.cpp" line="2813"/>
-        <location filename="../Sources/CSong.cpp" line="3168"/>
-        <location filename="../Sources/CSong.cpp" line="3205"/>
-        <location filename="../Sources/CSong.cpp" line="3442"/>
-        <location filename="../Sources/CSong.cpp" line="3564"/>
+        <location filename="../Sources/CSong.cpp" line="2157"/>
+        <location filename="../Sources/CSong.cpp" line="2215"/>
+        <location filename="../Sources/CSong.cpp" line="2649"/>
+        <location filename="../Sources/CSong.cpp" line="2825"/>
+        <location filename="../Sources/CSong.cpp" line="3180"/>
+        <location filename="../Sources/CSong.cpp" line="3217"/>
+        <location filename="../Sources/CSong.cpp" line="3454"/>
+        <location filename="../Sources/CSong.cpp" line="3576"/>
         <source>dd/MM/yyyy HH:mm:ss</source>
         <translation>dd/MM/yyyy HH:mm:ss</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2235"/>
-        <location filename="../Sources/CSong.cpp" line="2244"/>
-        <location filename="../Sources/CSong.cpp" line="2253"/>
-        <location filename="../Sources/CSong.cpp" line="2262"/>
-        <location filename="../Sources/CSong.cpp" line="2271"/>
-        <location filename="../Sources/CSong.cpp" line="2280"/>
-        <location filename="../Sources/CSong.cpp" line="2289"/>
-        <location filename="../Sources/CSong.cpp" line="2298"/>
-        <location filename="../Sources/CSong.cpp" line="2307"/>
-        <location filename="../Sources/CSong.cpp" line="2316"/>
-        <location filename="../Sources/CSong.cpp" line="2325"/>
-        <location filename="../Sources/CSong.cpp" line="2348"/>
-        <location filename="../Sources/CSong.cpp" line="2357"/>
-        <location filename="../Sources/CSong.cpp" line="2394"/>
-        <location filename="../Sources/CSong.cpp" line="2437"/>
-        <location filename="../Sources/CSong.cpp" line="2452"/>
-        <location filename="../Sources/CSong.cpp" line="2466"/>
-        <location filename="../Sources/CSong.cpp" line="2491"/>
-        <location filename="../Sources/CSong.cpp" line="2517"/>
+        <location filename="../Sources/CSong.cpp" line="2247"/>
+        <location filename="../Sources/CSong.cpp" line="2256"/>
+        <location filename="../Sources/CSong.cpp" line="2265"/>
+        <location filename="../Sources/CSong.cpp" line="2274"/>
+        <location filename="../Sources/CSong.cpp" line="2283"/>
+        <location filename="../Sources/CSong.cpp" line="2292"/>
+        <location filename="../Sources/CSong.cpp" line="2301"/>
+        <location filename="../Sources/CSong.cpp" line="2310"/>
+        <location filename="../Sources/CSong.cpp" line="2319"/>
+        <location filename="../Sources/CSong.cpp" line="2328"/>
+        <location filename="../Sources/CSong.cpp" line="2337"/>
+        <location filename="../Sources/CSong.cpp" line="2360"/>
+        <location filename="../Sources/CSong.cpp" line="2369"/>
+        <location filename="../Sources/CSong.cpp" line="2406"/>
+        <location filename="../Sources/CSong.cpp" line="2449"/>
+        <location filename="../Sources/CSong.cpp" line="2464"/>
+        <location filename="../Sources/CSong.cpp" line="2478"/>
+        <location filename="../Sources/CSong.cpp" line="2503"/>
+        <location filename="../Sources/CSong.cpp" line="2529"/>
         <source>Error: several tags &apos;%1&apos;</source>
         <translation>Erreur : plusieurs tags &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2477"/>
+        <location filename="../Sources/CSong.cpp" line="2489"/>
         <source>Error: language of tag &apos;USLT&apos; invalid</source>
         <translation>Erreur : la langue du tag &apos;USLT&apos; est invalide</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2783"/>
+        <location filename="../Sources/CSong.cpp" line="2795"/>
         <source>Erreur : tag LANGUAGE non gÃ©rÃ©</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2810"/>
+        <location filename="../Sources/CSong.cpp" line="2822"/>
         <source>Chargement des tags XiphComment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2946"/>
+        <location filename="../Sources/CSong.cpp" line="2958"/>
         <source>Erreur : les tags TRACKTOTAL et TOTALTRACKS sont prÃ©sents tous les deux</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2980"/>
+        <location filename="../Sources/CSong.cpp" line="2992"/>
         <source>Erreur : les tags TEMPO et BPM sont prÃ©sents tous les deux</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3087"/>
-        <location filename="../Sources/CSong.cpp" line="3093"/>
+        <location filename="../Sources/CSong.cpp" line="3099"/>
+        <location filename="../Sources/CSong.cpp" line="3105"/>
         <source>Erreur : tag REPLAYGAIN_TRACK_GAIN incorrect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3104"/>
+        <location filename="../Sources/CSong.cpp" line="3116"/>
         <source>Erreur : tag REPLAYGAIN_TRACK_PEAK incorrect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3121"/>
-        <location filename="../Sources/CSong.cpp" line="3127"/>
+        <location filename="../Sources/CSong.cpp" line="3133"/>
+        <location filename="../Sources/CSong.cpp" line="3139"/>
         <source>Erreur : tag REPLAYGAIN_ALBUM_GAIN incorrect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3138"/>
+        <location filename="../Sources/CSong.cpp" line="3150"/>
         <source>Erreur : tag REPLAYGAIN_ALBUM_PEAK incorrect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3165"/>
+        <location filename="../Sources/CSong.cpp" line="3177"/>
         <source>Enregistrement des tags ID3v1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3306"/>
-        <location filename="../Sources/CSong.cpp" line="3479"/>
+        <location filename="../Sources/CSong.cpp" line="3318"/>
+        <location filename="../Sources/CSong.cpp" line="3491"/>
         <source>Aucun tag pour enregistrer le compositeur pour le tri</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3439"/>
+        <location filename="../Sources/CSong.cpp" line="3451"/>
         <source>Enregistrement des tags APE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3452"/>
+        <location filename="../Sources/CSong.cpp" line="3464"/>
         <source>Aucun tag pour enregistrer le regroupement</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3461"/>
+        <location filename="../Sources/CSong.cpp" line="3473"/>
         <source>Aucun tag pour enregistrer l&apos;artiste de l&apos;album</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3467"/>
+        <location filename="../Sources/CSong.cpp" line="3479"/>
         <source>Aucun tag pour enregistrer le titre pour le tri</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3470"/>
-        <location filename="../Sources/CSong.cpp" line="3476"/>
+        <location filename="../Sources/CSong.cpp" line="3482"/>
+        <location filename="../Sources/CSong.cpp" line="3488"/>
         <source>Aucun tag pour enregistrer l&apos;artiste pour le tri</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3473"/>
+        <location filename="../Sources/CSong.cpp" line="3485"/>
         <source>Aucun tag pour enregistrer l&apos;album pour le tri</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3528"/>
+        <location filename="../Sources/CSong.cpp" line="3540"/>
         <source>Aucun tag pour enregistrer le nombre de battements par minute</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3531"/>
+        <location filename="../Sources/CSong.cpp" line="3543"/>
         <source>Aucun tag pour enregistrer les paroles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3537"/>
+        <location filename="../Sources/CSong.cpp" line="3549"/>
         <source>Aucun tag pour enregistrer le parolier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3561"/>
+        <location filename="../Sources/CSong.cpp" line="3573"/>
         <source>Enregistrement des tags Xiph Comment</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1201,7 +1221,7 @@ Erreur : %4</translation>
         <translation type="obsolete">Erreur : tag &apos;%1&apos; invalide</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3202"/>
+        <location filename="../Sources/CSong.cpp" line="3214"/>
         <source>Enregistrement des tags ID3v2</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2544,167 +2564,253 @@ Voulez-vous les ajouter ?</translation>
         <translation>Apparence</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="42"/>
+        <location filename="../Form/DialogPreferences.ui" line="49"/>
         <source>Show &quot;Stop&quot; button.</source>
         <translation>Afficher le bouton &quot;Stop&quot;.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="52"/>
+        <location filename="../Form/DialogPreferences.ui" line="66"/>
         <source>Row height:</source>
         <translation>Hauteur des lignes :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="62"/>
+        <location filename="../Form/DialogPreferences.ui" line="76"/>
         <source>px</source>
         <translation>px</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="78"/>
+        <location filename="../Form/DialogPreferences.ui" line="99"/>
         <source>Current song: show remaining time instead of duration.</source>
         <translation>Morceau en cours de lecture : afficher le temps restant au lieu de la durée.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="86"/>
+        <location filename="../Form/DialogPreferences.ui" line="107"/>
         <source>Database</source>
         <translation>Base de données</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="92"/>
+        <location filename="../Form/DialogPreferences.ui" line="120"/>
         <source>Driver:</source>
         <translation>Pilote :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="103"/>
+        <location filename="../Form/DialogPreferences.ui" line="131"/>
         <source>SQLite version 3 or above</source>
         <translation>SQLite version 3 ou supérieure</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="108"/>
+        <location filename="../Form/DialogPreferences.ui" line="136"/>
         <source>SQLite version 2</source>
         <translation>SQLite version 2</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="113"/>
+        <location filename="../Form/DialogPreferences.ui" line="141"/>
         <source>PostgreSQL</source>
         <translation>PostgreSQL</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="118"/>
+        <location filename="../Form/DialogPreferences.ui" line="146"/>
         <source>MySQL</source>
         <translation>MySQL</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="123"/>
+        <location filename="../Form/DialogPreferences.ui" line="151"/>
         <source>ODBC</source>
         <translation>ODBC</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="134"/>
+        <location filename="../Form/DialogPreferences.ui" line="169"/>
         <source>Username:</source>
         <translation>Utilisateur :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="144"/>
+        <location filename="../Form/DialogPreferences.ui" line="186"/>
         <source>Password:</source>
         <translation>Mot de passe :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="154"/>
+        <location filename="../Form/DialogPreferences.ui" line="203"/>
         <source>Database:</source>
         <translation>Base de données :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="177"/>
+        <location filename="../Form/DialogPreferences.ui" line="233"/>
         <source>Port:</source>
         <translation>Port :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="187"/>
+        <location filename="../Form/DialogPreferences.ui" line="250"/>
         <source>Host:</source>
         <translation>Serveur :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="201"/>
+        <location filename="../Form/DialogPreferences.ui" line="264"/>
         <source>Last.fm</source>
         <translation>Last.fm</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="207"/>
+        <location filename="../Form/DialogPreferences.ui" line="270"/>
         <source>Use Last.fm</source>
         <translation>Utiliser Last.fm</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="219"/>
+        <location filename="../Form/DialogPreferences.ui" line="282"/>
         <source>If this is not yet done, you must connect your account to the application. Use this button to open a navigator, and perform the connection:</source>
         <translation>Si ce n&apos;est pas encore fait, vous devez connecter votre compte à l&apos;application. Utilisez ce bouton pour ouvrir un navigateur, et effectuer la connexion :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="229"/>
+        <location filename="../Form/DialogPreferences.ui" line="292"/>
         <source>Connect to Last.fm</source>
         <translation>Se connecter à Last.fm</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="249"/>
+        <location filename="../Form/DialogPreferences.ui" line="319"/>
         <source>Percentage of reading before scrobbling:</source>
         <translation>Pourcentage de lecture avant de scrobbler :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="256"/>
+        <location filename="../Form/DialogPreferences.ui" line="326"/>
         <source> %</source>
         <translation> %</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="272"/>
+        <location filename="../Form/DialogPreferences.ui" line="349"/>
         <source>Delay before notify that a new song has started:</source>
         <translation>Délai avant de signaler qu&apos;un nouveau morceau a commencé :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="347"/>
+        <location filename="../Form/DialogPreferences.ui" line="379"/>
+        <location filename="../Form/DialogPreferences.ui" line="385"/>
+        <source>Folders</source>
+        <translation>Dossiers</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="391"/>
+        <source>Add folder...</source>
+        <translation>Ajouter...</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="405"/>
+        <source>Analyze folders to check changes on startup.</source>
+        <translation>Analyser les dossiers pour détecter les changements au lancement de l&apos;application.</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="425"/>
+        <source>Remove</source>
+        <translation>Supprimer</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="438"/>
+        <source>Keep folders organized</source>
+        <translation>Maintenir les dossiers organisés</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="457"/>
+        <source>Filename format:</source>
+        <translation>Format des noms de fichier :</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="481"/>
+        <source>Album title:</source>
+        <translation>Album :</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="502"/>
+        <source>Unknown album</source>
+        <translation>Album inconnu</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="519"/>
+        <source>Track number:</source>
+        <translation>Numéro de piste :</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="533"/>
+        <source>Year:</source>
+        <translation>Année :</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="550"/>
+        <source>Disc number:</source>
+        <translation>Numéro de disque :</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="557"/>
+        <source>Unknown artist</source>
+        <translation>Artiste inconnu</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="578"/>
+        <source>Title:</source>
+        <translation>Titre :</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="592"/>
+        <source>Artist name:</source>
+        <translation>Artiste :</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="606"/>
+        <source>Default value</source>
+        <translation>Valeur par défaut</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="640"/>
+        <source>Empty field</source>
+        <translation>Champ vide</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="657"/>
+        <source>Unknown title</source>
+        <translation>Titre inconnu</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="838"/>
         <source>When you add a file into the library, if there are no sorting fields, they will be automatically compute. For example, if a title starts with &quot;The &quot;.</source>
         <translation>Quand vous ajoutez unfichier à la médiathèque, s&apos;il n&apos;y a pas de valeurs pour le tri, elles sont automatiquement déterminées. Par exemple, si un titre commence par &quot;Le &quot;.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="279"/>
+        <location filename="../Form/DialogPreferences.ui" line="356"/>
         <source>When you start playing a song, a notification is send to Last.fm to update your profile. This value represent the delay in seconds before sending the information. It must be between 2s and 20s.</source>
         <translation>Lorsque vous démarrez la lecture d&apos;un morceau, une notification est envoyée à Last.fm pour mettre à jour votre profil. Cette valeur correspond au délai en secondes avant d&apos;envoyer l&apos;information. Elle doit être comprise entre 2s et 20s.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="282"/>
+        <location filename="../Form/DialogPreferences.ui" line="359"/>
         <source>s</source>
         <translation>s</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="302"/>
+        <location filename="../Form/DialogPreferences.ui" line="759"/>
         <source>Metadata</source>
         <translation>Métadonnées</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="308"/>
+        <location filename="../Form/DialogPreferences.ui" line="768"/>
         <source>Saving</source>
         <translation>Enregistrement</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="317"/>
+        <location filename="../Form/DialogPreferences.ui" line="784"/>
         <source>Write song duration.</source>
         <translation>Écrire la durée du morceau.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="324"/>
+        <location filename="../Form/DialogPreferences.ui" line="798"/>
         <source>Write play count.</source>
         <translation>Écrire le nombre de lectures.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="331"/>
+        <location filename="../Form/DialogPreferences.ui" line="812"/>
         <source>Write rating.</source>
         <translation>Écrire la note.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="341"/>
+        <location filename="../Form/DialogPreferences.ui" line="825"/>
         <source>Loading</source>
         <translation>Chargement</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="350"/>
+        <location filename="../Form/DialogPreferences.ui" line="841"/>
         <source>Automatically compute sorting fields.</source>
         <translation>Déterminer automatiquement les valeurs pour le tri.</translation>
     </message>

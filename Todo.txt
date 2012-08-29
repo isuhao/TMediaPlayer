@@ -15,6 +15,10 @@
   Importance moyenne
 --------------------------------------------------
 
+- Gérer les répertoires à surveiller :
+  - Analyser le répertoire récursivement au lancement de l'application.
+  - Organiser automatiquement les fichiers dans ces répertoires.
+
 - Ajouter une vue pour voir la liste des dernières lectures.
 
 - Ajouter une vue pour afficher l'illustration principale.

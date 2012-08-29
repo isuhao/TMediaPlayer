@@ -86,6 +86,24 @@ CDialogPreferences::CDialogPreferences(CApplication * application, QSettings * s
     m_uiWidget->editLastFmDelayBeforeNotification->setValue(m_settings->value("LastFm/DelayBeforeNotification", 5000).toInt() / 1000);
     m_uiWidget->editLastFmPercentageBeforeScrobbling->setValue(m_settings->value("LastFm/PercentageBeforeScrobbling", 60).toInt());
 
+    // Organisation automatique des fichiers
+    m_uiWidget->groupOrganize->setChecked(m_settings->value("Folders/KeepOrganized", false).toBool());
+    m_uiWidget->editOrgFormat->setText(m_settings->value("Folders/Format", QString("%2/%4%3/%6%5%1")).toString());
+
+    m_uiWidget->editOrgTitleDefault->setText(m_settings->value("Folders/TitleDefault", QString("%1")).toString());
+    m_uiWidget->editOrgArtistDefault->setText(m_settings->value("Folders/ArtistDefault", QString("%1")).toString());
+    m_uiWidget->editOrgAlbumDefault->setText(m_settings->value("Folders/AlbumDefault", QString("%1")).toString());
+    m_uiWidget->editOrgYearDefault->setText(m_settings->value("Folders/YearDefault", QString(" (%1)")).toString());
+    m_uiWidget->editOrgTrackDefault->setText(m_settings->value("Folders/TrackDefault", QString("%1 ")).toString());
+    m_uiWidget->editOrgDiscDefault->setText(m_settings->value("Folders/DiscDefault", QString("%1-")).toString());
+
+    m_uiWidget->editOrgTitleEmpty->setText(m_settings->value("Folders/TitleEmpty", tr("Unknown title")).toString());
+    m_uiWidget->editOrgArtistEmpty->setText(m_settings->value("Folders/ArtistEmpty", tr("Unknown artist")).toString());
+    m_uiWidget->editOrgAlbumEmpty->setText(m_settings->value("Folders/AlbumEmpty", tr("Unknown album")).toString());
+    m_uiWidget->editOrgYearEmpty->setText(m_settings->value("Folders/YearEmpty", QString()).toString());
+    m_uiWidget->editOrgTrackEmpty->setText(m_settings->value("Folders/TrackEmpty", QString()).toString());
+    m_uiWidget->editOrgDiscEmpty->setText(m_settings->value("Folders/DiscEmpty", QString()).toString());
+
     // Connexions des signaux des boutons
     QPushButton * btnOK = m_uiWidget->buttonBox->addButton(tr("OK"), QDialogButtonBox::AcceptRole);
     QPushButton * btnCancel = m_uiWidget->buttonBox->addButton(tr("Cancel"), QDialogButtonBox::RejectRole);
@@ -143,6 +161,24 @@ void CDialogPreferences::save(void)
     m_application->enableScrobbling(m_uiWidget->groupUseLastFm->isChecked());
     m_application->setDelayBeforeNotification(m_uiWidget->editLastFmDelayBeforeNotification->value() * 1000);
     m_application->setPercentageBeforeScrobbling(m_uiWidget->editLastFmPercentageBeforeScrobbling->value());
+
+    // Organisation automatique des fichiers
+    m_settings->setValue("Folders/KeepOrganized", m_uiWidget->groupOrganize->isChecked());
+    m_settings->setValue("Folders/Format", m_uiWidget->editOrgFormat->text());
+
+    m_settings->setValue("Folders/TitleDefault", m_uiWidget->editOrgTitleDefault->text());
+    m_settings->setValue("Folders/ArtistDefault", m_uiWidget->editOrgArtistDefault->text());
+    m_settings->setValue("Folders/AlbumDefault", m_uiWidget->editOrgAlbumDefault->text());
+    m_settings->setValue("Folders/YearDefault", m_uiWidget->editOrgYearDefault->text());
+    m_settings->setValue("Folders/TrackDefault", m_uiWidget->editOrgTrackDefault->text());
+    m_settings->setValue("Folders/DiscDefault", m_uiWidget->editOrgDiscDefault->text());
+
+    m_settings->setValue("Folders/TitleEmpty", m_uiWidget->editOrgTitleEmpty->text());
+    m_settings->setValue("Folders/ArtistEmpty", m_uiWidget->editOrgArtistEmpty->text());
+    m_settings->setValue("Folders/AlbumEmpty", m_uiWidget->editOrgAlbumEmpty->text());
+    m_settings->setValue("Folders/YearEmpty", m_uiWidget->editOrgYearEmpty->text());
+    m_settings->setValue("Folders/TrackEmpty", m_uiWidget->editOrgTrackEmpty->text());
+    m_settings->setValue("Folders/DiscEmpty", m_uiWidget->editOrgDiscEmpty->text());
 
     close();
 }
