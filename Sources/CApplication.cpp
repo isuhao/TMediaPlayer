@@ -210,7 +210,7 @@ bool CApplication::initWindow(void)
     m_uiWidget->toolBar->addWidget(widgetControl);
 
     m_uiControl->btnStop->setVisible(m_settings->value("Preferences/ShowButtonStop", true).toBool());
-    
+
     m_showRemainingTime = m_settings->value("Preferences/ShowRemainingTime", false).toBool();
 
     // Connexions des signaux et des slots
@@ -256,7 +256,7 @@ bool CApplication::initWindow(void)
     lyricsLayout->addWidget(m_lyricsEdit, 0, 0, 1, 2);
     lyricsLayout->addWidget(lyricsFind, 1, 0);
     lyricsLayout->addWidget(lyricsEdit, 1, 1);
-    
+
     QWidget * lyricsWidget = new QWidget(this);
     lyricsWidget->setLayout(lyricsLayout);
 
@@ -2531,7 +2531,7 @@ void CApplication::updateSongDescription(CSong * song)
 
         if (!albumTitle.isEmpty())
             description += " - " + albumTitle;
-        
+
         m_uiControl->songInfos->setText(description.replace('&', "&&"));
         m_uiControl->sliderPosition->setEnabled(true);
 
@@ -2578,7 +2578,7 @@ void CApplication::updateListInformations(void)
         duration = duration.addMSecs(static_cast<int>(durationMS % 86400000));
         numSongs = m_displayedSongTable->getNumSongs();
     }
-    
+
     // Barre d'état
     if (durationMS > 86400000)
     {
@@ -2655,7 +2655,7 @@ void CApplication::updateTimer(void)
             QTime positionTime(0, 0);
             positionTime = positionTime.addMSecs(position);
             m_uiControl->lblPosition->setText(positionTime.toString("m:ss"));
-            
+
             // Mise à jour du temps restant
             if (m_showRemainingTime)
             {

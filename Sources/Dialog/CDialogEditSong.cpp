@@ -37,10 +37,11 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  */
 
 CDialogEditSong::CDialogEditSong(CSongTableItem * songItem, CSongTable * songTable, CApplication * application) :
-    QDialog     (application),
-    m_uiWidget  (new Ui::DialogEditSong()),
-    m_songTable (songTable),
-    m_songItem  (songItem)
+    QDialog       (application),
+    m_uiWidget    (new Ui::DialogEditSong()),
+    m_songTable   (songTable),
+    m_songItem    (songItem),
+    m_application (application)
 {
     Q_CHECK_PTR(songItem);
     Q_CHECK_PTR(songTable);
@@ -256,7 +257,13 @@ void CDialogEditSong::updateInfos()
     // Illustration
     if (song->getFormat() == CSong::FormatMP3)
     {
+
+#ifdef Q_OS_WIN32
+        std::wstring fileNameWString = song->getFileName().toStdWString();
+        TagLib::MPEG::File file(fileNameWString.c_str(), false);
+#else
         TagLib::MPEG::File file(qPrintable(song->getFileName()), false);
+#endif
 
         if (file.isValid())
         {
@@ -279,7 +286,7 @@ void CDialogEditSong::updateInfos()
         }
         else
         {
-            qWarning() << "CDialogEditSong::updateInfos() : impossible de lire le fichier MP3 " << song->getFileName();
+            m_application->logError(QString("impossible de lire le fichier MP3 \"%1\"").arg(song->getFileName()), __FUNCTION__, __FILE__, __LINE__);
             m_uiWidget->valueCover->setPixmap(QPixmap::fromImage(song->getCoverImage()));
         }
     }

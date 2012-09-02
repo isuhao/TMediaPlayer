@@ -363,12 +363,18 @@ bool CSong::loadTags(bool readProperties)
 
         case CSong::FormatMP3:
         {
+
+#ifdef Q_OS_WIN32
+            std::wstring fileNameWString = m_properties.fileName.toStdWString();
+            TagLib::MPEG::File file(fileNameWString.c_str(), readProperties);
+#else
             TagLib::MPEG::File file(qPrintable(m_properties.fileName), readProperties);
+#endif
 
             if (!file.isValid())
             {
                 m_fileStatus = false;
-                m_application->logError(QString("impossible de lire le fichier MP3 %1").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(QString("impossible de lire le fichier MP3 \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 return false;
             }
 
@@ -407,7 +413,13 @@ bool CSong::loadTags(bool readProperties)
 
         case CSong::FormatOGG:
         {
+
+#ifdef Q_OS_WIN32
+            std::wstring fileNameWString = m_properties.fileName.toStdWString();
+            TagLib::Ogg::Vorbis::File file(fileNameWString.c_str(), readProperties);
+#else
             TagLib::Ogg::Vorbis::File file(qPrintable(m_properties.fileName), readProperties);
+#endif
 
             if (!file.isValid())
             {
@@ -447,12 +459,18 @@ bool CSong::loadTags(bool readProperties)
 
         case CSong::FormatFLAC:
         {
+
+#ifdef Q_OS_WIN32
+            std::wstring fileNameWString = m_properties.fileName.toStdWString();
+            TagLib::FLAC::File file(fileNameWString.c_str(), readProperties);
+#else
             TagLib::FLAC::File file(qPrintable(m_properties.fileName), readProperties);
+#endif
 
             if (!file.isValid())
             {
                 m_fileStatus = false;
-                m_application->logError(QString("impossible de lire le fichier FLAC %1").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(QString("impossible de lire le fichier FLAC \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 return false;
             }
 
@@ -470,7 +488,7 @@ bool CSong::loadTags(bool readProperties)
                 }
                 else
                 {
-                    m_application->logError(QString("impossible de récupérer les propriétés du fichier %1").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                    m_application->logError(QString("impossible de récupérer les propriétés du fichier \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 }
             }
 
@@ -519,12 +537,18 @@ bool CSong::writeTags(void)
 
         case CSong::FormatMP3:
         {
+
+#ifdef Q_OS_WIN32
+            std::wstring fileNameWString = m_properties.fileName.toStdWString();
+            TagLib::MPEG::File file(fileNameWString.c_str(), false);
+#else
             TagLib::MPEG::File file(qPrintable(m_properties.fileName), false);
+#endif
 
             if (!file.isValid())
             {
                 m_fileStatus = false;
-                m_application->logError(QString("impossible de lire le fichier MP3 %1").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(QString("impossible de lire le fichier MP3 \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 m_needWriteTags = true;
                 return false;
             }
@@ -552,12 +576,18 @@ bool CSong::writeTags(void)
 
         case CSong::FormatOGG:
         {
+
+#ifdef Q_OS_WIN32
+            std::wstring fileNameWString = m_properties.fileName.toStdWString();
+            TagLib::Ogg::Vorbis::File file(fileNameWString.c_str(), false);
+#else
             TagLib::Ogg::Vorbis::File file(qPrintable(m_properties.fileName), false);
+#endif
 
             if (!file.isValid())
             {
                 m_fileStatus = false;
-                m_application->logError(QString("impossible de lire le fichier Ogg %1").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(QString("impossible de lire le fichier Ogg \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 m_needWriteTags = true;
                 return false;
             }
@@ -581,12 +611,18 @@ bool CSong::writeTags(void)
 
         case CSong::FormatFLAC:
         {
+
+#ifdef Q_OS_WIN32
+            std::wstring fileNameWString = m_properties.fileName.toStdWString();
+            TagLib::FLAC::File file(fileNameWString.c_str(), false);
+#else
             TagLib::FLAC::File file(qPrintable(m_properties.fileName), false);
+#endif
 
             if (!file.isValid())
             {
                 m_fileStatus = false;
-                m_application->logError(QString("impossible de lire le fichier FLAC %1").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(QString("impossible de lire le fichier FLAC \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 m_needWriteTags = true;
                 return false;
             }
@@ -625,6 +661,7 @@ bool CSong::writeTags(void)
  * Déplace un fichier à partir de ses informations.
  *
  * \todo Implémentation.
+ * \todo Trouver dans quel répertoire de la médiathèque le fichier se trouve.
  *
  * \return Booléen indiquant si le déplacement a eu lieu.
  */
@@ -634,50 +671,52 @@ bool CSong::moveFile(void)
     QString title;
     QString artistName;
     QString albumTitle;
+    QString year;
     QString trackNumber;
     QString discNumber;
-    QString year;
 
     if (m_infos.title.isEmpty())
-        title = m_application->getSettings()->value("Preferences/PathFormatTitleDefault", tr("Unknown title")).toString();
+        title = m_application->getSettings()->value("Folders/TitleEmpty", tr("Unknown title")).toString();
     else
-        title = m_application->getSettings()->value("Preferences/PathFormatTitle", "%1").toString().arg(m_infos.title);
+        title = m_application->getSettings()->value("Folders/TitleDefault", "%1").toString().arg(m_infos.title);
 
     if (m_infos.artistName.isEmpty())
-        artistName = m_application->getSettings()->value("Preferences/PathFormatArtistDefault", tr("Unknown artist")).toString();
+        artistName = m_application->getSettings()->value("Folders/ArtistEmpty", tr("Unknown artist")).toString();
     else
-        artistName = m_application->getSettings()->value("Preferences/PathFormatArtist", "%1").toString().arg(m_infos.artistName);
+        artistName = m_application->getSettings()->value("Folders/ArtistDefault", "%1").toString().arg(m_infos.artistName);
 
     if (m_infos.albumTitle.isEmpty())
-        albumTitle = m_application->getSettings()->value("Preferences/PathFormatAlbumDefault", tr("Unknown album")).toString();
+        albumTitle = m_application->getSettings()->value("Folders/AlbumEmpty", tr("Unknown album")).toString();
     else
-        albumTitle = m_application->getSettings()->value("Preferences/PathFormatAlbum", "%1").toString().arg(m_infos.albumTitle);
-
-    if (m_infos.trackNumber == 0)
-        trackNumber = m_application->getSettings()->value("Preferences/PathFormatTrackDefault", tr("")).toString();
-    else
-        trackNumber = m_application->getSettings()->value("Preferences/PathFormatTrack", "%1 ").toString().arg(m_infos.trackNumber);
-
-    if (m_infos.discNumber == 0)
-        discNumber = m_application->getSettings()->value("Preferences/PathFormatDiscDefault", tr("")).toString();
-    else
-        discNumber = m_application->getSettings()->value("Preferences/PathFormatDisc", "%1-").toString().arg(m_infos.discNumber);
+        albumTitle = m_application->getSettings()->value("Folders/AlbumDefault", "%1").toString().arg(m_infos.albumTitle);
 
     if (m_infos.year == 0)
-        year = m_application->getSettings()->value("Preferences/PathFormatYearDefault", tr("")).toString();
+        year = m_application->getSettings()->value("Folders/YearEmpty", tr("")).toString();
     else
-        year = m_application->getSettings()->value("Preferences/PathFormatYear", " (%1)").toString().arg(m_infos.year);
+        year = m_application->getSettings()->value("Folders/YearDefault", " (%1)").toString().arg(m_infos.year);
 
-    QString pathName = m_application->getSettings()->value("Preferences/PathFormat", "%a/%b/%d%n%t").toString();
-    pathName.replace("%t", title);
-    pathName.replace("%a", artistName);
-    pathName.replace("%b", albumTitle);
-    pathName.replace("%n", trackNumber);
-    pathName.replace("%d", discNumber);
-    pathName.replace("%y", year);
+    if (m_infos.trackNumber == 0)
+        trackNumber = m_application->getSettings()->value("Folders/TrackEmpty", tr("")).toString();
+    else
+        trackNumber = m_application->getSettings()->value("Folders/TrackDefault", "%1 ").toString().arg(m_infos.trackNumber);
 
-    pathName = m_application->getSettings()->value("Preferences/Path", "%USERNAME%/Music/").toString() + pathName;
+    if (m_infos.discNumber == 0)
+        discNumber = m_application->getSettings()->value("Folders/DiscEmpty", tr("")).toString();
+    else
+        discNumber = m_application->getSettings()->value("Folders/DiscDefault", "%1-").toString().arg(m_infos.discNumber);
 
+    QString pathName = m_application->getSettings()->value("Folders/Format", "%2/%4%3/%6%5%1").toString();
+    pathName.replace("%1", title);
+    pathName.replace("%2", artistName);
+    pathName.replace("%3", albumTitle);
+    pathName.replace("%4", year);
+    pathName.replace("%5", trackNumber);
+    pathName.replace("%6", discNumber);
+
+    // NEIN! Il peut y avoir plusieurs répertoires dans la médiathèque.
+    pathName = m_application->getSettings()->value("Folders/Path", "%USERNAME%/Music/").toString() + pathName;
+
+    // Ajout de l'extension
     switch (m_properties.format)
     {
         default: break;
@@ -692,12 +731,18 @@ bool CSong::moveFile(void)
 }
 
 
+/**
+ * Récupère l'image illustrant le morceau.
+ *
+ * \todo Implémentation.
+ */
+
 QImage CSong::getCoverImage(void) const
 {
     QString fileName;
 
     QFileInfo fileInfo(m_properties.fileName);
-    QString pathName = fileInfo.path().replace('\\', '/') + QDir::separator();
+    QString pathName = fileInfo.path().replace('\\', '/') + '/';
 
     if (QFileInfo(pathName + "cover.jpg").exists())
         fileName = pathName + "cover.jpg";
@@ -821,8 +866,6 @@ int CSong::getId(CApplication * application, const QString& fileName)
 /**
  * Crée un morceau à partir d'un fichier.
  * Si le fichier est déjà présent en base de données, la méthode retourne NULL.
- *
- * \todo Implémentation.
  *
  * \param fileName Fichier à lire.
  * \return Pointeur sur le son crée, ou NULL en cas d'erreur.
@@ -1669,7 +1712,8 @@ bool CSong::loadSound(void)
     FMOD_RESULT res;
 
     // Chargement du son
-    res = m_application->getSoundSystem()->createStream(qPrintable(m_properties.fileName), FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, NULL, &m_sound);
+    //res = m_application->getSoundSystem()->createStream(qPrintable(m_properties.fileName), FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, NULL, &m_sound);
+    res = m_application->getSoundSystem()->createStream(reinterpret_cast<const char *>(m_properties.fileName.utf16()), FMOD_UNICODE | FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, NULL, &m_sound);
 
     if (res == FMOD_OK && m_sound)
     {
@@ -1682,7 +1726,7 @@ bool CSong::loadSound(void)
             // Mise à jour de la durée du morceau
             if (m_properties.duration != static_cast<int>(length))
             {
-                m_application->logError("la durée du morceau doit être mise à jour", __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(QString::fromUtf8("la durée du morceau doit être mise à jour"), __FUNCTION__, __FILE__, __LINE__);
                 m_properties.duration = length;
 
                 QSqlQuery query(m_application->getDataBase());
@@ -1711,7 +1755,7 @@ bool CSong::loadSound(void)
         m_fileStatus = false;
     }
 
-    m_application->logError(QString("échec du chargement du morceau %1").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+    m_application->logError(QString::fromUtf8("échec du chargement du fichier \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
 
     m_sound = NULL;
     m_channel = NULL;
@@ -1973,7 +2017,7 @@ void CSong::updateDatabase(void)
                           "WHERE song_id = ?");
 
             int numValue = 0;
-            
+
             query.bindValue(numValue++, m_properties.fileSize);
             query.bindValue(numValue++, m_properties.bitRate);
             query.bindValue(numValue++, m_properties.sampleRate);

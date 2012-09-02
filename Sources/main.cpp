@@ -19,6 +19,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include <QApplication>
 #include <QTranslator>
+#include <QTextCodec>
 #include <ctime>
 #include "CApplication.hpp"
 
@@ -32,6 +33,9 @@ int main(int argc, char * argv[])
 
     QCoreApplication::setOrganizationName("Ted");
     QCoreApplication::setApplicationName("TMediaPlayer");
+
+    QTextCodec * codec = QTextCodec::codecForName("UTF-8");
+    QTextCodec::setCodecForLocale(codec);
 
     // Internationnalisation
     QString locale = QLocale::system().name();

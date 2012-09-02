@@ -5,11 +5,12 @@
 
 - Améliorer la gestion du glisser-déposer dans la vue des listes de lecture (affichage de l'indicateur).
 
-- Si on relocalise un morceau, vérifier que le fichier sélectionné n'est pas déjà utilisé, et le cas échéant proposer une fusion.
+- Si on relocalise un morceau et que le fichier sélectionné n'est pas déjà utilisé, pouvoir effectuer une fusion.
 - Corriger les noms de fichier automatiquement.
 
 - Problème graphique : si on modifie les informations d'un morceau, il faut mettre à jour la vue courante.
 - Problème graphique : lorsqu'on sélectionne une liste de lecture, il faut donner le focus à la vue.
+- Bug : si on modifie une liste dynamique en cours de lecture, ben y'a un blem...
 
 --------------------------------------------------
   Importance moyenne

@@ -56,6 +56,7 @@ private:
     Ui::DialogEditSong * m_uiWidget;
     CSongTable * m_songTable;
     CSongTableItem * m_songItem;
+    CApplication * m_application;
 };
 
 #endif // FILE_C_DIALOG_EDIT_SONG
