@@ -96,6 +96,8 @@ CSongTable::CSongTable(CApplication * application) :
     setHorizontalHeader(header);
     header->setMovable(true);
     connect(header, SIGNAL(columnShown(int, bool)), this, SLOT(showColumn(int, bool)));
+
+    connect(m_model, SIGNAL(columnAboutToBeSorted(int, Qt::SortOrder)), this, SLOT(onSortAboutToChange(void)));
     connect(m_model, SIGNAL(columnSorted(int, Qt::SortOrder)), this, SLOT(sortColumn(int, Qt::SortOrder)));
 
     verticalHeader()->hide();
@@ -203,9 +205,9 @@ QList<CSongTableItem *> CSongTable::getSelectedSongItems(void) const
     QList<CSongTableItem *> songItemList;
     QModelIndexList indexList = selectionModel()->selectedRows();
 
-    foreach (QModelIndex index, indexList)
+    for (QModelIndexList::const_iterator it = indexList.begin(); it != indexList.end(); ++it)
     {
-        CSongTableItem * songItem = m_model->getSongItem(index);
+        CSongTableItem * songItem = m_model->getSongItem(*it);
         if (songItem) songItemList.append(songItem);
     }
 
@@ -678,7 +680,21 @@ void CSongTable::showColumn(int column, bool show)
 
 
 /**
+ * Méthode appellée lorsque le tri des colonnes va changé.
+ * Mémorise les lignes sélectionnées.
+ */
+
+void CSongTable::onSortAboutToChange(void)
+{
+    m_selectedItems = getSelectedSongItems();
+    m_currentItem = m_model->getSongItem(selectionModel()->currentIndex());
+}
+
+
+/**
  * Tri la table selon une colonne.
+ *
+ * \todo Mettre-à-jour la sélection.
  *
  * \param column Numéro de la colonne.
  * \param order  Ordre croissant ou décroissant.
@@ -694,6 +710,16 @@ void CSongTable::sortColumn(int column, Qt::SortOrder order)
         m_sortOrder = order;
 
         m_isModified = true;
+
+        // Mise-à-jour de la sélection
+        selectionModel()->clearSelection();
+
+        for (QList<CSongTableItem *>::const_iterator songItem = m_selectedItems.begin(); songItem != m_selectedItems.end(); ++songItem)
+        {
+            selectionModel()->select(m_model->index(m_model->getRowForSongItem(*songItem), 0), /*QItemSelectionModel::Current |*/ QItemSelectionModel::Select | QItemSelectionModel::Rows);
+        }
+
+        selectionModel()->setCurrentIndex(m_model->index(m_model->getRowForSongItem(m_currentItem), 0), QItemSelectionModel::Rows);
     }
 }
 

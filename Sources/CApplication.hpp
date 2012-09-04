@@ -122,6 +122,7 @@ public:
     QList<IPlayList *> getAllPlayLists(void) const;
     CSong * addSong(const QString& fileName);
     void removeSongs(const QList<CSong *> songs);
+    inline CDialogEditSong * getDialogEditSong(void) const;
 
     inline bool isPlaying(void) const;
     inline bool isPaused(void) const;
@@ -243,6 +244,7 @@ protected slots:
     void updateTimer(void);
     void selectPlayListFromTreeView(const QModelIndex& index);
     void connectToLastFm(void);
+    void onDialogEditSongClosed(void);
 
 protected:
 
@@ -268,6 +270,7 @@ private:
     FMOD::System * m_soundSystem;       ///< Système de son de FMOD.
     CPlayListView * m_playListView;     ///< Vue pour afficher les listes de lecture.
     CListModel * m_listModel;           ///< Modèle contenant les listes de lecture.
+    CDialogEditSong * m_dialogEditSong; ///< Pointeur sur la boite de dialogue pour modifier les informations d'un morceau.
     QSqlDatabase m_dataBase;            ///< Base de données.
     QSettings * m_settings;             ///< Paramètres de l'application.
     QTimer * m_timer;                   ///< Timer pour mettre à jour l'affichage.
@@ -354,6 +357,12 @@ inline CLibrary * CApplication::getLibrary(void) const
 inline CSongTable * CApplication::getDisplayedSongTable(void) const
 {
     return m_displayedSongTable;
+}
+
+
+inline CDialogEditSong * CApplication::getDialogEditSong(void) const
+{
+    return m_dialogEditSong;
 }
 
 

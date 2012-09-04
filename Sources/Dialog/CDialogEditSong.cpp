@@ -21,6 +21,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CSongTable.hpp"
 #include "CApplication.hpp"
 #include <QStandardItemModel>
+#include <QCloseEvent>
 
 #include <mpegfile.h>
 #include <id3v2tag.h>
@@ -106,6 +107,23 @@ CDialogEditSong::CDialogEditSong(CSongTableItem * songItem, CSongTable * songTab
 CDialogEditSong::~CDialogEditSong()
 {
     delete m_uiWidget;
+}
+
+
+void CDialogEditSong::setSongItem(CSongTableItem * songItem, CSongTable * songTable)
+{
+    Q_CHECK_PTR(songItem);
+    Q_CHECK_PTR(songTable);
+
+    m_songItem = songItem;
+    m_songTable = songTable;
+}
+
+
+void CDialogEditSong::closeEvent(QCloseEvent * event)
+{
+    event->accept();
+    emit closed();
 }
 
 

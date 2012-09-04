@@ -80,6 +80,11 @@ protected slots:
     inline void showColAlbumGain       (bool show = true) { emit columnShown(CSongTable::ColAlbumGain       , show); }
     inline void showColAlbumPeak       (bool show = true) { emit columnShown(CSongTable::ColAlbumPeak       , show); }
     inline void showColBPM             (bool show = true) { emit columnShown(CSongTable::ColBPM             , show); }
+    inline void showColTitleSort       (bool show = true) { emit columnShown(CSongTable::ColTitleSort       , show); }
+    inline void showColArtistSort      (bool show = true) { emit columnShown(CSongTable::ColArtistSort      , show); }
+    inline void showColAlbumSort       (bool show = true) { emit columnShown(CSongTable::ColAlbumSort       , show); }
+    inline void showColAlbumArtistSort (bool show = true) { emit columnShown(CSongTable::ColAlbumArtistSort , show); }
+    inline void showColComposerSort    (bool show = true) { emit columnShown(CSongTable::ColComposerSort    , show); }
 
 private:
 

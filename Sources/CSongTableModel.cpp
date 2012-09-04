@@ -31,7 +31,7 @@ CSongTableItem::CSongTableItem(void) :
     m_position (-1),
     m_song     (NULL)
 {
-    
+
 }
 
 
@@ -363,6 +363,12 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
                 else
                     return peak;
             }
+
+            case CSongTable::ColTitleSort      : return m_data.at(index.row())->getSong()->getTitleSort();
+            case CSongTable::ColArtistSort     : return m_data.at(index.row())->getSong()->getArtistNameSort();
+            case CSongTable::ColAlbumSort      : return m_data.at(index.row())->getSong()->getAlbumTitleSort();
+            case CSongTable::ColAlbumArtistSort: return m_data.at(index.row())->getSong()->getAlbumArtistSort();
+            case CSongTable::ColComposerSort   : return m_data.at(index.row())->getSong()->getComposerSort();
         }
     }
     else if (role == Qt::TextAlignmentRole)
@@ -459,6 +465,7 @@ QVariant CSongTableModel::headerData(int section, Qt::Orientation orientation, i
 
 void CSongTableModel::sort(int column, Qt::SortOrder order)
 {
+    emit columnAboutToBeSorted(column, order);
     emit layoutAboutToBeChanged();
 
     m_columnSort = column;
@@ -500,6 +507,11 @@ void CSongTableModel::sort(int column, Qt::SortOrder order)
             case CSongTable::ColAlbumGain       : qSort(m_data.begin(), m_data.end(), cmpSongAlbumGainAsc       ); break;
             case CSongTable::ColAlbumPeak       : qSort(m_data.begin(), m_data.end(), cmpSongAlbumPeakAsc       ); break;
             case CSongTable::ColBPM             : qSort(m_data.begin(), m_data.end(), cmpSongBPMAsc             ); break;
+            case CSongTable::ColTitleSort       : qSort(m_data.begin(), m_data.end(), cmpSongTitleSortAsc       ); break;
+            case CSongTable::ColArtistSort      : qSort(m_data.begin(), m_data.end(), cmpSongArtistSortAsc      ); break;
+            case CSongTable::ColAlbumSort       : qSort(m_data.begin(), m_data.end(), cmpSongAlbumSortAsc       ); break;
+            case CSongTable::ColAlbumArtistSort : qSort(m_data.begin(), m_data.end(), cmpSongAlbumArtistSortAsc ); break;
+            case CSongTable::ColComposerSort    : qSort(m_data.begin(), m_data.end(), cmpSongComposerSortAsc    ); break;
         }
     }
     else
@@ -539,6 +551,11 @@ void CSongTableModel::sort(int column, Qt::SortOrder order)
             case CSongTable::ColAlbumGain       : qSort(m_data.begin(), m_data.end(), cmpSongAlbumGainDesc       ); break;
             case CSongTable::ColAlbumPeak       : qSort(m_data.begin(), m_data.end(), cmpSongAlbumPeakDesc       ); break;
             case CSongTable::ColBPM             : qSort(m_data.begin(), m_data.end(), cmpSongBPMDesc             ); break;
+            case CSongTable::ColTitleSort       : qSort(m_data.begin(), m_data.end(), cmpSongTitleSortDesc       ); break;
+            case CSongTable::ColArtistSort      : qSort(m_data.begin(), m_data.end(), cmpSongArtistSortDesc      ); break;
+            case CSongTable::ColAlbumSort       : qSort(m_data.begin(), m_data.end(), cmpSongAlbumSortDesc       ); break;
+            case CSongTable::ColAlbumArtistSort : qSort(m_data.begin(), m_data.end(), cmpSongAlbumArtistSortDesc ); break;
+            case CSongTable::ColComposerSort    : qSort(m_data.begin(), m_data.end(), cmpSongComposerSortDesc    ); break;
         }
     }
 
@@ -844,8 +861,7 @@ CSongTableItem * CSongTableModel::getSongItem(const QModelIndex& index) const
 
 CSongTableItem * CSongTableModel::getSongItem(int row) const
 {
-    Q_ASSERT(row >= 0);
-    return (row < m_data.size() ? m_data.at(row) : NULL);
+    return (row < m_data.size() && row >= 0 ? m_data.at(row) : NULL);
 }
 
 

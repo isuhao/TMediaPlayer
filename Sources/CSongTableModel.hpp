@@ -122,7 +122,8 @@ public:
 
 signals:
 
-    void columnSorted(int column, Qt::SortOrder order); ///< Signal émis lorsqu'une colonne est triée.
+    void columnSorted(int column, Qt::SortOrder order);          ///< Signal émis lorsqu'une colonne est triée.
+    void columnAboutToBeSorted(int column, Qt::SortOrder order); ///< Signal émis lorsqu'une colonne va être triée.
 
 private:
 
@@ -561,6 +562,83 @@ private:
     static inline bool cmpSongBPMDesc(CSongTableItem * song1, CSongTableItem * song2)
     {
         return cmpSongBPMAsc(song2, song1);
+    }
+
+    static inline bool cmpSongTitleSortAsc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        const QString title1 = song1->getSong()->getTitleSort();
+        const QString title2 = song2->getSong()->getTitleSort();
+
+        return (QString::compare(title1, title2, Qt::CaseInsensitive) < 0);
+    }
+
+    static inline bool cmpSongTitleSortDesc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return cmpSongTitleAsc(song2, song1);
+    }
+
+    static inline bool cmpSongArtistSortAsc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        const QString artist1 = song1->getSong()->getArtistNameSort();
+        const QString artist2 = song2->getSong()->getArtistNameSort();
+
+        int cmp = QString::compare(artist1, artist2, Qt::CaseInsensitive);
+
+        if (cmp < 0) return true;
+        if (cmp > 0) return false;
+
+        return cmpSongAlbumAsc(song1, song2);
+    }
+
+    static inline bool cmpSongArtistSortDesc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return cmpSongArtistAsc(song2, song1);
+    }
+
+    static inline bool cmpSongAlbumSortAsc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        const QString album1 = song1->getSong()->getAlbumTitleSort();
+        const QString album2 = song2->getSong()->getAlbumTitleSort();
+
+        int cmp = QString::compare(album1, album2, Qt::CaseInsensitive);
+
+        if (cmp < 0) return true;
+        if (cmp > 0) return false;
+
+        return cmpSongDiscAsc(song1, song2);
+    }
+
+    static inline bool cmpSongAlbumSortDesc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return cmpSongAlbumAsc(song2, song1);
+    }
+
+    static inline bool cmpSongAlbumArtistSortAsc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        const QString artist1 = song1->getSong()->getAlbumArtistSort();
+        const QString artist2 = song2->getSong()->getAlbumArtistSort();
+
+        int cmp = QString::compare(artist1, artist2, Qt::CaseInsensitive);
+
+        if (cmp < 0) return true;
+        if (cmp > 0) return false;
+
+        return cmpSongAlbumAsc(song1, song2);
+    }
+
+    static inline bool cmpSongAlbumArtistSortDesc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return cmpSongAlbumArtistAsc(song2, song1);
+    }
+
+    static inline bool cmpSongComposerSortAsc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return (song1->getSong()->getComposerSort() < song2->getSong()->getComposerSort());
+    }
+
+    static inline bool cmpSongComposerSortDesc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return cmpSongComposerAsc(song2, song1);
     }
 
 

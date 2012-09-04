@@ -847,7 +847,7 @@ void CDialogEditSongs::onLyricsChange(void)
 }
 
 
-void CDialogEditSongs::onLyricistChange(void)
+void CDialogEditSongs::onLyricistChange(const QString& lyricist)
 {
     m_uiWidget->editLyricist->setPlaceholderText(QString());
     m_uiWidget->chLyricist->setChecked(true);

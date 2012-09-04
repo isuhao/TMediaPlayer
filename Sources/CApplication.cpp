@@ -75,6 +75,8 @@ CApplication::CApplication(void) :
     m_uiControl            (new Ui::WidgetControl()),
     m_soundSystem          (NULL),
     m_playListView         (NULL),
+    m_listModel            (NULL),
+    m_dialogEditSong       (NULL),
     m_settings             (NULL),
     m_timer                (NULL),
     m_listInfos            (NULL),
@@ -1077,6 +1079,12 @@ void CApplication::connectToLastFm(void)
 }
 
 
+void CApplication::onDialogEditSongClosed(void)
+{
+    m_dialogEditSong = NULL;
+}
+
+
 /**
  * Sélectionne tous les morceaux de la liste affichée.
  */
@@ -1831,8 +1839,9 @@ void CApplication::openDialogSongInfos(void)
 
     if (songItem)
     {
-        CDialogEditSong * dialog = new CDialogEditSong(songItem, m_displayedSongTable, this);
-        dialog->show();
+        m_dialogEditSong = new CDialogEditSong(songItem, m_displayedSongTable, this);
+        connect(m_dialogEditSong, SIGNAL(closed()), this, SLOT(onDialogEditSongClosed()));
+        m_dialogEditSong->show();
     }
 }
 

@@ -23,6 +23,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CWidgetMultiCriterion.hpp"
 #include "CCriteria.hpp"
 #include "CFolder.hpp"
+#include "CDialogEditSong.hpp"
 #include "CLibrary.hpp"
 #include <QSqlQuery>
 #include <QSqlError>
@@ -90,7 +91,7 @@ CWidgetMultiCriterion * CDynamicList::getWidget(void) const
  * Met à jour la liste des morceaux.
  *
  * \todo Pouvoir limiter le nombre de morceaux.
- * \todo Corriger le bug avec le passage au morceau suivant.
+ * \todo Si la boite de dialogue "Informations sur un morceau" est affiché, il faut éventuellement la mettre-à-jour.
  */
 
 void CDynamicList::updateList(void)
@@ -99,6 +100,17 @@ void CDynamicList::updateList(void)
     CSongTableItem * currentItem = m_model->getCurrentSongItem();
     CSong * currentSong = (currentItem ? currentItem->getSong() : NULL);
 
+    CDialogEditSong * dialogEditSong = m_application->getDialogEditSong();
+    CSong * currentSongInDialogEditSong = NULL;
+
+    if (dialogEditSong)
+    {
+        if (dialogEditSong->getSongTable() == this)
+            currentSongInDialogEditSong = dialogEditSong->getSongItem()->getSong();
+        else
+            dialogEditSong = NULL;
+    }
+
     QList<CSong *> songs = m_mainCriteria->getSongs(m_application->getLibrary()->getSongs(), QList<CSong *>(), m_onlyChecked);
 
     //TODO: nombre d'éléments
@@ -106,6 +118,7 @@ void CDynamicList::updateList(void)
     //2) Conserver les N premiers éléments
     //3) le sortByColumn ci-dessous n'est pas nécessaire si le critère de tri et l'ordre sont les mêmes
     //4) Si seul l'ordre diffère, il suffit de renverser la liste (swap des N/2 premiers éléments avec les N/2 derniers)
+
 
     // Liste des morceaux sélectionnés
     QModelIndexList indexList = selectionModel()->selectedRows();
@@ -119,17 +132,28 @@ void CDynamicList::updateList(void)
             selectedSongs.append(song);
     }
 
+    CSongTableItem * selectedSongItem = getSongItemForRow(selectionModel()->currentIndex().row());
+    CSong * selectedSong = (selectedSongItem ? selectedSongItem->getSong() : NULL);
+
+
     m_model->setSongs(songs);
     sortByColumn(m_columnSort, m_sortOrder);
 
+
     // Sélection des morceaux précédemment sélectionnés
+    selectionModel()->clearSelection();
+
     for (QList<CSong *>::const_iterator song = selectedSongs.begin(); song != selectedSongs.end(); ++song)
     {
         CSongTableItem * songItem = getFirstSongItem(*song);
 
         if (songItem)
-            selectionModel()->select(m_model->index(m_model->getRowForSongItem(songItem), 0), QItemSelectionModel::Current | QItemSelectionModel::Select | QItemSelectionModel::Rows);
+            selectionModel()->select(m_model->index(m_model->getRowForSongItem(songItem), 0), QItemSelectionModel::Select | QItemSelectionModel::Rows);
     }
+
+    if (selectedSong)
+        selectionModel()->setCurrentIndex(m_model->index(m_model->getRowForSongItem(getFirstSongItem(selectedSong)), 0), QItemSelectionModel::Rows);
+
 
     // On change le morceau courant affiché dans la liste
     if (currentItem)
@@ -137,6 +161,11 @@ void CDynamicList::updateList(void)
         CSongTableItem * currentItemAfter = getFirstSongItem(currentSong);
         m_model->setCurrentSong(currentItemAfter);
         m_application->m_currentSongItem = currentItemAfter;
+    }
+
+    if (dialogEditSong)
+    {
+        dialogEditSong->setSongItem(getFirstSongItem(currentSongInDialogEditSong), this);
     }
 
     emit listUpdated();

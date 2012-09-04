@@ -95,8 +95,13 @@ public:
         ColAlbumGain        = 30, ///< Gain de l'album.
         ColAlbumPeak        = 31, ///< Pic de l'album.
         ColBPM              = 32, ///< Battements par minute.
+        ColTitleSort        = 33, ///< Titre pour le tri.
+        ColArtistSort       = 34, ///< Artiste pour le tri.
+        ColAlbumSort        = 35, ///< Album pour le tri.
+        ColAlbumArtistSort  = 36, ///< Artiste de l'album pour le tri.
+        ColComposerSort     = 37, ///< Compositeur pour le tri.
 
-        ColNumber           = 33  ///< Nombre de types de colonnes.
+        ColNumber           = 38  ///< Nombre de types de colonnes.
     };
 
     static inline TColumnType getColumnTypeFromInteger(int column);
@@ -150,6 +155,7 @@ protected slots:
     virtual void columnResized(int logicalIndex, int oldSize, int newSize);
     virtual void openCustomMenuProject(const QPoint& point);
     void showColumn(int column, bool show = true);
+    void onSortAboutToChange(void);
     void sortColumn(int column, Qt::SortOrder order);
     void sort(void);
     void goToSongTable(void);
@@ -194,6 +200,8 @@ private:
 
     bool m_isModified;            ///< Indique si les informations de la liste ont été modifiées.
     bool m_isColumnMoving;        ///< Indique si les colonnes sont en cours de positionnement.
+    QList<CSongTableItem *> m_selectedItems; ///< Morceaux sélectionnés avant le tri.
+    CSongTableItem * m_currentItem;          ///< Morceau actif avant le tri.
 };
 
 Q_DECLARE_METATYPE(CSongTable *)
@@ -237,6 +245,11 @@ inline CSongTable::TColumnType CSongTable::getColumnTypeFromInteger(int column)
         case 30: return ColAlbumGain       ;
         case 31: return ColAlbumPeak       ;
         case 32: return ColBPM             ;
+        case 33: return ColTitleSort       ;
+        case 34: return ColArtistSort      ;
+        case 35: return ColAlbumSort       ;
+        case 36: return ColAlbumArtistSort ;
+        case 37: return ColComposerSort    ;
     }
 }
 
@@ -279,6 +292,11 @@ inline QString CSongTable::getColumnTypeName(CSongTable::TColumnType column)
         case ColAlbumGain       : return tr("Album gain"       );
         case ColAlbumPeak       : return tr("Album peak"       );
         case ColBPM             : return tr("BPM"              );
+        case ColTitleSort       : return tr("Sort Title"       );
+        case ColArtistSort      : return tr("Sort Artist"      );
+        case ColAlbumSort       : return tr("Sort Album"       );
+        case ColAlbumArtistSort : return tr("Sort Album artist");
+        case ColComposerSort    : return tr("Sort Composer"    );
     }
 }
 

@@ -650,7 +650,7 @@ bool CSong::writeTags(void)
     }
 
     updateFileInfos();
-    emit songModified();
+    //emit songModified();
 
     m_needWriteTags = false;
     return true;
@@ -2060,6 +2060,9 @@ void CSong::updateDatabase(void)
                 m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return;
             }
+
+            m_propertiesDB = m_properties;
+            m_infosDB = m_infos;
         }
 
         m_isModified = false;

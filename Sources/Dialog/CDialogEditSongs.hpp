@@ -69,7 +69,7 @@ protected slots:
     void onGenreChange(const QString& genre);
     void onRatingChange(int rating);
     void onLyricsChange(void);
-    void onLyricistChange(void);
+    void onLyricistChange(const QString& lyricist);
     void onLanguageChange(const QString& language);
 
     void onTitleChecked(bool checked);

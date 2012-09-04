@@ -27,6 +27,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 class CSongTable;
 class CApplication;
+class QCloseEvent;
 
 
 /**
@@ -41,6 +42,18 @@ public:
 
     CDialogEditSong(CSongTableItem * songItem, CSongTable * songTable, CApplication * application);
     virtual ~CDialogEditSong();
+
+    inline CSongTableItem * getSongItem(void) const;
+    inline CSongTable * getSongTable(void) const;
+    void setSongItem(CSongTableItem * songItem, CSongTable * songTable);
+
+signals:
+
+    void closed(void); ///< Signal émis lorsque la boite de dialogue est fermée.
+
+protected:
+
+    virtual void closeEvent(QCloseEvent * event);
 
 protected slots:
 
@@ -58,5 +71,17 @@ private:
     CSongTableItem * m_songItem;
     CApplication * m_application;
 };
+
+
+inline CSongTableItem * CDialogEditSong::getSongItem(void) const
+{
+    return m_songItem;
+}
+
+
+inline CSongTable * CDialogEditSong::getSongTable(void) const
+{
+    return m_songTable;
+}
 
 #endif // FILE_C_DIALOG_EDIT_SONG
