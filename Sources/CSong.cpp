@@ -768,6 +768,36 @@ QImage CSong::getCoverImage(void) const
 
 
 /**
+ * Indique si le morceau correspond à un filtre de recherche.
+ * La recherche est effectuée sur toutes les chaines de caractère.
+ *
+ * \param filter Filtre de recherche.
+ * \return Booléen.
+ */
+
+bool CSong::matchFilter(const QString& filter) const
+{
+    return (m_properties.fileName   .contains(filter, Qt::CaseInsensitive) ||
+            m_infos.title           .contains(filter, Qt::CaseInsensitive) ||
+            m_infos.artistName      .contains(filter, Qt::CaseInsensitive) ||
+            m_infos.albumTitle      .contains(filter, Qt::CaseInsensitive) ||
+            m_infos.albumArtist     .contains(filter, Qt::CaseInsensitive) ||
+            m_infos.genre           .contains(filter, Qt::CaseInsensitive) ||
+            m_infos.comments        .contains(filter, Qt::CaseInsensitive) ||
+            m_infos.lyrics          .contains(filter, Qt::CaseInsensitive) ||
+            m_infos.composer        .contains(filter, Qt::CaseInsensitive) ||
+            m_infos.titleSort       .contains(filter, Qt::CaseInsensitive) ||
+            m_infos.artistNameSort  .contains(filter, Qt::CaseInsensitive) ||
+            m_infos.albumTitleSort  .contains(filter, Qt::CaseInsensitive) ||
+            m_infos.albumArtistSort .contains(filter, Qt::CaseInsensitive) ||
+            m_infos.composerSort    .contains(filter, Qt::CaseInsensitive) ||
+            m_infos.lyricist        .contains(filter, Qt::CaseInsensitive) ||
+            m_infos.grouping        .contains(filter, Qt::CaseInsensitive) ||
+            m_infos.subTitle        .contains(filter, Qt::CaseInsensitive));
+}
+
+
+/**
  * Retourne la position de lecture du morceau.
  *
  * \return Position de lecture, ou -1 si le morceau n'est pas en cours de lecture.

@@ -232,6 +232,9 @@ bool CApplication::initWindow(void)
     connect(m_uiControl->sliderVolume, SIGNAL(sliderMoved(int)), this, SLOT(setVolume(int)));
     connect(m_uiControl->sliderPosition, SIGNAL(sliderReleased()), this, SLOT(updatePosition()));
 
+    // Filtre
+    connect(m_uiControl->editFilter, SIGNAL(textEdited(const QString&)), this, SLOT(onFilterChange(const QString&)));
+
 
     // Dock "Playlists"
     m_playListView = new CPlayListView(this);
@@ -1063,14 +1066,16 @@ void CApplication::logError(const QString& message, const QString& function, con
 
 /**
  * Affiche un message dans la barre d'état.
- * Le message est affiché pendant 3 secondes.
+ * Le message est affiché pendant 5 secondes.
+ *
+ * \todo Conserver le message dans une liste pour pouvoir l'afficher dans une vue.
  *
  * \param message Message à afficher.
  */
 
 void CApplication::notifyInformation(const QString& message)
 {
-    statusBar()->showMessage(message, 3000);
+    statusBar()->showMessage(message, 5000);
 }
 
 
@@ -1088,6 +1093,30 @@ void CApplication::connectToLastFm(void)
 void CApplication::onDialogEditSongClosed(void)
 {
     m_dialogEditSong = NULL;
+}
+
+
+/**
+ * Modifie le filtre de recherche à appliquer aux listes de lecture.
+ *
+ * \param filter Filtre de recherche.
+ */
+
+void CApplication::onFilterChange(const QString& filter)
+{
+    Q_CHECK_PTR(m_displayedSongTable);
+    m_displayedSongTable->applyFilter(filter);
+/*
+    // On applique le filtre à toutes les listes de lecture
+    QList<IPlayList *> playLists = getAllPlayLists();
+
+    for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
+    {
+        (*it)->applyFilter(filter);
+    }
+
+    m_library->applyFilter(filter);
+*/
 }
 
 
@@ -2544,7 +2573,7 @@ void CApplication::onPlayEnd(void)
 
         emit songPlayEnd(currentSong);
 
-        // On retri les listes de lecture
+        // On retrie les listes de lecture
         QList<IPlayList *> playLists = getAllPlayLists();
 
         for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
@@ -2754,6 +2783,7 @@ void CApplication::displaySongTable(CSongTable * songTable)
         m_playListView->selectionModel()->setCurrentIndex(m_playListView->getSongTableModelIndex(songTable), QItemSelectionModel::Select | QItemSelectionModel::Rows);
 
         m_displayedSongTable = songTable;
+        m_displayedSongTable->applyFilter(m_uiControl->editFilter->text());
         setCentralWidget(m_displayedSongTable);
         m_displayedSongTable->show();
 

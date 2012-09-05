@@ -245,6 +245,7 @@ protected slots:
     void selectPlayListFromTreeView(const QModelIndex& index);
     void connectToLastFm(void);
     void onDialogEditSongClosed(void);
+    void onFilterChange(const QString& filter);
 
 protected:
 

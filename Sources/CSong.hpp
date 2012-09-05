@@ -95,6 +95,7 @@ public:
     bool writeTags(void);
     bool moveFile(void);
     QImage getCoverImage(void) const;
+    bool matchFilter(const QString& filter) const;
     //void computeReplayGain(void);
 
     inline int getId(void) const;

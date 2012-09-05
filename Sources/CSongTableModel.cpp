@@ -188,14 +188,16 @@ int CSongTableModel::columnCount(const QModelIndex& parent) const
 
 QVariant CSongTableModel::data(const QModelIndex& index, int role) const
 {
-    if (index.row() >= m_data.size())
+    if (index.row() >= rowCount(index.parent()))
         return QVariant::Invalid;
 
+    // Police de caractère
     if (role == Qt::FontRole)
     {
         return QFont("Segoe UI", 8);
     }
 
+    // Image
     if (role == Qt::DecorationRole)
     {
         if (index.column() == CSongTable::ColPosition)
@@ -213,6 +215,7 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
             }
         }
     }
+    // Texte pour l'affichage
     else if (role == Qt::DisplayRole)
     {
         switch (index.column())
@@ -413,6 +416,7 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
                 return QVariant(Qt::AlignVCenter | Qt::AlignRight);
         }
     }
+    // Case à cocher
     else if (role == Qt::CheckStateRole)
     {
         if (index.column() == CSongTable::ColTitle)
@@ -420,6 +424,7 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
             return (m_data.at(index.row())->getSong()->isEnabled() ? Qt::Checked : Qt::Unchecked);
         }
     }
+    // Couleur du texte
     else if (role == Qt::ForegroundRole)
     {
         if (m_data.at(index.row())->getSong()->getFileStatus() == false)

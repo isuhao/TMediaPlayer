@@ -88,6 +88,5 @@
   - Affichage et modification des illustrations.
   - Afficher l'illustration principale dans l'onglet Résumé.
 
-- Moteur de recherche dans la liste de lecture.
 - Récupérer les pochettes depuis Internet.
 - Option "Lecture seule" (désactiver l'écriture des métadonnées et le déplacement des fichiers).

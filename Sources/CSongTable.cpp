@@ -269,6 +269,30 @@ qlonglong CSongTable::getTotalDuration(void) const
 
 
 /**
+ * Applique un filtre de recherche à la liste de lecture.
+ * Les morceaux qui ne correspondent pas au filtre sont masqués.
+ *
+ * \todo Changer le système :
+ *       - CSongTable::applyFilter appelle simplement la méthode CSongTableModel::applyFilter.
+ *       - CSongTableModel::applyFilter parcourt la liste des morceaux et rempli une liste avec ceux qui correspondant (m_dataFiltered).
+ *       - Les méthodes rowCount, data, etc. de CSongTableModel utilisent m_dataFiltered au lieu de m_data.
+ *
+ * \param filtre Filtre de recherche.
+ */
+
+void CSongTable::applyFilter(const QString& filter)
+{
+    const int numRow = m_model->rowCount();
+
+    for (int row = 0; row < numRow; ++row)
+    {
+        CSongTableItem * songItem = m_model->getSongItem(row);
+        setRowHidden(row, !songItem->getSong()->matchFilter(filter));
+    }
+}
+
+
+/**
  * Ajoute un morceau à la table.
  * Si le morceau est déjà présent, il est quand même ajouté.
  *
@@ -716,10 +740,11 @@ void CSongTable::sortColumn(int column, Qt::SortOrder order)
 
         for (QList<CSongTableItem *>::const_iterator songItem = m_selectedItems.begin(); songItem != m_selectedItems.end(); ++songItem)
         {
-            selectionModel()->select(m_model->index(m_model->getRowForSongItem(*songItem), 0), /*QItemSelectionModel::Current |*/ QItemSelectionModel::Select | QItemSelectionModel::Rows);
+            selectionModel()->select(m_model->index(m_model->getRowForSongItem(*songItem), 0), QItemSelectionModel::Select | QItemSelectionModel::Rows);
         }
 
-        selectionModel()->setCurrentIndex(m_model->index(m_model->getRowForSongItem(m_currentItem), 0), QItemSelectionModel::Rows);
+        if (m_currentItem)
+            selectionModel()->setCurrentIndex(m_model->index(m_model->getRowForSongItem(m_currentItem), 0), QItemSelectionModel::Rows);
     }
 }
 

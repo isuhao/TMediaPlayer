@@ -132,6 +132,7 @@ public:
     CSongTableItem * getNextSong(CSongTableItem * songItem, bool shuffle) const;
     CSongTableItem * getLastSong(bool shuffle) const;
     qlonglong getTotalDuration(void) const;
+    void applyFilter(const QString& filter);
     inline bool hasSong(CSong * song) const;
     inline int getColumnSorted(void) const;
     virtual bool isModified(void) const;
