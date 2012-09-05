@@ -43,7 +43,7 @@ CSongTableHeader::CSongTableHeader(QWidget * parent) :
 
     m_contextMenu = new QMenu(this);
     m_actionShowCol[0] = NULL;
-    
+
     m_menuInfos = new QMenu(tr("Informations"), this);
     m_menuProperties = new QMenu(tr("Properties"), this);
     m_menuReplayGain = new QMenu(tr("Replay Gain"), this);

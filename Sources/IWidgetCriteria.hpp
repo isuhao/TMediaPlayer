@@ -24,6 +24,10 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "ICriteria.hpp"
 
 
+/**
+ * Widget représentant un critère multiple.
+ */
+
 class IWidgetCriteria : public QWidget
 {
     Q_OBJECT
@@ -37,9 +41,9 @@ public:
     
 protected:
 
-    ICriteria::TType m_type;
-    ICriteria::TCondition m_condition;
-    CApplication * m_application;
+    ICriteria::TType m_type;           ///< Type de critère.
+    ICriteria::TCondition m_condition; ///< Condition de recherche.
+    CApplication * m_application;      ///< Pointeur sur l'application.
 };
 
 #endif // FILE_I_WIDGET_CRITERIA

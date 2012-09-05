@@ -438,6 +438,12 @@ void CApplication::enableScrobbling(bool enable)
 }
 
 
+/**
+ * Modifie le délai avant d'envoyer une notification à Last.fm.
+ *
+ * \param delay Délai en millisecondes.
+ */
+
 void CApplication::setDelayBeforeNotification(int delay)
 {
     delay = qBound(2000, delay, 20000);
@@ -1228,6 +1234,10 @@ void CApplication::pause(void)
 }
 
 
+/**
+ * Lance ou interrompt la lecture.
+ */
+
 void CApplication::togglePlay(void)
 {
     if (m_state != Playing)
@@ -1349,6 +1359,10 @@ void CApplication::previousSong(void)
     }
 }
 
+
+/**
+ * Passe au morceau suivant.
+ */
 
 void CApplication::nextSong(void)
 {
@@ -1489,6 +1503,12 @@ void CApplication::setShuffle(bool shuffle)
 }
 
 
+/**
+ * Active ou désactive le son.
+ *
+ * \param mute True pour couper le son, false pour le remettre.
+ */
+
 void CApplication::setMute(bool mute)
 {
     if (mute != m_isMute)
@@ -1505,11 +1525,21 @@ void CApplication::setMute(bool mute)
 }
 
 
+/**
+ * Active ou désactive le son.
+ */
+
 void CApplication::toggleMute(void)
 {
     setMute(!m_isMute);
 }
 
+
+/**
+ * Modifie le volume.
+ *
+ * \param volume Volume du son (entre 0 et 100).
+ */
 
 void CApplication::setVolume(int volume)
 {
@@ -2513,6 +2543,20 @@ void CApplication::onPlayEnd(void)
         nextSong();
 
         emit songPlayEnd(currentSong);
+
+        // On retri les listes de lecture
+        QList<IPlayList *> playLists = getAllPlayLists();
+
+        for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
+        {
+            int col = (*it)->getColumnSorted();
+            if (col == CSongTable::ColPlayCount || col == CSongTable::ColLastPlayTime)
+                (*it)->sort();
+        }
+        
+        int col = m_library->getColumnSorted();
+        if (col == CSongTable::ColPlayCount || col == CSongTable::ColLastPlayTime)
+            m_library->sort();
 
         //m_library->update(); // Why ???
     }

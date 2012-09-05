@@ -133,6 +133,7 @@ public:
     CSongTableItem * getLastSong(bool shuffle) const;
     qlonglong getTotalDuration(void) const;
     inline bool hasSong(CSong * song) const;
+    inline int getColumnSorted(void) const;
     virtual bool isModified(void) const;
 
     inline int getIdPlayList(void) const;
@@ -323,6 +324,12 @@ inline int CSongTable::getNumSongs(void) const
 inline bool CSongTable::hasSong(CSong * song) const
 {
     return m_model->hasSong(song);
+}
+
+
+inline int CSongTable::getColumnSorted(void) const
+{
+    return m_columnSort;
 }
 
 

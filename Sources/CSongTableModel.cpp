@@ -133,6 +133,13 @@ QList<CSong *> CSongTableModel::getSongs(void) const
 }
 
 
+/**
+ * Indique si un morceau est présent dans le modèle.
+ *
+ * \param song Pointeur sur le morceau à rechercher.
+ * \return Booléen.
+ */
+
 bool CSongTableModel::hasSong(CSong * song) const
 {
     foreach (CSongTableItem * songItem, m_data)
@@ -145,11 +152,25 @@ bool CSongTableModel::hasSong(CSong * song) const
 }
 
 
+/**
+ * Donne le nombre de lignes du modèle.
+ *
+ * \param parent Index parent (inutile).
+ * \return Nombre de lignes.
+ */
+
 int CSongTableModel::rowCount(const QModelIndex& parent) const
 {
     return m_data.size();
 }
 
+
+/**
+ * Donne le nombre de colonnes du modèle.
+ *
+ * \param parent Index parent (inutile).
+ * \return Nombre de colonnes.
+ */
 
 int CSongTableModel::columnCount(const QModelIndex& parent) const
 {
@@ -462,6 +483,10 @@ QVariant CSongTableModel::headerData(int section, Qt::Orientation orientation, i
     return QVariant::Invalid;
 }
 
+
+/**
+ * 
+ */
 
 void CSongTableModel::sort(int column, Qt::SortOrder order)
 {
