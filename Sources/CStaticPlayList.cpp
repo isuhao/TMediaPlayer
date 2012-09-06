@@ -666,8 +666,6 @@ void CStaticPlayList::romoveFromDatabase(void)
 
 void CStaticPlayList::openCustomMenuProject(const QPoint& point)
 {
-    qDebug() << "CStaticPlayList::openCustomMenuProject()";
-
     QModelIndex index = indexAt(point);
 
     if (index.isValid())
@@ -685,13 +683,23 @@ void CStaticPlayList::openCustomMenuProject(const QPoint& point)
         
         if (!severalSongs)
         {
-            menu->addAction(tr("Play")); // TODO...
+            menu->addAction(tr("Play"), this, SLOT(playSelectedSong()));
             menu->addSeparator();
         }
 
         menu->addAction(tr("Informations..."), m_application, SLOT(openDialogSongInfos()));
-        if (!severalSongs) menu->addAction(tr("Edit metadata"), m_application, SLOT(openDialogEditMetadata()));
-        if (!severalSongs) menu->addAction(tr("Show in explorer"), m_application, SLOT(openSongInExplorer()));
+
+        if (!severalSongs)
+        {
+            menu->addAction(tr("Edit metadata..."), m_application, SLOT(openDialogEditMetadata()));
+            menu->addAction(tr("Show in explorer"), m_application, SLOT(openSongInExplorer()));
+
+            if (m_selectedItem->getSong()->getFileStatus() == false)
+            {
+                menu->addAction(tr("Relocate"), m_application, SLOT(relocateSong()));
+            }
+        }
+
         menu->addSeparator();
         menu->addAction(tr("Remove from playlist"), this, SLOT(removeSelectedSongs()));
         menu->addAction(tr("Remove from library"), this, SLOT(removeSongsFromLibrary()));

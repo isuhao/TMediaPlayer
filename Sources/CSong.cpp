@@ -341,8 +341,6 @@ void CSong::loadFromDatabase(void)
         else
             m_plays.prepend(playTime);
     }
-
-    //TODO: trier les dates de lecture
 }
 
 

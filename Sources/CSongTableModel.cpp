@@ -1099,3 +1099,13 @@ void CSongTableModel::initShuffle(CSongTableItem * firstSong)
         }
     }
 }
+
+
+void CSongTableModel::replaceSong(CSong * oldSong, CSong * newSong)
+{
+    for (QList<CSongTableItem *>::const_iterator item = m_data.begin(); item != m_data.end(); ++item)
+    {
+        if ((*item)->m_song == oldSong)
+            (*item)->m_song = newSong;
+    }
+}

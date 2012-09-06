@@ -2041,8 +2041,12 @@ void CApplication::relocateSong(void)
             return;
         }
 
+        const int newSongId = CSong::getId(this, fileName);
+        CSong * newSong = getSongFromId(newSongId);
+        const int oldSongId = song->getId();
+
         // Le fichier est déjà dans la médiathèque
-        if (CSong::getId(this, fileName) >= 0)
+        if (newSongId >= 0)
         {
             QMessageBox::StandardButton res = QMessageBox::question(this, QString(), tr("This file is already in the library. Do you want to merge the two songs?"), QMessageBox::Yes | QMessageBox::No);
 
@@ -2051,16 +2055,95 @@ void CApplication::relocateSong(void)
                 return;
             }
 
-            //...
+            // On vérifie que le morceau n'est pas en cours de lecture
+            //TODO...
+            //A priori ça ne risque pas, mais on ne sait jamais
 
-            //TODO: FUSION
-            //Afficher une boite de dialogue avec la question "Le fichier sélectionné est déjà dans la médiathèque. Voulez-vous fusionner les deux morceaux ?"
-            //Si oui : changer l'identifiant des lectures du morceau 2.
-            //Remplacer les références au morceau 2 par le morceau 1 (listes statiques).
-            //Supprimer le morceau 2.
-            //Mettre-à-jour les listes dynamiques.
-            //Attention : si le morceau est en cours de lecture.
-            logError(QString("le fichier %1 est déjà dans la médiathèque").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
+            QSqlQuery query(m_dataBase);
+
+            // Remplacement du morceau dans les listes statiques
+            query.prepare("UPDATE static_list_song SET song_id = ? WHERE song_id = ?");
+            query.bindValue(0, newSongId);
+            query.bindValue(1, oldSongId);
+
+            if (!query.exec())
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
+
+            QList<IPlayList *> playLists = getAllPlayLists();
+
+            for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
+            {
+                if (qobject_cast<CStaticPlayList *>(*it))
+                {
+                    (*it)->replaceSong(song, newSong);
+                }
+            }
+
+            // Fusion des lectures
+            query.prepare("UPDATE play SET song_id = ? WHERE song_id = ?");
+            query.bindValue(0, newSongId);
+            query.bindValue(1, oldSongId);
+
+            if (!query.exec())
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
+
+            // Rechargement des lectures (pour ne pas avoir à trier manuellement les dates)
+            query.prepare("SELECT play_time, play_time_utc FROM play WHERE song_id = ? ORDER BY play_time_utc ASC");
+            query.bindValue(0, newSongId);
+
+            if (!query.exec())
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
+            else
+            {
+                newSong->m_plays.clear();
+
+                while (query.next())
+                {
+                    CSong::TSongPlay playTime;
+                    playTime.time = query.value(0).toDateTime();
+                    playTime.timeUTC = query.value(1).toDateTime();
+                    playTime.timeUTC.setTimeSpec(Qt::UTC);
+
+                    if (playTime.time.isNull())
+                        newSong->m_plays.append(playTime);
+                    else
+                        newSong->m_plays.prepend(playTime);
+                }
+            }
+
+            // Mise-à-jour des informations du morceau
+            int numPlays = newSong->m_plays.size();
+
+            if (numPlays > 0)
+            {
+                CSong::TSongPlay lastPlay = newSong->m_plays.first();
+
+                query.prepare("UPDATE song SET "
+                                  "song_play_count    = ?,"
+                                  "song_play_time     = ?,"
+                                  "song_play_time_utc = ? "
+                              "WHERE song_id = ?");
+
+                query.bindValue(0, numPlays);
+                query.bindValue(1, lastPlay.time);
+                query.bindValue(2, lastPlay.timeUTC);
+                query.bindValue(3, newSongId);
+
+                if (!query.exec())
+                {
+                    showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                }
+            }
+
+            // Suppression de l'ancien morceau
+            removeSongs(QList<CSong *>() << song);
+
             return;
         }
 
@@ -2332,6 +2415,12 @@ void CApplication::onSongModified(void)
     }
 }
 
+
+/**
+ * Cherche les paroles de la chanson courante sur Internet.
+ *
+ * \todo Problème si le morceau change avant que la réponse ne parvienne.
+ */
 
 void CApplication::findLyrics(void)
 {

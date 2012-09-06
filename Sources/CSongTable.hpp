@@ -136,6 +136,7 @@ public:
     inline bool hasSong(CSong * song) const;
     inline int getColumnSorted(void) const;
     virtual bool isModified(void) const;
+    void replaceSong(CSong * oldSong, CSong * newSong);
 
     inline int getIdPlayList(void) const;
 

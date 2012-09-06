@@ -119,6 +119,7 @@ public:
     void setCurrentSong(CSongTableItem * songItem);
     void initShuffle(CSongTableItem * firstSong = NULL);
     inline CSongTableItem * getCurrentSongItem(void) const;
+    void replaceSong(CSong * oldSong, CSong * newSong);
 
 signals:
 

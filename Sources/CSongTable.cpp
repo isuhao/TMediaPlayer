@@ -1219,6 +1219,12 @@ bool CSongTable::isModified(void) const
 }
 
 
+void CSongTable::replaceSong(CSong * oldSong, CSong * newSong)
+{
+    m_model->replaceSong(oldSong, newSong);
+}
+
+
 /**
  * Sélectionne un morceau dans la liste.
  *
@@ -1252,8 +1258,6 @@ void CSongTable::playSelectedSong(void)
 
 void CSongTable::openCustomMenuProject(const QPoint& point)
 {
-    //qDebug() << "CSongTable::openCustomMenuProject()";
-
     QModelIndex index = indexAt(point);
     m_selectedItem = NULL;
 
