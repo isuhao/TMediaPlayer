@@ -613,14 +613,11 @@ bool CListModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int
 
     if (data->hasFormat("application/x-ted-media-list"))
     {
-        //qDebug() << "CListModel::dropMimeData() : drop liste";
-
         int playListId, folderId;
         QByteArray encodedData = data->data("application/x-ted-media-list");
 
         if (!decodeDataList(encodedData, &playListId, &folderId))
         {
-            //qDebug() << "CListModel::dropMimeData() : erreur lors du décodage";
             return false;
         }
 
@@ -724,15 +721,11 @@ bool CListModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int
     {
         if (parent.isValid())
         {
-            //qDebug() << "CPlayListModel::dropMimeData() : ajout à une liste...";
-
             CSongTable * songTable = this->data(parent, Qt::UserRole + 1).value<CSongTable *>();
             CStaticPlayList * playList = qobject_cast<CStaticPlayList *>(songTable);
 
             if (songTable && playList)
             {
-                //qDebug() << "playlist " << playList->getName();
-
                 QByteArray encodedData = data->data("application/x-ted-media-songs");
                 QList<CSong *> songList = decodeDataSongs(encodedData);
 
@@ -740,13 +733,10 @@ bool CListModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int
                 return true;
             }
 
-            //qDebug() << "library ou dynamic list";
             return false;
         }
 
         // Création d'une liste statique
-        //qDebug() << "CPlayListModel::dropMimeData() : création d'une nouvelle liste...";
-
         QByteArray encodedData = data->data("application/x-ted-media-songs");
         QList<CSong *> songs = decodeDataSongs(encodedData);
 
@@ -831,8 +821,6 @@ QMimeData * CListModel::mimeData(const QModelIndexList& indexes) const
 {
     if (indexes.size() != 1)
         return NULL;
-
-    qDebug() << "CListModel::mimeData()";
 
     QByteArray data;
     QDataStream streamData(&data, QIODevice::WriteOnly);

@@ -170,7 +170,6 @@ CSong::CSong(const QString& fileName, CApplication * application) :
 
 CSong::~CSong()
 {
-    //qDebug() << "CSong::~CSong()";
     stop();
 
     if (m_sound)
@@ -515,7 +514,6 @@ bool CSong::loadTags(bool readProperties)
  * Pour le format FLAC, les tags xiphComment sont écrits.
  * Seuls les tags gérés par l'application sont mis à jour, les autres sont conservés.
  *
- * \todo Activer l'écriture.
  * \todo Vérifier que la taille est bien mise à jour.
  *
  * \return Booléen indiquant le succès de l'opération.
@@ -523,14 +521,10 @@ bool CSong::loadTags(bool readProperties)
 
 bool CSong::writeTags(void)
 {
-    //qDebug() << "CSong::writeTags()";
-
-    //return false; // Lecture seule...
-
     switch (m_properties.format)
     {
         default:
-            m_application->logError(QString("format non géré"), __FUNCTION__, __FILE__, __LINE__);
+            m_application->logError(tr("unknown format"), __FUNCTION__, __FILE__, __LINE__);
             return false;
 
         case CSong::FormatMP3:
@@ -546,7 +540,7 @@ bool CSong::writeTags(void)
             if (!file.isValid())
             {
                 m_fileStatus = false;
-                m_application->logError(QString("impossible de lire le fichier MP3 \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("file \"%1\" can't be opened").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 m_needWriteTags = true;
                 return false;
             }
@@ -555,7 +549,7 @@ bool CSong::writeTags(void)
 
             if (file.readOnly())
             {
-                m_application->logError(QString("le fichier est ouvert en lecture seule"), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("file \"%1\" is open in read-only"), __FUNCTION__, __FILE__, __LINE__);
                 m_needWriteTags = true;
                 return false;
             }
@@ -585,7 +579,7 @@ bool CSong::writeTags(void)
             if (!file.isValid())
             {
                 m_fileStatus = false;
-                m_application->logError(QString("impossible de lire le fichier Ogg \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("impossible de lire le fichier Ogg \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 m_needWriteTags = true;
                 return false;
             }
@@ -594,7 +588,7 @@ bool CSong::writeTags(void)
 
             if (file.readOnly())
             {
-                m_application->logError(QString("le fichier est ouvert en lecture seule"), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("file \"%1\" is open in read-only"), __FUNCTION__, __FILE__, __LINE__);
                 m_needWriteTags = true;
                 return false;
             }
@@ -620,7 +614,7 @@ bool CSong::writeTags(void)
             if (!file.isValid())
             {
                 m_fileStatus = false;
-                m_application->logError(QString("impossible de lire le fichier FLAC \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("impossible de lire le fichier FLAC \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 m_needWriteTags = true;
                 return false;
             }
@@ -629,7 +623,7 @@ bool CSong::writeTags(void)
 
             if (file.readOnly())
             {
-                m_application->logError(QString("le fichier est ouvert en lecture seule"), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("file \"%1\" is open in read-only"), __FUNCTION__, __FILE__, __LINE__);
                 m_needWriteTags = true;
                 return false;
             }
@@ -903,7 +897,7 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
 {
     if (getId(application, fileName) >= 0)
     {
-        application->logError(QString("le fichier %1 est déjà dans la médiathèque").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
+        application->logError(tr("le fichier %1 est déjà dans la médiathèque").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
         return NULL;
     }
 
@@ -915,7 +909,7 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
 
     if (res != FMOD_OK || !sound)
     {
-        application->logError(QString("erreur lors du chargement du fichier %1 avec FMOD").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
+        application->logError(tr("erreur lors du chargement du fichier %1 avec FMOD").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
         return NULL;
     }
 
@@ -932,7 +926,7 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
     res = sound->getLength(reinterpret_cast<unsigned int *>(&(song->m_properties.duration)), FMOD_TIMEUNIT_MS);
     if (res != FMOD_OK)
     {
-        application->logError(QString("impossible de calculer la durée du morceau %1").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
+        application->logError(tr("impossible de calculer la durée du morceau %1").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
         song->m_properties.duration = 0;
     }
 
@@ -941,14 +935,14 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
 
     if (res != FMOD_OK)
     {
-        application->logError(QString("impossible de déterminer le format du morceau %1").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
+        application->logError(tr("impossible de déterminer le format du morceau %1").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
     }
     else
     {
         switch (type)
         {
             default:
-                application->logError("format inconnu", __FUNCTION__, __FILE__, __LINE__);
+                application->logError(tr("unknown format"), __FUNCTION__, __FILE__, __LINE__);
                 delete song;
                 return NULL;
 
@@ -1754,7 +1748,7 @@ bool CSong::loadSound(void)
             // Mise à jour de la durée du morceau
             if (m_properties.duration != static_cast<int>(length))
             {
-                m_application->logError(QString::fromUtf8("la durée du morceau doit être mise à jour"), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("duration of song \"%1\" has to be updated"), __FUNCTION__, __FILE__, __LINE__);
                 m_properties.duration = length;
 
                 QSqlQuery query(m_application->getDataBase());
@@ -1783,7 +1777,7 @@ bool CSong::loadSound(void)
         m_fileStatus = false;
     }
 
-    m_application->logError(QString::fromUtf8("échec du chargement du fichier \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+    m_application->logError(tr("file \"%1\" can't be opened with FMOD").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
 
     m_sound = NULL;
     m_channel = NULL;
@@ -2589,7 +2583,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags)
 
             if (m_infos.language != LangUnknown && lng != m_infos.language)
             {
-                stream << tr("Erreur : la langue des paroles et différente de la langue du morceau") << '\n';
+                stream << tr("Error: language of lyrics and language of song are differents") << '\n';
             }
 
             setLanguage(lng);
@@ -2624,7 +2618,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags)
 
             if (fl.size() != 2)
             {
-                stream << tr("Erreur : tag %1 avec plusieurs champs").arg("TXXX") << '\n';
+                stream << tr("Error: tag %1 with several fields").arg("TXXX") << '\n';
                 continue;
             }
 
@@ -2641,13 +2635,13 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags)
 
                     if (!ok)
                     {
-                        stream << tr("Erreur : tag TXXX [REPLAYGAIN_TRACK_GAIN] incorrect") << '\n';
+                        stream << tr("Error: invalid tag '%1'").arg("TXXX [REPLAYGAIN_TRACK_GAIN]") << '\n';
                         setTrackGain(std::numeric_limits<float>::infinity());
                     }
                 }
                 else
                 {
-                    stream << tr("Erreur : tag TXXX [REPLAYGAIN_TRACK_GAIN] incorrect") << '\n';
+                    stream << tr("Error: invalid tag '%1'").arg("TXXX [REPLAYGAIN_TRACK_GAIN]") << '\n';
                 }
             }
             else if (frameName.compare("REPLAYGAIN_TRACK_PEAK", Qt::CaseInsensitive) == 0)
@@ -2657,7 +2651,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags)
 
                 if (!ok)
                 {
-                    stream << tr("Erreur : tag TXXX [REPLAYGAIN_TRACK_PEAK] incorrect") << '\n';
+                    stream << tr("Error: invalid tag '%1'").arg("TXXX [REPLAYGAIN_TRACK_PEAK]") << '\n';
                     setTrackPeak(std::numeric_limits<float>::infinity());
                 }
             }
@@ -2671,13 +2665,13 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags)
 
                     if (!ok)
                     {
-                        stream << tr("Erreur : tag TXXX [REPLAYGAIN_ALBUM_GAIN] incorrect") << '\n';
+                        stream << tr("Error: invalid tag '%1'").arg("TXXX [REPLAYGAIN_ALBUM_GAIN]") << '\n';
                         setAlbumGain(std::numeric_limits<float>::infinity());
                     }
                 }
                 else
                 {
-                    stream << tr("Erreur : tag TXXX [REPLAYGAIN_ALBUM_GAIN] incorrect") << '\n';
+                    stream << tr("Error: invalid tag '%1'").arg("TXXX [REPLAYGAIN_ALBUM_GAIN]") << '\n';
                 }
             }
             else if (frameName.compare("REPLAYGAIN_ALBUM_PEAK", Qt::CaseInsensitive) == 0)
@@ -2687,7 +2681,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags)
 
                 if (!ok)
                 {
-                    stream << tr("Erreur : tag TXXX [REPLAYGAIN_ALBUM_PEAK] incorrect") << '\n';
+                    stream << tr("Error: invalid tag '%1'").arg("TXXX [REPLAYGAIN_ALBUM_PEAK]") << '\n';
                     setAlbumPeak(std::numeric_limits<float>::infinity());
                 }
             }
@@ -2867,7 +2861,7 @@ bool CSong::loadTags(TagLib::APE::Tag * tags)
     // Langue
     if (!tagMap["LANGUAGE"].isEmpty())
     {
-        stream << tr("Erreur : tag LANGUAGE non géré") << '\n';
+        stream << tr("Error: tag 'LANGUAGE' non géré") << '\n';
         qDebug() << "CSong::loadTags() : APE : langue = " << QString::fromUtf8(tagMap["LANGUAGE"].toString().toCString(true));
         //infos.language = QString::fromUtf8(tagMap["LANGUAGE"].toString().toCString(true));
     }
@@ -3030,7 +3024,7 @@ bool CSong::loadTags(TagLib::Ogg::XiphComment * tags)
     {
         if (!tagMap["TRACKTOTAL"].isEmpty())
         {
-            stream << tr("Erreur : les tags TRACKTOTAL et TOTALTRACKS sont présents tous les deux") << '\n';
+            stream << tr("Error: les tags TRACKTOTAL et TOTALTRACKS sont présents tous les deux") << '\n';
         }
 
         QString trackCount = QString::fromUtf8(tagMap["TOTALTRACKS"].toString().toCString(true));
@@ -3064,7 +3058,7 @@ bool CSong::loadTags(TagLib::Ogg::XiphComment * tags)
     {
         if (!tagMap["TEMPO"].isEmpty())
         {
-            stream << tr("Erreur : les tags TEMPO et BPM sont présents tous les deux") << '\n';
+            stream << tr("Error: les tags TEMPO et BPM sont présents tous les deux") << '\n';
         }
 
         QString bpmStr = QString::fromUtf8(tagMap["BPM"].toString().toCString(true));

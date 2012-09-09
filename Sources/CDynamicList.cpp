@@ -58,7 +58,7 @@ CDynamicList::CDynamicList(CApplication * application, const QString& name) :
 
 CDynamicList::~CDynamicList()
 {
-    //qDebug() << "CDynamicList::~CDynamicList()";
+
 }
 
 
@@ -156,7 +156,7 @@ void CDynamicList::updateList(void)
 
 
     // On change le morceau courant affiché dans la liste
-    if (currentItem)
+    if (currentSong)
     {
         CSongTableItem * currentItemAfter = getFirstSongItem(currentSong);
         m_model->setCurrentSong(currentItemAfter);
@@ -184,7 +184,7 @@ bool CDynamicList::updateDatabase(void)
 
     if (!getFolder())
     {
-        qWarning() << "CDynamicList::updateDatabase() : big problème ligne " << __LINE__;
+        m_application->logError(tr("the playlist is not in a folder"), __FUNCTION__, __FILE__, __LINE__);
     }
 
     // Insertion
@@ -366,7 +366,7 @@ void CDynamicList::removeFromDatabase(void)
 {
     if (m_id <= 0)
     {
-        qWarning() << "CDynamicList::romoveFromDatabase() : identifiant invalide";
+        m_application->logError(tr("invalid identifier (%1)").arg(m_id), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
@@ -464,7 +464,7 @@ void CDynamicList::loadFromDatabase(void)
 
     if (criteriaList.isEmpty())
     {
-        qWarning() << "CDynamicList::loadFromDatabase() : aucun critère défini";
+        m_application->logError(tr("dynamic list with no criteria"), __FUNCTION__, __FILE__, __LINE__);
         m_mainCriteria = new CCriteria(m_application, this);
         return;
     }
@@ -478,7 +478,7 @@ void CDynamicList::loadFromDatabase(void)
         {
             if (m_mainCriteria)
             {
-                qWarning() << "CDynamicList::loadFromDatabase() : plusieurs critères principaux";
+                m_application->logError(tr("dynamic list with several main criterion"), __FUNCTION__, __FILE__, __LINE__);
                 continue;
             }
 

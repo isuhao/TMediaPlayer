@@ -156,8 +156,6 @@ CApplication::CApplication(void) :
 
 CApplication::~CApplication()
 {
-    //qDebug() << "CApplication::~CApplication()";
-
     if (m_timer)
     {
         m_timer->stop();
@@ -364,12 +362,11 @@ bool CApplication::initWindow(void)
 void CApplication::showDatabaseError(const QString& msg, const QString& query, const QString& fileName, int line)
 {
 
-#ifdef _DEBUG
+#ifdef QT_DEBUG
     QMessageBox::warning(this, tr("Database error"), tr("File: %1 (%2)\n\nQuery: %3\n\nError: %4").arg(fileName).arg(line).arg(query).arg(msg));
 #endif
 
-    qWarning() << "Database error (in file" << fileName << ", line" << line << "):" << msg;
-    qWarning() << "  Query:" << query;
+    logError(msg + "\n" + tr("Query: ") + query, "", fileName.toUtf8().data(), line);
 }
 
 
@@ -609,8 +606,6 @@ IPlayList * CApplication::getPlayListFromId(int id) const
 /**
  * Retourne la liste des listes de lecture contenant un morceau.
  *
- * \todo Chercher dans les dossiers.
- *
  * \param song Morceau à rechercher.
  * \return Liste des listes de lecture.
  */
@@ -654,6 +649,7 @@ QList<IPlayList *> CApplication::getAllPlayLists(void) const
 void CApplication::removeSongs(const QList<CSong *> songs)
 {
     m_library->removeSongsFromTable(songs);
+
 /*
     for (QList<CSong *>::const_iterator it = songs.begin(); it != songs.end(); ++it)
     {
@@ -1017,6 +1013,13 @@ QStringList CApplication::getGenreList(void)
 }
 
 
+/**
+ * Retourne le pointeur sur un fichier de log.
+ *
+ * \param logName Nom du fichier de log.
+ * \return Pointeur sur le fichier ouvert en écriture.
+ */
+
 QFile * CApplication::getLogFile(const QString& logName)
 {
     QString fileName = logName + QDateTime::currentDateTime().toString("-yyyy-MM-dd");
@@ -1027,7 +1030,7 @@ QFile * CApplication::getLogFile(const QString& logName)
 
         if (!logFile->open(QIODevice::WriteOnly | QIODevice::Append))
         {
-            logError("erreur lors de l'ouverture du fichier de log", __FUNCTION__, __FILE__, __LINE__);
+            logError(tr("erreur lors de l'ouverture du fichier de log"), __FUNCTION__, __FILE__, __LINE__);
             return NULL;
         }
 
@@ -1049,17 +1052,22 @@ QFile * CApplication::getLogFile(const QString& logName)
 void CApplication::logError(const QString& message, const QString& function, const char * file, int line)
 {
     static QFile * logFile = NULL;
-
-    if (!logFile)
+    static bool fileOpened = false;
+    
+    // L'ouverture du fichier n'est tentée qu'une seule fois pour éviter des appels récursifs infinis entre getLogFile et logError.
+    if (!fileOpened || !logFile)
     {
         logFile = getLogFile("errors");
+        fileOpened = true;
     }
 
+    QString txt = tr("%2 (%3 line %4): %1").arg(message).arg(function).arg(file).arg(line);
+
     QTextStream stream(logFile);
-    stream << function << ": " << message << "\n";
+    stream << txt << "\n";
 
 #ifdef QT_DEBUG
-    qWarning() << tr("%2 (%3 line %4): %1").arg(message).arg(function).arg(file).arg(line);
+    qWarning() << txt;
 #endif
 }
 
@@ -1068,14 +1076,13 @@ void CApplication::logError(const QString& message, const QString& function, con
  * Affiche un message dans la barre d'état.
  * Le message est affiché pendant 5 secondes.
  *
- * \todo Conserver le message dans une liste pour pouvoir l'afficher dans une vue.
- *
  * \param message Message à afficher.
  */
 
 void CApplication::notifyInformation(const QString& message)
 {
     statusBar()->showMessage(message, 5000);
+    m_infosNotified << TNotification(message, QDateTime::currentDateTime());
 }
 
 
@@ -1089,6 +1096,10 @@ void CApplication::connectToLastFm(void)
     new CAuthentication(this);
 }
 
+
+/**
+ * Méthode appellée lorsqu'on ferme la boite de dialogue de modification d'un morceau.
+ */
 
 void CApplication::onDialogEditSongClosed(void)
 {
@@ -1104,7 +1115,12 @@ void CApplication::onDialogEditSongClosed(void)
 
 void CApplication::onFilterChange(const QString& filter)
 {
-    Q_CHECK_PTR(m_displayedSongTable);
+    if (!m_displayedSongTable)
+    {
+        logError(tr("invalid pointer"), __FUNCTION__, __FILE__, __LINE__);
+        return;
+    }
+
     m_displayedSongTable->applyFilter(filter);
 /*
     // On applique le filtre à toutes les listes de lecture
@@ -1126,7 +1142,12 @@ void CApplication::onFilterChange(const QString& filter)
 
 void CApplication::selectAll(void)
 {
-    Q_CHECK_PTR(m_displayedSongTable);
+    if (!m_displayedSongTable)
+    {
+        logError(tr("invalid pointer"), __FUNCTION__, __FILE__, __LINE__);
+        return;
+    }
+
     m_displayedSongTable->selectAll();
 }
 
@@ -1137,7 +1158,12 @@ void CApplication::selectAll(void)
 
 void CApplication::selectNone(void)
 {
-    Q_CHECK_PTR(m_displayedSongTable);
+    if (!m_displayedSongTable)
+    {
+        logError(tr("invalid pointer"), __FUNCTION__, __FILE__, __LINE__);
+        return;
+    }
+
     m_displayedSongTable->clearSelection();
 }
 
@@ -1463,7 +1489,11 @@ void CApplication::nextSong(void)
 
 void CApplication::playSong(CSongTableItem * songItem)
 {
-    Q_CHECK_PTR(songItem);
+    if (!songItem)
+    {
+        logError(tr("invalid pointer"), __FUNCTION__, __FILE__, __LINE__);
+        return;
+    }
 
     if (m_currentSongItem)
     {
@@ -1525,7 +1555,6 @@ void CApplication::setShuffle(bool shuffle)
     if (shuffle != m_isShuffle)
     {
         m_isShuffle = shuffle;
-        //m_uiControl->btnShuffle->setChecked(shuffle);
         m_uiControl->btnShuffle->setIcon(QPixmap(m_isShuffle ? ":/icons/shuffle_on" : ":/icons/shuffle_off"));
         m_uiWidget->actionShuffle->setChecked(shuffle);
     }
@@ -1588,9 +1617,19 @@ void CApplication::setVolume(int volume)
 }
 
 
+/**
+ * Modifie la position de lecture.
+ *
+ * \param position Position de lecture, en millisecondes.
+ */
+
 void CApplication::setPosition(int position)
 {
-    Q_ASSERT(position >= 0);
+    if (position < 0)
+    {
+        logError(tr("invalid argument (%1)").arg(position), __FUNCTION__, __FILE__, __LINE__);
+        return;
+    }
 
     if (m_currentSongItem)
     {
@@ -1621,134 +1660,6 @@ void CApplication::setPosition(int position)
         }
     }
 }
-
-/*
-/// \todo Supprimer
-void CApplication::openPlayList(IPlayList * playList)
-{
-    Q_CHECK_PTR(playList);
-
-    m_displayedSongTable = playList;
-    //TODO: maj vue
-}
-*/
-/*
-void CApplication::renamePlayList(IPlayList * playList)
-{
-    Q_CHECK_PTR(playList);
-
-    //TODO: open dialog rename Playlist
-    //TODO: maj DB
-}
-*/
-/*
-void CApplication::editDynamicPlayList(CDynamicList * playList)
-{
-    if (!playList)
-    {
-        return;
-    }
-
-    //TODO: open dialog edit SmartPlaylist
-    //TODO: maj DB
-}
-*/
-
-/**
- * Supprime une liste de lecture.
- * Une boite de dialogue de confirmation est ouverte.
- *
- * \param playList Pointeur sur la liste de lecture à supprimer.
- */
-/*
-void CApplication::deletePlayList(IPlayList * playList)
-{
-    Q_CHECK_PTR(playList);
-
-    // Confirmation
-    if (QMessageBox::question(this, QString(), tr("Are you sure you want to delete this playlist?"), QMessageBox::Yes | QMessageBox::No) == QMessageBox::No)
-    {
-        return;
-    }
-
-    if (m_currentSongTable == playList)
-    {
-        m_currentSongTable = NULL;
-    }
-
-    if (m_displayedSongTable == playList)
-    {
-        m_displayedSongTable = m_library;
-        //TODO: maj vue
-    }
-
-    if (playList->getFolder())
-    {
-        //TODO: maj vue gauche
-        playList->setFolder(NULL);
-        delete playList;
-        //TODO: maj DB
-        return;
-    }
-
-    for (QList<IPlayList *>::const_iterator it = m_playLists.begin(); it != m_playLists.end(); ++it)
-    {
-        if (*it == playList)
-        {
-            //TODO: maj vue gauche
-            m_playLists.removeOne(playList);
-            delete playList;
-            //TODO: maj DB
-            return;
-        }
-    }
-}
-*/
-/*
-void CApplication::addListFolder(void)
-{
-    //TODO: open dialog new folder
-    //TODO: maj DB
-    //TODO: maj vue gauche
-}
-*/
-/*
-void CApplication::renameListFolder(CFolder * folder)
-{
-    Q_CHECK_PTR(folder);
-
-    //TODO: open dialog rename folder
-    //TODO: maj DB
-    //TODO: maj vue gauche
-}
-*/
-
-/**
- * Supprime un dossier de liste de lectures.
- *
- * \param folder Pointeur sur le dossier à supprimer.
- */
-/*
-void CApplication::deleteListFolder(CFolder * folder)
-{
-    Q_CHECK_PTR(folder);
-
-    //TODO: confirmation
-    //TODO: maj vue
-
-    QList<IPlayList *> playLists = folder->getPlayLists();
-    for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
-    {
-        (*it)->setFolder(nullptr);
-        m_playLists.append(*it);
-    }
-
-    m_folders.removeOne(folder);
-    delete folder;
-
-    //TODO: maj DB
-}
-*/
 
 
 /**
@@ -2005,8 +1916,6 @@ void CApplication::openDialogEditFolder(CFolder * folder)
 
 /**
  * Affiche une boite de dialogue pour relocaliser un morceau.
- *
- * \todo Pouvoir fusionner deux morceaux.
  */
 
 void CApplication::relocateSong(void)
@@ -2018,7 +1927,7 @@ void CApplication::relocateSong(void)
 
     if (songItemList.size() > 1)
     {
-        logError("plusieurs morceaux sélectionnés", __FUNCTION__, __FILE__, __LINE__);
+        logError(tr("plusieurs morceaux sélectionnés"), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
@@ -2148,7 +2057,7 @@ void CApplication::relocateSong(void)
         }
 
         song->m_properties.fileName = fileName;
-        //song->m_isModified = true;
+        //song->m_isModified = true; // Pourquoi pas ?
 
         // Recherche de la durée du morceau
         FMOD_SOUND_TYPE type;
@@ -2160,14 +2069,14 @@ void CApplication::relocateSong(void)
 
         if (res != FMOD_OK || !sound)
         {
-            logError(QString("erreur lors du chargement du fichier %1 avec FMOD").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
+            logError(tr("erreur lors du chargement du fichier %1 avec FMOD").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
             return;
         }
 
         res = sound->getLength(reinterpret_cast<unsigned int *>(&(song->m_properties.duration)), FMOD_TIMEUNIT_MS);
         if (res != FMOD_OK)
         {
-            logError(QString("impossible de calculer la durée du morceau %1").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
+            logError(tr("impossible de calculer la durée du morceau %1").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
             song->m_properties.duration = 0;
         }
 
@@ -2176,7 +2085,7 @@ void CApplication::relocateSong(void)
 
         if (res != FMOD_OK)
         {
-            logError(QString("impossible de déterminer le format du morceau %1").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
+            logError(tr("impossible de déterminer le format du morceau %1").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
         }
         else
         {
@@ -2240,113 +2149,33 @@ void CApplication::importFromSongbird(void)
 
 /**
  * Ajoute une liste de lecture à la vue.
- * Si la liste a déjà été ajoutée, rien n'est fait.
  *
  * \param playList Pointeur sur la liste de lecture à ajouter.
  */
 
 void CApplication::addPlayList(IPlayList * playList)
 {
-    Q_CHECK_PTR(playList);
-
-    m_listModel->addPlayList(playList);
-
-/*
-    if (m_playLists.contains(playList))
-    {
-        initPlayList(playList);
-        //playList->m_index = m_playListView->addSongTable(playList);
-    }
+    if (playList)
+        m_listModel->addPlayList(playList);
     else
-    {
-        initPlayList(playList);
-        playList->m_index = m_playListView->addSongTable(playList, m_playListView->getFolderModelIndex(playList->getFolder()));
-    }
-*/
+        logError(tr("invalid pointer"), __FUNCTION__, __FILE__, __LINE__);
 }
 
-/*
-void CApplication::initPlayList(IPlayList * playList)
-{
-    Q_CHECK_PTR(playList);
 
-    if (m_playLists.contains(playList))
-    {
-        // Liste de lecture dynamique
-        CDynamicList * dynamicList = qobject_cast<CDynamicList *>(playList);
-
-        if (dynamicList)
-        {
-            dynamicList->updateList();
-        }
-
-        return;
-    }
-
-    m_playLists.append(playList);
-
-    // Ajout dans le panneau gauche
-    //m_uiWidget->splitter->addWidget(playList);
-    playList->hide();
-
-    connect(playList, SIGNAL(songStarted(CSongTableItem *)), this, SLOT(playSong(CSongTableItem *)));
-    connect(playList, SIGNAL(nameChanged(const QString&, const QString&)), m_playListView, SLOT(onPlayListRenamed(const QString&, const QString&)));
-    connect(playList, SIGNAL(rowCountChanged()), this, SLOT(updateListInformations()));
-
-    // Liste de lecture statique
-    CStaticPlayList * staticList = qobject_cast<CStaticPlayList *>(playList);
-
-    if (staticList)
-    {
-        connect(staticList, SIGNAL(songsAdded()), this, SLOT(updateListInformations()));
-        connect(staticList, SIGNAL(songRemoved(CSong *)), this, SLOT(updateListInformations()));
-    }
-
-    // Liste de lecture dynamique
-    CDynamicList * dynamicList = qobject_cast<CDynamicList *>(playList);
-
-    if (dynamicList)
-    {
-        connect(dynamicList, SIGNAL(listUpdated()), this, SLOT(updateListInformations()));
-        dynamicList->updateList();
-    }
-}
-*/
+/**
+ * Ajoute un dossier de listes de lecture à la vue.
+ *
+ * \param folder Pointeur sur le dossier à ajouter.
+ */
 
 void CApplication::addFolder(CFolder * folder)
 {
-    Q_CHECK_PTR(folder);
-
-    m_listModel->addFolder(folder);
-/*
-    if (m_folders.contains(folder))
-    {
-        initFolder(folder);
-    }
+    if (folder)
+        m_listModel->addFolder(folder);
     else
-    {
-        initFolder(folder);
-        folder->m_index = m_playListView->addFolder(folder, m_playListView->getFolderModelIndex(folder->getFolder()));
-    }
-*/
+        logError(tr("invalid pointer"), __FUNCTION__, __FILE__, __LINE__);
 }
 
-/*
-void CApplication::initFolder(CFolder * folder)
-{
-    Q_CHECK_PTR(folder);
-
-    if (m_folders.contains(folder))
-    {
-        return;
-    }
-
-    m_folders.append(folder);
-    connect(folder, SIGNAL(nameChanged(const QString&, const QString&)), m_playListView, SLOT(onFolderRenamed(const QString&, const QString&)));
-
-    //...
-}
-*/
 
 /**
  * Ajoute un morceau à la médiathèque.
@@ -2392,7 +2221,10 @@ void CApplication::selectCurrentSong(void)
 void CApplication::selectSong(CSongTable * songTable, CSongTableItem * songItem)
 {
     if (!songTable || !songItem)
+    {
+        logError(tr("invalid pointer"), __FUNCTION__, __FILE__, __LINE__);
         return;
+    }
 
     displaySongTable(songTable);
     songTable->selectSongItem(songItem);
@@ -2463,74 +2295,6 @@ QStringList CApplication::importFolder(const QString& pathName)
     return fileList;
 }
 
-/*
-void CApplication::editSong(CSongTableItem * songItem)
-{
-    qDebug() << "CApplication::editSong()";
-    if (!songItem)
-    {
-        return;
-    }
-
-    CDialogEditSong * dialog = new CDialogEditSong(songItem, m_displayedSongTable);
-    dialog->show();
-}
-*/
-/*
-/// \todo Implémentation
-void CApplication::removeSong(CSongTableItem * songItem)
-{
-    qDebug() << "CApplication::removeSong()";
-
-    if (!songItem)
-    {
-        return;
-    }
-
-    //TODO: confirmation
-
-    if (m_currentSongItem == songItem)
-    {
-        stop();
-        m_currentSongItem = NULL;
-    }
-
-    //TODO: maj vue
-
-    m_library->removeSong(songItem->getSong());
-
-    for (QList<CFolder *>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
-    {
-        const QList<IPlayList *> playLists = folder->getPlayLists();
-
-        for (QList<IPlayList *>::const_iterator it2 = playLists.begin(); it2 != playLists.end(); ++it2)
-        {
-            CStaticPlayList * staticPlayList = dynamic_cast<CStaticPlayList *>(*it2);
-
-            if (staticPlayList)
-            {
-                staticPlayList->removeSong(songItem->getSong());
-            }
-        }
-    }
-
-    for (QList<IPlayList *>::const_iterator it = m_playLists.begin(); it != m_playLists.end(); ++it)
-    {
-        CStaticPlayList * staticPlayList = dynamic_cast<CStaticPlayList *>(*it);
-
-        if (staticPlayList)
-        {
-            staticPlayList->removeSong(songItem->getSong());
-        }
-    }
-
-    //TODO: maj DB
-
-    emit songRemoved(songItem->getSong());
-
-    delete songItem->getSong();
-}
-*/
 
 /**
  * Affiche le morceau sélectionné dans l'explorateur de fichiers.
@@ -2636,10 +2400,7 @@ void CApplication::removeSelectedItem(void)
         CDialogRemoveFolder * dialog = new CDialogRemoveFolder(this, folder);
 
         if (dialog->exec() == QDialog::Rejected)
-        {
-            qDebug() << "Suppression du dossier annulée...";
             return;
-        }
 
         m_listModel->removeFolder(folder, dialog->isResursive());
         delete dialog;
@@ -3470,13 +3231,10 @@ void CApplication::loadDatabase(void)
 
 void CApplication::startPlay(void)
 {
-    //qDebug() << "CApplication::startPlay()";
-
     Q_CHECK_PTR(m_currentSongItem);
     Q_CHECK_PTR(m_currentSongTable);
 
     setState(Playing);
-    //m_uiControl->btnPlay->setIcon(QPixmap(":/icons/pause"));
 
     m_currentSongItem->getSong()->play();
     emit songPlayStart(m_currentSongItem->getSong());
@@ -3533,13 +3291,6 @@ void CApplication::setState(State state)
             m_uiWidget->actionPlay->setText(tr("Play"));
             break;
     }
-}
-
-
-void CApplication::keyPressEvent(QKeyEvent * event)
-{
-    //qDebug() << "CApplication::keyPressEvent() : " << event->key();
-    event->accept();
 }
 
 

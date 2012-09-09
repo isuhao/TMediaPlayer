@@ -71,7 +71,6 @@ CDialogRemoveFolder::~CDialogRemoveFolder()
 
 void CDialogRemoveFolder::removeFolder(void)
 {
-    qDebug() << "CDialogRemoveFolder::removeFolder() : Suppression du dossier...";
     m_recursive = m_uiWidget->recursive->isChecked();
     close();
 }

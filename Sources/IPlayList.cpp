@@ -172,7 +172,7 @@ void IPlayList::removeFromDatabase(void)
 {
     if (m_idPlayList <= 0)
     {
-        m_application->logError("identifiant invalide", __FUNCTION__, __FILE__, __LINE__);
+        m_application->logError(tr("invalid identifier (%1)").arg(m_idPlayList), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
     

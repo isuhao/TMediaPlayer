@@ -44,7 +44,7 @@ CMultiCriterion::CMultiCriterion(CApplication * application, QObject * parent) :
 
 CMultiCriterion::~CMultiCriterion()
 {
-    //qDebug() << "CMultiCriterion::~CMultiCriterion()";
+
 }
 
 
@@ -197,7 +197,6 @@ void CMultiCriterion::setPlayList(CDynamicList * playList)
 void CMultiCriterion::insertIntoDatabase(CApplication * application)
 {
     Q_CHECK_PTR(application);
-    //qDebug() << "CMultiCriterion::insertIntoDatabase()";
 
     // Insertion du critère
     ICriteria::insertIntoDatabase(application);
@@ -207,23 +206,6 @@ void CMultiCriterion::insertIntoDatabase(CApplication * application)
         (*it)->insertIntoDatabase(application);
     }
 }
-
-
-/*
-QList<int> CMultiCriterion::getValidTypes(void) const
-{
-    QList<int> validType = ICriteria::getValidTypes();
-    validType.append(TypeMultiCriterion);
-    return validType;
-}
-
-
-bool CMultiCriterion::isValidType(int type) const
-{
-    if (type == TypeMultiCriterion) return true;
-    return ICriteria::isValidType(type);
-}
-*/
 
 
 IWidgetCriteria * CMultiCriterion::getWidget(void) const

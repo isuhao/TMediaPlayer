@@ -63,6 +63,7 @@ class CApplication : public QMainWindow
     friend class CDialogEditDynamicList;
     friend class CDialogEditFolder;
     friend class CDynamicList;
+    friend class CStaticPlayList;
 
 public:
 
@@ -180,14 +181,6 @@ public slots:
     void setPosition(int position);
     void setEqualizerEnabled(bool enabled = true);
 
-    //void openPlayList(IPlayList * playList);
-    //void renamePlayList(IPlayList * playList);
-    //void editDynamicPlayList(CDynamicList * playList);
-    //void deletePlayList(IPlayList * playList);
-    //void addListFolder(void);
-    //void renameListFolder(CFolder * folder);
-    //void deleteListFolder(CFolder * folder);
-
     void openDialogPreferences(void);
     void openDialogEqualizer(void);
     void openDialogEditMetadata(void);
@@ -203,8 +196,6 @@ public slots:
     void relocateSong(void);
     void importFromITunes(void);
     void importFromSongbird(void);
-    //void editSong(CSongTableItem * songItem);
-    //void removeSong(CSongTableItem * songItem);
     void selectCurrentSong(void);
     void selectSong(CSongTable * songTable, CSongTableItem * songItem);
     void openSongInExplorer(void);
@@ -250,9 +241,7 @@ protected slots:
 protected:
 
     void addPlayList(IPlayList * playList);
-    //void initPlayList(IPlayList * playList);
     void addFolder(CFolder * folder);
-    //void initFolder(CFolder * folder);
     QStringList importFolder(const QString& pathName);
     void importSongs(const QStringList& fileList);
     void displaySongTable(CSongTable * songTable);
@@ -261,7 +250,6 @@ protected:
     void startPlay(void);
     void setState(State state);
 
-    virtual void keyPressEvent(QKeyEvent * event);
     virtual void closeEvent(QCloseEvent * event);
 
 private:
@@ -289,10 +277,19 @@ private:
     int m_volume;                       ///< Volume sonore (entre 0 et 100).
     double m_equalizerGains[10];        ///< Gains de l'égaliseur.
     FMOD::DSP * m_dsp[10];
-    //QList<CFolder *> m_folders;         ///< Liste de l'ensemble des dossiers de listes de lecture.
-    //QList<IPlayList *> m_playLists;     ///< Liste de l'ensemble des listes de lectures.
     QMap<QString, QFile *> m_logList;   ///< Liste des fichiers de log ouverts.
     QString m_applicationPath;
+
+    // Notifications
+    struct TNotification
+    {
+        QString message; ///< Texte de la notification.
+        QDateTime date;  ///< Date de l'envoi.
+
+        TNotification(const QString& m, const QDateTime& d) : message(m), date(d) { }
+    };
+
+    QList<TNotification> m_infosNotified; ///< Liste des notifications.
 
     // Last.fm
     enum TLastFmState

@@ -164,7 +164,7 @@ public:
         TSong(void) : id(0), playCount(0), rating(0), enabled(true), compilation(false) { }
     };
 
-    CITunesLibrary(QObject * parent = NULL);
+    CITunesLibrary(CApplication * application, QObject * parent = NULL);
     ~CITunesLibrary();
 
     bool loadFile(const QString& fileName);
@@ -199,6 +199,7 @@ private:
     };
 
     bool m_isLoaded;                    ///< Indique si la médiathèque a été chargée.
+    CApplication * m_application;
     QString m_fileName;                 ///< Fichier contenant la médiathèque.
     QDomDocument m_document;            ///< Document XML.
     QMap<int, TSong> m_songs;           ///< Liste des morceaux de la médiathèque.

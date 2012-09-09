@@ -754,8 +754,6 @@ bool CSongTableModel::dropMimeData(const QMimeData * data, Qt::DropAction action
 
 void CSongTableModel::moveRows(const QList<int>& rows, int rowDest)
 {
-    //qDebug() << "M" << rows << " -> " << rowDest;
-
     if (rows.isEmpty() || rowDest < 0 || rowDest > m_data.size())
     {
         return;
@@ -776,7 +774,6 @@ void CSongTableModel::moveRows(const QList<int>& rows, int rowDest)
         }
 
         dataCopy.move(*it, rowDest + numMoved);
-        //qDebug() << "A" << *it << "->" << (rowDest + numMoved);
         ++numMoved;
     }
 
@@ -785,7 +782,6 @@ void CSongTableModel::moveRows(const QList<int>& rows, int rowDest)
     for (; it2 >= rows.begin(); --it2)
     {
         dataCopy.move(*it2, rowDest - 1 - numMoved);
-        //qDebug() << "B" << *it2 << "->" << (rowDest - 1 - numMoved);
         ++numMoved;
     }
 
@@ -1080,8 +1076,6 @@ void CSongTableModel::setCurrentSong(CSongTableItem * songItem)
 
 void CSongTableModel::initShuffle(CSongTableItem * firstSong)
 {
-    //qDebug() << "CSongTableModel::initShuffle()";
-
     m_dataShuffle = m_data;
     const int numSongs = rowCount();
 

@@ -93,8 +93,8 @@ void CLyricWiki::replyFinished(QNetworkReply * reply)
         qDebug() << "Réponse XML incorrecte (élément 'url' attendu)\n";
         return;
     }
-QString url = elemURL.text();
-qDebug() << url;
+
+    QString url = elemURL.text();
 
     QDomElement elemPageId = racine.firstChildElement("page_id");
 
@@ -109,33 +109,11 @@ qDebug() << url;
         qDebug() << "Réponse XML incorrecte (élément 'page_id' invalide)\n";
         return;
     }
-int pageId = elemPageId.text().toInt();
-qDebug() << pageId;
-
-/*
-<?xml version="1.0" encoding="UTF-8"?>
-<LyricsResult>
-	<artist>Nazareth</artist>
-	<song>Day At The Beach</song>
-	<lyrics>[...]</lyrics>
-   *<url>http://lyrics.wikia.com/Nazareth:Day_At_The_Beach</url>
-	<page_namespace>0</page_namespace>
-   *<page_id>834495</page_id>
-	<isOnTakedownList>0</isOnTakedownList>
-</LyricsResult>
-*/
 
     m_frame = page.mainFrame();
     m_frame->load(QUrl::fromPercentEncoding(qPrintable(url)));
     connect(m_frame, SIGNAL(loadFinished(bool)), this, SLOT(onPageFinished()));
-/*
-    QNetworkAccessManager * networkManager = new QNetworkAccessManager(this);
-    connect(networkManager, SIGNAL(finished(QNetworkReply *)), this, SLOT(replyFinished2(QNetworkReply *)));
 
-    QNetworkRequest request(QUrl::fromPercentEncoding(qPrintable(url)));
-    //request.setRawHeader("Content-Type", "application/x-www-form-urlencoded");
-    networkManager->get(request);
-*/
     reply->deleteLater();
 }
 
@@ -157,41 +135,7 @@ void CLyricWiki::replyFinished2(QNetworkReply * reply)
     foreach (QWebElement element, elements)
     {
         element.removeAllChildren();
-        qDebug() << element.toPlainText();
     }
-
-
-
-/*
-    QDomDocument doc;
-    
-    QString error;
-    if (!doc.setContent(data, &error))
-    {
-        qDebug() << "Document XML invalide (" << error << ")\n";
-        return;
-    }
-
-    QDomElement elem = doc.documentElement();
-
-    while (true)
-    {
-        elem = elem.nextSiblingElement("div");
-
-        if (elem.attribute("class") == "lyricbox")
-        {
-            qDebug() << elem.text();
-            //...
-            break;
-        }
-    }
-*/
-//<div class="lyricbox">
-
-    //...
-
-    //QString lyrics;
-    //emit lyricsFound(lyrics);
 
     reply->deleteLater();
     deleteLater();
@@ -200,7 +144,6 @@ void CLyricWiki::replyFinished2(QNetworkReply * reply)
 
 void CLyricWiki::onPageFinished(void)
 {
-    qDebug() << "onPageFinished" << this;
     QString lyrics;
 
     QWebElementCollection elements = m_frame->findAllElements(".lyricbox");

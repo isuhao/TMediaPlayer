@@ -113,7 +113,7 @@ CSongTable::CSongTable(CApplication * application) :
 
 CSongTable::~CSongTable()
 {
-    //qDebug() << "CSongTable::~CSongTable()";
+
 }
 
 
@@ -539,8 +539,6 @@ void CSongTable::initColumns(const QString& str)
     // d'affichée, sans quoi on pourrait faire disparaitre les données et le header en masquant toutes les colonnes.
     m_columns[0].visible = true;
 
-    //qDebug() << "Modification des colonnes :";
-
     m_isColumnMoving = true;
     CSongTableHeader * header = qobject_cast<CSongTableHeader *>(horizontalHeader());
 /*
@@ -574,36 +572,7 @@ void CSongTable::initColumns(const QString& str)
         {
             header->m_actionShowCol[col]->setChecked(m_columns[col].visible);
         }
-/*
-        switch (col)
-        {
-            default:
-                qWarning() << "CSongTable::initColumns() : Invalid column index";
-                break;
 
-            case ColPosition        : break;
-            case ColTitle           : header->m_actColTitle           ->setChecked(m_columns[col].visible); break;
-            case ColArtist          : header->m_actColArtist          ->setChecked(m_columns[col].visible); break;
-            case ColAlbum           : header->m_actColAlbum           ->setChecked(m_columns[col].visible); break;
-            case ColAlbumArtist     : header->m_actColAlbumArtist     ->setChecked(m_columns[col].visible); break;
-            case ColComposer        : header->m_actColComposer        ->setChecked(m_columns[col].visible); break;
-            case ColYear            : header->m_actColYear            ->setChecked(m_columns[col].visible); break;
-            case ColTrackNumber     : header->m_actColTrackNumber     ->setChecked(m_columns[col].visible); break;
-            case ColDiscNumber      : header->m_actColDiscNumber      ->setChecked(m_columns[col].visible); break;
-            case ColGenre           : header->m_actColGenre           ->setChecked(m_columns[col].visible); break;
-            case ColRating          : header->m_actColRating          ->setChecked(m_columns[col].visible); break;
-            case ColComments        : header->m_actColComments        ->setChecked(m_columns[col].visible); break;
-            case ColPlayCount       : header->m_actColPlayCount       ->setChecked(m_columns[col].visible); break;
-            case ColLastPlayTime    : header->m_actColLastPlayTime    ->setChecked(m_columns[col].visible); break;
-            case ColFileName        : header->m_actColFileName        ->setChecked(m_columns[col].visible); break;
-            case ColBitRate         : header->m_actColBitRate         ->setChecked(m_columns[col].visible); break;
-            case ColFormat          : header->m_actColFormat          ->setChecked(m_columns[col].visible); break;
-            case ColDuration        : header->m_actColDuration        ->setChecked(m_columns[col].visible); break;
-            case ColSampleRate      : header->m_actColSampleRate      ->setChecked(m_columns[col].visible); break;
-            case ColCreationDate    : header->m_actColCreationDate    ->setChecked(m_columns[col].visible); break;
-            case ColModificationDate: header->m_actColModificationDate->setChecked(m_columns[col].visible); break;
-        }
-*/
         // Déplacement de la colonne
         int logical = -1;
         for (int j = 0; j < ColNumber; ++j)
@@ -615,8 +584,6 @@ void CSongTable::initColumns(const QString& str)
             }
         }
 
-        //int visualIndex = header->visualIndex(col);
-        //header->moveSection(visualIndex, m_columns[col].pos);
         int visualIndex = header->visualIndex(logical);
         header->moveSection(visualIndex, col);
     }
@@ -757,8 +724,6 @@ void CSongTable::sort(void)
 
 void CSongTable::goToSongTable(void)
 {
-    //qDebug() << "CSongTable::goToSongTable";
-
     QAction * action = qobject_cast<QAction *>(sender());
 
     if (action)
@@ -775,8 +740,6 @@ void CSongTable::goToSongTable(void)
 
 void CSongTable::addToPlayList(void)
 {
-    //qDebug() << "CSongTable::addToPlayList";
-
     QAction * action = qobject_cast<QAction *>(sender());
 
     if (action)
@@ -819,8 +782,6 @@ void CSongTable::addToPlayList(void)
 
 void CSongTable::removeSongsFromLibrary(void)
 {
-    //qDebug() << "CSongTable::removeSongsFromLibrary()";
-
     // Liste des morceaux sélectionnés
     QModelIndexList indexList = selectionModel()->selectedRows();
 
@@ -864,8 +825,6 @@ void CSongTable::removeSongsFromLibrary(void)
 
 void CSongTable::checkSelection(void)
 {
-    //qDebug() << "CSongTable::checkSelection()";
-
     // Liste des morceaux sélectionnés
     QModelIndexList indexList = selectionModel()->selectedRows();
 
@@ -887,8 +846,6 @@ void CSongTable::checkSelection(void)
 
 void CSongTable::uncheckSelection(void)
 {
-    //qDebug() << "CSongTable::uncheckSelection()";
-
     // Liste des morceaux sélectionnés
     QModelIndexList indexList = selectionModel()->selectedRows();
 
@@ -989,16 +946,12 @@ void CSongTable::mousePressEvent(QMouseEvent * event)
         }
     }
 
-    //TODO
-
     QTableView::mousePressEvent(event);
 }
 */
 
 void CSongTable::columnMoved(int logicalIndex, int oldVisualIndex, int newVisualIndex)
 {
-    //qDebug() << "columnMoved("<<logicalIndex<<""<<oldVisualIndex<<""<<newVisualIndex<<")";
-
     if (!m_isColumnMoving)
     {
         if (oldVisualIndex < newVisualIndex)
@@ -1035,8 +988,6 @@ void CSongTable::columnMoved(int logicalIndex, int oldVisualIndex, int newVisual
 
 void CSongTable::columnResized(int logicalIndex, int oldSize, int newSize)
 {
-    //qDebug() << "columnResized("<<logicalIndex<<""<<oldSize<<""<<newSize<<")";
-
     m_columns[logicalIndex].width = newSize;
 
     m_isModified = true;
@@ -1052,7 +1003,7 @@ bool CSongTable::updateDatabase(void)
     {
         if (m_idPlayList < 0)
         {
-            qWarning() << "CSongTable::updateDatabase() : id négatif";
+            m_application->logError(tr("invalid identifier (%1)").arg(m_idPlayList), __FUNCTION__, __FILE__, __LINE__);
             return false;
         }
 
@@ -1101,10 +1052,6 @@ void CSongTable::startDrag(Qt::DropActions supportedActions)
         QMimeData * data = m_model->mimeData(indexes);
         if (!data) return;
 
-        //QRect rect;
-        //QPixmap pixmap = d->renderToPixmap(indexes, &rect);
-
-        //QPixmap pixmap = QPixmap(":/icons/song").scaledToHeight(32);
         QPixmap pixmap(64, 32);
         pixmap.fill(QColor(0, 0, 0, 0));
         {
@@ -1112,8 +1059,6 @@ void CSongTable::startDrag(Qt::DropActions supportedActions)
             painter.drawImage(QRect(QPoint(0, 0), QPoint(32, 32)), QImage(":/icons/song"));
             painter.drawText(QPoint(34, 26), QString::number(rows.size()));
         }
-
-        //rect.adjust(horizontalOffset(), verticalOffset(), 0, 0);
 
         QDrag * drag = new QDrag(this);
         drag->setPixmap(pixmap);
@@ -1192,14 +1137,9 @@ void CSongTable::mouseDoubleClickEvent(QMouseEvent * event)
 
         if (index.isValid())
         {
-            //qDebug() << "Double-clic sur un item...";
             selectRow(index.row());
             emit songStarted(m_model->getSongItem(index));
             event->accept();
-        }
-        else
-        {
-            //qDebug() << "Double-clic en dehors de la table";
         }
     }
 

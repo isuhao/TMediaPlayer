@@ -239,7 +239,6 @@ void CPlayListView::dragMoveEvent(QDragMoveEvent * event)
     event->setDropAction(Qt::CopyAction);
 
     QPoint point = event->pos();
-    //qDebug() << point << indexAt(point).row();
 
     QModelIndex index = indexAt(point);
 
@@ -255,7 +254,6 @@ void CPlayListView::dragMoveEvent(QDragMoveEvent * event)
 
             if (songTable && playList)
             {
-                //qDebug() << "CPlayListView::dragMoveEvent() : move songs in playList";
                 event->accept();
                 event->acceptProposedAction();
             }
@@ -274,8 +272,6 @@ void CPlayListView::dragMoveEvent(QDragMoveEvent * event)
         }
         else
         {
-            //qDebug() << "CPlayListView::dragMoveEvent() : move list...";
-            
             int playListId;
             int folderId;
 

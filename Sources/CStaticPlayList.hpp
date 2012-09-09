@@ -63,7 +63,7 @@ signals:
 protected slots:
 
     virtual bool updateDatabase(void);
-    virtual void romoveFromDatabase(void);
+    virtual void removeFromDatabase(void);
     virtual void openCustomMenuProject(const QPoint& point);
 
 protected:

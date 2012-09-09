@@ -35,7 +35,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 CImporterITunes::CImporterITunes(CApplication * application) :
     QWizard       (application),
     m_application (application),
-    m_library     (new CITunesLibrary(this))
+    m_library     (new CITunesLibrary(application, this))
 {
     Q_CHECK_PTR(application);
 
@@ -244,8 +244,6 @@ void CITunesWizardPage4::initializePage(void)
 
             if (songs[it2.key()])
             {
-                qDebug() << "CITunesWizardPage4::initializePage() : Morceau déjà présent";
-
                 if (field("dataAlwaysChange").toBool())
                 {
                     query.prepare("UPDATE song SET song_enabled = ?, song_compilation = ?, song_rating = ? "
@@ -423,11 +421,12 @@ bool CITunesWizardPage1::validateCurrentPage(void)
 }
 */
 
-CITunesLibrary::CITunesLibrary(QObject * parent) :
-    QObject    (parent),
-    m_isLoaded (false)
+CITunesLibrary::CITunesLibrary(CApplication * application, QObject * parent) :
+    QObject       (parent),
+    m_isLoaded    (false),
+    m_application (application)
 {
-
+    Q_CHECK_PTR(application);
 }
 
 
@@ -868,7 +867,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
                     }
                     else
                     {
-                        qDebug() << "CITunesLibrary::loadFile() : unknown key " << nodeListAttr.text() << " for a song";
+                        m_application->logError(tr("unknown key %1 for a song").arg(nodeListAttr.text()), __FUNCTION__, __FILE__, __LINE__);
                     }
 
                     nodeListAttr = nodeListAttr.nextSibling().toElement();

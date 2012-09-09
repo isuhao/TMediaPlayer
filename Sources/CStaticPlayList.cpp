@@ -23,6 +23,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CDynamicList.hpp"
 #include "CFolder.hpp"
 #include "CLibrary.hpp"
+#include "CDialogEditSong.hpp"
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QMessageBox>
@@ -58,7 +59,7 @@ CStaticPlayList::CStaticPlayList(CApplication * application, const QString& name
 
 CStaticPlayList::~CStaticPlayList()
 {
-    //qDebug() << "CStaticPlayList::~CStaticPlayList()";
+
 }
 
 
@@ -85,7 +86,11 @@ bool CStaticPlayList::isModified(void) const
 
 void CStaticPlayList::addSong(CSong * song, int pos)
 {
-    Q_CHECK_PTR(song);
+    if (!song)
+    {
+        m_application->logError(tr("invalid pointer"), __FUNCTION__, __FILE__, __LINE__);
+        return;
+    }
 
     //...
 
@@ -104,7 +109,11 @@ void CStaticPlayList::addSong(CSong * song, int pos)
 
 void CStaticPlayList::addSongs(const QList<CSong *>& songs, bool confirm)
 {
-    Q_ASSERT(m_id > 0);
+    if (m_id <= 0)
+    {
+        m_application->logError(tr("invalid identifier (%1)").arg(m_id), __FUNCTION__, __FILE__, __LINE__);
+        return;
+    }
 
     if (songs.isEmpty())
     {
@@ -182,7 +191,6 @@ void CStaticPlayList::addSongs(const QList<CSong *>& songs, bool confirm)
 
     if (numSongsAdded == 0)
     {
-        qDebug() << "Aucun morceau à ajouter";
         return;
     }
     
@@ -333,7 +341,7 @@ void CStaticPlayList::removeSongs(const QList<CSong *>& songs, bool confirm)
 
 
 /**
- * Enlève une liste de morceaux de la liste.
+ * Enlève une liste de morceaux de la liste de lecture.
  *
  * \param songItemList Liste des morceaux à enlever.
  * \param confirm      Demande une confirmation avant d'enlever les morceaux de la liste.
@@ -402,39 +410,73 @@ void CStaticPlayList::removeSongs(const QList<CSongTableItem *>& songItemList, b
 
 /**
  * Retire les morceaux sélectionnés de la liste.
- * Affiche une confirmation, qui pourra par la suite être désactivée.
+ * Affiche une confirmation.
+ *
+ * \todo Si la liste est en cours de lecture, il faut mettre à jour le pointeur sur le morceau en cours.
  */
 
 void CStaticPlayList::removeSelectedSongs(void)
 {
-    qDebug() << "CStaticPlayList::removeSongs()";
-
     // Liste des morceaux sélectionnés
-    QModelIndexList indexList = selectionModel()->selectedRows();
+    const QModelIndexList indexList = selectionModel()->selectedRows();
 
+    // Aucun morceau à supprimer
     if (indexList.isEmpty())
-    {
         return;
+    
+    // Si on est en train de lire un morceau de la liste, il faut mettre à jour les informations sur le morceau courant
+    CSongTableItem * currentItem = m_model->getCurrentSongItem();
+    CSong * currentSong = (currentItem ? currentItem->getSong() : NULL);
+
+    CDialogEditSong * dialogEditSong = m_application->getDialogEditSong();
+    CSong * currentSongInDialogEditSong = NULL;
+
+    if (dialogEditSong)
+    {
+        if (dialogEditSong->getSongTable() == this)
+            currentSongInDialogEditSong = dialogEditSong->getSongItem()->getSong();
+        else
+            dialogEditSong = NULL;
     }
 
     QList<CSongTableItem *> songItemList;
 
+    // On parcourt la liste des morceaux sélectionnés
     for (QModelIndexList::const_iterator it = indexList.begin(); it != indexList.end(); ++it)
     {
         CSongTableItem * songItem = m_model->getSongItem(*it);
 
+        // Morceau en cours de lecture
         if (m_application->getCurrentSongItem() == songItem)
         {
-            m_application->stop();
+            currentItem = NULL;
+            currentSong = NULL;
         }
 
-        emit songRemoved(songItem->getSong());
         songItemList.append(songItem);
     }
 
     removeSongs(songItemList, true);
 
     selectionModel()->clearSelection();
+
+    // On change le morceau courant affiché dans la liste
+    if (currentSong)
+    {
+        CSongTableItem * currentItemAfter = getFirstSongItem(currentSong);
+        m_model->setCurrentSong(currentItemAfter);
+        m_application->m_currentSongItem = currentItemAfter;
+    }
+
+    if (dialogEditSong)
+    {
+        CSongTableItem * songItem = getFirstSongItem(currentSongInDialogEditSong);
+
+        if (songItem)
+            dialogEditSong->setSongItem(songItem, this);
+        else
+            dialogEditSong->close();
+    }
 }
 
 
@@ -446,8 +488,6 @@ void CStaticPlayList::removeSelectedSongs(void)
 
 void CStaticPlayList::removeDuplicateSongs(void)
 {
-    qDebug() << "CStaticPlayList::removeDuplicateSongs()";
-
     QList<CSong *> songs = getSongs();
     QList<CSong *> songsNew;
 
@@ -494,7 +534,7 @@ bool CStaticPlayList::updateDatabase(void)
 {
     if (!getFolder())
     {
-        qWarning() << "CStaticPlayList::updateDatabase() : big problème ligne " << __LINE__;
+        m_application->logError(tr("the playlist is not in a folder"), __FUNCTION__, __FILE__, __LINE__);
     }
 
     // Insertion
@@ -571,7 +611,7 @@ bool CStaticPlayList::updateDatabase(void)
 
         if (m_application->getDataBase().driverName() == "QPSQL")
         {
-            query.prepare("SELECT currval('playlist_playlist_id_seq')");
+            query.prepare("SELECT currval('static_list_static_list_id_seq')");
 
             if (!query.exec())
             {
@@ -621,38 +661,39 @@ bool CStaticPlayList::updateDatabase(void)
  * Supprime la liste de la base de données.
  */
 
-void CStaticPlayList::romoveFromDatabase(void)
+void CStaticPlayList::removeFromDatabase(void)
 {
     if (m_id <= 0)
     {
-        qWarning() << "CStaticPlayList::romoveFromDatabase() : identifiant invalide";
-        return;
+        m_application->logError(tr("invalid identifier (%1)").arg(m_id), __FUNCTION__, __FILE__, __LINE__);
     }
-
-    QSqlQuery query(m_application->getDataBase());
-
-    // Suppression des morceaux
-    query.prepare("DELETE FROM static_list_song WHERE static_list_id = ?");
-    query.bindValue(0, m_id);
-
-    if (!query.exec())
+    else
     {
-        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        return;
+        QSqlQuery query(m_application->getDataBase());
+
+        // Suppression des morceaux
+        query.prepare("DELETE FROM static_list_song WHERE static_list_id = ?");
+        query.bindValue(0, m_id);
+
+        if (!query.exec())
+        {
+            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            return;
+        }
+
+        // Suppression de la liste statique
+        query.prepare("DELETE FROM static_list WHERE static_list_id = ?");
+        query.bindValue(0, m_id);
+
+        if (!query.exec())
+        {
+            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            return;
+        }
+
+        m_isStaticListModified = false;
+        m_id = -1;
     }
-
-    // Suppression de la liste statique
-    query.prepare("DELETE FROM static_list WHERE static_list_id = ?");
-    query.bindValue(0, m_id);
-
-    if (!query.exec())
-    {
-        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        return;
-    }
-
-    m_isStaticListModified = false;
-    m_id = -1;
 
     IPlayList::removeFromDatabase();
 }
@@ -832,8 +873,6 @@ void CStaticPlayList::dropEvent(QDropEvent * event)
 
     if (event->isAccepted())
     {
-        qDebug() << "CStaticPlayList::dropEvent() : OK";
-
         QModelIndex index = indexAt(event->pos());
         int row = -1;
 
@@ -866,8 +905,6 @@ void CStaticPlayList::dropEvent(QDropEvent * event)
                 ++numRowsBeforeDest;
             }
         }
-
-        qDebug() << "V" << rowList << " -> " << row;
 
         m_model->moveRows(rowList, row);
 

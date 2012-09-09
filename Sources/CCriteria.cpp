@@ -44,7 +44,7 @@ CCriteria::CCriteria(CApplication * application, QObject * parent) :
 
 CCriteria::~CCriteria()
 {
-    //qDebug() << "CCriteria::~CCriteria()";
+
 }
 
 
@@ -75,7 +75,7 @@ bool CCriteria::matchCriteria(CSong * song) const
             }
             else
             {
-                qWarning() << "CCriteria::matchCriteria() : la condition n'est pas gérée";
+                m_application->logError(tr("invalid condition"), __FUNCTION__, __FILE__, __LINE__);
                 return false;
             }
         }
@@ -93,7 +93,7 @@ bool CCriteria::matchCriteria(CSong * song) const
             }
             else
             {
-                qWarning() << "CCriteria::matchCriteria() : la condition n'est pas gérée";
+                m_application->logError(tr("invalid condition"), __FUNCTION__, __FILE__, __LINE__);
                 return false;
             }
         }
@@ -138,7 +138,7 @@ bool CCriteria::matchCriteria(CSong * song) const
         switch (m_condition)
         {
             default:
-                qWarning() << "CCriteria::matchCriteria() : la condition n'est pas gérée";
+                m_application->logError(tr("invalid condition"), __FUNCTION__, __FILE__, __LINE__);
                 return false;
 
             case CondStringEqual      : return (str.toLower() == m_value1.toString());
@@ -180,7 +180,7 @@ bool CCriteria::matchCriteria(CSong * song) const
         switch (m_condition)
         {
             default:
-                qWarning() << "CCriteria::matchCriteria() : la condition n'est pas gérée";
+                m_application->logError(tr("invalid condition"), __FUNCTION__, __FILE__, __LINE__);
                 return false;
 
             case CondNumberEqual      : return (num == m_value1.toInt());
@@ -212,7 +212,7 @@ bool CCriteria::matchCriteria(CSong * song) const
         switch (m_condition)
         {
             default:
-                qWarning() << "CCriteria::matchCriteria() : la condition n'est pas gérée";
+                m_application->logError(tr("invalid condition"), __FUNCTION__, __FILE__, __LINE__);
                 return false;
 
             case CondTimeIs         : return (time == m_value1.toTime());
@@ -246,7 +246,7 @@ bool CCriteria::matchCriteria(CSong * song) const
         switch (m_condition)
         {
             default:
-                qWarning() << "CCriteria::matchCriteria() : la condition n'est pas gérée";
+                m_application->logError(tr("invalid condition"), __FUNCTION__, __FILE__, __LINE__);
                 return false;
 
             case CondDateIs       : return (date == m_value1.toDateTime());
@@ -318,7 +318,7 @@ QList<CSong *> CCriteria::getSongs(const QList<CSong *>& from, const QList<CSong
 
         if (!playList)
         {
-            qWarning() << "CCriteria::getSongs() : la liste de lecture n'est pas valide";
+            m_application->logError(tr("invalid playlist"), __FUNCTION__, __FILE__, __LINE__);
             return songList;
         }
 
@@ -344,7 +344,7 @@ QList<CSong *> CCriteria::getSongs(const QList<CSong *>& from, const QList<CSong
         }
         else
         {
-            qWarning() << "CCriteria::getSongs() : la condition n'est pas gérée";
+            m_application->logError(tr("invalid condition"), __FUNCTION__, __FILE__, __LINE__);
         }
     }
     else

@@ -56,8 +56,6 @@ public:
     virtual bool matchCriteria(CSong * song) const;
     virtual QList<CSong *> getSongs(const QList<CSong *>& from, const QList<CSong *>& with = QList<CSong *>()) const;
     virtual TUpdateConditions getUpdateConditions(void) const;
-    //virtual QList<int> getValidTypes(void) const;
-    //virtual bool isValidType(int type) const;
 
     virtual IWidgetCriteria * getWidget(void) const;
 
