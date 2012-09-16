@@ -60,6 +60,9 @@
     <addaction name="actionInformations"/>
     <addaction name="actionOpenInExplorer"/>
     <addaction name="separator"/>
+    <addaction name="actionNotifications"/>
+    <addaction name="actionLastPlays"/>
+    <addaction name="separator"/>
     <addaction name="actionQuit"/>
     <addaction name="separator"/>
    </widget>
@@ -237,6 +240,16 @@
   <action name="actionEqualizer">
    <property name="text">
     <string>Equalizer...</string>
+   </property>
+  </action>
+  <action name="actionNotifications">
+   <property name="text">
+    <string>Notifications...</string>
+   </property>
+  </action>
+  <action name="actionLastPlays">
+   <property name="text">
+    <string>Last plays...</string>
    </property>
   </action>
  </widget>

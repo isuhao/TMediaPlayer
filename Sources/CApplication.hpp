@@ -111,6 +111,17 @@ public:
     void resetEqualizer(void);
     bool isEqualizerEnabled(void) const;
 
+    // Notifications
+    struct TNotification
+    {
+        QString message; ///< Texte de la notification.
+        QDateTime date;  ///< Date de l'envoi.
+
+        TNotification(const QString& m, const QDateTime& d) : message(m), date(d) { }
+    };
+
+    inline QList<TNotification> getNotifications(void) const;
+
     inline CSongTableItem * getCurrentSongItem(void) const;
     inline CSongTable * getCurrentSongTable(void) const;
     inline CLibrary * getLibrary(void) const;
@@ -182,6 +193,8 @@ public slots:
     void setEqualizerEnabled(bool enabled = true);
 
     void openDialogPreferences(void);
+    void openDialogNotifications(void);
+    void openDialogLastPlays(void);
     void openDialogEqualizer(void);
     void openDialogEditMetadata(void);
     void openDialogAddSongs(void);
@@ -280,15 +293,6 @@ private:
     QMap<QString, QFile *> m_logList;   ///< Liste des fichiers de log ouverts.
     QString m_applicationPath;
 
-    // Notifications
-    struct TNotification
-    {
-        QString message; ///< Texte de la notification.
-        QDateTime date;  ///< Date de l'envoi.
-
-        TNotification(const QString& m, const QDateTime& d) : message(m), date(d) { }
-    };
-
     QList<TNotification> m_infosNotified; ///< Liste des notifications.
 
     // Last.fm
@@ -308,6 +312,12 @@ private:
     int m_lastFmLastPosition;
     TLastFmState m_lastFmState;
 };
+
+
+QList<CApplication::TNotification> CApplication::getNotifications(void) const
+{
+    return m_infosNotified;
+}
 
 
 /**

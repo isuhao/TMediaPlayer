@@ -243,6 +243,13 @@ CSongTableItem * CSongTable::getNextSong(CSongTableItem * songItem, bool shuffle
 }
 
 
+/**
+ * Retourne le dernier morceau de la liste.
+ *
+ * \param shuffle Indique si la lecture est aléatoire.
+ * \return Dernier morceau de la liste, ou NULL si la liste est vide.
+ */
+
 CSongTableItem * CSongTable::getLastSong(bool shuffle) const
 {
     return m_model->getLastSong(shuffle);
@@ -274,7 +281,7 @@ qlonglong CSongTable::getTotalDuration(void) const
  *
  * \todo Changer le système :
  *       - CSongTable::applyFilter appelle simplement la méthode CSongTableModel::applyFilter.
- *       - CSongTableModel::applyFilter parcourt la liste des morceaux et rempli une liste avec ceux qui correspondant (m_dataFiltered).
+ *       - CSongTableModel::applyFilter parcourt la liste des morceaux et remplie une liste avec ceux qui correspondant (m_dataFiltered).
  *       - Les méthodes rowCount, data, etc. de CSongTableModel utilisent m_dataFiltered au lieu de m_data.
  *
  * \param filtre Filtre de recherche.
@@ -339,14 +346,16 @@ void CSongTable::addSongsToTable(const QList<CSong *>& songs)
  * Enlève une chanson de la liste.
  * Toutes les occurences de \a song sont enlevées de la liste.
  *
- * \todo Mettre à jour le modèle.
- *
  * \param song Pointeur sur la chanson à enlever.
  */
 
 void CSongTable::removeSongFromTable(CSong * song)
 {
-    Q_CHECK_PTR(song);
+    if (!song)
+    {
+        m_application->logError(tr("invalid pointer"), __FUNCTION__, __FILE__, __LINE__);
+        return;
+    }
 
     int row = 0;
 
@@ -374,7 +383,13 @@ void CSongTable::removeSongFromTable(CSong * song)
 
 void CSongTable::removeSongFromTable(int row)
 {
-    Q_ASSERT(row >= 0 && row < m_model->m_data.size());
+    Q_ASSERT(row >= 0);
+
+    if (row >= m_model->m_data.size())
+    {
+        m_application->logError(tr("invalid argument"), __FUNCTION__, __FILE__, __LINE__);
+        return;
+    }
 
     m_model->removeRow(row);
 
@@ -996,6 +1011,12 @@ void CSongTable::columnResized(int logicalIndex, int oldSize, int newSize)
     QTableView::columnResized(logicalIndex, oldSize, newSize);
 }
 
+
+/**
+ * Met à jour la base de données avec les informations de la table.
+ *
+ * \return Booléen indiquant le succès de l'opération.
+ */
 
 bool CSongTable::updateDatabase(void)
 {

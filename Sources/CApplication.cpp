@@ -34,6 +34,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "Dialog/CDialogEditStaticPlayList.hpp"
 #include "Dialog/CDialogPreferences.hpp"
 #include "Dialog/CDialogEqualizer.hpp"
+#include "Dialog/CDialogNotifications.hpp"
+#include "Dialog/CDialogLastPlays.hpp"
 #include "Dialog/CDialogRemoveFolder.hpp"
 #include "Importer/CImporterITunes.hpp"
 #include "CLibrary.hpp"
@@ -130,6 +132,8 @@ CApplication::CApplication(void) :
     connect(m_uiWidget->actionOpenInExplorer, SIGNAL(triggered()), this, SLOT(openSongInExplorer()));
     connect(m_uiWidget->actionImportITunes, SIGNAL(triggered()), this, SLOT(importFromITunes()));
     connect(m_uiWidget->actionImportSongbird, SIGNAL(triggered()), this, SLOT(importFromSongbird()));
+    connect(m_uiWidget->actionNotifications, SIGNAL(triggered()), this, SLOT(openDialogNotifications()));
+    connect(m_uiWidget->actionLastPlays, SIGNAL(triggered()), this, SLOT(openDialogLastPlays()));
 
     connect(m_uiWidget->actionSelectAll, SIGNAL(triggered()), this, SLOT(selectAll()));
     connect(m_uiWidget->actionSelectNone, SIGNAL(triggered()), this, SLOT(selectNone()));
@@ -1674,6 +1678,28 @@ void CApplication::openDialogPreferences(void)
 
 
 /**
+ * Affiche la boite de dialogue pour voir la liste des notifications.
+ */
+
+void CApplication::openDialogNotifications(void)
+{
+    CDialogNotifications * dialog = new CDialogNotifications(this);
+    dialog->show();
+}
+
+
+/**
+ * Affiche la boite de dialogue pour voir les dernières écoutes.
+ */
+
+void CApplication::openDialogLastPlays(void)
+{
+    CDialogLastPlays * dialog = new CDialogLastPlays(this);
+    dialog->show();
+}
+
+
+/**
  * Affiche la boite de dialogue pour modifier les paramètres de l'égaliseur.
  */
 
@@ -2076,7 +2102,7 @@ void CApplication::relocateSong(void)
         res = sound->getLength(reinterpret_cast<unsigned int *>(&(song->m_properties.duration)), FMOD_TIMEUNIT_MS);
         if (res != FMOD_OK)
         {
-            logError(tr("impossible de calculer la durée du morceau %1").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
+            logError(tr("can't compute song duration for file \"%1\"").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
             song->m_properties.duration = 0;
         }
 
@@ -2085,14 +2111,14 @@ void CApplication::relocateSong(void)
 
         if (res != FMOD_OK)
         {
-            logError(tr("impossible de déterminer le format du morceau %1").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
+            logError(tr("can't find song format for file \"%1\"").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
         }
         else
         {
             switch (type)
             {
                 default:
-                    logError("format inconnu", __FUNCTION__, __FILE__, __LINE__);
+                    logError(tr("unknown format"), __FUNCTION__, __FILE__, __LINE__);
                     return;
 
                 case FMOD_SOUND_TYPE_MPEG:
