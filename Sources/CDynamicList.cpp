@@ -121,7 +121,7 @@ void CDynamicList::updateList(void)
 
 
     // Liste des morceaux sélectionnés
-    QModelIndexList indexList = selectionModel()->selectedRows();
+    const QModelIndexList indexList = selectionModel()->selectedRows();
     QList<CSong *> selectedSongs;
 
     for (QModelIndexList::const_iterator index = indexList.begin(); index != indexList.end(); ++index)

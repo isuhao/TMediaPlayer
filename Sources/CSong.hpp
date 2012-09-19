@@ -68,13 +68,17 @@ public:
 
     enum TLanguage
     {
-        LangUnknown = 0, ///< Langue inconnue.
-        LangEnglish = 1, ///< Anglais.
-        LangFrench  = 2, ///< Français.
-        LangGerman  = 3, ///< Allemand.
-        LangItalian = 4, ///< Italien.
-        LangRussian = 5, ///< Russe.
-        LangSpanish = 6  ///< Espagnol.
+        LangUnknown    =  0, ///< Langue inconnue.
+        LangEnglish    =  1, ///< Anglais.
+        LangFrench     =  2, ///< Français.
+        LangGerman     =  3, ///< Allemand.
+        LangItalian    =  4, ///< Italien.
+        LangRussian    =  5, ///< Russe.
+        LangSpanish    =  6, ///< Espagnol.
+        LangChinese    =  7, ///< Chinois.
+        LangHindi      =  8, ///< Hindi.
+        LangPortuguese =  9, ///< Portugais.
+        LangArabic     = 10  ///< Arabe.
     };
 
     static inline TLanguage getLanguageFromInteger(int language);
@@ -371,15 +375,7 @@ private:
     int m_id;                       ///< Identifiant du morceau en base de données.
     QDateTime m_creation;           ///< Date de création (ajout à la médiathèque).
     QDateTime m_modification;       ///< Date de la dernière modication.
-/*
-    QString m_fileName;             ///< Fichier audio.
-    qlonglong m_fileSize;           ///< Taille du fichier en octets.
-    int m_bitRate;                  ///< Débit binaire.
-    int m_sampleRate;               ///< Fréquence d'échantillonnage.
-    TFormat m_format;               ///< Format de fichier.
-    int m_numChannels;              ///< Nombre de canaux.
-    int m_duration;                 ///< Durée du morceau en millisecondes.
-*/
+
     TSongProperties m_properties;   ///< Propriétés du morceau.
     TSongInfos m_infos;             ///< Informations modifiables.
 
@@ -436,13 +432,17 @@ inline CSong::TLanguage CSong::getLanguageFromInteger(int language)
     switch (language)
     {
         default:
-        case 0: return LangUnknown;
-        case 1: return LangEnglish;
-        case 2: return LangFrench ;
-        case 3: return LangGerman ;
-        case 4: return LangItalian;
-        case 5: return LangRussian;
-        case 6: return LangSpanish;
+        case  0: return LangUnknown   ;
+        case  1: return LangEnglish   ;
+        case  2: return LangFrench    ;
+        case  3: return LangGerman    ;
+        case  4: return LangItalian   ;
+        case  5: return LangRussian   ;
+        case  6: return LangSpanish   ;
+        case  7: return LangChinese   ;
+        case  8: return LangHindi     ;
+        case  9: return LangPortuguese;
+        case 10: return LangArabic    ;
     }
 }
 
@@ -459,13 +459,17 @@ inline QString CSong::getLanguageName(CSong::TLanguage language)
     switch (language)
     {
         default:
-        case LangUnknown: return tr("Unknown", "Unknown language");
-        case LangEnglish: return tr("English"                    );
-        case LangFrench : return tr("French"                     );
-        case LangGerman : return tr("German"                     );
-        case LangItalian: return tr("Italian"                    );
-        case LangRussian: return tr("Russian"                    );
-        case LangSpanish: return tr("Spanish"                    );
+        case LangUnknown   : return tr("Unknown", "Unknown language");
+        case LangEnglish   : return tr("English"                    );
+        case LangFrench    : return tr("French"                     );
+        case LangGerman    : return tr("German"                     );
+        case LangItalian   : return tr("Italian"                    );
+        case LangRussian   : return tr("Russian"                    );
+        case LangSpanish   : return tr("Spanish"                    );
+        case LangChinese   : return tr("Chinese"                    );
+        case LangHindi     : return tr("Hindi"                      );
+        case LangPortuguese: return tr("Portuguese"                 );
+        case LangArabic    : return tr("Arabic"                     );
     }
 }
 
@@ -480,13 +484,17 @@ inline QStringList CSong::getLanguageList(void)
 {
     QStringList langList;
 
-    langList << getLanguageName(LangUnknown);
-    langList << getLanguageName(LangEnglish);
-    langList << getLanguageName(LangFrench );
-    langList << getLanguageName(LangGerman );
-    langList << getLanguageName(LangItalian);
-    langList << getLanguageName(LangRussian);
-    langList << getLanguageName(LangSpanish);
+    langList << getLanguageName(LangUnknown   );
+    langList << getLanguageName(LangEnglish   );
+    langList << getLanguageName(LangFrench    );
+    langList << getLanguageName(LangGerman    );
+    langList << getLanguageName(LangItalian   );
+    langList << getLanguageName(LangRussian   );
+    langList << getLanguageName(LangSpanish   );
+    langList << getLanguageName(LangChinese   );
+    langList << getLanguageName(LangHindi     );
+    langList << getLanguageName(LangPortuguese);
+    langList << getLanguageName(LangArabic    );
 
     return langList;
 }
@@ -502,12 +510,16 @@ inline CSong::TLanguage CSong::getLanguageForISO2Code(const QString& code)
 {
     const QString codeLower = code.toLower();
 
-    if (codeLower == "en") return LangEnglish;
-    if (codeLower == "fr") return LangFrench ;
-    if (codeLower == "de") return LangGerman ;
-    if (codeLower == "it") return LangItalian;
-    if (codeLower == "ru") return LangRussian;
-    if (codeLower == "es") return LangSpanish;
+    if (codeLower == "en") return LangEnglish   ;
+    if (codeLower == "fr") return LangFrench    ;
+    if (codeLower == "de") return LangGerman    ;
+    if (codeLower == "it") return LangItalian   ;
+    if (codeLower == "ru") return LangRussian   ;
+    if (codeLower == "es") return LangSpanish   ;
+    if (codeLower == "zh") return LangChinese   ;
+    if (codeLower == "hi") return LangHindi     ;
+    if (codeLower == "pt") return LangPortuguese;
+    if (codeLower == "ar") return LangArabic    ;
 
     return LangUnknown;
 }
@@ -523,12 +535,16 @@ inline CSong::TLanguage CSong::getLanguageForISO3Code(const QString& code)
 {
     const QString codeLower = code.toLower();
 
-    if (codeLower == "eng") return LangEnglish;
-    if (codeLower == "fra") return LangFrench ;
-    if (codeLower == "deu") return LangGerman ;
-    if (codeLower == "ita") return LangItalian;
-    if (codeLower == "rus") return LangRussian;
-    if (codeLower == "spa") return LangSpanish;
+    if (codeLower == "eng") return LangEnglish   ;
+    if (codeLower == "fra") return LangFrench    ;
+    if (codeLower == "deu") return LangGerman    ;
+    if (codeLower == "ita") return LangItalian   ;
+    if (codeLower == "rus") return LangRussian   ;
+    if (codeLower == "spa") return LangSpanish   ;
+    if (codeLower == "zho") return LangChinese   ;
+    if (codeLower == "hin") return LangHindi     ;
+    if (codeLower == "por") return LangPortuguese;
+    if (codeLower == "ara") return LangArabic    ;
 
     return LangUnknown;
 }
@@ -543,13 +559,17 @@ inline QString CSong::getISO2CodeForLanguage(CSong::TLanguage language)
     switch (language)
     {
         default:
-        case LangUnknown: return "xx";
-        case LangEnglish: return "en";
-        case LangFrench : return "fr";
-        case LangGerman : return "de";
-        case LangItalian: return "it";
-        case LangRussian: return "ru";
-        case LangSpanish: return "es";
+        case LangUnknown   : return "xx";
+        case LangEnglish   : return "en";
+        case LangFrench    : return "fr";
+        case LangGerman    : return "de";
+        case LangItalian   : return "it";
+        case LangRussian   : return "ru";
+        case LangSpanish   : return "es";
+        case LangChinese   : return "zh";
+        case LangHindi     : return "hi";
+        case LangPortuguese: return "pt";
+        case LangArabic    : return "ar";
     }
 }
 
@@ -563,13 +583,17 @@ inline QString CSong::getISO3CodeForLanguage(CSong::TLanguage language)
     switch (language)
     {
         default:
-        case LangUnknown: return "xxx";
-        case LangEnglish: return "eng";
-        case LangFrench : return "fra";
-        case LangGerman : return "deu";
-        case LangItalian: return "ita";
-        case LangRussian: return "rus";
-        case LangSpanish: return "spa";
+        case LangUnknown   : return "xxx";
+        case LangEnglish   : return "eng";
+        case LangFrench    : return "fra";
+        case LangGerman    : return "deu";
+        case LangItalian   : return "ita";
+        case LangRussian   : return "rus";
+        case LangSpanish   : return "spa";
+        case LangChinese   : return "zho";
+        case LangHindi     : return "hin";
+        case LangPortuguese: return "por";
+        case LangArabic    : return "ara";
     }
 }
 

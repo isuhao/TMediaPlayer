@@ -22,6 +22,11 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QSettings>
 #include <QDesktopServices>
 #include <QDir>
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QFileDialog>
+
+#include <QtDebug>
 
 
 /**
@@ -88,7 +93,7 @@ CDialogPreferences::CDialogPreferences(CApplication * application, QSettings * s
 
     // Organisation automatique des fichiers
     m_uiWidget->groupOrganize->setChecked(m_settings->value("Folders/KeepOrganized", false).toBool());
-    m_uiWidget->editOrgFormat->setText(m_settings->value("Folders/Format", QString("%2/%4%3/%6%5%1")).toString());
+    m_uiWidget->editOrgFormat->setText(m_settings->value("Folders/Format", QString("%2/%3%4/%6%5%1")).toString());
 
     m_uiWidget->editOrgTitleDefault->setText(m_settings->value("Folders/TitleDefault", QString("%1")).toString());
     m_uiWidget->editOrgArtistDefault->setText(m_settings->value("Folders/ArtistDefault", QString("%1")).toString());
@@ -103,6 +108,26 @@ CDialogPreferences::CDialogPreferences(CApplication * application, QSettings * s
     m_uiWidget->editOrgYearEmpty->setText(m_settings->value("Folders/YearEmpty", QString()).toString());
     m_uiWidget->editOrgTrackEmpty->setText(m_settings->value("Folders/TrackEmpty", QString()).toString());
     m_uiWidget->editOrgDiscEmpty->setText(m_settings->value("Folders/DiscEmpty", QString()).toString());
+
+    // Liste des répertoires surveillés
+    QSqlQuery query(m_application->getDataBase());
+
+    if (!query.exec("SELECT path_id, path_location FROM libpath ORDER BY path_id"))
+    {
+        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+    }
+    else
+    {
+        while (query.next())
+        {
+            QListWidgetItem * item = new QListWidgetItem(query.value(1).toString());
+            item->setData(Qt::UserRole, query.value(0).toInt());
+            m_uiWidget->listFolders->addItem(item);
+        }
+    }
+
+    connect(m_uiWidget->btnAddFolder, SIGNAL(clicked()), this, SLOT(addFolder()));
+    connect(m_uiWidget->btnRemoveFolder, SIGNAL(clicked()), this, SLOT(removeSelectedFolder()));
 
     // Connexions des signaux des boutons
     QPushButton * btnOK = m_uiWidget->buttonBox->addButton(tr("OK"), QDialogButtonBox::AcceptRole);
@@ -184,6 +209,12 @@ void CDialogPreferences::save(void)
 }
 
 
+/**
+ * Méthode appellée lorsque le driver de base de données est modifié.
+ *
+ * \param name Nom du nouveau driver.
+ */
+
 void CDialogPreferences::onDriverChange(const QString& name)
 {
     if (name == tr("SQLite version 2") || name == tr("SQLite version 3 or above"))
@@ -199,5 +230,103 @@ void CDialogPreferences::onDriverChange(const QString& name)
         m_uiWidget->editDBPort->setEnabled(true);
         m_uiWidget->editDBUserName->setEnabled(true);
         m_uiWidget->editDBPassword->setEnabled(true);
+    }
+}
+
+
+/**
+ * Ajoute un répertoire à la liste des répertoires surveillés.
+ */
+
+void CDialogPreferences::addFolder(void)
+{
+    QString pathName = QFileDialog::getExistingDirectory(this);
+
+    if (pathName.isEmpty())
+        return;
+
+    pathName.replace('\\', '/');
+
+    QSqlQuery query(m_application->getDataBase());
+    query.prepare("INSERT INTO libpath (path_location) VALUES (?)");
+    query.bindValue(0, pathName);
+
+    if (!query.exec())
+    {
+        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        return;
+    }
+
+    int pathId = -1;
+
+    if (m_application->getDataBase().driverName() == "QPSQL")
+    {
+        query.prepare("SELECT currval('libpath_path_id_seq')");
+
+        if (!query.exec())
+        {
+            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            return;
+        }
+
+        if (query.next())
+        {
+            pathId = query.value(0).toInt();
+        }
+        else
+        {
+            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            return;
+        }
+    }
+    else
+    {
+        pathId = query.lastInsertId().toInt();
+    }
+
+    QListWidgetItem * item = new QListWidgetItem(pathName);
+    item->setData(Qt::UserRole, pathId);
+    m_uiWidget->listFolders->addItem(item);
+}
+
+
+/**
+ * Supprime le répertoire sélectionné de la liste des répertoires surveillés.
+ */
+
+void CDialogPreferences::removeSelectedFolder(void)
+{
+    QListWidgetItem * item = m_uiWidget->listFolders->currentItem();
+
+    if (!item)
+        return;
+
+    const int pathId = item->data(Qt::UserRole).toInt();
+
+    QSqlQuery query(m_application->getDataBase());
+    query.prepare("DELETE FROM libpath WHERE path_id = ?");
+    query.bindValue(0, pathId);
+
+    if (!query.exec())
+    {
+        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        return;
+    }
+
+    // Rechargement de la vue
+    m_uiWidget->listFolders->clear();
+
+    if (!query.exec("SELECT path_id, path_location FROM libpath ORDER BY path_id"))
+    {
+        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+    }
+    else
+    {
+        while (query.next())
+        {
+            QListWidgetItem * item = new QListWidgetItem(query.value(1).toString());
+            item->setData(Qt::UserRole, query.value(0).toInt());
+            m_uiWidget->listFolders->addItem(item);
+        }
     }
 }

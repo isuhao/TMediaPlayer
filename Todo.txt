@@ -21,10 +21,8 @@
 - Gérer les répertoires à surveiller :
   - Analyser le répertoire récursivement au lancement de l'application.
   - Organiser automatiquement les fichiers dans ces répertoires.
-
-- Ajouter une vue pour voir la liste des dernières lectures.
-
-- Ajouter une vue pour voir la liste des dernières notifications.
+  - Pouvoir organiser différement chaque répertoire ?
+  - Stocker ces informations avec les données de la médiathèque ?
 
 - Ajouter une vue pour afficher l'illustration principale.
 
@@ -91,6 +89,11 @@
 - Boite de dialogue Edit Song :
   - Affichage et modification des illustrations.
   - Afficher l'illustration principale dans l'onglet Résumé.
+
+- Égaliseur :
+  - Liste de préréglages.
+  - Pouvoir ajouter, modifier, et supprimer des préréglages.
+  - Associer un préréglage à chaque morceau (stocker les données d'égalisation avec la médiathèque).
 
 - Récupérer les pochettes depuis Internet.
 - Option "Lecture seule" (désactiver l'écriture des métadonnées et le déplacement des fichiers).

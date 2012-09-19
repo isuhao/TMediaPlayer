@@ -42,7 +42,7 @@ CDialogNotifications::CDialogNotifications(CApplication * application) :
     {
         QTableWidgetItem * item;
         
-        item = new QTableWidgetItem(notifications.at(row).date.toString("dd/MM/yyyy hh:mm:ss"));
+        item = new QTableWidgetItem(notifications.at(row).date.toString("dd/MM/yyyy HH:mm:ss"));
         m_uiWidget->table->setItem(row, 0, item);
         
         item = new QTableWidgetItem(notifications.at(row).message);

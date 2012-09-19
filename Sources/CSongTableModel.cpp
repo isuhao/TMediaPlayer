@@ -863,9 +863,9 @@ void CSongTableModel::clear(void)
 {
     emit layoutAboutToBeChanged();
 
-    foreach (CSongTableItem * songItem, m_data)
+    for (QList<CSongTableItem *>::const_iterator songItem = m_data.begin(); songItem != m_data.end(); ++songItem)
     {
-        delete songItem;
+        delete *songItem;
     }
 
     m_data.clear();
@@ -893,7 +893,9 @@ CSongTableItem * CSongTableModel::getSongItem(int row) const
 
 int CSongTableModel::getRowForSongItem(CSongTableItem * songItem) const
 {
-    Q_CHECK_PTR(songItem);
+    if (!songItem)
+        return -1;
+
     return m_data.indexOf(songItem);
 }
 

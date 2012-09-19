@@ -651,15 +651,22 @@ bool CSong::writeTags(void)
 
 /**
  * Déplace un fichier à partir de ses informations.
+ * Cette méthode doit être appellée quand on ajoute un fichier, ou qu'on modifie l'une des informations
+ * utilisées (titre, artiste, album, numéro de piste, de disque, ou année).
  *
  * \todo Implémentation.
  * \todo Trouver dans quel répertoire de la médiathèque le fichier se trouve.
+ * \todo Limiter la taille des noms de fichier (40 caractères avec iTunes).
  *
  * \return Booléen indiquant si le déplacement a eu lieu.
  */
 
 bool CSong::moveFile(void)
 {
+    // Recherche du répertoire de la médiathèque
+    //...
+    QString folder = "";
+
     QString title;
     QString artistName;
     QString albumTitle;
@@ -670,34 +677,96 @@ bool CSong::moveFile(void)
     if (m_infos.title.isEmpty())
         title = m_application->getSettings()->value("Folders/TitleEmpty", tr("Unknown title")).toString();
     else
-        title = m_application->getSettings()->value("Folders/TitleDefault", "%1").toString().arg(m_infos.title);
+        title = m_application->getSettings()->value("Folders/TitleDefault", "%1").toString().arg(m_infos.title).left(40);
+
+    title.replace('\\', '_');
+    title.replace('/', '_');
+    title.replace(':', '_');
+    title.replace('*', '_');
+    title.replace('?', '_');
+    title.replace('"', '_');
+    title.replace('<', '_');
+    title.replace('>', '_');
+    title.replace('|', '_');
 
     if (m_infos.artistName.isEmpty())
         artistName = m_application->getSettings()->value("Folders/ArtistEmpty", tr("Unknown artist")).toString();
     else
-        artistName = m_application->getSettings()->value("Folders/ArtistDefault", "%1").toString().arg(m_infos.artistName);
+        artistName = m_application->getSettings()->value("Folders/ArtistDefault", "%1").toString().arg(m_infos.artistName).left(40);
+
+    artistName.replace('\\', '_');
+    artistName.replace('/', '_');
+    artistName.replace(':', '_');
+    artistName.replace('*', '_');
+    artistName.replace('?', '_');
+    artistName.replace('"', '_');
+    artistName.replace('<', '_');
+    artistName.replace('>', '_');
+    artistName.replace('|', '_');
 
     if (m_infos.albumTitle.isEmpty())
         albumTitle = m_application->getSettings()->value("Folders/AlbumEmpty", tr("Unknown album")).toString();
     else
-        albumTitle = m_application->getSettings()->value("Folders/AlbumDefault", "%1").toString().arg(m_infos.albumTitle);
+        albumTitle = m_application->getSettings()->value("Folders/AlbumDefault", "%1").toString().arg(m_infos.albumTitle).left(40);
+
+    albumTitle.replace('\\', '_');
+    albumTitle.replace('/', '_');
+    albumTitle.replace(':', '_');
+    albumTitle.replace('*', '_');
+    albumTitle.replace('?', '_');
+    albumTitle.replace('"', '_');
+    albumTitle.replace('<', '_');
+    albumTitle.replace('>', '_');
+    albumTitle.replace('|', '_');
 
     if (m_infos.year == 0)
         year = m_application->getSettings()->value("Folders/YearEmpty", tr("")).toString();
     else
         year = m_application->getSettings()->value("Folders/YearDefault", " (%1)").toString().arg(m_infos.year);
 
-    if (m_infos.trackNumber == 0)
+    year.replace('\\', '_');
+    year.replace('/', '_');
+    year.replace(':', '_');
+    year.replace('*', '_');
+    year.replace('?', '_');
+    year.replace('"', '_');
+    year.replace('<', '_');
+    year.replace('>', '_');
+    year.replace('|', '_');
+
+    if (m_infos.trackNumber <= 0)
         trackNumber = m_application->getSettings()->value("Folders/TrackEmpty", tr("")).toString();
+    else if (m_infos.trackNumber < 10)
+        trackNumber = m_application->getSettings()->value("Folders/TrackDefault", "%1 ").toString().arg(QString("0%1").arg(m_infos.trackNumber));
     else
         trackNumber = m_application->getSettings()->value("Folders/TrackDefault", "%1 ").toString().arg(m_infos.trackNumber);
+
+    trackNumber.replace('\\', '_');
+    trackNumber.replace('/', '_');
+    trackNumber.replace(':', '_');
+    trackNumber.replace('*', '_');
+    trackNumber.replace('?', '_');
+    trackNumber.replace('"', '_');
+    trackNumber.replace('<', '_');
+    trackNumber.replace('>', '_');
+    trackNumber.replace('|', '_');
 
     if (m_infos.discNumber == 0)
         discNumber = m_application->getSettings()->value("Folders/DiscEmpty", tr("")).toString();
     else
         discNumber = m_application->getSettings()->value("Folders/DiscDefault", "%1-").toString().arg(m_infos.discNumber);
 
-    QString pathName = m_application->getSettings()->value("Folders/Format", "%2/%4%3/%6%5%1").toString();
+    discNumber.replace('\\', '_');
+    discNumber.replace('/', '_');
+    discNumber.replace(':', '_');
+    discNumber.replace('*', '_');
+    discNumber.replace('?', '_');
+    discNumber.replace('"', '_');
+    discNumber.replace('<', '_');
+    discNumber.replace('>', '_');
+    discNumber.replace('|', '_');
+
+    QString pathName = m_application->getSettings()->value("Folders/Format", "%2/%3%4/%6%5%1").toString();
     pathName.replace("%1", title);
     pathName.replace("%2", artistName);
     pathName.replace("%3", albumTitle);
@@ -705,8 +774,7 @@ bool CSong::moveFile(void)
     pathName.replace("%5", trackNumber);
     pathName.replace("%6", discNumber);
 
-    // NEIN! Il peut y avoir plusieurs répertoires dans la médiathèque.
-    pathName = m_application->getSettings()->value("Folders/Path", "%USERNAME%/Music/").toString() + pathName;
+    pathName = folder + pathName;
 
     // Ajout de l'extension
     switch (m_properties.format)
@@ -717,7 +785,12 @@ bool CSong::moveFile(void)
         case FormatFLAC: pathName += ".flac"; break;
     }
 
-    //...
+    qDebug() << "CSong::moveFile: " << pathName;
+
+    // 1) Comparer l'ancien nom et le nouveau
+    // 2) Vérifier que le nouveau nom n'est pas déjà utilisé, sinon ajouté un suffixe
+    // 3) Déplacer le fichier si possible
+    // 4) Mettre-à-jour la base de données et la mémoire
 
     return true;
 }
@@ -970,7 +1043,10 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
     }
 
     song->updateDatabase();
+    //song->moveFile();
+
     connect(song, SIGNAL(songModified()), application, SLOT(onSongModified()));
+
     return song;
 }
 
@@ -1859,6 +1935,17 @@ void CSong::updateDatabase(void)
 {
     if (m_isModified && (m_properties != m_propertiesDB || m_infos != m_infosDB))
     {
+        // Déplacement du fichier
+        if (m_infos.title       != m_infosDB.title      ||
+            m_infos.artistName  != m_infosDB.artistName ||
+            m_infos.albumTitle  != m_infosDB.albumTitle ||
+            m_infos.year        != m_infosDB.year       ||
+            m_infos.trackNumber != m_infosDB.trackNumber||
+            m_infos.discNumber  != m_infosDB.discNumber )
+        {
+            moveFile();
+        }
+
         m_modification = QDateTime::currentDateTime();
 
         QSqlQuery query(m_application->getDataBase());

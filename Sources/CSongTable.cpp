@@ -800,33 +800,29 @@ void CSongTable::removeSongsFromLibrary(void)
     // Liste des morceaux sélectionnés
     QModelIndexList indexList = selectionModel()->selectedRows();
 
-    if (indexList.isEmpty())
-    {
-        return;
-    }
-
-    // Confirmation
-    if (QMessageBox::question(this, QString(), tr("Are you sure you want to remove the selected songs from the library?\nThe files will not be deleted."), tr("Remove"), tr("Cancel"), 0, 1) == 1)
-    {
-        return;
-    }
-
     QList<CSong *> songList;
+    bool needStop = false;
 
     for (QModelIndexList::const_iterator it = indexList.begin(); it != indexList.end(); ++it)
     {
         CSongTableItem * songItem = m_model->getSongItem(*it);
 
         if (m_application->getCurrentSongItem() == songItem)
-        {
-            m_application->stop();
-        }
+            needStop = true;
 
         if (!songList.contains(songItem->getSong()))
-        {
             songList.append(songItem->getSong());
-        }
     }
+
+    if (songList.isEmpty())
+        return;
+
+    // Confirmation
+    if (QMessageBox::question(this, QString(), tr("Are you sure you want to remove the selected songs from the library?\nThe files will not be deleted."), tr("Remove"), tr("Cancel"), 0, 1) == 1)
+        return;
+
+    if (needStop)
+        m_application->stop();
 
     m_application->removeSongs(songList);
 
