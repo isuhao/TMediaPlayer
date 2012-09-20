@@ -62,8 +62,6 @@ class CApplication : public QMainWindow
     friend class CDialogEditStaticPlayList;
     friend class CDialogEditDynamicList;
     friend class CDialogEditFolder;
-    friend class CDynamicList;
-    friend class CStaticPlayList;
 
 public:
 
@@ -79,6 +77,7 @@ public:
 
     bool initWindow(void);
     void showDatabaseError(const QString& msg, const QString& query, const QString& fileName, int line);
+    void loadLibraryFolders(void);
 
     // Préférences
     void setRowHeight(int height);
@@ -127,7 +126,9 @@ public:
     inline CLibrary * getLibrary(void) const;
     inline CSongTable * getDisplayedSongTable(void) const;
     void setDisplayedSongTable(CSongTable * songTable);
+    void setCurrentSongItem(CSongTableItem * songItem, CSongTable * songTable);
     CSong * getSongFromId(int id) const;
+    QString getLibraryFolderFromFileName(const QString& fileName) const;
     CFolder * getFolderFromId(int id) const;
     IPlayList * getPlayListFromId(int id) const;
     QList<IPlayList *> getPlayListsWithSong(CSong * song) const;
@@ -292,6 +293,7 @@ private:
     FMOD::DSP * m_dsp[10];
     QMap<QString, QFile *> m_logList;   ///< Liste des fichiers de log ouverts.
     QString m_applicationPath;
+    QStringList m_libraryFolders;       ///< Liste des répertoires de la médiathèque.
 
     QList<TNotification> m_infosNotified; ///< Liste des notifications.
 

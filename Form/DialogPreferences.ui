@@ -460,11 +460,8 @@
           </item>
           <item row="8" column="1" colspan="3">
            <widget class="QLineEdit" name="editOrgFormat">
-            <property name="text">
-             <string notr="true">%2/%3%4/%6%5%1</string>
-            </property>
             <property name="maxLength">
-             <number>512</number>
+             <number>256</number>
             </property>
            </widget>
           </item>
@@ -484,27 +481,31 @@
           </item>
           <item row="3" column="1">
            <widget class="QLineEdit" name="editOrgAlbumDefault">
-            <property name="text">
-             <string notr="true">%1</string>
+            <property name="maxLength">
+             <number>64</number>
             </property>
            </widget>
           </item>
           <item row="4" column="1">
            <widget class="QLineEdit" name="editOrgYearDefault">
-            <property name="text">
-             <string notr="true"> (%1)</string>
+            <property name="maxLength">
+             <number>64</number>
             </property>
            </widget>
           </item>
           <item row="3" column="2">
            <widget class="QLineEdit" name="editOrgAlbumEmpty">
-            <property name="text">
-             <string>Unknown album</string>
+            <property name="maxLength">
+             <number>64</number>
             </property>
            </widget>
           </item>
           <item row="5" column="2">
-           <widget class="QLineEdit" name="editOrgTrackEmpty"/>
+           <widget class="QLineEdit" name="editOrgTrackEmpty">
+            <property name="maxLength">
+             <number>64</number>
+            </property>
+           </widget>
           </item>
           <item row="5" column="0">
            <widget class="QLabel" name="lblOrgTrack">
@@ -535,7 +536,11 @@
            </widget>
           </item>
           <item row="4" column="2">
-           <widget class="QLineEdit" name="editOrgYearEmpty"/>
+           <widget class="QLineEdit" name="editOrgYearEmpty">
+            <property name="maxLength">
+             <number>64</number>
+            </property>
+           </widget>
           </item>
           <item row="6" column="0">
            <widget class="QLabel" name="lblOrgDisc">
@@ -553,15 +558,15 @@
           </item>
           <item row="2" column="2">
            <widget class="QLineEdit" name="editOrgArtistEmpty">
-            <property name="text">
-             <string>Unknown artist</string>
+            <property name="maxLength">
+             <number>64</number>
             </property>
            </widget>
           </item>
           <item row="2" column="1">
            <widget class="QLineEdit" name="editOrgArtistDefault">
-            <property name="text">
-             <string notr="true">%1</string>
+            <property name="maxLength">
+             <number>64</number>
             </property>
            </widget>
           </item>
@@ -611,19 +616,23 @@
            </widget>
           </item>
           <item row="6" column="2">
-           <widget class="QLineEdit" name="editOrgDiscEmpty"/>
+           <widget class="QLineEdit" name="editOrgDiscEmpty">
+            <property name="maxLength">
+             <number>64</number>
+            </property>
+           </widget>
           </item>
           <item row="6" column="1">
            <widget class="QLineEdit" name="editOrgDiscDefault">
-            <property name="text">
-             <string notr="true">%1-</string>
+            <property name="maxLength">
+             <number>64</number>
             </property>
            </widget>
           </item>
           <item row="5" column="1">
            <widget class="QLineEdit" name="editOrgTrackDefault">
-            <property name="text">
-             <string notr="true">%1 </string>
+            <property name="maxLength">
+             <number>64</number>
             </property>
            </widget>
           </item>
@@ -647,14 +656,17 @@
           <item row="1" column="1">
            <widget class="QLineEdit" name="editOrgTitleDefault">
             <property name="text">
-             <string notr="true">%1</string>
+             <string notr="true"/>
+            </property>
+            <property name="maxLength">
+             <number>64</number>
             </property>
            </widget>
           </item>
           <item row="1" column="2">
            <widget class="QLineEdit" name="editOrgTitleEmpty">
-            <property name="text">
-             <string>Unknown title</string>
+            <property name="maxLength">
+             <number>64</number>
             </property>
            </widget>
           </item>

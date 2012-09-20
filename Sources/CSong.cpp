@@ -654,9 +654,7 @@ bool CSong::writeTags(void)
  * Cette méthode doit être appellée quand on ajoute un fichier, ou qu'on modifie l'une des informations
  * utilisées (titre, artiste, album, numéro de piste, de disque, ou année).
  *
- * \todo Implémentation.
- * \todo Trouver dans quel répertoire de la médiathèque le fichier se trouve.
- * \todo Limiter la taille des noms de fichier (40 caractères avec iTunes).
+ * \todo Supprimer les répertoires vides après déplacement des fichiers.
  *
  * \return Booléen indiquant si le déplacement a eu lieu.
  */
@@ -664,8 +662,13 @@ bool CSong::writeTags(void)
 bool CSong::moveFile(void)
 {
     // Recherche du répertoire de la médiathèque
-    //...
-    QString folder = "";
+    QString folder = m_application->getLibraryFolderFromFileName(m_properties.fileName);
+
+    if (folder.isEmpty())
+    {
+        qDebug() << "CSong::moveFile: pas dans un répertoire de la médiathèque";
+        return false;
+    }
 
     QString title;
     QString artistName;
@@ -774,23 +777,70 @@ bool CSong::moveFile(void)
     pathName.replace("%5", trackNumber);
     pathName.replace("%6", discNumber);
 
-    pathName = folder + pathName;
-
-    // Ajout de l'extension
-    switch (m_properties.format)
-    {
-        default: break;
-        case FormatMP3:  pathName += ".mp3";  break;
-        case FormatOGG:  pathName += ".ogg";  break;
-        case FormatFLAC: pathName += ".flac"; break;
-    }
+    pathName = folder + '/' + pathName;
 
     qDebug() << "CSong::moveFile: " << pathName;
 
-    // 1) Comparer l'ancien nom et le nouveau
-    // 2) Vérifier que le nouveau nom n'est pas déjà utilisé, sinon ajouté un suffixe
-    // 3) Déplacer le fichier si possible
-    // 4) Mettre-à-jour la base de données et la mémoire
+    QString extension;
+
+    // Recherche de l'extension
+    switch (m_properties.format)
+    {
+        default: break;
+        case FormatMP3:  extension = ".mp3";  break;
+        case FormatOGG:  extension = ".ogg";  break;
+        case FormatFLAC: extension = ".flac"; break;
+    }
+
+    // Comparaison entre l'ancien nom et le nouveau nom
+    if (m_properties.fileName == pathName + extension)
+    {
+        qDebug() << "CSong::moveFile: nom identique";
+        return false;
+    }
+
+    // Ajout d'un suffixe si nécessaire
+    if (QFileInfo(pathName + extension).exists())
+    {
+        int num = 1;
+
+        while (QFileInfo(pathName + ' ' + QString::number(num) + extension).exists())
+        {
+            ++num;
+        }
+
+        pathName += ' ' + QString::number(num);
+    }
+
+    pathName += extension;
+
+    // Déplacement du fichier
+    QFile file(m_properties.fileName);
+
+    // Création des répertoires si nécessaire
+    QDir dir;
+    dir.mkpath(QFileInfo(pathName).path());
+
+    if (!file.rename(pathName))
+    {
+        qDebug() << "CSong::moveFile: can't rename";
+        return false;
+    }
+
+    // Mise-à-jour de la base de données
+    QSqlQuery query(m_application->getDataBase());
+    query.prepare("UPDATE song SET song_filename = ? WHERE song_id = ?");
+    query.bindValue(0, pathName);
+    query.bindValue(1, m_id);
+
+    if (!query.exec())
+    {
+        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        return false;
+    }
+
+    m_properties.fileName = pathName;
+    m_propertiesDB.fileName = pathName;
 
     return true;
 }

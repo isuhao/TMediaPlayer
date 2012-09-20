@@ -375,6 +375,29 @@ void CApplication::showDatabaseError(const QString& msg, const QString& query, c
 
 
 /**
+ * Charge la liste des répertoires de la médiathèque.
+ */
+
+void CApplication::loadLibraryFolders(void)
+{
+    m_libraryFolders.clear();
+    QSqlQuery query(m_dataBase);
+
+    if (!query.exec("SELECT path_location FROM libpath"))
+    {
+        showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+    }
+    else
+    {
+        while (query.next())
+        {
+            m_libraryFolders.append(query.value(0).toString());
+        }
+    }
+}
+
+
+/**
  * Modifie la hauteur des lignes des tableaux.
  *
  * \param height Hauteur des lignes en pixels, entre 15 et 50.
@@ -565,6 +588,22 @@ void CApplication::setDisplayedSongTable(CSongTable * songTable)
 
 
 /**
+ * Modifie le morceau et la liste de lecture courants.
+ * Attention : cette méthode doit être appellée uniquement pour mettre à jour
+ * le morceau courant lorsque les données d'une liste sont modifiées.
+ *
+ * \param songItem  Morceau courant.
+ * \param songTable Liste de lecture courante.
+ */
+
+void CApplication::setCurrentSongItem(CSongTableItem * songItem, CSongTable * songTable)
+{
+    m_currentSongItem = songItem;
+    m_currentSongTable = songTable;
+}
+
+
+/**
  * Retourne le pointeur sur un morceau à partir de son identifiant en base de données.
  *
  * \param id Identifiant du morceau.
@@ -578,6 +617,26 @@ CSong * CApplication::getSongFromId(int id) const
 
     const QMap<int, CSong *> songList = m_library->getSongsMap();
     return songList.value(id);
+}
+
+
+/**
+ * Retourne le répertoire de la médiathèque qui contient un fichier.
+ *
+ * \param fileName Adresse du fichier à analyser.
+ * \return Adresse du répertoire surveillé, ou une chaine vide si le fichier
+ *         n'est pas dans un répertoire surveillé.
+ */
+
+QString CApplication::getLibraryFolderFromFileName(const QString& fileName) const
+{
+    for (QStringList::const_iterator it = m_libraryFolders.begin(); it != m_libraryFolders.end(); ++it)
+    {
+        if (fileName.startsWith(*it))
+            return *it;
+    }
+
+    return QString();
 }
 
 
@@ -3214,6 +3273,10 @@ void CApplication::loadDatabase(void)
     }
 
 
+    // Liste des répertoires
+    loadLibraryFolders();
+
+
     // Création de la médiathèque
     m_library = new CLibrary(this);
     m_library->m_idPlayList = 0;
@@ -3225,8 +3288,7 @@ void CApplication::loadDatabase(void)
     {
         showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
     }
-
-    if (query.next())
+    else if (query.next())
     {
         m_library->m_idPlayList = 0;
         m_library->initColumns(query.value(0).toString());

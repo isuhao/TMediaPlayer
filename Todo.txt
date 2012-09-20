@@ -5,8 +5,6 @@
 
 - Améliorer la gestion du glisser-déposer dans la vue des listes de lecture (affichage de l'indicateur).
 
-- Corriger les noms de fichier automatiquement.
-
 - Bug : si on modifie une liste dynamique en cours de lecture, ben y'a un blem...
 - Bug : si une liste ne contient que des morceaux introuvables et que la répétition de liste est activée, la lecture entraine une boucle infinie.
 
@@ -20,7 +18,6 @@
 
 - Gérer les répertoires à surveiller :
   - Analyser le répertoire récursivement au lancement de l'application.
-  - Organiser automatiquement les fichiers dans ces répertoires.
   - Pouvoir organiser différement chaque répertoire ?
   - Stocker ces informations avec les données de la médiathèque ?
 

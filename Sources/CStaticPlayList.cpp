@@ -465,7 +465,8 @@ void CStaticPlayList::removeSelectedSongs(void)
     {
         CSongTableItem * currentItemAfter = getFirstSongItem(currentSong);
         m_model->setCurrentSong(currentItemAfter);
-        m_application->m_currentSongItem = currentItemAfter;
+        //m_application->m_currentSongItem = currentItemAfter;
+        m_application->setCurrentSongItem(currentItemAfter, this);
     }
 
     if (dialogEditSong)

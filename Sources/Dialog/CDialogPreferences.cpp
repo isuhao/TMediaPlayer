@@ -93,12 +93,12 @@ CDialogPreferences::CDialogPreferences(CApplication * application, QSettings * s
 
     // Organisation automatique des fichiers
     m_uiWidget->groupOrganize->setChecked(m_settings->value("Folders/KeepOrganized", false).toBool());
-    m_uiWidget->editOrgFormat->setText(m_settings->value("Folders/Format", QString("%2/%3%4/%6%5%1")).toString());
+    m_uiWidget->editOrgFormat->setText(m_settings->value("Folders/Format", QString("%2/%4%3/%6%5%1")).toString());
 
     m_uiWidget->editOrgTitleDefault->setText(m_settings->value("Folders/TitleDefault", QString("%1")).toString());
     m_uiWidget->editOrgArtistDefault->setText(m_settings->value("Folders/ArtistDefault", QString("%1")).toString());
     m_uiWidget->editOrgAlbumDefault->setText(m_settings->value("Folders/AlbumDefault", QString("%1")).toString());
-    m_uiWidget->editOrgYearDefault->setText(m_settings->value("Folders/YearDefault", QString(" (%1)")).toString());
+    m_uiWidget->editOrgYearDefault->setText(m_settings->value("Folders/YearDefault", QString("%1 - ")).toString());
     m_uiWidget->editOrgTrackDefault->setText(m_settings->value("Folders/TrackDefault", QString("%1 ")).toString());
     m_uiWidget->editOrgDiscDefault->setText(m_settings->value("Folders/DiscDefault", QString("%1-")).toString());
 
@@ -287,6 +287,8 @@ void CDialogPreferences::addFolder(void)
     QListWidgetItem * item = new QListWidgetItem(pathName);
     item->setData(Qt::UserRole, pathId);
     m_uiWidget->listFolders->addItem(item);
+
+    m_application->loadLibraryFolders();
 }
 
 
@@ -329,4 +331,6 @@ void CDialogPreferences::removeSelectedFolder(void)
             m_uiWidget->listFolders->addItem(item);
         }
     }
+
+    m_application->loadLibraryFolders();
 }
