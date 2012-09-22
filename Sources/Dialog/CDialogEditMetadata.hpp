@@ -57,6 +57,11 @@ protected slots:
     void save(void);
     void reset(void);
 
+    void enableTagID3v1(bool enable);
+    void enableTagID3v2(bool enable);
+    void enableTagAPE(bool enable);
+    void enableTagXiphComment(bool enable);
+
 protected:
 
     void initTagID3v1(TagLib::ID3v1::Tag * tags);
@@ -74,6 +79,7 @@ private:
     QStandardItemModel * m_modelID3v2Comments;
     QStandardItemModel * m_modelID3v2Pictures;
     QStandardItemModel * m_modelAPE;
+    QStandardItemModel * m_modelXiphComment;
     CApplication * m_application; ///< Pointeur sur l'application.
     CSong * m_song;               ///< Pointeur sur le morceau.
 };

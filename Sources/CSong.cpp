@@ -109,15 +109,6 @@ CSong::CSong(CApplication * application) :
     m_isModified    (false),
     m_needWriteTags (false),
     m_id            (-1),
-/*
-    m_fileName      (""),
-    m_fileSize      (0),
-    m_bitRate       (0),
-    m_sampleRate    (0),
-    m_format        (FormatUnknown),
-    m_numChannels   (0),
-    m_duration      (0),
-*/
     m_fileStatus    (true)
 {
     Q_CHECK_PTR(application);
@@ -141,15 +132,6 @@ CSong::CSong(const QString& fileName, CApplication * application) :
     m_isModified    (false),
     m_needWriteTags (false),
     m_id            (-1),
-/*
-    m_fileName      (fileName),
-    m_fileSize      (0),
-    m_bitRate       (0),
-    m_sampleRate    (0),
-    m_format        (FormatUnknown),
-    m_numChannels   (0),
-    m_duration      (0),
-*/
     m_fileStatus    (true)
 {
     Q_CHECK_PTR(application);
@@ -1049,7 +1031,7 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
     res = sound->getLength(reinterpret_cast<unsigned int *>(&(song->m_properties.duration)), FMOD_TIMEUNIT_MS);
     if (res != FMOD_OK)
     {
-        application->logError(tr("impossible de calculer la durée du morceau %1").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
+        application->logError(tr("can't compute song duration for file \"%1\"").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
         song->m_properties.duration = 0;
     }
 
@@ -3025,7 +3007,7 @@ bool CSong::loadTags(TagLib::Ogg::XiphComment * tags)
     QFile * logFile = m_application->getLogFile("metadata");
     QTextStream stream(logFile);
     stream << "========================================\n";
-    stream << "   " << tr("Chargement des tags XiphComment") << '\n';
+    stream << "   " << tr("Loading XiphComment tags") << '\n';
     stream << "----------------------------------------\n";
     stream << tr("File:") << ' ' << m_properties.fileName << '\n';
     stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString(tr("dd/MM/yyyy HH:mm:ss")) << '\n';

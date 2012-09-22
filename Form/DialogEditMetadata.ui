@@ -29,60 +29,64 @@
       <attribute name="title">
        <string>ID3v1</string>
       </attribute>
-      <layout class="QFormLayout" name="formLayout">
-       <property name="fieldGrowthPolicy">
-        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-       </property>
-       <item row="0" column="0">
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0" colspan="2">
+        <widget class="QCheckBox" name="enableID3v1">
+         <property name="text">
+          <string>Enable ID3v1 tags.</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
         <widget class="QLabel" name="lblID3v1Title">
          <property name="text">
           <string>Title:</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
+       <item row="1" column="1">
         <widget class="QLineEdit" name="editID3v1Title">
          <property name="maxLength">
           <number>30</number>
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
+       <item row="2" column="0">
         <widget class="QLabel" name="lblID3v1Artist">
          <property name="text">
           <string>Artist:</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
+       <item row="2" column="1">
         <widget class="QLineEdit" name="editID3v1Artist">
          <property name="maxLength">
           <number>30</number>
          </property>
         </widget>
        </item>
-       <item row="2" column="0">
+       <item row="3" column="0">
         <widget class="QLabel" name="lblID3v1Album">
          <property name="text">
           <string>Album:</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
+       <item row="3" column="1">
         <widget class="QLineEdit" name="editID3v1Album">
          <property name="maxLength">
           <number>30</number>
          </property>
         </widget>
        </item>
-       <item row="3" column="0">
+       <item row="4" column="0">
         <widget class="QLabel" name="lblID3v1Year">
          <property name="text">
           <string>Year:</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
+       <item row="4" column="1">
         <widget class="QSpinBox" name="editID3v1Year">
          <property name="minimum">
           <number>0</number>
@@ -92,42 +96,42 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="0">
+       <item row="5" column="0">
         <widget class="QLabel" name="lblID3v1Comments">
          <property name="text">
           <string>Comments:</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
+       <item row="5" column="1">
         <widget class="QLineEdit" name="editID3v1Comments">
          <property name="maxLength">
           <number>28</number>
          </property>
         </widget>
        </item>
-       <item row="5" column="0">
+       <item row="6" column="0">
         <widget class="QLabel" name="lblID3v1Track">
          <property name="text">
           <string>Track number:</string>
          </property>
         </widget>
        </item>
-       <item row="5" column="1">
+       <item row="6" column="1">
         <widget class="QSpinBox" name="editID3v1Track">
          <property name="maximum">
           <number>255</number>
          </property>
         </widget>
        </item>
-       <item row="6" column="0">
+       <item row="7" column="0">
         <widget class="QLabel" name="lblID3v1Genre">
          <property name="text">
           <string>Genre:</string>
          </property>
         </widget>
        </item>
-       <item row="6" column="1">
+       <item row="7" column="1">
         <widget class="QComboBox" name="editID3v1Genre">
          <property name="maxCount">
           <number>256</number>
@@ -137,6 +141,19 @@
          </property>
         </widget>
        </item>
+       <item row="8" column="0" colspan="2">
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="tagID3v2">
@@ -145,7 +162,14 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="QTabWidget" name="tabWidget_2">
+        <widget class="QCheckBox" name="enableID3v2">
+         <property name="text">
+          <string>Enable ID3v2 tags.</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTabWidget" name="tabID3v2Type">
          <property name="currentIndex">
           <number>0</number>
          </property>
@@ -339,6 +363,13 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_7">
        <item>
+        <widget class="QCheckBox" name="enableAPE">
+         <property name="text">
+          <string>Enable APE tags.</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QTableView" name="tableAPE">
          <attribute name="horizontalHeaderMinimumSectionSize">
           <number>100</number>
@@ -363,6 +394,34 @@
       <attribute name="title">
        <string>Xiph Comment</string>
       </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_8">
+       <item>
+        <widget class="QCheckBox" name="enableXiphComment">
+         <property name="text">
+          <string>Enable XiphComment tags.</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTableView" name="tableXiphComment">
+         <attribute name="horizontalHeaderMinimumSectionSize">
+          <number>100</number>
+         </attribute>
+         <attribute name="horizontalHeaderStretchLastSection">
+          <bool>true</bool>
+         </attribute>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
+         <attribute name="verticalHeaderDefaultSectionSize">
+          <number>20</number>
+         </attribute>
+         <attribute name="verticalHeaderMinimumSectionSize">
+          <number>20</number>
+         </attribute>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </widget>
    </item>

@@ -20,6 +20,8 @@
   - Analyser le répertoire récursivement au lancement de l'application.
   - Pouvoir organiser différement chaque répertoire ?
   - Stocker ces informations avec les données de la médiathèque ?
+  - Supprimer les répertoires vides après déplacement des fichiers.
+  - Déplacer les illustrations sous forme d'image en même temps que les morceaux.
 
 - Ajouter une vue pour afficher l'illustration principale.
 
@@ -38,10 +40,6 @@
 - Optimisation : exécuter les requêtes SQL dans un thread séparé.
   - Utiliser des transactions.
   - Tester avec MySQL.
-
-- Organiser automatiquement les fichiers :
-  - Pouvoir préciser le schéma du nom ("%ARTIST%/%ALBUM%/{{%DISC%-}%TRACK% }%TITLE%")
-  - Ajouter une option pour tronquer les noms (40 caractères pour iTunes).
 
 - Barre d'état :
   - Afficher les informations sur les morceaux sélectionnés (nombre et durée).
