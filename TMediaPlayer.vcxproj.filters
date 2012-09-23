@@ -576,6 +576,9 @@
     <CustomBuild Include="Form\DialogLastPlays.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="Sources\CSliderStyle.hpp">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_DialogEditDynamicPlayList.h">

@@ -4,7 +4,7 @@
 <context>
     <name>CApplication</name>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="283"/>
+        <location filename="../Sources/CApplication.cpp" line="285"/>
         <source>Failed to init sound system with FMOD.</source>
         <translation>Le chargement du système de son avec FMOD a échoué.</translation>
     </message>
@@ -13,9 +13,9 @@
         <translation type="obsolete">Erreur lors du chargement de la base de données.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="122"/>
-        <location filename="../Sources/CApplication.cpp" line="2603"/>
-        <location filename="../Sources/CApplication.cpp" line="2607"/>
+        <location filename="../Sources/CApplication.cpp" line="123"/>
+        <location filename="../Sources/CApplication.cpp" line="2605"/>
+        <location filename="../Sources/CApplication.cpp" line="2609"/>
         <source>%n song(s), %1</source>
         <translation>
             <numerusform>%n morceau, %1</numerusform>
@@ -23,37 +23,42 @@
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="244"/>
+        <location filename="../Sources/CApplication.cpp" line="204"/>
+        <source>the application has already been initialized</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/CApplication.cpp" line="246"/>
         <source>Playlists</source>
         <translation>Listes de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="256"/>
+        <location filename="../Sources/CApplication.cpp" line="258"/>
         <source>Find</source>
         <translation>Chercher</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="259"/>
+        <location filename="../Sources/CApplication.cpp" line="261"/>
         <source>Edit</source>
         <translation>Modifier</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="270"/>
+        <location filename="../Sources/CApplication.cpp" line="272"/>
         <source>Lyrics</source>
         <translation>Paroles</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="338"/>
+        <location filename="../Sources/CApplication.cpp" line="340"/>
         <source>Failed to load database: %1.</source>
         <translation>Erreur lors du chargement de la base de données : %1.</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="370"/>
+        <location filename="../Sources/CApplication.cpp" line="372"/>
         <source>Database error</source>
         <translation>Erreur de base de données</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="370"/>
+        <location filename="../Sources/CApplication.cpp" line="372"/>
         <source>File: %1 (%2)
 
 Query: %3
@@ -66,17 +71,17 @@ Requête : %3
 Erreur : %4</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="373"/>
+        <location filename="../Sources/CApplication.cpp" line="375"/>
         <source>Query: </source>
         <translation>Requête : </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1096"/>
+        <location filename="../Sources/CApplication.cpp" line="1098"/>
         <source>erreur lors de l&apos;ouverture du fichier de log</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1127"/>
+        <location filename="../Sources/CApplication.cpp" line="1129"/>
         <source>%2 (%3 line %4): %1</source>
         <translation>%2 (%3 ligne %4) : %1</translation>
     </message>
@@ -85,12 +90,12 @@ Erreur : %4</translation>
         <translation type="obsolete">pointeur invalide</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1693"/>
+        <location filename="../Sources/CApplication.cpp" line="1695"/>
         <source>invalid argument (%1)</source>
         <translation>argument invalide (%1)</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="1868"/>
+        <location filename="../Sources/CApplication.cpp" line="1870"/>
         <source>%n song(s) added to the library.</source>
         <translation>
             <numerusform>%n morceau ajouté à la médiathèque.</numerusform>
@@ -98,22 +103,22 @@ Erreur : %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2015"/>
+        <location filename="../Sources/CApplication.cpp" line="2017"/>
         <source>plusieurs morceaux sÃ©lectionnÃ©s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2045"/>
+        <location filename="../Sources/CApplication.cpp" line="2047"/>
         <source>This file is already in the library. Do you want to merge the two songs?</source>
         <translation>Le fichier sélectionné est déjà dans la médiathèque. Voulez-vous fusionner les deux morceaux ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2157"/>
+        <location filename="../Sources/CApplication.cpp" line="2159"/>
         <source>erreur lors du chargement du fichier %1 avec FMOD</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="2603"/>
+        <location filename="../Sources/CApplication.cpp" line="2605"/>
         <source>%n day(s) %1</source>
         <translation>
             <numerusform>%n jour %1</numerusform>
@@ -128,70 +133,70 @@ Erreur : %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3363"/>
+        <location filename="../Sources/CApplication.cpp" line="3365"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3371"/>
-        <location filename="../Sources/CApplication.cpp" line="3379"/>
+        <location filename="../Sources/CApplication.cpp" line="3373"/>
+        <location filename="../Sources/CApplication.cpp" line="3381"/>
         <source>Play</source>
         <translation>Lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1839"/>
+        <location filename="../Sources/CApplication.cpp" line="1841"/>
         <source>Loading files...</source>
         <translation>Chargement des fichiers...</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1183"/>
-        <location filename="../Sources/CApplication.cpp" line="1210"/>
-        <location filename="../Sources/CApplication.cpp" line="1226"/>
-        <location filename="../Sources/CApplication.cpp" line="1557"/>
-        <location filename="../Sources/CApplication.cpp" line="2246"/>
-        <location filename="../Sources/CApplication.cpp" line="2261"/>
-        <location filename="../Sources/CApplication.cpp" line="2310"/>
+        <location filename="../Sources/CApplication.cpp" line="1185"/>
+        <location filename="../Sources/CApplication.cpp" line="1212"/>
+        <location filename="../Sources/CApplication.cpp" line="1228"/>
+        <location filename="../Sources/CApplication.cpp" line="1559"/>
+        <location filename="../Sources/CApplication.cpp" line="2248"/>
+        <location filename="../Sources/CApplication.cpp" line="2263"/>
+        <location filename="../Sources/CApplication.cpp" line="2312"/>
         <source>invalid pointer</source>
         <translation>pointeur invalide</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2164"/>
+        <location filename="../Sources/CApplication.cpp" line="2166"/>
         <source>can&apos;t compute song duration for file &quot;%1&quot;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2173"/>
+        <location filename="../Sources/CApplication.cpp" line="2175"/>
         <source>can&apos;t find song format for file &quot;%1&quot;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2180"/>
+        <location filename="../Sources/CApplication.cpp" line="2182"/>
         <source>unknown format</source>
         <translation>format inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2461"/>
+        <location filename="../Sources/CApplication.cpp" line="2463"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Êtes-vous sûr de vouloir supprimer cette liste de lecture ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2461"/>
+        <location filename="../Sources/CApplication.cpp" line="2463"/>
         <source>Yes</source>
         <translation>Oui</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2461"/>
+        <location filename="../Sources/CApplication.cpp" line="2463"/>
         <source>No</source>
         <translation>Non</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1805"/>
-        <location filename="../Sources/CApplication.cpp" line="2031"/>
+        <location filename="../Sources/CApplication.cpp" line="1807"/>
+        <location filename="../Sources/CApplication.cpp" line="2033"/>
         <source>Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)</source>
         <translation>Fichiers multimédias (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;Tous les fichiers (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1839"/>
+        <location filename="../Sources/CApplication.cpp" line="1841"/>
         <source>Abort</source>
         <translation>Interrompre</translation>
     </message>
@@ -200,7 +205,7 @@ Erreur : %4</translation>
         <translation type="obsolete">Êtes-vous sûr de vouloir supprimer ce dossier ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2749"/>
+        <location filename="../Sources/CApplication.cpp" line="2751"/>
         <source>This program requires FMOD %1 or superior.</source>
         <translation>Ce programme nécessite FMOD %1 ou supérieur.</translation>
     </message>
@@ -328,207 +333,215 @@ Erreur : %4</translation>
 <context>
     <name>CDialogEditMetadata</name>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="69"/>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="71"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="70"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="72"/>
         <source>Metadata</source>
         <translation>Métadonnées</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="167"/>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="169"/>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="178"/>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="181"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="168"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="170"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="179"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="182"/>
         <source>Key</source>
         <translation>Clé</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="167"/>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="169"/>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="178"/>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="181"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="168"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="170"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="179"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="182"/>
         <source>Value</source>
         <translation>Valeur</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="171"/>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="173"/>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="175"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="172"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="174"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="176"/>
         <source>Description</source>
         <translation>Description</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="171"/>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="173"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="172"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="174"/>
         <source>Language</source>
         <translation>Langue</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="171"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="172"/>
         <source>Lyrics</source>
         <translation>Paroles</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="173"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="174"/>
         <source>Comments</source>
         <translation>Commentaires</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="175"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="176"/>
         <source>Type</source>
         <translation>Type</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="175"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="176"/>
         <source>Format</source>
         <translation>Format</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="175"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="176"/>
         <source>Size</source>
         <translation>Taille</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="186"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="187"/>
         <source>unknown format</source>
         <translation type="unfinished">format inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="195"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="188"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="204"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="231"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="262"/>
+        <source>Error while loading tags.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="203"/>
         <source>can&apos;t read MP3 file &quot;%1&quot;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="214"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="230"/>
         <source>can&apos;t read Ogg file &quot;%1&quot;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="235"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="261"/>
         <source>can&apos;t read FLAC file &quot;%1&quot;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="414"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="455"/>
         <source>Other</source>
         <translation>Autre</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="415"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="456"/>
         <source>FileIcon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="416"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="457"/>
         <source>OtherFileIcon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="417"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="458"/>
         <source>FrontCover</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="418"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="459"/>
         <source>BackCover</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="419"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="460"/>
         <source>LeafletPage</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="420"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="461"/>
         <source>Media</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="421"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="462"/>
         <source>LeadArtist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="422"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="463"/>
         <source>Artist</source>
         <translation>Artiste</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="423"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="464"/>
         <source>Conductor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="424"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="465"/>
         <source>Band</source>
         <translation>Groupe</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="425"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="466"/>
         <source>Composer</source>
         <translation>Compositeur</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="426"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="467"/>
         <source>Lyricist</source>
         <translation>Parolier</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="427"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="468"/>
         <source>RecordingLocation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="428"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="469"/>
         <source>DuringRecording</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="429"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="470"/>
         <source>DuringPerformance</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="430"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="471"/>
         <source>MovieScreenCapture</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="431"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="472"/>
         <source>ColouredFish</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="432"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="473"/>
         <source>Illustration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="433"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="474"/>
         <source>BandLogo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="434"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="475"/>
         <source>PublisherLogo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="105"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="106"/>
         <source>Save</source>
         <translation>Enregistrer</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="106"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="107"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="107"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="108"/>
         <source>Apply</source>
         <translation>Appliquer</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="108"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="109"/>
         <source>Reset</source>
         <translation>Réinitialiser</translation>
     </message>
@@ -1203,16 +1216,18 @@ Erreur : %4</translation>
         <translation>Erreur : tag &apos;%1&apos; invalide</translation>
     </message>
     <message>
+        <location filename="../Sources/CSong.cpp" line="243"/>
+        <source>invalid identifier (%1)</source>
+        <translation type="unfinished">identifiant invalide (%1)</translation>
+    </message>
+    <message>
         <location filename="../Sources/CSong.cpp" line="340"/>
         <source>Unknown format</source>
         <translation>Format inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="534"/>
-        <location filename="../Sources/CSong.cpp" line="573"/>
-        <location filename="../Sources/CSong.cpp" line="608"/>
         <source>file &quot;%1&quot; is open in read-only</source>
-        <translation>le fichier &quot;%1&quot; est ouvert en lecture seule</translation>
+        <translation type="obsolete">le fichier &quot;%1&quot; est ouvert en lecture seule</translation>
     </message>
     <message>
         <location filename="../Sources/CSong.cpp" line="2345"/>
@@ -1261,19 +1276,30 @@ Erreur : %4</translation>
         <translation>format inconnu</translation>
     </message>
     <message>
+        <location filename="../Sources/CSong.cpp" line="356"/>
+        <source>can&apos;t read the MP3 file &quot;%1&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="376"/>
+        <source>impossible de rÃ©cupÃ©rer les propriÃ©tÃ©s du fichier %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="406"/>
+        <location filename="../Sources/CSong.cpp" line="564"/>
+        <source>can&apos;t read the Ogg file &quot;%1&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="424"/>
+        <source>can&apos;t get properties of the file &quot;%1&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../Sources/CSong.cpp" line="525"/>
         <source>file &quot;%1&quot; can&apos;t be opened</source>
         <translation>le fichier &quot;%1&quot; ne peut pas être ouvert</translation>
-    </message>
-    <message>
-        <location filename="../Sources/CSong.cpp" line="564"/>
-        <source>impossible de lire le fichier Ogg &quot;%1&quot;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Sources/CSong.cpp" line="599"/>
-        <source>impossible de lire le fichier FLAC &quot;%1&quot;</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../Sources/CSong.cpp" line="1005"/>
@@ -1286,8 +1312,20 @@ Erreur : %4</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../Sources/CSong.cpp" line="534"/>
+        <location filename="../Sources/CSong.cpp" line="573"/>
+        <location filename="../Sources/CSong.cpp" line="608"/>
+        <source>the file &quot;%1&quot; is open in read-only</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="599"/>
+        <source>can&apos;t read the FLAC file &quot;%1&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../Sources/CSong.cpp" line="1034"/>
-        <source>impossible de calculer la durÃ©e du morceau %1</source>
+        <source>can&apos;t compute song duration for file &quot;%1&quot;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

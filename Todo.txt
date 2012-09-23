@@ -22,6 +22,7 @@
   - Stocker ces informations avec les données de la médiathèque ?
   - Supprimer les répertoires vides après déplacement des fichiers.
   - Déplacer les illustrations sous forme d'image en même temps que les morceaux.
+  - Placer les compilations dans un dossier spécial.
 
 - Ajouter une vue pour afficher l'illustration principale.
 

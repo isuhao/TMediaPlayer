@@ -240,7 +240,7 @@ void CSong::loadFromDatabase(void)
 
     if (!query.next())
     {
-        m_application->logError(QString("l'identifiant %1 est invalide").arg(m_id), __FUNCTION__, __FILE__, __LINE__);
+        m_application->logError(tr("invalid identifier (%1)").arg(m_id), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
@@ -353,7 +353,7 @@ bool CSong::loadTags(bool readProperties)
             if (!file.isValid())
             {
                 m_fileStatus = false;
-                m_application->logError(QString("impossible de lire le fichier MP3 \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("can't read the MP3 file \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 return false;
             }
 
@@ -373,7 +373,7 @@ bool CSong::loadTags(bool readProperties)
                 }
                 else
                 {
-                    m_application->logError(QString("impossible de récupérer les propriétés du fichier %1").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                    m_application->logError(tr("impossible de récupérer les propriétés du fichier %1").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 }
             }
 
@@ -403,7 +403,7 @@ bool CSong::loadTags(bool readProperties)
             if (!file.isValid())
             {
                 m_fileStatus = false;
-                m_application->logError(QString("impossible de lire le fichier Ogg %1").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("can't read the Ogg file \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 return false;
             }
 
@@ -421,7 +421,7 @@ bool CSong::loadTags(bool readProperties)
                 }
                 else
                 {
-                    m_application->logError(QString("impossible de récupérer les propriétés du fichier %1").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                    m_application->logError(tr("can't get properties of the file \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 }
             }
 
@@ -531,7 +531,7 @@ bool CSong::writeTags(void)
 
             if (file.readOnly())
             {
-                m_application->logError(tr("file \"%1\" is open in read-only"), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("the file \"%1\" is open in read-only").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 m_needWriteTags = true;
                 return false;
             }
@@ -561,7 +561,7 @@ bool CSong::writeTags(void)
             if (!file.isValid())
             {
                 m_fileStatus = false;
-                m_application->logError(tr("impossible de lire le fichier Ogg \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("can't read the Ogg file \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 m_needWriteTags = true;
                 return false;
             }
@@ -570,7 +570,7 @@ bool CSong::writeTags(void)
 
             if (file.readOnly())
             {
-                m_application->logError(tr("file \"%1\" is open in read-only"), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("the file \"%1\" is open in read-only"), __FUNCTION__, __FILE__, __LINE__);
                 m_needWriteTags = true;
                 return false;
             }
@@ -596,7 +596,7 @@ bool CSong::writeTags(void)
             if (!file.isValid())
             {
                 m_fileStatus = false;
-                m_application->logError(tr("impossible de lire le fichier FLAC \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("can't read the FLAC file \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 m_needWriteTags = true;
                 return false;
             }
@@ -605,7 +605,7 @@ bool CSong::writeTags(void)
 
             if (file.readOnly())
             {
-                m_application->logError(tr("file \"%1\" is open in read-only"), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("the file \"%1\" is open in read-only"), __FUNCTION__, __FILE__, __LINE__);
                 m_needWriteTags = true;
                 return false;
             }

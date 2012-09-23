@@ -39,6 +39,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "Dialog/CDialogRemoveFolder.hpp"
 #include "Importer/CImporterITunes.hpp"
 #include "CLibrary.hpp"
+#include "CSliderStyle.hpp"
 
 // Last.fm
 #include "Last.fm/CAuthentication.hpp"
@@ -200,7 +201,7 @@ bool CApplication::initWindow(void)
 
     if (init)
     {
-        logError("l'application a déjà été initialisée", __FUNCTION__, __FILE__, __LINE__);
+        logError(tr("the application has already been initialized"), __FUNCTION__, __FILE__, __LINE__);
         return true;
     }
 
@@ -212,6 +213,7 @@ bool CApplication::initWindow(void)
     QWidget * widgetControl = new QWidget(this);
     m_uiControl->setupUi(widgetControl);
     m_uiWidget->toolBar->addWidget(widgetControl);
+    m_uiControl->sliderPosition->setStyle(new CSliderStyle);
 
     m_uiControl->btnStop->setVisible(m_settings->value("Preferences/ShowButtonStop", true).toBool());
 
