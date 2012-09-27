@@ -4,9 +4,9 @@
 <context>
     <name>CApplication</name>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="123"/>
-        <location filename="../Sources/CApplication.cpp" line="2605"/>
-        <location filename="../Sources/CApplication.cpp" line="2609"/>
+        <location filename="../Sources/CApplication.cpp" line="125"/>
+        <location filename="../Sources/CApplication.cpp" line="2611"/>
+        <location filename="../Sources/CApplication.cpp" line="2615"/>
         <source>%n song(s), %1</source>
         <translation>
             <numerusform>%n song, %1</numerusform>
@@ -14,47 +14,45 @@
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="204"/>
+        <location filename="../Sources/CApplication.cpp" line="206"/>
         <source>the application has already been initialized</source>
-        <translation type="unfinished"></translation>
+        <translation>the application has already been initialized</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="246"/>
+        <location filename="../Sources/CApplication.cpp" line="248"/>
         <source>Playlists</source>
         <translation>Playlists</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="258"/>
         <source>Find</source>
-        <translation>Find</translation>
+        <translation type="obsolete">Find</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="261"/>
         <source>Edit</source>
-        <translation>Edit</translation>
+        <translation type="obsolete">Edit</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="272"/>
+        <location filename="../Sources/CApplication.cpp" line="276"/>
         <source>Lyrics</source>
         <translation>Lyrics</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="285"/>
+        <location filename="../Sources/CApplication.cpp" line="289"/>
         <source>Failed to init sound system with FMOD.</source>
         <translation>Failed to init sound system with FMOD.</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="340"/>
+        <location filename="../Sources/CApplication.cpp" line="344"/>
         <source>Failed to load database: %1.</source>
         <translation>Failed to load database: %1.</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="372"/>
+        <location filename="../Sources/CApplication.cpp" line="376"/>
         <source>Database error</source>
         <translation>Database error</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="372"/>
+        <location filename="../Sources/CApplication.cpp" line="376"/>
         <source>File: %1 (%2)
 
 Query: %3
@@ -67,32 +65,32 @@ Query: %3
 Error: %4</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="375"/>
+        <location filename="../Sources/CApplication.cpp" line="379"/>
         <source>Query: </source>
         <translation>Query: </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1098"/>
+        <location filename="../Sources/CApplication.cpp" line="1102"/>
         <source>erreur lors de l&apos;ouverture du fichier de log</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1129"/>
+        <location filename="../Sources/CApplication.cpp" line="1133"/>
         <source>%2 (%3 line %4): %1</source>
         <translation>%2 (%3 line %4): %1</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2166"/>
+        <location filename="../Sources/CApplication.cpp" line="2170"/>
         <source>can&apos;t compute song duration for file &quot;%1&quot;</source>
         <translation>can&apos;t compute song duration for file &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2175"/>
+        <location filename="../Sources/CApplication.cpp" line="2179"/>
         <source>can&apos;t find song format for file &quot;%1&quot;</source>
         <translation>can&apos;t find song format for file &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2182"/>
+        <location filename="../Sources/CApplication.cpp" line="2186"/>
         <source>unknown format</source>
         <translation>unknown format</translation>
     </message>
@@ -101,39 +99,39 @@ Error: %4</translation>
         <translation type="obsolete">invalid pointer</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1185"/>
-        <location filename="../Sources/CApplication.cpp" line="1212"/>
-        <location filename="../Sources/CApplication.cpp" line="1228"/>
-        <location filename="../Sources/CApplication.cpp" line="1559"/>
-        <location filename="../Sources/CApplication.cpp" line="2248"/>
-        <location filename="../Sources/CApplication.cpp" line="2263"/>
-        <location filename="../Sources/CApplication.cpp" line="2312"/>
+        <location filename="../Sources/CApplication.cpp" line="1189"/>
+        <location filename="../Sources/CApplication.cpp" line="1216"/>
+        <location filename="../Sources/CApplication.cpp" line="1232"/>
+        <location filename="../Sources/CApplication.cpp" line="1563"/>
+        <location filename="../Sources/CApplication.cpp" line="2252"/>
+        <location filename="../Sources/CApplication.cpp" line="2267"/>
+        <location filename="../Sources/CApplication.cpp" line="2316"/>
         <source>invalid pointer</source>
         <translation>invalid pointer</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1695"/>
+        <location filename="../Sources/CApplication.cpp" line="1699"/>
         <source>invalid argument (%1)</source>
         <translation>invalid argument (%1)</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1807"/>
-        <location filename="../Sources/CApplication.cpp" line="2033"/>
+        <location filename="../Sources/CApplication.cpp" line="1811"/>
+        <location filename="../Sources/CApplication.cpp" line="2037"/>
         <source>Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)</source>
         <translation>Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1841"/>
+        <location filename="../Sources/CApplication.cpp" line="1845"/>
         <source>Loading files...</source>
         <translation>Loading files...</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1841"/>
+        <location filename="../Sources/CApplication.cpp" line="1845"/>
         <source>Abort</source>
         <translation>Abort</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="1870"/>
+        <location filename="../Sources/CApplication.cpp" line="1874"/>
         <source>%n song(s) added to the library.</source>
         <translation>
             <numerusform>%n song added to the library.</numerusform>
@@ -141,37 +139,37 @@ Error: %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2017"/>
+        <location filename="../Sources/CApplication.cpp" line="2021"/>
         <source>plusieurs morceaux sÃ©lectionnÃ©s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2047"/>
+        <location filename="../Sources/CApplication.cpp" line="2051"/>
         <source>This file is already in the library. Do you want to merge the two songs?</source>
         <translation>This file is already in the library. Do you want to merge the two songs?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2159"/>
+        <location filename="../Sources/CApplication.cpp" line="2163"/>
         <source>erreur lors du chargement du fichier %1 avec FMOD</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2463"/>
+        <location filename="../Sources/CApplication.cpp" line="2467"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Are you sure you want to delete this playlist?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2463"/>
+        <location filename="../Sources/CApplication.cpp" line="2467"/>
         <source>Yes</source>
         <translation>Yes</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2463"/>
+        <location filename="../Sources/CApplication.cpp" line="2467"/>
         <source>No</source>
         <translation>No</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="2605"/>
+        <location filename="../Sources/CApplication.cpp" line="2611"/>
         <source>%n day(s) %1</source>
         <translation>
             <numerusform>%n day %1</numerusform>
@@ -186,18 +184,18 @@ Error: %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2751"/>
+        <location filename="../Sources/CApplication.cpp" line="2757"/>
         <source>This program requires FMOD %1 or superior.</source>
         <translation>This program requires FMOD %1 or superior.</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3365"/>
+        <location filename="../Sources/CApplication.cpp" line="3371"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3373"/>
-        <location filename="../Sources/CApplication.cpp" line="3381"/>
+        <location filename="../Sources/CApplication.cpp" line="3379"/>
+        <location filename="../Sources/CApplication.cpp" line="3387"/>
         <source>Play</source>
         <translation>Play</translation>
     </message>
@@ -379,7 +377,7 @@ Error: %4</translation>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="231"/>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="262"/>
         <source>Error while loading tags.</source>
-        <translation type="unfinished"></translation>
+        <translation>Error while loading tags.</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="203"/>
@@ -1020,32 +1018,32 @@ Error: %4</translation>
         <translation>Unknown title</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="678"/>
+        <location filename="../Sources/CSong.cpp" line="681"/>
         <source>Unknown artist</source>
         <translation>Unknown artist</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="693"/>
+        <location filename="../Sources/CSong.cpp" line="696"/>
         <source>Unknown album</source>
         <translation>Unknown album</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="1262"/>
+        <location filename="../Sources/CSong.cpp" line="1265"/>
         <source>%1 Gio</source>
         <translation>%1 Gio</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="1268"/>
+        <location filename="../Sources/CSong.cpp" line="1271"/>
         <source>%1 Mio</source>
         <translation>%1 Mio</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="1274"/>
+        <location filename="../Sources/CSong.cpp" line="1277"/>
         <source>%1 Kio</source>
         <translation>%1 Kio</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CSong.cpp" line="1279"/>
+        <location filename="../Sources/CSong.cpp" line="1282"/>
         <source>%n byte(s)</source>
         <translation>
             <numerusform>%n byte</numerusform>
@@ -1053,88 +1051,88 @@ Error: %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2342"/>
+        <location filename="../Sources/CSong.cpp" line="2345"/>
         <source>Chargement des tags ID3v1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2344"/>
-        <location filename="../Sources/CSong.cpp" line="2402"/>
-        <location filename="../Sources/CSong.cpp" line="2836"/>
-        <location filename="../Sources/CSong.cpp" line="3012"/>
-        <location filename="../Sources/CSong.cpp" line="3367"/>
-        <location filename="../Sources/CSong.cpp" line="3404"/>
-        <location filename="../Sources/CSong.cpp" line="3641"/>
-        <location filename="../Sources/CSong.cpp" line="3763"/>
+        <location filename="../Sources/CSong.cpp" line="2347"/>
+        <location filename="../Sources/CSong.cpp" line="2405"/>
+        <location filename="../Sources/CSong.cpp" line="2839"/>
+        <location filename="../Sources/CSong.cpp" line="3015"/>
+        <location filename="../Sources/CSong.cpp" line="3370"/>
+        <location filename="../Sources/CSong.cpp" line="3407"/>
+        <location filename="../Sources/CSong.cpp" line="3644"/>
+        <location filename="../Sources/CSong.cpp" line="3766"/>
         <source>File:</source>
         <translation>File:</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2345"/>
-        <location filename="../Sources/CSong.cpp" line="2403"/>
-        <location filename="../Sources/CSong.cpp" line="2837"/>
-        <location filename="../Sources/CSong.cpp" line="3013"/>
-        <location filename="../Sources/CSong.cpp" line="3368"/>
-        <location filename="../Sources/CSong.cpp" line="3405"/>
-        <location filename="../Sources/CSong.cpp" line="3642"/>
-        <location filename="../Sources/CSong.cpp" line="3764"/>
+        <location filename="../Sources/CSong.cpp" line="2348"/>
+        <location filename="../Sources/CSong.cpp" line="2406"/>
+        <location filename="../Sources/CSong.cpp" line="2840"/>
+        <location filename="../Sources/CSong.cpp" line="3016"/>
+        <location filename="../Sources/CSong.cpp" line="3371"/>
+        <location filename="../Sources/CSong.cpp" line="3408"/>
+        <location filename="../Sources/CSong.cpp" line="3645"/>
+        <location filename="../Sources/CSong.cpp" line="3767"/>
         <source>Date:</source>
         <translation>Date:</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2400"/>
+        <location filename="../Sources/CSong.cpp" line="2403"/>
         <source>Chargement des tags ID3v2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2834"/>
+        <location filename="../Sources/CSong.cpp" line="2837"/>
         <source>Chargement des tags APE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2535"/>
-        <location filename="../Sources/CSong.cpp" line="2570"/>
+        <location filename="../Sources/CSong.cpp" line="2538"/>
         <location filename="../Sources/CSong.cpp" line="2573"/>
-        <location filename="../Sources/CSong.cpp" line="2577"/>
-        <location filename="../Sources/CSong.cpp" line="2585"/>
-        <location filename="../Sources/CSong.cpp" line="2606"/>
+        <location filename="../Sources/CSong.cpp" line="2576"/>
+        <location filename="../Sources/CSong.cpp" line="2580"/>
+        <location filename="../Sources/CSong.cpp" line="2588"/>
         <location filename="../Sources/CSong.cpp" line="2609"/>
-        <location filename="../Sources/CSong.cpp" line="2613"/>
-        <location filename="../Sources/CSong.cpp" line="2621"/>
-        <location filename="../Sources/CSong.cpp" line="2658"/>
-        <location filename="../Sources/CSong.cpp" line="2697"/>
-        <location filename="../Sources/CSong.cpp" line="2732"/>
-        <location filename="../Sources/CSong.cpp" line="2757"/>
-        <location filename="../Sources/CSong.cpp" line="2763"/>
-        <location filename="../Sources/CSong.cpp" line="2773"/>
-        <location filename="../Sources/CSong.cpp" line="2787"/>
-        <location filename="../Sources/CSong.cpp" line="2793"/>
-        <location filename="../Sources/CSong.cpp" line="2803"/>
-        <location filename="../Sources/CSong.cpp" line="2928"/>
+        <location filename="../Sources/CSong.cpp" line="2612"/>
+        <location filename="../Sources/CSong.cpp" line="2616"/>
+        <location filename="../Sources/CSong.cpp" line="2624"/>
+        <location filename="../Sources/CSong.cpp" line="2661"/>
+        <location filename="../Sources/CSong.cpp" line="2700"/>
+        <location filename="../Sources/CSong.cpp" line="2735"/>
+        <location filename="../Sources/CSong.cpp" line="2760"/>
+        <location filename="../Sources/CSong.cpp" line="2766"/>
+        <location filename="../Sources/CSong.cpp" line="2776"/>
+        <location filename="../Sources/CSong.cpp" line="2790"/>
+        <location filename="../Sources/CSong.cpp" line="2796"/>
+        <location filename="../Sources/CSong.cpp" line="2806"/>
         <location filename="../Sources/CSong.cpp" line="2931"/>
-        <location filename="../Sources/CSong.cpp" line="2935"/>
-        <location filename="../Sources/CSong.cpp" line="2943"/>
-        <location filename="../Sources/CSong.cpp" line="2961"/>
+        <location filename="../Sources/CSong.cpp" line="2934"/>
+        <location filename="../Sources/CSong.cpp" line="2938"/>
+        <location filename="../Sources/CSong.cpp" line="2946"/>
         <location filename="../Sources/CSong.cpp" line="2964"/>
-        <location filename="../Sources/CSong.cpp" line="2968"/>
-        <location filename="../Sources/CSong.cpp" line="2976"/>
-        <location filename="../Sources/CSong.cpp" line="3103"/>
-        <location filename="../Sources/CSong.cpp" line="3110"/>
-        <location filename="../Sources/CSong.cpp" line="3123"/>
-        <location filename="../Sources/CSong.cpp" line="3137"/>
-        <location filename="../Sources/CSong.cpp" line="3155"/>
-        <location filename="../Sources/CSong.cpp" line="3169"/>
-        <location filename="../Sources/CSong.cpp" line="3189"/>
-        <location filename="../Sources/CSong.cpp" line="3215"/>
-        <location filename="../Sources/CSong.cpp" line="3245"/>
-        <location filename="../Sources/CSong.cpp" line="3261"/>
+        <location filename="../Sources/CSong.cpp" line="2967"/>
+        <location filename="../Sources/CSong.cpp" line="2971"/>
+        <location filename="../Sources/CSong.cpp" line="2979"/>
+        <location filename="../Sources/CSong.cpp" line="3106"/>
+        <location filename="../Sources/CSong.cpp" line="3113"/>
+        <location filename="../Sources/CSong.cpp" line="3126"/>
+        <location filename="../Sources/CSong.cpp" line="3140"/>
+        <location filename="../Sources/CSong.cpp" line="3158"/>
+        <location filename="../Sources/CSong.cpp" line="3172"/>
+        <location filename="../Sources/CSong.cpp" line="3192"/>
+        <location filename="../Sources/CSong.cpp" line="3218"/>
+        <location filename="../Sources/CSong.cpp" line="3248"/>
+        <location filename="../Sources/CSong.cpp" line="3264"/>
         <source>Error: invalid tag &apos;%1&apos;</source>
         <translation>Error: invalid tag &apos;%1&apos;</translation>
     </message>
     <message>
         <location filename="../Sources/CSong.cpp" line="243"/>
         <source>invalid identifier (%1)</source>
-        <translation type="unfinished">invalid identifier (%1)</translation>
+        <translation>invalid identifier (%1)</translation>
     </message>
     <message>
         <location filename="../Sources/CSong.cpp" line="340"/>
@@ -1146,48 +1144,48 @@ Error: %4</translation>
         <translation type="obsolete">file &quot;%1&quot; is open in read-only</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2345"/>
-        <location filename="../Sources/CSong.cpp" line="2403"/>
-        <location filename="../Sources/CSong.cpp" line="2837"/>
-        <location filename="../Sources/CSong.cpp" line="3013"/>
-        <location filename="../Sources/CSong.cpp" line="3368"/>
-        <location filename="../Sources/CSong.cpp" line="3405"/>
-        <location filename="../Sources/CSong.cpp" line="3642"/>
-        <location filename="../Sources/CSong.cpp" line="3764"/>
+        <location filename="../Sources/CSong.cpp" line="2348"/>
+        <location filename="../Sources/CSong.cpp" line="2406"/>
+        <location filename="../Sources/CSong.cpp" line="2840"/>
+        <location filename="../Sources/CSong.cpp" line="3016"/>
+        <location filename="../Sources/CSong.cpp" line="3371"/>
+        <location filename="../Sources/CSong.cpp" line="3408"/>
+        <location filename="../Sources/CSong.cpp" line="3645"/>
+        <location filename="../Sources/CSong.cpp" line="3767"/>
         <source>dd/MM/yyyy HH:mm:ss</source>
         <translation>dd/MM/yyyy HH:mm:ss</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2435"/>
-        <location filename="../Sources/CSong.cpp" line="2444"/>
-        <location filename="../Sources/CSong.cpp" line="2453"/>
-        <location filename="../Sources/CSong.cpp" line="2462"/>
-        <location filename="../Sources/CSong.cpp" line="2471"/>
-        <location filename="../Sources/CSong.cpp" line="2480"/>
-        <location filename="../Sources/CSong.cpp" line="2489"/>
-        <location filename="../Sources/CSong.cpp" line="2498"/>
-        <location filename="../Sources/CSong.cpp" line="2507"/>
-        <location filename="../Sources/CSong.cpp" line="2516"/>
-        <location filename="../Sources/CSong.cpp" line="2525"/>
-        <location filename="../Sources/CSong.cpp" line="2548"/>
-        <location filename="../Sources/CSong.cpp" line="2557"/>
-        <location filename="../Sources/CSong.cpp" line="2594"/>
-        <location filename="../Sources/CSong.cpp" line="2637"/>
-        <location filename="../Sources/CSong.cpp" line="2652"/>
-        <location filename="../Sources/CSong.cpp" line="2666"/>
-        <location filename="../Sources/CSong.cpp" line="2691"/>
-        <location filename="../Sources/CSong.cpp" line="2717"/>
+        <location filename="../Sources/CSong.cpp" line="2438"/>
+        <location filename="../Sources/CSong.cpp" line="2447"/>
+        <location filename="../Sources/CSong.cpp" line="2456"/>
+        <location filename="../Sources/CSong.cpp" line="2465"/>
+        <location filename="../Sources/CSong.cpp" line="2474"/>
+        <location filename="../Sources/CSong.cpp" line="2483"/>
+        <location filename="../Sources/CSong.cpp" line="2492"/>
+        <location filename="../Sources/CSong.cpp" line="2501"/>
+        <location filename="../Sources/CSong.cpp" line="2510"/>
+        <location filename="../Sources/CSong.cpp" line="2519"/>
+        <location filename="../Sources/CSong.cpp" line="2528"/>
+        <location filename="../Sources/CSong.cpp" line="2551"/>
+        <location filename="../Sources/CSong.cpp" line="2560"/>
+        <location filename="../Sources/CSong.cpp" line="2597"/>
+        <location filename="../Sources/CSong.cpp" line="2640"/>
+        <location filename="../Sources/CSong.cpp" line="2655"/>
+        <location filename="../Sources/CSong.cpp" line="2669"/>
+        <location filename="../Sources/CSong.cpp" line="2694"/>
+        <location filename="../Sources/CSong.cpp" line="2720"/>
         <source>Error: several tags &apos;%1&apos;</source>
         <translation>Error: several tags &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2677"/>
+        <location filename="../Sources/CSong.cpp" line="2680"/>
         <source>Error: language of tag &apos;USLT&apos; invalid</source>
         <translation>Error: language of tag &apos;USLT&apos; invalid</translation>
     </message>
     <message>
         <location filename="../Sources/CSong.cpp" line="509"/>
-        <location filename="../Sources/CSong.cpp" line="1050"/>
+        <location filename="../Sources/CSong.cpp" line="1053"/>
         <source>unknown format</source>
         <translation>unknown format</translation>
     </message>
@@ -1218,12 +1216,12 @@ Error: %4</translation>
         <translation>file &quot;%1&quot; can&apos;t be opened</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="1005"/>
+        <location filename="../Sources/CSong.cpp" line="1008"/>
         <source>le fichier %1 est dÃ©jÃ  dans la mÃ©diathÃ¨que</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="1017"/>
+        <location filename="../Sources/CSong.cpp" line="1020"/>
         <source>erreur lors du chargement du fichier %1 avec FMOD</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1240,136 +1238,141 @@ Error: %4</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="1034"/>
-        <source>can&apos;t compute song duration for file &quot;%1&quot;</source>
-        <translation type="unfinished">can&apos;t compute song duration for file &quot;%1&quot;</translation>
+        <location filename="../Sources/CSong.cpp" line="678"/>
+        <source>Compilations</source>
+        <translation>Compilations</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="1043"/>
+        <location filename="../Sources/CSong.cpp" line="1037"/>
+        <source>can&apos;t compute song duration for file &quot;%1&quot;</source>
+        <translation>can&apos;t compute song duration for file &quot;%1&quot;</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSong.cpp" line="1046"/>
         <source>impossible de dÃ©terminer le format du morceau %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="1859"/>
+        <location filename="../Sources/CSong.cpp" line="1862"/>
         <source>duration of song &quot;%1&quot; has to be updated</source>
         <translation>duration of song &quot;%1&quot; has to be updated</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="1888"/>
+        <location filename="../Sources/CSong.cpp" line="1891"/>
         <source>file &quot;%1&quot; can&apos;t be opened with FMOD</source>
         <translation>file &quot;%1&quot; can&apos;t be opened with FMOD</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2705"/>
+        <location filename="../Sources/CSong.cpp" line="2708"/>
         <source>Error: language of lyrics and language of song are differents</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2740"/>
+        <location filename="../Sources/CSong.cpp" line="2743"/>
         <source>Error: tag %1 with several fields</source>
         <translation>Error: tag %1 with several fields</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="2983"/>
+        <location filename="../Sources/CSong.cpp" line="2986"/>
         <source>Error: tag &apos;LANGUAGE&apos; non gÃ©rÃ©</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3010"/>
+        <location filename="../Sources/CSong.cpp" line="3013"/>
         <source>Loading XiphComment tags</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3146"/>
+        <location filename="../Sources/CSong.cpp" line="3149"/>
         <source>Error: les tags TRACKTOTAL et TOTALTRACKS sont prÃ©sents tous les deux</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3180"/>
+        <location filename="../Sources/CSong.cpp" line="3183"/>
         <source>Error: les tags TEMPO et BPM sont prÃ©sents tous les deux</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3287"/>
-        <location filename="../Sources/CSong.cpp" line="3293"/>
+        <location filename="../Sources/CSong.cpp" line="3290"/>
+        <location filename="../Sources/CSong.cpp" line="3296"/>
         <source>Erreur : tag REPLAYGAIN_TRACK_GAIN incorrect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3304"/>
+        <location filename="../Sources/CSong.cpp" line="3307"/>
         <source>Erreur : tag REPLAYGAIN_TRACK_PEAK incorrect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3321"/>
-        <location filename="../Sources/CSong.cpp" line="3327"/>
+        <location filename="../Sources/CSong.cpp" line="3324"/>
+        <location filename="../Sources/CSong.cpp" line="3330"/>
         <source>Erreur : tag REPLAYGAIN_ALBUM_GAIN incorrect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3338"/>
+        <location filename="../Sources/CSong.cpp" line="3341"/>
         <source>Erreur : tag REPLAYGAIN_ALBUM_PEAK incorrect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3365"/>
+        <location filename="../Sources/CSong.cpp" line="3368"/>
         <source>Enregistrement des tags ID3v1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3506"/>
-        <location filename="../Sources/CSong.cpp" line="3679"/>
+        <location filename="../Sources/CSong.cpp" line="3509"/>
+        <location filename="../Sources/CSong.cpp" line="3682"/>
         <source>Aucun tag pour enregistrer le compositeur pour le tri</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3639"/>
+        <location filename="../Sources/CSong.cpp" line="3642"/>
         <source>Enregistrement des tags APE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3652"/>
+        <location filename="../Sources/CSong.cpp" line="3655"/>
         <source>Aucun tag pour enregistrer le regroupement</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3661"/>
+        <location filename="../Sources/CSong.cpp" line="3664"/>
         <source>Aucun tag pour enregistrer l&apos;artiste de l&apos;album</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3667"/>
+        <location filename="../Sources/CSong.cpp" line="3670"/>
         <source>Aucun tag pour enregistrer le titre pour le tri</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3670"/>
-        <location filename="../Sources/CSong.cpp" line="3676"/>
+        <location filename="../Sources/CSong.cpp" line="3673"/>
+        <location filename="../Sources/CSong.cpp" line="3679"/>
         <source>Aucun tag pour enregistrer l&apos;artiste pour le tri</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3673"/>
+        <location filename="../Sources/CSong.cpp" line="3676"/>
         <source>Aucun tag pour enregistrer l&apos;album pour le tri</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3728"/>
+        <location filename="../Sources/CSong.cpp" line="3731"/>
         <source>Aucun tag pour enregistrer le nombre de battements par minute</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3731"/>
+        <location filename="../Sources/CSong.cpp" line="3734"/>
         <source>Aucun tag pour enregistrer les paroles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3737"/>
+        <location filename="../Sources/CSong.cpp" line="3740"/>
         <source>Aucun tag pour enregistrer le parolier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3761"/>
+        <location filename="../Sources/CSong.cpp" line="3764"/>
         <source>Enregistrement des tags Xiph Comment</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1378,7 +1381,7 @@ Error: %4</translation>
         <translation type="obsolete">Error : invalid tag &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="../Sources/CSong.cpp" line="3402"/>
+        <location filename="../Sources/CSong.cpp" line="3405"/>
         <source>Enregistrement des tags ID3v2</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1919,6 +1922,29 @@ Would you like to add them?</translation>
     </message>
 </context>
 <context>
+    <name>CWidgetLyrics</name>
+    <message>
+        <location filename="../Sources/CWidgetLyrics.cpp" line="21"/>
+        <source>Find</source>
+        <translation>Find</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CWidgetLyrics.cpp" line="22"/>
+        <source>Edit</source>
+        <translation>Edit</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CWidgetLyrics.cpp" line="23"/>
+        <source>Save</source>
+        <translation>Save</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CWidgetLyrics.cpp" line="24"/>
+        <source>Cancel</source>
+        <translation>Cancel</translation>
+    </message>
+</context>
+<context>
     <name>CWidgetMultiCriterion</name>
     <message>
         <location filename="../Sources/CWidgetMultiCriterion.cpp" line="189"/>
@@ -2062,7 +2088,7 @@ Would you like to add them?</translation>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="36"/>
         <source>Enable ID3v1 tags.</source>
-        <translation type="unfinished"></translation>
+        <translation>Enable ID3v1 tags.</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="43"/>
@@ -2107,7 +2133,7 @@ Would you like to add them?</translation>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="167"/>
         <source>Enable ID3v2 tags.</source>
-        <translation type="unfinished"></translation>
+        <translation>Enable ID3v2 tags.</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="178"/>
@@ -2137,7 +2163,7 @@ Would you like to add them?</translation>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="401"/>
         <source>Enable XiphComment tags.</source>
-        <translation type="unfinished"></translation>
+        <translation>Enable XiphComment tags.</translation>
     </message>
     <message>
         <source>Description</source>
@@ -2178,7 +2204,7 @@ Would you like to add them?</translation>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="368"/>
         <source>Enable APE tags.</source>
-        <translation type="unfinished"></translation>
+        <translation>Enable APE tags.</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditMetadata.ui" line="395"/>

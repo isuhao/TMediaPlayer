@@ -40,6 +40,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "Importer/CImporterITunes.hpp"
 #include "CLibrary.hpp"
 #include "CSliderStyle.hpp"
+#include "CWidgetLyrics.hpp"
 
 // Last.fm
 #include "Last.fm/CAuthentication.hpp"
@@ -87,7 +88,8 @@ CApplication::CApplication(void) :
     m_currentSongTable     (NULL),
     m_library              (NULL),
     m_displayedSongTable   (NULL),
-    m_lyricsEdit           (NULL),
+    m_widgetLyrics         (NULL),
+    //m_lyricsEdit           (NULL),
     m_state                (Stopped),
     m_showRemainingTime    (false),
     m_isRepeat             (false),
@@ -252,6 +254,8 @@ bool CApplication::initWindow(void)
 
 
     // Dock "Lyrics"
+    m_widgetLyrics = new CWidgetLyrics(this);
+/*
     m_lyricsEdit = new QTextEdit();
     m_lyricsEdit->setReadOnly(true);
 
@@ -266,12 +270,12 @@ bool CApplication::initWindow(void)
     lyricsLayout->addWidget(lyricsFind, 1, 0);
     lyricsLayout->addWidget(lyricsEdit, 1, 1);
 
-    QWidget * lyricsWidget = new QWidget(this);
-    lyricsWidget->setLayout(lyricsLayout);
-
+    QWidget * m_widgetLyrics = new QWidget(this);
+    m_widgetLyrics->setLayout(lyricsLayout);
+*/
     QDockWidget * dockLyrics = new QDockWidget(tr("Lyrics"), this);
     dockLyrics->setObjectName("dock_lyrics");
-    dockLyrics->setWidget(lyricsWidget);
+    dockLyrics->setWidget(m_widgetLyrics);
     dockLyrics->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetClosable);
 
 
@@ -2340,7 +2344,7 @@ void CApplication::onSongModified(void)
  *
  * \todo Problème si le morceau change avant que la réponse ne parvienne.
  */
-
+/*
 void CApplication::findLyrics(void)
 {
     if (m_currentSongItem)
@@ -2351,7 +2355,7 @@ void CApplication::findLyrics(void)
         connect(query, SIGNAL(lyricsFound(const QString&)), m_lyricsEdit, SLOT(setText(const QString&)));
     }
 }
-
+*/
 
 /**
  * Liste les morceaux contenus dans un répertoire.
@@ -2564,7 +2568,8 @@ void CApplication::updateSongDescription(CSong * song)
             m_uiControl->lblTime->setText(durationTime.toString("m:ss")); /// \todo Stocker dans les settings
         }
 
-        m_lyricsEdit->setText(song->getLyrics());
+        //m_lyricsEdit->setText(song->getLyrics());
+        m_widgetLyrics->setSong(song);
     }
     else
     {
@@ -2574,7 +2579,8 @@ void CApplication::updateSongDescription(CSong * song)
         m_uiControl->lblPosition->setText("0:00");
         m_uiControl->lblTime->setText("0:00");
 
-        m_lyricsEdit->setText(QString());
+        //m_lyricsEdit->setText(QString());
+        m_widgetLyrics->setSong(song);
     }
 
     m_uiControl->sliderPosition->setValue(0);

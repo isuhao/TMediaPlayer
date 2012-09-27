@@ -674,10 +674,13 @@ bool CSong::moveFile(void)
     title.replace('>', '_');
     title.replace('|', '_');
 
-    if (m_infos.artistName.isEmpty())
-        artistName = m_application->getSettings()->value("Folders/ArtistEmpty", tr("Unknown artist")).toString();
+    if (m_infos.compilation)
+        artistName = tr("Compilations"); // TODO: ajouter ce nom aux paramètres
     else
-        artistName = m_application->getSettings()->value("Folders/ArtistDefault", "%1").toString().arg(m_infos.artistName).left(40);
+        if (m_infos.artistName.isEmpty())
+            artistName = m_application->getSettings()->value("Folders/ArtistEmpty", tr("Unknown artist")).toString();
+        else
+            artistName = m_application->getSettings()->value("Folders/ArtistDefault", "%1").toString().arg(m_infos.artistName).left(40);
 
     artistName.replace('\\', '_');
     artistName.replace('/', '_');

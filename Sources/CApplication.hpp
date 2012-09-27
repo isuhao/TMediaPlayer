@@ -39,6 +39,7 @@ class CDynamicList;
 class CStaticPlayList;
 class CLibrary;
 class CListModel;
+class CWidgetLyrics;
 class QStandardItemModel;
 class QSettings;
 class QTextEdit;
@@ -216,7 +217,7 @@ public slots:
     void editSelectedItem(void);
     void removeSelectedItem(void);
     void onSongModified(void);
-    void findLyrics(void);
+    //void findLyrics(void);
 
 signals:
 
@@ -282,7 +283,8 @@ private:
     CSongTable * m_currentSongTable;    ///< Liste de morceaux contenant le morceau en cours de lecture.
     CLibrary * m_library;               ///< Librairie (liste de tous les morceaux).
     CSongTable * m_displayedSongTable;  ///< Liste de morceaux affichée.
-    QTextEdit * m_lyricsEdit;           ///< Zone de texte pour les paroles.
+    //QTextEdit * m_lyricsEdit;           ///< Zone de texte pour les paroles.
+    CWidgetLyrics * m_widgetLyrics;     ///< Widget pour visualiser et modifier les paroles des morceaux.
     State m_state;                      ///< État de lecture.
     bool m_showRemainingTime;           ///< Indique si on doit afficher le temps restant ou la durée du morceau en cours de lecture.
     bool m_isRepeat;                    ///< Indique si la répétition est activée.

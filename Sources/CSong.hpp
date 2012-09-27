@@ -101,6 +101,7 @@ public:
     QImage getCoverImage(void) const;
     bool matchFilter(const QString& filter) const;
     //void computeReplayGain(void);
+    void updateDatabase(void);
 
     inline int getId(void) const;
     inline QString getFileName(void) const;
@@ -198,7 +199,6 @@ public slots:
 protected:
 
     void startPlay(void);
-    void updateDatabase(void);
     void updateFileInfos(void);
 
     void setFileSize(qlonglong fileSize);

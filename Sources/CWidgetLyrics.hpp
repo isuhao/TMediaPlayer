@@ -17,51 +17,48 @@ You should have received a copy of the GNU General Public License
 along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef FILE_C_LYRIC_WIKI
-#define FILE_C_LYRIC_WIKI
+#ifndef FILE_C_WIDGET_LYRICS
+#define FILE_C_WIDGET_LYRICS
 
-#include <QObject>
-#include <QMap>
-#include <QByteArray>
-#include <QString>
-#include <QWebPage>
+
+#include <QWidget>
+
 
 class CApplication;
 class CSong;
-class QNetworkReply;
-class QWebFrame;
+class QTextEdit;
+class QPushButton;
+class QGridLayout;
 
 
-class CLyricWiki : public QObject
+class CWidgetLyrics : public QWidget
 {
     Q_OBJECT
 
 public:
 
-    CLyricWiki(CApplication * application, CSong * song);
-    virtual ~CLyricWiki();
+    explicit CWidgetLyrics(CApplication * application);
 
-    inline CSong * getSong(void) const
-    {
-        return m_song;
-    }
-
-signals:
-
-    void lyricsFound(const QString& lyrics);
+    void setSong(CSong * song);
 
 protected slots:
 
-    void replyFinished(QNetworkReply * reply);
-    void replyFinished2(QNetworkReply * reply);
-    void onPageFinished(void);
+    void findLyrics(void);
+    void editLyrics(void);
+    void saveLyrics(void);
+    void cancelEdit(void);
+    void onLyricsFound(const QString& lyrics);
 
-protected:
-    
+private:
+
     CApplication * m_application;
     CSong * m_song;
-    QWebPage page;
-    QWebFrame * m_frame;
+    QGridLayout * m_layout;
+    QTextEdit * m_textEdit;
+    QPushButton * m_buttonFind;
+    QPushButton * m_buttonEdit;
+    QPushButton * m_buttonSave;
+    QPushButton * m_buttonCancel;
 };
 
-#endif // FILE_C_LYRIC_WIKI
+#endif // FILE_C_WIDGET_LYRICS
