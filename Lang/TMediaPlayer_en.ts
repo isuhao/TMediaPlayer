@@ -5,8 +5,8 @@
     <name>CApplication</name>
     <message numerus="yes">
         <location filename="../Sources/CApplication.cpp" line="125"/>
-        <location filename="../Sources/CApplication.cpp" line="2611"/>
-        <location filename="../Sources/CApplication.cpp" line="2615"/>
+        <location filename="../Sources/CApplication.cpp" line="2593"/>
+        <location filename="../Sources/CApplication.cpp" line="2597"/>
         <source>%n song(s), %1</source>
         <translation>
             <numerusform>%n song, %1</numerusform>
@@ -154,22 +154,22 @@ Error: %4</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2467"/>
+        <location filename="../Sources/CApplication.cpp" line="2449"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Are you sure you want to delete this playlist?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2467"/>
+        <location filename="../Sources/CApplication.cpp" line="2449"/>
         <source>Yes</source>
         <translation>Yes</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2467"/>
+        <location filename="../Sources/CApplication.cpp" line="2449"/>
         <source>No</source>
         <translation>No</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="2611"/>
+        <location filename="../Sources/CApplication.cpp" line="2593"/>
         <source>%n day(s) %1</source>
         <translation>
             <numerusform>%n day %1</numerusform>
@@ -184,18 +184,18 @@ Error: %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2757"/>
+        <location filename="../Sources/CApplication.cpp" line="2739"/>
         <source>This program requires FMOD %1 or superior.</source>
         <translation>This program requires FMOD %1 or superior.</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3371"/>
+        <location filename="../Sources/CApplication.cpp" line="3353"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3379"/>
-        <location filename="../Sources/CApplication.cpp" line="3387"/>
+        <location filename="../Sources/CApplication.cpp" line="3361"/>
+        <location filename="../Sources/CApplication.cpp" line="3369"/>
         <source>Play</source>
         <translation>Play</translation>
     </message>
@@ -369,7 +369,7 @@ Error: %4</translation>
     <message>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="187"/>
         <source>unknown format</source>
-        <translation type="unfinished">unknown format</translation>
+        <translation>unknown format</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="188"/>
@@ -381,18 +381,18 @@ Error: %4</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="203"/>
-        <source>can&apos;t read MP3 file &quot;%1&quot;</source>
-        <translation type="unfinished"></translation>
+        <source>can&apos;t read the MP3 file &quot;%1&quot;</source>
+        <translation>can&apos;t read the MP3 file &quot;%1&quot;</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="230"/>
-        <source>can&apos;t read Ogg file &quot;%1&quot;</source>
-        <translation type="unfinished"></translation>
+        <source>can&apos;t read the Ogg file &quot;%1&quot;</source>
+        <translation>can&apos;t read the Ogg file &quot;%1&quot;</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="261"/>
-        <source>can&apos;t read FLAC file &quot;%1&quot;</source>
-        <translation type="unfinished"></translation>
+        <source>can&apos;t read the FLAC file &quot;%1&quot;</source>
+        <translation>can&apos;t read the FLAC file &quot;%1&quot;</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="455"/>
@@ -1192,7 +1192,7 @@ Error: %4</translation>
     <message>
         <location filename="../Sources/CSong.cpp" line="356"/>
         <source>can&apos;t read the MP3 file &quot;%1&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>can&apos;t read the MP3 file &quot;%1&quot;</translation>
     </message>
     <message>
         <location filename="../Sources/CSong.cpp" line="376"/>
@@ -1203,12 +1203,12 @@ Error: %4</translation>
         <location filename="../Sources/CSong.cpp" line="406"/>
         <location filename="../Sources/CSong.cpp" line="564"/>
         <source>can&apos;t read the Ogg file &quot;%1&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>can&apos;t read the Ogg file &quot;%1&quot;</translation>
     </message>
     <message>
         <location filename="../Sources/CSong.cpp" line="424"/>
         <source>can&apos;t get properties of the file &quot;%1&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>can&apos;t get properties of the file &quot;%1&quot;</translation>
     </message>
     <message>
         <location filename="../Sources/CSong.cpp" line="525"/>
@@ -1230,12 +1230,12 @@ Error: %4</translation>
         <location filename="../Sources/CSong.cpp" line="573"/>
         <location filename="../Sources/CSong.cpp" line="608"/>
         <source>the file &quot;%1&quot; is open in read-only</source>
-        <translation type="unfinished"></translation>
+        <translation>the file &quot;%1&quot; is open in read-only</translation>
     </message>
     <message>
         <location filename="../Sources/CSong.cpp" line="599"/>
         <source>can&apos;t read the FLAC file &quot;%1&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>can&apos;t read the FLAC file &quot;%1&quot;</translation>
     </message>
     <message>
         <location filename="../Sources/CSong.cpp" line="678"/>
@@ -1280,7 +1280,7 @@ Error: %4</translation>
     <message>
         <location filename="../Sources/CSong.cpp" line="3013"/>
         <source>Loading XiphComment tags</source>
-        <translation type="unfinished"></translation>
+        <translation>Loading XiphComment tags</translation>
     </message>
     <message>
         <location filename="../Sources/CSong.cpp" line="3149"/>

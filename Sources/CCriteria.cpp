@@ -99,7 +99,7 @@ bool CCriteria::matchCriteria(CSong * song) const
         }
         else if (m_type == ICriteria::TypePlayList)
         {
-            qWarning() << "CCriteria::matchCriteria() : le critère TypePlayList doit être géré par la fonction appelante";
+            //qWarning() << "CCriteria::matchCriteria() : le critère TypePlayList doit être géré par la fonction appelante";
             return false;
         }
         else

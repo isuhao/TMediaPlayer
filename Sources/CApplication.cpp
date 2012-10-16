@@ -2055,7 +2055,7 @@ void CApplication::relocateSong(void)
                 return;
             }
 
-            // On vérifie que le morceau n'est pas en cours de lecture
+            // Vérifier que le morceau n'est pas en cours de lecture
             //TODO...
             //A priori ça ne risque pas, mais on ne sait jamais
 
@@ -2338,24 +2338,6 @@ void CApplication::onSongModified(void)
     }
 }
 
-
-/**
- * Cherche les paroles de la chanson courante sur Internet.
- *
- * \todo Problème si le morceau change avant que la réponse ne parvienne.
- */
-/*
-void CApplication::findLyrics(void)
-{
-    if (m_currentSongItem)
-    {
-        CSong * song = m_currentSongItem->getSong();
-        CLyricWiki * query = new CLyricWiki(this, song);
-        connect(query, SIGNAL(lyricsFound(const QString&)), song, SLOT(setLyrics(const QString&)));
-        connect(query, SIGNAL(lyricsFound(const QString&)), m_lyricsEdit, SLOT(setText(const QString&)));
-    }
-}
-*/
 
 /**
  * Liste les morceaux contenus dans un répertoire.

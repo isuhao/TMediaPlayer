@@ -200,7 +200,7 @@ void CDialogEditMetadata::reset(void)
 
             if (!file.isValid())
             {
-                m_application->logError(tr("can't read MP3 file \"%1\"").arg(m_song->getFileName()), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("can't read the MP3 file \"%1\"").arg(m_song->getFileName()), __FUNCTION__, __FILE__, __LINE__);
                 QMessageBox::warning(m_application, QString(), tr("Error while loading tags."), QMessageBox::Ok);
                 close();
                 return;
@@ -227,7 +227,7 @@ void CDialogEditMetadata::reset(void)
 
             if (!file.isValid())
             {
-                m_application->logError(tr("can't read Ogg file \"%1\"").arg(m_song->getFileName()), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("can't read the Ogg file \"%1\"").arg(m_song->getFileName()), __FUNCTION__, __FILE__, __LINE__);
                 QMessageBox::warning(m_application, QString(), tr("Error while loading tags."), QMessageBox::Ok);
                 close();
                 return;
@@ -258,7 +258,7 @@ void CDialogEditMetadata::reset(void)
 
             if (!file.isValid())
             {
-                m_application->logError(tr("can't read FLAC file \"%1\"").arg(m_song->getFileName()), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("can't read the FLAC file \"%1\"").arg(m_song->getFileName()), __FUNCTION__, __FILE__, __LINE__);
                 QMessageBox::warning(m_application, QString(), tr("Error while loading tags."), QMessageBox::Ok);
                 close();
                 return;

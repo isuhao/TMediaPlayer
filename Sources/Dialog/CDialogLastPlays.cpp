@@ -60,7 +60,7 @@ CDialogLastPlays::CDialogLastPlays(CApplication * application) :
 
             QTableWidgetItem * item;
         
-            item = new QTableWidgetItem(playTimeUTC.toString("dd/MM/yyyy HH:mm:ss"));
+            item = new QTableWidgetItem(playTimeUTC.toLocalTime().toString("dd/MM/yyyy HH:mm:ss"));
             m_uiWidget->table->setItem(row, 0, item);
         
             item = new QTableWidgetItem(song->getTitle());

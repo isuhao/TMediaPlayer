@@ -90,7 +90,7 @@ void CLibrary::removeSong(CSong * song)
 
 
 /**
- * Enlène un morceau de la table à partir de sa position.
+ * Enlève un morceau de la table à partir de sa position.
  *
  * \todo Supprimer cette méthode ?
  */

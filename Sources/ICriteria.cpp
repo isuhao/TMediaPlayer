@@ -117,7 +117,6 @@ void ICriteria::setPlayList(CDynamicList * playList)
 void ICriteria::insertIntoDatabase(CApplication * application)
 {
     Q_CHECK_PTR(application);
-    qDebug() << "ICriteria::insertIntoDatabase()";
 
     if (m_id != -1)
     {

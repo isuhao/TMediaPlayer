@@ -570,7 +570,7 @@ bool CSong::writeTags(void)
 
             if (file.readOnly())
             {
-                m_application->logError(tr("the file \"%1\" is open in read-only"), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("the file \"%1\" is open in read-only").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 m_needWriteTags = true;
                 return false;
             }
@@ -605,7 +605,7 @@ bool CSong::writeTags(void)
 
             if (file.readOnly())
             {
-                m_application->logError(tr("the file \"%1\" is open in read-only"), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("the file \"%1\" is open in read-only").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 m_needWriteTags = true;
                 return false;
             }
