@@ -94,7 +94,7 @@ CWidgetMultiCriterion * CDynamicList::getWidget(void) const
  * \todo Si la boite de dialogue "Informations sur un morceau" est affiché, il faut éventuellement la mettre-à-jour.
  */
 
-void CDynamicList::updateList(void)
+void CDynamicList::updateList()
 {
     // Si on est en train de lire un morceau de la liste, il faut mettre à jour les informations sur le morceau courant
     CSongTableItem * currentItem = m_model->getCurrentSongItem();
@@ -526,8 +526,8 @@ void CDynamicList::loadFromDatabase(void)
         if (conditions.testFlag(ICriteria::UpdateOnSongPlayEnd))
             connect(m_application, SIGNAL(songPlayEnd(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
 
-        if (conditions.testFlag(ICriteria::UpdateOnListModified))
-            connect(m_application, SIGNAL(listModified()), this, SLOT(updateList()), Qt::UniqueConnection);
+        //if (conditions.testFlag(ICriteria::UpdateOnListModified))
+            //connect(m_application, SIGNAL(listModified(IPlayList *)), this, SLOT(updateList()), Qt::UniqueConnection);
     }
 }
 
@@ -552,12 +552,12 @@ void CDynamicList::setCriteria(ICriteria * criteria)
     // Conditions de mise à jour
     if (m_autoUpdate)
     {
-        disconnect(m_application, SIGNAL(songsAdded()         ), this, SLOT(updateList()));
-        disconnect(m_application, SIGNAL(songRemoved(CSong *) ), this, SLOT(updateList()));
-        disconnect(m_application, SIGNAL(songModified(CSong *)), this, SLOT(updateList()));
-        disconnect(m_application, SIGNAL(songMoved(CSong *)   ), this, SLOT(updateList()));
-        disconnect(m_application, SIGNAL(songPlayEnd(CSong *) ), this, SLOT(updateList()));
-        disconnect(m_application, SIGNAL(listModified()       ), this, SLOT(updateList()));
+        disconnect(m_application, SIGNAL(songsAdded()             ), this, SLOT(updateList()));
+        disconnect(m_application, SIGNAL(songRemoved(CSong *)     ), this, SLOT(updateList()));
+        disconnect(m_application, SIGNAL(songModified(CSong *)    ), this, SLOT(updateList()));
+        disconnect(m_application, SIGNAL(songMoved(CSong *)       ), this, SLOT(updateList()));
+        disconnect(m_application, SIGNAL(songPlayEnd(CSong *)     ), this, SLOT(updateList()));
+        //disconnect(m_application, SIGNAL(listModified(IPlayList *)), this, SLOT(updateList()));
 
         ICriteria::TUpdateConditions conditions = m_mainCriteria->getUpdateConditions();
 
@@ -576,8 +576,8 @@ void CDynamicList::setCriteria(ICriteria * criteria)
         if (conditions.testFlag(ICriteria::UpdateOnSongPlayEnd))
             connect(m_application, SIGNAL(songPlayEnd(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
 
-        if (conditions.testFlag(ICriteria::UpdateOnListModified))
-            connect(m_application, SIGNAL(listModified()), this, SLOT(updateList()), Qt::UniqueConnection);
+        //if (conditions.testFlag(ICriteria::UpdateOnListModified))
+            //connect(m_application, SIGNAL(listModified(IPlayList *)), this, SLOT(updateList()), Qt::UniqueConnection);
     }
 
     emit listModified();

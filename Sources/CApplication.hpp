@@ -108,8 +108,8 @@ public:
 
     void setEqualizerGain(TEqualizerFrequency frequency, double gain);
     double getEqualizerGain(TEqualizerFrequency frequency);
-    void resetEqualizer(void);
-    bool isEqualizerEnabled(void) const;
+    void resetEqualizer();
+    bool isEqualizerEnabled() const;
 
     // Notifications
     struct TNotification
@@ -120,12 +120,12 @@ public:
         TNotification(const QString& m, const QDateTime& d) : message(m), date(d) { }
     };
 
-    inline QList<TNotification> getNotifications(void) const;
+    inline QList<TNotification> getNotifications() const;
 
-    inline CSongTableItem * getCurrentSongItem(void) const;
-    inline CSongTable * getCurrentSongTable(void) const;
-    inline CLibrary * getLibrary(void) const;
-    inline CSongTable * getDisplayedSongTable(void) const;
+    inline CSongTableItem * getCurrentSongItem() const;
+    inline CSongTable * getCurrentSongTable() const;
+    inline CLibrary * getLibrary() const;
+    inline CSongTable * getDisplayedSongTable() const;
     void setDisplayedSongTable(CSongTable * songTable);
     void setCurrentSongItem(CSongTableItem * songItem, CSongTable * songTable);
     CSong * getSongFromId(int id) const;
@@ -133,36 +133,38 @@ public:
     CFolder * getFolderFromId(int id) const;
     IPlayList * getPlayListFromId(int id) const;
     QList<IPlayList *> getPlayListsWithSong(CSong * song) const;
-    QList<IPlayList *> getAllPlayLists(void) const;
+    QList<IPlayList *> getAllPlayLists() const;
     CSong * addSong(const QString& fileName);
     void removeSongs(const QList<CSong *> songs);
-    inline CDialogEditSong * getDialogEditSong(void) const;
+    inline CDialogEditSong * getDialogEditSong() const;
+    void setSelectionInformations(int numSongs, qlonglong durationMS);
+    void onPlayListChange(IPlayList * playList);
 
-    inline bool isPlaying(void) const;
-    inline bool isPaused(void) const;
-    inline bool isStopped(void) const;
-    bool isRepeat(void) const;
-    bool isShuffle(void) const;
-    bool isMute(void) const;
-    int getVolume(void) const;
-    int getPosition(void) const;
+    inline bool isPlaying() const;
+    inline bool isPaused() const;
+    inline bool isStopped() const;
+    bool isRepeat() const;
+    bool isShuffle() const;
+    bool isMute() const;
+    int getVolume() const;
+    int getPosition() const;
 
     int getArtistId(const QString& name, const QString& nameSort);
     int getAlbumId(const QString& title, const QString& titleSort);
     int getGenreId(const QString& name);
-    QStringList getGenreList(void);
+    QStringList getGenreList();
 
-    inline FMOD::System * getSoundSystem(void) const
+    inline FMOD::System * getSoundSystem() const
     {
         return m_soundSystem;
     }
 
-    inline QSqlDatabase getDataBase(void) const
+    inline QSqlDatabase getDataBase() const
     {
         return m_dataBase;
     }
 
-    inline QSettings * getSettings(void) const
+    inline QSettings * getSettings() const
     {
         return m_settings;
     }
@@ -175,55 +177,54 @@ public:
 
 public slots:
 
-    void selectAll(void);
-    void selectNone(void);
-    void play(void);
-    void stop(void);
-    void pause(void);
-    void togglePlay(void);
-    void previousSong(void);
-    void nextSong(void);
+    void selectAll();
+    void selectNone();
+    void play();
+    void stop();
+    void pause();
+    void togglePlay();
+    void previousSong();
+    void nextSong();
     void playSong(CSongTableItem * songItem);
-    void setRepeat(void);
+    void setRepeat();
     void setRepeat(bool repeat);
-    void setShuffle(void);
+    void setShuffle();
     void setShuffle(bool shuffle);
     void setMute(bool mute);
-    void toggleMute(void);
+    void toggleMute();
     void setVolume(int volume);
     void setPosition(int position);
     void setEqualizerEnabled(bool enabled = true);
 
-    void openDialogPreferences(void);
-    void openDialogNotifications(void);
-    void openDialogLastPlays(void);
-    void openDialogEqualizer(void);
-    void openDialogEditMetadata(void);
-    void openDialogAddSongs(void);
-    void openDialogAddFolder(void);
-    void openDialogSongInfos(void);
-    void openDialogCreateStaticList(void);
+    void openDialogPreferences();
+    void openDialogNotifications();
+    void openDialogLastPlays();
+    void openDialogEqualizer();
+    void openDialogEditMetadata();
+    void openDialogAddSongs();
+    void openDialogAddFolder();
+    void openDialogSongInfos();
+    void openDialogCreateStaticList();
     void openDialogCreateDynamicList(CFolder * folder = NULL);
     void openDialogCreateFolder(CFolder * folder = NULL);
     void openDialogEditStaticPlayList(CStaticPlayList * playList);
     void openDialogEditDynamicList(CDynamicList * playList);
     void openDialogEditFolder(CFolder * folder);
-    void relocateSong(void);
-    void importFromITunes(void);
-    void importFromSongbird(void);
-    void selectCurrentSong(void);
+    void relocateSong();
+    void importFromITunes();
+    void importFromSongbird();
+    void selectCurrentSong();
     void selectSong(CSongTable * songTable, CSongTableItem * songItem);
-    void openSongInExplorer(void);
-    void editSelectedItem(void);
-    void removeSelectedItem(void);
-    void onSongModified(void);
-    //void findLyrics(void);
+    void openSongInExplorer();
+    void editSelectedItem();
+    void removeSelectedItem();
+    void onSongModified();
 
 signals:
 
     // Signaux sur les morceaux
     void songAdded(CSong * song);             ///< Signal émis lorsqu'un morceau est ajouté à la médiathèque.
-    void songsAdded(void);                    ///< Signal émis lorsqu'un ou plusieurs morceaux sont ajoutés à la médiathèque.
+    void songsAdded();                        ///< Signal émis lorsqu'un ou plusieurs morceaux sont ajoutés à la médiathèque.
     void songModified(CSong * song);          ///< Signal émis lorsque les informations d'un morceau sont modifiées.
     void songRemoved(CSong * song);           ///< Signal émis lorsqu'un morceau est retiré de la médiathèque.
   //void songMoved(CSong * song);             ///< Signal émis lorsque le fichier d'un morceau est déplacé.
@@ -234,23 +235,24 @@ signals:
     void songStopped(CSong * song);           ///< Signal émis lorsque la lecture est stoppée.
 
     // Signaux sur les listes de lecture
-    //void listAdded(IPlayList * playList);     ///< Signal émis lorsqu'une liste est créée.
-    //void listRemoved(IPlayList * playList);   ///< Signal émis lorsqu'une liste est supprimée.
+  //void listAdded(IPlayList * playList);     ///< Signal émis lorsqu'une liste est créée.
+    void listModified(IPlayList * playList);  ///< Signal émis lorsqu'une liste est modifiée.
+  //void listRemoved(IPlayList * playList);   ///< Signal émis lorsqu'une liste est supprimée.
 
     // Signaux sur les dossiers
-    //void folderAdded(CFolder * folder);   ///< Signal émis lorsqu'un dossier est crée.
-    //void folderRemoved(CFolder * folder); ///< Signal émis lorsqu'un dossier est supprimé.
+  //void folderAdded(CFolder * folder);      ///< Signal émis lorsqu'un dossier est crée.
+  //void folderRemoved(CFolder * folder);    ///< Signal émis lorsqu'un dossier est supprimé.
 
 protected slots:
 
-    void onPlayEnd(void);
+    void onPlayEnd();
     void updateSongDescription(CSong * song);
-    void updateListInformations(void);
-    void updatePosition(void);
-    void updateTimer(void);
+    void updateListInformations();
+    void updatePosition();
+    void updateTimer();
     void selectPlayListFromTreeView(const QModelIndex& index);
-    void connectToLastFm(void);
-    void onDialogEditSongClosed(void);
+    void connectToLastFm();
+    void onDialogEditSongClosed();
     void onFilterChange(const QString& filter);
 
 protected:
@@ -260,9 +262,9 @@ protected:
     QStringList importFolder(const QString& pathName);
     void importSongs(const QStringList& fileList);
     void displaySongTable(CSongTable * songTable);
-    bool initSoundSystem(void);
-    void loadDatabase(void);
-    void startPlay(void);
+    bool initSoundSystem();
+    void loadDatabase();
+    void startPlay();
     void setState(State state);
 
     virtual void closeEvent(QCloseEvent * event);
@@ -283,7 +285,6 @@ private:
     CSongTable * m_currentSongTable;    ///< Liste de morceaux contenant le morceau en cours de lecture.
     CLibrary * m_library;               ///< Librairie (liste de tous les morceaux).
     CSongTable * m_displayedSongTable;  ///< Liste de morceaux affichée.
-    //QTextEdit * m_lyricsEdit;           ///< Zone de texte pour les paroles.
     CWidgetLyrics * m_widgetLyrics;     ///< Widget pour visualiser et modifier les paroles des morceaux.
     State m_state;                      ///< État de lecture.
     bool m_showRemainingTime;           ///< Indique si on doit afficher le temps restant ou la durée du morceau en cours de lecture.

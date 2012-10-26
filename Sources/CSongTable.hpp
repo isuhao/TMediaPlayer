@@ -121,36 +121,36 @@ public:
     explicit CSongTable(CApplication * application);
     virtual ~CSongTable();
 
-    QList<CSong *> getSongs(void) const;
-    inline int getNumSongs(void) const;
+    QList<CSong *> getSongs() const;
+    inline int getNumSongs() const;
     CSongTableItem * getFirstSongItem(CSong * song) const;
     CSongTableItem * getSongItemForRow(int row) const;
     int getRowForSongItem(CSongTableItem * songItem) const;
-    CSongTableItem * getSelectedSongItem(void) const;
-    QList<CSongTableItem *> getSelectedSongItems(void) const;
+    CSongTableItem * getSelectedSongItem() const;
+    QList<CSongTableItem *> getSelectedSongItems() const;
     CSongTableItem * getPreviousSong(CSongTableItem * songItem, bool shuffle) const;
     CSongTableItem * getNextSong(CSongTableItem * songItem, bool shuffle) const;
     CSongTableItem * getLastSong(bool shuffle) const;
-    qlonglong getTotalDuration(void) const;
+    qlonglong getTotalDuration() const;
     void applyFilter(const QString& filter);
     inline bool hasSong(CSong * song) const;
-    inline int getColumnSorted(void) const;
-    virtual bool isModified(void) const;
+    inline int getColumnSorted() const;
+    virtual bool isModified() const;
     void replaceSong(CSong * oldSong, CSong * newSong);
 
-    inline int getIdPlayList(void) const;
+    inline int getIdPlayList() const;
 
 public slots:
 
     void selectSongItem(CSongTableItem * songItem);
-    void playSelectedSong(void);
+    void playSelectedSong();
 
 signals:
 
     void songSelected(CSongTableItem *); ///< Signal émis quand un morceau est sélectionné.
     void songStarted(CSongTableItem *);  ///< Signal émis quand un morceau est lancé (double-clic).
-    void columnChanged(void);            ///< Signal émis lorsque les colonnes sont modifiées.
-    void rowCountChanged(void);          ///< Signal émis lorsque le nombre de morceaux de la liste change.
+    void columnChanged();                ///< Signal émis lorsque les colonnes sont modifiées.
+    void rowCountChanged();              ///< Signal émis lorsque le nombre de morceaux de la liste change.
 
 protected slots:
 
@@ -158,15 +158,16 @@ protected slots:
     virtual void columnResized(int logicalIndex, int oldSize, int newSize);
     virtual void openCustomMenuProject(const QPoint& point);
     void showColumn(int column, bool show = true);
-    void onSortAboutToChange(void);
+    void onSortAboutToChange();
     void sortColumn(int column, Qt::SortOrder order);
-    void sort(void);
-    void goToSongTable(void);
-    void addToPlayList(void);
-    void removeSongsFromLibrary(void);
-    void checkSelection(void);
-    void uncheckSelection(void);
+    void sort();
+    void goToSongTable();
+    void addToPlayList();
+    void removeSongsFromLibrary();
+    void checkSelection();
+    void uncheckSelection();
     void onRowCountChange(const QModelIndex& parent, int start, int end);
+    void onSelectionChange();
 
 protected:
 
@@ -175,12 +176,12 @@ protected:
     void removeSongFromTable(CSong * song);
     void removeSongFromTable(int row);
     void removeSongsFromTable(const QList<CSong *>& songs);
-    void removeAllSongsFromTable(void);
+    void removeAllSongsFromTable();
     void initShuffle(CSongTableItem * firstSong = NULL);
 
     virtual void initColumns(const QString& str);
-    QString getColumnsInfos(void) const;
-    virtual bool updateDatabase(void);
+    QString getColumnsInfos() const;
+    virtual bool updateDatabase();
     virtual void startDrag(Qt::DropActions supportedActions);
 
     //void loadFromDatabase(int id);

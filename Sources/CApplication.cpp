@@ -780,6 +780,38 @@ void CApplication::removeSongs(const QList<CSong *> songs)
 }
 
 
+void CApplication::setSelectionInformations(int numSongs, qlonglong durationMS)
+{
+    if (numSongs > 1)
+    {
+        QTime duration(0, 0);
+        duration = duration.addMSecs(static_cast<int>(durationMS % 86400000));
+
+        // Barre d'état
+        if (durationMS > 86400000)
+        {
+            int numDays = static_cast<int>(durationMS / 86400000);
+            m_listInfos->setText(tr("%n selected song(s), %1", "", numSongs).arg(tr("%n day(s) %1", "", numDays).arg(duration.toString())));
+        }
+        else
+        {
+            m_listInfos->setText(tr("%n selected song(s), %1", "", numSongs).arg(duration.toString()));
+        }
+    }
+    else
+    {
+        updateListInformations();
+    }
+}
+
+
+void CApplication::onPlayListChange(IPlayList * playList)
+{
+    if (playList)
+        emit listModified(playList);
+}
+
+
 /**
  * Indique si la répétition est active.
  *
@@ -788,7 +820,7 @@ void CApplication::removeSongs(const QList<CSong *> songs)
  * \return Booléen.
  */
 
-bool CApplication::isRepeat(void) const
+bool CApplication::isRepeat() const
 {
     return m_isRepeat;
 }
@@ -2018,7 +2050,7 @@ void CApplication::relocateSong(void)
 
     if (songItemList.size() > 1)
     {
-        logError(tr("plusieurs morceaux sélectionnés"), __FUNCTION__, __FILE__, __LINE__);
+        logError(tr("several songs selected"), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
@@ -2156,11 +2188,12 @@ void CApplication::relocateSong(void)
         FMOD::Sound * sound;
 
         // Chargement du son
-        res = m_soundSystem->createStream(qPrintable(fileName), FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, NULL, &sound);
+        //res = m_soundSystem->createStream(qPrintable(fileName), FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, NULL, &sound);
+        res = m_soundSystem->createStream(reinterpret_cast<const char *>(fileName.utf16()), FMOD_UNICODE | FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, NULL, &sound);
 
         if (res != FMOD_OK || !sound)
         {
-            logError(tr("erreur lors du chargement du fichier %1 avec FMOD").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
+            logError(tr("error while loading the file \"%1\" with FMOD").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
             return;
         }
 
@@ -2573,7 +2606,7 @@ void CApplication::updateSongDescription(CSong * song)
  * Met à jour les informations sur la liste de morceaux affichée.
  */
 
-void CApplication::updateListInformations(void)
+void CApplication::updateListInformations()
 {
     QTime duration(0, 0);
     int numSongs = 0;
@@ -2700,9 +2733,7 @@ void CApplication::displaySongTable(CSongTable * songTable)
     if (songTable != m_displayedSongTable)
     {
         if (m_displayedSongTable)
-        {
             m_displayedSongTable->setParent(NULL);
-        }
 
         m_playListView->selectionModel()->clearSelection();
         m_playListView->selectionModel()->setCurrentIndex(m_playListView->getSongTableModelIndex(songTable), QItemSelectionModel::Select | QItemSelectionModel::Rows);
@@ -2713,6 +2744,7 @@ void CApplication::displaySongTable(CSongTable * songTable)
         m_displayedSongTable->show();
 
         updateListInformations();
+        m_displayedSongTable->onSelectionChange();
     }
 }
 
@@ -2723,16 +2755,18 @@ void CApplication::displaySongTable(CSongTable * songTable)
  * \return Booléen indiquant le succès ou l'échec du chargement.
  */
 
-bool CApplication::initSoundSystem(void)
+bool CApplication::initSoundSystem()
 {
     FMOD_RESULT res;
 
     res = FMOD::System_Create(&m_soundSystem);
-    if (res != FMOD_OK) return false;
+    if (res != FMOD_OK)
+        return false;
 
     unsigned int version;
     res = m_soundSystem->getVersion(&version);
-    if (res != FMOD_OK) return false;
+    if (res != FMOD_OK)
+        return false;
 
     if (version < FMOD_VERSION)
     {
@@ -2742,38 +2776,45 @@ bool CApplication::initSoundSystem(void)
 
     int numDrivers;
     res = m_soundSystem->getNumDrivers(&numDrivers);
-    if (res != FMOD_OK) return false;
+    if (res != FMOD_OK)
+        return false;
 
     if (numDrivers == 0)
     {
         res = m_soundSystem->setOutput(FMOD_OUTPUTTYPE_NOSOUND);
-        if (res != FMOD_OK) return false;
+        if (res != FMOD_OK)
+            return false;
     }
     else
     {
         FMOD_CAPS caps;
         FMOD_SPEAKERMODE speakermode;
         res = m_soundSystem->getDriverCaps(0, &caps, NULL, &speakermode);
-        if (res != FMOD_OK) return false;
+        if (res != FMOD_OK)
+            return false;
 
         // Set the user selected speaker mode
         res = m_soundSystem->setSpeakerMode(speakermode);
-        if (res != FMOD_OK) return false;
+        if (res != FMOD_OK)
+            return false;
 
         if (caps & FMOD_CAPS_HARDWARE_EMULATED)
         {
             res = m_soundSystem->setDSPBufferSize(1024, 10);
-            if (res != FMOD_OK) return false;
+            if (res != FMOD_OK)
+                return false;
         }
 
         char name[256] = "";
         res = m_soundSystem->getDriverInfo(0, name, 256, 0);
-        if (res != FMOD_OK) return false;
+        if (res != FMOD_OK)
+            return false;
 
         if (strstr(name, "SigmaTel"))
         {
             res = m_soundSystem->setSoftwareFormat(48000, FMOD_SOUND_FORMAT_PCMFLOAT, 0,0, FMOD_DSP_RESAMPLER_LINEAR);
-            if (res != FMOD_OK) return false;
+            if (res != FMOD_OK)
+                return false;
         }
     }
 
@@ -2781,7 +2822,8 @@ bool CApplication::initSoundSystem(void)
     if (res == FMOD_ERR_OUTPUT_CREATEBUFFER)
     {
         res = m_soundSystem->setSpeakerMode(FMOD_SPEAKERMODE_STEREO);
-        if (res != FMOD_OK) return false;
+        if (res != FMOD_OK)
+            return false;
         res = m_soundSystem->init(2, FMOD_INIT_NORMAL, 0);
     }
 

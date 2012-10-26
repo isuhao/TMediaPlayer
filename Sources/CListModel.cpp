@@ -261,6 +261,7 @@ void CListModel::loadFromDatabase(void)
             connect(playList, SIGNAL(nameChanged(const QString&, const QString&)), this, SLOT(onPlayListRenamed(const QString&, const QString&)));
             connect(playList, SIGNAL(rowCountChanged()), m_application, SLOT(updateListInformations()));
             connect(playList, SIGNAL(listUpdated()), m_application, SLOT(updateListInformations()));
+            connect(playList, SIGNAL(listUpdated()), this, SLOT(onPlayListChange()));
 
             playList->updateList();
         }
@@ -918,4 +919,13 @@ void CListModel::onFolderRenamed(const QString& oldName, const QString& newName)
         if (item)
             item->setText(newName);
     }
+}
+
+
+void CListModel::onPlayListChange()
+{
+    IPlayList * playList = qobject_cast<IPlayList *>(sender());
+
+    if (playList)
+        m_application->onPlayListChange(playList);
 }

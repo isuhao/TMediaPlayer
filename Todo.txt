@@ -42,9 +42,6 @@
   - Utiliser des transactions.
   - Tester avec MySQL.
 
-- Barre d'état :
-  - Afficher les informations sur les morceaux sélectionnés (nombre et durée).
-
 - Import depuis iTunes.
   - Importer les morceaux.
   - Importer les listes statiques.

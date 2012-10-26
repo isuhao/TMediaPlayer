@@ -42,13 +42,13 @@ public:
     explicit CListModel(CApplication * application);
     virtual ~CListModel();
 
-    void loadFromDatabase(void);
-    virtual void clear(void);
+    void loadFromDatabase();
+    virtual void clear();
 
     //inline CFolder * getRootFolder(void) const;
-    inline QList<CFolder *> getFolders(void) const;
-    inline QList<IPlayList *> getPlayLists(void) const;
-    inline CFolder * getRootFolder(void) const;
+    inline QList<CFolder *> getFolders() const;
+    inline QList<IPlayList *> getPlayLists() const;
+    inline CFolder * getRootFolder() const;
     CFolder * getFolderFromId(int id) const;
     IPlayList * getPlayListFromId(int id) const;
     QModelIndex getModelIndex(CFolder * folder) const;
@@ -63,7 +63,7 @@ public:
     // Glisser-déposer
     QMimeData * mimeData(const QModelIndexList& indexes) const;
     bool dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex& parent);
-    QStringList mimeTypes(void) const;
+    QStringList mimeTypes() const;
     Qt::DropActions supportedDropActions() const;
     
     QList<CSong *> decodeDataSongs(const QByteArray& encodedData) const;
@@ -73,6 +73,7 @@ private slots:
 
     void onPlayListRenamed(const QString& oldName, const QString& newName);
     void onFolderRenamed(const QString& oldName, const QString& newName);
+    void onPlayListChange();
 
 private:
 

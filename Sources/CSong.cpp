@@ -45,7 +45,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QtDebug>
 
 
-CSong::TSongInfos::TSongInfos(void) :
+CSong::TSongInfos::TSongInfos() :
     isEnabled       (true),
     title           (""),
     subTitle        (""),
@@ -82,7 +82,7 @@ CSong::TSongInfos::TSongInfos(void) :
 }
 
 
-CSong::TSongProperties::TSongProperties(void) :
+CSong::TSongProperties::TSongProperties() :
     fileName    (QString()),
     fileSize    (0),
     bitRate     (0),
@@ -92,7 +92,7 @@ CSong::TSongProperties::TSongProperties(void) :
     duration    (0)
 {
 
-};
+}
 
 
 /**
@@ -176,7 +176,7 @@ CSong::~CSong()
  * Si le morceau n'existe pas en base de données, rien n'est modifié.
  */
 
-void CSong::loadFromDatabase(void)
+void CSong::loadFromDatabase()
 {
     if (m_id <= 0)
         return;
@@ -337,7 +337,7 @@ bool CSong::loadTags(bool readProperties)
     switch (m_properties.format)
     {
         default:
-            m_application->logError(tr("Unknown format"), __FUNCTION__, __FILE__, __LINE__);
+            m_application->logError(tr("unknown format"), __FUNCTION__, __FILE__, __LINE__);
             return false;
 
         case CSong::FormatMP3:
@@ -373,7 +373,7 @@ bool CSong::loadTags(bool readProperties)
                 }
                 else
                 {
-                    m_application->logError(tr("impossible de récupérer les propriétés du fichier %1").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                    m_application->logError(tr("can't get properties of the file \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 }
             }
 
@@ -449,7 +449,7 @@ bool CSong::loadTags(bool readProperties)
             if (!file.isValid())
             {
                 m_fileStatus = false;
-                m_application->logError(QString("impossible de lire le fichier FLAC \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("can't read the FLAC file \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 return false;
             }
 
@@ -467,7 +467,7 @@ bool CSong::loadTags(bool readProperties)
                 }
                 else
                 {
-                    m_application->logError(QString("impossible de récupérer les propriétés du fichier \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                    m_application->logError(tr("can't get properties of the file \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 }
             }
 
@@ -522,7 +522,7 @@ bool CSong::writeTags(void)
             if (!file.isValid())
             {
                 m_fileStatus = false;
-                m_application->logError(tr("file \"%1\" can't be opened").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("the file \"%1\" can't be opened").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 m_needWriteTags = true;
                 return false;
             }
@@ -641,7 +641,7 @@ bool CSong::writeTags(void)
  * \return Booléen indiquant si le déplacement a eu lieu.
  */
 
-bool CSong::moveFile(void)
+bool CSong::moveFile()
 {
     // Recherche du répertoire de la médiathèque
     QString folder = m_application->getLibraryFolderFromFileName(m_properties.fileName);
@@ -903,7 +903,7 @@ bool CSong::matchFilter(const QString& filter) const
  * \return Position de lecture, ou -1 si le morceau n'est pas en cours de lecture.
  */
 
-int CSong::getPosition(void) const
+int CSong::getPosition() const
 {
     if (m_channel)
     {
@@ -922,7 +922,7 @@ int CSong::getPosition(void) const
  * \return Booléen.
  */
 
-bool CSong::isEnded(void) const
+bool CSong::isEnded() const
 {
     if (m_channel)
     {
@@ -1005,7 +1005,7 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
 {
     if (getId(application, fileName) >= 0)
     {
-        application->logError(tr("le fichier %1 est déjà dans la médiathèque").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
+        application->logError(tr("the file \"%1\" is already in library").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
         return NULL;
     }
 
@@ -1013,11 +1013,12 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
     FMOD::Sound * sound;
 
     // Chargement du son
-    res = application->getSoundSystem()->createStream(qPrintable(fileName), FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, NULL, &sound);
+    //res = application->getSoundSystem()->createStream(qPrintable(fileName), FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, NULL, &sound);
+    res = application->getSoundSystem()->createStream(reinterpret_cast<const char *>(fileName.utf16()), FMOD_UNICODE | FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, NULL, &sound);
 
     if (res != FMOD_OK || !sound)
     {
-        application->logError(tr("erreur lors du chargement du fichier %1 avec FMOD").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
+        application->logError(tr("the file \"%1\" can't be opened with FMOD").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
         return NULL;
     }
 
@@ -1043,7 +1044,7 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
 
     if (res != FMOD_OK)
     {
-        application->logError(tr("impossible de déterminer le format du morceau %1").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
+        application->logError(tr("can't find the format for the file \"%1\"").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
     }
     else
     {
@@ -1078,7 +1079,6 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
     }
 
     song->updateDatabase();
-    //song->moveFile();
 
     connect(song, SIGNAL(songModified()), application, SLOT(onSongModified()));
 
@@ -1888,7 +1888,7 @@ bool CSong::loadSound(void)
         m_fileStatus = false;
     }
 
-    m_application->logError(tr("file \"%1\" can't be opened with FMOD").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+    m_application->logError(tr("the file \"%1\" can't be opened with FMOD").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
 
     m_sound = NULL;
     m_channel = NULL;

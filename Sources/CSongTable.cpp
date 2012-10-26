@@ -103,6 +103,8 @@ CSongTable::CSongTable(CApplication * application) :
     verticalHeader()->hide();
     verticalHeader()->setDefaultSectionSize(m_application->getRowHeight());
 
+    connect(selectionModel(), SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)), this, SLOT(onSelectionChange()));
+
     initColumns("0:40;1:150;17:60;2+:150;3:150;6:50;9:60;12:50;13:120");
 }
 
@@ -200,7 +202,7 @@ CSongTableItem * CSongTable::getSelectedSongItem(void) const
 }
 
 
-QList<CSongTableItem *> CSongTable::getSelectedSongItems(void) const
+QList<CSongTableItem *> CSongTable::getSelectedSongItems() const
 {
     QList<CSongTableItem *> songItemList;
     QModelIndexList indexList = selectionModel()->selectedRows();
@@ -208,7 +210,8 @@ QList<CSongTableItem *> CSongTable::getSelectedSongItems(void) const
     for (QModelIndexList::const_iterator it = indexList.begin(); it != indexList.end(); ++it)
     {
         CSongTableItem * songItem = m_model->getSongItem(*it);
-        if (songItem) songItemList.append(songItem);
+        if (songItem)
+            songItemList.append(songItem);
     }
 
     return songItemList;
@@ -262,7 +265,7 @@ CSongTableItem * CSongTable::getLastSong(bool shuffle) const
  * \return Durée totale en millisecondes.
  */
 
-qlonglong CSongTable::getTotalDuration(void) const
+qlonglong CSongTable::getTotalDuration() const
 {
     qlonglong duration = 0;
 
@@ -416,7 +419,7 @@ void CSongTable::removeSongsFromTable(const QList<CSong *>& songs)
  * Aucune modification n'a lieu en base de données, et aucun signal n'est envoyé.
  */
 
-void CSongTable::removeAllSongsFromTable(void)
+void CSongTable::removeAllSongsFromTable()
 {
     m_model->clear();
 }
@@ -690,7 +693,7 @@ void CSongTable::showColumn(int column, bool show)
  * Mémorise les lignes sélectionnées.
  */
 
-void CSongTable::onSortAboutToChange(void)
+void CSongTable::onSortAboutToChange()
 {
     m_selectedItems = getSelectedSongItems();
     m_currentItem = m_model->getSongItem(selectionModel()->currentIndex());
@@ -753,7 +756,7 @@ void CSongTable::goToSongTable(void)
 }
 
 
-void CSongTable::addToPlayList(void)
+void CSongTable::addToPlayList()
 {
     QAction * action = qobject_cast<QAction *>(sender());
 
@@ -767,9 +770,7 @@ void CSongTable::addToPlayList(void)
             QModelIndexList indexList = selectionModel()->selectedRows();
 
             if (indexList.isEmpty())
-            {
                 return;
-            }
 
             QList<CSong *> songList;
 
@@ -795,7 +796,7 @@ void CSongTable::addToPlayList(void)
  * Retire les morceaux sélectionnés de la médiathèque.
  */
 
-void CSongTable::removeSongsFromLibrary(void)
+void CSongTable::removeSongsFromLibrary()
 {
     // Liste des morceaux sélectionnés
     QModelIndexList indexList = selectionModel()->selectedRows();
@@ -834,15 +835,13 @@ void CSongTable::removeSongsFromLibrary(void)
  * Coche tous les morceaux sélectionnés dans la liste.
  */
 
-void CSongTable::checkSelection(void)
+void CSongTable::checkSelection()
 {
     // Liste des morceaux sélectionnés
     QModelIndexList indexList = selectionModel()->selectedRows();
 
     if (indexList.isEmpty())
-    {
         return;
-    }
 
     for (QModelIndexList::const_iterator it = indexList.begin(); it != indexList.end(); ++it)
     {
@@ -855,15 +854,13 @@ void CSongTable::checkSelection(void)
  * Décoche tous les morceaux sélectionnés dans la liste.
  */
 
-void CSongTable::uncheckSelection(void)
+void CSongTable::uncheckSelection()
 {
     // Liste des morceaux sélectionnés
     QModelIndexList indexList = selectionModel()->selectedRows();
 
     if (indexList.isEmpty())
-    {
         return;
-    }
 
     for (QModelIndexList::const_iterator it = indexList.begin(); it != indexList.end(); ++it)
     {
@@ -875,6 +872,35 @@ void CSongTable::uncheckSelection(void)
 void CSongTable::onRowCountChange(const QModelIndex& parent, int start, int end)
 {
     emit rowCountChanged();
+}
+
+
+/**
+ * Méthode appellée lorsque la sélection change.
+ */
+
+void CSongTable::onSelectionChange()
+{
+    // On vérifie que cette table est actuellement affichée
+    if (m_application->getDisplayedSongTable() != this)
+        return;
+
+    QList<CSongTableItem *> songItems = getSelectedSongItems();
+
+    const int numSongs = songItems.size();
+
+    if (numSongs <= 0)
+        return;
+
+    // Durée totale sélectionnée
+    qlonglong durationMS = 0;
+
+    for (QList<CSongTableItem *>::const_iterator it = songItems.begin(); it != songItems.end(); ++it)
+    {
+        durationMS += (*it)->getSong()->getDuration();
+    }
+
+    m_application->setSelectionInformations(numSongs, durationMS);
 }
 
 
@@ -1201,7 +1227,7 @@ void CSongTable::selectSongItem(CSongTableItem * songItem)
 }
 
 
-void CSongTable::playSelectedSong(void)
+void CSongTable::playSelectedSong()
 {
     m_application->playSong(m_selectedItem);
 }
