@@ -172,8 +172,10 @@ CSongTableItem * CSongTable::getSongItemForRow(int row) const
 
 int CSongTable::getRowForSongItem(CSongTableItem * songItem) const
 {
-    Q_CHECK_PTR(songItem);
-    return m_model->getRowForSongItem(songItem);
+    if (songItem)
+        return m_model->getRowForSongItem(songItem);
+
+    return -1;
 }
 
 
@@ -831,6 +833,32 @@ void CSongTable::removeSongsFromLibrary()
 }
 
 
+void CSongTable::moveSongs()
+{
+    // Liste des morceaux sélectionnés
+    QModelIndexList indexList = selectionModel()->selectedRows();
+
+    QList<CSong *> songList;
+
+    for (QModelIndexList::const_iterator it = indexList.begin(); it != indexList.end(); ++it)
+    {
+        CSongTableItem * songItem = m_model->getSongItem(*it);
+        CSong * song = songItem->getSong();
+
+        if (!songList.contains(song))
+            songList.append(song);
+    }
+
+    if (songList.isEmpty())
+        return;
+
+    for (QList<CSong *>::const_iterator it = songList.begin(); it != songList.end(); ++it)
+    {
+        (*it)->moveFile();
+    }
+}
+
+
 /**
  * Coche tous les morceaux sélectionnés dans la liste.
  */
@@ -1278,6 +1306,12 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
 
         menu->addSeparator();
         menu->addAction(tr("Remove from library"), this, SLOT(removeSongsFromLibrary()));
+
+        if (severalSongs)
+            menu->addAction(tr("Rename files"), this, SLOT(moveSongs()));
+        else
+            menu->addAction(tr("Rename file"), this, SLOT(moveSongs()));
+
         menu->addAction(tr("Check selection"), this, SLOT(checkSelection()));
         menu->addAction(tr("Uncheck selection"), this, SLOT(uncheckSelection()));
         menu->addSeparator();

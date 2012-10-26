@@ -1127,11 +1127,12 @@ QFile * CApplication::getLogFile(const QString& logName)
 
     if (!m_logList.contains(fileName))
     {
-        QFile * logFile = new QFile(m_applicationPath + fileName + ".log", this);
+        QString logFileName = m_applicationPath + fileName + ".log";
+        QFile * logFile = new QFile(logFileName, this);
 
         if (!logFile->open(QIODevice::WriteOnly | QIODevice::Append))
         {
-            logError(tr("erreur lors de l'ouverture du fichier de log"), __FUNCTION__, __FILE__, __LINE__);
+            logError(tr("can't open the log file \"%1\"").arg(logFileName), __FUNCTION__, __FILE__, __LINE__);
             return NULL;
         }
 

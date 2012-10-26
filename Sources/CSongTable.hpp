@@ -164,6 +164,7 @@ protected slots:
     void goToSongTable();
     void addToPlayList();
     void removeSongsFromLibrary();
+    void moveSongs();
     void checkSelection();
     void uncheckSelection();
     void onRowCountChange(const QModelIndex& parent, int start, int end);

@@ -643,6 +643,8 @@ bool CSong::writeTags(void)
 
 bool CSong::moveFile()
 {
+    const unsigned int maxFolderLength = 50;
+
     // Recherche du répertoire de la médiathèque
     QString folder = m_application->getLibraryFolderFromFileName(m_properties.fileName);
 
@@ -659,11 +661,13 @@ bool CSong::moveFile()
     QString trackNumber;
     QString discNumber;
 
+    // Titre
     if (m_infos.title.isEmpty())
         title = m_application->getSettings()->value("Folders/TitleEmpty", tr("Unknown title")).toString();
     else
-        title = m_application->getSettings()->value("Folders/TitleDefault", "%1").toString().arg(m_infos.title).left(40);
-
+        title = m_application->getSettings()->value("Folders/TitleDefault", "%1").toString().arg(m_infos.title).left(maxFolderLength);
+    
+    // Caractères interdits sous Windows
     title.replace('\\', '_');
     title.replace('/', '_');
     title.replace(':', '_');
@@ -674,14 +678,20 @@ bool CSong::moveFile()
     title.replace('>', '_');
     title.replace('|', '_');
 
+    // Artiste
     if (m_infos.compilation)
         artistName = tr("Compilations"); // TODO: ajouter ce nom aux paramètres
-    else
+    else if (m_infos.albumArtist.isEmpty())
+    {
         if (m_infos.artistName.isEmpty())
             artistName = m_application->getSettings()->value("Folders/ArtistEmpty", tr("Unknown artist")).toString();
         else
-            artistName = m_application->getSettings()->value("Folders/ArtistDefault", "%1").toString().arg(m_infos.artistName).left(40);
+            artistName = m_application->getSettings()->value("Folders/ArtistDefault", "%1").toString().arg(m_infos.artistName).left(maxFolderLength);
+    }
+    else
+        artistName = m_application->getSettings()->value("Folders/ArtistDefault", "%1").toString().arg(m_infos.albumArtist).left(maxFolderLength);
 
+    // Caractères interdits sous Windows
     artistName.replace('\\', '_');
     artistName.replace('/', '_');
     artistName.replace(':', '_');
@@ -692,11 +702,13 @@ bool CSong::moveFile()
     artistName.replace('>', '_');
     artistName.replace('|', '_');
 
+    // Album
     if (m_infos.albumTitle.isEmpty())
         albumTitle = m_application->getSettings()->value("Folders/AlbumEmpty", tr("Unknown album")).toString();
     else
-        albumTitle = m_application->getSettings()->value("Folders/AlbumDefault", "%1").toString().arg(m_infos.albumTitle).left(40);
-
+        albumTitle = m_application->getSettings()->value("Folders/AlbumDefault", "%1").toString().arg(m_infos.albumTitle).left(maxFolderLength);
+    
+    // Caractères interdits sous Windows
     albumTitle.replace('\\', '_');
     albumTitle.replace('/', '_');
     albumTitle.replace(':', '_');
@@ -711,7 +723,8 @@ bool CSong::moveFile()
         year = m_application->getSettings()->value("Folders/YearEmpty", tr("")).toString();
     else
         year = m_application->getSettings()->value("Folders/YearDefault", " (%1)").toString().arg(m_infos.year);
-
+    
+    // Caractères interdits sous Windows
     year.replace('\\', '_');
     year.replace('/', '_');
     year.replace(':', '_');
@@ -728,7 +741,8 @@ bool CSong::moveFile()
         trackNumber = m_application->getSettings()->value("Folders/TrackDefault", "%1 ").toString().arg(QString("0%1").arg(m_infos.trackNumber));
     else
         trackNumber = m_application->getSettings()->value("Folders/TrackDefault", "%1 ").toString().arg(m_infos.trackNumber);
-
+    
+    // Caractères interdits sous Windows
     trackNumber.replace('\\', '_');
     trackNumber.replace('/', '_');
     trackNumber.replace(':', '_');
@@ -743,7 +757,8 @@ bool CSong::moveFile()
         discNumber = m_application->getSettings()->value("Folders/DiscEmpty", tr("")).toString();
     else
         discNumber = m_application->getSettings()->value("Folders/DiscDefault", "%1-").toString().arg(m_infos.discNumber);
-
+    
+    // Caractères interdits sous Windows
     discNumber.replace('\\', '_');
     discNumber.replace('/', '_');
     discNumber.replace(':', '_');
@@ -1976,7 +1991,8 @@ void CSong::updateDatabase(void)
             m_infos.albumTitle  != m_infosDB.albumTitle ||
             m_infos.year        != m_infosDB.year       ||
             m_infos.trackNumber != m_infosDB.trackNumber||
-            m_infos.discNumber  != m_infosDB.discNumber )
+            m_infos.discNumber  != m_infosDB.discNumber ||
+            m_infos.compilation != m_infosDB.compilation)
         {
             moveFile();
         }

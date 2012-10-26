@@ -745,6 +745,12 @@ void CStaticPlayList::openCustomMenuProject(const QPoint& point)
         menu->addSeparator();
         menu->addAction(tr("Remove from playlist"), this, SLOT(removeSelectedSongs()));
         menu->addAction(tr("Remove from library"), this, SLOT(removeSongsFromLibrary()));
+
+        if (severalSongs)
+            menu->addAction(tr("Rename files"), this, SLOT(moveSongs()));
+        else
+            menu->addAction(tr("Rename file"), this, SLOT(moveSongs()));
+
         menu->addAction(tr("Check selection"), this, SLOT(checkSelection()));
         menu->addAction(tr("Uncheck selection"), this, SLOT(uncheckSelection()));
         menu->addSeparator();
