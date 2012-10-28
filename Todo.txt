@@ -18,11 +18,10 @@
 
 - Gérer les répertoires à surveiller :
   - Analyser le répertoire récursivement au lancement de l'application.
-  - Pouvoir organiser différement chaque répertoire ?
   - Stocker ces informations avec les données de la médiathèque ?
+    - Pouvoir organiser différement chaque répertoire ?
   - Supprimer les répertoires vides après déplacement des fichiers.
   - Déplacer les illustrations sous forme d'image en même temps que les morceaux.
-  - Problèmes sous Windows : nom de fichier commençant ou se terminant par "." (entre autres).
 
 - Ajouter une vue pour afficher l'illustration principale.
 

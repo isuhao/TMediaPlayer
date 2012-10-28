@@ -43,28 +43,30 @@ public:
     CDialogEditSong(CSongTableItem * songItem, CSongTable * songTable, CApplication * application);
     virtual ~CDialogEditSong();
 
-    inline CSongTableItem * getSongItem(void) const;
-    inline CSongTable * getSongTable(void) const;
+    inline CSongTableItem * getSongItem() const;
+    inline CSongTable * getSongTable() const;
     void setSongItem(CSongTableItem * songItem, CSongTable * songTable);
 
 signals:
 
-    void closed(void); ///< Signal émis lorsque la boite de dialogue est fermée.
+    void closed(); ///< Signal émis lorsque la boite de dialogue est fermée.
 
 protected:
 
     virtual void closeEvent(QCloseEvent * event);
+    void applyChanges();
+    void resetSummary();
 
 protected slots:
 
-    void previousSong(void);
-    void nextSong(void);
-    void apply(void);
-    void save(void);
+    void previousSong();
+    void nextSong();
+    void apply();
+    void save();
 
 private:
 
-    void updateInfos(void);
+    void updateInfos();
     
     Ui::DialogEditSong * m_uiWidget;
     CSongTable * m_songTable;
@@ -73,13 +75,13 @@ private:
 };
 
 
-inline CSongTableItem * CDialogEditSong::getSongItem(void) const
+inline CSongTableItem * CDialogEditSong::getSongItem() const
 {
     return m_songItem;
 }
 
 
-inline CSongTable * CDialogEditSong::getSongTable(void) const
+inline CSongTable * CDialogEditSong::getSongTable() const
 {
     return m_songTable;
 }

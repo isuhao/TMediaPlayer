@@ -127,55 +127,7 @@ void CDialogEditSong::closeEvent(QCloseEvent * event)
 }
 
 
-/**
- * Affiche les informations du morceau précédent dans la liste.
- */
-
-void CDialogEditSong::previousSong(void)
-{
-    //apply(); // Comportement iTunes et Songbird
-
-    CSongTableItem * songItem = m_songTable->getPreviousSong(m_songItem, false);
-
-    if (songItem)
-    {
-        m_songItem = songItem;
-        updateInfos();
-
-        songItem = m_songTable->getPreviousSong(m_songItem, false);
-        m_uiWidget->btnPrevious->setEnabled(songItem);
-        m_uiWidget->btnNext->setEnabled(true);
-    }
-}
-
-
-/**
- * Affiche les informations du morceau suivant dans la liste.
- */
-
-void CDialogEditSong::nextSong(void)
-{
-    //apply(); // Comportement iTunes et Songbird
-
-    CSongTableItem * songItem = m_songTable->getNextSong(m_songItem, false);
-
-    if (songItem)
-    {
-        m_songItem = songItem;
-        updateInfos();
-
-        songItem = m_songTable->getNextSong(m_songItem, false);
-        m_uiWidget->btnPrevious->setEnabled(true);
-        m_uiWidget->btnNext->setEnabled(songItem);
-    }
-}
-
-
-/**
- * Enregistre les modifications effectuées sur le morceau.
- */
-
-void CDialogEditSong::apply(void)
+void CDialogEditSong::applyChanges()
 {
     CSong * song = m_songItem->getSong();
 
@@ -216,29 +168,14 @@ void CDialogEditSong::apply(void)
 
 
 /**
- * Enregistre les modifications effectuées sur le morceau et ferme la boite de dialogue.
- */
-
-void CDialogEditSong::save(void)
-{
-    apply();
-    close();
-}
-
-
-/**
- * Met à jour la boite de dialogue avec les informations du morceau.
+ * Recharge les informations affichées dans l'onglet "Résumé".
  *
  * \todo Afficher les illustrations.
  */
 
-void CDialogEditSong::updateInfos()
+void CDialogEditSong::resetSummary()
 {
     CSong * song = m_songItem->getSong();
-
-    // Rechargement des métadonnées
-    song->loadTags();
-    song->updateDatabase();
 
     const QString songTitle = song->getTitle();
     const QString songArtist = song->getArtistName();
@@ -314,34 +251,123 @@ void CDialogEditSong::updateInfos()
     }
 
     //TagLib::ID3v2::AttachedPictureFrame
-    
+}
+
+
+/**
+ * Affiche les informations du morceau précédent dans la liste.
+ */
+
+void CDialogEditSong::previousSong()
+{
+    //apply(); // Comportement iTunes et Songbird
+
+    CSongTableItem * songItem = m_songTable->getPreviousSong(m_songItem, false);
+
+    if (songItem)
+    {
+        m_songItem = songItem;
+        updateInfos();
+
+        songItem = m_songTable->getPreviousSong(m_songItem, false);
+        m_uiWidget->btnPrevious->setEnabled(songItem);
+        m_uiWidget->btnNext->setEnabled(true);
+    }
+}
+
+
+/**
+ * Affiche les informations du morceau suivant dans la liste.
+ */
+
+void CDialogEditSong::nextSong()
+{
+    //apply(); // Comportement iTunes et Songbird
+
+    CSongTableItem * songItem = m_songTable->getNextSong(m_songItem, false);
+
+    if (songItem)
+    {
+        m_songItem = songItem;
+        updateInfos();
+
+        songItem = m_songTable->getNextSong(m_songItem, false);
+        m_uiWidget->btnPrevious->setEnabled(true);
+        m_uiWidget->btnNext->setEnabled(songItem);
+    }
+}
+
+
+/**
+ * Enregistre les modifications effectuées sur le morceau.
+ */
+
+void CDialogEditSong::apply()
+{
+    applyChanges();
+    resetSummary();
+}
+
+
+/**
+ * Enregistre les modifications effectuées sur le morceau et ferme la boite de dialogue.
+ */
+
+void CDialogEditSong::save()
+{
+    applyChanges();
+    close();
+}
+
+
+/**
+ * Met à jour la boite de dialogue avec les informations du morceau.
+ */
+
+void CDialogEditSong::updateInfos()
+{
+    CSong * song = m_songItem->getSong();
+
+    // Rechargement des métadonnées
+    song->loadTags();
+    song->updateDatabase();
+
+
+    // Résumé
+    resetSummary();
+
 
     // Informations et tri
 
+    QString songTitle = song->getTitle();
     m_uiWidget->editTitle->setText(songTitle);
     m_uiWidget->editTitle_2->setText(songTitle);
     m_uiWidget->editTitleSort->setText(song->getTitleSort());
 
     m_uiWidget->editSubTitle->setText(song->getSubTitle());
 
+    QString songArtist = song->getArtistName();
     m_uiWidget->editArtist->setText(songArtist);
     m_uiWidget->editArtist_2->setText(songArtist);
     m_uiWidget->editArtistSort->setText(song->getArtistNameSort());
-
-    m_uiWidget->editAlbum->setText(song->getAlbumTitle());
-    m_uiWidget->editAlbum_2->setText(song->getAlbumTitle());
+    
+    QString songAlbum = song->getAlbumTitle();
+    m_uiWidget->editAlbum->setText(songAlbum);
+    m_uiWidget->editAlbum_2->setText(songAlbum);
     m_uiWidget->editAlbumSort->setText(song->getAlbumTitleSort());
-
-    m_uiWidget->editAlbumArtist->setText(song->getAlbumArtist());
-    m_uiWidget->editAlbumArtist_2->setText(song->getAlbumArtist());
+    
+    QString songAlbumArtist = song->getAlbumArtist();
+    m_uiWidget->editAlbumArtist->setText(songAlbumArtist);
+    m_uiWidget->editAlbumArtist_2->setText(songAlbumArtist);
     m_uiWidget->editAlbumArtistSort->setText(song->getAlbumArtistSort());
 
     m_uiWidget->editGrouping->setText(song->getGrouping());
     const int bpm = song->getBPM();
     m_uiWidget->editBPM->setText(bpm > 0 ? QString::number(bpm) : QString());
-
-    m_uiWidget->editComposer->setText(song->getComposer());
-    m_uiWidget->editComposer_2->setText(song->getComposer());
+    
+    QString songComposer = song->getComposer();
+    m_uiWidget->editComposer->setText(songComposer);
+    m_uiWidget->editComposer_2->setText(songComposer);
     m_uiWidget->editComposerSort->setText(song->getComposerSort());
 
     // Année

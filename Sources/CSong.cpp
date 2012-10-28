@@ -485,6 +485,20 @@ bool CSong::loadTags(bool readProperties)
         }
     }
 
+    // Pas de titre
+    if (m_infos.title.isEmpty())
+    {
+        int lastSlash = m_properties.fileName.lastIndexOf('/');
+        int lastPoint = m_properties.fileName.lastIndexOf('.');
+
+        if (lastSlash < 0)
+            m_infos.title = m_properties.fileName;
+        if (lastPoint <= lastSlash + 1)
+            m_infos.title = m_properties.fileName.mid(lastSlash + 1);
+        else
+            m_infos.title = m_properties.fileName.mid(lastSlash + 1, lastPoint - lastSlash - 1);
+    }
+
     m_isModified = true;
     return true;
 }
@@ -635,8 +649,10 @@ bool CSong::writeTags(void)
  * Déplace un fichier à partir de ses informations.
  * Cette méthode doit être appellée quand on ajoute un fichier, ou qu'on modifie l'une des informations
  * utilisées (titre, artiste, album, numéro de piste, de disque, ou année).
+ * La longueur d'un nom de dossier ou de fichier est limitée.
  *
  * \todo Supprimer les répertoires vides après déplacement des fichiers.
+ * \todo Ajouter d'autres informations (compositeur, langue, genre...).
  *
  * \return Booléen indiquant si le déplacement a eu lieu.
  */
@@ -660,23 +676,13 @@ bool CSong::moveFile()
     QString year;
     QString trackNumber;
     QString discNumber;
+    QString genre;
 
     // Titre
     if (m_infos.title.isEmpty())
         title = m_application->getSettings()->value("Folders/TitleEmpty", tr("Unknown title")).toString();
     else
         title = m_application->getSettings()->value("Folders/TitleDefault", "%1").toString().arg(m_infos.title).left(maxFolderLength);
-    
-    // Caractères interdits sous Windows
-    title.replace('\\', '_');
-    title.replace('/', '_');
-    title.replace(':', '_');
-    title.replace('*', '_');
-    title.replace('?', '_');
-    title.replace('"', '_');
-    title.replace('<', '_');
-    title.replace('>', '_');
-    title.replace('|', '_');
 
     // Artiste
     if (m_infos.compilation)
@@ -691,83 +697,45 @@ bool CSong::moveFile()
     else
         artistName = m_application->getSettings()->value("Folders/ArtistDefault", "%1").toString().arg(m_infos.albumArtist).left(maxFolderLength);
 
-    // Caractères interdits sous Windows
-    artistName.replace('\\', '_');
-    artistName.replace('/', '_');
-    artistName.replace(':', '_');
-    artistName.replace('*', '_');
-    artistName.replace('?', '_');
-    artistName.replace('"', '_');
-    artistName.replace('<', '_');
-    artistName.replace('>', '_');
-    artistName.replace('|', '_');
-
     // Album
     if (m_infos.albumTitle.isEmpty())
         albumTitle = m_application->getSettings()->value("Folders/AlbumEmpty", tr("Unknown album")).toString();
     else
         albumTitle = m_application->getSettings()->value("Folders/AlbumDefault", "%1").toString().arg(m_infos.albumTitle).left(maxFolderLength);
-    
-    // Caractères interdits sous Windows
-    albumTitle.replace('\\', '_');
-    albumTitle.replace('/', '_');
-    albumTitle.replace(':', '_');
-    albumTitle.replace('*', '_');
-    albumTitle.replace('?', '_');
-    albumTitle.replace('"', '_');
-    albumTitle.replace('<', '_');
-    albumTitle.replace('>', '_');
-    albumTitle.replace('|', '_');
 
+    // Année
     if (m_infos.year == 0)
         year = m_application->getSettings()->value("Folders/YearEmpty", tr("")).toString();
     else
         year = m_application->getSettings()->value("Folders/YearDefault", " (%1)").toString().arg(m_infos.year);
-    
-    // Caractères interdits sous Windows
-    year.replace('\\', '_');
-    year.replace('/', '_');
-    year.replace(':', '_');
-    year.replace('*', '_');
-    year.replace('?', '_');
-    year.replace('"', '_');
-    year.replace('<', '_');
-    year.replace('>', '_');
-    year.replace('|', '_');
 
+    // Numéro de piste
     if (m_infos.trackNumber <= 0)
         trackNumber = m_application->getSettings()->value("Folders/TrackEmpty", tr("")).toString();
     else if (m_infos.trackNumber < 10)
         trackNumber = m_application->getSettings()->value("Folders/TrackDefault", "%1 ").toString().arg(QString("0%1").arg(m_infos.trackNumber));
     else
         trackNumber = m_application->getSettings()->value("Folders/TrackDefault", "%1 ").toString().arg(m_infos.trackNumber);
-    
-    // Caractères interdits sous Windows
-    trackNumber.replace('\\', '_');
-    trackNumber.replace('/', '_');
-    trackNumber.replace(':', '_');
-    trackNumber.replace('*', '_');
-    trackNumber.replace('?', '_');
-    trackNumber.replace('"', '_');
-    trackNumber.replace('<', '_');
-    trackNumber.replace('>', '_');
-    trackNumber.replace('|', '_');
 
+    // Numéro de disque
     if (m_infos.discNumber == 0)
         discNumber = m_application->getSettings()->value("Folders/DiscEmpty", tr("")).toString();
     else
         discNumber = m_application->getSettings()->value("Folders/DiscDefault", "%1-").toString().arg(m_infos.discNumber);
-    
-    // Caractères interdits sous Windows
-    discNumber.replace('\\', '_');
+
+    // Genre
+    if (m_infos.discNumber == 0)
+        genre = m_application->getSettings()->value("Folders/GenreEmpty", tr("Unknown genre")).toString();
+    else
+        genre = m_application->getSettings()->value("Folders/GenreDefault", "%1").toString().arg(m_infos.genre);
+
+    title.replace('/', '_');
+    artistName.replace('/', '_');
+    albumTitle.replace('/', '_');
+    year.replace('/', '_');
+    trackNumber.replace('/', '_');
     discNumber.replace('/', '_');
-    discNumber.replace(':', '_');
-    discNumber.replace('*', '_');
-    discNumber.replace('?', '_');
-    discNumber.replace('"', '_');
-    discNumber.replace('<', '_');
-    discNumber.replace('>', '_');
-    discNumber.replace('|', '_');
+    genre.replace('/', '_');
 
     QString pathName = m_application->getSettings()->value("Folders/Format", "%2/%3%4/%6%5%1").toString();
     pathName.replace("%1", title);
@@ -776,10 +744,41 @@ bool CSong::moveFile()
     pathName.replace("%4", year);
     pathName.replace("%5", trackNumber);
     pathName.replace("%6", discNumber);
+    pathName.replace("%7", genre);
 
-    pathName = folder + '/' + pathName;
+    QStringList pathNameFolders = pathName.split('/', QString::SkipEmptyParts);
+    pathName.clear();
 
-    qDebug() << "CSong::moveFile: " << pathName;
+    for (QStringList::iterator it = pathNameFolders.begin(); it != pathNameFolders.end(); ++it)
+    {
+        *it = it->trimmed();
+
+        if (it->size() > maxFolderLength)
+            *it = it->left(maxFolderLength);
+
+        // Caractères interdits sous Windows
+        it->replace('\\', '_');
+        it->replace(':', '_');
+        it->replace('*', '_');
+        it->replace('?', '_');
+        it->replace('"', '_');
+        it->replace('<', '_');
+        it->replace('>', '_');
+        it->replace('|', '_');
+
+#ifdef Q_OS_WIN32
+        // Sous Windows, un nom de fichier ne peut pas se terminer par un point
+        if (it->endsWith('.'))
+            (*it)[it->size() - 1] = '_';
+#endif
+
+        pathName += '/' + *it;
+    }
+
+    if (pathName.isEmpty())
+        return false;
+
+    pathName = folder + pathName;
 
     QString extension;
 
@@ -791,6 +790,8 @@ bool CSong::moveFile()
         case FormatOGG:  extension = ".ogg";  break;
         case FormatFLAC: extension = ".flac"; break;
     }
+
+    qDebug() << "CSong::moveFile: " << pathName + extension;
 
     // Comparaison entre l'ancien nom et le nouveau nom
     if (m_properties.fileName == pathName + extension)
@@ -823,7 +824,7 @@ bool CSong::moveFile()
 
     if (!file.rename(pathName))
     {
-        qDebug() << "CSong::moveFile: can't rename";
+        m_application->logError(tr("can't rename the file \"%1\" to \"%2\"").arg(m_properties.fileName).arg(pathName), __FUNCTION__, __FILE__, __LINE__);
         return false;
     }
 

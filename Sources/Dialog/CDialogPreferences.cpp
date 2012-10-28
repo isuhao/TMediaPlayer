@@ -101,6 +101,7 @@ CDialogPreferences::CDialogPreferences(CApplication * application, QSettings * s
     m_uiWidget->editOrgYearDefault->setText(m_settings->value("Folders/YearDefault", QString("%1 - ")).toString());
     m_uiWidget->editOrgTrackDefault->setText(m_settings->value("Folders/TrackDefault", QString("%1 ")).toString());
     m_uiWidget->editOrgDiscDefault->setText(m_settings->value("Folders/DiscDefault", QString("%1-")).toString());
+    m_uiWidget->editOrgGenreDefault->setText(m_settings->value("Folders/GenreDefault", QString("%1")).toString());
 
     m_uiWidget->editOrgTitleEmpty->setText(m_settings->value("Folders/TitleEmpty", tr("Unknown title")).toString());
     m_uiWidget->editOrgArtistEmpty->setText(m_settings->value("Folders/ArtistEmpty", tr("Unknown artist")).toString());
@@ -108,6 +109,7 @@ CDialogPreferences::CDialogPreferences(CApplication * application, QSettings * s
     m_uiWidget->editOrgYearEmpty->setText(m_settings->value("Folders/YearEmpty", QString()).toString());
     m_uiWidget->editOrgTrackEmpty->setText(m_settings->value("Folders/TrackEmpty", QString()).toString());
     m_uiWidget->editOrgDiscEmpty->setText(m_settings->value("Folders/DiscEmpty", QString()).toString());
+    m_uiWidget->editOrgGenreEmpty->setText(m_settings->value("Folders/GenreEmpty", tr("Unknown genre")).toString());
 
     // Liste des répertoires surveillés
     QSqlQuery query(m_application->getDataBase());
@@ -156,7 +158,7 @@ CDialogPreferences::~CDialogPreferences()
  * \todo Gérer toutes les préferences.
  */
 
-void CDialogPreferences::save(void)
+void CDialogPreferences::save()
 {
     m_application->setRowHeight(m_uiWidget->editRowHeight->value());
     m_application->showButtonStop(m_uiWidget->editShowButtonStop->isChecked());
@@ -197,6 +199,7 @@ void CDialogPreferences::save(void)
     m_settings->setValue("Folders/YearDefault", m_uiWidget->editOrgYearDefault->text());
     m_settings->setValue("Folders/TrackDefault", m_uiWidget->editOrgTrackDefault->text());
     m_settings->setValue("Folders/DiscDefault", m_uiWidget->editOrgDiscDefault->text());
+    m_settings->setValue("Folders/GenreDefault", m_uiWidget->editOrgGenreDefault->text());
 
     m_settings->setValue("Folders/TitleEmpty", m_uiWidget->editOrgTitleEmpty->text());
     m_settings->setValue("Folders/ArtistEmpty", m_uiWidget->editOrgArtistEmpty->text());
@@ -204,6 +207,7 @@ void CDialogPreferences::save(void)
     m_settings->setValue("Folders/YearEmpty", m_uiWidget->editOrgYearEmpty->text());
     m_settings->setValue("Folders/TrackEmpty", m_uiWidget->editOrgTrackEmpty->text());
     m_settings->setValue("Folders/DiscEmpty", m_uiWidget->editOrgDiscEmpty->text());
+    m_settings->setValue("Folders/GenreEmpty", m_uiWidget->editOrgGenreEmpty->text());
 
     close();
 }
@@ -238,7 +242,7 @@ void CDialogPreferences::onDriverChange(const QString& name)
  * Ajoute un répertoire à la liste des répertoires surveillés.
  */
 
-void CDialogPreferences::addFolder(void)
+void CDialogPreferences::addFolder()
 {
     QString pathName = QFileDialog::getExistingDirectory(this);
 
@@ -296,7 +300,7 @@ void CDialogPreferences::addFolder(void)
  * Supprime le répertoire sélectionné de la liste des répertoires surveillés.
  */
 
-void CDialogPreferences::removeSelectedFolder(void)
+void CDialogPreferences::removeSelectedFolder()
 {
     QListWidgetItem * item = m_uiWidget->listFolders->currentItem();
 
