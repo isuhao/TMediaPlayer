@@ -1270,18 +1270,24 @@ QList<CSong *> CSong::loadAllSongsFromDatabase(CApplication * application)
  *         respectivement 1024, 1024*1024, et 1024*1024*1024 octets).
  */
 
-QString CSong::getFileSize(int fileSize)
+QString CSong::getFileSize(qlonglong fileSize)
 {
     Q_ASSERT(fileSize >= 0);
 
+    // Plus de 1 Tio
+    if (fileSize >= 1099511627776L/*1024 * 1024 * 1024 * 1024*/)
+    {
+        float fileSizeDisplay = static_cast<float>(static_cast<int>(static_cast<float>(10 * fileSize) / (1024*1024*1024*1024))) / 10;
+        return tr("%1 Tio").arg(fileSizeDisplay);
+    }
     // Plus de 1 Gio
-    if (fileSize >= 1024 * 1024 * 1024)
+    else if (fileSize >= 1073741824L/*1024 * 1024 * 1024*/)
     {
         float fileSizeDisplay = static_cast<float>(static_cast<int>(static_cast<float>(10 * fileSize) / (1024*1024*1024))) / 10;
         return tr("%1 Gio").arg(fileSizeDisplay);
     }
     // Plus de 1 Mio
-    else if (fileSize >= 1024 * 1024)
+    else if (fileSize >= 1048576L/*1024 * 1024*/)
     {
         float fileSizeDisplay = static_cast<float>(static_cast<int>(static_cast<float>(10 * fileSize) / (1024*1024))) / 10;
         return tr("%1 Mio").arg(fileSizeDisplay);

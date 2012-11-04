@@ -2619,7 +2619,7 @@ void CApplication::updateListInformations()
         duration = duration.addMSecs(static_cast<int>(durationMS % 86400000));
         numSongs = m_displayedSongTable->getNumSongs();
     }
-
+/*
     // Barre d'état
     if (durationMS > 86400000)
     {
@@ -2630,6 +2630,8 @@ void CApplication::updateListInformations()
     {
         m_listInfos->setText(tr("%n song(s), %1", "", numSongs).arg(duration.toString()));
     }
+*/
+    m_listInfos->setText(tr("%n song(s), %1", "", numSongs).arg(durationToString(durationMS)));
 }
 
 
@@ -3431,4 +3433,21 @@ void CApplication::closeEvent(QCloseEvent * event)
     m_settings->setValue("Window/WindowState", saveState());
 
     QMainWindow::closeEvent(event);
+}
+
+
+QString CApplication::durationToString(qlonglong durationMS)
+{
+    QTime duration(0, 0);
+    duration = duration.addMSecs(static_cast<int>(durationMS % 86400000));
+
+    if (durationMS > 86400000)
+    {
+        int numDays = static_cast<int>(durationMS / 86400000);
+        return tr("%n day(s) %1", "", numDays).arg(duration.toString());
+    }
+    else
+    {
+        return duration.toString();
+    }
 }

@@ -81,7 +81,31 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *>& songItemList, CAppli
     // Liste des langues
     m_uiWidget->editLanguage->addItems(CSong::getLanguageList());
 
-    
+
+    // Résumé
+    int durationMin;
+    int durationMax = 0;
+    qlonglong durationTotal = 0;
+   
+    qlonglong fileSizeMin;
+    qlonglong fileSizeMax = 0;
+    qlonglong fileSizeTotal = 0;
+
+    QDateTime creationMin;
+    QDateTime creationMax;
+
+    QDateTime modificationMin;
+    QDateTime modificationMax;
+
+    int bitRateMin;
+    int bitRateMax = 0;
+    qlonglong bitRateAverage = 0;
+
+    int sampleRateMin;
+    int sampleRateMax = 0;
+
+    QList<TPlay> plays;
+
     // Recherche des données similaires pour tous les éléments
     QString songTitle;           bool songTitleSim           = true;
     QString songTitleSort;       bool songTitleSortSim       = true;
@@ -118,10 +142,82 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *>& songItemList, CAppli
 
     bool first = true;
 
+    // On parcourt la liste des morceaux sélectionnés pour trouver les informations à afficher
     for (QList<CSongTableItem *>::const_iterator it = m_songItemList.begin(); it != m_songItemList.end(); ++it)
     {
         Q_CHECK_PTR(*it);
         CSong * song = (*it)->getSong();
+
+        // Durée du morceau
+        int songDuration = song->getDuration();
+        durationTotal += songDuration;
+
+        if (first || songDuration < durationMin)
+            durationMin = songDuration;
+
+        if (songDuration > durationMax)
+            durationMax = songDuration;
+
+        // Taille du fichier
+        qlonglong songFileSize = song->getFileSize();
+        fileSizeTotal += songFileSize;
+
+        if (first || songFileSize < fileSizeMin)
+            fileSizeMin = songFileSize;
+
+        if (songFileSize > fileSizeMax)
+            fileSizeMax = songFileSize;
+
+        // Date de création
+        QDateTime songCreation = song->getCreationDate();
+
+        if (first || songCreation < creationMin)
+            creationMin = songCreation;
+
+        if (songCreation > creationMax)
+            creationMax = songCreation;
+
+        // Date de modification
+        QDateTime songModification = song->getModificationDate();
+
+        if (first || songModification < modificationMin)
+            modificationMin = songModification;
+
+        if (songModification > modificationMax)
+            modificationMax = songModification;
+
+        // Débit binaire
+        int songBitRate = song->getBitRate();
+        bitRateAverage += static_cast<qlonglong>(songBitRate) * static_cast<qlonglong>(songDuration);
+
+        if (first || songBitRate < bitRateMin)
+            bitRateMin = songBitRate;
+
+        if (songBitRate > bitRateMax)
+            bitRateMax = songBitRate;
+
+        // Fréquence d'échantillonnage
+        int songSampleRate = song->getSampleRate();
+
+        if (first || songSampleRate < sampleRateMin)
+            sampleRateMin = songSampleRate;
+
+        if (songSampleRate > sampleRateMax)
+            sampleRateMax = songSampleRate;
+
+
+        // Lectures
+        QList<CSong::TSongPlay> songPlays = song->getPlays();
+
+        for (QList<CSong::TSongPlay>::const_iterator play = songPlays.begin(); play != songPlays.end(); ++play)
+        {
+            TPlay p;
+            p.song    = song;
+            p.time    = play->time;
+            p.timeUTC = play->timeUTC;
+
+            plays.append(p);
+        }
 
         if (first)
         {
@@ -196,6 +292,111 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *>& songItemList, CAppli
             if (songCompilationSim && song->isCompilation() != songCompilation) songCompilationSim = false;
         }
     }
+
+    qSort(plays.begin(), plays.end(), CDialogEditSongs::comparePlay);
+
+
+    // Résumé
+    if (durationMin == durationMax)
+    {
+        m_uiWidget->valueDuration->setText(tr("%1 (total: %2)").arg(CApplication::durationToString(durationMin))
+                                                               .arg(CApplication::durationToString(durationTotal)));
+    }
+    else
+    {
+        m_uiWidget->valueDuration->setText(tr("between %1 and %2 (total: %3)").arg(CApplication::durationToString(durationMin))
+                                                                              .arg(CApplication::durationToString(durationMax))
+                                                                              .arg(CApplication::durationToString(durationTotal)));
+    }
+
+    QString fileSizeMinStr = CSong::getFileSize(fileSizeMin);
+    QString fileSizeMaxStr = CSong::getFileSize(fileSizeMax);
+
+    if (fileSizeMinStr == fileSizeMaxStr)
+    {
+        m_uiWidget->valueFilesSize->setText(tr("%1 (total: %2)").arg(fileSizeMinStr)
+                                                                .arg(CSong::getFileSize(fileSizeTotal)));
+    }
+    else
+    {
+        m_uiWidget->valueFilesSize->setText(tr("between %1 and %2 (total: %3)").arg(fileSizeMinStr)
+                                                                               .arg(fileSizeMaxStr)
+                                                                               .arg(CSong::getFileSize(fileSizeTotal)));
+    }
+
+    m_uiWidget->valueCreation->setText(tr("%1 - %2").arg(creationMin.toString("dd/MM/yyyy HH:mm:ss"))
+                                                    .arg(creationMax.toString("dd/MM/yyyy HH:mm:ss")));
+
+    m_uiWidget->valueModification->setText(tr("%1 - %2").arg(modificationMin.toString("dd/MM/yyyy HH:mm:ss"))
+                                                        .arg(modificationMax.toString("dd/MM/yyyy HH:mm:ss")));
+
+    bitRateAverage /= durationTotal;
+
+    if (bitRateMin == bitRateMax)
+    {
+        m_uiWidget->valueBitRate->setText(tr("%1 kbit/s").arg(bitRateMin));
+    }
+    else
+    {
+        m_uiWidget->valueBitRate->setText(tr("%1 - %2 (average: %3)").arg(tr("%1 kbit/s").arg(bitRateMin))
+                                                                     .arg(tr("%1 kbit/s").arg(bitRateMax))
+                                                                     .arg(tr("%1 kbit/s").arg(bitRateAverage)));
+    }
+
+    //m_uiWidget->valueFormat->setText(CSong::getFormatName(song->getFormat()));
+
+    //m_uiWidget->valueChannels->setText(QString::number(song->getNumChannels()));
+
+    if (sampleRateMin == sampleRateMax)
+    {
+        m_uiWidget->valueSampleRate->setText(tr("%1 Hz").arg(sampleRateMax));
+    }
+    else
+    {
+        m_uiWidget->valueSampleRate->setText(tr("%1 - %2").arg(tr("%1 Hz").arg(sampleRateMin))
+                                                          .arg(tr("%1 Hz").arg(sampleRateMax)));
+    }
+
+    m_uiWidget->valueLastPlayTime->setText(plays.first().time.toString("dd/MM/yyyy HH:mm:ss"));
+
+    m_uiWidget->valuePlayCount->setText(QString::number(plays.size()));
+
+
+    // Lectures
+    QStandardItemModel * model = new QStandardItemModel(this);
+    model->setHorizontalHeaderLabels(QStringList() << tr("Song") << tr("Local time") << tr("UTC"));
+    m_uiWidget->listPlays->setModel(model);
+
+    for (QList<TPlay>::const_iterator it = plays.begin(); it != plays.end(); ++it)
+    {
+        QList<QStandardItem *> itemList;
+
+        const QString songTitle = it->song->getTitle();
+        const QString songArtist = it->song->getArtistName();
+        const QString songAlbum = it->song->getAlbumTitle();
+
+        if (songAlbum.isEmpty())
+        {
+            if (songArtist.isEmpty())
+                itemList << new QStandardItem(songTitle);
+            else
+                itemList << new QStandardItem(songArtist + " - " + songTitle);
+        }
+        else
+        {
+            if (songArtist.isEmpty())
+                itemList << new QStandardItem(QString("%1 (%2)").arg(songTitle).arg(songAlbum));
+            else
+                itemList << new QStandardItem(QString("%1 - %2 (%3)").arg(songArtist).arg(songTitle).arg(songAlbum));
+        }
+
+        itemList << new QStandardItem(it->time.toString(tr("dd/MM/yyyy HH:mm:ss")));
+        itemList << new QStandardItem(it->timeUTC.toString(tr("dd/MM/yyyy HH:mm:ss")));
+        model->appendRow(itemList);
+    }
+
+    m_uiWidget->listPlays->resizeColumnsToContents();
+
 
     const QString notSimText = tr("Different values");
 

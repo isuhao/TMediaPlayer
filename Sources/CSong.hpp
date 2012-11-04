@@ -66,6 +66,7 @@ public:
     static inline QString getFormatName(TFormat format);
     static inline QStringList getFormatList(void);
 
+
     enum TLanguage
     {
         LangUnknown    =  0, ///< Langue inconnue.
@@ -90,75 +91,83 @@ public:
     static inline QString getISO3CodeForLanguage(TLanguage language);
 
 
+    struct TSongPlay
+    {
+        QDateTime time;
+        QDateTime timeUTC;
+    };
+
+
     explicit CSong(CApplication * application);
     CSong(const QString& fileName, CApplication * application);
     virtual ~CSong();
 
-    void loadFromDatabase(void);
+    void loadFromDatabase();
     bool loadTags(bool readProperties = false);
-    bool writeTags(void);
-    bool moveFile(void);
-    QImage getCoverImage(void) const;
+    bool writeTags();
+    bool moveFile();
+    QImage getCoverImage() const;
     bool matchFilter(const QString& filter) const;
-    //void computeReplayGain(void);
-    void updateDatabase(void);
+    //void computeReplayGain();
+    void updateDatabase();
 
-    inline int getId(void) const;
-    inline QString getFileName(void) const;
-    inline qlonglong getFileSize(void) const;
-    inline int getBitRate(void) const;
-    inline int getSampleRate(void) const;
-    inline TFormat getFormat(void) const;
+    inline int getId() const;
+    inline QString getFileName() const;
+    inline qlonglong getFileSize() const;
+    inline int getBitRate() const;
+    inline int getSampleRate() const;
+    inline TFormat getFormat() const;
     inline int getNumChannels(void) const;
-    inline int getDuration(void) const;
-    inline bool getFileStatus(void) const;
-    inline QDateTime getCreationDate(void) const;
-    inline QDateTime getModificationDate(void) const;
+    inline int getDuration() const;
+    inline bool getFileStatus() const;
+    inline QDateTime getCreationDate() const;
+    inline QDateTime getModificationDate() const;
 
-    inline bool isEnabled(void) const;
-    inline QString getTitle(void) const;
-    inline QString getSubTitle(void) const;
-    inline QString getGrouping(void) const;
-    inline QString getArtistName(void) const;
-    inline QString getAlbumTitle(void) const;
-    inline QString getAlbumArtist(void) const;
-    inline QString getComposer(void) const;
+    inline bool isEnabled() const;
+    inline QString getTitle() const;
+    inline QString getSubTitle() const;
+    inline QString getGrouping() const;
+    inline QString getArtistName() const;
+    inline QString getAlbumTitle() const;
+    inline QString getAlbumArtist() const;
+    inline QString getComposer() const;
     inline QString getTitleSort(bool empty = true) const;
     inline QString getArtistNameSort(bool empty = true) const;
     inline QString getAlbumTitleSort(bool empty = true) const;
     inline QString getAlbumArtistSort(bool empty = true) const;
     inline QString getComposerSort(bool empty = true) const;
-    inline int getYear(void) const;
-    inline int getTrackNumber(void) const;
-    inline int getTrackCount(void) const;
-    inline int getDiscNumber(void) const;
-    inline int getDiscCount(void) const;
-    inline QString getGenre(void) const;
-    inline int getRating(void) const;
-    inline QString getComments(void) const;
-    inline int getBPM(void) const;
-    inline QString getLyrics(void) const;
-    inline TLanguage getLanguage(void) const;
-    inline QString getLyricist(void) const;
-    inline bool isCompilation(void) const;
-    inline bool isSkipShuffle(void) const;
+    inline int getYear() const;
+    inline int getTrackNumber() const;
+    inline int getTrackCount() const;
+    inline int getDiscNumber() const;
+    inline int getDiscCount() const;
+    inline QString getGenre() const;
+    inline int getRating() const;
+    inline QString getComments() const;
+    inline int getBPM() const;
+    inline QString getLyrics() const;
+    inline TLanguage getLanguage() const;
+    inline QString getLyricist() const;
+    inline bool isCompilation() const;
+    inline bool isSkipShuffle() const;
 
     // Replay Gain
-    inline float getTrackGain(void) const;
-    inline float getTrackPeak(void) const;
-    inline float getAlbumGain(void) const;
-    inline float getAlbumPeak(void) const;
+    inline float getTrackGain() const;
+    inline float getTrackPeak() const;
+    inline float getAlbumGain() const;
+    inline float getAlbumPeak() const;
 
-    int getPosition(void) const;
-    bool isEnded(void) const;
+    int getPosition() const;
+    bool isEnded() const;
 
-    inline int getNumPlays(void) const;
-    inline QDateTime getLastPlay(void) const;
+    inline int getNumPlays() const;
+    inline QDateTime getLastPlay() const;
+    inline QList<TSongPlay> getPlays() const;
 
     static int getId(CApplication * application, const QString& fileName);
     static CSong * loadFromFile(CApplication * application, const QString& fileName);
     static QList<CSong *> loadAllSongsFromDatabase(CApplication * application);
-    static QString getFileSize(int fileSize);
+    static QString getFileSize(qlonglong fileSize);
 
 public slots:
 
@@ -198,8 +207,8 @@ public slots:
 
 protected:
 
-    void startPlay(void);
-    void updateFileInfos(void);
+    void startPlay();
+    void updateFileInfos();
 
     void setFileSize(qlonglong fileSize);
     void setBitRate(int bitRate);
@@ -211,16 +220,16 @@ protected slots:
     void setPosition(int position);
     void setVolume(int volume);
     void setMute(bool mute);
-    bool loadSound(void);
-    void play(void);
-    void pause(void);
-    void stop(void);
-    void emitPlayEnd(void);
+    bool loadSound();
+    void play();
+    void pause();
+    void stop();
+    void emitPlayEnd();
 
 signals:
 
-    void songModified(void); ///< Signal émis lorsque les informations du morceau sont modifiées.
-    void playEnd(void);      ///< Signal émis lorsque la lecture se termine.
+    void songModified(); ///< Signal émis lorsque les informations du morceau sont modifiées.
+    void playEnd();      ///< Signal émis lorsque la lecture se termine.
 
 private:
 
@@ -238,7 +247,7 @@ private:
         int numChannels;    ///< Nombre de canaux.
         int duration;       ///< Durée du morceau en millisecondes.
 
-        TSongProperties(void);
+        TSongProperties();
 
         inline bool operator==(const TSongProperties& other)
         {
@@ -298,7 +307,7 @@ private:
         float albumGain;
         float albumPeak;
 
-        TSongInfos(void);
+        TSongInfos();
 
         inline bool operator==(const TSongInfos& other)
         {
@@ -340,12 +349,6 @@ private:
         {
             return !(operator==(other));
         }
-    };
-
-    struct TSongPlay
-    {
-        QDateTime time;
-        QDateTime timeUTC;
     };
 
 
@@ -972,6 +975,11 @@ inline int CSong::getNumPlays(void) const
 inline QDateTime CSong::getLastPlay(void) const
 {
     return (m_plays.isEmpty() ? QDateTime() : m_plays.first().timeUTC);
+}
+
+inline QList<CSong::TSongPlay> CSong::getPlays() const
+{
+    return m_plays;
 }
 
 #endif // FILE_C_SONG

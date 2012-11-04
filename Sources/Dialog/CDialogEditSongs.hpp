@@ -100,7 +100,25 @@ protected slots:
     void onFocusChange(QWidget * old, QWidget * now);
 
 private:
-    
+
+    struct TPlay
+    {
+        CSong * song;
+        QDateTime time;
+        QDateTime timeUTC;
+    };
+
+    inline static bool comparePlay(const TPlay& p1, const TPlay& p2)
+    {
+        if (p1.timeUTC.isNull())
+            return false;
+
+        if (p2.timeUTC.isNull())
+            return true;
+
+        return (p1.timeUTC > p2.timeUTC);
+    }
+
     Ui::DialogEditSongs * m_uiWidget;
     CSpecialSpinBox * m_editRating;
     bool m_differentComments;

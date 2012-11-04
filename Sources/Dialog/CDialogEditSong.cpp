@@ -198,15 +198,15 @@ void CDialogEditSong::resetSummary()
 
     m_uiWidget->valueFileName->setText(song->getFileName());
     m_uiWidget->valueFileSize->setText(CSong::getFileSize(song->getFileSize()));
-    m_uiWidget->valueCreation->setText(song->getCreationDate().toString());
-    m_uiWidget->valueModification->setText(song->getModificationDate().toString());
+    m_uiWidget->valueCreation->setText(song->getCreationDate().toString("dd/MM/yyyy HH:mm:ss"));
+    m_uiWidget->valueModification->setText(song->getModificationDate().toString("dd/MM/yyyy HH:mm:ss"));
 
     m_uiWidget->valueBitRate->setText(tr("%1 kbit/s").arg(song->getBitRate()));
     m_uiWidget->valueFormat->setText(CSong::getFormatName(song->getFormat()));
     m_uiWidget->valueChannels->setText(QString::number(song->getNumChannels()));
     m_uiWidget->valueSampleRate->setText(tr("%1 Hz").arg(song->getSampleRate()));
 
-    m_uiWidget->valueLastPlayTime->setText(song->getLastPlay().toString());
+    m_uiWidget->valueLastPlayTime->setText(song->getLastPlay().toString("dd/MM/yyyy HH:mm:ss"));
     m_uiWidget->valuePlayCount->setText(QString::number(song->getNumPlays()));
 
     // Illustration
@@ -451,7 +451,6 @@ void CDialogEditSong::updateInfos()
 
 
     // Lectures
-
     QStandardItemModel * model = new QStandardItemModel(this);
     model->setHorizontalHeaderLabels(QStringList() << tr("Local time") << tr("UTC"));
     m_uiWidget->listPlays->setModel(model);
@@ -463,4 +462,6 @@ void CDialogEditSong::updateInfos()
         itemList << new QStandardItem(it->timeUTC.toString(tr("dd/MM/yyyy HH:mm:ss")));
         model->appendRow(itemList);
     }
+
+    m_uiWidget->listPlays->resizeColumnsToContents();
 }

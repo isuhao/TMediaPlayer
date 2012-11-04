@@ -175,6 +175,8 @@ public:
 
     void openDialogCreateStaticList(CFolder * folder, const QList<CSong *>& songs = QList<CSong *>());
 
+    static QString durationToString(qlonglong durationMS);
+
 public slots:
 
     void selectAll();
