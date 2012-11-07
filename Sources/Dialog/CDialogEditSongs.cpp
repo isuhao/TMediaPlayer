@@ -104,6 +104,11 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *>& songItemList, CAppli
     int sampleRateMin;
     int sampleRateMax = 0;
 
+    QMap<CSong::TFormat, int> formats;
+
+    int numChannelsMin;
+    int numChannelsMax = 0;
+
     QList<TPlay> plays;
 
     // Recherche des données similaires pour tous les éléments
@@ -205,6 +210,22 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *>& songItemList, CAppli
         if (songSampleRate > sampleRateMax)
             sampleRateMax = songSampleRate;
 
+        // Formats
+        CSong::TFormat format = song->getFormat();
+
+        if (formats.contains(format))
+            ++formats[format];
+        else
+            formats[format] = 1;
+
+        // Fréquence d'échantillonnage
+        int songNumChannels = song->getNumChannels();
+
+        if (first || songNumChannels < numChannelsMin)
+            numChannelsMin = songNumChannels;
+
+        if (songNumChannels > numChannelsMax)
+            numChannelsMax = songNumChannels;
 
         // Lectures
         QList<CSong::TSongPlay> songPlays = song->getPlays();
@@ -343,9 +364,41 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *>& songItemList, CAppli
                                                                      .arg(tr("%1 kbit/s").arg(bitRateAverage)));
     }
 
-    //m_uiWidget->valueFormat->setText(CSong::getFormatName(song->getFormat()));
+    // Formats
+    QString formatStr;
 
-    //m_uiWidget->valueChannels->setText(QString::number(song->getNumChannels()));
+    for (int f = 0; f < formats.size(); ++f)
+    {
+        CSong::TFormat m = CSong::FormatUnknown;
+        int valMax = 0;
+
+        for (QMap<CSong::TFormat, int>::iterator it = formats.begin(); it != formats.end(); ++it)
+        {
+            if (it.value() > valMax)
+            {
+                valMax = it.value();
+                m = it.key();
+                it.value() = 0;
+            }
+        }
+
+        if (!formatStr.isEmpty())
+            formatStr += ", ";
+
+        formatStr += CSong::getFormatName(m);
+    }
+
+    m_uiWidget->valueFormat->setText(formatStr);
+
+    if (numChannelsMin == numChannelsMax)
+    {
+        m_uiWidget->valueChannels->setText(QString::number(numChannelsMin));
+    }
+    else
+    {
+        m_uiWidget->valueChannels->setText(QString("%1 - %2").arg(numChannelsMin)
+                                                             .arg(numChannelsMax));
+    }
 
     if (sampleRateMin == sampleRateMax)
     {
@@ -357,7 +410,10 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *>& songItemList, CAppli
                                                           .arg(tr("%1 Hz").arg(sampleRateMax)));
     }
 
-    m_uiWidget->valueLastPlayTime->setText(plays.first().time.toString("dd/MM/yyyy HH:mm:ss"));
+    if (plays.isEmpty())
+        m_uiWidget->valueLastPlayTime->setText(tr("never"));
+    else
+        m_uiWidget->valueLastPlayTime->setText(plays.first().time.toString("dd/MM/yyyy HH:mm:ss"));
 
     m_uiWidget->valuePlayCount->setText(QString::number(plays.size()));
 

@@ -27,6 +27,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 class CSongTable;
 class CApplication;
+class CRatingEditor;
 class QCloseEvent;
 
 
@@ -69,6 +70,7 @@ private:
     void updateInfos();
     
     Ui::DialogEditSong * m_uiWidget;
+    CRatingEditor * m_ratingEditor;
     CSongTable * m_songTable;
     CSongTableItem * m_songItem;
     CApplication * m_application;

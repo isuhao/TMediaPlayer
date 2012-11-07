@@ -1082,6 +1082,7 @@ QStringList CApplication::getGenreList(void)
     QStringList genres;
 
     // Genres prédéfinis
+    genres.append("Blues");
     genres.append("Classical");
     genres.append("Country");
     genres.append("Funk");

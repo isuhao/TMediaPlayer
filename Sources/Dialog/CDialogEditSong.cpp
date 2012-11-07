@@ -20,8 +20,10 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CDialogEditSong.hpp"
 #include "CSongTable.hpp"
 #include "CApplication.hpp"
+#include "CRatingEditor.hpp"
 #include <QStandardItemModel>
 #include <QCloseEvent>
+#include <QSettings>
 
 #include <mpegfile.h>
 #include <id3v2tag.h>
@@ -38,11 +40,12 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  */
 
 CDialogEditSong::CDialogEditSong(CSongTableItem * songItem, CSongTable * songTable, CApplication * application) :
-    QDialog       (application),
-    m_uiWidget    (new Ui::DialogEditSong()),
-    m_songTable   (songTable),
-    m_songItem    (songItem),
-    m_application (application)
+    QDialog        (application),
+    m_uiWidget     (new Ui::DialogEditSong()),
+    m_ratingEditor (new CRatingEditor()),
+    m_songTable    (songTable),
+    m_songItem     (songItem),
+    m_application  (application)
 {
     Q_CHECK_PTR(songItem);
     Q_CHECK_PTR(songTable);
@@ -50,6 +53,9 @@ CDialogEditSong::CDialogEditSong(CSongTableItem * songItem, CSongTable * songTab
 
     setAttribute(Qt::WA_DeleteOnClose);
     m_uiWidget->setupUi(this);
+
+    m_ratingEditor->setDelegate(false);
+    m_uiWidget->layoutInfos->addWidget(m_ratingEditor, 16, 1, 1, 3);
 
 
     // Liste des langues
@@ -120,12 +126,22 @@ void CDialogEditSong::setSongItem(CSongTableItem * songItem, CSongTable * songTa
 }
 
 
+/**
+ * Méthode appellée lorsqu'on ferme la boite de dialogue
+ *
+ * \param event Évènement de fermeture.
+ */
+
 void CDialogEditSong::closeEvent(QCloseEvent * event)
 {
     event->accept();
     emit closed();
 }
 
+
+/**
+ * Applique les modifications apportées au morceau.
+ */
 
 void CDialogEditSong::applyChanges()
 {
@@ -153,7 +169,8 @@ void CDialogEditSong::applyChanges()
     song->setDiscCount(m_uiWidget->editDiscCount->text().toInt());
     song->setComments(m_uiWidget->editComments->toPlainText());
     song->setGenre(m_uiWidget->editGenre->currentText());
-    song->setRating(m_uiWidget->editRating->value());
+    //song->setRating(m_uiWidget->editRating->value());
+    song->setRating(m_ratingEditor->getRatingValue());
     song->setLyrics(m_uiWidget->editLyrics->toPlainText());
     song->setLanguage(CSong::getLanguageFromInteger(m_uiWidget->editLanguage->currentIndex()));
     song->setLyricist(m_uiWidget->editLyricist->text());
@@ -206,7 +223,13 @@ void CDialogEditSong::resetSummary()
     m_uiWidget->valueChannels->setText(QString::number(song->getNumChannels()));
     m_uiWidget->valueSampleRate->setText(tr("%1 Hz").arg(song->getSampleRate()));
 
-    m_uiWidget->valueLastPlayTime->setText(song->getLastPlay().toString("dd/MM/yyyy HH:mm:ss"));
+    QDateTime lastPlay = song->getLastPlay();
+
+    if (lastPlay.isNull())
+        m_uiWidget->valueLastPlayTime->setText(tr("never"));
+    else
+        m_uiWidget->valueLastPlayTime->setText(song->getLastPlay().toString("dd/MM/yyyy HH:mm:ss"));
+
     m_uiWidget->valuePlayCount->setText(QString::number(song->getNumPlays()));
 
     // Illustration
@@ -260,7 +283,9 @@ void CDialogEditSong::resetSummary()
 
 void CDialogEditSong::previousSong()
 {
-    //apply(); // Comportement iTunes et Songbird
+    QSettings * settings = m_application->getSettings();
+    if (settings->value("Preferences/AutoSaveInEditSong", false).toBool())
+        applyChanges();
 
     CSongTableItem * songItem = m_songTable->getPreviousSong(m_songItem, false);
 
@@ -282,7 +307,9 @@ void CDialogEditSong::previousSong()
 
 void CDialogEditSong::nextSong()
 {
-    //apply(); // Comportement iTunes et Songbird
+    QSettings * settings = m_application->getSettings();
+    if (settings->value("Preferences/AutoSaveInEditSong", false).toBool())
+        applyChanges();
 
     CSongTableItem * songItem = m_songTable->getNextSong(m_songItem, false);
 
@@ -407,7 +434,8 @@ void CDialogEditSong::updateInfos()
     m_uiWidget->editGenre->setCurrentIndex(genreIndex);
 
     // Note
-    m_uiWidget->editRating->setValue(song->getRating());
+    //m_uiWidget->editRating->setValue(song->getRating());
+    m_ratingEditor->setRatingValue(song->getRating());
 
 
     // Paroles

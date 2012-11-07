@@ -116,7 +116,7 @@ void CSongTableModel::setSongs(const QList<CSong *>& data)
  * \return Liste des morceaux.
  */
 
-QList<CSong *> CSongTableModel::getSongs(void) const
+QList<CSong *> CSongTableModel::getSongs() const
 {
     QList<CSongTableItem *> dataCopy = m_data;
     qSort(dataCopy.begin(), dataCopy.end(), cmpSongPositionAsc);
@@ -142,9 +142,9 @@ QList<CSong *> CSongTableModel::getSongs(void) const
 
 bool CSongTableModel::hasSong(CSong * song) const
 {
-    foreach (CSongTableItem * songItem, m_data)
+    for (QList<CSongTableItem *>::const_iterator it = m_data.begin(); it != m_data.end(); ++it)
     {
-        if (songItem->getSong() == song)
+        if ((*it)->getSong() == song)
             return true;
     }
 
@@ -222,7 +222,7 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
         {
             case CSongTable::ColPosition:
             {
-                if (m_canDrop)
+                //if (m_canDrop)
                 {
                     //return m_data.at(index.row())->getPosition();
                     return index.row() + 1;
@@ -439,9 +439,7 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
 
 /**
  * Modifie les données d'un item.
- * Cette méthode n'est utilisée que pour la case à cocher d'un morceau.
- *
- * \todo Implémentation.
+ * Cette méthode n'est utilisée que pour la case à cocher et la note d'un morceau.
  *
  * \param index Index de l'item.
  * \param value Nouvelle valeur de la donnée.
@@ -746,8 +744,6 @@ bool CSongTableModel::dropMimeData(const QMimeData * data, Qt::DropAction action
  * Déplace un ensemble de lignes vers une autre position.
  * La liste \a rows doit être triée et ne doit pas contenir de doublons.
  *
- * \todo Implémentation.
- *
  * \param rows    Liste de lignes (les numéros de ligne doivent être compris entre 0 et rowCount() - 1).
  * \param rowDest Ligne de destination (entre 0 et rowCount()).
  */
@@ -795,6 +791,13 @@ void CSongTableModel::moveRows(const QList<int>& rows, int rowDest)
     emit layoutChanged();
 }
 
+
+/**
+ * Ajoute un morceau au modèle.
+ *
+ * \param song Pointeur sur le morceau à ajouter.
+ * \param pos  Numéro de ligne.
+ */
 
 void CSongTableModel::insertRow(CSong * song, int pos)
 {
@@ -912,7 +915,7 @@ CSongTableItem * CSongTableModel::getPreviousSong(CSongTableItem * songItem, boo
 {
     if (songItem && !m_data.contains(songItem))
     {
-        m_application->logError(tr("l'item demandé n'est pas dans la table"), __FUNCTION__, __FILE__, __LINE__);
+        m_application->logError(tr("the requested item is not in the table"), __FUNCTION__, __FILE__, __LINE__);
         songItem = NULL;
     }
 
@@ -922,14 +925,14 @@ CSongTableItem * CSongTableModel::getPreviousSong(CSongTableItem * songItem, boo
         {
             if (m_data.size() != m_dataShuffle.size())
             {
-                m_application->logError(tr("la liste des morceaux aléatoires est incorrecte"), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("the shuffle list is incorrect"), __FUNCTION__, __FILE__, __LINE__);
             }
 
             const int row = m_dataShuffle.indexOf(songItem);
 
             if (row < 0)
             {
-                m_application->logError(tr("l'item demandé n'est pas dans la liste des morceaux aléatoires"), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("the requested item is not in the shuffle list"), __FUNCTION__, __FILE__, __LINE__);
                 return NULL;
             }
 
@@ -966,7 +969,7 @@ CSongTableItem * CSongTableModel::getNextSong(CSongTableItem * songItem, bool sh
 {
     if (songItem && !m_data.contains(songItem))
     {
-        m_application->logError(tr("l'item demandé n'est pas dans la table"), __FUNCTION__, __FILE__, __LINE__);
+        m_application->logError(tr("the requested item is not in the table"), __FUNCTION__, __FILE__, __LINE__);
         songItem = NULL;
     }
 
@@ -976,14 +979,14 @@ CSongTableItem * CSongTableModel::getNextSong(CSongTableItem * songItem, bool sh
         {
             if (m_data.size() != m_dataShuffle.size())
             {
-                m_application->logError(tr("la liste des morceaux aléatoires est incorrecte"), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("the shuffle list is incorrect"), __FUNCTION__, __FILE__, __LINE__);
             }
 
             const int row = m_dataShuffle.indexOf(songItem);
 
             if (row < 0)
             {
-                m_application->logError(tr("l'item demandé n'est pas dans la liste des morceaux aléatoires"), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("the requested item is not in the shuffle list"), __FUNCTION__, __FILE__, __LINE__);
                 return NULL;
             }
 
@@ -1007,7 +1010,7 @@ CSongTableItem * CSongTableModel::getNextSong(CSongTableItem * songItem, bool sh
         {
             if (m_data.size() != m_dataShuffle.size())
             {
-                m_application->logError(tr("la liste des morceaux aléatoires est incorrecte"), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("the shuffle list is incorrect"), __FUNCTION__, __FILE__, __LINE__);
                 return NULL;
             }
 

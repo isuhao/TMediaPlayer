@@ -22,7 +22,9 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 
 CRatingEditor::CRatingEditor(QWidget * parent) :
-    QWidget (parent)
+    QWidget    (parent),
+    m_delegate (true),
+    m_editMode (CRating::Editable)
 {
     setMouseTracking(true);
     setAutoFillBackground(true);
@@ -35,10 +37,16 @@ QSize CRatingEditor::sizeHint() const
 }
 
 
+QSize CRatingEditor::minimumSizeHint() const
+{
+    return m_rating.minimumSizeHint();
+}
+
+
 void CRatingEditor::paintEvent(QPaintEvent * event)
 {
     QPainter painter(this);
-    m_rating.paint(&painter, rect(), this->palette(), CRating::Editable);
+    m_rating.paint(&painter, rect(), this->palette(), m_editMode);
 }
 
 
@@ -54,9 +62,32 @@ void CRatingEditor::mouseMoveEvent(QMouseEvent * event)
 }
 
 
-void CRatingEditor::mouseReleaseEvent(QMouseEvent * event )
+void CRatingEditor::mouseReleaseEvent(QMouseEvent * event)
 {
+    m_saveRating = m_rating;
     emit editingFinished();
+}
+
+
+void CRatingEditor::enterEvent(QEvent * event)
+{
+    if (m_delegate)
+        return;
+
+    m_saveRating = m_rating;
+    m_editMode = CRating::Editable;
+    update();
+}
+
+
+void CRatingEditor::leaveEvent(QEvent * event)
+{
+    if (m_delegate)
+        return;
+
+    m_rating = m_saveRating;
+    m_editMode = CRating::ReadOnly;
+    update();
 }
 
 

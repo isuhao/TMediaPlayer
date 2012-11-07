@@ -30,28 +30,59 @@ class CRatingEditor : public QWidget
 
 public:
 
-    CRatingEditor(QWidget * parent = NULL);
+    explicit CRatingEditor(QWidget * parent = NULL);
 
-    QSize sizeHint() const;
+    virtual QSize sizeHint() const;
+    virtual QSize minimumSizeHint() const;
+    inline CRating getRating() const;
+    inline int getRatingValue() const;
     inline void setRating(const CRating& rating);
-    inline CRating getRating(void);
+    inline void setRatingValue(int value);
+
+    inline void setDelegate(bool delegate)
+    {
+        m_delegate = delegate;
+
+        if (!delegate)
+        {
+            m_saveRating = m_rating;
+            m_editMode = CRating::ReadOnly;
+        }
+    }
 
 signals:
 
-    void editingFinished(void);
+    void editingFinished();
 
 protected:
 
-     void paintEvent(QPaintEvent * event);
-     void mouseMoveEvent(QMouseEvent * event);
-     void mouseReleaseEvent(QMouseEvent * event);
+     virtual void paintEvent(QPaintEvent * event);
+     virtual void mouseMoveEvent(QMouseEvent * event);
+     virtual void mouseReleaseEvent(QMouseEvent * event);
+     virtual void enterEvent(QEvent * event);
+     virtual void leaveEvent(QEvent * event);
 
 private:
 
      int starAtPosition(int x) const;
 
      CRating m_rating;
+     CRating m_saveRating;
+     bool m_delegate;              ///< Indique si le widget a été crée par un délégué dans une vue.
+     CRating::EditMode m_editMode; ///< Mode d'édition.
 };
+
+
+inline CRating CRatingEditor::getRating() const
+{
+    return m_rating;
+}
+
+
+inline int CRatingEditor::getRatingValue() const
+{
+    return m_rating.getRating();
+}
 
 
 inline void CRatingEditor::setRating(const CRating& rating)
@@ -60,9 +91,9 @@ inline void CRatingEditor::setRating(const CRating& rating)
 }
 
 
-inline CRating CRatingEditor::getRating()
+inline void CRatingEditor::setRatingValue(int value)
 {
-    return m_rating;
+    m_rating.setRating(value);
 }
 
 #endif // FILE_C_RATING_EDITOR

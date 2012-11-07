@@ -64,9 +64,6 @@
   - Affichage et modification des illustrations.
   - Afficher l'illustration principale dans l'onglet Résumé.
 
-- Boite de dialogue Edit Songs :
-  - Terminer l'implémentation de l'onglet Résumé.
-
 - Égaliseur :
   - Liste de préréglages.
   - Pouvoir ajouter, modifier, et supprimer des préréglages.

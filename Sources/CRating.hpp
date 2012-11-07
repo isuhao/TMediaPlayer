@@ -40,16 +40,25 @@ public:
     };
 
     CRating(int rating = 0);
+    CRating(const CRating& other);
 
-    void paint(QPainter * painter, const QRect &rect, const QPalette &palette, EditMode mode) const;
-    QSize sizeHint(void) const;
-    inline int getRating(void) const;
+    void paint(QPainter * painter, const QRect& rect, const QPalette& palette, EditMode mode) const;
+    QSize sizeHint() const;
+    QSize CRating::minimumSizeHint() const;
+    inline int getRating() const;
     inline void setRating(int rating);
+
+    inline CRating& operator=(const CRating& other)
+    {
+        m_rating = other.m_rating;
+        return *this;
+    }
 
 private:
 
-    QPolygonF m_starPolygon;
-    QPolygonF m_diamondPolygon;
+    static QPolygonF m_starPolygon;
+    static QPolygonF m_diamondPolygon;
+    static bool m_polygonInitialized;
     int m_rating;
 };
 
@@ -64,7 +73,7 @@ inline int CRating::getRating() const
 
 inline void CRating::setRating(int rating)
 {
-    if (rating < 0 ||rating > 5) return;
+    if (rating < 0 || rating > 5) return;
     m_rating = rating;
 }
 

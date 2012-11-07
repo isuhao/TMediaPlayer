@@ -25,17 +25,45 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 const int PaintingScaleFactor = 15;
 
 
+QPolygonF CRating::m_starPolygon;
+QPolygonF CRating::m_diamondPolygon;
+bool CRating::m_polygonInitialized = false;
+
+
 CRating::CRating(int rating)
 {
     setRating(rating);
 
-    for (int i = 0; i < 5; ++i)
+    if (!m_polygonInitialized)
     {
-        double angle = (0.8 * i - 0.5) * 3.14;
-        m_starPolygon << QPointF(0.5 + 0.5 * cos(angle), 0.5 + 0.5 * sin(angle));
-    }
+        for (int i = 0; i < 5; ++i)
+        {
+            double angle = (0.8 * i - 0.5) * 3.14;
+            m_starPolygon << QPointF(0.5 + 0.5 * cos(angle), 0.5 + 0.5 * sin(angle));
+        }
 
-    m_diamondPolygon << QPointF(0.4, 0.5) << QPointF(0.5, 0.4) << QPointF(0.6, 0.5) << QPointF(0.5, 0.6) << QPointF(0.4, 0.5);
+        m_diamondPolygon << QPointF(0.4, 0.5) << QPointF(0.5, 0.4) << QPointF(0.6, 0.5) << QPointF(0.5, 0.6) << QPointF(0.4, 0.5);
+
+        m_polygonInitialized = true;
+    }
+}
+
+
+CRating::CRating(const CRating& other) :
+m_rating (other.m_rating)
+{
+    if (!m_polygonInitialized)
+    {
+        for (int i = 0; i < 5; ++i)
+        {
+            double angle = (0.8 * i - 0.5) * 3.14;
+            m_starPolygon << QPointF(0.5 + 0.5 * cos(angle), 0.5 + 0.5 * sin(angle));
+        }
+
+        m_diamondPolygon << QPointF(0.4, 0.5) << QPointF(0.5, 0.4) << QPointF(0.6, 0.5) << QPointF(0.5, 0.6) << QPointF(0.4, 0.5);
+
+        m_polygonInitialized = true;
+    }
 }
 
 
@@ -45,7 +73,19 @@ QSize CRating::sizeHint() const
 }
 
 
-void CRating::paint(QPainter *painter, const QRect &rect, const QPalette &palette, EditMode mode) const
+QSize CRating::minimumSizeHint() const
+{
+    return sizeHint();
+}
+
+
+/**
+ * Dessine la note sous forme d'étoiles.
+ *
+ * \todo Gérer correctement la couleur de fond.
+ */
+
+void CRating::paint(QPainter * painter, const QRect& rect, const QPalette& palette, EditMode mode) const
 {
     painter->save();
 

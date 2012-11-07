@@ -461,14 +461,14 @@ bool CITunesLibrary::loadFile(const QString& fileName)
 
     if (!file.open(QIODevice::ReadOnly))
     {
-        qWarning() << "CITunesLibrary::loadFile() : erreur lors de l'ouverture du fichier " << fileName;
+        m_application->logError(tr("can't open the file \"%1\"").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
         return false;
     }
 
     if (!m_document.setContent(&file))
     {
         file.close();
-        qWarning() << "CITunesLibrary::loadFile() : le fichier " << fileName << " n'est pas un document XML valide";
+        m_application->logError(tr("the file \"%1\" is not a valid XML file").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
         return false;
     }
 
@@ -478,7 +478,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
 
     if (node.tagName() != "plist")
     {
-        qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'plist' attendu)";
+        m_application->logError(tr("the file \"%1\" is not valid (%2)").arg(fileName).arg(tr("expected element \"%1\"").arg("plist")), __FUNCTION__, __FILE__, __LINE__);
         return false;
     }
 
@@ -486,7 +486,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
 
     if (node.tagName() != "dict")
     {
-        qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'dict' attendu)";
+        m_application->logError(tr("the file \"%1\" is not valid (%2)").arg(fileName).arg(tr("expected element \"%1\"").arg("dict")), __FUNCTION__, __FILE__, __LINE__);
         return false;
     }
 
@@ -496,7 +496,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
     {
         if (node.tagName() != "key")
         {
-            qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'key' attendu)";
+            m_application->logError(tr("the file \"%1\" is not valid (%2)").arg(fileName).arg(tr("expected element \"%1\"").arg("key")), __FUNCTION__, __FILE__, __LINE__);
             continue;
         }
         
@@ -516,7 +516,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
             {
                 if (nodeList.tagName() != "key")
                 {
-                    qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'key' attendu)";
+                    m_application->logError(tr("the file \"%1\" is not valid (%2)").arg(fileName).arg(tr("expected element \"%1\"").arg("key")), __FUNCTION__, __FILE__, __LINE__);
                     continue;
                 }
 
@@ -524,7 +524,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
 
                 if (nodeList.tagName() != "dict")
                 {
-                    qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'dict' attendu)";
+                    m_application->logError(tr("the file \"%1\" is not valid (%2)").arg(fileName).arg(tr("expected element \"%1\"").arg("dict")), __FUNCTION__, __FILE__, __LINE__);
                     continue;
                 }
 
@@ -535,7 +535,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
                 {
                     if (nodeListAttr.tagName() != "key")
                     {
-                        qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'key' attendu)";
+                        m_application->logError(tr("the file \"%1\" is not valid (%2)").arg(fileName).arg(tr("expected element \"%1\"").arg("key")), __FUNCTION__, __FILE__, __LINE__);
                         continue;
                     }
 
@@ -743,7 +743,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
                         }
                         else
                         {
-                            qWarning() << "Nom de fichier incorrect";
+                            m_application->logError(tr("incorrect file name in element \"Location\" (%1)").arg(song.fileName), __FUNCTION__, __FILE__, __LINE__);
                         }
                     }
                     else if (nodeListAttr.text() == "File Folder Count")
@@ -867,7 +867,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
                     }
                     else
                     {
-                        m_application->logError(tr("unknown key %1 for a song").arg(nodeListAttr.text()), __FUNCTION__, __FILE__, __LINE__);
+                        m_application->logError(tr("unknown key \"%1\" for a song").arg(nodeListAttr.text()), __FUNCTION__, __FILE__, __LINE__);
                     }
 
                     nodeListAttr = nodeListAttr.nextSibling().toElement();
@@ -959,7 +959,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
 
                             if (nodeListSong.text() != "Track ID")
                             {
-                                qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (valeur 'Track ID' attendue)";
+                                m_application->logError(tr("the file \"%1\" is not valid (%2)").arg(fileName).arg(tr("expected value \"%1\"").arg("Track ID")), __FUNCTION__, __FILE__, __LINE__);
                                 continue;
                             }
 
@@ -1044,7 +1044,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
 
                 if (folderIndex == -1)
                 {
-                    qWarning() << "CITunesLibrary::loadFile() : dossier introuvable";
+                    m_application->logError(tr("invalid folder for playlist"), __FUNCTION__, __FILE__, __LINE__);
                     m_dynamicLists.append(it.value());
                 }
                 else
@@ -1069,7 +1069,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
 
                 if (folderIndex == -1)
                 {
-                    qWarning() << "CITunesLibrary::loadFile() : dossier introuvable";
+                    m_application->logError(tr("invalid folder for playlist"), __FUNCTION__, __FILE__, __LINE__);
                     m_staticLists.append(it.value());
                 }
                 else
@@ -1171,7 +1171,7 @@ bool CITunesLibrary::testLoadingXMLElementError(const QString& element, const QS
 {
     if (element != expected)
     {
-        qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément " << expected << " attendu)";
+        m_application->logError(tr("the file \"%1\" is not valid (%2)").arg("").arg(tr("expected element \"%1\"").arg(expected)), __FUNCTION__, __FILE__, __LINE__);
         return true;
     }
 

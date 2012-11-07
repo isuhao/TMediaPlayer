@@ -31,7 +31,7 @@ void CRatingDelegate::paint(QPainter * painter, const QStyleOptionViewItem& opti
         CRating starRating = qvariant_cast<CRating>(index.data());
 
         if (option.state & QStyle::State_Selected)
-        painter->fillRect(option.rect, option.palette.highlight());
+            painter->fillRect(option.rect, option.palette.highlight());
 
         starRating.paint(painter, option.rect, option.palette,
         CRating::ReadOnly);
