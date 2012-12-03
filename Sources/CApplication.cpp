@@ -73,7 +73,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * Constructeur de la classe principale de l'application.
  */
 
-CApplication::CApplication(void) :
+CApplication::CApplication() :
     QMainWindow            (NULL),
     m_uiWidget             (new Ui::TMediaPlayer()),
     m_uiControl            (new Ui::WidgetControl()),
@@ -89,7 +89,7 @@ CApplication::CApplication(void) :
     m_library              (NULL),
     m_displayedSongTable   (NULL),
     m_widgetLyrics         (NULL),
-    //m_lyricsEdit           (NULL),
+  //m_lyricsEdit           (NULL),
     m_state                (Stopped),
     m_showRemainingTime    (false),
     m_isRepeat             (false),
@@ -197,7 +197,7 @@ CApplication::~CApplication()
  * Initialise l'interface graphique et charge les données.
  */
 
-bool CApplication::initWindow(void)
+bool CApplication::initWindow()
 {
     static bool init = false;
 
@@ -526,7 +526,7 @@ double CApplication::getEqualizerGain(TEqualizerFrequency frequency)
  * Tous les gains sont définis à 1.
  */
 
-void CApplication::resetEqualizer(void)
+void CApplication::resetEqualizer()
 {
     setEqualizerGain(CApplication::EqFreq32 , 1.0);
     setEqualizerGain(CApplication::EqFreq64 , 1.0);
@@ -574,9 +574,21 @@ void CApplication::setEqualizerEnabled(bool enabled)
  * \return Booléen.
  */
 
-bool CApplication::isEqualizerEnabled(void) const
+bool CApplication::isEqualizerEnabled() const
 {
     return m_settings->value(QString("Equalizer/Enabled"), false).toBool();
+}
+
+
+/**
+ * Retourne le filtre de recherche actuel.
+ *
+ * \return Filtre de recherche.
+ */
+
+QString CApplication::getFilter() const
+{
+    return m_uiControl->editFilter->text().trimmed();
 }
 
 
@@ -1243,7 +1255,7 @@ void CApplication::onFilterChange(const QString& filter)
  * Sélectionne tous les morceaux de la liste affichée.
  */
 
-void CApplication::selectAll(void)
+void CApplication::selectAll()
 {
     if (!m_displayedSongTable)
     {
@@ -1259,7 +1271,7 @@ void CApplication::selectAll(void)
  * Désélectionne tous les morceaux de la liste affichée.
  */
 
-void CApplication::selectNone(void)
+void CApplication::selectNone()
 {
     if (!m_displayedSongTable)
     {
@@ -1275,7 +1287,7 @@ void CApplication::selectNone(void)
  * Démarre la lecture du morceau sélectionné.
  */
 
-void CApplication::play(void)
+void CApplication::play()
 {
     if (m_currentSongItem)
     {
@@ -1840,7 +1852,7 @@ void CApplication::openDialogEditMetadata(void)
  * Affiche une boite de dialogue pour sélectionner des fichiers à ajouter à la médiathèque.
  */
 
-void CApplication::openDialogAddSongs(void)
+void CApplication::openDialogAddSongs()
 {
     QStringList fileList = QFileDialog::getOpenFileNames(this, QString(), QString(), tr("Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)"));
     importSongs(fileList);
@@ -1851,7 +1863,7 @@ void CApplication::openDialogAddSongs(void)
  * Affiche une boite de dialogue pour ajouter un dossier à la médiathèque.
  */
 
-void CApplication::openDialogAddFolder(void)
+void CApplication::openDialogAddFolder()
 {
     QString folder = QFileDialog::getExistingDirectory(this);
 
@@ -1914,7 +1926,7 @@ void CApplication::importSongs(const QStringList& fileList)
  * Affiche une boite de dialogue pour visualiser et éditer les informations du morceau sélectionné.
  */
 
-void CApplication::openDialogSongInfos(void)
+void CApplication::openDialogSongInfos()
 {
     Q_CHECK_PTR(m_displayedSongTable);
 
@@ -1945,7 +1957,7 @@ void CApplication::openDialogSongInfos(void)
  * Affiche la boite de dialogue pour crée une nouvelle liste de lecture statique.
  */
 
-void CApplication::openDialogCreateStaticList(void)
+void CApplication::openDialogCreateStaticList()
 {
     openDialogCreateStaticList(NULL);
 }
@@ -2253,7 +2265,7 @@ void CApplication::relocateSong(void)
  * Ouvre la fenêtre pour importer la médiathèque depuis iTunes.
  */
 
-void CApplication::importFromITunes(void)
+void CApplication::importFromITunes()
 {
     CImporterITunes * dialog = new CImporterITunes(this);
     dialog->show();
@@ -2266,7 +2278,7 @@ void CApplication::importFromITunes(void)
  * \todo Implémentation.
  */
 
-void CApplication::importFromSongbird(void)
+void CApplication::importFromSongbird()
 {
     //CImporterSongbird * dialog = new CImporterSongbird(this);
     //dialog->show();
@@ -2431,7 +2443,7 @@ void CApplication::openSongInExplorer(void)
  * Ouvre la boite de dialogue pour modifier la liste de lecture ou le dossier selectionné dans la vue.
  */
 
-void CApplication::editSelectedItem(void)
+void CApplication::editSelectedItem()
 {
     IPlayList * playList = qobject_cast<IPlayList *>(m_playListView->getSelectedSongTable());
 
@@ -2474,7 +2486,7 @@ void CApplication::editSelectedItem(void)
  * \todo Gérer le cas où la liste est utilisée dans un critère d'une liste dynamique.
  */
 
-void CApplication::removeSelectedItem(void)
+void CApplication::removeSelectedItem()
 {
     IPlayList * playList = qobject_cast<IPlayList *>(m_playListView->getSelectedSongTable());
 
@@ -2518,9 +2530,11 @@ void CApplication::removeSelectedItem(void)
 
 /**
  * Méthode appelée quand la lecture d'un morceau se termine.
+ *
+ * \todo Pouvoir arrêter la lecture ou fermer l'application à la fin d'un morceau.
  */
 
-void CApplication::onPlayEnd(void)
+void CApplication::onPlayEnd()
 {
     if (m_currentSongItem)
     {
@@ -2640,7 +2654,7 @@ void CApplication::updateListInformations()
  * Met à jour la position de lecture depuis la position du curseur.
  */
 
-void CApplication::updatePosition(void)
+void CApplication::updatePosition()
 {
     setPosition(m_uiControl->sliderPosition->value());
 }
@@ -2651,7 +2665,7 @@ void CApplication::updatePosition(void)
  * et pour passer au morceau suivant si nécessaire.
  */
 
-void CApplication::updateTimer(void)
+void CApplication::updateTimer()
 {
     if (m_currentSongItem)
     {
@@ -2841,7 +2855,7 @@ bool CApplication::initSoundSystem()
  * \todo Utiliser des méthodes dédiées dans les classes CSongTable et CFolder.
  */
 
-void CApplication::loadDatabase(void)
+void CApplication::loadDatabase()
 {
     QSqlQuery query(m_dataBase);
 

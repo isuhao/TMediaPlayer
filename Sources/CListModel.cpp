@@ -82,7 +82,7 @@ CListModel::~CListModel()
  * Charge le modèle depuis la base de données.
  */
 
-void CListModel::loadFromDatabase(void)
+void CListModel::loadFromDatabase()
 {
     clear();
 
@@ -277,7 +277,7 @@ void CListModel::loadFromDatabase(void)
 }
 
 
-void CListModel::clear(void)
+void CListModel::clear()
 {
     QStandardItemModel::clear();
 
@@ -809,7 +809,7 @@ bool CListModel::decodeDataList(const QByteArray& encodedData, int * playList, i
  * \return Liste de types.
  */
 
-QStringList CListModel::mimeTypes(void) const
+QStringList CListModel::mimeTypes() const
 {
     QStringList types;
     types << "application/x-ted-media-songs"; // Liste de morceaux
@@ -820,6 +820,7 @@ QStringList CListModel::mimeTypes(void) const
 
 QMimeData * CListModel::mimeData(const QModelIndexList& indexes) const
 {
+#ifdef ENABLE_DRAG_DROP_FOR_LISTS
     if (indexes.size() != 1)
         return NULL;
 
@@ -849,6 +850,9 @@ QMimeData * CListModel::mimeData(const QModelIndexList& indexes) const
     QMimeData * mimeData = new QMimeData();
     mimeData->setData("application/x-ted-media-list", data);
     return mimeData;
+#else
+    return NULL;
+#endif
 }
 
 

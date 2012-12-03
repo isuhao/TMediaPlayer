@@ -43,30 +43,51 @@ CSongTableItem::CSongTableItem(int position, CSong * song) :
 }
 
 
+/**
+ * Constructeur du modèle avec une liste de morceaux.
+ *
+ * \param application Pointeur sur la classe principale de l'application.
+ * \param data        Liste de morceaux.
+ * \param parent      Pointeur sur le widget parent.
+ */
+
 CSongTableModel::CSongTableModel(CApplication * application, const QList<CSong *>& data, QWidget * parent) :
-    QAbstractTableModel (parent),
-    m_application       (application),
-    m_canDrop           (false),
-    m_columnSort        (-1),
-    m_currentSongItem   (NULL)
+QAbstractTableModel (parent),
+m_application       (application),
+m_canDrop           (false),
+m_columnSort        (-1),
+m_currentSongItem   (NULL)
 {
     Q_CHECK_PTR(application);
 
     int i = 0;
 
-    foreach (CSong * song, data)
+    // Remplissage de la liste des morceaux
+    for (QList<CSong *>::const_iterator it = data.begin(); it != data.end(); ++it)
     {
-        m_data.append(new CSongTableItem(++i, song));
+        m_data.append(new CSongTableItem(++i, *it));
     }
+
+#ifdef FILTER_NEW_SYSTEM
+    // TODO: récupérer le filter courant
+    m_dataFiltered = m_data;
+#endif
 }
 
 
+/**
+ * Constructeur du modèle sans liste de morceaux.
+ *
+ * \param application Pointeur sur la classe principale de l'application.
+ * \param parent      Pointeur sur le widget parent.
+ */
+
 CSongTableModel::CSongTableModel(CApplication * application, QWidget * parent) :
-    QAbstractTableModel (parent),
-    m_application       (application),
-    m_canDrop           (false),
-    m_columnSort        (-1),
-    m_currentSongItem   (NULL)
+QAbstractTableModel (parent),
+m_application       (application),
+m_canDrop           (false),
+m_columnSort        (-1),
+m_currentSongItem   (NULL)
 {
     Q_CHECK_PTR(application);
 }
@@ -97,12 +118,22 @@ void CSongTableModel::setSongs(const QList<CSong *>& data)
 
     m_data.clear();
     m_dataShuffle.clear();
+
+#ifdef FILTER_NEW_SYSTEM
+    m_dataFiltered.clear();
+#endif
+
     int i = 0;
 
     for (QList<CSong *>::const_iterator it = data.begin(); it != data.end(); ++it)
     {
         m_data.append(new CSongTableItem(++i, *it));
     }
+
+#ifdef FILTER_NEW_SYSTEM
+    // TODO: récupérer le filter courant
+    m_dataFiltered = m_data;
+#endif
 
     initShuffle();
 
@@ -161,7 +192,11 @@ bool CSongTableModel::hasSong(CSong * song) const
 
 int CSongTableModel::rowCount(const QModelIndex& parent) const
 {
+#ifdef FILTER_NEW_SYSTEM
+    return m_dataFiltered.size();
+#else
     return m_data.size();
+#endif
 }
 
 
@@ -197,12 +232,18 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
         return QFont("Segoe UI", 8);
     }
 
+#ifdef FILTER_NEW_SYSTEM
+    QList<CSongTableItem *> data = m_dataFiltered;
+#else
+    QList<CSongTableItem *> data = m_data;
+#endif
+
     // Image
     if (role == Qt::DecorationRole)
     {
         if (index.column() == CSongTable::ColPosition)
         {
-            if (m_data.at(index.row()) == m_currentSongItem)
+            if (data.at(index.row()) == m_currentSongItem)
             {
                 if (m_application->isPlaying())
                 {
@@ -224,7 +265,7 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
             {
                 //if (m_canDrop)
                 {
-                    //return m_data.at(index.row())->getPosition();
+                    //return data.at(index.row())->getPosition();
                     return index.row() + 1;
                 }
 
@@ -233,28 +274,28 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
 
           //case CSongTable::ColShufflePos : return m_dataShuffle.indexOf(m_data.at(index.row()));
 
-            case CSongTable::ColTitle      : return m_data.at(index.row())->getSong()->getTitle();
-            case CSongTable::ColArtist     : return m_data.at(index.row())->getSong()->getArtistName();
-            case CSongTable::ColAlbum      : return m_data.at(index.row())->getSong()->getAlbumTitle();
-            case CSongTable::ColAlbumArtist: return m_data.at(index.row())->getSong()->getAlbumArtist();
-            case CSongTable::ColComposer   : return m_data.at(index.row())->getSong()->getComposer();
+            case CSongTable::ColTitle      : return data.at(index.row())->getSong()->getTitle();
+            case CSongTable::ColArtist     : return data.at(index.row())->getSong()->getArtistName();
+            case CSongTable::ColAlbum      : return data.at(index.row())->getSong()->getAlbumTitle();
+            case CSongTable::ColAlbumArtist: return data.at(index.row())->getSong()->getAlbumArtist();
+            case CSongTable::ColComposer   : return data.at(index.row())->getSong()->getComposer();
 
             // Année
             case CSongTable::ColYear:
             {
-                int year = m_data.at(index.row())->getSong()->getYear();
+                int year = data.at(index.row())->getSong()->getYear();
                 return (year > 0 ? year : QVariant(QString()));
             }
 
             // Numéro de piste
             case CSongTable::ColTrackNumber:
             {
-                const int trackNumber = m_data.at(index.row())->getSong()->getTrackNumber();
+                const int trackNumber = data.at(index.row())->getSong()->getTrackNumber();
 
                 if (trackNumber <= 0)
                     return QString();
 
-                const int trackCount = m_data.at(index.row())->getSong()->getTrackCount();
+                const int trackCount = data.at(index.row())->getSong()->getTrackCount();
 
                 if (trackCount >= trackNumber)
                     return QString("%1/%2").arg(trackNumber).arg(trackCount);
@@ -265,12 +306,12 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
             // Numéro de disque
             case CSongTable::ColDiscNumber:
             {
-                const int discNumber = m_data.at(index.row())->getSong()->getDiscNumber();
+                const int discNumber = data.at(index.row())->getSong()->getDiscNumber();
 
                 if (discNumber <= 0)
                     return QString();
 
-                const int discCount = m_data.at(index.row())->getSong()->getDiscCount();
+                const int discCount = data.at(index.row())->getSong()->getDiscCount();
 
                 if (discCount >= discNumber)
                     return QString("%1/%2").arg(discNumber).arg(discCount);
@@ -278,25 +319,25 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
                     return discNumber;
             }
 
-            case CSongTable::ColGenre       : return m_data.at(index.row())->getSong()->getGenre();
-            case CSongTable::ColRating      : return QVariant::fromValue<CRating>(m_data.at(index.row())->getSong()->getRating());
-            case CSongTable::ColComments    : return m_data.at(index.row())->getSong()->getComments();
-            case CSongTable::ColPlayCount   : return m_data.at(index.row())->getSong()->getNumPlays();
-            case CSongTable::ColLastPlayTime: return m_data.at(index.row())->getSong()->getLastPlay().toLocalTime();
-            case CSongTable::ColFileName    : return m_data.at(index.row())->getSong()->getFileName();
+            case CSongTable::ColGenre       : return data.at(index.row())->getSong()->getGenre();
+            case CSongTable::ColRating      : return QVariant::fromValue<CRating>(data.at(index.row())->getSong()->getRating());
+            case CSongTable::ColComments    : return data.at(index.row())->getSong()->getComments();
+            case CSongTable::ColPlayCount   : return data.at(index.row())->getSong()->getNumPlays();
+            case CSongTable::ColLastPlayTime: return data.at(index.row())->getSong()->getLastPlay().toLocalTime();
+            case CSongTable::ColFileName    : return data.at(index.row())->getSong()->getFileName();
 
             // Débit
             case CSongTable::ColBitRate:
-                return tr("%1 kbit/s").arg(m_data.at(index.row())->getSong()->getBitRate());
+                return tr("%1 kbit/s").arg(data.at(index.row())->getSong()->getBitRate());
 
             // Format
             case CSongTable::ColFormat:
-                return CSong::getFormatName(m_data.at(index.row())->getSong()->getFormat());
+                return CSong::getFormatName(data.at(index.row())->getSong()->getFormat());
 
             // Durée
             case CSongTable::ColDuration:
             {
-                int duration = m_data.at(index.row())->getSong()->getDuration();
+                int duration = data.at(index.row())->getSong()->getDuration();
 
                 QTime durationTime(0, 0);
                 durationTime = durationTime.addMSecs(duration);
@@ -305,52 +346,52 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
 
             // Fréquence d'échantillonnage
             case CSongTable::ColSampleRate:
-                return tr("%1 Hz").arg(m_data.at(index.row())->getSong()->getSampleRate());
+                return tr("%1 Hz").arg(data.at(index.row())->getSong()->getSampleRate());
 
             // Date de création
             case CSongTable::ColCreationDate:
-                return m_data.at(index.row())->getSong()->getCreationDate();
+                return data.at(index.row())->getSong()->getCreationDate();
 
             // Date de modification
             case CSongTable::ColModificationDate:
-                return m_data.at(index.row())->getSong()->getModificationDate();
+                return data.at(index.row())->getSong()->getModificationDate();
 
             // Nombre de canaux
             case CSongTable::ColChannels:
-                return m_data.at(index.row())->getSong()->getNumChannels();
+                return data.at(index.row())->getSong()->getNumChannels();
 
             // Taille du fichier
             case CSongTable::ColFileSize:
-                return CSong::getFileSize(m_data.at(index.row())->getSong()->getFileSize());
+                return CSong::getFileSize(data.at(index.row())->getSong()->getFileSize());
 
             // Paroles
             case CSongTable::ColLyrics:
-                return m_data.at(index.row())->getSong()->getLyrics();
+                return data.at(index.row())->getSong()->getLyrics();
 
             // Langue
             case CSongTable::ColLanguage:
-                return CSong::getLanguageName(m_data.at(index.row())->getSong()->getLanguage());
+                return CSong::getLanguageName(data.at(index.row())->getSong()->getLanguage());
 
             // Parolier
             case CSongTable::ColLyricist:
-                return m_data.at(index.row())->getSong()->getLyricist();
+                return data.at(index.row())->getSong()->getLyricist();
 
             // Regroupement
             case CSongTable::ColGrouping:
-                return m_data.at(index.row())->getSong()->getGrouping();
+                return data.at(index.row())->getSong()->getGrouping();
 
             // Sous-titre
             case CSongTable::ColSubTitle:
-                return m_data.at(index.row())->getSong()->getSubTitle();
+                return data.at(index.row())->getSong()->getSubTitle();
 
             // BPM
             case CSongTable::ColBPM:
-                return m_data.at(index.row())->getSong()->getBPM();
+                return data.at(index.row())->getSong()->getBPM();
 
             // Replay Gain
             case CSongTable::ColTrackGain:
             {
-                float gain = m_data.at(index.row())->getSong()->getTrackGain();
+                float gain = data.at(index.row())->getSong()->getTrackGain();
 
                 if (gain == std::numeric_limits<float>::infinity())
                     return QVariant::Invalid;
@@ -360,7 +401,7 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
 
             case CSongTable::ColTrackPeak:
             {
-                float peak = m_data.at(index.row())->getSong()->getTrackPeak();
+                float peak = data.at(index.row())->getSong()->getTrackPeak();
 
                 if (peak == std::numeric_limits<float>::infinity())
                     return QVariant::Invalid;
@@ -370,7 +411,7 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
 
             case CSongTable::ColAlbumGain:
             {
-                float gain = m_data.at(index.row())->getSong()->getAlbumGain();
+                float gain = data.at(index.row())->getSong()->getAlbumGain();
 
                 if (gain == std::numeric_limits<float>::infinity())
                     return QVariant::Invalid;
@@ -380,7 +421,7 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
 
             case CSongTable::ColAlbumPeak:
             {
-                float peak = m_data.at(index.row())->getSong()->getAlbumPeak();
+                float peak = data.at(index.row())->getSong()->getAlbumPeak();
 
                 if (peak == std::numeric_limits<float>::infinity())
                     return QVariant::Invalid;
@@ -388,11 +429,11 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
                     return peak;
             }
 
-            case CSongTable::ColTitleSort      : return m_data.at(index.row())->getSong()->getTitleSort();
-            case CSongTable::ColArtistSort     : return m_data.at(index.row())->getSong()->getArtistNameSort();
-            case CSongTable::ColAlbumSort      : return m_data.at(index.row())->getSong()->getAlbumTitleSort();
-            case CSongTable::ColAlbumArtistSort: return m_data.at(index.row())->getSong()->getAlbumArtistSort();
-            case CSongTable::ColComposerSort   : return m_data.at(index.row())->getSong()->getComposerSort();
+            case CSongTable::ColTitleSort      : return data.at(index.row())->getSong()->getTitleSort();
+            case CSongTable::ColArtistSort     : return data.at(index.row())->getSong()->getArtistNameSort();
+            case CSongTable::ColAlbumSort      : return data.at(index.row())->getSong()->getAlbumTitleSort();
+            case CSongTable::ColAlbumArtistSort: return data.at(index.row())->getSong()->getAlbumArtistSort();
+            case CSongTable::ColComposerSort   : return data.at(index.row())->getSong()->getComposerSort();
         }
     }
     else if (role == Qt::TextAlignmentRole)
@@ -421,13 +462,13 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
     {
         if (index.column() == CSongTable::ColTitle)
         {
-            return (m_data.at(index.row())->getSong()->isEnabled() ? Qt::Checked : Qt::Unchecked);
+            return (data.at(index.row())->getSong()->isEnabled() ? Qt::Checked : Qt::Unchecked);
         }
     }
     // Couleur du texte
     else if (role == Qt::ForegroundRole)
     {
-        if (m_data.at(index.row())->getSong()->getFileStatus() == false)
+        if (data.at(index.row())->getSong()->getFileStatus() == false)
         {
             return QBrush(Qt::darkGray);
         }
@@ -449,15 +490,21 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
 
 bool CSongTableModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
+#ifdef FILTER_NEW_SYSTEM
+    QList<CSongTableItem *> data = m_dataFiltered;
+#else
+    QList<CSongTableItem *> data = m_data;
+#endif
+
     if (role == Qt::CheckStateRole && index.column() == CSongTable::ColTitle)
     {
-        m_data.at(index.row())->getSong()->setEnabled(value.toInt() == Qt::Checked);
+        data.at(index.row())->getSong()->setEnabled(value.toInt() == Qt::Checked);
         emit dataChanged(index, index);
         return true;
     }
     else if (role == Qt::EditRole && index.column() == CSongTable::ColRating)
     {
-        m_data.at(index.row())->getSong()->setRating(value.value<CRating>().getRating());
+        data.at(index.row())->getSong()->setRating(value.value<CRating>().getRating());
         emit dataChanged(index, index);
         return true;
     }
@@ -488,7 +535,12 @@ QVariant CSongTableModel::headerData(int section, Qt::Orientation orientation, i
 
 
 /**
- * 
+ * Trie les morceaux de la liste.
+ *
+ * \todo Trier aussi la liste filtrée.
+ *
+ * \param column Colonne à utiliser comme critère de tri.
+ * \param order  Ordre de tri (ascendant ou descendant).
  */
 
 void CSongTableModel::sort(int column, Qt::SortOrder order)
@@ -587,6 +639,97 @@ void CSongTableModel::sort(int column, Qt::SortOrder order)
         }
     }
 
+#ifdef FILTER_NEW_SYSTEM
+    if (order == Qt::AscendingOrder)
+    {
+        switch (column)
+        {
+            case CSongTable::ColPosition        : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongPositionAsc        ); break;
+            case CSongTable::ColTitle           : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongTitleAsc           ); break;
+            case CSongTable::ColArtist          : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongArtistAsc          ); break;
+            case CSongTable::ColAlbum           : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongAlbumAsc           ); break;
+            case CSongTable::ColAlbumArtist     : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongAlbumArtistAsc     ); break;
+            case CSongTable::ColComposer        : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongComposerAsc        ); break;
+            case CSongTable::ColYear            : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongYearAsc            ); break;
+            case CSongTable::ColTrackNumber     : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongTrackAsc           ); break;
+            case CSongTable::ColDiscNumber      : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongDiscAsc            ); break;
+            case CSongTable::ColGenre           : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongGenreAsc           ); break;
+            case CSongTable::ColRating          : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongRatingAsc          ); break;
+            case CSongTable::ColComments        : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongCommentsAsc        ); break;
+            case CSongTable::ColPlayCount       : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongPlayCountAsc       ); break;
+            case CSongTable::ColLastPlayTime    : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongLastPlayedAsc      ); break;
+            case CSongTable::ColFileName        : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongFileNameAsc        ); break;
+            case CSongTable::ColBitRate         : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongBitRateAsc         ); break;
+            case CSongTable::ColFormat          : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongFormatAsc          ); break;
+            case CSongTable::ColDuration        : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongDurationAsc        ); break;
+            case CSongTable::ColSampleRate      : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongSampleRateAsc      ); break;
+            case CSongTable::ColCreationDate    : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongCreationDateAsc    ); break;
+            case CSongTable::ColModificationDate: qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongModificationDateAsc); break;
+            case CSongTable::ColChannels        : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongChannelsAsc        ); break;
+            case CSongTable::ColFileSize        : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongFileSizeAsc        ); break;
+            case CSongTable::ColLyrics          : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongLyricsAsc          ); break;
+            case CSongTable::ColLanguage        : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongLanguageAsc        ); break;
+            case CSongTable::ColLyricist        : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongLyricistAsc        ); break;
+            case CSongTable::ColGrouping        : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongGroupingAsc        ); break;
+            case CSongTable::ColSubTitle        : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongSubTitleAsc        ); break;
+            case CSongTable::ColTrackGain       : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongTrackGainAsc       ); break;
+            case CSongTable::ColTrackPeak       : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongTrackPeakAsc       ); break;
+            case CSongTable::ColAlbumGain       : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongAlbumGainAsc       ); break;
+            case CSongTable::ColAlbumPeak       : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongAlbumPeakAsc       ); break;
+            case CSongTable::ColBPM             : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongBPMAsc             ); break;
+            case CSongTable::ColTitleSort       : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongTitleSortAsc       ); break;
+            case CSongTable::ColArtistSort      : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongArtistSortAsc      ); break;
+            case CSongTable::ColAlbumSort       : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongAlbumSortAsc       ); break;
+            case CSongTable::ColAlbumArtistSort : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongAlbumArtistSortAsc ); break;
+            case CSongTable::ColComposerSort    : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongComposerSortAsc    ); break;
+        }
+    }
+    else
+    {
+        switch (column)
+        {
+            case CSongTable::ColPosition        : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongPositionDesc        ); break;
+            case CSongTable::ColTitle           : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongTitleDesc           ); break;
+            case CSongTable::ColArtist          : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongArtistDesc          ); break;
+            case CSongTable::ColAlbum           : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongAlbumDesc           ); break;
+            case CSongTable::ColAlbumArtist     : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongAlbumArtistDesc     ); break;
+            case CSongTable::ColComposer        : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongComposerDesc        ); break;
+            case CSongTable::ColYear            : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongYearDesc            ); break;
+            case CSongTable::ColTrackNumber     : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongTrackDesc           ); break;
+            case CSongTable::ColDiscNumber      : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongDiscDesc            ); break;
+            case CSongTable::ColGenre           : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongGenreDesc           ); break;
+            case CSongTable::ColRating          : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongRatingDesc          ); break;
+            case CSongTable::ColComments        : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongCommentsDesc        ); break;
+            case CSongTable::ColPlayCount       : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongPlayCountDesc       ); break;
+            case CSongTable::ColLastPlayTime    : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongLastPlayedDesc      ); break;
+            case CSongTable::ColFileName        : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongFileNameDesc        ); break;
+            case CSongTable::ColBitRate         : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongBitRateDesc         ); break;
+            case CSongTable::ColFormat          : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongFormatDesc          ); break;
+            case CSongTable::ColDuration        : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongDurationDesc        ); break;
+            case CSongTable::ColSampleRate      : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongSampleRateDesc      ); break;
+            case CSongTable::ColCreationDate    : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongCreationDateDesc    ); break;
+            case CSongTable::ColModificationDate: qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongModificationDateDesc); break;
+            case CSongTable::ColChannels        : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongChannelsDesc        ); break;
+            case CSongTable::ColFileSize        : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongFileSizeDesc        ); break;
+            case CSongTable::ColLyrics          : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongLyricsDesc          ); break;
+            case CSongTable::ColLanguage        : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongLanguageDesc        ); break;
+            case CSongTable::ColLyricist        : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongLyricistDesc        ); break;
+            case CSongTable::ColGrouping        : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongGroupingDesc        ); break;
+            case CSongTable::ColSubTitle        : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongSubTitleDesc        ); break;
+            case CSongTable::ColTrackGain       : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongTrackGainDesc       ); break;
+            case CSongTable::ColTrackPeak       : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongTrackPeakDesc       ); break;
+            case CSongTable::ColAlbumGain       : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongAlbumGainDesc       ); break;
+            case CSongTable::ColAlbumPeak       : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongAlbumPeakDesc       ); break;
+            case CSongTable::ColBPM             : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongBPMDesc             ); break;
+            case CSongTable::ColTitleSort       : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongTitleSortDesc       ); break;
+            case CSongTable::ColArtistSort      : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongArtistSortDesc      ); break;
+            case CSongTable::ColAlbumSort       : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongAlbumSortDesc       ); break;
+            case CSongTable::ColAlbumArtistSort : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongAlbumArtistSortDesc ); break;
+            case CSongTable::ColComposerSort    : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongComposerSortDesc    ); break;
+        }
+    }
+#endif
+
     emit layoutChanged();
     emit columnSorted(column, order);
 }
@@ -631,7 +774,7 @@ Qt::ItemFlags CSongTableModel::flags(const QModelIndex& index) const
  * \return Liste types.
  */
 
-QStringList CSongTableModel::mimeTypes(void) const
+QStringList CSongTableModel::mimeTypes() const
 {
     QStringList types;
 
@@ -653,13 +796,13 @@ QMimeData * CSongTableModel::mimeData(const QModelIndexList& indexes) const
     QStringList fileList;
     QList<int> rows;
 
-    foreach (QModelIndex index, indexes)
+    for (QModelIndexList::const_iterator it = indexes.begin(); it != indexes.end(); ++it)
     {
-        if (index.isValid() && !rows.contains(index.row()))
+        if (it->isValid() && !rows.contains(it->row()))
         {
-            rows.append(index.row());
+            rows.append(it->row());
 
-            const QString fileName = m_data.at(index.row())->getSong()->getFileName();
+            const QString fileName = m_data.at(it->row())->getSong()->getFileName();
 
             if (!fileList.contains(fileName))
             {
@@ -709,6 +852,8 @@ QMimeData * CSongTableModel::mimeData(const QModelIndexList& indexes) const
 
 /**
  * Méthode appelée lorsqu'on dépose des données dans le modèle.
+ *
+ * \todo Pouvoir ajouter des morceaux par glisser-déposer depuis une autre application.
  *
  * \param data   Données déposées.
  * \param action Action de glisser-déposer.
@@ -819,21 +964,49 @@ void CSongTableModel::insertRow(CSong * song, int pos)
 
     m_dataShuffle.append(songItem);
 
+#ifdef FILTER_NEW_SYSTEM
+    if (song->matchFilter(m_application->getFilter()))
+    {
+        m_dataFiltered.append(songItem);
+        m_dataFilteredShuffle.append(songItem);
+    }
+#endif
+
     emit layoutChanged();
 }
 
+
+/**
+ * Supprime une ligne du modèle.
+ *
+ * \param row Numéro de la ligne à supprimer.
+ */
 
 void CSongTableModel::removeRow(int row)
 {
-    Q_ASSERT(row >= 0 && row < m_data.size());
+    if (row < 0 || row >= m_data.size())
+        return;
 
     emit layoutAboutToBeChanged();
+
     CSongTableItem * songItem = m_data.takeAt(row);
     m_dataShuffle.removeOne(songItem);
+#ifdef FILTER_NEW_SYSTEM
+    m_dataFiltered.removeOne(songItem);
+    m_dataShuffleFiltered.removeOne(songItem);
+#endif
+
     delete songItem;
+
     emit layoutChanged();
 }
 
+
+/**
+ * Supprime une liste de morceaux du modèle.
+ *
+ * \param songs Liste de morceaux à supprimer.
+ */
 
 void CSongTableModel::removeSongs(const QList<CSong *>& songs)
 {
@@ -850,6 +1023,12 @@ void CSongTableModel::removeSongs(const QList<CSong *>& songs)
         {
             m_data.removeOne(*it);
             m_dataShuffle.removeOne(*it);
+
+#ifdef FILTER_NEW_SYSTEM
+            m_dataFiltered.removeOne(*it);
+            m_dataShuffleFiltered.removeOne(*it);
+#endif
+
             delete *it;
         }
     }
@@ -862,10 +1041,11 @@ void CSongTableModel::removeSongs(const QList<CSong *>& songs)
  * Supprime toutes les données du modèle.
  */
 
-void CSongTableModel::clear(void)
+void CSongTableModel::clear()
 {
     emit layoutAboutToBeChanged();
 
+    // Suppression des morceaux
     for (QList<CSongTableItem *>::const_iterator songItem = m_data.begin(); songItem != m_data.end(); ++songItem)
     {
         delete *songItem;
@@ -873,9 +1053,22 @@ void CSongTableModel::clear(void)
 
     m_data.clear();
     m_dataShuffle.clear();
+
+#ifdef FILTER_NEW_SYSTEM
+    m_dataFiltered.clear();
+    m_dataShuffleFiltered.clear();
+#endif
+
     emit layoutChanged();
 }
 
+
+/**
+ * Retourne le morceau correspondant à un index.
+ *
+ * \param index Index de modèle.
+ * \return Pointeur sur le morceau, ou NULL si l'index est incorrect.
+ */
 
 CSongTableItem * CSongTableModel::getSongItem(const QModelIndex& index) const
 {
@@ -888,18 +1081,44 @@ CSongTableItem * CSongTableModel::getSongItem(const QModelIndex& index) const
 }
 
 
+/**
+ * Retourne le morceau correspondant à une ligne.
+ *
+ * \param row Numéro de ligne.
+ * \return Pointeur sur le morceau, ou NULL si le numéro de ligne est incorrect.
+ */
+
 CSongTableItem * CSongTableModel::getSongItem(int row) const
 {
-    return (row < m_data.size() && row >= 0 ? m_data.at(row) : NULL);
+#ifdef FILTER_NEW_SYSTEM
+    QList<CSongTableItem *> data = m_dataFiltered;
+#else
+    QList<CSongTableItem *> data = m_data;
+#endif
+
+    return (row < data.size() && row >= 0 ? data.at(row) : NULL);
 }
 
+
+/**
+ * Retourne la ligne correspondant à un morceau.
+ *
+ * \param songItem Morceau à rechercher.
+ * \return Numéro de ligne, ou -1 si le morceau n'est pas dans la liste.
+ */
 
 int CSongTableModel::getRowForSongItem(CSongTableItem * songItem) const
 {
     if (!songItem)
         return -1;
+   
+#ifdef FILTER_NEW_SYSTEM
+    QList<CSongTableItem *> data = m_dataFiltered;
+#else
+    QList<CSongTableItem *> data = m_data;
+#endif
 
-    return m_data.indexOf(songItem);
+    return data.indexOf(songItem);
 }
 
 
@@ -913,7 +1132,15 @@ int CSongTableModel::getRowForSongItem(CSongTableItem * songItem) const
 
 CSongTableItem * CSongTableModel::getPreviousSong(CSongTableItem * songItem, bool shuffle) const
 {
-    if (songItem && !m_data.contains(songItem))
+#ifdef FILTER_NEW_SYSTEM
+    QList<CSongTableItem *> data = m_dataFiltered;
+    QList<CSongTableItem *> dataShuffle = m_dataShuffleFiltered;
+#else
+    QList<CSongTableItem *> data = m_data;
+    QList<CSongTableItem *> dataShuffle = m_dataShuffle;
+#endif
+
+    if (songItem && !data.contains(songItem))
     {
         m_application->logError(tr("the requested item is not in the table"), __FUNCTION__, __FILE__, __LINE__);
         songItem = NULL;
@@ -923,12 +1150,12 @@ CSongTableItem * CSongTableModel::getPreviousSong(CSongTableItem * songItem, boo
     {
         if (shuffle)
         {
-            if (m_data.size() != m_dataShuffle.size())
+            if (data.size() != dataShuffle.size())
             {
                 m_application->logError(tr("the shuffle list is incorrect"), __FUNCTION__, __FILE__, __LINE__);
             }
 
-            const int row = m_dataShuffle.indexOf(songItem);
+            const int row = dataShuffle.indexOf(songItem);
 
             if (row < 0)
             {
@@ -941,13 +1168,13 @@ CSongTableItem * CSongTableModel::getPreviousSong(CSongTableItem * songItem, boo
                 return NULL;
             }
 
-            CSongTableItem * previousItem = m_dataShuffle.at(row - 1);
+            CSongTableItem * previousItem = dataShuffle.at(row - 1);
             return (previousItem->getSong()->isSkipShuffle() ? getNextSong(previousItem, true) : previousItem);
         }
         else
         {
             const int row = getRowForSongItem(songItem);
-            return (row <= 0 ? NULL : m_data.at(row - 1));
+            return (row <= 0 ? NULL : data.at(row - 1));
         }
     }
     else
@@ -967,7 +1194,15 @@ CSongTableItem * CSongTableModel::getPreviousSong(CSongTableItem * songItem, boo
 
 CSongTableItem * CSongTableModel::getNextSong(CSongTableItem * songItem, bool shuffle) const
 {
-    if (songItem && !m_data.contains(songItem))
+#ifdef FILTER_NEW_SYSTEM
+    QList<CSongTableItem *> data = m_dataFiltered;
+    QList<CSongTableItem *> dataShuffle = m_dataShuffleFiltered;
+#else
+    QList<CSongTableItem *> data = m_data;
+    QList<CSongTableItem *> dataShuffle = m_dataShuffle;
+#endif
+
+    if (songItem && !data.contains(songItem))
     {
         m_application->logError(tr("the requested item is not in the table"), __FUNCTION__, __FILE__, __LINE__);
         songItem = NULL;
@@ -977,12 +1212,12 @@ CSongTableItem * CSongTableModel::getNextSong(CSongTableItem * songItem, bool sh
     {
         if (shuffle)
         {
-            if (m_data.size() != m_dataShuffle.size())
+            if (data.size() != dataShuffle.size())
             {
                 m_application->logError(tr("the shuffle list is incorrect"), __FUNCTION__, __FILE__, __LINE__);
             }
 
-            const int row = m_dataShuffle.indexOf(songItem);
+            const int row = dataShuffle.indexOf(songItem);
 
             if (row < 0)
             {
@@ -990,64 +1225,77 @@ CSongTableItem * CSongTableModel::getNextSong(CSongTableItem * songItem, bool sh
                 return NULL;
             }
 
-            if (row == m_dataShuffle.size() - 1)
+            if (row == dataShuffle.size() - 1)
             {
                 return NULL;
             }
 
-            CSongTableItem * nextItem = m_dataShuffle.at(row + 1);
+            CSongTableItem * nextItem = dataShuffle.at(row + 1);
             return (nextItem->getSong()->isSkipShuffle() ? getNextSong(nextItem, true) : nextItem);
         }
         else
         {
             const int row = getRowForSongItem(songItem);
-            return (row == m_data.size() - 1 ? NULL : m_data.at(row + 1));
+            return (row == data.size() - 1 ? NULL : data.at(row + 1));
         }
     }
+    // Premier élément de la liste
     else
     {
         if (shuffle)
         {
-            if (m_data.size() != m_dataShuffle.size())
+            if (data.size() != dataShuffle.size())
             {
                 m_application->logError(tr("the shuffle list is incorrect"), __FUNCTION__, __FILE__, __LINE__);
                 return NULL;
             }
 
-            if (m_dataShuffle.isEmpty())
+            if (dataShuffle.isEmpty())
             {
                 return NULL;
             }
 
-            CSongTableItem * nextItem = m_dataShuffle.at(0);
+            CSongTableItem * nextItem = dataShuffle.at(0);
             return (nextItem->getSong()->isSkipShuffle() ? getNextSong(nextItem, true) : nextItem);
         }
         else
         {
-            return (m_data.isEmpty() ? NULL : m_data.at(0));
+            return (data.isEmpty() ? NULL : data.at(0));
         }
     }
 }
 
 
+/**
+ * Retourne le dernier morceau du modèle.
+ *
+ * \param shuffle Indique si la lecture aléatoire est activée.
+ * \return Pointeur sur le dernier morceau, ou NULL si la liste est vide.
+ */
+
 CSongTableItem * CSongTableModel::getLastSong(bool shuffle) const
 {
-    if (m_data.isEmpty())
+#ifdef FILTER_NEW_SYSTEM
+    QList<CSongTableItem *> data = m_dataFiltered;
+    QList<CSongTableItem *> dataShuffle = m_dataShuffleFiltered;
+#else
+    QList<CSongTableItem *> data = m_data;
+    QList<CSongTableItem *> dataShuffle = m_dataShuffle;
+#endif
+
+    // Aucun morceau dans le modèle
+    if (data.isEmpty())
         return NULL;
 
-    if (shuffle)
+    if (!shuffle)
+        return data.last();
+
+    for (QList<CSongTableItem *>::const_iterator it = dataShuffle.end(); it != dataShuffle.begin(); --it)
     {
-        for (QList<CSongTableItem *>::const_iterator it = m_dataShuffle.end(); it != m_dataShuffle.begin(); --it)
+        if (!(*it)->getSong()->isSkipShuffle())
         {
-            if (!(*it)->getSong()->isSkipShuffle())
-            {
-                return *it;
-            }
+            return *it;
         }
-    }
-    else
-    {
-        return m_data.last();
     }
 
     return NULL;
@@ -1076,6 +1324,8 @@ void CSongTableModel::setCurrentSong(CSongTableItem * songItem)
  *
  * Le fonctionnement de la lecture aléatoire est identique à celui de iTunes.
  *
+ * \todo Gérer le filtre de recherche.
+ *
  * \param firstSong Morceau à placer au début de la liste.
  */
 
@@ -1097,14 +1347,78 @@ void CSongTableModel::initShuffle(CSongTableItem * firstSong)
             m_dataShuffle.swap(m_dataShuffle.indexOf(firstSong), 0);
         }
     }
+
+#ifdef FILTER_NEW_SYSTEM
+    // Modification de la liste filtrée
+    applyFilterForShuffleList(m_application->getFilter());
+#endif
 }
 
 
+/**
+ * Remplace un morceau par un autre.
+ *
+ * \param oldSong Pointeur sur le morceau à remplacer.
+ * \param newSong Pointeur sur le nouveau morceau.
+ */
+
 void CSongTableModel::replaceSong(CSong * oldSong, CSong * newSong)
 {
+    // On n'a pas besoin de parcourir les autres listes, car les pointeurs sont partagés entre ces listes
     for (QList<CSongTableItem *>::const_iterator item = m_data.begin(); item != m_data.end(); ++item)
     {
         if ((*item)->m_song == oldSong)
             (*item)->m_song = newSong;
     }
 }
+
+#ifdef FILTER_NEW_SYSTEM
+
+/**
+ * Applique un filtre de recherche aux morceaux de la liste.
+ *
+ * \param filter Filtre de recherche.
+ */
+
+void CSongTableModel::applyFilter(const QString& filter)
+{
+    if (filter.isEmpty())
+    {
+        m_dataFiltered = m_data;
+        return;
+    }
+
+    m_dataFiltered.clear();
+
+    // Liste normale
+    for (QList<CSongTableItem *>::const_iterator item = m_data.begin(); item != m_data.end(); ++item)
+    {
+        if ((*item)->m_song->matchFilter(filter))
+        {
+            m_dataFiltered.append(*item);
+        }
+    }
+
+    applyFilterForShuffleList(filter);
+}
+
+void CSongTableModel::applyFilterForShuffleList(const QString& filter)
+{
+    if (filter.isEmpty())
+    {
+        m_dataShuffleFiltered = m_dataShuffle;
+        return;
+    }
+
+    m_dataShuffleFiltered.clear();
+
+    for (QList<CSongTableItem *>::const_iterator item = m_dataShuffle.begin(); item != m_dataShuffle.end(); ++item)
+    {
+        if ((*item)->m_song->matchFilter(filter))
+        {
+            m_dataShuffleFiltered.append(*item);
+        }
+    }
+}
+
+#endif

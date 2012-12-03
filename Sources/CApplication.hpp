@@ -66,6 +66,7 @@ class CApplication : public QMainWindow
 
 public:
 
+    /// État de lecture.
     enum State
     {
         Stopped,
@@ -73,16 +74,16 @@ public:
         Paused
     };
 
-    CApplication(void);
+    CApplication();
     virtual ~CApplication();
 
-    bool initWindow(void);
+    bool initWindow();
     void showDatabaseError(const QString& msg, const QString& query, const QString& fileName, int line);
-    void loadLibraryFolders(void);
+    void loadLibraryFolders();
 
     // Préférences
     void setRowHeight(int height);
-    int getRowHeight(void) const;
+    int getRowHeight() const;
     void showButtonStop(bool show = true);
     void showRemainingTime(bool show = true);
 
@@ -121,6 +122,9 @@ public:
     };
 
     inline QList<TNotification> getNotifications() const;
+
+    // Filtre de recherche
+    QString getFilter() const;
 
     inline CSongTableItem * getCurrentSongItem() const;
     inline CSongTable * getCurrentSongTable() const;

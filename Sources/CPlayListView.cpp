@@ -121,7 +121,7 @@ CFolder * CPlayListView::getFolder(const QModelIndex& index) const
  * \return Liste de morceaux sélectionnée, ou NULL.
  */
 
-CSongTable * CPlayListView::getSelectedSongTable(void) const
+CSongTable * CPlayListView::getSelectedSongTable() const
 {
     QModelIndex index = selectionModel()->currentIndex();
     return (index.isValid() ? getSongTable(index) : NULL);
@@ -134,7 +134,7 @@ CSongTable * CPlayListView::getSelectedSongTable(void) const
  * \return Dossier sélectionné, ou NULL.
  */
 
-CFolder * CPlayListView::getSelectedFolder(void) const
+CFolder * CPlayListView::getSelectedFolder() const
 {
     QModelIndex index = selectionModel()->currentIndex();
     return (index.isValid() ? getFolder(index) : NULL);
@@ -270,8 +270,10 @@ void CPlayListView::dragMoveEvent(QDragMoveEvent * event)
                 return;
             }
         }
+        // Déplacement d'un dossier ou d'une liste de lecture
         else
         {
+#ifdef ENABLE_DRAG_DROP_FOR_LISTS
             int playListId;
             int folderId;
 
@@ -305,7 +307,12 @@ void CPlayListView::dragMoveEvent(QDragMoveEvent * event)
             }
 
             event->accept();
-            event->acceptProposedAction();
+            event->acceptProposedAction()
+#else
+            // Désactivation
+            event->ignore();
+            return;
+#endif
         }
     }
     else
@@ -363,7 +370,7 @@ void CPlayListView::openCustomMenuProject(const QPoint& point)
             }
             else
             {
-                m_application->logError("l'item n'est ni une liste ni un dossier", __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("l'item n'est ni une liste ni un dossier"), __FUNCTION__, __FILE__, __LINE__);
             }
         }
     }
@@ -385,21 +392,21 @@ void CPlayListView::onItemExpanded(const QModelIndex& index)
 }
 
 
-void CPlayListView::createStaticList(void)
+void CPlayListView::createStaticList()
 {
     CFolder * folder = getSelectedFolder();
     m_application->openDialogCreateStaticList(folder);
 }
 
 
-void CPlayListView::createDynamicList(void)
+void CPlayListView::createDynamicList()
 {
     CFolder * folder = getSelectedFolder();
     m_application->openDialogCreateDynamicList(folder);
 }
 
 
-void CPlayListView::createFolder(void)
+void CPlayListView::createFolder()
 {
     CFolder * folder = getSelectedFolder();
     m_application->openDialogCreateFolder(folder);

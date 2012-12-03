@@ -56,7 +56,7 @@ bool IPlayList::hasAncestor(CFolder * folder) const
  * \return Booléen.
  */
 
-bool IPlayList::isModified(void) const
+bool IPlayList::isModified() const
 {
     return (m_isPlayListModified || CSongTable::isModified());
 }
@@ -117,13 +117,13 @@ void IPlayList::setFolder(CFolder * folder)
  * \return Booléen indiquant le succès de l'opération.
  */
 
-bool IPlayList::updateDatabase(void)
+bool IPlayList::updateDatabase()
 {
     if (m_isPlayListModified)
     {
         if (m_idPlayList <= 0)
         {
-            m_application->logError("identifiant invalide", __FUNCTION__, __FILE__, __LINE__);
+            m_application->logError(tr("invalid identifier (%1)").arg(m_idPlayList), __FUNCTION__, __FILE__, __LINE__);
         }
         else
         {
@@ -138,7 +138,7 @@ bool IPlayList::updateDatabase(void)
             }
             else
             {
-                m_application->logError("la liste de lecture n'a pas de dossier parent", __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("la liste de lecture n'a pas de dossier parent"), __FUNCTION__, __FILE__, __LINE__);
                 return false;
             }
 
@@ -168,7 +168,7 @@ bool IPlayList::updateDatabase(void)
  * Supprime la liste de la base de données.
  */
 
-void IPlayList::removeFromDatabase(void)
+void IPlayList::removeFromDatabase()
 {
     if (m_idPlayList <= 0)
     {

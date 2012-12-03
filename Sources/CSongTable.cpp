@@ -125,7 +125,7 @@ CSongTable::~CSongTable()
  * \return Liste des morceaux.
  */
 
-QList<CSong *> CSongTable::getSongs(void) const
+QList<CSong *> CSongTable::getSongs() const
 {
     return m_model->getSongs();
 }
@@ -141,9 +141,7 @@ QList<CSong *> CSongTable::getSongs(void) const
 CSongTableItem * CSongTable::getFirstSongItem(CSong * song) const
 {
     if (!song)
-    {
         return NULL;
-    }
 
     for (QList<CSongTableItem *>::const_iterator it = m_model->m_data.begin(); it != m_model->m_data.end(); ++it)
     {
@@ -185,7 +183,7 @@ int CSongTable::getRowForSongItem(CSongTableItem * songItem) const
  * \return Pointeur sur l'item, ou NULL si aucun n'est sélectionné.
  */
 
-CSongTableItem * CSongTable::getSelectedSongItem(void) const
+CSongTableItem * CSongTable::getSelectedSongItem() const
 {
     // On cherche la première ligne sélectionnée
     int row = -1;
@@ -286,14 +284,17 @@ qlonglong CSongTable::getTotalDuration() const
  *
  * \todo Changer le système :
  *       - CSongTable::applyFilter appelle simplement la méthode CSongTableModel::applyFilter.
- *       - CSongTableModel::applyFilter parcourt la liste des morceaux et remplie une liste avec ceux qui correspondant (m_dataFiltered).
+ *       - CSongTableModel::applyFilter parcourt la liste des morceaux et remplie une liste avec ceux qui correspondent (m_dataFiltered).
  *       - Les méthodes rowCount, data, etc. de CSongTableModel utilisent m_dataFiltered au lieu de m_data.
  *
- * \param filtre Filtre de recherche.
+ * \param filter Filtre de recherche.
  */
 
 void CSongTable::applyFilter(const QString& filter)
 {
+#ifdef FILTER_NEW_SYSTEM
+    m_model->applyFilter(filter);
+#else
     const int numRow = m_model->rowCount();
 
     for (int row = 0; row < numRow; ++row)
@@ -301,6 +302,7 @@ void CSongTable::applyFilter(const QString& filter)
         CSongTableItem * songItem = m_model->getSongItem(row);
         setRowHidden(row, !songItem->getSong()->matchFilter(filter));
     }
+#endif
 }
 
 
@@ -388,7 +390,8 @@ void CSongTable::removeSongFromTable(CSong * song)
 
 void CSongTable::removeSongFromTable(int row)
 {
-    Q_ASSERT(row >= 0);
+    if (row < 0)
+        return;
 
     if (row >= m_model->m_data.size())
     {
@@ -635,7 +638,8 @@ void CSongTable::initColumns(const QString& str)
 
 void CSongTable::showColumn(int column, bool show)
 {
-    Q_ASSERT(column >= 0 && column < ColNumber);
+    if (column < 0 || column >= ColNumber)
+        return;
 
     if (m_columns[column].visible != show)
     {
@@ -705,15 +709,14 @@ void CSongTable::onSortAboutToChange()
 /**
  * Tri la table selon une colonne.
  *
- * \todo Mettre-à-jour la sélection.
- *
  * \param column Numéro de la colonne.
  * \param order  Ordre croissant ou décroissant.
  */
 
 void CSongTable::sortColumn(int column, Qt::SortOrder order)
 {
-    Q_ASSERT(column >= 0 && column < ColNumber);
+    if (column < 0 || column >= ColNumber)
+        return;
 
     if (m_columnSort != column || m_sortOrder != order)
     {
@@ -736,13 +739,13 @@ void CSongTable::sortColumn(int column, Qt::SortOrder order)
 }
 
 
-void CSongTable::sort(void)
+void CSongTable::sort()
 {
     m_model->sort(m_columnSort, m_sortOrder);
 }
 
 
-void CSongTable::goToSongTable(void)
+void CSongTable::goToSongTable()
 {
     QAction * action = qobject_cast<QAction *>(sender());
 
@@ -932,7 +935,7 @@ void CSongTable::onSelectionChange()
 }
 
 
-QString CSongTable::getColumnsInfos(void) const
+QString CSongTable::getColumnsInfos() const
 {
     QString str;
     int currentPos = 0;
@@ -1068,7 +1071,7 @@ void CSongTable::columnResized(int logicalIndex, int oldSize, int newSize)
  * \return Booléen indiquant le succès de l'opération.
  */
 
-bool CSongTable::updateDatabase(void)
+bool CSongTable::updateDatabase()
 {
     if (m_isModified)
     {
@@ -1224,7 +1227,7 @@ void CSongTable::mouseDoubleClickEvent(QMouseEvent * event)
  * \return Booléen.
  */
 
-bool CSongTable::isModified(void) const
+bool CSongTable::isModified() const
 {
     return m_isModified;
 }
@@ -1312,8 +1315,24 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
         else
             menu->addAction(tr("Rename file"), this, SLOT(moveSongs()));
 
-        menu->addAction(tr("Check selection"), this, SLOT(checkSelection()));
-        menu->addAction(tr("Uncheck selection"), this, SLOT(uncheckSelection()));
+        if (!severalSongs)
+        {
+            QAction * actionCheck = menu->addAction(tr("Check song"), this, SLOT(checkSelection()));
+            QAction * actionUncheck = menu->addAction(tr("Uncheck song"), this, SLOT(uncheckSelection()));
+
+            bool songIsChecked = m_selectedItem->getSong()->isEnabled();
+
+            if (songIsChecked)
+                actionCheck->setEnabled(false);
+            else
+                actionUncheck->setEnabled(false);
+        }
+        else
+        {
+            menu->addAction(tr("Check selection"), this, SLOT(checkSelection()));
+            menu->addAction(tr("Uncheck selection"), this, SLOT(uncheckSelection()));
+        }
+
         menu->addSeparator();
 
         if (!severalSongs)

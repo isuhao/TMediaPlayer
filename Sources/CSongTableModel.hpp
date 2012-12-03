@@ -35,11 +35,11 @@ class CSongTableItem
 
 public:
 
-    CSongTableItem(void);
+    CSongTableItem();
 
-    inline int getPosition(void) const;
-    inline CSong * getSong(void) const;
-    inline bool isValid(void) const;
+    inline int getPosition() const;
+    inline CSong * getSong() const;
+    inline bool isValid() const;
 
 private:
 
@@ -50,19 +50,19 @@ private:
 };
 
 
-inline int CSongTableItem::getPosition(void) const
+inline int CSongTableItem::getPosition() const
 {
     return m_position;
 }
 
 
-inline CSong * CSongTableItem::getSong(void) const
+inline CSong * CSongTableItem::getSong() const
 {
     return m_song;
 }
 
 
-inline bool CSongTableItem::isValid(void) const
+inline bool CSongTableItem::isValid() const
 {
     return (m_position >= 0 && m_song);
 }
@@ -87,8 +87,8 @@ public:
     void setCanDrop(bool canDrop);
 
     void setSongs(const QList<CSong *>& songs);
-    QList<CSong *> getSongs(void) const;
-    inline int getNumSongs(void) const;
+    QList<CSong *> getSongs() const;
+    inline int getNumSongs() const;
     bool hasSong(CSong * song) const;
 
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
@@ -100,7 +100,7 @@ public:
 
     // Glisser-déposer
     Qt::ItemFlags flags(const QModelIndex& index) const;
-    QStringList mimeTypes(void) const;
+    QStringList mimeTypes() const;
     QMimeData * mimeData(const QModelIndexList& indexes) const;
     bool dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex& parent);
     void moveRows(const QList<int>& rows, int rowDest);
@@ -108,7 +108,7 @@ public:
     void insertRow(CSong * song, int pos = -1);
     void removeRow(int row);
     void removeSongs(const QList<CSong *>& songs);
-    void clear(void);
+    void clear();
 
     CSongTableItem * getSongItem(const QModelIndex& index) const;
     CSongTableItem * getSongItem(int row) const;
@@ -118,13 +118,22 @@ public:
     CSongTableItem * getLastSong(bool shuffle) const;
     void setCurrentSong(CSongTableItem * songItem);
     void initShuffle(CSongTableItem * firstSong = NULL);
-    inline CSongTableItem * getCurrentSongItem(void) const;
+    inline CSongTableItem * getCurrentSongItem() const;
     void replaceSong(CSong * oldSong, CSong * newSong);
+#ifdef FILTER_NEW_SYSTEM
+    void applyFilter(const QString& filter);
+#endif
 
 signals:
 
     void columnSorted(int column, Qt::SortOrder order);          ///< Signal émis lorsqu'une colonne est triée.
     void columnAboutToBeSorted(int column, Qt::SortOrder order); ///< Signal émis lorsqu'une colonne va être triée.
+
+protected:
+
+#ifdef FILTER_NEW_SYSTEM
+    void applyFilterForShuffleList(const QString& filter);
+#endif
 
 private:
 
@@ -768,18 +777,28 @@ private:
     bool m_canDrop;               ///< Indique si la vue peut recevoir des données (liste statique).
     int m_columnSort;             ///< Numéro de la colonne triée.
     CSongTableItem * m_currentSongItem;
-    QList<CSongTableItem *> m_data;
-    QList<CSongTableItem *> m_dataShuffle;
+    QList<CSongTableItem *> m_data;                ///< Liste des morceaux.
+    QList<CSongTableItem *> m_dataShuffle;         ///< Liste des morceaux aléatoires.
+#ifdef FILTER_NEW_SYSTEM
+    QList<CSongTableItem *> m_dataFiltered;        ///< Liste des morceaux filtrées.
+    QList<CSongTableItem *> m_dataShuffleFiltered; ///< Liste des morceaux aléatoires filtrées.
+#endif
 };
 
 
-inline int CSongTableModel::getNumSongs(void) const
+/**
+ * Retourne le nombre de morceaux du modèle.
+ *
+ * \return Nombre de morceaux.
+ */
+
+inline int CSongTableModel::getNumSongs() const
 {
     return m_data.size();
 }
 
 
-inline CSongTableItem * CSongTableModel::getCurrentSongItem(void) const
+inline CSongTableItem * CSongTableModel::getCurrentSongItem() const
 {
     return m_currentSongItem;
 }

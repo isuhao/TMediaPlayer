@@ -751,8 +751,24 @@ void CStaticPlayList::openCustomMenuProject(const QPoint& point)
         else
             menu->addAction(tr("Rename file"), this, SLOT(moveSongs()));
 
-        menu->addAction(tr("Check selection"), this, SLOT(checkSelection()));
-        menu->addAction(tr("Uncheck selection"), this, SLOT(uncheckSelection()));
+        if (!severalSongs)
+        {
+            QAction * actionCheck = menu->addAction(tr("Check song"), this, SLOT(checkSelection()));
+            QAction * actionUncheck = menu->addAction(tr("Uncheck song"), this, SLOT(uncheckSelection()));
+
+            bool songIsChecked = m_selectedItem->getSong()->isEnabled();
+
+            if (songIsChecked)
+                actionCheck->setEnabled(false);
+            else
+                actionUncheck->setEnabled(false);
+        }
+        else
+        {
+            menu->addAction(tr("Check selection"), this, SLOT(checkSelection()));
+            menu->addAction(tr("Uncheck selection"), this, SLOT(uncheckSelection()));
+        }
+
         menu->addSeparator();
 
         if (!severalSongs)

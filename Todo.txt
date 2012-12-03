@@ -3,7 +3,10 @@
   Importance élevée
 --------------------------------------------------
 
-- Améliorer la gestion du glisser-déposer dans la vue des listes de lecture (affichage de l'indicateur).
+- Améliorer la gestion du glisser-déposer dans la vue des listes de lecture.
+  - Pouvoir désactiver le positionnement des listes et dossiers.
+  - Améliorer l'affichage de l'indicateur.
+  - Tester le mécanisme en profondeur.
 
 - Bug : si on modifie une liste dynamique en cours de lecture, ben y'a un blem...
 - Bug : si une liste ne contient que des morceaux introuvables et que la répétition de liste est activée, la lecture entraine une boucle infinie.
@@ -12,9 +15,13 @@
 - Problème graphique : lorsqu'on sélectionne une liste de lecture, il faut donner le focus à la vue.
 - Problème graphique : les menus peuvent sortir de l'écran et être partiellement masqués.
 
+- Fichier FLAC : problème avec les métadonnées pour le numéro de disque, et les commentaires (effacement impossible).
+
 --------------------------------------------------
   Importance moyenne
 --------------------------------------------------
+
+- Ajouter une colonne pour afficher le nom de fichier sans le chemin.
 
 - Gérer les répertoires à surveiller :
   - Analyser le répertoire récursivement au lancement de l'application.
@@ -37,6 +44,11 @@
 
 - Implémenter la répétition d'un morceau.
 
+- File d'attente.
+  - Ajouter un item dans la vue "Listes des lecture".
+  - Ajouter des entrées dans les menus contextuels pour ajouter un morceau en file d'attente.
+  - Pouvoir arrêter la lecture / Fermer l'application à la fin d'un morceau.
+
 - Optimisation : exécuter les requêtes SQL dans un thread séparé.
   - Utiliser des transactions.
   - Tester avec MySQL.
@@ -44,6 +56,9 @@
 --------------------------------------------------
   Importance faible
 --------------------------------------------------
+
+- Ajouter des icônes aux entrées des menus contextuels.
+- Menu contextuel d'un morceau : afficher l'arborescence des listes de lecture.
 
 - Fenêtre Préférences :
   - Écrire la durée du morceau dans les tags (TLEN)
