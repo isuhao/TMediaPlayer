@@ -3,10 +3,7 @@
   Importance élevée
 --------------------------------------------------
 
-- Améliorer la gestion du glisser-déposer dans la vue des listes de lecture.
-  - Pouvoir désactiver le positionnement des listes et dossiers.
-  - Améliorer l'affichage de l'indicateur.
-  - Tester le mécanisme en profondeur.
+- Revoir les scripts de création des bases de données intégrés au logiciel.
 
 - Bug : si on modifie une liste dynamique en cours de lecture, ben y'a un blem...
 - Bug : si une liste ne contient que des morceaux introuvables et que la répétition de liste est activée, la lecture entraine une boucle infinie.
@@ -21,7 +18,12 @@
   Importance moyenne
 --------------------------------------------------
 
-- Ajouter une colonne pour afficher le nom de fichier sans le chemin.
+- Installateur : pouvoir choisir la base de données à utiliser.
+
+- Améliorer la gestion du glisser-déposer dans la vue des listes de lecture.
+  - Pouvoir désactiver le positionnement des listes et dossiers.
+  - Améliorer l'affichage de l'indicateur.
+  - Tester le mécanisme en profondeur.
 
 - Gérer les répertoires à surveiller :
   - Analyser le répertoire récursivement au lancement de l'application.
@@ -45,7 +47,7 @@
 - Implémenter la répétition d'un morceau.
 
 - File d'attente.
-  - Ajouter un item dans la vue "Listes des lecture".
+  - Ajouter un item dans la vue "Listes de lecture".
   - Ajouter des entrées dans les menus contextuels pour ajouter un morceau en file d'attente.
   - Pouvoir arrêter la lecture / Fermer l'application à la fin d'un morceau.
 

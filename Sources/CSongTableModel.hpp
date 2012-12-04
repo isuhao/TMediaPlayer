@@ -161,7 +161,7 @@ private:
         int cmp = QString::compare(title1, title2, Qt::CaseInsensitive);
 
         if (cmp == 0)
-            return cmpSongFileNameAsc(song1, song2);
+            return cmpSongPathNameAsc(song1, song2);
 
         return (cmp < 0);
     }
@@ -376,9 +376,28 @@ private:
         return cmpSongLastPlayedAsc(song2, song1);
     }
 
-    static inline bool cmpSongFileNameAsc(CSongTableItem * song1, CSongTableItem * song2)
+    static inline bool cmpSongPathNameAsc(CSongTableItem * song1, CSongTableItem * song2)
     {
         return (song1->getSong()->getFileName() < song2->getSong()->getFileName());
+    }
+
+    static inline bool cmpSongPathNameDesc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        return cmpSongPathNameAsc(song2, song1);
+    }
+    
+    static inline bool cmpSongFileNameAsc(CSongTableItem * song1, CSongTableItem * song2)
+    {
+        const QString pathName1 = song1->getSong()->getFileName();
+        const QString pathName2 = song2->getSong()->getFileName();
+
+        const QString fileName1 = pathName1.mid(pathName1.lastIndexOf('/') + 1);
+        const QString fileName2 = pathName2.mid(pathName2.lastIndexOf('/') + 1);
+
+        if (fileName1 == fileName2)
+            return cmpSongPathNameAsc(song1, song2);
+
+        return (fileName1 < fileName2);
     }
 
     static inline bool cmpSongFileNameDesc(CSongTableItem * song1, CSongTableItem * song2)

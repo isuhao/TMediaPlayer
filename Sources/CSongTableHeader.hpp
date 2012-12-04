@@ -61,7 +61,7 @@ protected slots:
     inline void showColComments        (bool show = true) { emit columnShown(CSongTable::ColComments        , show); }
     inline void showColPlayCount       (bool show = true) { emit columnShown(CSongTable::ColPlayCount       , show); }
     inline void showColLastPlayTime    (bool show = true) { emit columnShown(CSongTable::ColLastPlayTime    , show); }
-    inline void showColFileName        (bool show = true) { emit columnShown(CSongTable::ColFileName        , show); }
+    inline void showColPathName        (bool show = true) { emit columnShown(CSongTable::ColPathName        , show); }
     inline void showColBitRate         (bool show = true) { emit columnShown(CSongTable::ColBitRate         , show); }
     inline void showColFormat          (bool show = true) { emit columnShown(CSongTable::ColFormat          , show); }
     inline void showColDuration        (bool show = true) { emit columnShown(CSongTable::ColDuration        , show); }
@@ -85,6 +85,7 @@ protected slots:
     inline void showColAlbumSort       (bool show = true) { emit columnShown(CSongTable::ColAlbumSort       , show); }
     inline void showColAlbumArtistSort (bool show = true) { emit columnShown(CSongTable::ColAlbumArtistSort , show); }
     inline void showColComposerSort    (bool show = true) { emit columnShown(CSongTable::ColComposerSort    , show); }
+    inline void showColFileName        (bool show = true) { emit columnShown(CSongTable::ColFileName        , show); }
 
 private:
 

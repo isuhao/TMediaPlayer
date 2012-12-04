@@ -77,6 +77,7 @@ CSongTableHeader::CSongTableHeader(QWidget * parent) :
     // Propriétés
     T_CREATE_ACTION(m_menuProperties, PlayCount       , CSongTable::ColPlayCount       );
     T_CREATE_ACTION(m_menuProperties, LastPlayTime    , CSongTable::ColLastPlayTime    );
+    T_CREATE_ACTION(m_menuProperties, PathName        , CSongTable::ColPathName        );
     T_CREATE_ACTION(m_menuProperties, FileName        , CSongTable::ColFileName        );
     T_CREATE_ACTION(m_menuProperties, BitRate         , CSongTable::ColBitRate         );
     T_CREATE_ACTION(m_menuProperties, Format          , CSongTable::ColFormat          );

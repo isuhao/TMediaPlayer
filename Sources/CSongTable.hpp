@@ -76,7 +76,7 @@ public:
         ColComments         = 11, ///< Commentaires.
         ColPlayCount        = 12, ///< Lectures.
         ColLastPlayTime     = 13, ///< Dernière lecture.
-        ColFileName         = 14, ///< Fichier.
+        ColPathName         = 14, ///< Nom du fichier (chemin complet).
         ColBitRate          = 15, ///< Débit.
         ColFormat           = 16, ///< Format.
         ColDuration         = 17, ///< Durée.
@@ -100,8 +100,9 @@ public:
         ColAlbumSort        = 35, ///< Album pour le tri.
         ColAlbumArtistSort  = 36, ///< Artiste de l'album pour le tri.
         ColComposerSort     = 37, ///< Compositeur pour le tri.
+        ColFileName         = 38, ///< Nom du fichier (sans le chemin).
 
-        ColNumber           = 38  ///< Nombre de types de colonnes.
+        ColNumber           = 39  ///< Nombre de types de colonnes.
     };
 
     static inline TColumnType getColumnTypeFromInteger(int column);
@@ -231,7 +232,7 @@ inline CSongTable::TColumnType CSongTable::getColumnTypeFromInteger(int column)
         case 11: return ColComments        ;
         case 12: return ColPlayCount       ;
         case 13: return ColLastPlayTime    ;
-        case 14: return ColFileName        ;
+        case 14: return ColPathName        ;
         case 15: return ColBitRate         ;
         case 16: return ColFormat          ;
         case 17: return ColDuration        ;
@@ -255,6 +256,7 @@ inline CSongTable::TColumnType CSongTable::getColumnTypeFromInteger(int column)
         case 35: return ColAlbumSort       ;
         case 36: return ColAlbumArtistSort ;
         case 37: return ColComposerSort    ;
+        case 38: return ColFileName        ;
     }
 }
 
@@ -278,7 +280,7 @@ inline QString CSongTable::getColumnTypeName(CSongTable::TColumnType column)
         case ColComments        : return tr("Comments"         );
         case ColPlayCount       : return tr("Plays"            );
         case ColLastPlayTime    : return tr("Last played"      );
-        case ColFileName        : return tr("File name"        );
+        case ColPathName        : return tr("Pathname"         );
         case ColBitRate         : return tr("Bit rate"         );
         case ColFormat          : return tr("Format"           );
         case ColDuration        : return tr("Duration"         );
@@ -302,6 +304,7 @@ inline QString CSongTable::getColumnTypeName(CSongTable::TColumnType column)
         case ColAlbumSort       : return tr("Sort Album"       );
         case ColAlbumArtistSort : return tr("Sort Album artist");
         case ColComposerSort    : return tr("Sort Composer"    );
+        case ColFileName        : return tr("Filename"         );
     }
 }
 
@@ -312,7 +315,7 @@ inline QString CSongTable::getColumnTypeName(CSongTable::TColumnType column)
  * \return Nombre de morceaux.
  */
 
-inline int CSongTable::getNumSongs(void) const
+inline int CSongTable::getNumSongs() const
 {
     return m_model->getNumSongs();
 }
@@ -337,7 +340,7 @@ inline int CSongTable::getColumnSorted(void) const
 }
 
 
-inline int CSongTable::getIdPlayList(void) const
+inline int CSongTable::getIdPlayList() const
 {
     return m_idPlayList;
 }

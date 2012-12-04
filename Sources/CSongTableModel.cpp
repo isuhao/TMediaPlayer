@@ -27,7 +27,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QtDebug>
 
 
-CSongTableItem::CSongTableItem(void) :
+CSongTableItem::CSongTableItem() :
     m_position (-1),
     m_song     (NULL)
 {
@@ -69,7 +69,7 @@ m_currentSongItem   (NULL)
     }
 
 #ifdef FILTER_NEW_SYSTEM
-    // TODO: récupérer le filter courant
+    // TODO: récupérer le filtre courant
     m_dataFiltered = m_data;
 #endif
 }
@@ -131,7 +131,7 @@ void CSongTableModel::setSongs(const QList<CSong *>& data)
     }
 
 #ifdef FILTER_NEW_SYSTEM
-    // TODO: récupérer le filter courant
+    // TODO: récupérer le filtre courant
     m_dataFiltered = m_data;
 #endif
 
@@ -324,7 +324,13 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
             case CSongTable::ColComments    : return data.at(index.row())->getSong()->getComments();
             case CSongTable::ColPlayCount   : return data.at(index.row())->getSong()->getNumPlays();
             case CSongTable::ColLastPlayTime: return data.at(index.row())->getSong()->getLastPlay().toLocalTime();
-            case CSongTable::ColFileName    : return data.at(index.row())->getSong()->getFileName();
+            case CSongTable::ColPathName    : return data.at(index.row())->getSong()->getFileName();
+
+            case CSongTable::ColFileName:
+            {
+                const QString fileName = data.at(index.row())->getSong()->getFileName();
+                return fileName.mid(fileName.lastIndexOf('/') + 1);
+            }
 
             // Débit
             case CSongTable::ColBitRate:
@@ -568,7 +574,7 @@ void CSongTableModel::sort(int column, Qt::SortOrder order)
             case CSongTable::ColComments        : qSort(m_data.begin(), m_data.end(), cmpSongCommentsAsc        ); break;
             case CSongTable::ColPlayCount       : qSort(m_data.begin(), m_data.end(), cmpSongPlayCountAsc       ); break;
             case CSongTable::ColLastPlayTime    : qSort(m_data.begin(), m_data.end(), cmpSongLastPlayedAsc      ); break;
-            case CSongTable::ColFileName        : qSort(m_data.begin(), m_data.end(), cmpSongFileNameAsc        ); break;
+            case CSongTable::ColPathName        : qSort(m_data.begin(), m_data.end(), cmpSongPathNameAsc        ); break;
             case CSongTable::ColBitRate         : qSort(m_data.begin(), m_data.end(), cmpSongBitRateAsc         ); break;
             case CSongTable::ColFormat          : qSort(m_data.begin(), m_data.end(), cmpSongFormatAsc          ); break;
             case CSongTable::ColDuration        : qSort(m_data.begin(), m_data.end(), cmpSongDurationAsc        ); break;
@@ -592,6 +598,7 @@ void CSongTableModel::sort(int column, Qt::SortOrder order)
             case CSongTable::ColAlbumSort       : qSort(m_data.begin(), m_data.end(), cmpSongAlbumSortAsc       ); break;
             case CSongTable::ColAlbumArtistSort : qSort(m_data.begin(), m_data.end(), cmpSongAlbumArtistSortAsc ); break;
             case CSongTable::ColComposerSort    : qSort(m_data.begin(), m_data.end(), cmpSongComposerSortAsc    ); break;
+            case CSongTable::ColFileName        : qSort(m_data.begin(), m_data.end(), cmpSongFileNameAsc        ); break;
         }
     }
     else
@@ -612,7 +619,7 @@ void CSongTableModel::sort(int column, Qt::SortOrder order)
             case CSongTable::ColComments        : qSort(m_data.begin(), m_data.end(), cmpSongCommentsDesc        ); break;
             case CSongTable::ColPlayCount       : qSort(m_data.begin(), m_data.end(), cmpSongPlayCountDesc       ); break;
             case CSongTable::ColLastPlayTime    : qSort(m_data.begin(), m_data.end(), cmpSongLastPlayedDesc      ); break;
-            case CSongTable::ColFileName        : qSort(m_data.begin(), m_data.end(), cmpSongFileNameDesc        ); break;
+            case CSongTable::ColPathName        : qSort(m_data.begin(), m_data.end(), cmpSongPathNameDesc        ); break;
             case CSongTable::ColBitRate         : qSort(m_data.begin(), m_data.end(), cmpSongBitRateDesc         ); break;
             case CSongTable::ColFormat          : qSort(m_data.begin(), m_data.end(), cmpSongFormatDesc          ); break;
             case CSongTable::ColDuration        : qSort(m_data.begin(), m_data.end(), cmpSongDurationDesc        ); break;
@@ -636,6 +643,7 @@ void CSongTableModel::sort(int column, Qt::SortOrder order)
             case CSongTable::ColAlbumSort       : qSort(m_data.begin(), m_data.end(), cmpSongAlbumSortDesc       ); break;
             case CSongTable::ColAlbumArtistSort : qSort(m_data.begin(), m_data.end(), cmpSongAlbumArtistSortDesc ); break;
             case CSongTable::ColComposerSort    : qSort(m_data.begin(), m_data.end(), cmpSongComposerSortDesc    ); break;
+            case CSongTable::ColFileName        : qSort(m_data.begin(), m_data.end(), cmpSongFileNameDesc        ); break;
         }
     }
 
