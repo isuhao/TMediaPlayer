@@ -108,6 +108,10 @@ CDialogEditMetadata::CDialogEditMetadata(CApplication * application, CSong * son
     QPushButton * btnApply = m_uiWidget->buttonBox->addButton(tr("Apply"), QDialogButtonBox::ApplyRole);
     QPushButton * btnReset = m_uiWidget->buttonBox->addButton(tr("Reset"), QDialogButtonBox::ResetRole);
 
+    // TODO: Enlever ces 2 lignes quand tout sera fonctionnel
+    btnSave->setEnabled(false);
+    btnApply->setEnabled(false);
+
     connect(btnSave, SIGNAL(clicked()), this, SLOT(save()));
     connect(btnCancel, SIGNAL(clicked()), this, SLOT(close()));
     connect(btnApply, SIGNAL(clicked()), this, SLOT(apply()));
@@ -138,7 +142,7 @@ CDialogEditMetadata::~CDialogEditMetadata()
  * \todo Implémentation.
  */
 
-void CDialogEditMetadata::apply(void)
+void CDialogEditMetadata::apply()
 {
     //...
 }
@@ -148,7 +152,7 @@ void CDialogEditMetadata::apply(void)
  * Enregistre les modifications effectuées sur le morceau et ferme la boite de dialogue.
  */
 
-void CDialogEditMetadata::save(void)
+void CDialogEditMetadata::save()
 {
     apply();
     close();
@@ -157,11 +161,9 @@ void CDialogEditMetadata::save(void)
 
 /**
  * Recharge les métadonnées du morceau.
- *
- * \todo Implémentation.
  */
 
-void CDialogEditMetadata::reset(void)
+void CDialogEditMetadata::reset()
 {
     // Titres des colonnes
     m_modelID3v2Text->clear();
@@ -277,6 +279,10 @@ void CDialogEditMetadata::reset(void)
 }
 
 
+/**
+ * Active ou désactive les tags ID3 v1.
+ */
+
 void CDialogEditMetadata::enableTagID3v1(bool enable)
 {
     m_uiWidget->enableID3v1->setChecked(enable);
@@ -291,6 +297,10 @@ void CDialogEditMetadata::enableTagID3v1(bool enable)
 }
 
 
+/**
+ * Active ou désactive les tags ID3 v2.
+ */
+
 void CDialogEditMetadata::enableTagID3v2(bool enable)
 {
     m_uiWidget->enableID3v2->setChecked(enable);
@@ -299,6 +309,10 @@ void CDialogEditMetadata::enableTagID3v2(bool enable)
 }
 
 
+/**
+ * Active ou désactive les tags APE.
+ */
+
 void CDialogEditMetadata::enableTagAPE(bool enable)
 {
     m_uiWidget->enableAPE->setChecked(enable);
@@ -306,6 +320,10 @@ void CDialogEditMetadata::enableTagAPE(bool enable)
     m_uiWidget->tableAPE->setEnabled(enable);
 }
 
+
+/**
+ * Active ou désactive les tags XiphComment.
+ */
 
 void CDialogEditMetadata::enableTagXiphComment(bool enable)
 {
@@ -446,6 +464,13 @@ void CDialogEditMetadata::initTagID3v2(TagLib::ID3v2::Tag * tags)
     }
 }
 
+
+/**
+ * Retourne une chaine correspondant à un type d'illustration.
+ *
+ * \param type Type d'illustration.
+ * \return Chaine de caractères.
+ */
 
 QString CDialogEditMetadata::pictureType(TagLib::ID3v2::AttachedPictureFrame::Type type) const
 {

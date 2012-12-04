@@ -543,8 +543,6 @@ QVariant CSongTableModel::headerData(int section, Qt::Orientation orientation, i
 /**
  * Trie les morceaux de la liste.
  *
- * \todo Trier aussi la liste filtrée.
- *
  * \param column Colonne à utiliser comme critère de tri.
  * \param order  Ordre de tri (ascendant ou descendant).
  */
@@ -976,7 +974,7 @@ void CSongTableModel::insertRow(CSong * song, int pos)
     if (song->matchFilter(m_application->getFilter()))
     {
         m_dataFiltered.append(songItem);
-        m_dataFilteredShuffle.append(songItem);
+        m_dataShuffleFiltered.append(songItem);
     }
 #endif
 
@@ -1390,9 +1388,12 @@ void CSongTableModel::replaceSong(CSong * oldSong, CSong * newSong)
 
 void CSongTableModel::applyFilter(const QString& filter)
 {
+    emit layoutAboutToBeChanged();
+
     if (filter.isEmpty())
     {
         m_dataFiltered = m_data;
+        emit layoutChanged();
         return;
     }
 
@@ -1408,7 +1409,10 @@ void CSongTableModel::applyFilter(const QString& filter)
     }
 
     applyFilterForShuffleList(filter);
+
+    emit layoutChanged();
 }
+
 
 void CSongTableModel::applyFilterForShuffleList(const QString& filter)
 {

@@ -59,6 +59,11 @@
   Importance faible
 --------------------------------------------------
 
+- Recherche de paroles :
+  - Ajouter un bouton pour rechercher les paroles dans les fenêtre "Edit Song(s)".
+  - Pouvoir ajouter facilement d'autres sites (plugins ?).
+  - Dans le dock, afficher et pouvoir modifier la langue des paroles et le parolier.
+
 - Ajouter des icônes aux entrées des menus contextuels.
 - Menu contextuel d'un morceau : afficher l'arborescence des listes de lecture.
 
@@ -68,14 +73,13 @@
   - Écrire la note (POPM)
   - Option "Déterminer automatiquement les valeurs pour le tri".
   - Option "Illustrations : image dans le dossier".
-  - Option "Enregistrer les modifications quand on passe au morceau suivant ou précédent dans la vue Edit Song".
 
 - Créer la boite de dialogue Édition des métadonnées :
   - Gérer les différents types de tags :
     - ID3v2 : pictures, ...
-    - xiphComment.
-    - APE.
+    - APE : tags binaires et locator.
   - Ajouter une option "Vérifier la cohérence des données" (tags duppliqués, valeurs identiques pour les différents formats de tags...).
+  - Enregistrer les modifications.
 
 - Boite de dialogue Edit Song :
   - Affichage et modification des illustrations.

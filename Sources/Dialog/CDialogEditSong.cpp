@@ -279,12 +279,13 @@ void CDialogEditSong::resetSummary()
 
 /**
  * Affiche les informations du morceau précédent dans la liste.
+ * Les modifications sont enregistrées si l'option EditSongAutoSave est activée.
  */
 
 void CDialogEditSong::previousSong()
 {
     QSettings * settings = m_application->getSettings();
-    if (settings->value("Preferences/AutoSaveInEditSong", false).toBool())
+    if (settings->value("Preferences/EditSongAutoSave", false).toBool())
         applyChanges();
 
     CSongTableItem * songItem = m_songTable->getPreviousSong(m_songItem, false);
@@ -303,12 +304,13 @@ void CDialogEditSong::previousSong()
 
 /**
  * Affiche les informations du morceau suivant dans la liste.
+ * Les modifications sont enregistrées si l'option EditSongAutoSave est activée.
  */
 
 void CDialogEditSong::nextSong()
 {
     QSettings * settings = m_application->getSettings();
-    if (settings->value("Preferences/AutoSaveInEditSong", false).toBool())
+    if (settings->value("Preferences/EditSongAutoSave", false).toBool())
         applyChanges();
 
     CSongTableItem * songItem = m_songTable->getNextSong(m_songItem, false);

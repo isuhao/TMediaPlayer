@@ -283,189 +283,189 @@ Erreur : %4</translation>
         <translation>Métadonnées</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="168"/>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="170"/>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="179"/>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="182"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="172"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="181"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="184"/>
         <source>Key</source>
         <translation>Clé</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="168"/>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="170"/>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="179"/>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="182"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="172"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="181"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="184"/>
         <source>Value</source>
         <translation>Valeur</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="172"/>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="174"/>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="176"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="178"/>
         <source>Description</source>
         <translation>Description</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="172"/>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="174"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="176"/>
         <source>Language</source>
         <translation>Langue</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="172"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="174"/>
         <source>Lyrics</source>
         <translation>Paroles</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="174"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="176"/>
         <source>Comments</source>
         <translation>Commentaires</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="176"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="178"/>
         <source>Type</source>
         <translation>Type</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="176"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="178"/>
         <source>Format</source>
         <translation>Format</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="176"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="178"/>
         <source>Size</source>
         <translation>Taille</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="187"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="189"/>
         <source>unknown format</source>
         <translation>format inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="188"/>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="204"/>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="231"/>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="262"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="190"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="206"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="233"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="264"/>
         <source>Error while loading tags.</source>
         <translation>Erreur lors du chargement des métadonnées.</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="203"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="205"/>
         <source>can&apos;t read the MP3 file &quot;%1&quot;</source>
         <translation>impossible de lire le fichier MP3 &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="230"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="232"/>
         <source>can&apos;t read the Ogg file &quot;%1&quot;</source>
         <translation>impossible de lire le fichier Ogg &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="261"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="263"/>
         <source>can&apos;t read the FLAC file &quot;%1&quot;</source>
         <translation>impossible de lire le fichier FLAC &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="455"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="480"/>
         <source>Other</source>
         <translation>Autre</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="456"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="481"/>
         <source>FileIcon</source>
         <translation>Icône de fichier</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="457"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="482"/>
         <source>OtherFileIcon</source>
         <translation>Autre icône de fichier</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="458"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="483"/>
         <source>FrontCover</source>
         <translation>Pochette avant</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="459"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="484"/>
         <source>BackCover</source>
         <translation>Pochette arrière</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="460"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="485"/>
         <source>LeafletPage</source>
         <translation>Livret</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="461"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="486"/>
         <source>Media</source>
         <translation>Media</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="462"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="487"/>
         <source>LeadArtist</source>
         <translation>Artiste principal</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="463"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="488"/>
         <source>Artist</source>
         <translation>Artiste</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="464"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="489"/>
         <source>Conductor</source>
         <translation>Chef d&apos;orchestre</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="465"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="490"/>
         <source>Band</source>
         <translation>Groupe</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="466"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="491"/>
         <source>Composer</source>
         <translation>Compositeur</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="467"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="492"/>
         <source>Lyricist</source>
         <translation>Parolier</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="468"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="493"/>
         <source>RecordingLocation</source>
         <translation>Lieu d&apos;enregistrement</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="469"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="494"/>
         <source>DuringRecording</source>
         <translation>Pendant l&apos;enregistrement</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="470"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="495"/>
         <source>DuringPerformance</source>
         <translation>Pendant un concert</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="471"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="496"/>
         <source>MovieScreenCapture</source>
         <translation>Capture d&apos;écran du film</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="472"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="497"/>
         <source>ColouredFish</source>
         <translation>Poisson coloré</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="473"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="498"/>
         <source>Illustration</source>
         <translation>Illustration</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="474"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="499"/>
         <source>BandLogo</source>
         <translation>Logo du groupe</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="475"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="500"/>
         <source>PublisherLogo</source>
         <translation>Logo du distributeur</translation>
     </message>
@@ -529,24 +529,24 @@ Erreur : %4</translation>
         <translation>jamais</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="456"/>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="468"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="458"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="470"/>
         <source>%1 dB</source>
         <translation>%1 dB</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="483"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="485"/>
         <source>Local time</source>
         <translation>Heure locale</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="483"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="485"/>
         <source>UTC</source>
         <translation>UTC</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="489"/>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="490"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="491"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="492"/>
         <source>dd/MM/yyyy HH:mm:ss</source>
         <translation>dd/MM/yyyy HH:mm:ss</translation>
     </message>
@@ -691,68 +691,68 @@ Erreur : %4</translation>
 <context>
     <name>CDialogPreferences</name>
     <message>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="60"/>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="61"/>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="170"/>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="224"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="62"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="172"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="226"/>
         <source>SQLite version 2</source>
         <translation>SQLite version 2</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="65"/>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="66"/>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="172"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="67"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="174"/>
         <source>PostgreSQL</source>
         <translation>PostgreSQL</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="70"/>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="71"/>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="174"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="72"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="176"/>
         <source>MySQL</source>
         <translation>MySQL</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="75"/>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="76"/>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="176"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="77"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="178"/>
         <source>ODBC</source>
         <translation>ODBC</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="80"/>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="81"/>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="224"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="82"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="226"/>
         <source>SQLite version 3 or above</source>
         <translation>SQLite version 3 ou supérieure</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="106"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="107"/>
         <source>Unknown title</source>
         <translation>Titre inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="107"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="108"/>
         <source>Unknown artist</source>
         <translation>Artiste inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="108"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="109"/>
         <source>Unknown album</source>
         <translation>Album inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="112"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="113"/>
         <source>Unknown genre</source>
         <translation>Genre inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="135"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="136"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="136"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="137"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
@@ -1583,7 +1583,7 @@ Erreur : %4</translation>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="283"/>
         <source>Pathname</source>
-        <translation type="unfinished"></translation>
+        <translation>Localisation</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="284"/>
@@ -1703,7 +1703,7 @@ Erreur : %4</translation>
     <message>
         <location filename="../Sources/CSongTable.hpp" line="307"/>
         <source>Filename</source>
-        <translation type="unfinished"></translation>
+        <translation>Fichier</translation>
     </message>
     <message>
         <location filename="../Sources/CSongTable.cpp" line="827"/>
@@ -1861,21 +1861,21 @@ Les fichiers ne seront pas supprimés.</translation>
         <translation>%1 dB</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTableModel.cpp" line="1153"/>
-        <location filename="../Sources/CSongTableModel.cpp" line="1215"/>
+        <location filename="../Sources/CSongTableModel.cpp" line="1151"/>
+        <location filename="../Sources/CSongTableModel.cpp" line="1213"/>
         <source>the requested item is not in the table</source>
         <translation>l&apos;item demandé n&apos;est pas dans la table</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTableModel.cpp" line="1163"/>
-        <location filename="../Sources/CSongTableModel.cpp" line="1225"/>
-        <location filename="../Sources/CSongTableModel.cpp" line="1257"/>
+        <location filename="../Sources/CSongTableModel.cpp" line="1161"/>
+        <location filename="../Sources/CSongTableModel.cpp" line="1223"/>
+        <location filename="../Sources/CSongTableModel.cpp" line="1255"/>
         <source>the shuffle list is incorrect</source>
         <translation>la liste des morceaux aléatoires est incorrecte</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTableModel.cpp" line="1170"/>
-        <location filename="../Sources/CSongTableModel.cpp" line="1232"/>
+        <location filename="../Sources/CSongTableModel.cpp" line="1168"/>
+        <location filename="../Sources/CSongTableModel.cpp" line="1230"/>
         <source>the requested item is not in the shuffle list</source>
         <translation>l&apos;item demandé n&apos;est pas dans la liste des morceaux aléatoires</translation>
     </message>
@@ -3027,223 +3027,228 @@ Voulez-vous les ajouter ?</translation>
         <translation>Morceau en cours de lecture : afficher le temps restant au lieu de la durée.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="107"/>
+        <location filename="../Form/DialogPreferences.ui" line="113"/>
+        <source>Edit song: save modifications by clicking on buttons &quot;Previous&quot; or &quot;Next&quot;.</source>
+        <translation>Modification d&apos;un morceau : enregistrer les modifications en cliquant sur les boutons &quot;Précédent&quot; ou &quot;Suivant&quot;.</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogPreferences.ui" line="121"/>
         <source>Database</source>
         <translation>Base de données</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="120"/>
+        <location filename="../Form/DialogPreferences.ui" line="134"/>
         <source>Driver:</source>
         <translation>Pilote :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="131"/>
+        <location filename="../Form/DialogPreferences.ui" line="145"/>
         <source>SQLite version 3 or above</source>
         <translation>SQLite version 3 ou supérieure</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="136"/>
+        <location filename="../Form/DialogPreferences.ui" line="150"/>
         <source>SQLite version 2</source>
         <translation>SQLite version 2</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="141"/>
+        <location filename="../Form/DialogPreferences.ui" line="155"/>
         <source>PostgreSQL</source>
         <translation>PostgreSQL</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="146"/>
+        <location filename="../Form/DialogPreferences.ui" line="160"/>
         <source>MySQL</source>
         <translation>MySQL</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="151"/>
+        <location filename="../Form/DialogPreferences.ui" line="165"/>
         <source>ODBC</source>
         <translation>ODBC</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="169"/>
+        <location filename="../Form/DialogPreferences.ui" line="183"/>
         <source>Username:</source>
         <translation>Utilisateur :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="186"/>
+        <location filename="../Form/DialogPreferences.ui" line="200"/>
         <source>Password:</source>
         <translation>Mot de passe :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="203"/>
+        <location filename="../Form/DialogPreferences.ui" line="217"/>
         <source>Database:</source>
         <translation>Base de données :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="233"/>
+        <location filename="../Form/DialogPreferences.ui" line="247"/>
         <source>Port:</source>
         <translation>Port :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="250"/>
+        <location filename="../Form/DialogPreferences.ui" line="264"/>
         <source>Host:</source>
         <translation>Serveur :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="264"/>
+        <location filename="../Form/DialogPreferences.ui" line="278"/>
         <source>Last.fm</source>
         <translation>Last.fm</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="270"/>
+        <location filename="../Form/DialogPreferences.ui" line="284"/>
         <source>Use Last.fm</source>
         <translation>Utiliser Last.fm</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="282"/>
+        <location filename="../Form/DialogPreferences.ui" line="296"/>
         <source>If this is not yet done, you must connect your account to the application. Use this button to open a navigator, and perform the connection:</source>
         <translation>Si ce n&apos;est pas encore fait, vous devez connecter votre compte à l&apos;application. Utilisez ce bouton pour ouvrir un navigateur, et effectuer la connexion :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="292"/>
+        <location filename="../Form/DialogPreferences.ui" line="306"/>
         <source>Connect to Last.fm</source>
         <translation>Se connecter à Last.fm</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="319"/>
+        <location filename="../Form/DialogPreferences.ui" line="333"/>
         <source>Percentage of reading before scrobbling:</source>
         <translation>Pourcentage de lecture avant de scrobbler :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="326"/>
+        <location filename="../Form/DialogPreferences.ui" line="340"/>
         <source> %</source>
         <translation> %</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="349"/>
+        <location filename="../Form/DialogPreferences.ui" line="363"/>
         <source>Delay before notify that a new song has started:</source>
         <translation>Délai avant de signaler qu&apos;un nouveau morceau a commencé :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="379"/>
-        <location filename="../Form/DialogPreferences.ui" line="385"/>
+        <location filename="../Form/DialogPreferences.ui" line="393"/>
+        <location filename="../Form/DialogPreferences.ui" line="399"/>
         <source>Folders</source>
         <translation>Dossiers</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="391"/>
+        <location filename="../Form/DialogPreferences.ui" line="405"/>
         <source>Add folder...</source>
         <translation>Ajouter...</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="405"/>
+        <location filename="../Form/DialogPreferences.ui" line="419"/>
         <source>Analyze folders to check changes on startup.</source>
         <translation>Analyser les dossiers pour détecter les changements au lancement de l&apos;application.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="425"/>
+        <location filename="../Form/DialogPreferences.ui" line="439"/>
         <source>Remove</source>
         <translation>Supprimer</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="438"/>
+        <location filename="../Form/DialogPreferences.ui" line="452"/>
         <source>Keep folders organized</source>
         <translation>Maintenir les dossiers organisés</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="457"/>
+        <location filename="../Form/DialogPreferences.ui" line="471"/>
         <source>Filename format:</source>
         <translation>Format des noms de fichier :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="478"/>
+        <location filename="../Form/DialogPreferences.ui" line="492"/>
         <source>Album title:</source>
         <translation>Album :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="520"/>
+        <location filename="../Form/DialogPreferences.ui" line="534"/>
         <source>Track number:</source>
         <translation>Numéro de piste :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="534"/>
+        <location filename="../Form/DialogPreferences.ui" line="548"/>
         <source>Year:</source>
         <translation>Année :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="555"/>
+        <location filename="../Form/DialogPreferences.ui" line="569"/>
         <source>Disc number:</source>
         <translation>Numéro de disque :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="583"/>
+        <location filename="../Form/DialogPreferences.ui" line="597"/>
         <source>Title:</source>
         <translation>Titre :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="597"/>
+        <location filename="../Form/DialogPreferences.ui" line="611"/>
         <source>Artist name:</source>
         <translation>Artiste :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="611"/>
+        <location filename="../Form/DialogPreferences.ui" line="625"/>
         <source>Default value</source>
         <translation>Valeur par défaut</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="649"/>
+        <location filename="../Form/DialogPreferences.ui" line="663"/>
         <source>Empty field</source>
         <translation>Champ vide</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="884"/>
+        <location filename="../Form/DialogPreferences.ui" line="898"/>
         <source>When you add a file into the library, if there are no sorting fields, they will be automatically compute. For example, if a title starts with &quot;The &quot;.</source>
         <translation>Quand vous ajoutez unfichier à la médiathèque, s&apos;il n&apos;y a pas de valeurs pour le tri, elles sont automatiquement déterminées. Par exemple, si un titre commence par &quot;Le &quot;.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="356"/>
+        <location filename="../Form/DialogPreferences.ui" line="370"/>
         <source>When you start playing a song, a notification is send to Last.fm to update your profile. This value represent the delay in seconds before sending the information. It must be between 2s and 20s.</source>
         <translation>Lorsque vous démarrez la lecture d&apos;un morceau, une notification est envoyée à Last.fm pour mettre à jour votre profil. Cette valeur correspond au délai en secondes avant d&apos;envoyer l&apos;information. Elle doit être comprise entre 2s et 20s.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="359"/>
+        <location filename="../Form/DialogPreferences.ui" line="373"/>
         <source>s</source>
         <translation>s</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="774"/>
+        <location filename="../Form/DialogPreferences.ui" line="788"/>
         <source>Genre:</source>
         <translation>Genre :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="805"/>
+        <location filename="../Form/DialogPreferences.ui" line="819"/>
         <source>Metadata</source>
         <translation>Métadonnées</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="814"/>
+        <location filename="../Form/DialogPreferences.ui" line="828"/>
         <source>Saving</source>
         <translation>Enregistrement</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="830"/>
+        <location filename="../Form/DialogPreferences.ui" line="844"/>
         <source>Write song duration.</source>
         <translation>Écrire la durée du morceau.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="844"/>
+        <location filename="../Form/DialogPreferences.ui" line="858"/>
         <source>Write play count.</source>
         <translation>Écrire le nombre de lectures.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="858"/>
+        <location filename="../Form/DialogPreferences.ui" line="872"/>
         <source>Write rating.</source>
         <translation>Écrire la note.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="871"/>
+        <location filename="../Form/DialogPreferences.ui" line="885"/>
         <source>Loading</source>
         <translation>Chargement</translation>
     </message>
     <message>
-        <location filename="../Form/DialogPreferences.ui" line="887"/>
+        <location filename="../Form/DialogPreferences.ui" line="901"/>
         <source>Automatically compute sorting fields.</source>
         <translation>Déterminer automatiquement les valeurs pour le tri.</translation>
     </message>
