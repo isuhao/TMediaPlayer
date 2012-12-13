@@ -68,6 +68,7 @@ CSongTableHeader::CSongTableHeader(QWidget * parent) :
     T_CREATE_ACTION(m_menuInfos, Grouping       , CSongTable::ColGrouping       );
     T_CREATE_ACTION(m_menuInfos, SubTitle       , CSongTable::ColSubTitle       );
     T_CREATE_ACTION(m_menuInfos, BPM            , CSongTable::ColBPM            );
+    m_menuInfos->addSeparator();
     T_CREATE_ACTION(m_menuInfos, TitleSort      , CSongTable::ColTitleSort      );
     T_CREATE_ACTION(m_menuInfos, ArtistSort     , CSongTable::ColArtistSort     );
     T_CREATE_ACTION(m_menuInfos, AlbumSort      , CSongTable::ColAlbumSort      );
