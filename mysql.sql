@@ -137,6 +137,21 @@ CREATE TABLE libpath (
     path_location VARCHAR(512) NOT NULL UNIQUE
 );
 
+CREATE TABLE equalizer (
+    equalizer_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    equalizer_name VARCHAR(512) NOT NULL UNIQUE,
+    equalizer_val0 FLOAT NOT NULL DEFAULT 1.0,
+    equalizer_val1 FLOAT NOT NULL DEFAULT 1.0,
+    equalizer_val2 FLOAT NOT NULL DEFAULT 1.0,
+    equalizer_val3 FLOAT NOT NULL DEFAULT 1.0,
+    equalizer_val4 FLOAT NOT NULL DEFAULT 1.0,
+    equalizer_val5 FLOAT NOT NULL DEFAULT 1.0,
+    equalizer_val6 FLOAT NOT NULL DEFAULT 1.0,
+    equalizer_val7 FLOAT NOT NULL DEFAULT 1.0,
+    equalizer_val8 FLOAT NOT NULL DEFAULT 1.0,
+    equalizer_val9 FLOAT NOT NULL DEFAULT 1.0
+);
+
 
 CREATE VIEW albums AS SELECT DISTINCT(album_title) FROM album NATURAL JOIN song WHERE song_id IS NOT NULL;
 

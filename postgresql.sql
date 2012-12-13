@@ -10,6 +10,7 @@ CREATE TABLE folder (
 
 INSERT INTO folder VALUES (0, '', 0, 1, 1);
 
+
 CREATE TABLE playlist (
     playlist_id SERIAL PRIMARY KEY,
     playlist_name VARCHAR(512) NOT NULL,
@@ -22,6 +23,7 @@ CREATE TABLE playlist (
 INSERT INTO playlist (playlist_id, playlist_name, folder_id, list_position, list_columns)
 VALUES (0, 'Library', 0, -1, '0:40;1:150;17:60;2+:150;3:150;6:50;9:60;12:50;13:120');
 
+
 CREATE TABLE dynamic_list (
     dynamic_list_id SERIAL PRIMARY KEY,
     criteria_id INTEGER NOT NULL,
@@ -30,6 +32,7 @@ CREATE TABLE dynamic_list (
     only_checked INTEGER NOT NULL,
     UNIQUE (playlist_id)
 );
+
 
 CREATE TABLE criteria (
     criteria_id SERIAL PRIMARY KEY,
@@ -43,11 +46,13 @@ CREATE TABLE criteria (
     UNIQUE (dynamic_list_id, criteria_parent, criteria_position)
 );
 
+
 CREATE TABLE static_list (
     static_list_id SERIAL PRIMARY KEY,
     playlist_id INTEGER NOT NULL,
     UNIQUE (playlist_id)
 );
+
 
 CREATE TABLE static_list_song (
     static_list_id INTEGER NOT NULL,
@@ -55,6 +60,7 @@ CREATE TABLE static_list_song (
     song_position INTEGER NOT NULL,
     UNIQUE (static_list_id, song_position)
 );
+
 
 CREATE TABLE song (
     song_id SERIAL PRIMARY KEY,
@@ -100,6 +106,7 @@ CREATE TABLE song (
     song_album_peak FLOAT NOT NULL
 );
 
+
 CREATE TABLE album (
     album_id SERIAL PRIMARY KEY,
     album_title VARCHAR(512) NOT NULL,
@@ -109,14 +116,26 @@ CREATE TABLE album (
 
 INSERT INTO album (album_id, album_title, album_title_sort) VALUES (0, '', '');
 
-CREATE TABLE artist (
-    artist_id SERIAL PRIMARY KEY,
-    artist_name VARCHAR(512) NOT NULL,
-    artist_name_sort VARCHAR(512),
-    UNIQUE (artist_name, artist_name_sort)
+
+CREATE SEQUENCE artist_artist_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+
+CREATE TABLE artist
+(
+  artist_id integer NOT NULL DEFAULT nextval('artist_artist_id_seq'::regclass),
+  artist_id serial NOT NULL,
+  artist_name character varying(512) NOT NULL,
+  artist_name_sort character varying(512),
+  CONSTRAINT artist_pkey PRIMARY KEY (artist_id),
+  CONSTRAINT artist_artist_name_artist_name_sort_key UNIQUE (artist_name , artist_name_sort)
 );
 
 INSERT INTO artist (artist_id, artist_name, artist_name_sort) VALUES (0, '', '');
+
 
 CREATE TABLE genre (
     genre_id SERIAL PRIMARY KEY,
@@ -125,6 +144,7 @@ CREATE TABLE genre (
 
 INSERT INTO genre (genre_id, genre_name) VALUES (0, '');
 
+
 CREATE TABLE play (
     play_id SERIAL PRIMARY KEY,
     song_id INTEGER NOT NULL,
@@ -132,9 +152,35 @@ CREATE TABLE play (
     play_time_utc TIMESTAMP
 );
 
+
 CREATE TABLE libpath (
     path_id SERIAL PRIMARY KEY,
     path_location VARCHAR(512) NOT NULL UNIQUE
+);
+
+
+CREATE SEQUENCE equalizer_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+
+CREATE TABLE equalizer (
+    equalizer_id integer NOT NULL DEFAULT nextval('equalizer_seq'::regclass),
+    equalizer_name character varying(512) NOT NULL,
+    equalizer_val0 double precision NOT NULL DEFAULT 1.0,
+    equalizer_val1 double precision NOT NULL DEFAULT 1.0,
+    equalizer_val2 double precision NOT NULL DEFAULT 1.0,
+    equalizer_val3 double precision NOT NULL DEFAULT 1.0,
+    equalizer_val4 double precision NOT NULL DEFAULT 1.0,
+    equalizer_val5 double precision NOT NULL DEFAULT 1.0,
+    equalizer_val6 double precision NOT NULL DEFAULT 1.0,
+    equalizer_val7 double precision NOT NULL DEFAULT 1.0,
+    equalizer_val8 double precision NOT NULL DEFAULT 1.0,
+    equalizer_val9 double precision NOT NULL DEFAULT 1.0,
+    CONSTRAINT equalizer_pkey PRIMARY KEY (equalizer_id),
+    CONSTRAINT equalizer_name_key UNIQUE (equalizer_name)
 );
 
 

@@ -86,9 +86,8 @@
   - Afficher l'illustration principale dans l'onglet Résumé.
 
 - Égaliseur :
-  - Liste de préréglages.
-  - Pouvoir ajouter, modifier, et supprimer des préréglages.
-  - Associer un préréglage à chaque morceau (stocker les données d'égalisation avec la médiathèque).
+  - Pouvoir supprimer des préréglages.
+  - Associer un préréglage à chaque morceau.
 
 - Récupérer les pochettes depuis Internet.
 - Option "Lecture seule" (désactiver l'écriture des métadonnées et le déplacement des fichiers).

@@ -5,9 +5,17 @@
   <property name="windowModality">
    <enum>Qt::WindowModal</enum>
   </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>200</height>
+   </rect>
+  </property>
   <property name="minimumSize">
    <size>
-    <width>0</width>
+    <width>400</width>
     <height>150</height>
    </size>
   </property>
@@ -15,6 +23,34 @@
    <string>Equalizer</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0" colspan="12">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QCheckBox" name="enableEqualizer">
+       <property name="font">
+        <font>
+         <pointsize>7</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Enable equalizer</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="listPreset">
+       <property name="maxVisibleItems">
+        <number>20</number>
+       </property>
+       <property name="sizeAdjustPolicy">
+        <enum>QComboBox::AdjustToContents</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
    <item row="1" column="8" rowspan="3">
     <widget class="QSlider" name="slider6">
      <property name="minimum">
@@ -183,20 +219,6 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="0" colspan="12">
-    <widget class="QCheckBox" name="enableEqualizer">
-     <property name="font">
-      <font>
-       <pointsize>7</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>Enable equalizer</string>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="9" rowspan="3">
     <widget class="QSlider" name="slider7">
      <property name="minimum">
@@ -253,40 +275,6 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="label_2">
-     <property name="font">
-      <font>
-       <pointsize>7</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>-10 dB</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignBottom|Qt::AlignRight|Qt::AlignTrailing</set>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="label_3">
-     <property name="font">
-      <font>
-       <pointsize>7</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>0 dB</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="7" rowspan="3">
     <widget class="QSlider" name="slider5">
      <property name="minimum">
@@ -316,7 +304,7 @@
     </widget>
    </item>
    <item row="1" column="0">
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="lbl10p">
      <property name="font">
       <font>
        <pointsize>7</pointsize>
@@ -329,13 +317,6 @@
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="0" colspan="12">
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="standardButtons">
-      <set>QDialogButtonBox::NoButton</set>
      </property>
     </widget>
    </item>
@@ -367,14 +348,8 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="2">
-    <widget class="QLabel" name="label_4">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
+   <item row="2" column="0">
+    <widget class="QLabel" name="lbl0dB">
      <property name="font">
       <font>
        <pointsize>7</pointsize>
@@ -383,21 +358,15 @@
       </font>
      </property>
      <property name="text">
-      <string>32</string>
+      <string>0 dB</string>
      </property>
      <property name="alignment">
-      <set>Qt::AlignCenter</set>
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
    </item>
-   <item row="4" column="3">
-    <widget class="QLabel" name="label_5">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
+   <item row="3" column="0">
+    <widget class="QLabel" name="lbl10m">
      <property name="font">
       <font>
        <pointsize>7</pointsize>
@@ -406,61 +375,15 @@
       </font>
      </property>
      <property name="text">
-      <string>64</string>
+      <string>-10 dB</string>
      </property>
      <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="4">
-    <widget class="QLabel" name="label_6">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>7</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>125</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="5">
-    <widget class="QLabel" name="label_7">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>7</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>250</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
+      <set>Qt::AlignBottom|Qt::AlignRight|Qt::AlignTrailing</set>
      </property>
     </widget>
    </item>
    <item row="4" column="6">
-    <widget class="QLabel" name="label_8">
+    <widget class="QLabel" name="lbl500">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -483,7 +406,7 @@
     </widget>
    </item>
    <item row="4" column="7">
-    <widget class="QLabel" name="label_9">
+    <widget class="QLabel" name="lbl1K">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -506,7 +429,7 @@
     </widget>
    </item>
    <item row="4" column="8">
-    <widget class="QLabel" name="label_10">
+    <widget class="QLabel" name="lbl2K">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -529,7 +452,7 @@
     </widget>
    </item>
    <item row="4" column="9">
-    <widget class="QLabel" name="label_11">
+    <widget class="QLabel" name="lbl4K">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -552,7 +475,7 @@
     </widget>
    </item>
    <item row="4" column="10">
-    <widget class="QLabel" name="label_12">
+    <widget class="QLabel" name="lbl8K">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -575,7 +498,7 @@
     </widget>
    </item>
    <item row="4" column="11">
-    <widget class="QLabel" name="label_13">
+    <widget class="QLabel" name="lbl16K">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -597,10 +520,108 @@
      </property>
     </widget>
    </item>
+   <item row="4" column="2">
+    <widget class="QLabel" name="lbl32">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>7</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>32</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="3">
+    <widget class="QLabel" name="lbl64">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>7</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>64</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="4">
+    <widget class="QLabel" name="lbl125">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>7</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>125</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="5">
+    <widget class="QLabel" name="lbl250">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>7</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>250</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0" colspan="12">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::NoButton</set>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <tabstops>
-  <tabstop>enableEqualizer</tabstop>
   <tabstop>slider0</tabstop>
   <tabstop>slider1</tabstop>
   <tabstop>slider2</tabstop>

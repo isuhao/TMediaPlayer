@@ -123,6 +123,29 @@ public:
 
     inline QList<TNotification> getNotifications() const;
 
+    /// Structure contenant un réglage d'égaliseur.
+    struct TEqualizer
+    {
+        int id;          ///< Identifiant du réglage en base de données.
+        QString name;    ///< Nom du réglage.
+        float value[10]; ///< Valeurs de gain de l'égaliseur.
+
+        /// Constructeur par défaut.
+        TEqualizer() : id(0)
+        {
+            for (std::size_t f = 0; f < 10; ++f)
+                value[f] = 1.0f;
+        }
+    };
+
+    inline QList<TEqualizer> getEqualizerList() const;
+    QString getEqualizerName(int id) const;
+    int getEqualizerIdFromName(const QString& name) const;
+    TEqualizer getEqualizerFromId(int id) const;
+    inline TEqualizer getCurrentEqualizer() const;
+    void saveEqualizer(TEqualizer& equalizer);
+    void setCurrentEqualizer(const TEqualizer& equalizer);
+
     // Filtre de recherche
     QString getFilter() const;
 
@@ -273,6 +296,10 @@ protected:
     void startPlay();
     void setState(State state);
 
+    void createDatabaseSQLite();
+    void createDatabaseMySQL();
+    void createDatabasePostgreSQL();
+
     virtual void closeEvent(QCloseEvent * event);
 
 private:
@@ -298,10 +325,16 @@ private:
     bool m_isShuffle;                   ///< Indique si la lecture aléatoire est activée.
     bool m_isMute;                      ///< Indique si le son est coupé.
     int m_volume;                       ///< Volume sonore (entre 0 et 100).
+
+    // Égaliseur
     double m_equalizerGains[10];        ///< Gains de l'égaliseur.
-    FMOD::DSP * m_dsp[10];
+    FMOD::DSP * m_dsp[10];              ///< Gains de l'égaliseur pour FMOD.
+
+    QList<TEqualizer> m_equalizers;     ///< Liste des préréglages d'égaliseur.
+    TEqualizer m_currentEqualizer;      ///< Égaliseur actuel.
+
     QMap<QString, QFile *> m_logList;   ///< Liste des fichiers de log ouverts.
-    QString m_applicationPath;
+    QString m_applicationPath;          ///< Répertoire contenant l'application.
     QStringList m_libraryFolders;       ///< Liste des répertoires de la médiathèque.
 
     QList<TNotification> m_infosNotified; ///< Liste des notifications.
@@ -325,9 +358,21 @@ private:
 };
 
 
-QList<CApplication::TNotification> CApplication::getNotifications(void) const
+QList<CApplication::TNotification> CApplication::getNotifications() const
 {
     return m_infosNotified;
+}
+
+
+inline QList<CApplication::TEqualizer> CApplication::getEqualizerList() const
+{
+    return m_equalizers;
+}
+
+
+inline CApplication::TEqualizer CApplication::getCurrentEqualizer() const
+{
+    return m_currentEqualizer;
 }
 
 
@@ -337,7 +382,7 @@ QList<CApplication::TNotification> CApplication::getNotifications(void) const
  * \return Chanson en cours de lecture, ou NULL.
  */
 
-inline CSongTableItem * CApplication::getCurrentSongItem(void) const
+inline CSongTableItem * CApplication::getCurrentSongItem() const
 {
     return m_currentSongItem;
 }
@@ -349,7 +394,7 @@ inline CSongTableItem * CApplication::getCurrentSongItem(void) const
  * \return Liste de morceaux en cours de lecture, ou NULL.
  */
 
-inline CSongTable * CApplication::getCurrentSongTable(void) const
+inline CSongTable * CApplication::getCurrentSongTable() const
 {
     return m_currentSongTable;
 }
@@ -361,7 +406,7 @@ inline CSongTable * CApplication::getCurrentSongTable(void) const
  * \return Médiathèque, qui contient l'ensemble des morceaux.
  */
 
-inline CLibrary * CApplication::getLibrary(void) const
+inline CLibrary * CApplication::getLibrary() const
 {
     return m_library;
 }
@@ -373,7 +418,7 @@ inline CLibrary * CApplication::getLibrary(void) const
  * \return Liste de morceaux affichée.
  */
 
-inline CSongTable * CApplication::getDisplayedSongTable(void) const
+inline CSongTable * CApplication::getDisplayedSongTable() const
 {
     return m_displayedSongTable;
 }
@@ -391,7 +436,7 @@ inline CDialogEditSong * CApplication::getDialogEditSong(void) const
  * \return Booléen.
  */
 
-inline bool CApplication::isPlaying(void) const
+inline bool CApplication::isPlaying() const
 {
     return (m_state == Playing);
 }
@@ -403,7 +448,7 @@ inline bool CApplication::isPlaying(void) const
  * \return Booléen.
  */
 
-inline bool CApplication::isPaused(void) const
+inline bool CApplication::isPaused() const
 {
     return (m_state == Paused);
 }
@@ -415,7 +460,7 @@ inline bool CApplication::isPaused(void) const
  * \return Booléen.
  */
 
-inline bool CApplication::isStopped(void) const
+inline bool CApplication::isStopped() const
 {
     return (m_state == Stopped);
 }

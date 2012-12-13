@@ -33,17 +33,18 @@ class CDialogEqualizer : public QDialog
 
 public:
 
-    CDialogEqualizer(CApplication * application);
-    ~CDialogEqualizer();
+    explicit CDialogEqualizer(CApplication * application);
+    virtual ~CDialogEqualizer();
 
 public slots:
 
-    void reset(void);
+    void reset();
 
 protected:
 
     int convertGainToSliderValue(double gain) const;
     double convertSliderValueToGain(int value) const;
+    void resetPresetList();
 
 protected slots:
 
@@ -57,6 +58,8 @@ protected slots:
     void onSlider7Change(int value);
     void onSlider8Change(int value);
     void onSlider9Change(int value);
+    void onListPresetChange(int index);
+    void onPresetSave(const QString& name);
 
 private:
 
