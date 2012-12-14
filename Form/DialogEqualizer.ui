@@ -64,19 +64,19 @@
     </widget>
    </item>
    <item row="0" column="0" colspan="12">
-      <widget class="QCheckBox" name="enableEqualizer">
-       <property name="font">
-        <font>
-         <pointsize>7</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>Enable equalizer</string>
-       </property>
-      </widget>
-     </item>
+    <widget class="QCheckBox" name="enableEqualizer">
+     <property name="font">
+      <font>
+       <pointsize>7</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Enable equalizer</string>
+     </property>
+    </widget>
+   </item>
    <item row="2" column="8" rowspan="3">
     <widget class="QSlider" name="slider6">
      <property name="minimum">
@@ -644,7 +644,7 @@
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>20</width>
+         <width>10</width>
          <height>10</height>
         </size>
        </property>

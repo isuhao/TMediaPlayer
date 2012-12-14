@@ -21,5 +21,6 @@
         <file alias="repeat_on">Resources/icon_repeat_on.png</file>
         <file alias="shuffle_off">Resources/icon_shuffle_off.png</file>
         <file alias="shuffle_on">Resources/icon_shuffle_on.png</file>
+        <file alias="equalizer">Resources/equalizer.png</file>
     </qresource>
 </RCC>

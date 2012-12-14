@@ -143,14 +143,17 @@ CApplication::CApplication() :
     connect(m_uiWidget->actionPreferences, SIGNAL(triggered()), this, SLOT(openDialogPreferences()));
 
     connect(m_uiWidget->actionPlay, SIGNAL(triggered()), this, SLOT(togglePlay()));
+    //connect(m_uiWidget->actionPause, SIGNAL(triggered()), this, SLOT(pause()));
     connect(m_uiWidget->actionStop, SIGNAL(triggered()), this, SLOT(stop()));
     connect(m_uiWidget->actionPrevious, SIGNAL(triggered()), this, SLOT(previousSong()));
     connect(m_uiWidget->actionNext, SIGNAL(triggered()), this, SLOT(nextSong()));
     connect(m_uiWidget->actionRepeat, SIGNAL(triggered(bool)), this, SLOT(setRepeat(bool)));
     connect(m_uiWidget->actionShuffle, SIGNAL(triggered(bool)), this, SLOT(setShuffle(bool)));
+    //connect(m_uiWidget->actionMtute, SIGNAL(triggered()), this, SLOT(mute()));
     connect(m_uiWidget->actionEqualizer, SIGNAL(triggered()), this, SLOT(openDialogEqualizer()));
 
     connect(m_uiWidget->actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+    //connect(m_uiWidget->actionAbout, SIGNAL(triggered()), qApp, SLOT(about()));
 
 
     connect(this, SIGNAL(songPlayStart(CSong *)), this, SLOT(updateSongDescription(CSong *)));
@@ -3250,6 +3253,7 @@ void CApplication::setState(State state)
             m_uiControl->btnPrevious->setEnabled(true);
             m_uiControl->btnNext->setEnabled(true);
             m_uiWidget->actionPlay->setText(tr("Pause"));
+            m_uiWidget->actionPlay->setIcon(QPixmap(":/icons/pause"));
             break;
 
         case Paused:
@@ -3258,6 +3262,7 @@ void CApplication::setState(State state)
             m_uiControl->btnPrevious->setEnabled(true);
             m_uiControl->btnNext->setEnabled(true);
             m_uiWidget->actionPlay->setText(tr("Play"));
+            m_uiWidget->actionPlay->setIcon(QPixmap(":/icons/play"));
             break;
 
         case Stopped:
@@ -3266,6 +3271,7 @@ void CApplication::setState(State state)
             m_uiControl->btnPrevious->setEnabled(false);
             m_uiControl->btnNext->setEnabled(false);
             m_uiWidget->actionPlay->setText(tr("Play"));
+            m_uiWidget->actionPlay->setIcon(QPixmap(":/icons/play"));
             break;
     }
 }

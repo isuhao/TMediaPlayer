@@ -130,11 +130,19 @@
    </property>
   </action>
   <action name="actionNewPlayList">
+   <property name="icon">
+    <iconset resource="../TMediaPlayer.qrc">
+     <normaloff>:/icons/playlist</normaloff>:/icons/playlist</iconset>
+   </property>
    <property name="text">
     <string>New playlist...</string>
    </property>
   </action>
   <action name="actionNewDynamicPlayList">
+   <property name="icon">
+    <iconset resource="../TMediaPlayer.qrc">
+     <normaloff>:/icons/dynamic_list</normaloff>:/icons/dynamic_list</iconset>
+   </property>
    <property name="text">
     <string>New dynamic playlist...</string>
    </property>
@@ -165,6 +173,10 @@
    </property>
   </action>
   <action name="actionPlay">
+   <property name="icon">
+    <iconset resource="../TMediaPlayer.qrc">
+     <normaloff>:/icons/play</normaloff>:/icons/play</iconset>
+   </property>
    <property name="text">
     <string>Play</string>
    </property>
@@ -173,21 +185,37 @@
    </property>
   </action>
   <action name="actionPause">
+   <property name="icon">
+    <iconset resource="../TMediaPlayer.qrc">
+     <normaloff>:/icons/pause</normaloff>:/icons/pause</iconset>
+   </property>
    <property name="text">
     <string>Pause</string>
    </property>
   </action>
   <action name="actionStop">
+   <property name="icon">
+    <iconset resource="../TMediaPlayer.qrc">
+     <normaloff>:/icons/stop</normaloff>:/icons/stop</iconset>
+   </property>
    <property name="text">
     <string>Stop</string>
    </property>
   </action>
   <action name="actionPrevious">
+   <property name="icon">
+    <iconset resource="../TMediaPlayer.qrc">
+     <normaloff>:/icons/previous</normaloff>:/icons/previous</iconset>
+   </property>
    <property name="text">
     <string>Previous</string>
    </property>
   </action>
   <action name="actionNext">
+   <property name="icon">
+    <iconset resource="../TMediaPlayer.qrc">
+     <normaloff>:/icons/next</normaloff>:/icons/next</iconset>
+   </property>
    <property name="text">
     <string>Next</string>
    </property>
@@ -196,6 +224,10 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="../TMediaPlayer.qrc">
+     <normaloff>:/icons/shuffle_on</normaloff>:/icons/shuffle_on</iconset>
+   </property>
    <property name="text">
     <string>Shuffle</string>
    </property>
@@ -203,6 +235,10 @@
   <action name="actionRepeat">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../TMediaPlayer.qrc">
+     <normaloff>:/icons/repeat_on</normaloff>:/icons/repeat_on</iconset>
    </property>
    <property name="text">
     <string>Repeat</string>
@@ -228,6 +264,10 @@
    </property>
   </action>
   <action name="actionNewFolder">
+   <property name="icon">
+    <iconset resource="../TMediaPlayer.qrc">
+     <normaloff>:/icons/folder_close</normaloff>:/icons/folder_close</iconset>
+   </property>
    <property name="text">
     <string>New folder...</string>
    </property>
@@ -238,6 +278,10 @@
    </property>
   </action>
   <action name="actionEqualizer">
+   <property name="icon">
+    <iconset resource="../TMediaPlayer.qrc">
+     <normaloff>:/icons/equalizer</normaloff>:/icons/equalizer</iconset>
+   </property>
    <property name="text">
     <string>Equalizer...</string>
    </property>
