@@ -1152,7 +1152,7 @@ int CApplication::getArtistId(const QString& name, const QString& nameSort)
 
     if (m_dataBase.driverName() == "QPSQL")
     {
-        query.prepare("SELECT currval('artist_artist_id_seq')");
+        query.prepare("SELECT currval('artist_seq')");
 
         if (!query.exec())
         {
@@ -1218,7 +1218,7 @@ int CApplication::getAlbumId(const QString& title, const QString& titleSort)
 
     if (m_dataBase.driverName() == "QPSQL")
     {
-        query.prepare("SELECT currval('album_album_id_seq')");
+        query.prepare("SELECT currval('album_seq')");
 
         if (!query.exec())
         {
@@ -1280,7 +1280,7 @@ int CApplication::getGenreId(const QString& name)
 
     if (m_dataBase.driverName() == "QPSQL")
     {
-        query.prepare("SELECT currval('genre_genre_id_seq')");
+        query.prepare("SELECT currval('genre_seq')");
 
         if (!query.exec())
         {
@@ -3273,8 +3273,6 @@ void CApplication::setState(State state)
 
 /**
  * Crée la structure de la base de données pour SQLite.
- *
- * \todo Implémentation.
  */
 
 void CApplication::createDatabaseSQLite()
@@ -3286,7 +3284,7 @@ void CApplication::createDatabaseSQLite()
     {
         if (!query.exec("CREATE TABLE folder ("
                             "folder_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                            "folder_name VARCHAR NOT NULL,"
+                            "folder_name VARCHAR(512) NOT NULL,"
                             "folder_parent INTEGER NOT NULL,"
                             "folder_position INTEGER NOT NULL,"
                             "folder_expanded INTEGER NOT NULL"
@@ -3306,10 +3304,10 @@ void CApplication::createDatabaseSQLite()
     {
         if (!query.exec("CREATE TABLE playlist ("
                             "playlist_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                            "playlist_name VARCHAR NOT NULL,"
+                            "playlist_name VARCHAR(512) NOT NULL,"
                             "folder_id INTEGER NOT NULL,"
                             "list_position INTEGER NOT NULL,"
-                            "list_columns VARCHAR NOT NULL"
+                            "list_columns VARCHAR(512) NOT NULL"
                             //",UNIQUE (folder_id, list_position)"
                         ")"))
         {
@@ -3317,7 +3315,7 @@ void CApplication::createDatabaseSQLite()
         }
 
         if (!query.exec("INSERT INTO playlist (playlist_id, playlist_name, folder_id, list_position, list_columns) "
-                        "VALUES (0, 'Library', 0, 0, '')"))
+                        "VALUES (0, 'Library', 0, -1, '0:40;1:150;17:60;2+:150;3:150;6:50;9:60;12:50;13:120')"))
         {
             showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         }
@@ -3347,8 +3345,8 @@ void CApplication::createDatabaseSQLite()
                             "criteria_position INTEGER NOT NULL,"
                             "criteria_type INTEGER NOT NULL,"
                             "criteria_condition INTEGER NOT NULL,"
-                            "criteria_value1 VARCHAR,"
-                            "criteria_value2 VARCHAR,"
+                            "criteria_value1 VARCHAR(512),"
+                            "criteria_value2 VARCHAR(512),"
                             "UNIQUE (dynamic_list_id, criteria_parent, criteria_position)"
                         ")"))
         {
@@ -3385,7 +3383,7 @@ void CApplication::createDatabaseSQLite()
     {
         if (!query.exec("CREATE TABLE song ("
                             "song_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                            "song_filename VARCHAR NOT NULL UNIQUE,"
+                            "song_filename VARCHAR(512) NOT NULL UNIQUE,"
                             "song_filesize INTEGER NOT NULL,"
                             "song_bitrate INTEGER NOT NULL,"
                             "song_sample_rate INTEGER NOT NULL,"
@@ -3395,15 +3393,15 @@ void CApplication::createDatabaseSQLite()
                             "song_creation DATETIME NOT NULL,"
                             "song_modification DATETIME NOT NULL,"
                             "song_enabled INTEGER NOT NULL,"
-                            "song_title VARCHAR NOT NULL,"
-                            "song_title_sort VARCHAR NOT NULL,"
-                            "song_subtitle VARCHAR NOT NULL,"
-                            "song_grouping VARCHAR NOT NULL,"
+                            "song_title VARCHAR(512) NOT NULL,"
+                            "song_title_sort VARCHAR(512) NOT NULL,"
+                            "song_subtitle VARCHAR(512) NOT NULL,"
+                            "song_grouping VARCHAR(512) NOT NULL,"
                             "artist_id INTEGER NOT NULL,"
                             "album_id INTEGER NOT NULL,"
                             "album_artist_id INTEGER NOT NULL,"
-                            "song_composer VARCHAR NOT NULL,"
-                            "song_composer_sort VARCHAR NOT NULL,"
+                            "song_composer VARCHAR(512) NOT NULL,"
+                            "song_composer_sort VARCHAR(512) NOT NULL,"
                             "song_year INTEGER NOT NULL,"
                             "song_track_number INTEGER NOT NULL,"
                             "song_track_count INTEGER NOT NULL,"
@@ -3411,11 +3409,11 @@ void CApplication::createDatabaseSQLite()
                             "song_disc_count INTEGER NOT NULL,"
                             "genre_id INTEGER NOT NULL,"
                             "song_rating INTEGER NOT NULL,"
-                            "song_comments VARCHAR NOT NULL,"
+                            "song_comments TEXT NOT NULL,"
                             "song_bpm INTEGER NOT NULL,"
                             "song_lyrics TEXT NOT NULL,"
                             "song_language VARCHAR(2) NOT NULL,"
-                            "song_lyricist VARCHAR NOT NULL,"
+                            "song_lyricist VARCHAR(512) NOT NULL,"
                             "song_compilation INTEGER NOT NULL,"
                             "song_skip_shuffle INTEGER NOT NULL,"
                             "song_play_count INTEGER NOT NULL,"
@@ -3435,8 +3433,8 @@ void CApplication::createDatabaseSQLite()
     {
         if (!query.exec("CREATE TABLE album ("
                             "album_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                            "album_title VARCHAR NOT NULL,"
-                            "album_title_sort VARCHAR,"
+                            "album_title VARCHAR(512) NOT NULL,"
+                            "album_title_sort VARCHAR(512),"
                             "UNIQUE (album_title, album_title_sort)"
                         ")"))
         {
@@ -3453,8 +3451,8 @@ void CApplication::createDatabaseSQLite()
     {
         if (!query.exec("CREATE TABLE artist ("
                             "artist_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                            "artist_name VARCHAR NOT NULL,"
-                            "artist_name_sort VARCHAR,"
+                            "artist_name VARCHAR(512) NOT NULL,"
+                            "artist_name_sort VARCHAR(512),"
                             "UNIQUE (artist_name, artist_name_sort)"
                         ")"))
         {
@@ -3471,7 +3469,7 @@ void CApplication::createDatabaseSQLite()
     {
         if (!query.exec("CREATE TABLE genre ("
                             "genre_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                            "genre_name VARCHAR NOT NULL UNIQUE"
+                            "genre_name VARCHAR(512) NOT NULL UNIQUE"
                         ")"))
         {
             showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
@@ -3486,6 +3484,7 @@ void CApplication::createDatabaseSQLite()
     if (!tables.contains("play"))
     {
         if (!query.exec("CREATE TABLE play ("
+                            "play_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
                             "song_id INTEGER NOT NULL,"
                             "play_time TIMESTAMP,"
                             "play_time_utc TIMESTAMP"
@@ -3494,10 +3493,45 @@ void CApplication::createDatabaseSQLite()
             showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         }
     }
+
+    if (!tables.contains("libpath"))
+    {
+        if (!query.exec("CREATE TABLE libpath ("
+                            "path_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+                            "path_location VARCHAR(512) NOT NULL UNIQUE"
+                        ")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
+
+    if (!tables.contains("equalizer"))
+    {
+        if (!query.exec("CREATE TABLE equalizer ("
+                            "equalizer_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+                            "equalizer_name VARCHAR(512) NOT NULL UNIQUE,"
+                            "equalizer_val0 FLOAT NOT NULL DEFAULT 1.0,"
+                            "equalizer_val1 FLOAT NOT NULL DEFAULT 1.0,"
+                            "equalizer_val2 FLOAT NOT NULL DEFAULT 1.0,"
+                            "equalizer_val3 FLOAT NOT NULL DEFAULT 1.0,"
+                            "equalizer_val4 FLOAT NOT NULL DEFAULT 1.0,"
+                            "equalizer_val5 FLOAT NOT NULL DEFAULT 1.0,"
+                            "equalizer_val6 FLOAT NOT NULL DEFAULT 1.0,"
+                            "equalizer_val7 FLOAT NOT NULL DEFAULT 1.0,"
+                            "equalizer_val8 FLOAT NOT NULL DEFAULT 1.0,"
+                            "equalizer_val9 FLOAT NOT NULL DEFAULT 1.0"
+                        ")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
 }
 
 
-/// \todo Implémentation.
+/**
+ * Crée la structure de la base de données pour MySQL.
+ */
+
 void CApplication::createDatabaseMySQL()
 {
     QSqlQuery query(m_dataBase);
@@ -3507,7 +3541,7 @@ void CApplication::createDatabaseMySQL()
     {
         if (!query.exec("CREATE TABLE folder ("
                             "folder_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
-                            "folder_name VARCHAR NOT NULL,"
+                            "folder_name VARCHAR(512) NOT NULL,"
                             "folder_parent INTEGER NOT NULL,"
                             "folder_position INTEGER NOT NULL,"
                             "folder_expanded INTEGER NOT NULL"
@@ -3527,10 +3561,10 @@ void CApplication::createDatabaseMySQL()
     {
         if (!query.exec("CREATE TABLE playlist ("
                             "playlist_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
-                            "playlist_name VARCHAR NOT NULL,"
+                            "playlist_name VARCHAR(512) NOT NULL,"
                             "folder_id INTEGER NOT NULL,"
                             "list_position INTEGER NOT NULL,"
-                            "list_columns VARCHAR NOT NULL"
+                            "list_columns VARCHAR(512) NOT NULL"
                             //",UNIQUE (folder_id, list_position)"
                         ")"))
         {
@@ -3538,7 +3572,7 @@ void CApplication::createDatabaseMySQL()
         }
 
         if (!query.exec("INSERT INTO playlist (playlist_id, playlist_name, folder_id, list_position, list_columns) "
-                        "VALUES (0, 'Library', 0, 0, '')"))
+                        "VALUES (0, 'Library', 0, -1, '0:40;1:150;17:60;2+:150;3:150;6:50;9:60;12:50;13:120')"))
         {
             showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         }
@@ -3568,8 +3602,8 @@ void CApplication::createDatabaseMySQL()
                             "criteria_position INTEGER NOT NULL,"
                             "criteria_type INTEGER NOT NULL,"
                             "criteria_condition INTEGER NOT NULL,"
-                            "criteria_value1 VARCHAR,"
-                            "criteria_value2 VARCHAR,"
+                            "criteria_value1 VARCHAR(512),"
+                            "criteria_value2 VARCHAR(512),"
                             "UNIQUE (dynamic_list_id, criteria_parent, criteria_position)"
                         ")"))
         {
@@ -3606,7 +3640,7 @@ void CApplication::createDatabaseMySQL()
     {
         if (!query.exec("CREATE TABLE song ("
                             "song_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
-                            "song_filename VARCHAR NOT NULL UNIQUE,"
+                            "song_filename VARCHAR(512) NOT NULL UNIQUE,"
                             "song_filesize INTEGER NOT NULL,"
                             "song_bitrate INTEGER NOT NULL,"
                             "song_sample_rate INTEGER NOT NULL,"
@@ -3616,15 +3650,15 @@ void CApplication::createDatabaseMySQL()
                             "song_creation DATETIME NOT NULL,"
                             "song_modification DATETIME NOT NULL,"
                             "song_enabled INTEGER NOT NULL,"
-                            "song_title VARCHAR NOT NULL,"
-                            "song_title_sort VARCHAR NOT NULL,"
-                            "song_subtitle VARCHAR NOT NULL,"
-                            "song_grouping VARCHAR NOT NULL,"
+                            "song_title VARCHAR(512) NOT NULL,"
+                            "song_title_sort VARCHAR(512) NOT NULL,"
+                            "song_subtitle VARCHAR(512) NOT NULL,"
+                            "song_grouping VARCHAR(512) NOT NULL,"
                             "artist_id INTEGER NOT NULL,"
                             "album_id INTEGER NOT NULL,"
                             "album_artist_id INTEGER NOT NULL,"
-                            "song_composer VARCHAR NOT NULL,"
-                            "song_composer_sort VARCHAR NOT NULL,"
+                            "song_composer VARCHAR(512) NOT NULL,"
+                            "song_composer_sort VARCHAR(512) NOT NULL,"
                             "song_year INTEGER NOT NULL,"
                             "song_track_number INTEGER NOT NULL,"
                             "song_track_count INTEGER NOT NULL,"
@@ -3632,11 +3666,11 @@ void CApplication::createDatabaseMySQL()
                             "song_disc_count INTEGER NOT NULL,"
                             "genre_id INTEGER NOT NULL,"
                             "song_rating INTEGER NOT NULL,"
-                            "song_comments VARCHAR NOT NULL,"
+                            "song_comments TEXT NOT NULL,"
                             "song_bpm INTEGER NOT NULL,"
                             "song_lyrics TEXT NOT NULL,"
                             "song_language VARCHAR(2) NOT NULL,"
-                            "song_lyricist VARCHAR NOT NULL,"
+                            "song_lyricist VARCHAR(512) NOT NULL,"
                             "song_compilation INTEGER NOT NULL,"
                             "song_skip_shuffle INTEGER NOT NULL,"
                             "song_play_count INTEGER NOT NULL,"
@@ -3656,8 +3690,8 @@ void CApplication::createDatabaseMySQL()
     {
         if (!query.exec("CREATE TABLE album ("
                             "album_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
-                            "album_title VARCHAR NOT NULL,"
-                            "album_title_sort VARCHAR,"
+                            "album_title VARCHAR(512) NOT NULL,"
+                            "album_title_sort VARCHAR(512),"
                             "UNIQUE (album_title, album_title_sort)"
                         ")"))
         {
@@ -3674,8 +3708,8 @@ void CApplication::createDatabaseMySQL()
     {
         if (!query.exec("CREATE TABLE artist ("
                             "artist_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
-                            "artist_name VARCHAR NOT NULL,"
-                            "artist_name_sort VARCHAR,"
+                            "artist_name VARCHAR(512) NOT NULL,"
+                            "artist_name_sort VARCHAR(512),"
                             "UNIQUE (artist_name, artist_name_sort)"
                         ")"))
         {
@@ -3692,7 +3726,7 @@ void CApplication::createDatabaseMySQL()
     {
         if (!query.exec("CREATE TABLE genre ("
                             "genre_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
-                            "genre_name VARCHAR NOT NULL UNIQUE"
+                            "genre_name VARCHAR(512) NOT NULL UNIQUE"
                         ")"))
         {
             showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
@@ -3707,6 +3741,7 @@ void CApplication::createDatabaseMySQL()
     if (!tables.contains("play"))
     {
         if (!query.exec("CREATE TABLE play ("
+                            "play_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
                             "song_id INTEGER NOT NULL,"
                             "play_time TIMESTAMP,"
                             "play_time_utc TIMESTAMP"
@@ -3715,16 +3750,349 @@ void CApplication::createDatabaseMySQL()
             showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         }
     }
+
+    if (!tables.contains("libpath"))
+    {
+        if (!query.exec("CREATE TABLE libpath ("
+                            "path_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
+                            "path_location VARCHAR(512) NOT NULL UNIQUE"
+                        ")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
+
+    if (!tables.contains("equalizer"))
+    {
+        if (!query.exec("CREATE TABLE equalizer ("
+                            "equalizer_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
+                            "equalizer_name VARCHAR(512) NOT NULL UNIQUE,"
+                            "equalizer_val0 FLOAT NOT NULL DEFAULT 1.0,"
+                            "equalizer_val1 FLOAT NOT NULL DEFAULT 1.0,"
+                            "equalizer_val2 FLOAT NOT NULL DEFAULT 1.0,"
+                            "equalizer_val3 FLOAT NOT NULL DEFAULT 1.0,"
+                            "equalizer_val4 FLOAT NOT NULL DEFAULT 1.0,"
+                            "equalizer_val5 FLOAT NOT NULL DEFAULT 1.0,"
+                            "equalizer_val6 FLOAT NOT NULL DEFAULT 1.0,"
+                            "equalizer_val7 FLOAT NOT NULL DEFAULT 1.0,"
+                            "equalizer_val8 FLOAT NOT NULL DEFAULT 1.0,"
+                            "equalizer_val9 FLOAT NOT NULL DEFAULT 1.0"
+                        ")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
 }
 
 
-/// \todo Implémentation.
+/**
+ * Crée la structure de la base de données pour PostgreSQL.
+ */
+
 void CApplication::createDatabasePostgreSQL()
 {
     QSqlQuery query(m_dataBase);
     QStringList tables = m_dataBase.tables(QSql::Tables);
 
-    //...
+    if (!tables.contains("folder"))
+    {
+        if (!query.exec("CREATE TABLE folder ("
+                            "folder_id SERIAL PRIMARY KEY,"
+                            "folder_name VARCHAR(512) NOT NULL,"
+                            "folder_parent INTEGER NOT NULL,"
+                            "folder_position INTEGER NOT NULL,"
+                            "folder_expanded INTEGER NOT NULL"
+                            //",UNIQUE (folder_parent, folder_position)"
+                        ")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+
+        // Renommage de la séquence
+        if (!query.exec("ALTER TABLE folder_folder_id_seq RENAME TO folder_seq"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+
+        if (!query.exec("INSERT INTO folder VALUES (0, '', 0, 1, 1)"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
+
+    if (!tables.contains("playlist"))
+    {
+        if (!query.exec("CREATE TABLE playlist ("
+                            "playlist_id SERIAL PRIMARY KEY,"
+                            "playlist_name VARCHAR(512) NOT NULL,"
+                            "folder_id INTEGER NOT NULL,"
+                            "list_position INTEGER NOT NULL,"
+                            "list_columns VARCHAR(512) NOT NULL"
+                            //",UNIQUE (folder_id, list_position)"
+                        ")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+
+        if (!query.exec("INSERT INTO playlist (playlist_id, playlist_name, folder_id, list_position, list_columns)"
+                        "VALUES (0, 'Library', 0, -1, '0:40;1:150;17:60;2+:150;3:150;6:50;9:60;12:50;13:120')"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
+
+    if (!tables.contains("dynamic_list"))
+    {
+        if (!query.exec("CREATE TABLE dynamic_list ("
+                            "dynamic_list_id SERIAL PRIMARY KEY,"
+                            "criteria_id INTEGER NOT NULL,"
+                            "playlist_id INTEGER NOT NULL,"
+                            "auto_update INTEGER NOT NULL,"
+                            "only_checked INTEGER NOT NULL,"
+                            "UNIQUE (playlist_id)"
+                        ")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+
+        // Renommage de la séquence
+        if (!query.exec("ALTER TABLE dynamic_list_dynamic_list_id_seq RENAME TO dynamic_list_seq"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
+
+    if (!tables.contains("criteria"))
+    {
+        if (!query.exec("CREATE TABLE criteria ("
+                            "criteria_id SERIAL PRIMARY KEY,"
+                            "dynamic_list_id INTEGER NOT NULL,"
+                            "criteria_parent INTEGER NOT NULL,"
+                            "criteria_position INTEGER NOT NULL,"
+                            "criteria_type INTEGER NOT NULL,"
+                            "criteria_condition INTEGER NOT NULL,"
+                            "criteria_value1 VARCHAR(512),"
+                            "criteria_value2 VARCHAR(512),"
+                            "UNIQUE (dynamic_list_id, criteria_parent, criteria_position)"
+                        ")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+
+        // Renommage de la séquence
+        if (!query.exec("ALTER TABLE criteria_criteria_id_seq RENAME TO criteria_seq"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
+
+    if (!tables.contains("static_list"))
+    {
+        if (!query.exec("CREATE TABLE static_list ("
+                            "static_list_id SERIAL PRIMARY KEY,"
+                            "playlist_id INTEGER NOT NULL,"
+                            "UNIQUE (playlist_id)"
+                        ")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+
+        // Renommage de la séquence
+        if (!query.exec("ALTER TABLE static_list_static_list_id_seq RENAME TO static_list_seq"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
+
+    if (!tables.contains("static_list_song"))
+    {
+        if (!query.exec("CREATE TABLE static_list_song ("
+                            "static_list_id INTEGER NOT NULL,"
+                            "song_id INTEGER NOT NULL,"
+                            "song_position INTEGER NOT NULL,"
+                            "UNIQUE (static_list_id, song_position)"
+                        ")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
+
+    if (!tables.contains("song"))
+    {
+        if (!query.exec("CREATE TABLE song ("
+                            "song_id SERIAL PRIMARY KEY,"
+                            "song_filename VARCHAR(512) NOT NULL UNIQUE,"
+                            "song_filesize INTEGER NOT NULL,"
+                            "song_bitrate INTEGER NOT NULL,"
+                            "song_sample_rate INTEGER NOT NULL,"
+                            "song_format INTEGER NOT NULL,"
+                            "song_channels INTEGER NOT NULL,"
+                            "song_duration INTEGER NOT NULL,"
+                            "song_creation TIMESTAMP NOT NULL,"
+                            "song_modification TIMESTAMP NOT NULL,"
+                            "song_enabled INTEGER NOT NULL,"
+                            "song_title VARCHAR(512) NOT NULL,"
+                            "song_title_sort VARCHAR(512) NOT NULL,"
+                            "song_subtitle VARCHAR(512) NOT NULL,"
+                            "song_grouping VARCHAR(512) NOT NULL,"
+                            "artist_id INTEGER NOT NULL,"
+                            "album_id INTEGER NOT NULL,"
+                            "album_artist_id INTEGER NOT NULL,"
+                            "song_composer VARCHAR(512) NOT NULL,"
+                            "song_composer_sort VARCHAR(512) NOT NULL,"
+                            "song_year INTEGER NOT NULL,"
+                            "song_track_number INTEGER NOT NULL,"
+                            "song_track_count INTEGER NOT NULL,"
+                            "song_disc_number INTEGER NOT NULL,"
+                            "song_disc_count INTEGER NOT NULL,"
+                            "genre_id INTEGER NOT NULL,"
+                            "song_rating INTEGER NOT NULL,"
+                            "song_comments TEXT NOT NULL,"
+                            "song_bpm INTEGER NOT NULL,"
+                            "song_lyrics TEXT NOT NULL,"
+                            "song_language CHAR(2) NOT NULL,"
+                            "song_lyricist VARCHAR(512) NOT NULL,"
+                            "song_compilation INTEGER NOT NULL,"
+                            "song_skip_shuffle INTEGER NOT NULL,"
+                            "song_play_count INTEGER NOT NULL,"
+                            "song_play_time TIMESTAMP,"
+                            "song_play_time_utc TIMESTAMP,"
+                            "song_track_gain FLOAT NOT NULL,"
+                            "song_track_peak FLOAT NOT NULL,"
+                            "song_album_gain FLOAT NOT NULL,"
+                            "song_album_peak FLOAT NOT NULL"
+                        ")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
+
+    if (!tables.contains("album"))
+    {
+        if (!query.exec("CREATE TABLE album ("
+                            "album_id SERIAL PRIMARY KEY,"
+                            "album_title VARCHAR(512) NOT NULL,"
+                            "album_title_sort VARCHAR(512),"
+                            "UNIQUE (album_title, album_title_sort)"
+                        ")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+
+        // Renommage de la séquence
+        if (!query.exec("ALTER TABLE album_album_id_seq RENAME TO album_seq"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+
+        if (!query.exec("INSERT INTO album (album_id, album_title, album_title_sort) VALUES (0, '', '')"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
+
+    if (!tables.contains("artist"))
+    {
+        if (!query.exec("CREATE TABLE artist ("
+                            "artist_id SERIAL PRIMARY KEY,"
+                            "artist_name character varying(512) NOT NULL,"
+                            "artist_name_sort character varying(512),"
+                            "UNIQUE (artist_name, artist_name_sort)"
+                        ")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+
+        // Renommage de la séquence
+        if (!query.exec("ALTER TABLE artist_artist_id_seq RENAME TO artist_seq"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+
+        if (!query.exec("INSERT INTO artist (artist_id, artist_name, artist_name_sort) VALUES (0, '', '')"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
+
+    if (!tables.contains("genre"))
+    {
+        if (!query.exec("CREATE TABLE genre ("
+                            "genre_id SERIAL PRIMARY KEY,"
+                            "genre_name VARCHAR(512) NOT NULL UNIQUE"
+                        ")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+
+        // Renommage de la séquence
+        if (!query.exec("ALTER TABLE genre_genre_id_seq RENAME TO genre_seq"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+
+        if (!query.exec("INSERT INTO genre (genre_id, genre_name) VALUES (0, '')"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
+
+    if (!tables.contains("play"))
+    {
+        if (!query.exec("CREATE TABLE play ("
+                            "play_id SERIAL PRIMARY KEY,"
+                            "song_id INTEGER NOT NULL,"
+                            "play_time TIMESTAMP,"
+                            "play_time_utc TIMESTAMP"
+                        ")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
+
+    if (!tables.contains("libpath"))
+    {
+        if (!query.exec("CREATE TABLE libpath ("
+                            "path_id SERIAL PRIMARY KEY,"
+                            "path_location VARCHAR(512) NOT NULL UNIQUE"
+                        ")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+
+        // Renommage de la séquence
+        if (!query.exec("ALTER TABLE libpath_path_id_seq RENAME TO libpath_seq"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
+
+    if (!tables.contains("equalizer"))
+    {
+        if (!query.exec("CREATE TABLE equalizer ("
+                            "equalizer_id SERIAL PRIMARY KEY,"
+                            "equalizer_name character varying(512) NOT NULL,"
+                            "equalizer_val0 double precision NOT NULL DEFAULT 1.0,"
+                            "equalizer_val1 double precision NOT NULL DEFAULT 1.0,"
+                            "equalizer_val2 double precision NOT NULL DEFAULT 1.0,"
+                            "equalizer_val3 double precision NOT NULL DEFAULT 1.0,"
+                            "equalizer_val4 double precision NOT NULL DEFAULT 1.0,"
+                            "equalizer_val5 double precision NOT NULL DEFAULT 1.0,"
+                            "equalizer_val6 double precision NOT NULL DEFAULT 1.0,"
+                            "equalizer_val7 double precision NOT NULL DEFAULT 1.0,"
+                            "equalizer_val8 double precision NOT NULL DEFAULT 1.0,"
+                            "equalizer_val9 double precision NOT NULL DEFAULT 1.0"
+                        ")"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+
+        // Renommage de la séquence
+        if (!query.exec("ALTER TABLE equalizer_equalizer_id_seq RENAME TO equalizer_seq"))
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
 }
 
 

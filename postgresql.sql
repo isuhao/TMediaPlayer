@@ -117,21 +117,11 @@ CREATE TABLE album (
 INSERT INTO album (album_id, album_title, album_title_sort) VALUES (0, '', '');
 
 
-CREATE SEQUENCE artist_artist_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 1
-  CACHE 1;
-
-CREATE TABLE artist
-(
-  artist_id integer NOT NULL DEFAULT nextval('artist_artist_id_seq'::regclass),
-  artist_id serial NOT NULL,
-  artist_name character varying(512) NOT NULL,
-  artist_name_sort character varying(512),
-  CONSTRAINT artist_pkey PRIMARY KEY (artist_id),
-  CONSTRAINT artist_artist_name_artist_name_sort_key UNIQUE (artist_name , artist_name_sort)
+CREATE TABLE artist (
+    artist_id SERIAL PRIMARY KEY,
+    artist_name character varying(512) NOT NULL,
+    artist_name_sort character varying(512),
+    UNIQUE (artist_name, artist_name_sort)
 );
 
 INSERT INTO artist (artist_id, artist_name, artist_name_sort) VALUES (0, '', '');

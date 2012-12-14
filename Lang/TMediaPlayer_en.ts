@@ -166,7 +166,7 @@ Error: %4</translation>
     </message>
     <message numerus="yes">
         <location filename="../Sources/CApplication.cpp" line="1031"/>
-        <location filename="../Sources/CApplication.cpp" line="3758"/>
+        <location filename="../Sources/CApplication.cpp" line="4126"/>
         <source>%n day(s) %1</source>
         <translation>
             <numerusform>%n day %1</numerusform>

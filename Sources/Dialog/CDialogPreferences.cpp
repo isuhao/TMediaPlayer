@@ -267,7 +267,7 @@ void CDialogPreferences::addFolder()
 
     if (m_application->getDataBase().driverName() == "QPSQL")
     {
-        query.prepare("SELECT currval('libpath_path_id_seq')");
+        query.prepare("SELECT currval('libpath_seq')");
 
         if (!query.exec())
         {

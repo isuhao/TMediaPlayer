@@ -265,7 +265,7 @@ bool CDynamicList::updateDatabase(void)
 
         if (m_application->getDataBase().driverName() == "QPSQL")
         {
-            query.prepare("SELECT currval('dynamic_list_dynamic_list_id_seq')");
+            query.prepare("SELECT currval('dynamic_list_seq')");
 
             if (!query.exec())
             {

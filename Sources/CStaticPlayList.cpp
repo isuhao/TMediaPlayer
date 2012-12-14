@@ -612,7 +612,7 @@ bool CStaticPlayList::updateDatabase(void)
 
         if (m_application->getDataBase().driverName() == "QPSQL")
         {
-            query.prepare("SELECT currval('static_list_static_list_id_seq')");
+            query.prepare("SELECT currval('static_list_seq')");
 
             if (!query.exec())
             {

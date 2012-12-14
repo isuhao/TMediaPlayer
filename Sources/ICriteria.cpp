@@ -187,7 +187,7 @@ void ICriteria::insertIntoDatabase(CApplication * application)
 
     if (m_application->getDataBase().driverName() == "QPSQL")
     {
-        query.prepare("SELECT currval('criteria_criteria_id_seq')");
+        query.prepare("SELECT currval('criteria_seq')");
 
         if (!query.exec())
         {

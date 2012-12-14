@@ -481,7 +481,7 @@ bool CFolder::updateDatabase(void)
 
         if (m_application->getDataBase().driverName() == "QPSQL")
         {
-            query.prepare("SELECT currval('folder_folder_id_seq')");
+            query.prepare("SELECT currval('folder_seq')");
 
             if (!query.exec())
             {
