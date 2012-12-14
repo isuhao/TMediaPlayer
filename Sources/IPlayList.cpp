@@ -138,7 +138,7 @@ bool IPlayList::updateDatabase()
             }
             else
             {
-                m_application->logError(tr("la liste de lecture n'a pas de dossier parent"), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("the playlist has no parent folder"), __FUNCTION__, __FILE__, __LINE__);
                 return false;
             }
 

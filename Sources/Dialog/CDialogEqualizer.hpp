@@ -27,6 +27,12 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 class CApplication;
 
 
+/**
+ * Boite de dialogue de l'égaliseur.
+ * Permet de modifier les valeurs de gain de l'égaliseur graphiquement,
+ * de sélectionner un préréglage, et d'ajouter ou modifier un préréglage.
+ */
+
 class CDialogEqualizer : public QDialog
 {
     Q_OBJECT
@@ -58,13 +64,17 @@ protected slots:
     void onSlider7Change(int value);
     void onSlider8Change(int value);
     void onSlider9Change(int value);
+
     void onListPresetChange(int index);
     void onPresetSave(const QString& name);
+    void onPresetRename(const QString& name);
+    void renameCurrentPreset();
+    void deleteCurrentPreset();
 
 private:
 
-    Ui::DialogEqualizer * m_uiWidget;
-    CApplication * m_application;
+    Ui::DialogEqualizer * m_uiWidget; ///< Pointeur sur le widget de la boite de dialogue.
+    CApplication * m_application;     ///< Pointeur sur la classe principale de l'application.
 };
 
 #endif // FILE_C_DIALOG_EQUALIZER

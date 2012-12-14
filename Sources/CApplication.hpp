@@ -74,6 +74,7 @@ public:
         Paused
     };
 
+
     CApplication();
     virtual ~CApplication();
 
@@ -81,18 +82,71 @@ public:
     void showDatabaseError(const QString& msg, const QString& query, const QString& fileName, int line);
     void loadLibraryFolders();
 
+
     // Préférences
     void setRowHeight(int height);
     int getRowHeight() const;
     void showButtonStop(bool show = true);
     void showRemainingTime(bool show = true);
 
+
     // Last.fm
     void enableScrobbling(bool enable = true);
     void setDelayBeforeNotification(int delay);
     void setPercentageBeforeScrobbling(int percentage);
 
+
+    // Notifications
+    struct TNotification
+    {
+        QString message; ///< Texte de la notification.
+        QDateTime date;  ///< Date de l'envoi.
+
+        TNotification(const QString& m, const QDateTime& d) : message(m), date(d) { }
+    };
+
+    inline QList<TNotification> getNotifications() const;
+
+
     // Égaliseur
+
+    /// Structure contenant un réglage d'égaliseur.
+    struct TEqualizerPreset
+    {
+        int id;          ///< Identifiant du réglage en base de données.
+        QString name;    ///< Nom du réglage.
+        float value[10]; ///< Valeurs de gain de l'égaliseur.
+
+        /// Constructeur par défaut.
+        TEqualizerPreset() : id(0)
+        {
+            for (std::size_t f = 0; f < 10; ++f)
+                value[f] = 1.0f;
+        }
+
+        bool operator==(const TEqualizerPreset& other) const
+        {
+            return (id       == other.id       &&
+                    name     == other.name     && 
+                    value[0] == other.value[0] && 
+                    value[1] == other.value[1] && 
+                    value[2] == other.value[2] && 
+                    value[3] == other.value[3] && 
+                    value[4] == other.value[4] && 
+                    value[5] == other.value[5] && 
+                    value[6] == other.value[6] && 
+                    value[7] == other.value[7] && 
+                    value[8] == other.value[8] && 
+                    value[9] == other.value[9]);
+        }
+
+        bool operator!=(const TEqualizerPreset& other) const
+        {
+            return !operator==(other);
+        }
+    };
+
+    /// Fréquences de l'égaliseur.
     enum TEqualizerFrequency
     {
         EqFreq32  = 0, ///< 32 Hz.
@@ -111,40 +165,15 @@ public:
     double getEqualizerGain(TEqualizerFrequency frequency);
     void resetEqualizer();
     bool isEqualizerEnabled() const;
+    inline QList<TEqualizerPreset> getEqualizerPresetList() const;
+    QString getEqualizerPresetName(int id) const;
+    int getEqualizerPresetIdFromName(const QString& name) const;
+    TEqualizerPreset getEqualizerPresetFromId(int id) const;
+    inline TEqualizerPreset getCurrentEqualizerPreset() const;
+    void saveEqualizerPreset(TEqualizerPreset& equalizer);
+    void deleteEqualizerPreset(TEqualizerPreset& equalizer);
+    void setCurrentEqualizerPreset(const TEqualizerPreset& equalizer);
 
-    // Notifications
-    struct TNotification
-    {
-        QString message; ///< Texte de la notification.
-        QDateTime date;  ///< Date de l'envoi.
-
-        TNotification(const QString& m, const QDateTime& d) : message(m), date(d) { }
-    };
-
-    inline QList<TNotification> getNotifications() const;
-
-    /// Structure contenant un réglage d'égaliseur.
-    struct TEqualizer
-    {
-        int id;          ///< Identifiant du réglage en base de données.
-        QString name;    ///< Nom du réglage.
-        float value[10]; ///< Valeurs de gain de l'égaliseur.
-
-        /// Constructeur par défaut.
-        TEqualizer() : id(0)
-        {
-            for (std::size_t f = 0; f < 10; ++f)
-                value[f] = 1.0f;
-        }
-    };
-
-    inline QList<TEqualizer> getEqualizerList() const;
-    QString getEqualizerName(int id) const;
-    int getEqualizerIdFromName(const QString& name) const;
-    TEqualizer getEqualizerFromId(int id) const;
-    inline TEqualizer getCurrentEqualizer() const;
-    void saveEqualizer(TEqualizer& equalizer);
-    void setCurrentEqualizer(const TEqualizer& equalizer);
 
     // Filtre de recherche
     QString getFilter() const;
@@ -304,38 +333,37 @@ protected:
 
 private:
 
-    Ui::TMediaPlayer * m_uiWidget;      ///< Widget représentant la fenêtre principale.
-    Ui::WidgetControl * m_uiControl;    ///< Widget représentant la barre de contrôle.
-    FMOD::System * m_soundSystem;       ///< Système de son de FMOD.
-    CPlayListView * m_playListView;     ///< Vue pour afficher les listes de lecture.
-    CListModel * m_listModel;           ///< Modèle contenant les listes de lecture.
-    CDialogEditSong * m_dialogEditSong; ///< Pointeur sur la boite de dialogue pour modifier les informations d'un morceau.
-    QSqlDatabase m_dataBase;            ///< Base de données.
-    QSettings * m_settings;             ///< Paramètres de l'application.
-    QTimer * m_timer;                   ///< Timer pour mettre à jour l'affichage.
-    QLabel * m_listInfos;               ///< Label pour afficher les informations sur la liste affichée.
-    CSongTableItem * m_currentSongItem; ///< Pointeur sur l'item en cours de lecture.
-    CSongTable * m_currentSongTable;    ///< Liste de morceaux contenant le morceau en cours de lecture.
-    CLibrary * m_library;               ///< Librairie (liste de tous les morceaux).
-    CSongTable * m_displayedSongTable;  ///< Liste de morceaux affichée.
-    CWidgetLyrics * m_widgetLyrics;     ///< Widget pour visualiser et modifier les paroles des morceaux.
-    State m_state;                      ///< État de lecture.
-    bool m_showRemainingTime;           ///< Indique si on doit afficher le temps restant ou la durée du morceau en cours de lecture.
-    bool m_isRepeat;                    ///< Indique si la répétition est activée.
-    bool m_isShuffle;                   ///< Indique si la lecture aléatoire est activée.
-    bool m_isMute;                      ///< Indique si le son est coupé.
-    int m_volume;                       ///< Volume sonore (entre 0 et 100).
+    Ui::TMediaPlayer * m_uiWidget;        ///< Widget représentant la fenêtre principale.
+    Ui::WidgetControl * m_uiControl;      ///< Widget représentant la barre de contrôle.
+    FMOD::System * m_soundSystem;         ///< Système de son de FMOD.
+    CPlayListView * m_playListView;       ///< Vue pour afficher les listes de lecture.
+    CListModel * m_listModel;             ///< Modèle contenant les listes de lecture.
+    CDialogEditSong * m_dialogEditSong;   ///< Pointeur sur la boite de dialogue pour modifier les informations d'un morceau.
+    QSqlDatabase m_dataBase;              ///< Base de données.
+    QSettings * m_settings;               ///< Paramètres de l'application.
+    QTimer * m_timer;                     ///< Timer pour mettre à jour l'affichage.
+    QLabel * m_listInfos;                 ///< Label pour afficher les informations sur la liste affichée.
+    CSongTableItem * m_currentSongItem;   ///< Pointeur sur l'item en cours de lecture.
+    CSongTable * m_currentSongTable;      ///< Liste de morceaux contenant le morceau en cours de lecture.
+    CLibrary * m_library;                 ///< Librairie (liste de tous les morceaux).
+    CSongTable * m_displayedSongTable;    ///< Liste de morceaux affichée.
+    CWidgetLyrics * m_widgetLyrics;       ///< Widget pour visualiser et modifier les paroles des morceaux.
+    State m_state;                        ///< État de lecture.
+    bool m_showRemainingTime;             ///< Indique si on doit afficher le temps restant ou la durée du morceau en cours de lecture.
+    bool m_isRepeat;                      ///< Indique si la répétition est activée.
+    bool m_isShuffle;                     ///< Indique si la lecture aléatoire est activée.
+    bool m_isMute;                        ///< Indique si le son est coupé.
+    int m_volume;                         ///< Volume sonore (entre 0 et 100).
 
     // Égaliseur
-    double m_equalizerGains[10];        ///< Gains de l'égaliseur.
-    FMOD::DSP * m_dsp[10];              ///< Gains de l'égaliseur pour FMOD.
+    double m_equalizerGains[10];          ///< Gains de l'égaliseur.
+    FMOD::DSP * m_dsp[10];                ///< Gains de l'égaliseur pour FMOD.
+    QList<TEqualizerPreset> m_equalizerPresets; ///< Liste des préréglages d'égaliseur.
+    TEqualizerPreset m_currentEqualizerPreset;  ///< Préréglage de l'égaliseur actuel.
 
-    QList<TEqualizer> m_equalizers;     ///< Liste des préréglages d'égaliseur.
-    TEqualizer m_currentEqualizer;      ///< Égaliseur actuel.
-
-    QMap<QString, QFile *> m_logList;   ///< Liste des fichiers de log ouverts.
-    QString m_applicationPath;          ///< Répertoire contenant l'application.
-    QStringList m_libraryFolders;       ///< Liste des répertoires de la médiathèque.
+    QMap<QString, QFile *> m_logList;     ///< Liste des fichiers de log ouverts.
+    QString m_applicationPath;            ///< Répertoire contenant l'application.
+    QStringList m_libraryFolders;         ///< Liste des répertoires de la médiathèque.
 
     QList<TNotification> m_infosNotified; ///< Liste des notifications.
 
@@ -348,13 +376,13 @@ private:
         Scrobbled
     };
 
-    bool m_lastFmEnableScrobble;      ///< Indique si le scrobbling est activé.
-    int m_delayBeforeNotification;    ///< Délai avant d'envoyer une notification.
-    int m_percentageBeforeScrobbling; ///< Pourcentage d'écouter avant de scrobbler.
-    QByteArray m_lastFmKey;           ///< Clé utilisée pour l'authentification à Last.fm.
+    bool m_lastFmEnableScrobble;          ///< Indique si le scrobbling est activé.
+    int m_delayBeforeNotification;        ///< Délai avant d'envoyer une notification.
+    int m_percentageBeforeScrobbling;     ///< Pourcentage d'écouter avant de scrobbler.
+    QByteArray m_lastFmKey;               ///< Clé utilisée pour l'authentification à Last.fm.
     int m_lastFmTimeListened;
     int m_lastFmLastPosition;
-    TLastFmState m_lastFmState;
+    TLastFmState m_lastFmState;           ///< État actuel de Last.fm.
 };
 
 
@@ -364,15 +392,15 @@ QList<CApplication::TNotification> CApplication::getNotifications() const
 }
 
 
-inline QList<CApplication::TEqualizer> CApplication::getEqualizerList() const
+inline QList<CApplication::TEqualizerPreset> CApplication::getEqualizerPresetList() const
 {
-    return m_equalizers;
+    return m_equalizerPresets;
 }
 
 
-inline CApplication::TEqualizer CApplication::getCurrentEqualizer() const
+inline CApplication::TEqualizerPreset CApplication::getCurrentEqualizerPreset() const
 {
-    return m_currentEqualizer;
+    return m_currentEqualizerPreset;
 }
 
 

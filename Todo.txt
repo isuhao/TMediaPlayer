@@ -27,10 +27,11 @@
 
 - Gérer les répertoires à surveiller :
   - Analyser le répertoire récursivement au lancement de l'application.
-  - Stocker ces informations avec les données de la médiathèque ?
-    - Pouvoir organiser différement chaque répertoire ?
+  - Stocker ces informations avec les données de la médiathèque.
+    - Pouvoir organiser différement chaque répertoire.
   - Supprimer les répertoires vides après déplacement des fichiers.
   - Déplacer les illustrations sous forme d'image en même temps que les morceaux.
+  - Ajouter des options pour gérer la casse (extension en minuscule ou majuscule, chemin en minuscule, majuscule, ou normal).
 
 - Ajouter une vue pour afficher l'illustration principale.
 
@@ -85,9 +86,7 @@
   - Affichage et modification des illustrations.
   - Afficher l'illustration principale dans l'onglet Résumé.
 
-- Égaliseur :
-  - Pouvoir supprimer des préréglages.
-  - Associer un préréglage à chaque morceau.
+- Pouvoir associer un préréglage d'égaliseur à chaque morceau.
 
 - Récupérer les pochettes depuis Internet.
 - Option "Lecture seule" (désactiver l'écriture des métadonnées et le déplacement des fichiers).

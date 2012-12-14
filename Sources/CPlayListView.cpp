@@ -370,7 +370,7 @@ void CPlayListView::openCustomMenuProject(const QPoint& point)
             }
             else
             {
-                m_application->logError(tr("l'item n'est ni une liste ni un dossier"), __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("the item isn't a playlist or a folder"), __FUNCTION__, __FILE__, __LINE__);
             }
         }
     }

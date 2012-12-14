@@ -10,7 +10,7 @@
     </message>
     <message numerus="yes">
         <location filename="../Sources/CApplication.cpp" line="125"/>
-        <location filename="../Sources/CApplication.cpp" line="2839"/>
+        <location filename="../Sources/CApplication.cpp" line="2874"/>
         <source>%n song(s), %1</source>
         <translation>
             <numerusform>%n morceau, %1</numerusform>
@@ -61,17 +61,17 @@ Erreur : %4</translation>
         <translation>Requête : </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1369"/>
+        <location filename="../Sources/CApplication.cpp" line="1404"/>
         <source>%2 (%3 line %4): %1</source>
         <translation>%2 (%3 ligne %4) : %1</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1935"/>
+        <location filename="../Sources/CApplication.cpp" line="1970"/>
         <source>invalid argument (%1)</source>
         <translation>argument invalide (%1)</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="2110"/>
+        <location filename="../Sources/CApplication.cpp" line="2145"/>
         <source>%n song(s) added to the library.</source>
         <translation>
             <numerusform>%n morceau ajouté à la médiathèque.</numerusform>
@@ -79,13 +79,13 @@ Erreur : %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2287"/>
+        <location filename="../Sources/CApplication.cpp" line="2322"/>
         <source>This file is already in the library. Do you want to merge the two songs?</source>
         <translation>Le fichier sélectionné est déjà dans la médiathèque. Voulez-vous fusionner les deux morceaux ?</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="996"/>
-        <location filename="../Sources/CApplication.cpp" line="3718"/>
+        <location filename="../Sources/CApplication.cpp" line="1031"/>
+        <location filename="../Sources/CApplication.cpp" line="3758"/>
         <source>%n day(s) %1</source>
         <translation>
             <numerusform>%n jour %1</numerusform>
@@ -93,24 +93,24 @@ Erreur : %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3217"/>
+        <location filename="../Sources/CApplication.cpp" line="3252"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3225"/>
-        <location filename="../Sources/CApplication.cpp" line="3233"/>
+        <location filename="../Sources/CApplication.cpp" line="3260"/>
+        <location filename="../Sources/CApplication.cpp" line="3268"/>
         <source>Play</source>
         <translation>Lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2081"/>
+        <location filename="../Sources/CApplication.cpp" line="2116"/>
         <source>Loading files...</source>
         <translation>Chargement des fichiers...</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="996"/>
-        <location filename="../Sources/CApplication.cpp" line="1000"/>
+        <location filename="../Sources/CApplication.cpp" line="1031"/>
+        <location filename="../Sources/CApplication.cpp" line="1035"/>
         <source>%n selected song(s), %1</source>
         <translation>
             <numerusform>%n morceau sélectionné, %1</numerusform>
@@ -118,74 +118,74 @@ Erreur : %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1338"/>
+        <location filename="../Sources/CApplication.cpp" line="1373"/>
         <source>can&apos;t open the log file &quot;%1&quot;</source>
         <translation>impossible d&apos;ouvrir le fichier de log &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1425"/>
-        <location filename="../Sources/CApplication.cpp" line="1452"/>
-        <location filename="../Sources/CApplication.cpp" line="1468"/>
-        <location filename="../Sources/CApplication.cpp" line="1799"/>
-        <location filename="../Sources/CApplication.cpp" line="2489"/>
-        <location filename="../Sources/CApplication.cpp" line="2504"/>
-        <location filename="../Sources/CApplication.cpp" line="2553"/>
+        <location filename="../Sources/CApplication.cpp" line="1460"/>
+        <location filename="../Sources/CApplication.cpp" line="1487"/>
+        <location filename="../Sources/CApplication.cpp" line="1503"/>
+        <location filename="../Sources/CApplication.cpp" line="1834"/>
+        <location filename="../Sources/CApplication.cpp" line="2524"/>
+        <location filename="../Sources/CApplication.cpp" line="2539"/>
+        <location filename="../Sources/CApplication.cpp" line="2588"/>
         <source>invalid pointer</source>
         <translation>pointeur invalide</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2257"/>
+        <location filename="../Sources/CApplication.cpp" line="2292"/>
         <source>several songs selected</source>
         <translation>plusieurs morceaux sélectionnés</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2400"/>
+        <location filename="../Sources/CApplication.cpp" line="2435"/>
         <source>error while loading the file &quot;%1&quot; with FMOD</source>
         <translation>erreur lors du chargement du fichier &quot;%1&quot; avec FMOD</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2407"/>
+        <location filename="../Sources/CApplication.cpp" line="2442"/>
         <source>can&apos;t compute song duration for file &quot;%1&quot;</source>
         <translation>impossible de calculer la durée du morceau &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2416"/>
+        <location filename="../Sources/CApplication.cpp" line="2451"/>
         <source>can&apos;t find song format for file &quot;%1&quot;</source>
         <translation>impossible de déterminer le format du fichier &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2423"/>
+        <location filename="../Sources/CApplication.cpp" line="2458"/>
         <source>unknown format</source>
         <translation>format inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2686"/>
+        <location filename="../Sources/CApplication.cpp" line="2721"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Êtes-vous sûr de vouloir supprimer cette liste de lecture ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2686"/>
+        <location filename="../Sources/CApplication.cpp" line="2721"/>
         <source>Yes</source>
         <translation>Oui</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2686"/>
+        <location filename="../Sources/CApplication.cpp" line="2721"/>
         <source>No</source>
         <translation>Non</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2047"/>
-        <location filename="../Sources/CApplication.cpp" line="2273"/>
+        <location filename="../Sources/CApplication.cpp" line="2082"/>
+        <location filename="../Sources/CApplication.cpp" line="2308"/>
         <source>Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)</source>
         <translation>Fichiers multimédias (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;Tous les fichiers (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2081"/>
+        <location filename="../Sources/CApplication.cpp" line="2116"/>
         <source>Abort</source>
         <translation>Interrompre</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2981"/>
+        <location filename="../Sources/CApplication.cpp" line="3016"/>
         <source>This program requires FMOD %1 or superior.</source>
         <translation>Ce programme nécessite FMOD %1 ou supérieur.</translation>
     </message>
@@ -662,48 +662,57 @@ Erreur : %4</translation>
 <context>
     <name>CDialogEqualizer</name>
     <message>
-        <location filename="../Sources/Dialog/CDialogEqualizer.cpp" line="73"/>
-        <location filename="../Sources/Dialog/CDialogEqualizer.cpp" line="275"/>
+        <location filename="../Sources/Dialog/CDialogEqualizer.cpp" line="69"/>
+        <location filename="../Sources/Dialog/CDialogEqualizer.cpp" line="265"/>
+        <location filename="../Sources/Dialog/CDialogEqualizer.cpp" line="403"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEqualizer.cpp" line="74"/>
+        <location filename="../Sources/Dialog/CDialogEqualizer.cpp" line="70"/>
         <source>Reset</source>
         <translation>Réinitialiser</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEqualizer.cpp" line="80"/>
+        <location filename="../Sources/Dialog/CDialogEqualizer.cpp" line="76"/>
         <source>New preset...</source>
         <translation>Définir comme préréglage...</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEqualizer.cpp" line="81"/>
         <source>Edit list...</source>
-        <translation>Modifier la liste...</translation>
+        <translation type="obsolete">Modifier la liste...</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEqualizer.cpp" line="83"/>
+        <location filename="../Sources/Dialog/CDialogEqualizer.cpp" line="77"/>
         <source>Manual</source>
         <translation>Manuel</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEqualizer.cpp" line="276"/>
+        <location filename="../Sources/Dialog/CDialogEqualizer.cpp" line="321"/>
+        <location filename="../Sources/Dialog/CDialogEqualizer.cpp" line="360"/>
+        <source>You need to choose a name for the preset.</source>
+        <translation>Vous devez choisir un nom pour le préréglage.</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEqualizer.cpp" line="266"/>
+        <location filename="../Sources/Dialog/CDialogEqualizer.cpp" line="404"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEqualizer.cpp" line="277"/>
+        <location filename="../Sources/Dialog/CDialogEqualizer.cpp" line="267"/>
+        <location filename="../Sources/Dialog/CDialogEqualizer.cpp" line="405"/>
         <source>Name of the preset:</source>
         <translation>Nom du préréglage :</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEqualizer.cpp" line="331"/>
-        <source>You need to choose a name for the preset</source>
-        <translation type="unfinished"></translation>
+        <location filename="../Sources/Dialog/CDialogEqualizer.cpp" line="426"/>
+        <source>Are you sure you want to delete the equalizer preset &quot;%1&quot;?</source>
+        <translation>Êtes-vous sûr de vouloir supprimer le préréglage d&apos;égaliseur &quot;%1&quot; ?</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEqualizer.cpp" line="349"/>
+        <location filename="../Sources/Dialog/CDialogEqualizer.cpp" line="341"/>
+        <location filename="../Sources/Dialog/CDialogEqualizer.cpp" line="369"/>
         <source>The preset &quot;%1&quot; already exists. Do you want to replace it?</source>
         <translation>Le préréglage &quot;%1&quot; existe déjà. Souhaitez-vous le remplacer ?</translation>
     </message>
@@ -1039,8 +1048,8 @@ Erreur : %4</translation>
     </message>
     <message>
         <location filename="../Sources/CPlayListView.cpp" line="373"/>
-        <source>l&apos;item n&apos;est ni une liste ni un dossier</source>
-        <translation type="unfinished"></translation>
+        <source>the item isn&apos;t a playlist or a folder</source>
+        <translation>l&apos;item n&apos;est ni une liste ni un dossier</translation>
     </message>
 </context>
 <context>
@@ -2914,72 +2923,87 @@ Voulez-vous les ajouter ?</translation>
         <translation>Égaliseur</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEqualizer.ui" line="38"/>
+        <location filename="../Form/DialogEqualizer.ui" line="76"/>
         <source>Enable equalizer</source>
         <translation>Activer l&apos;égaliseur</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEqualizer.ui" line="378"/>
+        <location filename="../Form/DialogEqualizer.ui" line="387"/>
         <source>-10 dB</source>
         <translation>-10 dB</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEqualizer.ui" line="361"/>
+        <location filename="../Form/DialogEqualizer.ui" line="36"/>
         <source>0 dB</source>
         <translation>0 dB</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEqualizer.ui" line="316"/>
+        <location filename="../Form/DialogEqualizer.ui" line="342"/>
         <source>+10 dB</source>
         <translation>+10 dB</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEqualizer.ui" line="539"/>
+        <location filename="../Form/DialogEqualizer.ui" line="525"/>
         <source>32</source>
         <translation>32</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEqualizer.ui" line="562"/>
+        <location filename="../Form/DialogEqualizer.ui" line="548"/>
         <source>64</source>
         <translation>64</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEqualizer.ui" line="585"/>
+        <location filename="../Form/DialogEqualizer.ui" line="571"/>
         <source>125</source>
         <translation>125</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEqualizer.ui" line="608"/>
+        <location filename="../Form/DialogEqualizer.ui" line="594"/>
         <source>250</source>
         <translation>250</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEqualizer.ui" line="401"/>
+        <location filename="../Form/DialogEqualizer.ui" line="620"/>
+        <source>Preset:</source>
+        <translation>Préréglage :</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEqualizer.ui" line="668"/>
+        <source>Rename...</source>
+        <translation>Renommer...</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEqualizer.ui" line="687"/>
+        <source>Delete</source>
+        <translation>Supprimer</translation>
+    </message>
+    <message>
+        <location filename="../Form/DialogEqualizer.ui" line="59"/>
         <source>500</source>
         <translation>500</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEqualizer.ui" line="424"/>
+        <location filename="../Form/DialogEqualizer.ui" line="410"/>
         <source>1K</source>
         <translation>1K</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEqualizer.ui" line="447"/>
+        <location filename="../Form/DialogEqualizer.ui" line="433"/>
         <source>2K</source>
         <translation>2K</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEqualizer.ui" line="470"/>
+        <location filename="../Form/DialogEqualizer.ui" line="456"/>
         <source>4K</source>
         <translation>4K</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEqualizer.ui" line="493"/>
+        <location filename="../Form/DialogEqualizer.ui" line="479"/>
         <source>8K</source>
         <translation>8K</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEqualizer.ui" line="516"/>
+        <location filename="../Form/DialogEqualizer.ui" line="502"/>
         <source>16K</source>
         <translation>16K</translation>
     </message>
@@ -3317,8 +3341,8 @@ Voulez-vous les ajouter ?</translation>
     </message>
     <message>
         <location filename="../Sources/IPlayList.cpp" line="141"/>
-        <source>la liste de lecture n&apos;a pas de dossier parent</source>
-        <translation type="unfinished"></translation>
+        <source>the playlist has no parent folder</source>
+        <translation>la liste de lecture n&apos;a pas de dossier parent</translation>
     </message>
 </context>
 <context>
