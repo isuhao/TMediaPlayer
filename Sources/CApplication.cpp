@@ -942,7 +942,7 @@ QList<IPlayList *> CApplication::getPlayListsWithSong(CSong * song) const
  * \return Listes de lecture.
  */
 
-QList<IPlayList *> CApplication::getAllPlayLists(void) const
+QList<IPlayList *> CApplication::getAllPlayLists() const
 {
     return m_listModel->getPlayLists();
 }
@@ -1072,7 +1072,7 @@ bool CApplication::isRepeat() const
  * \return Booléen.
  */
 
-bool CApplication::isShuffle(void) const
+bool CApplication::isShuffle() const
 {
     return m_isShuffle;
 }
@@ -1084,7 +1084,7 @@ bool CApplication::isShuffle(void) const
  * \return Booléen.
  */
 
-bool CApplication::isMute(void) const
+bool CApplication::isMute() const
 {
     return m_isMute;
 }
@@ -1096,7 +1096,7 @@ bool CApplication::isMute(void) const
  * \return Volume sonore, entre 0 et 100.
  */
 
-int CApplication::getVolume(void) const
+int CApplication::getVolume() const
 {
     return m_volume;
 }
@@ -1108,7 +1108,7 @@ int CApplication::getVolume(void) const
  * \return Position de lecture, ou 0 si aucun morceau n'est en cours de lecture.
  */
 
-int CApplication::getPosition(void) const
+int CApplication::getPosition() const
 {
     return (m_currentSongItem ? m_currentSongItem->getSong()->getPosition() : 0);
 }
@@ -1434,7 +1434,7 @@ void CApplication::notifyInformation(const QString& message)
  * Le navigateur doit s'ouvrir pour que l'utilisateur puisse se connecter.
  */
 
-void CApplication::connectToLastFm(void)
+void CApplication::connectToLastFm()
 {
     new CAuthentication(this);
 }
@@ -1444,7 +1444,7 @@ void CApplication::connectToLastFm(void)
  * Méthode appellée lorsqu'on ferme la boite de dialogue de modification d'un morceau.
  */
 
-void CApplication::onDialogEditSongClosed(void)
+void CApplication::onDialogEditSongClosed()
 {
     m_dialogEditSong = NULL;
 }
@@ -1584,7 +1584,7 @@ void CApplication::play()
  * Arrête la lecture.
  */
 
-void CApplication::stop(void)
+void CApplication::stop()
 {
     if (m_currentSongItem)
     {
@@ -1616,7 +1616,7 @@ void CApplication::stop(void)
  * Met la lecture en pause.
  */
 
-void CApplication::pause(void)
+void CApplication::pause()
 {
     if (m_currentSongItem)
     {
@@ -1636,16 +1636,12 @@ void CApplication::pause(void)
  * Lance ou interrompt la lecture.
  */
 
-void CApplication::togglePlay(void)
+void CApplication::togglePlay()
 {
     if (m_state != Playing)
-    {
         play();
-    }
     else
-    {
         pause();
-    }
 }
 
 
@@ -1655,7 +1651,7 @@ void CApplication::togglePlay(void)
  * supérieure à 4 secondes, on revient au début du morceau.
  */
 
-void CApplication::previousSong(void)
+void CApplication::previousSong()
 {
     if (m_currentSongItem)
     {
@@ -1663,27 +1659,18 @@ void CApplication::previousSong(void)
 
         int position = m_currentSongItem->getSong()->getPosition();
 
+        // Retour au début du morceau
+        if (position > 4000)
+        {
+            setPosition(0);
+            return;
+        }
+
         m_currentSongItem->getSong()->stop();
         updateSongDescription(NULL);
         m_currentSongTable->m_model->setCurrentSong(NULL);
 
         setState(Stopped);
-
-        // Retour au début du morceau
-        if (position > 4000)
-        {
-            if (m_state == Paused)
-            {
-                startPlay();
-                pause();
-            }
-            else
-            {
-                startPlay();
-            }
-
-            return;
-        }
 
         CSongTableItem * songItem = m_currentSongTable->getPreviousSong(m_currentSongItem, m_isShuffle);
 
@@ -1713,7 +1700,6 @@ void CApplication::previousSong(void)
                 {
                     startPlay();
                 }
-
                 return;
             }
         }
@@ -1762,7 +1748,7 @@ void CApplication::previousSong(void)
  * Passe au morceau suivant.
  */
 
-void CApplication::nextSong(void)
+void CApplication::nextSong()
 {
     if (m_currentSongItem)
     {
@@ -1870,7 +1856,7 @@ void CApplication::playSong(CSongTableItem * songItem)
 }
 
 
-void CApplication::setRepeat(void)
+void CApplication::setRepeat()
 {
     setRepeat(!m_isRepeat);
 }
@@ -1887,7 +1873,7 @@ void CApplication::setRepeat(bool repeat)
 }
 
 
-void CApplication::setShuffle(void)
+void CApplication::setShuffle()
 {
     setShuffle(!m_isShuffle);
 }
@@ -1930,7 +1916,7 @@ void CApplication::setMute(bool mute)
  * Active ou désactive le son.
  */
 
-void CApplication::toggleMute(void)
+void CApplication::toggleMute()
 {
     setMute(!m_isMute);
 }
@@ -2009,7 +1995,7 @@ void CApplication::setPosition(int position)
  * Affiche la boite de dialogue pour modifier les préférences.
  */
 
-void CApplication::openDialogPreferences(void)
+void CApplication::openDialogPreferences()
 {
     CDialogPreferences * dialog = new CDialogPreferences(this, m_settings);
     dialog->show();
@@ -2020,7 +2006,7 @@ void CApplication::openDialogPreferences(void)
  * Affiche la boite de dialogue pour voir la liste des notifications.
  */
 
-void CApplication::openDialogNotifications(void)
+void CApplication::openDialogNotifications()
 {
     CDialogNotifications * dialog = new CDialogNotifications(this);
     dialog->show();
@@ -2031,7 +2017,7 @@ void CApplication::openDialogNotifications(void)
  * Affiche la boite de dialogue pour voir les dernières écoutes.
  */
 
-void CApplication::openDialogLastPlays(void)
+void CApplication::openDialogLastPlays()
 {
     CDialogLastPlays * dialog = new CDialogLastPlays(this);
     dialog->show();
@@ -2042,7 +2028,7 @@ void CApplication::openDialogLastPlays(void)
  * Affiche la boite de dialogue pour modifier les paramètres de l'égaliseur.
  */
 
-void CApplication::openDialogEqualizer(void)
+void CApplication::openDialogEqualizer()
 {
     CDialogEqualizer * dialog = new CDialogEqualizer(this);
     dialog->show();
@@ -2053,7 +2039,7 @@ void CApplication::openDialogEqualizer(void)
  * Affiche la boite de dialogue pour visualiser et modifier les métadonnées d'un morceau.
  */
 
-void CApplication::openDialogEditMetadata(void)
+void CApplication::openDialogEditMetadata()
 {
     Q_CHECK_PTR(m_displayedSongTable);
 

@@ -3,7 +3,9 @@
   Importance élevée
 --------------------------------------------------
 
-- Revoir les scripts de création des bases de données intégrés au logiciel.
+- Revoir le dock "Listes de lecture".
+  - Ajouter une entrée "File d'attente".
+  - Ajouter des entrées pour les lecteurs de CD.
 
 - Bug : si on modifie une liste dynamique en cours de lecture, ben y'a un blem...
 - Bug : si une liste ne contient que des morceaux introuvables et que la répétition de liste est activée, la lecture entraine une boucle infinie.
@@ -24,6 +26,9 @@
   - Pouvoir désactiver le positionnement des listes et dossiers.
   - Améliorer l'affichage de l'indicateur.
   - Tester le mécanisme en profondeur.
+
+- Pouvoir lire un CD audio.
+  - Utiliser le code de la SDL.
 
 - Gérer les répertoires à surveiller :
   - Analyser le répertoire récursivement au lancement de l'application.
@@ -59,6 +64,9 @@
 --------------------------------------------------
   Importance faible
 --------------------------------------------------
+
+- Lors de la fermeture de l'application, demander une confirmation si un morceau est en cours de lecture.
+- N'autoriser qu'une seule instance de l'application.
 
 - Recherche de paroles :
   - Ajouter un bouton pour rechercher les paroles dans les fenêtre "Edit Song(s)".
