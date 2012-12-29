@@ -19,6 +19,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CDialogPreferences.hpp"
 #include "CApplication.hpp"
+#include "Language.hpp"
 #include <QSettings>
 #include <QDesktopServices>
 #include <QDir>
@@ -48,11 +49,36 @@ CDialogPreferences::CDialogPreferences(CApplication * application, QSettings * s
     m_uiWidget->setupUi(this);
 
     // Récupération des paramètres
-    m_uiWidget->editRowHeight->setValue(m_settings->value("Preferences/RowHeight", 19).toInt());
     m_uiWidget->editShowButtonStop->setChecked(m_settings->value("Preferences/ShowButtonStop", true).toBool());
     m_uiWidget->editEditSongAutoSave->setChecked(m_settings->value("Preferences/EditSongAutoSave", false).toBool());
     m_uiWidget->editShowRemainingTime->setChecked(m_settings->value("Preferences/ShowRemainingTime", false).toBool());
+    m_uiWidget->editRowHeight->setValue(m_settings->value("Preferences/RowHeight", 19).toInt());
 
+    // Langues
+    QDir langDirectory("Lang/");
+    QStringList langFiles = langDirectory.entryList(QStringList() << "TMediaPlayer_??.qm");
+
+    m_uiWidget->editLanguage->addItem(tr("System language"));
+
+    foreach (QString langFile, langFiles)
+    {
+        QString langISO2 = langFile.mid(13, 2);
+        m_uiWidget->editLanguage->addItem(getLanguageName(getLanguageForISO2Code(langISO2)), langISO2);
+    }
+
+    QString currentLanguage = m_settings->value("Preferences/Language", QString()).toString();
+    
+    int langIndex = 0;
+
+    if (!currentLanguage.isEmpty())
+        langIndex = m_uiWidget->editLanguage->findData(currentLanguage);
+
+    if (langIndex < 0)
+        langIndex = 0;
+
+    m_uiWidget->editLanguage->setCurrentIndex(langIndex);
+
+    // Base de données
     QString driver = m_settings->value("Database/Type", QString("QSQLITE")).toString();
     connect(m_uiWidget->editDBDriver, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onDriverChange(const QString&)));
 
@@ -165,6 +191,8 @@ void CDialogPreferences::save()
     m_application->showButtonStop(m_uiWidget->editShowButtonStop->isChecked());
     m_settings->setValue("Preferences/EditSongAutoSave", m_uiWidget->editEditSongAutoSave->isChecked());
     m_application->showRemainingTime(m_uiWidget->editShowRemainingTime->isChecked());
+
+    m_settings->setValue("Preferences/Language", m_uiWidget->editLanguage->itemData(m_uiWidget->editLanguage->currentIndex()));
 
     // Database
     QString driver = m_uiWidget->editDBDriver->currentText();

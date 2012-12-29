@@ -418,7 +418,7 @@ void CDialogEditMetadata::initTagID3v2(TagLib::ID3v2::Tag * tags)
                     QList<QStandardItem *> itemList;
 
                     itemList.append(new QStandardItem(QString::fromUtf8(frame->description().toCString(true))));
-                    itemList.append(new QStandardItem(CSong::getLanguageName(CSong::getLanguageForISO3Code(QByteArray(frame->language().data(), 3)))));
+                    itemList.append(new QStandardItem(getLanguageName(getLanguageForISO3Code(QByteArray(frame->language().data(), 3)))));
                     itemList.append(new QStandardItem(QString::fromUtf8(frame->text().toCString(true))));
 
                     m_modelID3v2Lyrics->appendRow(itemList);
@@ -434,7 +434,7 @@ void CDialogEditMetadata::initTagID3v2(TagLib::ID3v2::Tag * tags)
                     QList<QStandardItem *> itemList;
 
                     itemList.append(new QStandardItem(QString::fromUtf8(frame->description().toCString(true))));
-                    itemList.append(new QStandardItem(CSong::getLanguageName(CSong::getLanguageForISO3Code(QByteArray(frame->language().data(), 3)))));
+                    itemList.append(new QStandardItem(getLanguageName(getLanguageForISO3Code(QByteArray(frame->language().data(), 3)))));
                     itemList.append(new QStandardItem(QString::fromUtf8(frame->text().toCString(true))));
 
                     m_modelID3v2Comments->appendRow(itemList);

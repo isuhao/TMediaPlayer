@@ -45,7 +45,7 @@ CWidgetCriteria::CWidgetCriteria(CApplication * application, QWidget * parent) :
     //TODO: remplir la liste de types ici !
 
     // Remplissage des listes
-    m_uiWidget->listLanguage->addItems(CSong::getLanguageList());
+    m_uiWidget->listLanguage->addItems(getLanguageList());
     m_uiWidget->listFormat->addItems(CSong::getFormatList());
 
     QList<IPlayList *> playLists = m_application->getAllPlayLists();
@@ -111,7 +111,7 @@ ICriteria * CWidgetCriteria::getCriteria(void)
     {
         if (m_type == ICriteria::TypeLanguage)
         {
-            criteria->m_value1 = CSong::getISO2CodeForLanguage(CSong::getLanguageFromInteger(m_uiWidget->listLanguage->currentIndex()));
+            criteria->m_value1 = getISO2CodeForLanguage(getLanguageFromInteger(m_uiWidget->listLanguage->currentIndex()));
         }
         else if (m_type == ICriteria::TypePlayList)
         {

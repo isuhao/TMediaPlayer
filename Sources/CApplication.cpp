@@ -108,6 +108,14 @@ CApplication::CApplication() :
     // Chargement des paramètres de l'application
     m_settings = new QSettings(this);
 
+    // Internationnalisation
+    QString lang = m_settings->value("Preferences/Language", QLocale::system().name()).toString();
+
+    if (lang.isEmpty() || !m_translator.load(QString("Lang/TMediaPlayer_") + lang))
+        m_translator.load(QString("Lang/TMediaPlayer_") + QLocale::system().name());
+
+    qApp->installTranslator(&m_translator);
+
     m_applicationPath = QDesktopServices::storageLocation(QDesktopServices::DataLocation) + QDir::separator();
     QDir(m_applicationPath).mkpath(".");
 
@@ -2068,7 +2076,14 @@ void CApplication::openDialogEditMetadata()
 
 void CApplication::openDialogAddSongs()
 {
-    QStringList fileList = QFileDialog::getOpenFileNames(this, QString(), QString(), tr("Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)"));
+    QStringList fileList = QFileDialog::getOpenFileNames(this, QString(), m_settings->value("Preferences/LastDirectory", QString()).toString(), tr("Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)"));
+
+    if (fileList.isEmpty())
+        return;
+
+    QFileInfo fileInfo(fileList.at(0));
+    m_settings->setValue("Preferences/LastDirectory", fileInfo.path());
+
     importSongs(fileList);
 }
 
@@ -2079,10 +2094,12 @@ void CApplication::openDialogAddSongs()
 
 void CApplication::openDialogAddFolder()
 {
-    QString folder = QFileDialog::getExistingDirectory(this);
+    QString folder = QFileDialog::getExistingDirectory(this, QString(), m_settings->value("Preferences/LastDirectory", QString()).toString());
 
     if (folder.isEmpty())
         return;
+
+    m_settings->setValue("Preferences/LastDirectory", folder);
 
     importSongs(importFolder(folder));
 }

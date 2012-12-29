@@ -376,7 +376,7 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
 
             // Langue
             case CSongTable::ColLanguage:
-                return CSong::getLanguageName(data.at(index.row())->getSong()->getLanguage());
+                return getLanguageName(data.at(index.row())->getSong()->getLanguage());
 
             // Parolier
             case CSongTable::ColLyricist:

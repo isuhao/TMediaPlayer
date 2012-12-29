@@ -553,13 +553,13 @@ private:
 
     static inline bool cmpSongLanguageAsc(CSongTableItem * song1, CSongTableItem * song2)
     {
-        CSong::TLanguage lang1 = song1->getSong()->getLanguage();
-        CSong::TLanguage lang2 = song2->getSong()->getLanguage();
+        TLanguage lang1 = song1->getSong()->getLanguage();
+        TLanguage lang2 = song2->getSong()->getLanguage();
 
         if (lang1 == lang2)
             return cmpSongArtistAsc(song1, song2);
 
-        return (CSong::getLanguageName(lang1) < CSong::getLanguageName(lang2));
+        return (getLanguageName(lang1) < getLanguageName(lang2));
     }
 
     static inline bool cmpSongLanguageDesc(CSongTableItem * song1, CSongTableItem * song2)

@@ -20,6 +20,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #ifndef FILE_C_SONG
 #define FILE_C_SONG
 
+#include "Language.hpp"
 #include <QList>
 #include <QDateTime>
 #include <QString>
@@ -65,30 +66,6 @@ public:
     static inline TFormat getFormatFromInteger(int format);
     static inline QString getFormatName(TFormat format);
     static inline QStringList getFormatList(void);
-
-
-    enum TLanguage
-    {
-        LangUnknown    =  0, ///< Langue inconnue.
-        LangEnglish    =  1, ///< Anglais.
-        LangFrench     =  2, ///< Français.
-        LangGerman     =  3, ///< Allemand.
-        LangItalian    =  4, ///< Italien.
-        LangRussian    =  5, ///< Russe.
-        LangSpanish    =  6, ///< Espagnol.
-        LangChinese    =  7, ///< Chinois.
-        LangHindi      =  8, ///< Hindi.
-        LangPortuguese =  9, ///< Portugais.
-        LangArabic     = 10  ///< Arabe.
-    };
-
-    static inline TLanguage getLanguageFromInteger(int language);
-    static inline QString getLanguageName(TLanguage language);
-    static inline QStringList getLanguageList(void);
-    static inline TLanguage getLanguageForISO2Code(const QString& code);
-    static inline TLanguage getLanguageForISO3Code(const QString& code);
-    static inline QString getISO2CodeForLanguage(TLanguage language);
-    static inline QString getISO3CodeForLanguage(TLanguage language);
 
 
     struct TSongPlay
@@ -430,184 +407,13 @@ inline QStringList CSong::getFormatList(void)
 }
 
 
-inline CSong::TLanguage CSong::getLanguageFromInteger(int language)
-{
-    switch (language)
-    {
-        default:
-        case  0: return LangUnknown   ;
-        case  1: return LangEnglish   ;
-        case  2: return LangFrench    ;
-        case  3: return LangGerman    ;
-        case  4: return LangItalian   ;
-        case  5: return LangRussian   ;
-        case  6: return LangSpanish   ;
-        case  7: return LangChinese   ;
-        case  8: return LangHindi     ;
-        case  9: return LangPortuguese;
-        case 10: return LangArabic    ;
-    }
-}
-
-
-/**
- * Retourne le nom correspondant à une langue.
- *
- * \param language Langue.
- * \param Nom de la langue.
- */
-
-inline QString CSong::getLanguageName(CSong::TLanguage language)
-{
-    switch (language)
-    {
-        default:
-        case LangUnknown   : return tr("Unknown", "Unknown language");
-        case LangEnglish   : return tr("English"                    );
-        case LangFrench    : return tr("French"                     );
-        case LangGerman    : return tr("German"                     );
-        case LangItalian   : return tr("Italian"                    );
-        case LangRussian   : return tr("Russian"                    );
-        case LangSpanish   : return tr("Spanish"                    );
-        case LangChinese   : return tr("Chinese"                    );
-        case LangHindi     : return tr("Hindi"                      );
-        case LangPortuguese: return tr("Portuguese"                 );
-        case LangArabic    : return tr("Arabic"                     );
-    }
-}
-
-
-/**
- * Retourne la liste des langues.
- *
- * \return Liste des langues.
- */
-
-inline QStringList CSong::getLanguageList(void)
-{
-    QStringList langList;
-
-    langList << getLanguageName(LangUnknown   );
-    langList << getLanguageName(LangEnglish   );
-    langList << getLanguageName(LangFrench    );
-    langList << getLanguageName(LangGerman    );
-    langList << getLanguageName(LangItalian   );
-    langList << getLanguageName(LangRussian   );
-    langList << getLanguageName(LangSpanish   );
-    langList << getLanguageName(LangChinese   );
-    langList << getLanguageName(LangHindi     );
-    langList << getLanguageName(LangPortuguese);
-    langList << getLanguageName(LangArabic    );
-
-    return langList;
-}
-
-
-/**
- * Retourne langue correspondant à un code ISO 639-1.
- *
- * \param code Code ISO 639-1.
- */
-
-inline CSong::TLanguage CSong::getLanguageForISO2Code(const QString& code)
-{
-    const QString codeLower = code.toLower();
-
-    if (codeLower == "en") return LangEnglish   ;
-    if (codeLower == "fr") return LangFrench    ;
-    if (codeLower == "de") return LangGerman    ;
-    if (codeLower == "it") return LangItalian   ;
-    if (codeLower == "ru") return LangRussian   ;
-    if (codeLower == "es") return LangSpanish   ;
-    if (codeLower == "zh") return LangChinese   ;
-    if (codeLower == "hi") return LangHindi     ;
-    if (codeLower == "pt") return LangPortuguese;
-    if (codeLower == "ar") return LangArabic    ;
-
-    return LangUnknown;
-}
-
-
-/**
- * Retourne langue correspondant à un code ISO 639-2.
- *
- * \param code Code ISO 639-2.
- */
-
-inline CSong::TLanguage CSong::getLanguageForISO3Code(const QString& code)
-{
-    const QString codeLower = code.toLower();
-
-    if (codeLower == "eng") return LangEnglish   ;
-    if (codeLower == "fra") return LangFrench    ;
-    if (codeLower == "deu") return LangGerman    ;
-    if (codeLower == "ita") return LangItalian   ;
-    if (codeLower == "rus") return LangRussian   ;
-    if (codeLower == "spa") return LangSpanish   ;
-    if (codeLower == "zho") return LangChinese   ;
-    if (codeLower == "hin") return LangHindi     ;
-    if (codeLower == "por") return LangPortuguese;
-    if (codeLower == "ara") return LangArabic    ;
-
-    return LangUnknown;
-}
-
-
-/**
- * Retourne le code ISO 639-1 correspondant à une langue.
- */
-
-inline QString CSong::getISO2CodeForLanguage(CSong::TLanguage language)
-{
-    switch (language)
-    {
-        default:
-        case LangUnknown   : return "xx";
-        case LangEnglish   : return "en";
-        case LangFrench    : return "fr";
-        case LangGerman    : return "de";
-        case LangItalian   : return "it";
-        case LangRussian   : return "ru";
-        case LangSpanish   : return "es";
-        case LangChinese   : return "zh";
-        case LangHindi     : return "hi";
-        case LangPortuguese: return "pt";
-        case LangArabic    : return "ar";
-    }
-}
-
-
-/**
- * Retourne le code ISO 639-2 correspondant à une langue.
- */
-
-inline QString CSong::getISO3CodeForLanguage(CSong::TLanguage language)
-{
-    switch (language)
-    {
-        default:
-        case LangUnknown   : return "xxx";
-        case LangEnglish   : return "eng";
-        case LangFrench    : return "fra";
-        case LangGerman    : return "deu";
-        case LangItalian   : return "ita";
-        case LangRussian   : return "rus";
-        case LangSpanish   : return "spa";
-        case LangChinese   : return "zho";
-        case LangHindi     : return "hin";
-        case LangPortuguese: return "por";
-        case LangArabic    : return "ara";
-    }
-}
-
-
 /**
  * Retourne l'identifiant du morceau en base de données.
  *
  * \return Identifiant du morceau.
  */
 
-inline int CSong::getId(void) const
+inline int CSong::getId() const
 {
     return m_id;
 }
@@ -619,7 +425,7 @@ inline int CSong::getId(void) const
  * \return Nom du fichier.
  */
 
-inline QString CSong::getFileName(void) const
+inline QString CSong::getFileName() const
 {
     return m_properties.fileName;
 }
@@ -631,7 +437,7 @@ inline QString CSong::getFileName(void) const
  * \return Taille du fichier en octets.
  */
 
-inline qlonglong CSong::getFileSize(void) const
+inline qlonglong CSong::getFileSize() const
 {
     return m_properties.fileSize;
 }
@@ -643,7 +449,7 @@ inline qlonglong CSong::getFileSize(void) const
  * \return Débit binaire.
  */
 
-inline int CSong::getBitRate(void) const
+inline int CSong::getBitRate() const
 {
     return m_properties.bitRate;
 }
@@ -655,7 +461,7 @@ inline int CSong::getBitRate(void) const
  * \return Fréquence d'échantillonnage.
  */
 
-inline int CSong::getSampleRate(void) const
+inline int CSong::getSampleRate() const
 {
     return m_properties.sampleRate;
 }
@@ -667,7 +473,7 @@ inline int CSong::getSampleRate(void) const
  * \return Format du morceau.
  */
 
-inline CSong::TFormat CSong::getFormat(void) const
+inline CSong::TFormat CSong::getFormat() const
 {
     return m_properties.format;
 }
@@ -679,7 +485,7 @@ inline CSong::TFormat CSong::getFormat(void) const
  * \return Nombre de canaux.
  */
 
-inline int CSong::getNumChannels(void) const
+inline int CSong::getNumChannels() const
 {
     return m_properties.numChannels;
 }
@@ -691,7 +497,7 @@ inline int CSong::getNumChannels(void) const
  * \return Durée du morceau en millisecondes.
  */
 
-inline int CSong::getDuration(void) const
+inline int CSong::getDuration() const
 {
     return m_properties.duration;
 }
@@ -703,7 +509,7 @@ inline int CSong::getDuration(void) const
  * \return Booléen valant true si le fichier est accessible, false sinon.
  */
 
-inline bool CSong::getFileStatus(void) const
+inline bool CSong::getFileStatus() const
 {
     return m_fileStatus;
 }
@@ -715,7 +521,7 @@ inline bool CSong::getFileStatus(void) const
  * \return Date d'ajout du morceau à la médiathèque.
  */
 
-inline QDateTime CSong::getCreationDate(void) const
+inline QDateTime CSong::getCreationDate() const
 {
     return m_creation;
 }
@@ -727,7 +533,7 @@ inline QDateTime CSong::getCreationDate(void) const
  * \return Date de modification du morceau.
  */
 
-inline QDateTime CSong::getModificationDate(void) const
+inline QDateTime CSong::getModificationDate() const
 {
     return m_modification;
 }
@@ -739,7 +545,7 @@ inline QDateTime CSong::getModificationDate(void) const
  * \return Booléen.
  */
 
-inline bool CSong::isEnabled(void) const
+inline bool CSong::isEnabled() const
 {
     return m_infos.isEnabled;
 }
@@ -751,7 +557,7 @@ inline bool CSong::isEnabled(void) const
  * \return Titre du morceau.
  */
 
-inline QString CSong::getTitle(void) const
+inline QString CSong::getTitle() const
 {
     return m_infos.title;
 }
@@ -763,7 +569,7 @@ inline QString CSong::getTitle(void) const
  * \return Sous-titre du morceau.
  */
 
-inline QString CSong::getSubTitle(void) const
+inline QString CSong::getSubTitle() const
 {
     return m_infos.subTitle;
 }
@@ -775,43 +581,55 @@ inline QString CSong::getSubTitle(void) const
  * \return Regroupement du morceau.
  */
 
-inline QString CSong::getGrouping(void) const
+inline QString CSong::getGrouping() const
 {
     return m_infos.grouping;
 }
 
 
 /**
- * Return le nom de l'artiste du morceau.
+ * Retourne le nom de l'artiste du morceau.
  *
  * \return Nom de l'artiste du morceau.
  */
 
-inline QString CSong::getArtistName(void) const
+inline QString CSong::getArtistName() const
 {
     return m_infos.artistName;
 }
 
 
 /**
- * Return le titre de l'album.
+ * Retourne le titre de l'album.
  *
  * \return Titre de l'album.
  */
 
-inline QString CSong::getAlbumTitle(void) const
+inline QString CSong::getAlbumTitle() const
 {
     return m_infos.albumTitle;
 }
 
 
-inline QString CSong::getAlbumArtist(void) const
+/**
+ * Retourne le nom de l'artiste de l'album.
+ *
+ * \return Nom de l'artiste de l'album.
+ */
+
+inline QString CSong::getAlbumArtist() const
 {
     return m_infos.albumArtist;
 }
 
 
-inline QString CSong::getComposer(void) const
+/**
+ * Retourne le compositeur du morceau.
+ *
+ * \return Compositeur du morceau.
+ */
+
+inline QString CSong::getComposer() const
 {
     return m_infos.composer;
 }
@@ -852,37 +670,43 @@ inline QString CSong::getComposerSort(bool empty) const
 }
 
 
-inline int CSong::getYear(void) const
+inline int CSong::getYear() const
 {
     return m_infos.year;
 }
 
 
-inline int CSong::getTrackNumber(void) const
+inline int CSong::getTrackNumber() const
 {
     return m_infos.trackNumber;
 }
 
 
-inline int CSong::getTrackCount(void) const
+inline int CSong::getTrackCount() const
 {
     return m_infos.trackCount;
 }
 
 
-inline int CSong::getDiscNumber(void) const
+inline int CSong::getDiscNumber() const
 {
     return m_infos.discNumber;
 }
 
 
-inline int CSong::getDiscCount(void) const
+inline int CSong::getDiscCount() const
 {
     return m_infos.discCount;
 }
 
 
-inline QString CSong::getGenre(void) const
+/**
+ * Retourne le genre du morceau.
+ *
+ * \return Genre du morceau.
+ */
+
+inline QString CSong::getGenre() const
 {
     return m_infos.genre;
 }
@@ -894,88 +718,113 @@ inline QString CSong::getGenre(void) const
  * \return Note du morceau (entre 0 et 5).
  */
 
-inline int CSong::getRating(void) const
+inline int CSong::getRating() const
 {
     return m_infos.rating;
 }
 
 
-inline QString CSong::getComments(void) const
+inline QString CSong::getComments() const
 {
     return m_infos.comments;
 }
 
 
-inline int CSong::getBPM(void) const
+/**
+ * Retourne le nombre de battements par minute (BPM) du morceau.
+ *
+ * \return Nombre de battements par minute.
+ */
+
+inline int CSong::getBPM() const
 {
     return m_infos.bpm;
 }
 
 
-inline QString CSong::getLyrics(void) const
+/**
+ * Retourne les paroles du morceau.
+ *
+ * \return Paroles du morceau.
+ */
+
+inline QString CSong::getLyrics() const
 {
     return m_infos.lyrics;
 }
 
 
-inline CSong::TLanguage CSong::getLanguage(void) const
+/**
+ * Retourne la langue des paroles du morceau.
+ *
+ * \return Langue des paroles.
+ */
+
+inline TLanguage CSong::getLanguage() const
 {
     return m_infos.language;
 }
 
 
-inline QString CSong::getLyricist(void) const
+/**
+ * Retourne le parolier du morceau.
+ *
+ * \return Parolier du morceau.
+ */
+
+inline QString CSong::getLyricist() const
 {
     return m_infos.lyricist;
 }
 
 
-inline bool CSong::isCompilation(void) const
+inline bool CSong::isCompilation() const
 {
     return m_infos.compilation;
 }
 
 
-inline bool CSong::isSkipShuffle(void) const
+inline bool CSong::isSkipShuffle() const
 {
     return m_infos.skipShuffle;
 }
 
 
-inline float CSong::getTrackGain(void) const
+inline float CSong::getTrackGain() const
 {
     return m_infos.trackGain;
 }
 
 
-inline float CSong::getTrackPeak(void) const
+inline float CSong::getTrackPeak() const
 {
     return m_infos.trackPeak;
 }
 
 
-inline float CSong::getAlbumGain(void) const
+inline float CSong::getAlbumGain() const
 {
     return m_infos.albumGain;
 }
 
 
-inline float CSong::getAlbumPeak(void) const
+inline float CSong::getAlbumPeak() const
 {
     return m_infos.albumPeak;
 }
 
 
-inline int CSong::getNumPlays(void) const
+inline int CSong::getNumPlays() const
 {
     return m_plays.size();
 }
 
 
-inline QDateTime CSong::getLastPlay(void) const
+inline QDateTime CSong::getLastPlay() const
 {
     return (m_plays.isEmpty() ? QDateTime() : m_plays.first().timeUTC);
 }
+
 
 inline QList<CSong::TSongPlay> CSong::getPlays() const
 {

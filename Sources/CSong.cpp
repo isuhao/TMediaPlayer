@@ -1688,7 +1688,7 @@ void CSong::setLyrics(const QString& lyrics)
  * \param language Nouvelle langue du morceau.
  */
 
-void CSong::setLanguage(CSong::TLanguage language)
+void CSong::setLanguage(TLanguage language)
 {
     if (m_infos.language != language)
     {
@@ -3609,16 +3609,16 @@ bool CSong::writeTags(TagLib::ID3v2::Tag * tags, const TSongInfos& infos, QFile 
     {
         TagLib::ID3v2::UnsynchronizedLyricsFrame * frame = new TagLib::ID3v2::UnsynchronizedLyricsFrame(TagLib::String::UTF8);
         frame->setText(TagLib::String(infos.lyrics.toUtf8().constData(), TagLib::String::UTF8));
-        frame->setLanguage(CSong::getISO3CodeForLanguage(infos.language).toLatin1().constData());
+        frame->setLanguage(getISO3CodeForLanguage(infos.language).toLatin1().constData());
         tags->addFrame(frame);
     }
 
     // Langue
     tags->removeFrames("TLAN");
-    if (infos.language != CSong::LangUnknown)
+    if (infos.language != LangUnknown)
     {
         TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TLAN", TagLib::String::UTF8);
-        frame->setText(CSong::getISO3CodeForLanguage(infos.language).toLatin1().constData());
+        frame->setText(getISO3CodeForLanguage(infos.language).toLatin1().constData());
         tags->addFrame(frame);
     }
 
@@ -3757,7 +3757,7 @@ bool CSong::writeTags(TagLib::APE::Tag * tags, const TSongInfos& infos, QFile * 
     stream << tr("No tag for \"%1\"").arg(tr("Lyrics")) << '\n';
 
     // Langue
-    tags->addValue("LANGUAGE", CSong::getISO3CodeForLanguage(infos.language).toUtf8().constData());
+    tags->addValue("LANGUAGE", getISO3CodeForLanguage(infos.language).toUtf8().constData());
 
     // Parolier
     stream << tr("No tag for \"%1\"").arg(tr("Lyricist")) << '\n';
@@ -3914,10 +3914,10 @@ bool CSong::writeTags(TagLib::Ogg::XiphComment * tags, const TSongInfos& infos, 
         tags->addField("LYRICS", TagLib::String(infos.lyrics.toUtf8().constData(), TagLib::String::UTF8));
 
     // Langue
-    if (infos.language == CSong::LangUnknown)
+    if (infos.language == LangUnknown)
         tags->removeField("LANGUAGE");
     else
-        tags->addField("LANGUAGE", CSong::getISO3CodeForLanguage(infos.language).toLatin1().constData());
+        tags->addField("LANGUAGE", getISO3CodeForLanguage(infos.language).toLatin1().constData());
 
     // Parolier
     if (infos.lyricist.isEmpty())

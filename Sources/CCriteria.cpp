@@ -63,7 +63,7 @@ bool CCriteria::matchCriteria(CSong * song) const
     {
         if (m_type == ICriteria::TypeLanguage)
         {
-            const CSong::TLanguage lng = CSong::getLanguageForISO2Code(m_value1.toString());
+            const TLanguage lng = getLanguageForISO2Code(m_value1.toString());
 
             if (m_condition == ICriteria::CondIs)
             {
@@ -457,7 +457,7 @@ IWidgetCriteria * CCriteria::getWidget(void) const
 
         if (m_type == ICriteria::TypeLanguage)
         {
-            widget->m_uiWidget->listLanguage->setCurrentIndex(CSong::getLanguageForISO2Code(m_value1.toString()));
+            widget->m_uiWidget->listLanguage->setCurrentIndex(getLanguageForISO2Code(m_value1.toString()));
         }
         else if (m_type == ICriteria::TypePlayList)
         {

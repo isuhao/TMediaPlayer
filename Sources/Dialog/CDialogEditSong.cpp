@@ -59,7 +59,7 @@ CDialogEditSong::CDialogEditSong(CSongTableItem * songItem, CSongTable * songTab
 
 
     // Liste des langues
-    m_uiWidget->editLanguage->addItems(CSong::getLanguageList());
+    m_uiWidget->editLanguage->addItems(getLanguageList());
 
 
     // Liste des genres
@@ -172,7 +172,7 @@ void CDialogEditSong::applyChanges()
     //song->setRating(m_uiWidget->editRating->value());
     song->setRating(m_ratingEditor->getRatingValue());
     song->setLyrics(m_uiWidget->editLyrics->toPlainText());
-    song->setLanguage(CSong::getLanguageFromInteger(m_uiWidget->editLanguage->currentIndex()));
+    song->setLanguage(getLanguageFromInteger(m_uiWidget->editLanguage->currentIndex()));
     song->setLyricist(m_uiWidget->editLyricist->text());
     
     song->setEnabled(m_uiWidget->editEnabled->isChecked());

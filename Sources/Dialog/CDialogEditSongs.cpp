@@ -79,7 +79,7 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *>& songItemList, CAppli
 
 
     // Liste des langues
-    m_uiWidget->editLanguage->addItems(CSong::getLanguageList());
+    m_uiWidget->editLanguage->addItems(getLanguageList());
 
 
     // Résumé
@@ -137,7 +137,7 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *>& songItemList, CAppli
     int songBPM         = 0; bool songBPMSim         = true;
     int songRating      = 0; bool songRatingSim      = true;
 
-    CSong::TLanguage songLanguage = CSong::LangUnknown;
+    TLanguage songLanguage = LangUnknown;
     bool songLanguageSim = true;
 
     bool songEnabled     = false; bool songEnabledSim     = true;
@@ -305,7 +305,7 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *>& songItemList, CAppli
             if (songLanguageSim && song->getLanguage() != songLanguage)
             {
                 songLanguageSim = false;
-                songLanguage = CSong::LangUnknown;
+                songLanguage = LangUnknown;
             }
 
             if (songEnabledSim     && song->isEnabled()     != songEnabled    ) songEnabledSim     = false;
@@ -896,7 +896,7 @@ void CDialogEditSongs::apply(void)
             song->setLyrics(m_uiWidget->editLyrics->toPlainText());
 
         if (m_uiWidget->chLanguage->isChecked())
-            song->setLanguage(CSong::getLanguageFromInteger(m_uiWidget->editLanguage->currentIndex()));
+            song->setLanguage(getLanguageFromInteger(m_uiWidget->editLanguage->currentIndex()));
 
         if (m_uiWidget->chLyricist->isChecked())
             song->setLyricist(m_uiWidget->editLyricist->text());

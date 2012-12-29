@@ -25,6 +25,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QSqlDatabase>
 #include <QMutexLocker>
 #include <QFile>
+#include <QTranslator>
 #include "CSongTableModel.hpp"
 #include "ui_TMediaPlayer.h"
 #include "ui_WidgetControl.h"
@@ -335,6 +336,7 @@ private:
 
     Ui::TMediaPlayer * m_uiWidget;        ///< Widget représentant la fenêtre principale.
     Ui::WidgetControl * m_uiControl;      ///< Widget représentant la barre de contrôle.
+    QTranslator m_translator;
     FMOD::System * m_soundSystem;         ///< Système de son de FMOD.
     CPlayListView * m_playListView;       ///< Vue pour afficher les listes de lecture.
     CListModel * m_listModel;             ///< Modèle contenant les listes de lecture.
