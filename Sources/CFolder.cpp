@@ -134,7 +134,7 @@ bool CFolder::hasAncestor(CFolder * folder) const
  * \return Booléen.
  */
 
-bool CFolder::isModified(void) const
+bool CFolder::isModified() const
 {
     return m_isModified;
 }
@@ -440,7 +440,7 @@ void CFolder::setOpen(bool open)
  * \return Booléen indiquant le succès de l'opération.
  */
 
-bool CFolder::updateDatabase(void)
+bool CFolder::updateDatabase()
 {
     int folderId = 0;
     int position = 0;
@@ -574,7 +574,7 @@ void CFolder::removeFromDatabase(bool recursive)
 }
 
 
-void CFolder::fixPositions(void)
+void CFolder::fixPositions()
 {
     for (QVector<TFolderItem *>::iterator it = m_items.begin(); it != m_items.end(); )
     {

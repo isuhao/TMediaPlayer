@@ -142,7 +142,7 @@ void CLyricWiki::replyFinished2(QNetworkReply * reply)
 }
 
 
-void CLyricWiki::onPageFinished(void)
+void CLyricWiki::onPageFinished()
 {
     QString lyrics;
 

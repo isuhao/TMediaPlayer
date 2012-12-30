@@ -34,6 +34,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 class CSong;
 class CSongTable;
 class CFolder;
+class CCDRomDrive;
 class IPlayList;
 class CPlayListView;
 class CDynamicList;
@@ -226,6 +227,11 @@ public:
         return m_settings;
     }
 
+    inline QList<CCDRomDrive *> getCDRomDrives() const
+    {
+        return m_cdRomDrives;
+    }
+
     QFile * getLogFile(const QString& logName);
     void logError(const QString& message, const QString& function, const char * file, int line);
     void notifyInformation(const QString& message);
@@ -337,6 +343,7 @@ private:
     Ui::TMediaPlayer * m_uiWidget;        ///< Widget représentant la fenêtre principale.
     Ui::WidgetControl * m_uiControl;      ///< Widget représentant la barre de contrôle.
     QTranslator m_translator;
+    QList<CCDRomDrive *> m_cdRomDrives;   ///< Liste des lecteurs de CD-ROM.
     FMOD::System * m_soundSystem;         ///< Système de son de FMOD.
     CPlayListView * m_playListView;       ///< Vue pour afficher les listes de lecture.
     CListModel * m_listModel;             ///< Modèle contenant les listes de lecture.
@@ -454,7 +461,7 @@ inline CSongTable * CApplication::getDisplayedSongTable() const
 }
 
 
-inline CDialogEditSong * CApplication::getDialogEditSong(void) const
+inline CDialogEditSong * CApplication::getDialogEditSong() const
 {
     return m_dialogEditSong;
 }

@@ -163,18 +163,18 @@ public:
     explicit ICriteria(CApplication * application, QObject * parent = NULL);
     virtual ~ICriteria();
 
-    inline int getId(void) const;
-    inline int getType(void) const;
-    inline int getCondition(void) const;
-    inline QVariant getValue1(void) const;
-    inline QVariant getValue2(void) const;
-    inline CDynamicList * getPlayList(void) const;
+    inline int getId() const;
+    inline int getType() const;
+    inline int getCondition() const;
+    inline QVariant getValue1() const;
+    inline QVariant getValue2() const;
+    inline CDynamicList * getPlayList() const;
 
     virtual bool matchCriteria(CSong * song) const = 0;
     virtual QList<CSong *> getSongs(const QList<CSong *>& from, const QList<CSong *>& with = QList<CSong *>(), bool onlyChecked = false) const;
-    virtual inline TUpdateConditions getUpdateConditions(void) const;
+    virtual inline TUpdateConditions getUpdateConditions() const;
 
-    virtual IWidgetCriteria * getWidget(void) const = 0;
+    virtual IWidgetCriteria * getWidget() const = 0;
 
 protected:
 
@@ -198,43 +198,55 @@ private:
 Q_DECLARE_OPERATORS_FOR_FLAGS(ICriteria::TUpdateConditions)
 
 
-inline int ICriteria::getId(void) const
+/**
+ * Retourne l'identifiant du critère.
+ *
+ * \return Identifiant du critère.
+ */
+
+inline int ICriteria::getId() const
 {
     return m_id;
 }
 
 
-inline int ICriteria::getType(void) const
+/**
+ * Retourne le type du critère.
+ *
+ * \return Type du critère.
+ */
+
+inline int ICriteria::getType() const
 {
     return m_type;
 }
 
 
-inline int ICriteria::getCondition(void) const
+inline int ICriteria::getCondition() const
 {
     return m_condition;
 }
 
 
-inline QVariant ICriteria::getValue1(void) const
+inline QVariant ICriteria::getValue1() const
 {
     return m_value1;
 }
 
 
-inline QVariant ICriteria::getValue2(void) const
+inline QVariant ICriteria::getValue2() const
 {
     return m_value2;
 }
 
 
-inline CDynamicList * ICriteria::getPlayList(void) const
+inline CDynamicList * ICriteria::getPlayList() const
 {
     return m_playList;
 }
 
 
-inline ICriteria::TUpdateConditions ICriteria::getUpdateConditions(void) const
+inline ICriteria::TUpdateConditions ICriteria::getUpdateConditions() const
 {
     return UpdateNever;
 }

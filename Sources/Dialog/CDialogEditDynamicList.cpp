@@ -31,6 +31,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  *
  * \param playList    Pointeur sur la liste à modifier, ou NULL pour une nouvelle liste.
  * \param application Pointeur sur l'application.
+ * \param folder      Dossier contenant la liste de lecture.
  */
 
 CDialogEditDynamicList::CDialogEditDynamicList(CDynamicList * playList, CApplication * application, CFolder * folder) :
@@ -100,7 +101,7 @@ CDialogEditDynamicList::~CDialogEditDynamicList()
  * Redimensionne la boite de dialogue à chaque ajout ou suppression de critère.
  */
 
-void CDialogEditDynamicList::resizeWindow(void)
+void CDialogEditDynamicList::resizeWindow()
 {
     setMinimumSize(0, 0);
     resize(size().width(), 1);
@@ -111,7 +112,7 @@ void CDialogEditDynamicList::resizeWindow(void)
  * Enregistre les paramètres de la liste de lecture dynamique.
  */
 
-void CDialogEditDynamicList::save(void)
+void CDialogEditDynamicList::save()
 {
     QString name = m_uiWidget->editName->text();
 

@@ -27,7 +27,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 IPlayList::IPlayList(CApplication * application, const QString& name) :
     CSongTable           (application),
     m_name               (name),
-    //m_position           (1),
+  //m_position           (1),
     m_folder             (NULL),
     m_isPlayListModified (false),
     m_folderChanging     (false)
@@ -44,7 +44,8 @@ IPlayList::~IPlayList()
 
 bool IPlayList::hasAncestor(CFolder * folder) const
 {
-    if (!folder) return false;
+    if (!folder)
+        return false;
 
     return (m_folder ? m_folder->hasAncestor(folder) : false);
 }

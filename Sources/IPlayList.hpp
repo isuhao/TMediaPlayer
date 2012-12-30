@@ -46,10 +46,10 @@ public:
     explicit IPlayList(CApplication * application, const QString& name = QString());
     virtual ~IPlayList() = 0;
 
-    inline QString getName(void) const;
-    inline CFolder * getFolder(void) const;
+    inline QString getName() const;
+    inline CFolder * getFolder() const;
     bool hasAncestor(CFolder * folder) const;
-    virtual bool isModified(void) const;
+    virtual bool isModified() const;
 
 public slots:
 
@@ -87,18 +87,18 @@ signals:
 
 protected:
 
-    virtual bool updateDatabase(void);
-    virtual void removeFromDatabase(void);
+    virtual bool updateDatabase();
+    virtual void removeFromDatabase();
 
     QString m_name;            ///< Nom de la liste de lecture.
-    //int m_position;            ///< Position de la liste dans le dossier.
+  //int m_position;            ///< Position de la liste dans le dossier.
 
 private:
 
     CFolder * m_folder;        ///< Dossier contenant la liste.
     bool m_isPlayListModified; ///< Indique si la liste de lecture a été modifiée.
     bool m_folderChanging;     ///< Indique si le dossier est en train d'être changé.
-    //QModelIndex m_index;       ///< Index de la liste dans la vue.
+  //QModelIndex m_index;       ///< Index de la liste dans la vue.
 };
 
 
@@ -108,7 +108,7 @@ private:
  * \return Nom de la liste.
  */
 
-inline QString IPlayList::getName(void) const
+inline QString IPlayList::getName() const
 {
     return m_name;
 }
@@ -120,7 +120,7 @@ inline QString IPlayList::getName(void) const
  * \return Pointeur sur le dossier, ou NULL si la liste est à la racine.
  */
 
-inline CFolder * IPlayList::getFolder(void) const
+inline CFolder * IPlayList::getFolder() const
 {
     return m_folder;
 }

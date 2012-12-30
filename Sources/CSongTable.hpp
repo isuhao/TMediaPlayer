@@ -334,7 +334,7 @@ inline bool CSongTable::hasSong(CSong * song) const
 }
 
 
-inline int CSongTable::getColumnSorted(void) const
+inline int CSongTable::getColumnSorted() const
 {
     return m_columnSort;
 }

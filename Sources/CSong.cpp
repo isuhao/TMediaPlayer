@@ -19,6 +19,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CSong.hpp"
 #include "CApplication.hpp"
+#include "CCDRomDrive.hpp"
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QMessageBox>
@@ -99,17 +100,21 @@ CSong::TSongProperties::TSongProperties() :
  * Crée un nouveau morceau invalide.
  *
  * \todo Supprimer ou rendre privée ?
+ *
+ * \param application Pointeur sur la classe principale de l'application.
  */
 
 CSong::CSong(CApplication * application) :
-    QObject         (application),
-    m_application   (application),
-    m_sound         (NULL),
-    m_channel       (NULL),
-    m_isModified    (false),
-    m_needWriteTags (false),
-    m_id            (-1),
-    m_fileStatus    (true)
+    QObject            (application),
+    m_application      (application),
+    m_sound            (NULL),
+    m_channel          (NULL),
+    m_cdRomDrive       (NULL),
+    m_cdRomTrackNumber (-1),
+    m_isModified       (false),
+    m_needWriteTags    (false),
+    m_id               (-1),
+    m_fileStatus       (true)
 {
     Q_CHECK_PTR(application);
 }
@@ -121,18 +126,21 @@ CSong::CSong(CApplication * application) :
  * chargées depuis le base, sinon, les données sont lues depuis les métadonnées
  * du morceau.
  *
- * \param fileName Nom du fichier contenant le son son à charger.
+ * \param fileName    Nom du fichier contenant le son son à charger.
+ * \param application Pointeur sur la classe principale de l'application.
  */
 
 CSong::CSong(const QString& fileName, CApplication * application) :
-    QObject         (application),
-    m_application   (application),
-    m_sound         (NULL),
-    m_channel       (NULL),
-    m_isModified    (false),
-    m_needWriteTags (false),
-    m_id            (-1),
-    m_fileStatus    (true)
+    QObject            (application),
+    m_application      (application),
+    m_sound            (NULL),
+    m_channel          (NULL),
+    m_cdRomDrive       (NULL),
+    m_cdRomTrackNumber (-1),
+    m_isModified       (false),
+    m_needWriteTags    (false),
+    m_id               (-1),
+    m_fileStatus       (true)
 {
     Q_CHECK_PTR(application);
 
@@ -154,20 +162,23 @@ CSong::~CSong()
 {
     stop();
 
-    if (m_sound)
+    if (!m_cdRomDrive)
     {
-        m_sound->release();
-        m_sound = NULL;
+        if (m_sound)
+        {
+            m_sound->release();
+            m_sound = NULL;
+        }
+
+        m_channel = NULL;
+
+        // Mise à jour du fichier
+        if (m_needWriteTags)
+            writeTags();
+
+        // Mise à jour de la base de données
+        updateDatabase();
     }
-
-    m_channel = NULL;
-
-    // Mise à jour du fichier
-    if (m_needWriteTags)
-        writeTags();
-
-    // Mise à jour de la base de données
-    updateDatabase();
 }
 
 
@@ -334,6 +345,9 @@ void CSong::loadFromDatabase()
 
 bool CSong::loadTags(bool readProperties)
 {
+    if (m_cdRomDrive)
+        return false;
+
     switch (m_properties.format)
     {
         default:
@@ -515,8 +529,11 @@ bool CSong::loadTags(bool readProperties)
  * \return Booléen indiquant le succès de l'opération.
  */
 
-bool CSong::writeTags(void)
+bool CSong::writeTags()
 {
+    if (m_cdRomDrive)
+        return false;
+
     switch (m_properties.format)
     {
         default:
@@ -853,7 +870,7 @@ bool CSong::moveFile()
  * \todo Implémentation.
  */
 
-QImage CSong::getCoverImage(void) const
+QImage CSong::getCoverImage() const
 {
     QString fileName;
 
@@ -924,7 +941,7 @@ int CSong::getPosition() const
     if (m_channel)
     {
         unsigned int pos;
-        FMOD_RESULT res = m_channel->getPosition(&pos, FMOD_TIMEUNIT_MS);
+        FMOD_RESULT res = m_channel->getPosition(&pos, (m_cdRomDrive ? FMOD_TIMEUNIT_SENTENCE_MS : FMOD_TIMEUNIT_MS));
         return (res == FMOD_OK ? pos : -1);
     }
 
@@ -954,7 +971,8 @@ bool CSong::isEnded() const
 /**
  * Cherche l'identifiant d'un fichier en base de données.
  *
- * \param fileName Nom du fichier, doit être un chemin absolu simplifié.
+ * \param application Pointeur sur la classe principale de l'application.
+ * \param fileName    Nom du fichier, doit être un chemin absolu simplifié.
  * \return Identifiant du fichier, ou -1 s'il n'existe pas.
  */
 
@@ -1013,7 +1031,8 @@ int CSong::getId(CApplication * application, const QString& fileName)
  * Crée un morceau à partir d'un fichier.
  * Si le fichier est déjà présent en base de données, la méthode retourne NULL.
  *
- * \param fileName Fichier à lire.
+ * \param application Pointeur sur la classe principale de l'application.
+ * \param fileName    Fichier à lire.
  * \return Pointeur sur le son crée, ou NULL en cas d'erreur.
  */
 
@@ -1046,9 +1065,8 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
     song->m_properties.fileName = fileName;
 
     // Recherche de la durée du morceau
-    FMOD_SOUND_TYPE type;
-
     res = sound->getLength(reinterpret_cast<unsigned int *>(&(song->m_properties.duration)), FMOD_TIMEUNIT_MS);
+
     if (res != FMOD_OK)
     {
         application->logError(tr("can't compute song duration for file \"%1\"").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
@@ -1056,6 +1074,7 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
     }
 
     // Recherche du format du morceau
+    FMOD_SOUND_TYPE type;
     res = sound->getFormat(&type, NULL, NULL, NULL);
 
     if (res != FMOD_OK)
@@ -1778,7 +1797,7 @@ void CSong::setAlbumPeak(float peak)
  * Démarre la lecture du morceau.
  */
 
-void CSong::startPlay(void)
+void CSong::startPlay()
 {
     Q_CHECK_PTR(m_sound);
 
@@ -1788,6 +1807,15 @@ void CSong::startPlay(void)
 
     FMOD_RESULT res;
     res = m_application->getSoundSystem()->playSound(FMOD_CHANNEL_FREE, m_sound, true, &m_channel);
+
+    // Lecture depuis un CD-ROM
+    if (m_cdRomDrive)
+    {
+        res = m_channel->setPosition(m_cdRomTrackNumber, FMOD_TIMEUNIT_SENTENCE_SUBSOUND);
+
+        if (res != FMOD_OK)
+            m_application->logError(tr("can't play track #%1 in CD-ROM drive \"%2\"").arg(m_cdRomTrackNumber + 1).arg(m_cdRomDrive->getDriveName()), __FUNCTION__, __FILE__, __LINE__);
+    }
 
     if (res == FMOD_OK && m_channel)
     {
@@ -1811,13 +1839,19 @@ void CSong::startPlay(void)
 }
 
 
+/**
+ * Modifie la position de lecture du morceau.
+ *
+ * \param position Position de lecture (en millisecondes).
+ */
+
 void CSong::setPosition(int position)
 {
     Q_ASSERT(position >= 0);
 
     if (m_sound && m_channel)
     {
-        m_channel->setPosition(position, FMOD_TIMEUNIT_MS);
+        m_channel->setPosition(position, (m_cdRomDrive ? FMOD_TIMEUNIT_SENTENCE_MS : FMOD_TIMEUNIT_MS));
     }
 }
 
@@ -1858,7 +1892,7 @@ void CSong::setMute(bool mute)
  * Charge le son en mémoire.
  */
 
-bool CSong::loadSound(void)
+bool CSong::loadSound()
 {
     // Déjà initialisé
     if (m_sound && m_channel)
@@ -1922,7 +1956,7 @@ bool CSong::loadSound(void)
  * Démarre ou reprend la lecture du morceau.
  */
 
-void CSong::play(void)
+void CSong::play()
 {
     if (!m_sound)
         return;
@@ -1941,7 +1975,14 @@ void CSong::play(void)
             return;
         }
     }
+/*
+            res = m_channel->setPosition(m_cdRomTrackNumber, FMOD_TIMEUNIT_SENTENCE_SUBSOUND);
 
+            if (res != FMOD_OK)
+            {
+                m_application->logError(tr("can't play track #%1 in CD-ROM drive \"%2\"").arg(m_cdRomTrackNumber + 1).arg(m_cdRomDrive->getDriveName()), __FUNCTION__, __FILE__, __LINE__);
+            }
+*/
     startPlay();
 }
 
@@ -1950,7 +1991,7 @@ void CSong::play(void)
  * Met la lecture du morceau en pause.
  */
 
-void CSong::pause(void)
+void CSong::pause()
 {
     if (m_sound && m_channel)
     {
@@ -1964,21 +2005,24 @@ void CSong::pause(void)
  * Arrête la lecture du morceau.
  */
 
-void CSong::stop(void)
+void CSong::stop()
 {
     if (m_sound && m_channel)
     {
         m_channel->stop();
 
-        // Fermeture du fichier
-        m_sound->release();
-        m_sound = NULL;
-        m_channel = NULL;
-
-        // Écriture des métadonnées
-        if (m_needWriteTags)
+        if (!m_cdRomDrive)
         {
-            writeTags();
+            // Fermeture du fichier
+            m_sound->release();
+            m_sound = NULL;
+            m_channel = NULL;
+
+            // Écriture des métadonnées
+            if (m_needWriteTags)
+            {
+                writeTags();
+            }
         }
     }
 }
@@ -1988,8 +2032,12 @@ void CSong::stop(void)
  * Met à jour la base de données si les informations du morceau ont été modifiées.
  */
 
-void CSong::updateDatabase(void)
+void CSong::updateDatabase()
 {
+    // Le morceau provient d'un CD-ROM
+    if (m_cdRomDrive)
+        return;
+
     if (m_isModified && (m_properties != m_propertiesDB || m_infos != m_infosDB))
     {
         // Déplacement du fichier
@@ -2242,7 +2290,7 @@ void CSong::updateDatabase(void)
  * Met à jour le nom et la taille du fichier en base de données.
  */
 
-void CSong::updateFileInfos(void)
+void CSong::updateFileInfos()
 {
     if (m_id <= 0)
         return;
@@ -2305,44 +2353,45 @@ void CSong::setNumChannels(int numChannels)
  * Méthode appelée quand la lecture du morceau est terminée.
  */
 
-void CSong::emitPlayEnd(void)
+void CSong::emitPlayEnd()
 {
     const QDateTime currentTime = QDateTime::currentDateTime();
     const QDateTime currentTimeUTC = QDateTime::currentDateTimeUtc();
 
-    QSqlQuery query(m_application->getDataBase());
-    query.prepare("UPDATE song SET "
-                      "song_play_count    = song_play_count + 1,"
-                      "song_play_time     = ?,"
-                      "song_play_time_utc = ? "
-                  "WHERE song_id = ?");
+    TSongPlay playTime;
+    playTime.time = currentTime;
+    playTime.timeUTC = currentTimeUTC;
+    playTime.timeUTC.setTimeSpec(Qt::UTC);
+    m_plays.prepend(playTime);
 
-    query.bindValue(0, currentTime);
-    query.bindValue(1, currentTimeUTC);
-    query.bindValue(2, m_id);
-
-    if (!query.exec())
+    if (m_id > 0)
     {
-        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        return;
-    }
+        QSqlQuery query(m_application->getDataBase());
 
-    query.prepare("INSERT INTO play (song_id, play_time, play_time_utc) VALUES (?, ?, ?)");
-    query.bindValue(0, m_id);
-    query.bindValue(1, currentTime);
-    query.bindValue(2, currentTimeUTC);
+        query.prepare("UPDATE song SET "
+                          "song_play_count    = song_play_count + 1,"
+                          "song_play_time     = ?,"
+                          "song_play_time_utc = ? "
+                      "WHERE song_id = ?");
 
-    if (!query.exec())
-    {
-        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-    }
-    else
-    {
-        TSongPlay playTime;
-        playTime.time = currentTime;
-        playTime.timeUTC = currentTimeUTC;
-        playTime.timeUTC.setTimeSpec(Qt::UTC);
-        m_plays.prepend(playTime);
+        query.bindValue(0, currentTime);
+        query.bindValue(1, currentTimeUTC);
+        query.bindValue(2, m_id);
+
+        if (!query.exec())
+        {
+            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+
+        query.prepare("INSERT INTO play (song_id, play_time, play_time_utc) VALUES (?, ?, ?)");
+        query.bindValue(0, m_id);
+        query.bindValue(1, currentTime);
+        query.bindValue(2, currentTimeUTC);
+
+        if (!query.exec())
+        {
+            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
     }
 
     emit playEnd();

@@ -45,17 +45,17 @@ public:
     explicit CDynamicList(CApplication * application, const QString& name = QString());
     ~CDynamicList();
 
-    virtual bool isModified(void) const;
-    CWidgetMultiCriterion * getWidget(void) const;
+    virtual bool isModified() const;
+    CWidgetMultiCriterion * getWidget() const;
 
-    inline int getId(void) const;
-    inline bool isAutoUpdate(void) const;
-    inline bool getOnlyChecked(void) const;
-    inline int getNumItems(void) const;
+    inline int getId() const;
+    inline bool isAutoUpdate() const;
+    inline bool getOnlyChecked() const;
+    inline int getNumItems() const;
 
 public slots:
 
-    void updateList(void);
+    void updateList();
 
 protected slots:
 
@@ -63,14 +63,14 @@ protected slots:
 
 signals:
 
-    void listModified(void); ///< Signal émis lorsque la liste a été modifiée.
-    void listUpdated(void);  ///< Signal émis lorsque la liste a été mise à jour.
+    void listModified(); ///< Signal émis lorsque la liste a été modifiée.
+    void listUpdated();  ///< Signal émis lorsque la liste a été mise à jour.
 
 protected:
     
-    virtual bool updateDatabase(void);
-    virtual void removeFromDatabase(void);
-    void loadFromDatabase(void);
+    virtual bool updateDatabase();
+    virtual void removeFromDatabase();
+    void loadFromDatabase();
     void setCriteria(ICriteria * criteria);
     void setAutoUpdate(bool autoUpdate = true);
     void setOnlyChecked(bool onlyChecked = true);
@@ -94,25 +94,25 @@ private:
  * \return Identifiant de la liste.
  */
 
-inline int CDynamicList::getId(void) const
+inline int CDynamicList::getId() const
 {
     return m_id;
 }
 
 
-inline bool CDynamicList::isAutoUpdate(void) const
+inline bool CDynamicList::isAutoUpdate() const
 {
     return m_autoUpdate;
 }
 
 
-inline bool CDynamicList::getOnlyChecked(void) const
+inline bool CDynamicList::getOnlyChecked() const
 {
     return m_onlyChecked;
 }
 
 
-inline int CDynamicList::getNumItems(void) const
+inline int CDynamicList::getNumItems() const
 {
     return m_numItems;
 }

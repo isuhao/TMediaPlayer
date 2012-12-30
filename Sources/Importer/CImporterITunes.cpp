@@ -73,13 +73,13 @@ CImporterITunes::~CImporterITunes()
 }
 
 
-QStringList CImporterITunes::getSelectedItems(void) const
+QStringList CImporterITunes::getSelectedItems() const
 {
     return m_page2->getSelectedItems();
 }
 
 
-bool CImporterITunes::needToImportSongs(void) const
+bool CImporterITunes::needToImportSongs() const
 {
     return m_page2->needToImportSongs();
 }
@@ -109,13 +109,13 @@ CITunesWizardPage1::CITunesWizardPage1(CITunesLibrary * library, QWidget * paren
 }
 
     
-bool CITunesWizardPage1::isComplete(void) const
+bool CITunesWizardPage1::isComplete() const
 {
     return (!m_editFileName->text().isEmpty() && QWizardPage::isComplete());
 }
 
 
-void CITunesWizardPage1::chooseFile(void)
+void CITunesWizardPage1::chooseFile()
 {
     m_editFileName->setText(QFileDialog::getOpenFileName(this, QString(), "iTunes Music Library.xml"));
 }
@@ -143,7 +143,7 @@ CITunesWizardPage2::CITunesWizardPage2(CITunesLibrary * library, QWidget * paren
 }
 
 
-void CITunesWizardPage2::initializePage(void)
+void CITunesWizardPage2::initializePage()
 {
     QString fileName = field("fileName").toString();
     m_library->loadFile(fileName);
@@ -151,13 +151,13 @@ void CITunesWizardPage2::initializePage(void)
 }
 
 
-void CITunesWizardPage2::cleanupPage(void)
+void CITunesWizardPage2::cleanupPage()
 {
     m_model->clear();
 }
 
 
-QStringList CITunesWizardPage2::getSelectedItems(void) const
+QStringList CITunesWizardPage2::getSelectedItems() const
 {
     QStringList res;
 
@@ -175,7 +175,7 @@ QStringList CITunesWizardPage2::getSelectedItems(void) const
 }
 
 
-bool CITunesWizardPage2::needToImportSongs(void) const
+bool CITunesWizardPage2::needToImportSongs() const
 {
     if (m_model)
         return (m_model->item(0)->checkState() == Qt::Checked);
@@ -228,7 +228,7 @@ CITunesWizardPage4::CITunesWizardPage4(CApplication * application, CITunesLibrar
 
 
 /// \todo Implémentation.
-void CITunesWizardPage4::initializePage(void)
+void CITunesWizardPage4::initializePage()
 {
     QSqlQuery query(m_application->getDataBase());
     QMap<int, CSong *> songs;
@@ -415,7 +415,7 @@ void CITunesWizardPage4::initializePage(void)
 
 
 /*
-bool CITunesWizardPage1::validateCurrentPage(void)
+bool CITunesWizardPage1::validateCurrentPage()
 {
     return QWizardPage::validateCurrentPage();
 }

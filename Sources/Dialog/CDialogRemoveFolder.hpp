@@ -40,22 +40,28 @@ public:
     CDialogRemoveFolder(CApplication * application, CFolder * folder);
     virtual ~CDialogRemoveFolder();
 
-    inline bool isResursive(void) const;
+    inline bool isResursive() const;
 
 protected slots:
 
-    void removeFolder(void);
+    void removeFolder();
 
 private:
 
     Ui::DialogRemoveFolder * m_uiWidget;
-    CApplication * m_application;
-    CFolder * m_folder;
-    bool m_recursive;
+    CApplication * m_application; ///< Pointeur sur la classe principale de l'application.
+    CFolder * m_folder;           ///< Pointeur sur le dossier à supprimer.
+    bool m_recursive;             ///< Indique si le contenu du dossier doit être supprimé récursivement.
 };
 
 
-inline bool CDialogRemoveFolder::isResursive(void) const
+/**
+ * Indique si le contenu du dossier doit être supprimé récursivement.
+ *
+ * \return Booléen.
+ */
+
+inline bool CDialogRemoveFolder::isResursive() const
 {
     return m_recursive;
 }

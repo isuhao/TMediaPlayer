@@ -42,7 +42,7 @@ public:
 protected slots:
 
     virtual void replyFinished(QNetworkReply * reply);
-    void getLastFmSession(void);
+    void getLastFmSession();
     void replyLastFmFinished(QNetworkReply * reply);
 
 private:

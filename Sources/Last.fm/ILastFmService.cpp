@@ -75,8 +75,7 @@ QByteArray ILastFmService::getLastFmQuery(const QMap<QByteArray, QByteArray>& ar
 /**
  * Calcule la signature d'une méthode pour envoyer une requête à Last.fm.
  *
- * \param args       Tableau associatif des arguments (de la forme clé => valeur), avec la méthode.
- * \param methodName Nom de la méthode.
+ * \param args Tableau associatif des arguments (de la forme clé => valeur), avec la méthode.
  */
 
 QByteArray ILastFmService::getLastFmSignature(const QMap<QByteArray, QByteArray>& args) const

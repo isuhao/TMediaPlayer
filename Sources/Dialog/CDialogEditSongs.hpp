@@ -44,8 +44,8 @@ public:
 
 protected slots:
 
-    void apply(void);
-    void save(void);
+    void apply();
+    void save();
 
     void onTitleChange(const QString& title);
     void onTitleSortChange(const QString& title);
@@ -59,7 +59,7 @@ protected slots:
     void onComposerSortChange(const QString& composer);
     void onSubTitleChange(const QString& subTitle);
     void onGroupingChange(const QString& grouping);
-    void onCommentsChange(void);
+    void onCommentsChange();
     void onYearChange(const QString& year);
     void onTrackNumberChange(const QString& trackNumber);
     void onTrackCountChange(const QString& trackCount);
@@ -68,7 +68,7 @@ protected slots:
     void onBPMChange(const QString& bpm);
     void onGenreChange(const QString& genre);
     void onRatingChange(int rating);
-    void onLyricsChange(void);
+    void onLyricsChange();
     void onLyricistChange(const QString& lyricist);
     void onLanguageChange(const QString& language);
 

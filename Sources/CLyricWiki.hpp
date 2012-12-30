@@ -41,7 +41,7 @@ public:
     CLyricWiki(CApplication * application, CSong * song);
     virtual ~CLyricWiki();
 
-    inline CSong * getSong(void) const
+    inline CSong * getSong() const
     {
         return m_song;
     }
@@ -54,7 +54,7 @@ protected slots:
 
     void replyFinished(QNetworkReply * reply);
     void replyFinished2(QNetworkReply * reply);
-    void onPageFinished(void);
+    void onPageFinished();
 
 protected:
     

@@ -418,6 +418,21 @@
     <ClCompile Include="GeneratedFiles\Release\moc_CWidgetLyrics.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\CCDRomDrive.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_CCDRomDrive.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_CCDRomDrive.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\sha1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\base64.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Sources\CApplication.hpp">
@@ -591,6 +606,9 @@
     <CustomBuild Include="Sources\CWidgetLyrics.hpp">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="Sources\CCDRomDrive.hpp">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_DialogEditDynamicPlayList.h">
@@ -649,6 +667,15 @@
     </ClInclude>
     <ClInclude Include="Sources\Language.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\base64.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\sha1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\CDRomDrive.hpp">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

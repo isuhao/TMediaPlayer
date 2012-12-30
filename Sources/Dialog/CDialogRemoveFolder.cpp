@@ -69,7 +69,7 @@ CDialogRemoveFolder::~CDialogRemoveFolder()
  * Supprime le dossier et ferme la boite de dialogue.
  */
 
-void CDialogRemoveFolder::removeFolder(void)
+void CDialogRemoveFolder::removeFolder()
 {
     m_recursive = m_uiWidget->recursive->isChecked();
     close();

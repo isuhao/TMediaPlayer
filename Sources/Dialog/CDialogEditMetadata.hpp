@@ -53,9 +53,9 @@ public:
 
 protected slots:
 
-    void apply(void);
-    void save(void);
-    void reset(void);
+    void apply();
+    void save();
+    void reset();
 
     void enableTagID3v1(bool enable);
     void enableTagID3v2(bool enable);

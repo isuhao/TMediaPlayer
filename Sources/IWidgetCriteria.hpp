@@ -37,7 +37,7 @@ public:
     explicit IWidgetCriteria(CApplication * application, QWidget * parent = NULL);
     virtual ~IWidgetCriteria();
 
-    virtual ICriteria * getCriteria(void) = 0;
+    virtual ICriteria * getCriteria() = 0;
     
 protected:
 

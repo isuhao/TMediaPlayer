@@ -822,7 +822,7 @@ CDialogEditSongs::~CDialogEditSongs()
  * Enregistre les modifications effectuées sur les morceaux.
  */
 
-void CDialogEditSongs::apply(void)
+void CDialogEditSongs::apply()
 {
     // Modification de chaque morceau
     for (QList<CSongTableItem *>::const_iterator it = m_songItemList.begin(); it != m_songItemList.end(); ++it)
@@ -920,7 +920,7 @@ void CDialogEditSongs::apply(void)
  * Enregistre les modifications effectuées sur les morceaux et ferme la boite de dialogue.
  */
 
-void CDialogEditSongs::save(void)
+void CDialogEditSongs::save()
 {
     apply();
     close();
@@ -1026,7 +1026,7 @@ void CDialogEditSongs::onGroupingChange(const QString& grouping)
 }
 
 
-void CDialogEditSongs::onCommentsChange(void)
+void CDialogEditSongs::onCommentsChange()
 {
     if (m_differentComments)
     {
@@ -1093,7 +1093,7 @@ void CDialogEditSongs::onRatingChange(int rating)
 }
 
 
-void CDialogEditSongs::onLyricsChange(void)
+void CDialogEditSongs::onLyricsChange()
 {
     if (m_differentLyrics)
     {

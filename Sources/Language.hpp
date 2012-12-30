@@ -72,7 +72,7 @@ inline TLanguage getLanguageFromInteger(int language)
  * Retourne le nom correspondant à une langue.
  *
  * \param language Langue.
- * \param Nom de la langue.
+ * \return Nom de la langue.
  */
 
 inline QString getLanguageName(TLanguage language)

@@ -43,8 +43,8 @@ public:
 
     CSongTable * getSongTable(const QModelIndex& index) const;
     CFolder * getFolder(const QModelIndex& index) const;
-    CSongTable * getSelectedSongTable(void) const;
-    CFolder * getSelectedFolder(void) const;
+    CSongTable * getSelectedSongTable() const;
+    CFolder * getSelectedFolder() const;
     QModelIndex getSongTableModelIndex(CSongTable * songTable) const;
     QModelIndex getFolderModelIndex(CFolder * folder) const;
     void setModel(CListModel * model);
@@ -59,9 +59,9 @@ protected slots:
     virtual void openCustomMenuProject(const QPoint& point);
     void onItemCollapsed(const QModelIndex& index);
     void onItemExpanded(const QModelIndex& index);
-    void createStaticList(void);
-    void createDynamicList(void);
-    void createFolder(void);
+    void createStaticList();
+    void createDynamicList();
+    void createFolder();
 
 private:
     

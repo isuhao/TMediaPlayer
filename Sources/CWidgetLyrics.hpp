@@ -43,10 +43,10 @@ public:
 
 protected slots:
 
-    void findLyrics(void);
-    void editLyrics(void);
-    void saveLyrics(void);
-    void cancelEdit(void);
+    void findLyrics();
+    void editLyrics();
+    void saveLyrics();
+    void cancelEdit();
     void onLyricsFound(const QString& lyrics);
 
 private:

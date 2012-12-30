@@ -33,8 +33,8 @@ public:
 
     explicit CLibrary(CApplication * application);
     
-    void deleteSongs(void);
-    inline QMap<int, CSong *> getSongsMap(void) const;
+    void deleteSongs();
+    inline QMap<int, CSong *> getSongsMap() const;
     
 public slots:
 
@@ -49,7 +49,7 @@ private:
 };
 
 
-inline QMap<int, CSong *> CLibrary::getSongsMap(void) const
+inline QMap<int, CSong *> CLibrary::getSongsMap() const
 {
     return m_songs;
 }

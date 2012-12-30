@@ -39,7 +39,7 @@ public:
     explicit CWidgetCriteria(CApplication * application, QWidget * parent = NULL);
     virtual ~CWidgetCriteria();
 
-    virtual ICriteria * getCriteria(void);
+    virtual ICriteria * getCriteria();
 
 protected slots:
 

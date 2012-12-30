@@ -124,7 +124,7 @@ void CAuthentication::replyFinished(QNetworkReply * reply)
 }
 
 
-void CAuthentication::getLastFmSession(void)
+void CAuthentication::getLastFmSession()
 {
     Q_CHECK_PTR(m_timerLastFm);
 

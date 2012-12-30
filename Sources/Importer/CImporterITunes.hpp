@@ -51,8 +51,8 @@ public:
     explicit CImporterITunes(CApplication * application);
     virtual ~CImporterITunes();
 
-    QStringList getSelectedItems(void) const;
-    bool needToImportSongs(void) const;
+    QStringList getSelectedItems() const;
+    bool needToImportSongs() const;
 
 private:
 
@@ -73,11 +73,11 @@ public:
 
     explicit CITunesWizardPage1(CITunesLibrary * library, QWidget * parent = NULL);
 
-    virtual bool isComplete(void) const;
+    virtual bool isComplete() const;
 
 protected slots:
 
-    void chooseFile(void);
+    void chooseFile();
 
 private:
 
@@ -97,11 +97,11 @@ public:
 
     explicit CITunesWizardPage2(CITunesLibrary * library, QWidget * parent = NULL);
 
-    virtual void initializePage(void);
-    virtual void cleanupPage(void);
+    virtual void initializePage();
+    virtual void cleanupPage();
 
-    QStringList getSelectedItems(void) const;
-    bool needToImportSongs(void) const;
+    QStringList getSelectedItems() const;
+    bool needToImportSongs() const;
 
 private:
     
@@ -136,7 +136,7 @@ public:
 
     CITunesWizardPage4(CApplication * application, CITunesLibrary * library, QWidget * parent = NULL);
 
-    virtual void initializePage(void);
+    virtual void initializePage();
 
 private:
     
@@ -161,16 +161,16 @@ public:
         bool enabled;         ///< Indique si le morceau est coché ou pas.
         bool compilation;     ///< Indique si le morceau fait partie d'une compilation.
 
-        TSong(void) : id(0), playCount(0), rating(0), enabled(true), compilation(false) { }
+        inline TSong() : id(0), playCount(0), rating(0), enabled(true), compilation(false) { }
     };
 
-    CITunesLibrary(CApplication * application, QObject * parent = NULL);
-    ~CITunesLibrary();
+    explicit CITunesLibrary(CApplication * application, QObject * parent = NULL);
+    virtual ~CITunesLibrary();
 
     bool loadFile(const QString& fileName);
     void initModelWithLists(QStandardItemModel * model) const;
 
-    QMap<int, TSong> getSongs(void) const { return m_songs; }
+    inline QMap<int, TSong> getSongs() const { return m_songs; }
 
 private:
 

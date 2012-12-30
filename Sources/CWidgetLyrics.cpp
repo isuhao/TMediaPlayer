@@ -62,7 +62,7 @@ void CWidgetLyrics::setSong(CSong * song)
 }
 
     
-void CWidgetLyrics::findLyrics(void)
+void CWidgetLyrics::findLyrics()
 {
     if (m_song)
     {
@@ -72,7 +72,7 @@ void CWidgetLyrics::findLyrics(void)
 }
 
 
-void CWidgetLyrics::editLyrics(void)
+void CWidgetLyrics::editLyrics()
 {
     m_textEdit->setReadOnly(false);
 
@@ -84,7 +84,7 @@ void CWidgetLyrics::editLyrics(void)
 }
 
 
-void CWidgetLyrics::saveLyrics(void)
+void CWidgetLyrics::saveLyrics()
 {
     if (m_song)
     {
@@ -103,7 +103,7 @@ void CWidgetLyrics::saveLyrics(void)
 }
 
 
-void CWidgetLyrics::cancelEdit(void)
+void CWidgetLyrics::cancelEdit()
 {
     m_textEdit->setText(m_song ? m_song->getLyrics() : QString());
     m_textEdit->setReadOnly(true);

@@ -38,8 +38,8 @@ public:
 
     virtual bool matchCriteria(CSong * song) const;
     virtual QList<CSong *> getSongs(const QList<CSong *>& from, const QList<CSong *>& with = QList<CSong *>()) const;
-    virtual TUpdateConditions getUpdateConditions(void) const;
-    virtual IWidgetCriteria * getWidget(void) const;
+    virtual TUpdateConditions getUpdateConditions() const;
+    virtual IWidgetCriteria * getWidget() const;
 };
 
 #endif // FILE_C_CRITERIA

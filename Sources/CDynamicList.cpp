@@ -68,7 +68,7 @@ CDynamicList::~CDynamicList()
  * \return Booléen.
  */
 
-bool CDynamicList::isModified(void) const
+bool CDynamicList::isModified() const
 {
     return (m_isDynamicListModified || IPlayList::isModified());
 }
@@ -80,7 +80,7 @@ bool CDynamicList::isModified(void) const
  * \return Widget.
  */
 
-CWidgetMultiCriterion * CDynamicList::getWidget(void) const
+CWidgetMultiCriterion * CDynamicList::getWidget() const
 {
     IWidgetCriteria * widget = m_mainCriteria->getWidget();
     return qobject_cast<CWidgetMultiCriterion *>(widget);
@@ -179,7 +179,7 @@ void CDynamicList::updateList()
  * \return Booléen indiquant le succès de l'opération.
  */
 
-bool CDynamicList::updateDatabase(void)
+bool CDynamicList::updateDatabase()
 {
     QSqlQuery query(m_application->getDataBase());
 
@@ -363,7 +363,7 @@ bool CDynamicList::updateDatabase(void)
  * Supprime la liste de la base de données.
  */
 
-void CDynamicList::removeFromDatabase(void)
+void CDynamicList::removeFromDatabase()
 {
     if (m_id <= 0)
     {
@@ -404,7 +404,7 @@ void CDynamicList::removeFromDatabase(void)
  * Charge la liste de lecture dynamique depuis la base de données.
  */
 
-void CDynamicList::loadFromDatabase(void)
+void CDynamicList::loadFromDatabase()
 {
     if (m_id <= 0)
     {

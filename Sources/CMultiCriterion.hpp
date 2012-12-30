@@ -46,18 +46,18 @@ public:
     explicit CMultiCriterion(CApplication * application, QObject * parent = NULL);
     virtual ~CMultiCriterion();
 
-    TMultiCriterionType getMultiCriterionType(void) const;
-    inline QList<ICriteria *> getChildren(void) const;
-    inline int getNumChildren(void) const;
+    TMultiCriterionType getMultiCriterionType() const;
+    inline QList<ICriteria *> getChildren() const;
+    inline int getNumChildren() const;
 
     void setMultiCriterionType(TMultiCriterionType type);
     void addChild(ICriteria * child);
 
     virtual bool matchCriteria(CSong * song) const;
     virtual QList<CSong *> getSongs(const QList<CSong *>& from, const QList<CSong *>& with = QList<CSong *>()) const;
-    virtual TUpdateConditions getUpdateConditions(void) const;
+    virtual TUpdateConditions getUpdateConditions() const;
 
-    virtual IWidgetCriteria * getWidget(void) const;
+    virtual IWidgetCriteria * getWidget() const;
 
 protected:
 
@@ -81,13 +81,13 @@ inline CMultiCriterion::TMultiCriterionType CMultiCriterion::getMultiCriterionTy
 }
 
 
-inline QList<ICriteria *> CMultiCriterion::getChildren(void) const
+inline QList<ICriteria *> CMultiCriterion::getChildren() const
 {
     return m_children;
 }
 
 
-inline int CMultiCriterion::getNumChildren(void) const
+inline int CMultiCriterion::getNumChildren() const
 {
     return m_children.size();
 }

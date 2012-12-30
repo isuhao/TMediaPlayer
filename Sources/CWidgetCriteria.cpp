@@ -33,7 +33,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  *
  * \todo Remplir la liste des types de critères dans le code (et la trier).
  *
- * \param parent Widget parent.
+ * \param application Pointeur sur la classe principale de l'application.
+ * \param parent      Widget parent.
  */
 
 CWidgetCriteria::CWidgetCriteria(CApplication * application, QWidget * parent) :
@@ -99,7 +100,7 @@ CWidgetCriteria::~CWidgetCriteria()
  * \return Pointeur sur le critère.
  */
 
-ICriteria * CWidgetCriteria::getCriteria(void)
+ICriteria * CWidgetCriteria::getCriteria()
 {
     qDebug() << "CWidgetCriteria::getCriteria()";
 

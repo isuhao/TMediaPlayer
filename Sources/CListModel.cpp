@@ -23,6 +23,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CStaticPlayList.hpp"
 #include "CDynamicList.hpp"
 #include "CLibrary.hpp"
+#include "CCDRomDrive.hpp"
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QMimeData>
@@ -112,7 +113,7 @@ void CListModel::loadFromDatabase()
 
             if (folder->m_folder < 0)
             {
-                m_application->logError("le dossier parent a un identifiant invalide", __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("le dossier parent a un identifiant invalide"), __FUNCTION__, __FILE__, __LINE__);
                 folder->m_folder = 0;
             }
 
@@ -142,13 +143,13 @@ void CListModel::loadFromDatabase()
                 }
                 else
                 {
-                    m_application->logError("identifiant invalide", __FUNCTION__, __FILE__, __LINE__);
+                    m_application->logError(tr("identifiant invalide"), __FUNCTION__, __FILE__, __LINE__);
                 }
             }
         }
         else
         {
-            m_application->logError("le dossier contenant le dossier a un identifiant invalide", __FUNCTION__, __FILE__, __LINE__);
+            m_application->logError(tr("le dossier contenant le dossier a un identifiant invalide"), __FUNCTION__, __FILE__, __LINE__);
         }
     }
 
@@ -178,7 +179,7 @@ void CListModel::loadFromDatabase()
             }
             else
             {
-                m_application->logError("le dossier contenant la liste statique a un identifiant invalide", __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("le dossier contenant la liste statique a un identifiant invalide"), __FUNCTION__, __FILE__, __LINE__);
             }
 
             // Liste des morceaux de la liste de lecture
@@ -249,7 +250,7 @@ void CListModel::loadFromDatabase()
             }
             else
             {
-                m_application->logError("le dossier contenant la liste statique a un identifiant invalide", __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("le dossier contenant la liste statique a un identifiant invalide"), __FUNCTION__, __FILE__, __LINE__);
             }
 
             playList->loadFromDatabase();
@@ -277,6 +278,10 @@ void CListModel::loadFromDatabase()
 }
 
 
+/**
+ * Efface les données du modèle.
+ */
+
 void CListModel::clear()
 {
     QStandardItemModel::clear();
@@ -293,8 +298,51 @@ void CListModel::clear()
     libraryItem->setData(QVariant::fromValue(qobject_cast<CSongTable *>(m_application->getLibrary())), Qt::UserRole + 1);
 
     appendRow(libraryItem);
-
     m_songTableItems[libraryItem] = m_application->getLibrary();
+
+    // Ajout des lecteurs de CD-ROM
+    QList<CCDRomDrive *> drives = m_application->getCDRomDrives();
+
+    for (QList<CCDRomDrive *>::const_iterator drive = drives.begin(); drive != drives.end(); ++drive)
+    {
+        QStandardItem * cdDriveItem = new QStandardItem(QPixmap(":/icons/cd"), (*drive)->getDriveName());
+        cdDriveItem->setData(QVariant::fromValue(qobject_cast<CSongTable *>(*drive)), Qt::UserRole + 1);
+
+        if (!(*drive)->hasCDInDrive())
+        {
+            cdDriveItem->setEnabled(false);
+            cdDriveItem->setSelectable(false);
+        }
+
+        appendRow(cdDriveItem);
+        m_songTableItems[cdDriveItem] = *drive;
+        m_cdRomDrives[cdDriveItem] = *drive;
+    }
+}
+
+
+void CListModel::updateCDRomDrives()
+{
+    QList<CCDRomDrive *> drives = m_application->getCDRomDrives();
+
+    for (QList<CCDRomDrive *>::const_iterator drive = drives.begin(); drive != drives.end(); ++drive)
+    {
+        QStandardItem * cdDriveItem = m_cdRomDrives.key(*drive);
+        
+        if (!cdDriveItem)
+            continue;
+
+        if ((*drive)->hasCDInDrive())
+        {
+            cdDriveItem->setEnabled(true);
+            cdDriveItem->setSelectable(true);
+        }
+        else
+        {
+            cdDriveItem->setEnabled(false);
+            cdDriveItem->setSelectable(false);
+        }
+    }
 }
 
 

@@ -31,7 +31,7 @@ CLibrary::CLibrary(CApplication * application) :
  * Supprime tous les morceaux de la table. La mémoire est libérée.
  */
 
-void CLibrary::deleteSongs(void)
+void CLibrary::deleteSongs()
 {
     QList<CSong *> songs = m_model->getSongs();
 

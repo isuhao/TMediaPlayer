@@ -28,7 +28,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 /**
  * Crée le critère.
  *
- * \param parent Pointeur sur l'objet parent.
+ * \param application Pointeur sur la classe principale de l'application.
+ * \param parent      Pointeur sur l'objet parent.
  */
 
 CCriteria::CCriteria(CApplication * application, QObject * parent) :
@@ -362,7 +363,7 @@ QList<CSong *> CCriteria::getSongs(const QList<CSong *>& from, const QList<CSong
 }
 
 
-ICriteria::TUpdateConditions CCriteria::getUpdateConditions(void) const
+ICriteria::TUpdateConditions CCriteria::getUpdateConditions() const
 {
     switch (m_type)
     {
@@ -406,7 +407,7 @@ ICriteria::TUpdateConditions CCriteria::getUpdateConditions(void) const
 #include "CWidgetCriteria.hpp" // Si on l'inclut avant, l'intellisense bug complètement...
 
 
-IWidgetCriteria * CCriteria::getWidget(void) const
+IWidgetCriteria * CCriteria::getWidget() const
 {
     CWidgetCriteria * widget = new CWidgetCriteria(m_application, NULL);
 

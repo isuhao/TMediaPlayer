@@ -30,7 +30,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * Construit le widget.
  * Un sous-critère simple est ajouté.
  *
- * \param parent Widget parent.
+ * \param application Pointeur sur la classe principale de l'application.
+ * \param parent      Widget parent.
  */
 
 CWidgetMultiCriterion::CWidgetMultiCriterion(CApplication * application, QWidget * parent) :
@@ -64,7 +65,7 @@ CWidgetMultiCriterion::~CWidgetMultiCriterion()
  * \return Pointeur sur le critère.
  */
 
-ICriteria * CWidgetMultiCriterion::getCriteria(void)
+ICriteria * CWidgetMultiCriterion::getCriteria()
 {
     qDebug() << "CWidgetMultiCriterion::getCriteria()";
     CMultiCriterion * criteria = new CMultiCriterion(m_application, this);
@@ -89,7 +90,7 @@ void CWidgetMultiCriterion::setMultiCriterionType(int type)
  * Ajoute un sous-critère.
  */
 
-void CWidgetMultiCriterion::addCriteria(void)
+void CWidgetMultiCriterion::addCriteria()
 {
     addCriteria(new CWidgetCriteria(m_application, this));
 }
@@ -99,7 +100,7 @@ void CWidgetMultiCriterion::addCriteria(void)
  * Ajoute un sous-critère de type multi-critères.
  */
 
-void CWidgetMultiCriterion::addMultiCriterion(void)
+void CWidgetMultiCriterion::addMultiCriterion()
 {
     addCriteria(new CWidgetMultiCriterion(m_application, this));
 }
@@ -158,7 +159,7 @@ void CWidgetMultiCriterion::removeCriteria(int row)
  * Le numéro de la ligne est déterminée à partir du widget ayant envoyé le signal.
  */
 
-void CWidgetMultiCriterion::removeCriteriaFromButton(void)
+void CWidgetMultiCriterion::removeCriteriaFromButton()
 {
     QPushButton * btnRemove = qobject_cast<QPushButton *>(sender());
 

@@ -30,7 +30,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 /**
  * Crée le critère.
  *
- * \param parent Pointeur sur l'objet parent, qui sera chargé de détruire le critère.
+ * \param application Pointeur sur la classe principale de l'application.
+ * \param parent      Pointeur sur l'objet parent, qui sera chargé de détruire le critère.
  */
 
 ICriteria::ICriteria(CApplication * application, QObject * parent) :
@@ -212,7 +213,7 @@ void ICriteria::insertIntoDatabase(CApplication * application)
 }
 
 /*
-QList<int> ICriteria::getValidTypes(void) const
+QList<int> ICriteria::getValidTypes() const
 {
     return QList<int>();
 }
@@ -224,7 +225,7 @@ bool ICriteria::isValidType(int type) const
 }
 
 
-QList<int> ICriteria::getValidConditions(void) const
+QList<int> ICriteria::getValidConditions() const
 {
     return QList<int>();
 }

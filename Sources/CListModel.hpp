@@ -26,6 +26,7 @@ class CApplication;
 class CFolder;
 class CSong;
 class CSongTable;
+class CCDRomDrive;
 class IPlayList;
 
 
@@ -44,8 +45,9 @@ public:
 
     void loadFromDatabase();
     virtual void clear();
+    void updateCDRomDrives();
 
-    //inline CFolder * getRootFolder(void) const;
+    //inline CFolder * getRootFolder() const;
     inline QList<CFolder *> getFolders() const;
     inline QList<IPlayList *> getPlayLists() const;
     inline CFolder * getRootFolder() const;
@@ -82,26 +84,27 @@ private:
 
     CApplication * m_application; ///< Pointeur sur l'application.
     CFolder * m_rootFolder;       ///< Dossier principal.
-    QMap<QStandardItem *, CFolder *> m_folderItems;
-    QMap<QStandardItem *, CSongTable *> m_songTableItems;
-    QList<CFolder *> m_folders;
-    QList<IPlayList *> m_playLists;
+    QMap<QStandardItem *, CFolder *>     m_folderItems;    ///< Tableau des items associés aux dossiers.
+    QMap<QStandardItem *, CSongTable *>  m_songTableItems; ///< Tableau des items associés aux listes de lecture.
+    QMap<QStandardItem *, CCDRomDrive *> m_cdRomDrives;    ///< Tableau des items associés aux lecteurs de CD-ROM.
+    QList<CFolder *> m_folders;         ///< Liste des dossiers.
+    QList<IPlayList *> m_playLists;     ///< Liste des listes de lecture.
 };
 
 
-inline QList<CFolder *> CListModel::getFolders(void) const
+inline QList<CFolder *> CListModel::getFolders() const
 {
     return m_folders;
 }
 
 
-inline QList<IPlayList *> CListModel::getPlayLists(void) const
+inline QList<IPlayList *> CListModel::getPlayLists() const
 {
     return m_playLists;
 }
 
 
-inline CFolder * CListModel::getRootFolder(void) const
+inline CFolder * CListModel::getRootFolder() const
 {
     return m_rootFolder;
 }

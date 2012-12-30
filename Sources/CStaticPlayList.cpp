@@ -69,7 +69,7 @@ CStaticPlayList::~CStaticPlayList()
  * \return Booléen.
  */
 
-bool CStaticPlayList::isModified(void) const
+bool CStaticPlayList::isModified() const
 {
     return (m_isStaticListModified || IPlayList::isModified());
 }
@@ -415,7 +415,7 @@ void CStaticPlayList::removeSongs(const QList<CSongTableItem *>& songItemList, b
  * \todo Si la liste est en cours de lecture, il faut mettre à jour le pointeur sur le morceau en cours.
  */
 
-void CStaticPlayList::removeSelectedSongs(void)
+void CStaticPlayList::removeSelectedSongs()
 {
     // Liste des morceaux sélectionnés
     const QModelIndexList indexList = selectionModel()->selectedRows();
@@ -487,7 +487,7 @@ void CStaticPlayList::removeSelectedSongs(void)
  * \todo Tester complètement.
  */
 
-void CStaticPlayList::removeDuplicateSongs(void)
+void CStaticPlayList::removeDuplicateSongs()
 {
     QList<CSong *> songs = getSongs();
     QList<CSong *> songsNew;
@@ -531,7 +531,7 @@ void CStaticPlayList::removeDuplicateSongs(void)
  * Si la liste n'existe pas en base de données, elle est ajoutée.
  */
 
-bool CStaticPlayList::updateDatabase(void)
+bool CStaticPlayList::updateDatabase()
 {
     if (!getFolder())
     {
@@ -662,7 +662,7 @@ bool CStaticPlayList::updateDatabase(void)
  * Supprime la liste de la base de données.
  */
 
-void CStaticPlayList::removeFromDatabase(void)
+void CStaticPlayList::removeFromDatabase()
 {
     if (m_id <= 0)
     {

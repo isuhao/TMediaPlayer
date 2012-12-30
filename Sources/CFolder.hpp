@@ -64,17 +64,17 @@ public:
     explicit CFolder(CApplication * application, const QString& name = QString());
     virtual ~CFolder();
 
-    inline int getId(void) const;
-    inline QString getName(void) const;
-    inline CFolder * getFolder(void) const;
+    inline int getId() const;
+    inline QString getName() const;
+    inline CFolder * getFolder() const;
     bool hasAncestor(CFolder * folder) const;
-    inline bool isOpen(void) const;
-    inline QList<IPlayList *> getPlayLists(void) const;
-    inline QList<CFolder *> getFolders(void) const;
-    inline QVector<TFolderItem *> getItems(void) const;
-    inline int getNumPlayLists(void) const;
-    inline int getNumFolders(void) const;
-    bool isModified(void) const;
+    inline bool isOpen() const;
+    inline QList<IPlayList *> getPlayLists() const;
+    inline QList<CFolder *> getFolders() const;
+    inline QVector<TFolderItem *> getItems() const;
+    inline int getNumPlayLists() const;
+    inline int getNumFolders() const;
+    bool isModified() const;
     int getPosition(IPlayList * playList) const;
     int getPosition(CFolder * folder) const;
 
@@ -100,8 +100,8 @@ signals:
 
     void folderChanged(CFolder * oldFolder, CFolder * newFolder);
 
-    void folderOpened(void); ///< Signal émis lorsque le dossier est ouvert.
-    void folderClosed(void); ///< Signal émis lorsque le dossier est fermé.
+    void folderOpened(); ///< Signal émis lorsque le dossier est ouvert.
+    void folderClosed(); ///< Signal émis lorsque le dossier est fermé.
 
 public slots:
 
@@ -115,9 +115,9 @@ public slots:
 
 protected:
     
-    virtual bool updateDatabase(void);
+    virtual bool updateDatabase();
     virtual void removeFromDatabase(bool recursive = false);
-    void fixPositions(void);
+    void fixPositions();
 
 private:
     
@@ -149,7 +149,7 @@ Q_DECLARE_METATYPE(CFolder *)
  * \return Identifiant du dossier.
  */
 
-inline int CFolder::getId(void) const
+inline int CFolder::getId() const
 {
     return m_id;
 }
@@ -161,7 +161,7 @@ inline int CFolder::getId(void) const
  * \return Nom du dossier.
  */
 
-inline QString CFolder::getName(void) const
+inline QString CFolder::getName() const
 {
     return m_name;
 }
@@ -173,7 +173,7 @@ inline QString CFolder::getName(void) const
  * \return Pointeur sur le dossier parent.
  */
 
-inline CFolder * CFolder::getFolder(void) const
+inline CFolder * CFolder::getFolder() const
 {
     return m_folder;
 }
@@ -185,7 +185,7 @@ inline CFolder * CFolder::getFolder(void) const
  * \return Booléen.
  */
 
-inline bool CFolder::isOpen(void) const
+inline bool CFolder::isOpen() const
 {
     return m_open;
 }
@@ -197,7 +197,7 @@ inline bool CFolder::isOpen(void) const
  * \return Liste des listes de lecture.
  */
 
-inline QList<IPlayList *> CFolder::getPlayLists(void) const
+inline QList<IPlayList *> CFolder::getPlayLists() const
 {
     return m_playLists0;
 }
@@ -209,13 +209,13 @@ inline QList<IPlayList *> CFolder::getPlayLists(void) const
  * \return Liste des dossiers.
  */
 
-inline QList<CFolder *> CFolder::getFolders(void) const
+inline QList<CFolder *> CFolder::getFolders() const
 {
     return m_folders0;
 }
 
 
-inline QVector<CFolder::TFolderItem *> CFolder::getItems(void) const
+inline QVector<CFolder::TFolderItem *> CFolder::getItems() const
 {
     return m_items;
 }
@@ -227,7 +227,7 @@ inline QVector<CFolder::TFolderItem *> CFolder::getItems(void) const
  * \return Nombre de listes de lecture.
  */
 
-inline int CFolder::getNumPlayLists(void) const
+inline int CFolder::getNumPlayLists() const
 {
     return m_playLists0.size();
 }
@@ -239,7 +239,7 @@ inline int CFolder::getNumPlayLists(void) const
  * \return Nombre de dossiers.
  */
 
-inline int CFolder::getNumFolders(void) const
+inline int CFolder::getNumFolders() const
 {
     return m_folders0.size();
 }

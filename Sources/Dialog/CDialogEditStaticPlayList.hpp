@@ -45,7 +45,7 @@ public:
 
 protected slots:
 
-    void save(void);
+    void save();
 
 private:
     

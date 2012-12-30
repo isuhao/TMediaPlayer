@@ -41,6 +41,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CLibrary.hpp"
 #include "CSliderStyle.hpp"
 #include "CWidgetLyrics.hpp"
+#include "CCDRomDrive.hpp"
 
 // Last.fm
 #include "Last.fm/CAuthentication.hpp"
@@ -189,6 +190,15 @@ CApplication::~CApplication()
 
     delete m_listModel;
 
+    // Destruction des lecteurs de CD-ROM
+    for (QList<CCDRomDrive *>::const_iterator drive = m_cdRomDrives.begin(); drive != m_cdRomDrives.end(); ++drive)
+    {
+        delete *drive;
+    }
+
+    m_cdRomDrives.clear();
+
+    // Destruction de la médiathèque
     if (m_library)
     {
         m_library->updateDatabase();
@@ -416,7 +426,7 @@ void CApplication::showDatabaseError(const QString& msg, const QString& query, c
  * Charge la liste des répertoires de la médiathèque.
  */
 
-void CApplication::loadLibraryFolders(void)
+void CApplication::loadLibraryFolders()
 {
     m_libraryFolders.clear();
     QSqlQuery query(m_dataBase);
@@ -464,7 +474,7 @@ void CApplication::setRowHeight(int height)
  * \return Hauteur des lignes en pixels (par défaut, 19).
  */
 
-int CApplication::getRowHeight(void) const
+int CApplication::getRowHeight() const
 {
     return m_settings->value("Preferences/RowHeight", 19).toInt();
 }
@@ -1325,7 +1335,7 @@ int CApplication::getGenreId(const QString& name)
  *         par les morceaux, en plus de certains genres prédéfinis.
  */
 
-QStringList CApplication::getGenreList(void)
+QStringList CApplication::getGenreList()
 {
     QStringList genres;
 
@@ -1395,9 +1405,10 @@ QFile * CApplication::getLogFile(const QString& logName)
 /**
  * Gestion des messages d'erreur.
  *
- * \param message Message d'erreur.
- * \param file    Nom du fichier source.
- * \param line    Ligne dans le fichier source.
+ * \param message  Message d'erreur.
+ * \param function Nom de la fonction où l'erreur est survenue.
+ * \param file     Nom du fichier source contenant la fonction.
+ * \param line     Ligne dans le fichier source.
  */
 
 void CApplication::logError(const QString& message, const QString& function, const char * file, int line)
@@ -2286,7 +2297,7 @@ void CApplication::openDialogEditFolder(CFolder * folder)
  * Affiche une boite de dialogue pour relocaliser un morceau.
  */
 
-void CApplication::relocateSong(void)
+void CApplication::relocateSong()
 {
     Q_CHECK_PTR(m_displayedSongTable);
 
@@ -2442,7 +2453,9 @@ void CApplication::relocateSong(void)
             return;
         }
 
+        // Durée du morceau
         res = sound->getLength(reinterpret_cast<unsigned int *>(&(song->m_properties.duration)), FMOD_TIMEUNIT_MS);
+
         if (res != FMOD_OK)
         {
             logError(tr("can't compute song duration for file \"%1\"").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
@@ -2574,7 +2587,7 @@ CSong * CApplication::addSong(const QString& fileName)
  * Sélectionne le morceau en cours de lecture.
  */
 
-void CApplication::selectCurrentSong(void)
+void CApplication::selectCurrentSong()
 {
     selectSong(m_currentSongTable, m_currentSongItem);
 }
@@ -2606,7 +2619,7 @@ void CApplication::selectSong(CSongTable * songTable, CSongTableItem * songItem)
  * Le signal songModified est émis.
  */
 
-void CApplication::onSongModified(void)
+void CApplication::onSongModified()
 {
     CSong * song = qobject_cast<CSong *>(sender());
 
@@ -2651,7 +2664,7 @@ QStringList CApplication::importFolder(const QString& pathName)
  * Affiche le morceau sélectionné dans l'explorateur de fichiers.
  */
 
-void CApplication::openSongInExplorer(void)
+void CApplication::openSongInExplorer()
 {
     // Recherche du morceau sélectionné
     CSongTableItem * songItem = m_displayedSongTable->getSelectedSongItem();
@@ -2898,6 +2911,16 @@ void CApplication::updatePosition()
 
 void CApplication::updateTimer()
 {
+    // Vérification des lecteurs de CD-ROM
+    static int timerCDRomDrive = 0;
+
+    if (++timerCDRomDrive > 10)
+    {
+        m_listModel->updateCDRomDrives();
+        timerCDRomDrive = 0;
+    }
+
+    // Morceau actuel
     if (m_currentSongItem)
     {
         Q_CHECK_PTR(m_currentSongTable);
@@ -2949,6 +2972,10 @@ void CApplication::updateTimer()
             if (m_showRemainingTime)
             {
                 int duration = m_currentSongItem->getSong()->getDuration() - position;
+
+                if (duration < 0)
+                    duration = 0;
+
                 QTime remainingTime(0, 0);
                 remainingTime = remainingTime.addMSecs(duration);
                 m_uiControl->lblTime->setText(remainingTime.toString("m:ss"));
@@ -3006,6 +3033,7 @@ void CApplication::displaySongTable(CSongTable * songTable)
 
 bool CApplication::initSoundSystem()
 {
+    bool ret = true;
     FMOD_RESULT res;
 
     res = FMOD::System_Create(&m_soundSystem);
@@ -3076,7 +3104,43 @@ bool CApplication::initSoundSystem()
         res = m_soundSystem->init(2, FMOD_INIT_NORMAL, 0);
     }
 
-    return (res == FMOD_OK);
+    ret = (res == FMOD_OK);
+
+    // Lecteurs de CD-ROM
+    int numDrives;
+    res = m_soundSystem->getNumCDROMDrives(&numDrives);
+
+    if (res != FMOD_OK)
+    {
+        logError(tr("can't get number of CD-ROM drives"), __FUNCTION__, __FILE__, __LINE__);
+    }
+    else
+    {
+        for (int drive = 0; drive < numDrives; ++drive)
+        {
+            char driveName[128]  = "";
+            char SCSIName[128]   = "";
+            char deviceName[128] = "";
+
+            res = m_soundSystem->getCDROMDriveName(drive, driveName, 128, SCSIName, 128, deviceName, 128);
+
+            if (res != FMOD_OK)
+            {
+                logError(tr("can't get name of drive #%1").arg(drive), __FUNCTION__, __FILE__, __LINE__);
+            }
+            else
+            {
+                CCDRomDrive * cdRomDrive = new CCDRomDrive(driveName, this, SCSIName, deviceName);
+                cdRomDrive->hide();
+
+                m_cdRomDrives.append(cdRomDrive);
+
+                connect(cdRomDrive, SIGNAL(songStarted(CSongTableItem *)), this, SLOT(playSong(CSongTableItem *)));
+            }
+        }
+    }
+
+    return ret;
 }
 
 
@@ -3219,11 +3283,31 @@ void CApplication::startPlay()
 
     setState(Playing);
 
-    m_currentSongItem->getSong()->play();
-    emit songPlayStart(m_currentSongItem->getSong());
-    connect(m_currentSongItem->getSong(), SIGNAL(playEnd()), this, SLOT(onPlayEnd()), Qt::UniqueConnection);
+    CSong * song = m_currentSongItem->getSong();
+/*
+    if (song->isInCDRomDrive())
+    {
+        FMOD_RESULT res;
+        res = song->m_channel->stop();
 
-    updateSongDescription(m_currentSongItem->getSong());
+        if (res != FMOD_OK)
+        {
+            logError(tr("can't play track #%1 in CD-ROM drive \"%2\"").arg(song->m_cdRomTrackNumber + 1).arg(song->m_cdRomDrive->getDriveName()), __FUNCTION__, __FILE__, __LINE__);
+        }
+
+        res = song->m_channel->setPosition(song->m_cdRomTrackNumber, FMOD_TIMEUNIT_SENTENCE_SUBSOUND);
+
+        if (res != FMOD_OK)
+        {
+            logError(tr("can't play track #%1 in CD-ROM drive \"%2\"").arg(song->m_cdRomTrackNumber + 1).arg(song->m_cdRomDrive->getDriveName()), __FUNCTION__, __FILE__, __LINE__);
+        }
+    }
+*/
+    song->play();
+    emit songPlayStart(song);
+    connect(song, SIGNAL(playEnd()), this, SLOT(onPlayEnd()), Qt::UniqueConnection);
+
+    updateSongDescription(song);
     m_currentSongTable->m_model->setCurrentSong(m_currentSongItem);
 
     m_state = Playing;
@@ -3234,14 +3318,10 @@ void CApplication::startPlay()
         m_lastFmTimeListened = 0;
         m_lastFmLastPosition = 0;
 
-        if (m_currentSongItem->getSong()->getDuration() >= 30000)
-        {
+        if (song->getDuration() >= 30000)
             m_lastFmState = Started;
-        }
         else
-        {
             m_lastFmState = NoScrobble;
-        }
     }
 }
 

@@ -48,7 +48,7 @@ CMultiCriterion::~CMultiCriterion()
 }
 
 
-CMultiCriterion::TMultiCriterionType CMultiCriterion::getMultiCriterionType(void) const
+CMultiCriterion::TMultiCriterionType CMultiCriterion::getMultiCriterionType() const
 {
     switch (m_type)
     {
@@ -163,7 +163,7 @@ QList<CSong *> CMultiCriterion::getSongs(const QList<CSong *>& from, const QList
 }
 
 
-ICriteria::TUpdateConditions CMultiCriterion::getUpdateConditions(void) const
+ICriteria::TUpdateConditions CMultiCriterion::getUpdateConditions() const
 {
     if (m_children.isEmpty())
     {
@@ -208,7 +208,7 @@ void CMultiCriterion::insertIntoDatabase(CApplication * application)
 }
 
 
-IWidgetCriteria * CMultiCriterion::getWidget(void) const
+IWidgetCriteria * CMultiCriterion::getWidget() const
 {
     CWidgetMultiCriterion * widget = new CWidgetMultiCriterion(m_application, NULL);
     widget->setMultiCriterionType(m_type);

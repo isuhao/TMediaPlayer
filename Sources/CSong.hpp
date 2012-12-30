@@ -38,6 +38,7 @@ namespace TagLib
 }
 
 class CApplication;
+class CCDRomDrive;
 class QFile;
 
 
@@ -50,6 +51,7 @@ class CSong : public QObject
     Q_OBJECT
 
     friend class CApplication;
+    friend class CCDRomDrive;
     friend class CDialogEditSong;
     friend class CDialogEditSongs;
 
@@ -57,15 +59,18 @@ public:
 
     enum TFormat
     {
-        FormatUnknown = 0, ///< Format inconnu.
-        FormatMP3     = 1, ///< Format MPEG Layer 3.
-        FormatOGG     = 2, ///< Format Ogg Vorbis.
-        FormatFLAC    = 3  ///< Format FLAC.
+        FormatUnknown = 0,  ///< Format inconnu.
+
+        FormatMP3     = 1,  ///< Format MPEG Layer 3.
+        FormatOGG     = 2,  ///< Format Ogg Vorbis.
+        FormatFLAC    = 3,  ///< Format FLAC.
+
+        FormatCDAudio = 100 ///< CD-ROM audio.
     };
 
     static inline TFormat getFormatFromInteger(int format);
     static inline QString getFormatName(TFormat format);
-    static inline QStringList getFormatList(void);
+    static inline QStringList getFormatList();
 
 
     struct TSongPlay
@@ -87,6 +92,7 @@ public:
     bool matchFilter(const QString& filter) const;
     //void computeReplayGain();
     void updateDatabase();
+    inline bool isInCDRomDrive() const;
 
     inline int getId() const;
     inline QString getFileName() const;
@@ -94,7 +100,7 @@ public:
     inline int getBitRate() const;
     inline int getSampleRate() const;
     inline TFormat getFormat() const;
-    inline int getNumChannels(void) const;
+    inline int getNumChannels() const;
     inline int getDuration() const;
     inline bool getFileStatus() const;
     inline QDateTime getCreationDate() const;
@@ -348,6 +354,8 @@ private:
     CApplication * m_application;   ///< Pointeur sur l'application.
     FMOD::Sound * m_sound;          ///< Pointeur sur la structure de FMOD.
     FMOD::Channel * m_channel;      ///< Canal audio.
+    CCDRomDrive * m_cdRomDrive;     ///< Pointeur sur le lecteur de CD-ROM d'où provient le morceau.
+    int m_cdRomTrackNumber;         ///< Numéro de la piste sur le CD-ROM.
     bool m_isModified;              ///< Indique si les données ont été modifiées.
     mutable bool m_needWriteTags;   ///< Indique si les métadonnées doivent être mises à jour.
     bool m_fileStatus;              ///< Indique si le fichier est accessible.
@@ -373,10 +381,11 @@ inline CSong::TFormat CSong::getFormatFromInteger(int format)
     switch (format)
     {
         default:
-        case 0: return FormatUnknown;
-        case 1: return FormatMP3    ;
-        case 2: return FormatOGG    ;
-        case 3: return FormatFLAC   ;
+        case   0: return FormatUnknown;
+        case   1: return FormatMP3    ;
+        case   2: return FormatOGG    ;
+        case   3: return FormatFLAC   ;
+        case 100: return FormatCDAudio;
     }
 }
 
@@ -390,11 +399,12 @@ inline QString CSong::getFormatName(CSong::TFormat format)
         case FormatMP3    : return tr("MP3"                      );
         case FormatOGG    : return tr("Ogg Vorbis"               );
         case FormatFLAC   : return tr("FLAC"                     );
+        case FormatCDAudio: return tr("CD audio"                 );
     }
 }
 
 
-inline QStringList CSong::getFormatList(void)
+inline QStringList CSong::getFormatList()
 {
     QStringList formatList;
 
@@ -402,8 +412,15 @@ inline QStringList CSong::getFormatList(void)
     formatList << getFormatName(FormatMP3    );
     formatList << getFormatName(FormatOGG    );
     formatList << getFormatName(FormatFLAC   );
+    formatList << getFormatName(FormatCDAudio);
 
     return formatList;
+}
+
+
+inline bool CSong::isInCDRomDrive() const
+{
+    return (m_cdRomDrive != NULL);
 }
 
 

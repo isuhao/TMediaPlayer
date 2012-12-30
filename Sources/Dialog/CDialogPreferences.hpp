@@ -40,10 +40,10 @@ public:
 
 protected slots:
 
-    void save(void);
+    void save();
     void onDriverChange(const QString& name);
-    void addFolder(void);
-    void removeSelectedFolder(void);
+    void addFolder();
+    void removeSelectedFolder();
 
 private:
 

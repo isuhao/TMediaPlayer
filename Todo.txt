@@ -27,8 +27,14 @@
   - Améliorer l'affichage de l'indicateur.
   - Tester le mécanisme en profondeur.
 
-- Pouvoir lire un CD audio.
-  - Utiliser le code de la SDL.
+- Gérer les CD audio :
+  - Vérifier régulièrement la présence d'un CD dans chaque lecteur.
+  - Afficher les informations de chaque piste (freeDb).
+  - Pouvoir importer les pistes d'un CD.
+  - Modifier le menu contextuel de la vue "Listes de lecture" :
+    - Éjecter le CD.
+    - Obtenir le DiscId.
+    - Importer.
 
 - Gérer les répertoires à surveiller :
   - Analyser le répertoire récursivement au lancement de l'application.

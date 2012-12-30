@@ -73,7 +73,7 @@ CDialogEditStaticPlayList::~CDialogEditStaticPlayList()
  * \todo Ajouter les morceaux à la liste.
  */
 
-void CDialogEditStaticPlayList::save(void)
+void CDialogEditStaticPlayList::save()
 {
     QString name = m_uiWidget->editName->text();
 

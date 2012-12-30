@@ -97,7 +97,7 @@ CSongTable::CSongTable(CApplication * application) :
     header->setMovable(true);
     connect(header, SIGNAL(columnShown(int, bool)), this, SLOT(showColumn(int, bool)));
 
-    connect(m_model, SIGNAL(columnAboutToBeSorted(int, Qt::SortOrder)), this, SLOT(onSortAboutToChange(void)));
+    connect(m_model, SIGNAL(columnAboutToBeSorted(int, Qt::SortOrder)), this, SLOT(onSortAboutToChange()));
     connect(m_model, SIGNAL(columnSorted(int, Qt::SortOrder)), this, SLOT(sortColumn(int, Qt::SortOrder)));
 
     verticalHeader()->hide();
@@ -158,7 +158,7 @@ CSongTableItem * CSongTable::getFirstSongItem(CSong * song) const
 /**
  * Retourne le pointeur sur l'item à une ligne donnée.
  *
- * \param pos Numéro de la ligne (à partir de 0).
+ * \param row Numéro de la ligne (à partir de 0).
  * \return Pointeur sur l'item, ou NULL.
  */
 

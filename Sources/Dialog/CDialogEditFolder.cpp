@@ -72,7 +72,7 @@ CDialogEditFolder::~CDialogEditFolder()
 }
 
 
-void CDialogEditFolder::save(void)
+void CDialogEditFolder::save()
 {
     QString name = m_uiWidget->editName->text();
 

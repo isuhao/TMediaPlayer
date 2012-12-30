@@ -41,7 +41,7 @@ public:
     explicit CStaticPlayList(CApplication * application, const QString& name = QString());
     virtual ~CStaticPlayList();
 
-    virtual bool isModified(void) const;
+    virtual bool isModified() const;
 
 public slots:
 
@@ -51,8 +51,8 @@ public slots:
     void removeSong(CSongTableItem * songItem, bool confirm = true);
     void removeSongs(const QList<CSong *>& songs, bool confirm = true);
     void removeSongs(const QList<CSongTableItem *>& songItemList, bool confirm = true);
-    void removeSelectedSongs(void);
-    void removeDuplicateSongs(void);
+    void removeSelectedSongs();
+    void removeDuplicateSongs();
 
 signals:
 
@@ -62,8 +62,8 @@ signals:
 
 protected slots:
 
-    virtual bool updateDatabase(void);
-    virtual void removeFromDatabase(void);
+    virtual bool updateDatabase();
+    virtual void removeFromDatabase();
     virtual void openCustomMenuProject(const QPoint& point);
 
 protected:

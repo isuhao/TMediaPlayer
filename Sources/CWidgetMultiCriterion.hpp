@@ -46,15 +46,15 @@ public:
     explicit CWidgetMultiCriterion(CApplication * application, QWidget * parent = NULL);
     virtual ~CWidgetMultiCriterion();
 
-    virtual ICriteria * getCriteria(void);
+    virtual ICriteria * getCriteria();
 
 protected slots:
 
     void setMultiCriterionType(int type);
-    void addCriteria(void);
-    void addMultiCriterion(void);
+    void addCriteria();
+    void addMultiCriterion();
     void removeCriteria(int row);
-    void removeCriteriaFromButton(void);
+    void removeCriteriaFromButton();
 
 private:
 

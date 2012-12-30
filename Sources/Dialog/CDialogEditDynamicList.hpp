@@ -45,11 +45,11 @@ public:
 
 public slots:
 
-    void resizeWindow(void);
+    void resizeWindow();
 
 protected slots:
 
-    void save(void);
+    void save();
 
 private:
     
