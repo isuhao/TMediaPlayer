@@ -232,34 +232,34 @@ Erreur : %4</translation>
 <context>
     <name>CCDRomDrive</name>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="95"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="119"/>
         <source>the CD-ROM drive &quot;%1&quot; can&apos;t be opened with FMOD</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="105"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="129"/>
         <source>can&apos;t get number of track for CD-ROM drive &quot;%1&quot;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="202"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="237"/>
         <source>can&apos;t play track #%1 in CD-ROM drive &quot;%2&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>impossible de jouer la piste #%1 du lecteur de CD-ROM &quot;%2&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="210"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="245"/>
         <source>can&apos;t compute song duration for track #%1 in CD-ROM drive &quot;%2&quot;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="222"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="257"/>
         <source>can&apos;t find the format for track #%1 in CD-ROM drive &quot;%2&quot;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="229"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="264"/>
         <source>unknown format</source>
-        <translation type="unfinished">format inconnu</translation>
+        <translation>format inconnu</translation>
     </message>
 </context>
 <context>
@@ -1086,37 +1086,47 @@ Erreur : %4</translation>
 <context>
     <name>CPlayListView</name>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="71"/>
         <location filename="../Sources/CPlayListView.cpp" line="75"/>
+        <location filename="../Sources/CPlayListView.cpp" line="79"/>
         <source>Edit...</source>
         <translation>Modifier...</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="72"/>
         <location filename="../Sources/CPlayListView.cpp" line="76"/>
+        <location filename="../Sources/CPlayListView.cpp" line="80"/>
         <source>Remove</source>
         <translation>Supprimer</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="78"/>
-        <location filename="../Sources/CPlayListView.cpp" line="83"/>
+        <location filename="../Sources/CPlayListView.cpp" line="82"/>
+        <location filename="../Sources/CPlayListView.cpp" line="87"/>
         <source>New playlist...</source>
         <translation>Nouvelle liste de lecture...</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="79"/>
-        <location filename="../Sources/CPlayListView.cpp" line="84"/>
+        <location filename="../Sources/CPlayListView.cpp" line="83"/>
+        <location filename="../Sources/CPlayListView.cpp" line="88"/>
         <source>New dynamic playlist...</source>
         <translation>Nouvelle liste de lecture dynamique...</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="80"/>
-        <location filename="../Sources/CPlayListView.cpp" line="85"/>
+        <location filename="../Sources/CPlayListView.cpp" line="84"/>
+        <location filename="../Sources/CPlayListView.cpp" line="89"/>
         <source>New folder...</source>
         <translation>Nouveau dossier...</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="373"/>
+        <location filename="../Sources/CPlayListView.cpp" line="92"/>
+        <source>Eject</source>
+        <translation>Éjecter</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CPlayListView.cpp" line="93"/>
+        <source>Informations...</source>
+        <translation>Informations...</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CPlayListView.cpp" line="412"/>
         <source>the item isn&apos;t a playlist or a folder</source>
         <translation>l&apos;item n&apos;est ni une liste ni un dossier</translation>
     </message>
@@ -1192,7 +1202,7 @@ Erreur : %4</translation>
     <message>
         <location filename="../Sources/CSong.hpp" line="402"/>
         <source>CD audio</source>
-        <translation type="unfinished"></translation>
+        <translation>CD audio</translation>
     </message>
     <message>
         <source>Unknown</source>
@@ -1296,7 +1306,7 @@ Erreur : %4</translation>
     <message>
         <location filename="../Sources/CSong.cpp" line="1817"/>
         <source>can&apos;t play track #%1 in CD-ROM drive &quot;%2&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>impossible de jouer la piste #%1 du lecteur de CD-ROM &quot;%2&quot;</translation>
     </message>
     <message>
         <location filename="../Sources/CSong.cpp" line="2417"/>

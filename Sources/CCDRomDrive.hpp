@@ -21,6 +21,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #define FILE_C_CDROM_DRIVE
 
 #include "CSongTable.hpp"
+#include "CDRomDrive.hpp"
 
 
 class CApplication;
@@ -48,10 +49,17 @@ public:
     virtual ~CCDRomDrive();
 
     inline QString getDriveName() const;
-    bool hasCDInDrive();
+    inline QString getSCSIName() const;
+    inline QString getDeviceName() const;
     inline qint32 getDiscId() const;
+    inline QString getMusicBrainzDiscId() const;
+    bool hasCDInDrive();
 
     virtual bool isModified() const;
+
+public slots:
+
+    void ejectDisc();
 
 protected:
 
@@ -59,13 +67,14 @@ protected:
 
 private:
 
-    QString m_driveName;    ///< Nom du lecteur.
+    QString m_driveName;     ///< Nom du lecteur.
     QString m_SCSIName;
-    QString m_deviceName;   ///< Nom du périphérique.
-    qint32 m_discId;        ///< DiscId.
-    QString m_musicBrainzId;
-    FMOD::Sound * m_sound;  ///< Pointeur sur la structure de FMOD.
-    QList<CSong *> m_songs; ///< Liste des morceaux du CD-ROM.
+    QString m_deviceName;    ///< Nom du périphérique.
+    qint32 m_discId;         ///< DiscId.
+    QString m_musicBrainzId; ///< Identifiant du disque pour MusicBrainz.
+    FMOD::Sound * m_sound;   ///< Pointeur sur la structure de FMOD.
+    CDiscInfos m_disc;
+    QList<CSong *> m_songs;  ///< Liste des morceaux du CD-ROM.
 };
 
 
@@ -81,9 +90,27 @@ inline QString CCDRomDrive::getDriveName() const
 }
 
 
+inline QString CCDRomDrive::getSCSIName() const
+{
+    return m_SCSIName;
+}
+
+
+inline QString CCDRomDrive::getDeviceName() const
+{
+    return m_deviceName;
+}
+
+
 inline qint32 CCDRomDrive::getDiscId() const
 {
     return m_discId;
+}
+
+
+inline QString CCDRomDrive::getMusicBrainzDiscId() const
+{
+    return m_musicBrainzId;
 }
 
 #endif // FILE_C_CDROM_DRIVE

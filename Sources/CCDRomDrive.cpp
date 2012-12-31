@@ -22,7 +22,6 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CSong.hpp"
 #include "sha1.h"   // For MusicBrainz Id
 #include "base64.h" // For MusicBrainz Id
-#include "CDRomDrive.hpp" // For MusicBrainz Id
 
 
 /**
@@ -38,7 +37,8 @@ m_driveName  (driveName),
 m_SCSIName   (SCSIName),
 m_deviceName (deviceName),
 m_discId     (0),
-m_sound      (NULL)
+m_sound      (NULL),
+m_disc       (qPrintable(driveName))
 {
 
 }
@@ -70,6 +70,7 @@ CCDRomDrive::~CCDRomDrive()
  * Indique s'il y a un disque dans le lecteur.
  *
  * \todo Vérifier qu'il y a toujours un CD...
+ * \todo Calculer la durée de chaque morceau de façon plus fine.
  *
  * \return Booléen.
  */
@@ -78,11 +79,34 @@ bool CCDRomDrive::hasCDInDrive()
 {
     if (m_sound)
     {
-        //...
+        if (m_disc.hasDiscInDrive())
+        {
+            return true;
+        }
+        else
+        {
+            removeAllSongsFromTable();
+
+            // Destruction des morceaux
+            for (QList<CSong *>::const_iterator song = m_songs.begin(); song != m_songs.end(); ++song)
+            {
+                delete *song;
+            }
+
+            m_songs.clear();
+
+            m_sound->release();
+            m_sound = NULL;
+
+            m_discId = 0;
+            m_musicBrainzId = QString();
+
+            return false;
+        }
     }
     else
     {
-        FMOD_RESULT res = m_application->getSoundSystem()->createStream(qPrintable(m_driveName), FMOD_OPENONLY | FMOD_ACCURATETIME, 0, &m_sound);
+        FMOD_RESULT res = m_application->getSoundSystem()->createStream(qPrintable(m_driveName), FMOD_OPENONLY, 0, &m_sound);
 
         // Pas de disque dans le lecteur
         if (res == FMOD_ERR_CDDA_NODISC)
@@ -117,16 +141,18 @@ bool CCDRomDrive::hasCDInDrive()
             if (tag.datatype == FMOD_TAGDATATYPE_CDTOC)
             {
                 FMOD_CDTOC * toc = reinterpret_cast<FMOD_CDTOC *>(tag.data);
-
+/*
                 // Calcul des durées des pistes
-                for (int track = 0; track <= toc->numtracks; ++track)
+                for (int track = 0; track < toc->numtracks; ++track)
                 {
                     songDurations[track] = (toc->min[track] * 60) + toc->sec[track];
 
                     if (track > 0)
                         songDurations[track] -= (toc->min[track-1] * 60 + toc->sec[track-1]);
-                }
 
+                    songDurations[track] *= 1000;
+                }
+*/
                 // Calcul du DiscId
                 int	n = 0;
 
@@ -148,23 +174,32 @@ bool CCDRomDrive::hasCDInDrive()
                 m_discId = ((n % 0xff) << 24 | t << 8 | toc->numtracks);
 
                 // Calcul du DiscId de MusicBrainz
-                mb_disc_private disc;
-
-                if (mb_disc_read_unportable_nt(&disc, qPrintable(m_driveName)))
+                if (m_disc.readInfos())
                 {
+                    // Calcul des durées des pistes
+                    for (int track = 1; track < 100; ++track)
+                    {
+                        if (track == m_disc.infos.lastTrack)
+                            songDurations[track] = (1000 * (m_disc.infos.trackOffsets[0] - m_disc.infos.trackOffsets[track]) / 75);
+                        else if (track == 99)
+                            songDurations[track] = 0;
+                        else
+                            songDurations[track] = (1000 * (m_disc.infos.trackOffsets[track+1] - m_disc.infos.trackOffsets[track]) / 75);
+                    }
+
 	                SHA_INFO sha;
                     sha_init(&sha);
 
                     char tmp[17] = "";
-                    sprintf_s(tmp, "%02X", disc.first_track_num);
+                    sprintf_s(tmp, "%02X", m_disc.infos.firstTrack);
                     sha_update(&sha, reinterpret_cast<unsigned char *>(tmp), strlen(tmp));
 
-                    sprintf_s(tmp, "%02X", disc.last_track_num);
+                    sprintf_s(tmp, "%02X", m_disc.infos.lastTrack);
                     sha_update(&sha, reinterpret_cast<unsigned char *>(tmp), strlen(tmp));
 
                     for (int i = 0; i < 100; ++i)
                     {
-	                    sprintf_s(tmp, "%08X", disc.track_offsets[i]);
+	                    sprintf_s(tmp, "%08X", m_disc.infos.trackOffsets[i]);
 	                    sha_update(&sha, reinterpret_cast<unsigned char *>(tmp), strlen(tmp));
                     }
 
@@ -210,7 +245,7 @@ bool CCDRomDrive::hasCDInDrive()
                     m_application->logError(tr("can't compute song duration for track #%1 in CD-ROM drive \"%2\"").arg(track + 1).arg(m_driveName), __FUNCTION__, __FILE__, __LINE__);
 
                     // Utilisation de la table de contenu
-                    song->m_properties.duration = 1000 * songDurations[track+1];
+                    song->m_properties.duration = songDurations[track+1];
                 }
 
                 // Recherche du format du morceau
@@ -268,6 +303,18 @@ bool CCDRomDrive::isModified() const
 {
     // Les lecteurs ne sont pas enregistrés en base de données
     return false;
+}
+
+
+/**
+ * Éjecte le disque du lecteur.
+ *
+ * \todo Implémentation.
+ */
+
+void CCDRomDrive::ejectDisc()
+{
+    m_disc.ejectDisc();
 }
 
 

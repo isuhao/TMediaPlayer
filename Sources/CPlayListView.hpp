@@ -25,6 +25,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 class CListModel;
 class CSongTable;
+class CCDRomDrive;
 class CApplication;
 class CFolder;
 
@@ -45,6 +46,7 @@ public:
     CFolder * getFolder(const QModelIndex& index) const;
     CSongTable * getSelectedSongTable() const;
     CFolder * getSelectedFolder() const;
+    CCDRomDrive * getSelectedCDRomDrive() const;
     QModelIndex getSongTableModelIndex(CSongTable * songTable) const;
     QModelIndex getFolderModelIndex(CFolder * folder) const;
     void setModel(CListModel * model);
@@ -62,6 +64,8 @@ protected slots:
     void createStaticList();
     void createDynamicList();
     void createFolder();
+    void ejectCDRom();
+    void informationsAboutCDRomDrive();
 
 private:
     
@@ -69,6 +73,7 @@ private:
     CListModel * m_model;         ///< Modèle utilisé pour afficher les listes de lecture.
     QMenu * m_menuPlaylist;       ///< Menu contextuel pour les listes de lecture.
     QMenu * m_menuFolder;         ///< Menu contextuel pour les dossiers.
+    QMenu * m_menuCDRomDrive;     ///< Menu contextuel pour les lecteurs de CD-ROM.
     QMenu * m_menuDefault;        ///< Menu contextuel par défaut.
 };
 

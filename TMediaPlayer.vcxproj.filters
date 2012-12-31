@@ -433,6 +433,9 @@
     <ClCompile Include="Sources\base64.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\CDRomDrive.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Sources\CApplication.hpp">
@@ -675,7 +678,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Sources\CDRomDrive.hpp">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

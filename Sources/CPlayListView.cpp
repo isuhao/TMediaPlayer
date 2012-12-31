@@ -24,9 +24,11 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CDynamicList.hpp"
 #include "CApplication.hpp"
 #include "CFolder.hpp"
+#include "CCDRomDrive.hpp"
 #include <QHeaderView>
 #include <QMenu>
 #include <QDragMoveEvent>
+#include <QDesktopWidget>
 
 #include <QtDebug>
 
@@ -42,11 +44,13 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  */
 
 CPlayListView::CPlayListView(CApplication * application) :
-    QTreeView      (application),
-    m_application  (application),
-    m_model        (NULL),
-    m_menuPlaylist (NULL),
-    m_menuDefault  (NULL)
+    QTreeView        (application),
+    m_application    (application),
+    m_model          (NULL),
+    m_menuPlaylist   (NULL),
+    m_menuFolder     (NULL),
+    m_menuCDRomDrive (NULL),
+    m_menuDefault    (NULL)
 {
     Q_CHECK_PTR(application);
 
@@ -83,6 +87,10 @@ CPlayListView::CPlayListView(CApplication * application) :
     m_menuDefault->addAction(tr("New playlist..."), m_application, SLOT(openDialogCreateStaticList()));
     m_menuDefault->addAction(tr("New dynamic playlist..."), m_application, SLOT(openDialogCreateDynamicList()));
     m_menuDefault->addAction(tr("New folder..."), m_application, SLOT(openDialogCreateFolder()));
+
+    m_menuCDRomDrive = new QMenu(this);
+    m_menuCDRomDrive->addAction(tr("Eject"), this, SLOT(ejectCDRom()));
+    m_menuCDRomDrive->addAction(tr("Informations..."), this, SLOT(informationsAboutCDRomDrive()));
 
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(openCustomMenuProject(const QPoint&)));
@@ -129,7 +137,7 @@ CSongTable * CPlayListView::getSelectedSongTable() const
 
 
 /**
- * Retourne le dossier actuellement sélectionnée.
+ * Retourne le dossier actuellement sélectionné.
  *
  * \return Dossier sélectionné, ou NULL.
  */
@@ -138,6 +146,29 @@ CFolder * CPlayListView::getSelectedFolder() const
 {
     QModelIndex index = selectionModel()->currentIndex();
     return (index.isValid() ? getFolder(index) : NULL);
+}
+
+
+/**
+ * Retourne le lecteur de CD-ROM actuellement sélectionné.
+ *
+ * \return Lecteur de CD-ROM sélectionné, ou NULL.
+ */
+
+CCDRomDrive * CPlayListView::getSelectedCDRomDrive() const
+{
+    QModelIndex index = selectionModel()->currentIndex();
+
+    if (!index.isValid())
+        return NULL;
+
+    CSongTable * songTable = getSongTable(index);
+
+    if (!songTable)
+        return NULL;
+
+    CCDRomDrive * cdRomDrive = qobject_cast<CCDRomDrive *>(songTable);
+    return cdRomDrive;
 }
 
 
@@ -338,11 +369,16 @@ void CPlayListView::dragMoveEvent(QDragMoveEvent * event)
 /**
  * Ouvre le menu contextuel de la vue.
  *
+ * \todo Vérifier que la position du menu est correcte :
+ *       - Déterminer la hauteur du menu (H), sa position verticale (P), et la hauteur de l'écran (S).
+ *       - Si (P + H > S) => (P = S - H)
+ *
  * \param point Position du clic.
  */
 
 void CPlayListView::openCustomMenuProject(const QPoint& point)
 {
+    QMenu * menu = m_menuDefault; // Menu à afficher
     QModelIndex index = indexAt(point);
 
     if (index.isValid())
@@ -355,18 +391,21 @@ void CPlayListView::openCustomMenuProject(const QPoint& point)
 
             if (songTable)
             {
+                // Menu pour une liste de lecture
                 if (qobject_cast<IPlayList *>(songTable))
                 {
-                    m_menuPlaylist->move(mapToGlobal(point));
-                    m_menuPlaylist->show();
-                    return;
+                    menu = m_menuPlaylist;
+                }
+                // Menu pour un lecteur de CD-ROM
+                else if (qobject_cast<CCDRomDrive *>(songTable))
+                {
+                    menu = m_menuCDRomDrive;
                 }
             }
+            // Menu pour un dossier
             else if (item->data(Qt::UserRole + 2).value<CFolder *>())
             {
-                m_menuFolder->move(mapToGlobal(point));
-                m_menuFolder->show();
-                return;
+                menu = m_menuFolder;
             }
             else
             {
@@ -375,8 +414,22 @@ void CPlayListView::openCustomMenuProject(const QPoint& point)
         }
     }
 
-    m_menuDefault->move(mapToGlobal(point));
-    m_menuDefault->show();
+    // Positionnement du menu pour éviter qu'il ne sorte de l'écran
+    QPoint menuPosition = mapToGlobal(point);
+    QDesktopWidget * desktopWidget = QApplication::desktop();
+    const QRect screen = desktopWidget->screenGeometry(this);
+
+    if (menuPosition.y() + menu->height() > screen.height())
+    {
+        if (menu->height() <= screen.height())
+            menuPosition.setY(screen.height() - menu->height());
+        else
+            menuPosition.setY(0);
+    }
+    
+    // Affichage du menu
+    menu->move(menuPosition);
+    menu->show();
 }
 
 
@@ -392,12 +445,20 @@ void CPlayListView::onItemExpanded(const QModelIndex& index)
 }
 
 
+/**
+ * Slot pour créer une liste statique à l'intérieur d'un dossier.
+ */
+
 void CPlayListView::createStaticList()
 {
     CFolder * folder = getSelectedFolder();
     m_application->openDialogCreateStaticList(folder);
 }
 
+
+/**
+ * Slot pour créer une liste dynamique à l'intérieur d'un dossier.
+ */
 
 void CPlayListView::createDynamicList()
 {
@@ -406,8 +467,44 @@ void CPlayListView::createDynamicList()
 }
 
 
+/**
+ * Slot pour créer un dossier à l'intérieur d'un autre dossier.
+ */
+
 void CPlayListView::createFolder()
 {
     CFolder * folder = getSelectedFolder();
     m_application->openDialogCreateFolder(folder);
+}
+
+
+/**
+ * Éjecte le CD-ROM du lecteur de CD-ROM actuellement sélectionné.
+ */
+
+void CPlayListView::ejectCDRom()
+{
+    CCDRomDrive * cdRomDrive = getSelectedCDRomDrive();
+
+    if (cdRomDrive)
+    {
+        cdRomDrive->ejectDisc();
+    }
+}
+
+
+/**
+ * Affiche les informations sur le lecteur de CD-ROM actuellement sélectionné.
+ *
+ * \todo Implémentation.
+ */
+
+void CPlayListView::informationsAboutCDRomDrive()
+{
+    CCDRomDrive * cdRomDrive = getSelectedCDRomDrive();
+
+    if (cdRomDrive)
+    {
+        //...
+    }
 }

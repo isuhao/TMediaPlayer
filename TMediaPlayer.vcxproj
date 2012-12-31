@@ -339,6 +339,7 @@
     <ClCompile Include="Sources\CApplication.cpp" />
     <ClCompile Include="Sources\CCDRomDrive.cpp" />
     <ClCompile Include="Sources\CCriteria.cpp" />
+    <ClCompile Include="Sources\CDRomDrive.cpp" />
     <ClCompile Include="Sources\CDynamicList.cpp" />
     <ClCompile Include="Sources\CFolder.cpp" />
     <ClCompile Include="Sources\CLibrary.cpp" />

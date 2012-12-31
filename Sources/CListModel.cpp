@@ -321,6 +321,10 @@ void CListModel::clear()
 }
 
 
+/**
+ * Met à jour les informations sur les lecteurs de CD-ROM.
+ */
+
 void CListModel::updateCDRomDrives()
 {
     QList<CCDRomDrive *> drives = m_application->getCDRomDrives();
