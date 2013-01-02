@@ -37,8 +37,13 @@ CSongTableHeader::CSongTableHeader(QWidget * parent) :
     m_menuProperties        (NULL),
     m_menuReplayGain        (NULL)
 {
+#if QT_VERSION >= 0x050000
+    setSectionsClickable(true);
+    setSectionsMovable(true);
+#else
     setClickable(true);
     setMovable(true);
+#endif
     setContextMenuPolicy(Qt::DefaultContextMenu);
 
     m_contextMenu = new QMenu(this);

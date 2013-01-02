@@ -119,8 +119,14 @@ CApplication::CApplication() :
         m_translator.load(QString("Lang/TMediaPlayer_") + QLocale::system().name());
 
     qApp->installTranslator(&m_translator);
-
+    
+#if QT_VERSION >= 0x050000
+    m_applicationPath = QStandardPaths::writableLocation(QStandardPaths::DataLocation) + QDir::separator();
+#else
     m_applicationPath = QDesktopServices::storageLocation(QDesktopServices::DataLocation) + QDir::separator();
+#endif
+
+    // Création du répertoire si nécessaire
     QDir(m_applicationPath).mkpath(".");
 
     // Initialisation de l'interface graphique
@@ -309,7 +315,13 @@ bool CApplication::initWindow()
 
     QString dbHostName = m_settings->value("Database/Host", QString("localhost")).toString();
     int dbPort = m_settings->value("Database/Port", 0).toInt();
+
+#if QT_VERSION >= 0x050000
+    QString dbBaseName = m_settings->value("Database/Base", QStandardPaths::writableLocation(QStandardPaths::DataLocation) + QDir::separator() + "library.sqlite").toString();
+#else
     QString dbBaseName = m_settings->value("Database/Base", QDesktopServices::storageLocation(QDesktopServices::DataLocation) + QDir::separator() + "library.sqlite").toString();
+#endif
+
     QString dbUserName = m_settings->value("Database/UserName", QString("root")).toString();
     QString dbPassword = m_settings->value("Database/Password", QString("")).toString();
 

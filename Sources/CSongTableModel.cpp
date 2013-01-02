@@ -23,6 +23,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CRating.hpp"
 #include <QMouseEvent>
 #include <QUrl>
+#include <QMimeData>
 
 #include <QtDebug>
 

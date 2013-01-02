@@ -112,7 +112,12 @@ CDialogPreferences::CDialogPreferences(CApplication * application, QSettings * s
     m_uiWidget->editDBPort->setValue(m_settings->value("Database/Port", 0).toInt());
     m_uiWidget->editDBUserName->setText(m_settings->value("Database/UserName", QString("root")).toString());
     m_uiWidget->editDBPassword->setText(m_settings->value("Database/Password", QString("")).toString());
+    
+#if QT_VERSION >= 0x050000
+    m_uiWidget->editDBDatabase->setText(m_settings->value("Database/Base", QStandardPaths::writableLocation(QStandardPaths::DataLocation) + QDir::separator() + "library.sqlite").toString());
+#else
     m_uiWidget->editDBDatabase->setText(m_settings->value("Database/Base", QDesktopServices::storageLocation(QDesktopServices::DataLocation) + QDir::separator() + "library.sqlite").toString());
+#endif
 
     m_uiWidget->groupUseLastFm->setChecked(m_settings->value("LastFm/EnableScrobble", false).toBool());
     m_uiWidget->editLastFmDelayBeforeNotification->setValue(m_settings->value("LastFm/DelayBeforeNotification", 5000).toInt() / 1000);

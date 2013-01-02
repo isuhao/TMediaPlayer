@@ -28,6 +28,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QHeaderView>
 #include <QMenu>
 #include <QDragMoveEvent>
+#include <QMimeData>
 #include <QDesktopWidget>
 
 #include <QtDebug>
@@ -223,6 +224,24 @@ void CPlayListView::setModel(CListModel * model)
     {
         setExpanded(m_model->getModelIndex(*it), (*it)->isOpen());
     }
+    
+    // Affiche ou masque les lecteurs de CD-ROM
+    QList<CCDRomDrive *> drives = m_application->getCDRomDrives();
+
+    for (QList<CCDRomDrive *>::const_iterator drive = drives.begin(); drive != drives.end(); ++drive)
+    {
+        QModelIndex index = m_model->getModelIndex(*drive);
+
+        if (!index.isValid())
+            continue;
+
+        QStandardItem * item = m_model->item(index.row());
+
+        if (item == NULL)
+            continue;
+
+        setRowHidden(index.row(), index.parent(), !item->isEnabled());
+    }
 }
 
 
@@ -304,7 +323,19 @@ void CPlayListView::dragMoveEvent(QDragMoveEvent * event)
 
     if (index.isValid())
     {
+#if QT_VERSION >= 0x050000
+        const QMimeData * mimeData = event->mimeData();
+
+        if (!mimeData)
+        {
+            event->ignore();
+            return;
+        }
+
+        QByteArray dataList = mimeData->data("application/x-ted-media-list");
+#else
         QByteArray dataList = event->encodedData("application/x-ted-media-list");
+#endif
 
         if (dataList.isEmpty())
         {
@@ -377,7 +408,19 @@ void CPlayListView::dragMoveEvent(QDragMoveEvent * event)
     }
     else
     {
+#if QT_VERSION >= 0x050000
+        const QMimeData * mimeData = event->mimeData();
+
+        if (!mimeData)
+        {
+            event->ignore();
+            return;
+        }
+
+        QByteArray dataList = mimeData->data("application/x-ted-media-list");
+#else
         QByteArray dataList = event->encodedData("application/x-ted-media-list");
+#endif
 
         if (dataList.isEmpty())
         {

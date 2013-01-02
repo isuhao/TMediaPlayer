@@ -237,8 +237,14 @@ void CDialogEditSong::resetSummary()
     {
 
 #ifdef Q_OS_WIN32
+
+#if QT_VERSION >= 0x050000
+        TagLib::MPEG::File file(reinterpret_cast<const wchar_t *>(song->getFileName().constData()));
+#else
         std::wstring fileNameWString = song->getFileName().toStdWString();
         TagLib::MPEG::File file(fileNameWString.c_str(), false);
+#endif
+
 #else
         TagLib::MPEG::File file(qPrintable(song->getFileName()), false);
 #endif

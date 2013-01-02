@@ -37,6 +37,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QPainter>
 #include <QMessageBox>
 #include <QSettings>
+#include <QDrag>
 
 #include <QtDebug>
 
@@ -96,7 +97,13 @@ CSongTable::CSongTable(CApplication * application) :
     // Modification des colonnes
     CSongTableHeader * header = new CSongTableHeader(this);
     setHorizontalHeader(header);
+
+#if QT_VERSION >= 0x050000
+    header->setSectionsMovable(true);
+#else
     header->setMovable(true);
+#endif
+
     connect(header, SIGNAL(columnShown(int, bool)), this, SLOT(showColumn(int, bool)));
 
     connect(m_model, SIGNAL(columnAboutToBeSorted(int, Qt::SortOrder)), this, SLOT(onSortAboutToChange()));

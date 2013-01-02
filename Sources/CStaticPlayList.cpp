@@ -31,6 +31,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QKeyEvent>
 #include <QPainter>
 #include <QSettings>
+#include <QMimeData>
 
 #include <QtDebug>
 
@@ -913,7 +914,12 @@ void CStaticPlayList::dropEvent(QDropEvent * event)
             row = m_model->rowCount();
         }
 
-        QByteArray encodedData = event->mimeData()->data("application/x-ted-media-items");
+        const QMimeData * mimeData = event->mimeData();
+
+        if (!mimeData)
+            return;
+
+        QByteArray encodedData = mimeData->data("application/x-ted-media-items");
         QDataStream stream(&encodedData, QIODevice::ReadOnly);
 
         int numSongs;

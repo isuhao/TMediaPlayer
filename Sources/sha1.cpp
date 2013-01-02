@@ -348,11 +348,9 @@ void sha_stream(unsigned char digest[20], SHA_INFO * sha_info, FILE * fin)
 
 void sha_print(unsigned char digest[20])
 {
-    int i, j;
-
-    for (j = 0; j < 5; ++j)
+    for (int j = 0; j < 5; ++j)
     {
-	    for (i = 0; i < 4; ++i)
+	    for (int i = 0; i < 4; ++i)
         {
 	        printf("%02x", *digest++);
 	    }
@@ -364,10 +362,9 @@ void sha_print(unsigned char digest[20])
 char * sha_version()
 {
 #if (SHA_VERSION == 1)
-    static char *version = "SHA-1";
+    static char * version = "SHA-1";
 #else
-    static char *version = "SHA";
+    static char * version = "SHA";
 #endif
-    return(version);
+    return version;
 }
-

@@ -194,8 +194,14 @@ void CDialogEditMetadata::reset()
         case CSong::FormatMP3:
         {
 #ifdef Q_OS_WIN32
+
+#if QT_VERSION >= 0x050000
+            TagLib::MPEG::File file(reinterpret_cast<const wchar_t *>(m_song->getFileName().constData()));
+#else
             std::wstring fileNameWString = m_song->getFileName().toStdWString();
             TagLib::MPEG::File file(fileNameWString.c_str(), false);
+#endif
+
 #else
             TagLib::MPEG::File file(qPrintable(m_song->getFileName()), false);
 #endif
@@ -221,8 +227,14 @@ void CDialogEditMetadata::reset()
         case CSong::FormatOGG:
         {
 #ifdef Q_OS_WIN32
+
+#if QT_VERSION >= 0x050000
+            TagLib::Ogg::Vorbis::File file(reinterpret_cast<const wchar_t *>(m_song->getFileName().constData()));
+#else
             std::wstring fileNameWString = m_song->getFileName().toStdWString();
             TagLib::Ogg::Vorbis::File file(fileNameWString.c_str(), false);
+#endif
+
 #else
             TagLib::Ogg::Vorbis::File file(qPrintable(m_song->getFileName()), false);
 #endif
@@ -252,8 +264,14 @@ void CDialogEditMetadata::reset()
         case CSong::FormatFLAC:
         {
 #ifdef Q_OS_WIN32
+
+#if QT_VERSION >= 0x050000
+            TagLib::FLAC::File file(reinterpret_cast<const wchar_t *>(m_song->getFileName().constData()));
+#else
             std::wstring fileNameWString = m_song->getFileName().toStdWString();
             TagLib::FLAC::File file(fileNameWString.c_str(), false);
+#endif
+
 #else
             TagLib::FLAC::File file(qPrintable(m_song->getFileName()), false);
 #endif
