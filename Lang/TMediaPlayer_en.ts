@@ -293,7 +293,7 @@ Error: %4</translation>
 %2</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogAbout.cpp" line="66"/>
+        <location filename="../Sources/Dialog/CDialogAbout.cpp" line="75"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -1151,7 +1151,7 @@ Error: %4</translation>
         <translation>Informations...</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="462"/>
+        <location filename="../Sources/CPlayListView.cpp" line="480"/>
         <source>the item isn&apos;t a playlist or a folder</source>
         <translation>the item isn&apos;t a playlist or a folder</translation>
     </message>
