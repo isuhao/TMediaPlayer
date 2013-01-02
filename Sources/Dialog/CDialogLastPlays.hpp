@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2012 Teddy Michel
+Copyright (C) 2012-2013 Teddy Michel
 
 This file is part of TMediaPlayer.
 

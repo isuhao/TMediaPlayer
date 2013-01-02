@@ -4,7 +4,6 @@
 --------------------------------------------------
 
 - Revoir le dock "Listes de lecture".
-  - Ajouter une entrée "File d'attente".
 
 - Bug : si on modifie une liste dynamique en cours de lecture, ben y'a un blem...
 - Bug : si une liste ne contient que des morceaux introuvables et que la répétition de liste est activée, la lecture entraine une boucle infinie.
@@ -27,7 +26,6 @@
 - Gérer les CD audio :
   - Afficher les informations de chaque piste (freeDb).
   - Pouvoir importer les pistes d'un CD.
-  - Créer la boite de dialogue pour afficher les informations sur le disque (DiscId, MusicBrainz Id, nom du périphérique, etc.).
 
 - Gérer les répertoires à surveiller :
   - Analyser le répertoire récursivement au lancement de l'application.
@@ -55,8 +53,6 @@
   - Ajouter un item dans la vue "Listes de lecture".
   - Ajouter des entrées dans les menus contextuels pour ajouter un morceau en file d'attente.
   - Pouvoir arrêter la lecture / Fermer l'application à la fin d'un morceau.
-
-- Implémenter complètement la boite de dialogue "About".
 
 --------------------------------------------------
   Importance faible
