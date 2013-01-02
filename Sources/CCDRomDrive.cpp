@@ -29,6 +29,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  *
  * \param driveName   Nom du lecteur.
  * \param application Pointeur sur la classe principale de l'application.
+ * \param SCSIName    Nom SCSI du lecteur.
+ * \param deviceName  Nom du périphérique.
  */
 
 CCDRomDrive::CCDRomDrive(const QString& driveName, CApplication * application, const QString& SCSIName, const QString& deviceName) :
@@ -40,7 +42,8 @@ m_discId     (0),
 m_sound      (NULL),
 m_disc       (qPrintable(driveName))
 {
-
+    // Glisser-déposer
+    setDragEnabled(false);
 }
 
 

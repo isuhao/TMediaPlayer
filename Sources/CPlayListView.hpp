@@ -50,6 +50,7 @@ public:
     QModelIndex getSongTableModelIndex(CSongTable * songTable) const;
     QModelIndex getFolderModelIndex(CFolder * folder) const;
     void setModel(CListModel * model);
+    void updateCDRomDrives();
 
 protected:
 

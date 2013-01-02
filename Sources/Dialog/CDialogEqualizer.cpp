@@ -18,7 +18,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CDialogEqualizer.hpp"
-#include "CApplication.hpp"
+#include "../CApplication.hpp"
 #include <QPushButton>
 #include <QInputDialog>
 #include <QMessageBox>

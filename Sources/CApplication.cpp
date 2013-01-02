@@ -37,6 +37,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "Dialog/CDialogNotifications.hpp"
 #include "Dialog/CDialogLastPlays.hpp"
 #include "Dialog/CDialogRemoveFolder.hpp"
+#include "Dialog/CDialogAbout.hpp"
 #include "Importer/CImporterITunes.hpp"
 #include "CLibrary.hpp"
 #include "CSliderStyle.hpp"
@@ -70,6 +71,9 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QSqlDriver>
 
 
+const int timerPeriod = 250; ///< Intervalle entre chaque mise-à-jour des informations.
+
+
 /**
  * Constructeur de la classe principale de l'application.
  */
@@ -90,7 +94,6 @@ CApplication::CApplication() :
     m_library              (NULL),
     m_displayedSongTable   (NULL),
     m_widgetLyrics         (NULL),
-  //m_lyricsEdit           (NULL),
     m_state                (Stopped),
     m_showRemainingTime    (false),
     m_isRepeat             (false),
@@ -152,17 +155,17 @@ CApplication::CApplication() :
     connect(m_uiWidget->actionPreferences, SIGNAL(triggered()), this, SLOT(openDialogPreferences()));
 
     connect(m_uiWidget->actionPlay, SIGNAL(triggered()), this, SLOT(togglePlay()));
-    //connect(m_uiWidget->actionPause, SIGNAL(triggered()), this, SLOT(pause()));
+    connect(m_uiWidget->actionPause, SIGNAL(triggered()), this, SLOT(pause()));
     connect(m_uiWidget->actionStop, SIGNAL(triggered()), this, SLOT(stop()));
     connect(m_uiWidget->actionPrevious, SIGNAL(triggered()), this, SLOT(previousSong()));
     connect(m_uiWidget->actionNext, SIGNAL(triggered()), this, SLOT(nextSong()));
     connect(m_uiWidget->actionRepeat, SIGNAL(triggered(bool)), this, SLOT(setRepeat(bool)));
     connect(m_uiWidget->actionShuffle, SIGNAL(triggered(bool)), this, SLOT(setShuffle(bool)));
-    //connect(m_uiWidget->actionMtute, SIGNAL(triggered()), this, SLOT(mute()));
+    connect(m_uiWidget->actionMute, SIGNAL(triggered(bool)), this, SLOT(setMute(bool)));
     connect(m_uiWidget->actionEqualizer, SIGNAL(triggered()), this, SLOT(openDialogEqualizer()));
 
     connect(m_uiWidget->actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
-    //connect(m_uiWidget->actionAbout, SIGNAL(triggered()), qApp, SLOT(about()));
+    connect(m_uiWidget->actionAbout, SIGNAL(triggered()), this, SLOT(openDialogAbout()));
 
 
     connect(this, SIGNAL(songPlayStart(CSong *)), this, SLOT(updateSongDescription(CSong *)));
@@ -230,9 +233,6 @@ bool CApplication::initWindow()
 
 
     // Barre de contrôle
-    //QWidget * toolWidget = new QWidget(this);
-    //m_uiWidget->horizontalLayout->setParent(NULL);
-    //toolWidget->setLayout(m_uiWidget->horizontalLayout);
     QWidget * widgetControl = new QWidget(this);
     m_uiControl->setupUi(widgetControl);
     m_uiWidget->toolBar->addWidget(widgetControl);
@@ -276,24 +276,7 @@ bool CApplication::initWindow()
 
     // Dock "Lyrics"
     m_widgetLyrics = new CWidgetLyrics(this);
-/*
-    m_lyricsEdit = new QTextEdit();
-    m_lyricsEdit->setReadOnly(true);
 
-    QPushButton * lyricsFind = new QPushButton(tr("Find"));
-    connect(lyricsFind, SIGNAL(clicked()), this, SLOT(findLyrics()));
-
-    QPushButton * lyricsEdit = new QPushButton(tr("Edit"));
-
-    QGridLayout * lyricsLayout = new QGridLayout();
-    lyricsLayout->setMargin(0);
-    lyricsLayout->addWidget(m_lyricsEdit, 0, 0, 1, 2);
-    lyricsLayout->addWidget(lyricsFind, 1, 0);
-    lyricsLayout->addWidget(lyricsEdit, 1, 1);
-
-    QWidget * m_widgetLyrics = new QWidget(this);
-    m_widgetLyrics->setLayout(lyricsLayout);
-*/
     QDockWidget * dockLyrics = new QDockWidget(tr("Lyrics"), this);
     dockLyrics->setObjectName("dock_lyrics");
     dockLyrics->setWidget(m_widgetLyrics);
@@ -392,7 +375,7 @@ bool CApplication::initWindow()
 
     m_timer = new QTimer(this);
     connect(m_timer, SIGNAL(timeout()), this, SLOT(updateTimer()));
-    m_timer->start(250);
+    m_timer->start(timerPeriod);
 
     updateSongDescription(NULL);
     setState(Stopped);
@@ -2294,6 +2277,17 @@ void CApplication::openDialogEditFolder(CFolder * folder)
 
 
 /**
+ * Affiche la boite de dialogue "À propos".
+ */
+
+void CApplication::openDialogAbout()
+{
+    CDialogAbout * dialog = new CDialogAbout(this);
+    dialog->show();
+}
+
+
+/**
  * Affiche une boite de dialogue pour relocaliser un morceau.
  */
 
@@ -2916,7 +2910,7 @@ void CApplication::updateTimer()
 
     if (++timerCDRomDrive > 10)
     {
-        m_listModel->updateCDRomDrives();
+        m_playListView->updateCDRomDrives();
         timerCDRomDrive = 0;
     }
 

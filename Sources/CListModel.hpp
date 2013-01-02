@@ -104,6 +104,12 @@ inline QList<IPlayList *> CListModel::getPlayLists() const
 }
 
 
+/**
+ * Retourne le dossier principal, qui contient les dossiers et les listes de lecture.
+ *
+ * \return Pointeur sur le dossier principal.
+ */
+
 inline CFolder * CListModel::getRootFolder() const
 {
     return m_rootFolder;

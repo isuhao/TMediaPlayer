@@ -18,8 +18,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CDialogEditStaticPlayList.hpp"
-#include "CStaticPlayList.hpp"
-#include "CApplication.hpp"
+#include "../CStaticPlayList.hpp"
+#include "../CApplication.hpp"
 #include <QStandardItemModel>
 #include <QMessageBox>
 #include <QPushButton>

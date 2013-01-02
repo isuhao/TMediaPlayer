@@ -24,11 +24,13 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CFolder.hpp"
 #include "CLibrary.hpp"
 #include "CDialogEditSong.hpp"
+
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QMessageBox>
 #include <QKeyEvent>
 #include <QPainter>
+#include <QSettings>
 
 #include <QtDebug>
 
@@ -746,10 +748,13 @@ void CStaticPlayList::openCustomMenuProject(const QPoint& point)
         menu->addAction(tr("Remove from playlist"), this, SLOT(removeSelectedSongs()));
         menu->addAction(tr("Remove from library"), this, SLOT(removeSongsFromLibrary()));
 
-        if (severalSongs)
-            menu->addAction(tr("Rename files"), this, SLOT(moveSongs()));
-        else
-            menu->addAction(tr("Rename file"), this, SLOT(moveSongs()));
+        if (m_application->getSettings()->value("Folders/KeepOrganized", false).toBool())
+        {
+            if (severalSongs)
+                menu->addAction(tr("Rename files"), this, SLOT(moveSongs()));
+            else
+                menu->addAction(tr("Rename file"), this, SLOT(moveSongs()));
+        }
 
         if (!severalSongs)
         {

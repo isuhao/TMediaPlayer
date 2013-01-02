@@ -18,9 +18,9 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CDialogEditSong.hpp"
-#include "CSongTable.hpp"
-#include "CApplication.hpp"
-#include "CRatingEditor.hpp"
+#include "../CSongTable.hpp"
+#include "../CApplication.hpp"
+#include "../CRatingEditor.hpp"
 #include <QStandardItemModel>
 #include <QCloseEvent>
 #include <QSettings>

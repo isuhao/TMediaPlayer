@@ -2041,13 +2041,17 @@ void CSong::updateDatabase()
     if (m_isModified && (m_properties != m_propertiesDB || m_infos != m_infosDB))
     {
         // Déplacement du fichier
-        if (m_infos.title       != m_infosDB.title      ||
-            m_infos.artistName  != m_infosDB.artistName ||
-            m_infos.albumTitle  != m_infosDB.albumTitle ||
-            m_infos.year        != m_infosDB.year       ||
-            m_infos.trackNumber != m_infosDB.trackNumber||
-            m_infos.discNumber  != m_infosDB.discNumber ||
-            m_infos.compilation != m_infosDB.compilation)
+        if (m_application->getSettings()->value("Folders/KeepOrganized", false).toBool() &&
+              (
+                m_infos.title       != m_infosDB.title       ||
+                m_infos.artistName  != m_infosDB.artistName  ||
+                m_infos.albumTitle  != m_infosDB.albumTitle  ||
+                m_infos.year        != m_infosDB.year        ||
+                m_infos.trackNumber != m_infosDB.trackNumber ||
+                m_infos.discNumber  != m_infosDB.discNumber  ||
+                m_infos.compilation != m_infosDB.compilation
+              )
+            )
         {
             moveFile();
         }

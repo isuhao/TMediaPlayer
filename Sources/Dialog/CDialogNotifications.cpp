@@ -18,7 +18,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CDialogNotifications.hpp"
-#include "CApplication.hpp"
+#include "../CApplication.hpp"
 #include <QPushButton>
 
 

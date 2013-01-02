@@ -18,8 +18,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CDialogRemoveFolder.hpp"
-#include "CApplication.hpp"
-#include "CFolder.hpp"
+#include "../CApplication.hpp"
+#include "../CFolder.hpp"
 #include <QPushButton>
 
 #include <QtDebug>

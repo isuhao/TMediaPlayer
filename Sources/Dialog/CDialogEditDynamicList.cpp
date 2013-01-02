@@ -18,9 +18,9 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CDialogEditDynamicList.hpp"
-#include "CDynamicList.hpp"
-#include "CWidgetMultiCriterion.hpp"
-#include "CApplication.hpp"
+#include "../CDynamicList.hpp"
+#include "../CWidgetMultiCriterion.hpp"
+#include "../CApplication.hpp"
 #include <QStandardItemModel>
 #include <QMessageBox>
 #include <QPushButton>

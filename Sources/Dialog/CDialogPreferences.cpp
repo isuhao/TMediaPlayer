@@ -18,8 +18,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CDialogPreferences.hpp"
-#include "CApplication.hpp"
-#include "Language.hpp"
+#include "../CApplication.hpp"
+#include "../Language.hpp"
 #include <QSettings>
 #include <QDesktopServices>
 #include <QDir>

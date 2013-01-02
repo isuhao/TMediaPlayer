@@ -5,7 +5,6 @@
 
 - Revoir le dock "Listes de lecture".
   - Ajouter une entrée "File d'attente".
-  - Ajouter des entrées pour les lecteurs de CD.
 
 - Bug : si on modifie une liste dynamique en cours de lecture, ben y'a un blem...
 - Bug : si une liste ne contient que des morceaux introuvables et que la répétition de liste est activée, la lecture entraine une boucle infinie.
@@ -19,8 +18,6 @@
 --------------------------------------------------
   Importance moyenne
 --------------------------------------------------
-
-- Installateur : pouvoir choisir la base de données à utiliser.
 
 - Améliorer la gestion du glisser-déposer dans la vue des listes de lecture.
   - Pouvoir désactiver le positionnement des listes et dossiers.
@@ -59,13 +56,15 @@
   - Ajouter des entrées dans les menus contextuels pour ajouter un morceau en file d'attente.
   - Pouvoir arrêter la lecture / Fermer l'application à la fin d'un morceau.
 
-- Optimisation : exécuter les requêtes SQL dans un thread séparé.
-  - Utiliser des transactions.
-  - Tester avec MySQL.
+- Implémenter complètement la boite de dialogue "About".
 
 --------------------------------------------------
   Importance faible
 --------------------------------------------------
+
+- Ajouter une vue pour afficher l'histogramme.
+
+- Installateur : pouvoir choisir la base de données à utiliser.
 
 - Lors de la fermeture de l'application, demander une confirmation si un morceau est en cours de lecture.
 - N'autoriser qu'une seule instance de l'application.
@@ -100,6 +99,10 @@
 
 - Récupérer les pochettes depuis Internet.
 - Option "Lecture seule" (désactiver l'écriture des métadonnées et le déplacement des fichiers).
+
+- Optimisation : exécuter les requêtes SQL dans un thread séparé.
+  - Utiliser des transactions.
+  - Tester avec MySQL.
 
 - Import depuis iTunes.
   - Importer les morceaux.

@@ -27,6 +27,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CDynamicList.hpp"
 #include "CRatingDelegate.hpp"
 #include "CLibrary.hpp"
+
 #include <QStringList>
 #include <QMouseEvent>
 #include <QHeaderView>
@@ -35,6 +36,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QMenu>
 #include <QPainter>
 #include <QMessageBox>
+#include <QSettings>
 
 #include <QtDebug>
 
@@ -1310,10 +1312,13 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
         menu->addSeparator();
         menu->addAction(tr("Remove from library"), this, SLOT(removeSongsFromLibrary()));
 
-        if (severalSongs)
-            menu->addAction(tr("Rename files"), this, SLOT(moveSongs()));
-        else
-            menu->addAction(tr("Rename file"), this, SLOT(moveSongs()));
+        if (m_application->getSettings()->value("Folders/KeepOrganized", false).toBool())
+        {
+            if (severalSongs)
+                menu->addAction(tr("Rename files"), this, SLOT(moveSongs()));
+            else
+                menu->addAction(tr("Rename file"), this, SLOT(moveSongs()));
+        }
 
         if (!severalSongs)
         {

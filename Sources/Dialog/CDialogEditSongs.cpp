@@ -18,8 +18,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CDialogEditSongs.hpp"
-#include "CApplication.hpp"
-#include "CSpecialSpinBox.hpp"
+#include "../CApplication.hpp"
+#include "../CSpecialSpinBox.hpp"
 #include <QStandardItemModel>
 #include <QPushButton>
 

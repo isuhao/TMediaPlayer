@@ -95,6 +95,7 @@
      <string>&amp;Help</string>
     </property>
     <addaction name="actionAboutQt"/>
+    <addaction name="actionAbout"/>
    </widget>
    <addaction name="menu_Fichier"/>
    <addaction name="menuEdit"/>
@@ -192,6 +193,9 @@
    <property name="text">
     <string>Pause</string>
    </property>
+   <property name="shortcut">
+    <string>Space</string>
+   </property>
   </action>
   <action name="actionStop">
    <property name="icon">
@@ -250,7 +254,7 @@
      <normaloff>:/icons/preferences</normaloff>:/icons/preferences</iconset>
    </property>
    <property name="text">
-    <string>Preferences...</string>
+    <string>&amp;Preferences...</string>
    </property>
   </action>
   <action name="actionAboutQt">
@@ -294,6 +298,16 @@
   <action name="actionLastPlays">
    <property name="text">
     <string>Last plays...</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>&amp;About...</string>
+   </property>
+  </action>
+  <action name="actionMute">
+   <property name="text">
+    <string>Mute</string>
    </property>
   </action>
  </widget>

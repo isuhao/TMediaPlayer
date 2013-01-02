@@ -227,6 +227,35 @@ void CPlayListView::setModel(CListModel * model)
 
 
 /**
+ * Met à jour les informations sur les lecteurs de CD-ROM.
+ * Affiche ou masque les éléments correspondant aux lecteurs.
+ */
+
+void CPlayListView::updateCDRomDrives()
+{
+    Q_CHECK_PTR(m_model);
+    m_model->updateCDRomDrives();
+    
+    QList<CCDRomDrive *> drives = m_application->getCDRomDrives();
+
+    for (QList<CCDRomDrive *>::const_iterator drive = drives.begin(); drive != drives.end(); ++drive)
+    {
+        QModelIndex index = m_model->getModelIndex(*drive);
+
+        if (!index.isValid())
+            continue;
+
+        QStandardItem * item = m_model->item(index.row());
+
+        if (item == NULL)
+            continue;
+
+        setRowHidden(index.row(), index.parent(), !item->isEnabled());
+    }
+}
+
+
+/**
  * Gestion des touches du clavier.
  * La touche Supprimer est gérée.
  *
@@ -368,10 +397,6 @@ void CPlayListView::dragMoveEvent(QDragMoveEvent * event)
 
 /**
  * Ouvre le menu contextuel de la vue.
- *
- * \todo Vérifier que la position du menu est correcte :
- *       - Déterminer la hauteur du menu (H), sa position verticale (P), et la hauteur de l'écran (S).
- *       - Si (P + H > S) => (P = S - H)
  *
  * \param point Position du clic.
  */
