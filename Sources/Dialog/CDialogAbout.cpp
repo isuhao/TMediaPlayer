@@ -39,8 +39,8 @@ CDialogAbout::CDialogAbout(CApplication * application) :
     m_uiWidget->setupUi(this);
 
     // Versions
-    const QString appVersion    = "1.0.35";
-    const QString appDate       = "02/01/2013";
+    const QString appVersion    = "1.0.36";
+    const QString appDate       = "03/01/2013";
     const QString FMODVersion   = "FMOD Ex 4.44.03";
     const QString FMODCopyright = "FMOD Ex SoundSystem Copyright © 2005-2012 Firelight Technologies Pty, Ltd.";
     const QString musicBrainz   = tr("MusicBrainzId computation:\n%1\n%2").arg("Copyright (C) 2000 Robert Kaye")

@@ -242,22 +242,27 @@ Erreur : %4</translation>
         <translation>impossible de déterminer le nombre de piste du lecteur de CD-ROM &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="240"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="236"/>
+        <source>Track %1</source>
+        <translation>Piste %1</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CCDRomDrive.cpp" line="244"/>
         <source>can&apos;t play track #%1 in CD-ROM drive &quot;%2&quot;</source>
         <translation>impossible de jouer la piste #%1 du lecteur de CD-ROM &quot;%2&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="248"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="252"/>
         <source>can&apos;t compute song duration for track #%1 in CD-ROM drive &quot;%2&quot;</source>
         <translation>impossible de calculer la durée de la piste #%1 du lecteur de CD-ROM &quot;%2&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="260"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="271"/>
         <source>can&apos;t find the format for track #%1 in CD-ROM drive &quot;%2&quot;</source>
         <translation>impossible de déterminer le format de la piste #%1 du lecteur de CD-ROM &quot;%2&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="267"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="278"/>
         <source>unknown format</source>
         <translation>format inconnu</translation>
     </message>
@@ -1111,47 +1116,47 @@ Erreur : %4</translation>
 <context>
     <name>CPlayListView</name>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="76"/>
-        <location filename="../Sources/CPlayListView.cpp" line="80"/>
+        <location filename="../Sources/CPlayListView.cpp" line="78"/>
+        <location filename="../Sources/CPlayListView.cpp" line="82"/>
         <source>Edit...</source>
         <translation>Modifier...</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="77"/>
-        <location filename="../Sources/CPlayListView.cpp" line="81"/>
+        <location filename="../Sources/CPlayListView.cpp" line="79"/>
+        <location filename="../Sources/CPlayListView.cpp" line="83"/>
         <source>Remove</source>
         <translation>Supprimer</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="83"/>
-        <location filename="../Sources/CPlayListView.cpp" line="88"/>
+        <location filename="../Sources/CPlayListView.cpp" line="85"/>
+        <location filename="../Sources/CPlayListView.cpp" line="90"/>
         <source>New playlist...</source>
         <translation>Nouvelle liste de lecture...</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="84"/>
-        <location filename="../Sources/CPlayListView.cpp" line="89"/>
+        <location filename="../Sources/CPlayListView.cpp" line="86"/>
+        <location filename="../Sources/CPlayListView.cpp" line="91"/>
         <source>New dynamic playlist...</source>
         <translation>Nouvelle liste de lecture dynamique...</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="85"/>
-        <location filename="../Sources/CPlayListView.cpp" line="90"/>
+        <location filename="../Sources/CPlayListView.cpp" line="87"/>
+        <location filename="../Sources/CPlayListView.cpp" line="92"/>
         <source>New folder...</source>
         <translation>Nouveau dossier...</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="93"/>
+        <location filename="../Sources/CPlayListView.cpp" line="95"/>
         <source>Eject</source>
         <translation>Éjecter</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="94"/>
+        <location filename="../Sources/CPlayListView.cpp" line="96"/>
         <source>Informations...</source>
         <translation>Informations...</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="480"/>
+        <location filename="../Sources/CPlayListView.cpp" line="482"/>
         <source>the item isn&apos;t a playlist or a folder</source>
         <translation>l&apos;item n&apos;est ni une liste ni un dossier</translation>
     </message>
@@ -2274,27 +2279,27 @@ Voulez-vous les ajouter ?</translation>
         <translation>Nom du lecteur :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogCDRomDriveInfos.ui" line="60"/>
+        <location filename="../Form/DialogCDRomDriveInfos.ui" line="63"/>
         <source>SCSI name:</source>
         <translation>Nom SCSI :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogCDRomDriveInfos.ui" line="81"/>
+        <location filename="../Form/DialogCDRomDriveInfos.ui" line="87"/>
         <source>Device name:</source>
         <translation>Nom du périphérique :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogCDRomDriveInfos.ui" line="98"/>
+        <location filename="../Form/DialogCDRomDriveInfos.ui" line="107"/>
         <source>CD-Rom</source>
         <translation>CD-Rom</translation>
     </message>
     <message>
-        <location filename="../Form/DialogCDRomDriveInfos.ui" line="111"/>
+        <location filename="../Form/DialogCDRomDriveInfos.ui" line="120"/>
         <source>DiscId:</source>
         <translation>DiscId:</translation>
     </message>
     <message>
-        <location filename="../Form/DialogCDRomDriveInfos.ui" line="132"/>
+        <location filename="../Form/DialogCDRomDriveInfos.ui" line="144"/>
         <source>MusicBrainz disc id:</source>
         <translation>Identifiant MusicBrainz :</translation>
     </message>

@@ -51,7 +51,7 @@ public:
     inline QString getDriveName() const;
     inline QString getSCSIName() const;
     inline QString getDeviceName() const;
-    inline qint32 getDiscId() const;
+    inline quint32 getDiscId() const;
     inline QString getMusicBrainzDiscId() const;
     bool hasCDInDrive();
 
@@ -70,7 +70,7 @@ private:
     QString m_driveName;     ///< Nom du lecteur.
     QString m_SCSIName;
     QString m_deviceName;    ///< Nom du périphérique.
-    qint32 m_discId;         ///< DiscId.
+    quint32 m_discId;        ///< DiscId.
     QString m_musicBrainzId; ///< Identifiant du disque pour MusicBrainz.
     FMOD::Sound * m_sound;   ///< Pointeur sur la structure de FMOD.
     CDiscInfos m_disc;
@@ -102,7 +102,7 @@ inline QString CCDRomDrive::getDeviceName() const
 }
 
 
-inline qint32 CCDRomDrive::getDiscId() const
+inline quint32 CCDRomDrive::getDiscId() const
 {
     return m_discId;
 }

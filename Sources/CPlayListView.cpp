@@ -25,6 +25,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CApplication.hpp"
 #include "CFolder.hpp"
 #include "CCDRomDrive.hpp"
+#include "Dialog/CDialogCDRomDriveInfos.hpp"
+
 #include <QHeaderView>
 #include <QMenu>
 #include <QDragMoveEvent>
@@ -563,8 +565,6 @@ void CPlayListView::ejectCDRom()
 
 /**
  * Affiche les informations sur le lecteur de CD-ROM actuellement sélectionné.
- *
- * \todo Implémentation.
  */
 
 void CPlayListView::informationsAboutCDRomDrive()
@@ -573,6 +573,7 @@ void CPlayListView::informationsAboutCDRomDrive()
 
     if (cdRomDrive)
     {
-        //...
+        CDialogCDRomDriveInfos * dialog = new CDialogCDRomDriveInfos(cdRomDrive, m_application);
+        dialog->show();
     }
 }

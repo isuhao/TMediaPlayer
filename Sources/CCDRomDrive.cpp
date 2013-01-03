@@ -144,7 +144,7 @@ bool CCDRomDrive::hasCDInDrive()
             if (tag.datatype == FMOD_TAGDATATYPE_CDTOC)
             {
                 FMOD_CDTOC * toc = reinterpret_cast<FMOD_CDTOC *>(tag.data);
-/*
+
                 // Calcul des durées des pistes
                 for (int track = 0; track < toc->numtracks; ++track)
                 {
@@ -155,7 +155,7 @@ bool CCDRomDrive::hasCDInDrive()
 
                     songDurations[track] *= 1000;
                 }
-*/
+
                 // Calcul du DiscId
                 int	n = 0;
 
@@ -233,6 +233,10 @@ bool CCDRomDrive::hasCDInDrive()
                 song->m_cdRomDrive       = this;
                 song->m_cdRomTrackNumber = track;
 
+                song->m_infos.title       = tr("Track %1").arg(track + 1);
+                song->m_infos.trackNumber = track + 1;
+                song->m_infos.trackCount  = numTracks;
+
                 res = channel->setPosition(track, FMOD_TIMEUNIT_SENTENCE_SUBSOUND);
 
                 if (res != FMOD_OK)
@@ -249,6 +253,13 @@ bool CCDRomDrive::hasCDInDrive()
 
                     // Utilisation de la table de contenu
                     song->m_properties.duration = songDurations[track+1];
+                }
+
+                // La norme définit la durée minimale d'un morceau à 2s
+                if (song->m_properties.duration < 2000)
+                {
+                    delete song;
+                    continue;
                 }
 
                 // Recherche du format du morceau
