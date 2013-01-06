@@ -62,17 +62,16 @@ void CLyricWiki::replyFinished(QNetworkReply * reply)
 
     if (reply->error() != QNetworkReply::NoError)
     {
-        qDebug() << "Erreur HTTP : " << reply->error() << "\n";
+        m_application->logError(tr("HTTP error: %1").arg(reply->error()), __FUNCTION__, __FILE__, __LINE__);
     }
 
     QByteArray data = reply->readAll();
-
     QDomDocument doc;
-    
     QString error;
+
     if (!doc.setContent(data, &error))
     {
-        qDebug() << "Document XML invalide (" << error << ")\n";
+        m_application->logError(tr("invalid XML document (%1)").arg(error), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
@@ -80,17 +79,15 @@ void CLyricWiki::replyFinished(QNetworkReply * reply)
 
     if (racine.tagName() != "LyricsResult")
     {
-        qDebug() << "Réponse XML incorrecte (élément 'LyricsResult' attendu)\n";
+        m_application->logError(tr("invalid XML response (expected element '%1')").arg("LyricsResult"), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
     
-    //racine = racine.firstChildElement();
-
     QDomElement elemURL = racine.firstChildElement("url");
 
     if (elemURL.isNull())
     {
-        qDebug() << "Réponse XML incorrecte (élément 'url' attendu)\n";
+        m_application->logError(tr("invalid XML response (expected element '%1')").arg("url"), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
@@ -100,13 +97,13 @@ void CLyricWiki::replyFinished(QNetworkReply * reply)
 
     if (elemPageId.isNull())
     {
-        qDebug() << "Réponse XML incorrecte (élément 'page_id' attendu)\n";
+        m_application->logError(tr("invalid XML response (expected element '%1')").arg("page_id"), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
     if (elemPageId.text().toInt() <= 0)
     {
-        qDebug() << "Réponse XML incorrecte (élément 'page_id' invalide)\n";
+        m_application->logError(tr("invalid XML response (invalid element '%1')").arg("page_id"), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
@@ -124,7 +121,7 @@ void CLyricWiki::replyFinished2(QNetworkReply * reply)
 
     if (reply->error() != QNetworkReply::NoError)
     {
-        qDebug() << "Erreur HTTP : " << reply->error() << "\n";
+        m_application->logError(tr("HTTP error: %1").arg(reply->error()), __FUNCTION__, __FILE__, __LINE__);
     }
 
     QByteArray data = reply->readAll();

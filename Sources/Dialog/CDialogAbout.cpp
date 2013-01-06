@@ -39,20 +39,22 @@ CDialogAbout::CDialogAbout(CApplication * application) :
     m_uiWidget->setupUi(this);
 
     // Versions
-    const QString appVersion    = "1.0.36";
-    const QString appDate       = "03/01/2013";
+    const QString appVersion    = m_application->getAppVersion();
+    const QString appDate       = m_application->getAppDate();
     const QString FMODVersion   = "FMOD Ex 4.44.03";
     const QString FMODCopyright = "FMOD Ex SoundSystem Copyright © 2005-2012 Firelight Technologies Pty, Ltd.";
     const QString musicBrainz   = tr("MusicBrainzId computation:\n%1\n%2").arg("Copyright (C) 2000 Robert Kaye")
                                                                           .arg("Copyright (C) 2007 Lukas Lalinsky");
+    const QString tagLibVersion = "TagLib 1.7.2 (license LGPL 2.1)";
 
     m_uiWidget->textVersion->setText(QString("TMediaPlayer %1").arg(appVersion));
 
-    m_uiWidget->textInfos->setText(QString("TMediaPlayer %1 (%2)\n\n%3\n%4\n\n%5\n")
+    m_uiWidget->textInfos->setText(QString("TMediaPlayer %1 (%2)\n\n%3\n%4\n\n%5\n\n%6\n")
                                     .arg(appVersion)
                                     .arg(appDate)
                                     .arg(FMODVersion)
                                     .arg(FMODCopyright)
+                                    .arg(tagLibVersion)
                                     .arg(musicBrainz));
 
     // Licence

@@ -67,8 +67,6 @@ void CAuthentication::replyFinished(QNetworkReply * reply)
     stream << tr("Code:") << ' ' << reply->error() << '\n';
     stream << tr("Content:") << ' ' << "'" << data << "'\n";
 
-    Q_CHECK_PTR(reply);
-
     if (reply->error() != QNetworkReply::NoError)
     {
         stream << "Erreur HTTP : " << reply->error() << "\n";

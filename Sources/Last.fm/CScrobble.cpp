@@ -69,12 +69,12 @@ CScrobble::CScrobble(CApplication * application, const QByteArray& sessionKey, C
     stream << "========================================\n";
     stream << "   Request 'Scrobble'\n";
     stream << "----------------------------------------\n";
-    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString() << "\n";
-    stream << tr("Title:") << ' ' << "'" << song->getTitle() << "'\n";
-    stream << tr("Artist:") << ' ' << "'" << song->getArtistName() << "'\n";
-    stream << tr("Album:") << ' ' << "'" << song->getAlbumTitle() << "'\n";
-    stream << tr("URL:") << ' ' << "'" << m_lastFmUrl << "'\n";
-    stream << tr("Content:") << ' ' << "'" << content << "'\n";
+    stream << qSetFieldWidth(8) << tr("Date:")    << qSetFieldWidth(0) << ' ' << QDateTime::currentDateTime().toString() << "\n";
+    stream << qSetFieldWidth(8) << tr("Title:")   << qSetFieldWidth(0) << ' ' << "'" << song->getTitle() << "'\n";
+    stream << qSetFieldWidth(8) << tr("Artist:")  << qSetFieldWidth(0) << ' ' << "'" << song->getArtistName() << "'\n";
+    stream << qSetFieldWidth(8) << tr("Album:")   << qSetFieldWidth(0) << ' ' << "'" << song->getAlbumTitle() << "'\n";
+    stream << qSetFieldWidth(8) << tr("URL:")     << qSetFieldWidth(0) << ' ' << "'" << m_lastFmUrl << "'\n";
+    stream << qSetFieldWidth(8) << tr("Content:") << qSetFieldWidth(0) << ' ' << "'" << content << "'\n";
 
     QUrl url(m_lastFmUrl);
     QNetworkRequest request(url);

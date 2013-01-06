@@ -73,6 +73,21 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 const int timerPeriod = 250; ///< Intervalle entre chaque mise-à-jour des informations.
 
+const QString appVersion = "1.0.37";     ///< Numéro de version de l'application.
+const QString appDate    = "06/01/2013"; ///< Date de sortie de cette version.
+
+
+QString CApplication::getAppVersion() const
+{
+    return appVersion;
+}
+
+
+QString CApplication::getAppDate() const
+{
+    return appDate;
+}
+
 
 /**
  * Constructeur de la classe principale de l'application.

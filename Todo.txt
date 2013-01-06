@@ -23,9 +23,8 @@
   - Améliorer l'affichage de l'indicateur.
   - Tester le mécanisme en profondeur.
 
-- Gérer les CD audio :
-  - Afficher les informations de chaque piste (freeDb).
-  - Pouvoir importer les pistes d'un CD.
+- Pouvoir importer les pistes d'un CD.
+- Modifier le menu contextuel pour enlever certains éléments ("Enlever de la médiathèque).
 
 - Gérer les répertoires à surveiller :
   - Analyser le répertoire récursivement au lancement de l'application.

@@ -20,8 +20,9 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CCDRomDrive.hpp"
 #include "CApplication.hpp"
 #include "CSong.hpp"
-#include "sha1.h"   // For MusicBrainz Id
-#include "base64.h" // For MusicBrainz Id
+#include "MusicBrainz/sha1.h"
+#include "MusicBrainz/base64.h"
+#include "MusicBrainz/CMusicBrainzLookup.hpp"
 
 
 /**
@@ -42,6 +43,11 @@ m_discId     (0),
 m_sound      (NULL),
 m_disc       (qPrintable(driveName))
 {
+    for (int track = 0; track < 100; ++track)
+    {
+        m_songs[track] = NULL;
+    }
+
     // Glisser-déposer
     setDragEnabled(false);
 }
@@ -54,12 +60,11 @@ m_disc       (qPrintable(driveName))
 CCDRomDrive::~CCDRomDrive()
 {
     // Destruction des morceaux
-    for (QList<CSong *>::const_iterator song = m_songs.begin(); song != m_songs.end(); ++song)
+    for (int track = 0; track < 100; ++track)
     {
-        delete *song;
+        delete m_songs[track];
+        m_songs[track] = NULL;
     }
-
-    m_songs.clear();
 
     if (m_sound)
     {
@@ -71,9 +76,6 @@ CCDRomDrive::~CCDRomDrive()
 
 /**
  * Indique s'il y a un disque dans le lecteur.
- *
- * \todo Vérifier qu'il y a toujours un CD...
- * \todo Calculer la durée de chaque morceau de façon plus fine.
  *
  * \return Booléen.
  */
@@ -91,12 +93,11 @@ bool CCDRomDrive::hasCDInDrive()
             removeAllSongsFromTable();
 
             // Destruction des morceaux
-            for (QList<CSong *>::const_iterator song = m_songs.begin(); song != m_songs.end(); ++song)
+            for (int track = 0; track < 100; ++track)
             {
-                delete *song;
+                delete m_songs[track];
+                m_songs[track] = NULL;
             }
-
-            m_songs.clear();
 
             m_sound->release();
             m_sound = NULL;
@@ -221,28 +222,28 @@ bool CCDRomDrive::hasCDInDrive()
         FMOD::Channel * channel = NULL;
         res = m_application->getSoundSystem()->playSound(FMOD_CHANNEL_FREE, m_sound, true, &channel);
 
+        // Création des morceaux
         if (res == FMOD_OK && channel)
         {
-            for (int track = 0; track < numTracks; ++track)
+            QList<CSong *> songs;
+
+            for (int track = 0; track < 100; ++track)
             {
-                CSong * song = new CSong(m_application);
+                m_songs[track] = NULL;
+            }
 
-                // Attributs du morceau
-                song->m_sound            = m_sound;
-                song->m_channel          = channel;
-                song->m_cdRomDrive       = this;
-                song->m_cdRomTrackNumber = track;
-
-                song->m_infos.title       = tr("Track %1").arg(track + 1);
-                song->m_infos.trackNumber = track + 1;
-                song->m_infos.trackCount  = numTracks;
-
-                res = channel->setPosition(track, FMOD_TIMEUNIT_SENTENCE_SUBSOUND);
+            for (int track = 0; track < numTracks && track < 100; ++track)
+            {
+                //res = channel->setPosition(track, FMOD_TIMEUNIT_SENTENCE_SUBSOUND);
+                res = channel->setPosition(track, FMOD_TIMEUNIT_SENTENCE);
 
                 if (res != FMOD_OK)
                 {
                     m_application->logError(tr("can't play track #%1 in CD-ROM drive \"%2\"").arg(track + 1).arg(m_driveName), __FUNCTION__, __FILE__, __LINE__);
+                    continue;
                 }
+
+                CSong * song = new CSong(m_application);
 
                 // Recherche de la durée du morceau
                 res = m_sound->getLength(reinterpret_cast<unsigned int *>(&(song->m_properties.duration)), FMOD_TIMEUNIT_SENTENCE_MS);
@@ -262,9 +263,32 @@ bool CCDRomDrive::hasCDInDrive()
                     continue;
                 }
 
+                // Attributs du morceau
+                song->m_sound            = m_sound;
+                song->m_channel          = channel;
+                song->m_cdRomDrive       = this;
+                song->m_cdRomTrackNumber = track;
+                
+                song->m_infos.title       = tr("Track %1").arg(track + 1);
+                song->m_infos.trackNumber = track + 1;
+                song->m_infos.trackCount  = numTracks;
+
+                if (track + 1 < 10)
+                    song->m_properties.fileName = QString("Track0%1.cda").arg(track + 1);
+                else
+                    song->m_properties.fileName = QString("Track%1.cda").arg(track + 1);
+
                 // Recherche du format du morceau
                 FMOD_SOUND_TYPE type;
-                res = m_sound->getFormat(&type, NULL, NULL, NULL);
+                FMOD_SOUND_FORMAT format;
+                res = m_sound->getFormat(&type, &format, &(song->m_properties.numChannels), NULL);
+
+                if (song->m_properties.numChannels <= 0)
+                    song->m_properties.numChannels = 1;
+                
+                song->m_properties.sampleRate = 44100;
+                song->m_properties.bitRate    = song->m_properties.sampleRate * 16 * song->m_properties.numChannels / 1000;
+                song->m_properties.fileSize   = (static_cast<qlonglong>(song->m_properties.duration) * static_cast<qlonglong>(song->m_properties.bitRate)) / 8; // 8 bits par octet
 
                 if (res != FMOD_OK)
                 {
@@ -296,11 +320,14 @@ bool CCDRomDrive::hasCDInDrive()
                     }
                 }
 
-                m_songs.append(song);
+                m_songs[track + 1] = song;
+                songs.append(song);
             }
 
-            addSongsToTable(m_songs);
+            addSongsToTable(songs);
         }
+
+        CMusicBrainzLookup * lookup = new CMusicBrainzLookup(this, m_application);
     }
 
     return (m_sound != NULL);
@@ -322,13 +349,29 @@ bool CCDRomDrive::isModified() const
 
 /**
  * Éjecte le disque du lecteur.
- *
- * \todo Implémentation.
  */
 
 void CCDRomDrive::ejectDisc()
 {
     m_disc.ejectDisc();
+
+    removeAllSongsFromTable();
+
+    // Destruction des morceaux
+    for (int track = 0; track < 100; ++track)
+    {
+        delete m_songs[track];
+        m_songs[track] = NULL;
+    }
+
+    if (m_sound)
+    {
+        m_sound->release();
+        m_sound = NULL;
+    }
+
+    m_discId = 0;
+    m_musicBrainzId = QString();
 }
 
 

@@ -54,6 +54,7 @@ public:
     inline quint32 getDiscId() const;
     inline QString getMusicBrainzDiscId() const;
     bool hasCDInDrive();
+    inline CSong * getSong(int trackNumber) const;
 
     virtual bool isModified() const;
 
@@ -74,7 +75,7 @@ private:
     QString m_musicBrainzId; ///< Identifiant du disque pour MusicBrainz.
     FMOD::Sound * m_sound;   ///< Pointeur sur la structure de FMOD.
     CDiscInfos m_disc;
-    QList<CSong *> m_songs;  ///< Liste des morceaux du CD-ROM.
+    CSong * m_songs[100];    ///< Liste des morceaux du CD-ROM.
 };
 
 
@@ -96,11 +97,23 @@ inline QString CCDRomDrive::getSCSIName() const
 }
 
 
+/**
+ * Retourne le nom du périphérique.
+ *
+ * \return Nom du périphérique.
+ */
+
 inline QString CCDRomDrive::getDeviceName() const
 {
     return m_deviceName;
 }
 
+
+/**
+ * Retourne l'identifiant DiscId.
+ *
+ * \return Identifiant DiscId.
+ */
 
 inline quint32 CCDRomDrive::getDiscId() const
 {
@@ -108,9 +121,31 @@ inline quint32 CCDRomDrive::getDiscId() const
 }
 
 
+/**
+ * Retourne l'identifiant du disque pour MusicBrainz.
+ *
+ * \return Identifiant du disque pour MusicBrainz.
+ */
+
 inline QString CCDRomDrive::getMusicBrainzDiscId() const
 {
     return m_musicBrainzId;
+}
+
+
+/**
+ * Retourne le morceau correspondant à un numéro de piste.
+ *
+ * \param trackNumber Numéro de piste (entre 0 et 99).
+ * \return Pointeur sur le morceau, ou NULL.
+ */
+
+inline CSong * CCDRomDrive::getSong(int trackNumber) const
+{
+    if (trackNumber < 0 || trackNumber >= 100)
+        return NULL;
+
+    return m_songs[trackNumber];
 }
 
 #endif // FILE_C_CDROM_DRIVE

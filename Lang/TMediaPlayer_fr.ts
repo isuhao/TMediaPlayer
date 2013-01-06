@@ -4,13 +4,13 @@
 <context>
     <name>CApplication</name>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="299"/>
+        <location filename="../Sources/CApplication.cpp" line="314"/>
         <source>Failed to init sound system with FMOD.</source>
         <translation>Le chargement du système de son avec FMOD a échoué.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="143"/>
-        <location filename="../Sources/CApplication.cpp" line="2899"/>
+        <location filename="../Sources/CApplication.cpp" line="158"/>
+        <location filename="../Sources/CApplication.cpp" line="2914"/>
         <source>%n song(s), %1</source>
         <translation>
             <numerusform>%n morceau, %1</numerusform>
@@ -18,32 +18,32 @@
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="236"/>
+        <location filename="../Sources/CApplication.cpp" line="251"/>
         <source>the application has already been initialized</source>
         <translation>l&apos;application a déjà été initialisée</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="275"/>
+        <location filename="../Sources/CApplication.cpp" line="290"/>
         <source>Playlists</source>
         <translation>Listes de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="286"/>
+        <location filename="../Sources/CApplication.cpp" line="301"/>
         <source>Lyrics</source>
         <translation>Paroles</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="342"/>
+        <location filename="../Sources/CApplication.cpp" line="357"/>
         <source>Failed to load database: %1.</source>
         <translation>Erreur lors du chargement de la base de données : %1.</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="413"/>
+        <location filename="../Sources/CApplication.cpp" line="428"/>
         <source>Database error</source>
         <translation>Erreur de base de données</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="413"/>
+        <location filename="../Sources/CApplication.cpp" line="428"/>
         <source>File: %1 (%2)
 
 Query: %3
@@ -56,22 +56,22 @@ Requête : %3
 Erreur : %4</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="416"/>
+        <location filename="../Sources/CApplication.cpp" line="431"/>
         <source>Query: </source>
         <translation>Requête : </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1421"/>
+        <location filename="../Sources/CApplication.cpp" line="1436"/>
         <source>%2 (%3 line %4): %1</source>
         <translation>%2 (%3 ligne %4) : %1</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1973"/>
+        <location filename="../Sources/CApplication.cpp" line="1988"/>
         <source>invalid argument (%1)</source>
         <translation>argument invalide (%1)</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="2157"/>
+        <location filename="../Sources/CApplication.cpp" line="2172"/>
         <source>%n song(s) added to the library.</source>
         <translation>
             <numerusform>%n morceau ajouté à la médiathèque.</numerusform>
@@ -79,13 +79,13 @@ Erreur : %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2345"/>
+        <location filename="../Sources/CApplication.cpp" line="2360"/>
         <source>This file is already in the library. Do you want to merge the two songs?</source>
         <translation>Le fichier sélectionné est déjà dans la médiathèque. Voulez-vous fusionner les deux morceaux ?</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="1047"/>
-        <location filename="../Sources/CApplication.cpp" line="4221"/>
+        <location filename="../Sources/CApplication.cpp" line="1062"/>
+        <location filename="../Sources/CApplication.cpp" line="4236"/>
         <source>%n day(s) %1</source>
         <translation>
             <numerusform>%n jour %1</numerusform>
@@ -93,34 +93,34 @@ Erreur : %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3121"/>
+        <location filename="../Sources/CApplication.cpp" line="3136"/>
         <source>can&apos;t get number of CD-ROM drives</source>
         <translation>impossible de déterminer le nombre de lecteurs de CD-ROM</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3135"/>
+        <location filename="../Sources/CApplication.cpp" line="3150"/>
         <source>can&apos;t get name of drive #%1</source>
         <translation>impossible de trouver le nom du lecteur #%1</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3344"/>
+        <location filename="../Sources/CApplication.cpp" line="3359"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3353"/>
-        <location filename="../Sources/CApplication.cpp" line="3362"/>
+        <location filename="../Sources/CApplication.cpp" line="3368"/>
+        <location filename="../Sources/CApplication.cpp" line="3377"/>
         <source>Play</source>
         <translation>Lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2128"/>
+        <location filename="../Sources/CApplication.cpp" line="2143"/>
         <source>Loading files...</source>
         <translation>Chargement des fichiers...</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="1047"/>
-        <location filename="../Sources/CApplication.cpp" line="1051"/>
+        <location filename="../Sources/CApplication.cpp" line="1062"/>
+        <location filename="../Sources/CApplication.cpp" line="1066"/>
         <source>%n selected song(s), %1</source>
         <translation>
             <numerusform>%n morceau sélectionné, %1</numerusform>
@@ -128,74 +128,74 @@ Erreur : %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1389"/>
+        <location filename="../Sources/CApplication.cpp" line="1404"/>
         <source>can&apos;t open the log file &quot;%1&quot;</source>
         <translation>impossible d&apos;ouvrir le fichier de log &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1477"/>
-        <location filename="../Sources/CApplication.cpp" line="1504"/>
-        <location filename="../Sources/CApplication.cpp" line="1520"/>
-        <location filename="../Sources/CApplication.cpp" line="1837"/>
-        <location filename="../Sources/CApplication.cpp" line="2549"/>
+        <location filename="../Sources/CApplication.cpp" line="1492"/>
+        <location filename="../Sources/CApplication.cpp" line="1519"/>
+        <location filename="../Sources/CApplication.cpp" line="1535"/>
+        <location filename="../Sources/CApplication.cpp" line="1852"/>
         <location filename="../Sources/CApplication.cpp" line="2564"/>
-        <location filename="../Sources/CApplication.cpp" line="2613"/>
+        <location filename="../Sources/CApplication.cpp" line="2579"/>
+        <location filename="../Sources/CApplication.cpp" line="2628"/>
         <source>invalid pointer</source>
         <translation>pointeur invalide</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2315"/>
+        <location filename="../Sources/CApplication.cpp" line="2330"/>
         <source>several songs selected</source>
         <translation>plusieurs morceaux sélectionnés</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2458"/>
+        <location filename="../Sources/CApplication.cpp" line="2473"/>
         <source>error while loading the file &quot;%1&quot; with FMOD</source>
         <translation>erreur lors du chargement du fichier &quot;%1&quot; avec FMOD</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2467"/>
+        <location filename="../Sources/CApplication.cpp" line="2482"/>
         <source>can&apos;t compute song duration for file &quot;%1&quot;</source>
         <translation>impossible de calculer la durée du morceau &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2476"/>
+        <location filename="../Sources/CApplication.cpp" line="2491"/>
         <source>can&apos;t find song format for file &quot;%1&quot;</source>
         <translation>impossible de déterminer le format du fichier &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2483"/>
+        <location filename="../Sources/CApplication.cpp" line="2498"/>
         <source>unknown format</source>
         <translation>format inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2746"/>
+        <location filename="../Sources/CApplication.cpp" line="2761"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Êtes-vous sûr de vouloir supprimer cette liste de lecture ?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2746"/>
+        <location filename="../Sources/CApplication.cpp" line="2761"/>
         <source>Yes</source>
         <translation>Oui</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2746"/>
+        <location filename="../Sources/CApplication.cpp" line="2761"/>
         <source>No</source>
         <translation>Non</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2085"/>
-        <location filename="../Sources/CApplication.cpp" line="2331"/>
+        <location filename="../Sources/CApplication.cpp" line="2100"/>
+        <location filename="../Sources/CApplication.cpp" line="2346"/>
         <source>Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)</source>
         <translation>Fichiers multimédias (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;Tous les fichiers (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2128"/>
+        <location filename="../Sources/CApplication.cpp" line="2143"/>
         <source>Abort</source>
         <translation>Interrompre</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3056"/>
+        <location filename="../Sources/CApplication.cpp" line="3071"/>
         <source>This program requires FMOD %1 or superior.</source>
         <translation>Ce programme nécessite FMOD %1 ou supérieur.</translation>
     </message>
@@ -205,26 +205,26 @@ Erreur : %4</translation>
     <message>
         <location filename="../Sources/Last.fm/CAuthentication.cpp" line="47"/>
         <location filename="../Sources/Last.fm/CAuthentication.cpp" line="66"/>
-        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="149"/>
-        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="178"/>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="147"/>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="176"/>
         <source>Date:</source>
         <translation>Date : </translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CAuthentication.cpp" line="48"/>
-        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="150"/>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="148"/>
         <source>URL:</source>
         <translation>URL :</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CAuthentication.cpp" line="67"/>
-        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="179"/>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="177"/>
         <source>Code:</source>
         <translation>Code :</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CAuthentication.cpp" line="68"/>
-        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="180"/>
+        <location filename="../Sources/Last.fm/CAuthentication.cpp" line="178"/>
         <source>Content:</source>
         <translation>Contenu : </translation>
     </message>
@@ -232,37 +232,37 @@ Erreur : %4</translation>
 <context>
     <name>CCDRomDrive</name>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="122"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="123"/>
         <source>the CD-ROM drive &quot;%1&quot; can&apos;t be opened with FMOD</source>
         <translation>le lecteur de CD-ROM &quot;%1&quot; ne peut être ouvert avec FMOD</translation>
     </message>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="132"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="133"/>
         <source>can&apos;t get number of track for CD-ROM drive &quot;%1&quot;</source>
         <translation>impossible de déterminer le nombre de piste du lecteur de CD-ROM &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="236"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="272"/>
         <source>Track %1</source>
         <translation>Piste %1</translation>
     </message>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="244"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="242"/>
         <source>can&apos;t play track #%1 in CD-ROM drive &quot;%2&quot;</source>
         <translation>impossible de jouer la piste #%1 du lecteur de CD-ROM &quot;%2&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="252"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="253"/>
         <source>can&apos;t compute song duration for track #%1 in CD-ROM drive &quot;%2&quot;</source>
         <translation>impossible de calculer la durée de la piste #%1 du lecteur de CD-ROM &quot;%2&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="271"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="295"/>
         <source>can&apos;t find the format for track #%1 in CD-ROM drive &quot;%2&quot;</source>
         <translation>impossible de déterminer le format de la piste #%1 du lecteur de CD-ROM &quot;%2&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="278"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="302"/>
         <source>unknown format</source>
         <translation>format inconnu</translation>
     </message>
@@ -298,7 +298,7 @@ Erreur : %4</translation>
 %2</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogAbout.cpp" line="75"/>
+        <location filename="../Sources/Dialog/CDialogAbout.cpp" line="77"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -1111,6 +1111,71 @@ Erreur : %4</translation>
         <location filename="../Sources/CListModel.cpp" line="297"/>
         <source>Library</source>
         <translation>Médiathèque</translation>
+    </message>
+</context>
+<context>
+    <name>CLyricWiki</name>
+    <message>
+        <location filename="../Sources/CLyricWiki.cpp" line="65"/>
+        <location filename="../Sources/CLyricWiki.cpp" line="124"/>
+        <source>HTTP error: %1</source>
+        <translation>erreur HTTP : %1</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CLyricWiki.cpp" line="74"/>
+        <source>invalid XML document (%1)</source>
+        <translation>document XML invalide (%1)</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CLyricWiki.cpp" line="82"/>
+        <location filename="../Sources/CLyricWiki.cpp" line="90"/>
+        <location filename="../Sources/CLyricWiki.cpp" line="100"/>
+        <source>invalid XML response (expected element &apos;%1&apos;)</source>
+        <translation>réponse XML invalide (élément &apos;%1&apos; attendu)</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CLyricWiki.cpp" line="106"/>
+        <source>invalid XML response (invalid element &apos;%1&apos;)</source>
+        <translation>réponse XML invalide (élément &apos;%1&apos; invalide)</translation>
+    </message>
+</context>
+<context>
+    <name>CMusicBrainzLookup</name>
+    <message>
+        <location filename="../Sources/MusicBrainz/CMusicBrainzLookup.cpp" line="71"/>
+        <source>Invalid XML document (%1)</source>
+        <translation>Document XML invalide (%1)</translation>
+    </message>
+    <message>
+        <location filename="../Sources/MusicBrainz/CMusicBrainzLookup.cpp" line="79"/>
+        <source>Réponse XML incorrecte (élément &apos;metadata&apos; attendu)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/MusicBrainz/CMusicBrainzLookup.cpp" line="87"/>
+        <source>Réponse XML incorrecte (élément &apos;disc&apos; attendu)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/MusicBrainz/CMusicBrainzLookup.cpp" line="100"/>
+        <source>MusicBrainz: invalid response (release-list count != 1)</source>
+        <translation>MusicBrainz : réponse invalide (release-list count != 1)</translation>
+    </message>
+    <message>
+        <location filename="../Sources/MusicBrainz/CMusicBrainzLookup.cpp" line="108"/>
+        <source>Réponse XML incorrecte (élément &apos;release&apos; attendu)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/MusicBrainz/CMusicBrainzLookup.cpp" line="154"/>
+        <source>MusicBrainz: invalid response (medium-list count != 1)</source>
+        <translation>MusicBrainz : réponse invalide (medium-list count != 1)</translation>
+    </message>
+    <message>
+        <location filename="../Sources/MusicBrainz/CMusicBrainzLookup.cpp" line="162"/>
+        <location filename="../Sources/MusicBrainz/CMusicBrainzLookup.cpp" line="179"/>
+        <source>invalid XML response (expected element &apos;%1&apos;)</source>
+        <translation>réponse XML invalide (élément &apos;%1&apos; attendu)</translation>
     </message>
 </context>
 <context>

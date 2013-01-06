@@ -7,8 +7,8 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{636B2DBF-C6E8-448D-A78E-7894B72281E3}
 AppName=TMediaPlayer
-AppVersion=1.0.35
-;AppVerName=TMediaPlayer 1.0.35
+AppVersion=1.0.37
+;AppVerName=TMediaPlayer 1.0.37
 DefaultDirName={pf}\TMediaPlayer
 DefaultGroupName=TMediaPlayer
 AllowNoIcons=yes

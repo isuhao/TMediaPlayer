@@ -68,6 +68,9 @@ class CApplication : public QMainWindow
 
 public:
 
+    QString getAppVersion() const;
+    QString getAppDate() const;
+
     /// État de lecture.
     enum State
     {
