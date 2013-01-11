@@ -749,7 +749,7 @@ void CStaticPlayList::openCustomMenuProject(const QPoint& point)
         menu->addAction(tr("Remove from playlist"), this, SLOT(removeSelectedSongs()));
         menu->addAction(tr("Remove from library"), this, SLOT(removeSongsFromLibrary()));
 
-        if (m_application->getSettings()->value("Folders/KeepOrganized", false).toBool())
+        //if (m_application->getSettings()->value("Folders/KeepOrganized", false).toBool())
         {
             if (severalSongs)
                 menu->addAction(tr("Rename files"), this, SLOT(moveSongs()));

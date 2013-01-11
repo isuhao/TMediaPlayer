@@ -35,8 +35,16 @@ CScrobble::CScrobble(CApplication * application, const QByteArray& sessionKey, C
     // Arguments de la requête
     QMap<QByteArray, QByteArray> args;
 
+    QString artistName = song->getArtistName();
+
+    if (artistName.isEmpty())
+    {
+        deleteLater();
+        return;
+    }
+
     args["method"]    = "track.scrobble";
-    args["artist"]    = song->getArtistName().toUtf8();
+    args["artist"]    = artistName.toUtf8();
     args["track"]     = song->getTitle().toUtf8();
     args["api_key"]   = m_apiKey;
     args["duration"]  = QString::number(song->getDuration() / 1000).toUtf8();
@@ -66,15 +74,17 @@ CScrobble::CScrobble(CApplication * application, const QByteArray& sessionKey, C
     // Log
     QFile * logFile = m_application->getLogFile("lastFm");
     QTextStream stream(logFile);
+    stream.setFieldAlignment(QTextStream::AlignLeft);
+
     stream << "========================================\n";
     stream << "   Request 'Scrobble'\n";
     stream << "----------------------------------------\n";
-    stream << qSetFieldWidth(8) << tr("Date:")    << qSetFieldWidth(0) << ' ' << QDateTime::currentDateTime().toString() << "\n";
-    stream << qSetFieldWidth(8) << tr("Title:")   << qSetFieldWidth(0) << ' ' << "'" << song->getTitle() << "'\n";
-    stream << qSetFieldWidth(8) << tr("Artist:")  << qSetFieldWidth(0) << ' ' << "'" << song->getArtistName() << "'\n";
-    stream << qSetFieldWidth(8) << tr("Album:")   << qSetFieldWidth(0) << ' ' << "'" << song->getAlbumTitle() << "'\n";
-    stream << qSetFieldWidth(8) << tr("URL:")     << qSetFieldWidth(0) << ' ' << "'" << m_lastFmUrl << "'\n";
-    stream << qSetFieldWidth(8) << tr("Content:") << qSetFieldWidth(0) << ' ' << "'" << content << "'\n";
+    stream << qSetFieldWidth(9) << tr("Date:")    << qSetFieldWidth(0) << ' ' << QDateTime::currentDateTime().toString() << "\n";
+    stream << qSetFieldWidth(9) << tr("Title:")   << qSetFieldWidth(0) << ' ' << song->getTitle() << "\n";
+    stream << qSetFieldWidth(9) << tr("Artist:")  << qSetFieldWidth(0) << ' ' << song->getArtistName() << "\n";
+    stream << qSetFieldWidth(9) << tr("Album:")   << qSetFieldWidth(0) << ' ' << song->getAlbumTitle() << "\n";
+    stream << qSetFieldWidth(9) << tr("URL:")     << qSetFieldWidth(0) << ' ' << m_lastFmUrl << "\n";
+    stream << qSetFieldWidth(9) << tr("Content:") << qSetFieldWidth(0) << ' ' << content << "\n";
 
     QUrl url(m_lastFmUrl);
     QNetworkRequest request(url);
@@ -96,12 +106,14 @@ void CScrobble::replyFinished(QNetworkReply * reply)
     // Log
     QFile * logFile = m_application->getLogFile("lastFm");
     QTextStream stream(logFile);
+    stream.setFieldAlignment(QTextStream::AlignLeft);
+
     stream << "========================================\n";
     stream << "   Reply 'Scrobble'\n";
     stream << "----------------------------------------\n";
-    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString() << "\n";
-    stream << tr("Code:") << ' ' << reply->error() << "\n";
-    stream << tr("Content:") << ' ' << "'" << reply->readAll() << "'\n";
+    stream << qSetFieldWidth(9) << tr("Date:")    << qSetFieldWidth(0) << ' ' << QDateTime::currentDateTime().toString() << "\n";
+    stream << qSetFieldWidth(9) << tr("Code:")    << qSetFieldWidth(0) << ' ' << reply->error() << "\n";
+    stream << qSetFieldWidth(9) << tr("Content:") << qSetFieldWidth(0) << ' ' << reply->readAll() << "\n";
 
     if (reply->error() != QNetworkReply::NoError)
     {

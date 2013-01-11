@@ -469,6 +469,24 @@
     <ClCompile Include="GeneratedFiles\Release\moc_CMusicBrainzLookup.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\CLibraryFolder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_CLibraryFolder.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_CLibraryFolder.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Dialog\CDialogPreferencesFolder.cpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_CDialogPreferencesFolder.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_CDialogPreferencesFolder.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Sources\CApplication.hpp">
@@ -660,6 +678,15 @@
     <CustomBuild Include="Sources\MusicBrainz\CMusicBrainzLookup.hpp">
       <Filter>Header Files\MusicBrainz</Filter>
     </CustomBuild>
+    <CustomBuild Include="Form\DialogPreferencesFolder.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Sources\CLibraryFolder.hpp">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Sources\Dialog\CDialogPreferencesFolder.hpp">
+      <Filter>Header Files\Dialog</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_DialogEditDynamicPlayList.h">
@@ -733,6 +760,9 @@
     </ClInclude>
     <ClInclude Include="Sources\MusicBrainz\sha1.h">
       <Filter>Header Files\MusicBrainz</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_DialogPreferencesFolder.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

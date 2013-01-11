@@ -7,8 +7,8 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{636B2DBF-C6E8-448D-A78E-7894B72281E3}
 AppName=TMediaPlayer
-AppVersion=1.0.37
-;AppVerName=TMediaPlayer 1.0.37
+AppVersion=1.0.38
+AppPublisher=Ted
 DefaultDirName={pf}\TMediaPlayer
 DefaultGroupName=TMediaPlayer
 AllowNoIcons=yes
@@ -16,6 +16,8 @@ LicenseFile=..\License.txt
 OutputBaseFilename=setup
 Compression=lzma
 SolidCompression=yes
+UninstallDisplayIcon={app}\TMediaPlayer.exe,0
+UninstallDisplayName="TMediaPlayer"
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"

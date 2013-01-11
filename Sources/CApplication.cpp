@@ -26,6 +26,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CPlayListView.hpp"
 #include "CListModel.hpp"
 #include "CLyricWiki.hpp"
+#include "CLibraryFolder.hpp"
 #include "Dialog/CDialogEditDynamicList.hpp"
 #include "Dialog/CDialogEditFolder.hpp"
 #include "Dialog/CDialogEditMetadata.hpp"
@@ -73,8 +74,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 const int timerPeriod = 250; ///< Intervalle entre chaque mise-à-jour des informations.
 
-const QString appVersion = "1.0.37";     ///< Numéro de version de l'application.
-const QString appDate    = "06/01/2013"; ///< Date de sortie de cette version.
+const QString appVersion = "1.0.38";     ///< Numéro de version de l'application.
+const QString appDate    = "11/01/2013"; ///< Date de sortie de cette version.
 
 
 QString CApplication::getAppVersion() const
@@ -221,6 +222,13 @@ CApplication::~CApplication()
     }
 
     m_cdRomDrives.clear();
+
+    for (QList<CLibraryFolder *>::const_iterator folder = m_libraryFolders.begin(); folder != m_libraryFolders.end(); ++folder)
+    {
+        delete *folder;
+    }
+
+    m_libraryFolders.clear();
 
     // Destruction de la médiathèque
     if (m_library)
@@ -429,29 +437,6 @@ void CApplication::showDatabaseError(const QString& msg, const QString& query, c
 #endif
 
     logError(msg + "\n" + tr("Query: ") + query, "", fileName.toUtf8().data(), line);
-}
-
-
-/**
- * Charge la liste des répertoires de la médiathèque.
- */
-
-void CApplication::loadLibraryFolders()
-{
-    m_libraryFolders.clear();
-    QSqlQuery query(m_dataBase);
-
-    if (!query.exec("SELECT path_location FROM libpath"))
-    {
-        showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-    }
-    else
-    {
-        while (query.next())
-        {
-            m_libraryFolders.append(query.value(0).toString());
-        }
-    }
 }
 
 
@@ -894,23 +879,65 @@ CSong * CApplication::getSongFromId(int id) const
 }
 
 
-/**
- * Retourne le répertoire de la médiathèque qui contient un fichier.
- *
- * \param fileName Adresse du fichier à analyser.
- * \return Adresse du répertoire surveillé, ou une chaine vide si le fichier
- *         n'est pas dans un répertoire surveillé.
- */
-
-QString CApplication::getLibraryFolderFromFileName(const QString& fileName) const
+CLibraryFolder * CApplication::getLibraryFolder(int folderId) const
 {
-    for (QStringList::const_iterator it = m_libraryFolders.begin(); it != m_libraryFolders.end(); ++it)
+    for (QList<CLibraryFolder *>::const_iterator it = m_libraryFolders.begin(); it != m_libraryFolders.end(); ++it)
     {
-        if (fileName.startsWith(*it))
+        if ((*it)->id == folderId)
             return *it;
     }
 
-    return QString();
+    return NULL;
+}
+
+
+int CApplication::getLibraryFolderId(const QString& fileName) const
+{
+    for (QList<CLibraryFolder *>::const_iterator it = m_libraryFolders.begin(); it != m_libraryFolders.end(); ++it)
+    {
+        if (fileName.startsWith((*it)->pathName))
+            return (*it)->id;
+    }
+
+    return -1;
+}
+
+
+void CApplication::addLibraryFolder(CLibraryFolder * folder)
+{
+    if (!folder || m_libraryFolders.contains(folder))
+        return;
+
+    m_libraryFolders.append(folder);
+}
+
+
+/**
+ * Supprime un répertoire de la médiathèque.
+ *
+ * \param folder Pointeur sur le répertoire à supprimer.
+ */
+
+void CApplication::removeLibraryFolder(CLibraryFolder * folder)
+{
+    if (!folder)
+        return;
+
+    m_libraryFolders.removeAll(folder);
+
+    if (folder->id > 0)
+    {
+        QSqlQuery query(getDataBase());
+        query.prepare("DELETE FROM libpath WHERE path_id = ?");
+        query.bindValue(0, folder->id);
+
+        if (!query.exec())
+        {
+            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        }
+    }
+
+    delete folder;
 }
 
 
@@ -3218,7 +3245,26 @@ void CApplication::loadDatabase()
 
 
     // Liste des répertoires
-    loadLibraryFolders();
+    if (!query.exec("SELECT path_id, path_location, path_keep_organized, path_format, path_format_items FROM libpath"))
+    {
+        showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+    }
+    else
+    {
+        while (query.next())
+        {
+            CLibraryFolder * libraryFolder = new CLibraryFolder(this);
+            
+            libraryFolder->id            = query.value(0).toInt();
+            libraryFolder->pathName      = query.value(1).toString();
+            libraryFolder->keepOrganized = query.value(2).toBool();
+            libraryFolder->format        = query.value(3).toString();
+
+            libraryFolder->convertStringToFormatItems(query.value(4).toString());
+
+            m_libraryFolders.append(libraryFolder);
+        }
+    }
 
 
     // Création de la médiathèque

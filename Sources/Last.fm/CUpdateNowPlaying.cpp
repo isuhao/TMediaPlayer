@@ -29,16 +29,24 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 
 CUpdateNowPlaying::CUpdateNowPlaying(CApplication * application, const QByteArray& sessionKey, CSong * song) :
-    ILastFmService (application, sessionKey),
-    m_song         (song)
+ILastFmService (application, sessionKey),
+m_song         (song)
 {
     Q_CHECK_PTR(song);
 
     // Arguments de la requête
     QMap<QByteArray, QByteArray> args;
+
+    QString artistName = song->getArtistName();
+
+    if (artistName.isEmpty())
+    {
+        deleteLater();
+        return;
+    }
     
     args["method"]   = "track.updateNowPlaying";
-    args["artist"]   = song->getArtistName().toUtf8();
+    args["artist"]   = artistName.toUtf8();
     args["track"]    = song->getTitle().toUtf8();
     args["api_key"]  = m_apiKey;
     args["duration"] = QString::number(song->getDuration() / 1000).toUtf8();
@@ -67,15 +75,17 @@ CUpdateNowPlaying::CUpdateNowPlaying(CApplication * application, const QByteArra
     // Log
     QFile * logFile = m_application->getLogFile("lastFm");
     QTextStream stream(logFile);
+    stream.setFieldAlignment(QTextStream::AlignLeft);
+
     stream << "========================================\n";
     stream << "   Request 'Update Now Playing'\n";
     stream << "----------------------------------------\n";
-    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString() << "\n";
-    stream << tr("Title:") << ' ' << "'" << song->getTitle() << "'\n";
-    stream << tr("Artist:") << ' ' << "'" << song->getArtistName() << "'\n";
-    stream << tr("Album:") << ' ' << "'" << song->getAlbumTitle() << "'\n";
-    stream << tr("URL:") << ' ' << "'" << m_lastFmUrl << "'\n";
-    stream << tr("Content:") << ' ' << "'" << content << "'\n";
+    stream << qSetFieldWidth(9) << tr("Date:")    << qSetFieldWidth(0) << ' ' << QDateTime::currentDateTime().toString() << "\n";
+    stream << qSetFieldWidth(9) << tr("Title:")   << qSetFieldWidth(0) << ' ' << song->getTitle() << "\n";
+    stream << qSetFieldWidth(9) << tr("Artist:")  << qSetFieldWidth(0) << ' ' << song->getArtistName() << "\n";
+    stream << qSetFieldWidth(9) << tr("Album:")   << qSetFieldWidth(0) << ' ' << song->getAlbumTitle() << "\n";
+    stream << qSetFieldWidth(9) << tr("URL:")     << qSetFieldWidth(0) << ' ' << m_lastFmUrl << "\n";
+    stream << qSetFieldWidth(9) << tr("Content:") << qSetFieldWidth(0) << ' ' << content << "\n";
 
     QUrl url(m_lastFmUrl);
     QNetworkRequest request(url);
@@ -93,12 +103,14 @@ void CUpdateNowPlaying::replyFinished(QNetworkReply * reply)
     // Log
     QFile * logFile = m_application->getLogFile("lastFm");
     QTextStream stream(logFile);
+    stream.setFieldAlignment(QTextStream::AlignLeft);
+
     stream << "========================================\n";
     stream << "   Reply 'Update Now Playing'\n";
     stream << "----------------------------------------\n";
-    stream << tr("Date:") << ' ' << QDateTime::currentDateTime().toString() << "\n";
-    stream << tr("Code:") << ' ' << reply->error() << "\n";
-    stream << tr("Content:") << ' ' << "'" << reply->readAll() << "'\n";
+    stream << qSetFieldWidth(9) << tr("Date:")    << qSetFieldWidth(0) << ' ' << QDateTime::currentDateTime().toString() << "\n";
+    stream << qSetFieldWidth(9) << tr("Code:")    << qSetFieldWidth(0) << ' ' << reply->error() << "\n";
+    stream << qSetFieldWidth(9) << tr("Content:") << qSetFieldWidth(0) << ' ' << reply->readAll() << "\n";
 
     if (reply->error() != QNetworkReply::NoError)
     {

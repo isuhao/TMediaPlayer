@@ -19,6 +19,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CSong.hpp"
 #include "CApplication.hpp"
+#include "CLibraryFolder.hpp"
 #include "CCDRomDrive.hpp"
 #include <QSqlQuery>
 #include <QSqlError>
@@ -705,7 +706,7 @@ bool CSong::writeTags()
  * La longueur d'un nom de dossier ou de fichier est limitée.
  *
  * \todo Supprimer les répertoires vides après déplacement des fichiers.
- * \todo Ajouter d'autres informations (compositeur, langue, genre...).
+ * \todo Ajouter d'autres informations (compositeur, langue...).
  *
  * \return Booléen indiquant si le déplacement a eu lieu.
  */
@@ -715,13 +716,15 @@ bool CSong::moveFile()
     const unsigned int maxFolderLength = 50;
 
     // Recherche du répertoire de la médiathèque
-    QString folder = m_application->getLibraryFolderFromFileName(m_properties.fileName);
+    CLibraryFolder * libraryFolder = m_application->getLibraryFolder(m_application->getLibraryFolderId(m_properties.fileName));
 
-    if (folder.isEmpty())
-    {
-        qDebug() << "CSong::moveFile: pas dans un répertoire de la médiathèque";
+    // Le fichier n'est pas dans un répertoire de la médiathèque
+    if (libraryFolder == NULL)
         return false;
-    }
+
+    // Le répertoire n'est pas automatiquement organisé
+    if (!libraryFolder->keepOrganized)
+        return false;
 
     QString title;
     QString artistName;
@@ -733,55 +736,56 @@ bool CSong::moveFile()
 
     // Titre
     if (m_infos.title.isEmpty())
-        title = m_application->getSettings()->value("Folders/TitleEmpty", tr("Unknown title")).toString();
+        title = libraryFolder->titleEmpty;
     else
-        title = m_application->getSettings()->value("Folders/TitleDefault", "%1").toString().arg(m_infos.title).left(maxFolderLength);
+        title = libraryFolder->titleDefault.arg(m_infos.title).left(maxFolderLength);
 
     // Artiste
     if (m_infos.compilation)
-        artistName = tr("Compilations"); // TODO: ajouter ce nom aux paramètres
+        artistName = libraryFolder->compilationName;
     else if (m_infos.albumArtist.isEmpty())
     {
         if (m_infos.artistName.isEmpty())
-            artistName = m_application->getSettings()->value("Folders/ArtistEmpty", tr("Unknown artist")).toString();
+            artistName = libraryFolder->artistEmpty;
         else
-            artistName = m_application->getSettings()->value("Folders/ArtistDefault", "%1").toString().arg(m_infos.artistName).left(maxFolderLength);
+            artistName = libraryFolder->artistDefault.arg(m_infos.artistName).left(maxFolderLength);
     }
     else
-        artistName = m_application->getSettings()->value("Folders/ArtistDefault", "%1").toString().arg(m_infos.albumArtist).left(maxFolderLength);
+        artistName = libraryFolder->artistDefault.arg(m_infos.albumArtist).left(maxFolderLength);
 
     // Album
     if (m_infos.albumTitle.isEmpty())
-        albumTitle = m_application->getSettings()->value("Folders/AlbumEmpty", tr("Unknown album")).toString();
+        albumTitle = libraryFolder->albumEmpty;
     else
-        albumTitle = m_application->getSettings()->value("Folders/AlbumDefault", "%1").toString().arg(m_infos.albumTitle).left(maxFolderLength);
+        albumTitle = libraryFolder->albumDefault.arg(m_infos.albumTitle).left(maxFolderLength);
 
     // Année
     if (m_infos.year == 0)
-        year = m_application->getSettings()->value("Folders/YearEmpty", tr("")).toString();
+        year = libraryFolder->yearEmpty;
     else
-        year = m_application->getSettings()->value("Folders/YearDefault", " (%1)").toString().arg(m_infos.year);
+        year = libraryFolder->yearDefault.arg(m_infos.year);
 
     // Numéro de piste
     if (m_infos.trackNumber <= 0)
-        trackNumber = m_application->getSettings()->value("Folders/TrackEmpty", tr("")).toString();
-    else if (m_infos.trackNumber < 10)
-        trackNumber = m_application->getSettings()->value("Folders/TrackDefault", "%1 ").toString().arg(QString("0%1").arg(m_infos.trackNumber));
+        trackNumber = libraryFolder->trackEmpty;
+    else if (m_infos.trackNumber < 10) // Le numéro de piste est sur 2 chiffre au minimum
+        trackNumber = libraryFolder->trackDefault.arg(QString("0%1").arg(m_infos.trackNumber));
     else
-        trackNumber = m_application->getSettings()->value("Folders/TrackDefault", "%1 ").toString().arg(m_infos.trackNumber);
+        trackNumber = libraryFolder->trackDefault.arg(m_infos.trackNumber);
 
     // Numéro de disque
     if (m_infos.discNumber == 0)
-        discNumber = m_application->getSettings()->value("Folders/DiscEmpty", tr("")).toString();
+        discNumber = libraryFolder->discEmpty;
     else
-        discNumber = m_application->getSettings()->value("Folders/DiscDefault", "%1-").toString().arg(m_infos.discNumber);
+        discNumber = libraryFolder->discDefault.arg(m_infos.discNumber);
 
     // Genre
     if (m_infos.discNumber == 0)
-        genre = m_application->getSettings()->value("Folders/GenreEmpty", tr("Unknown genre")).toString();
+        genre = libraryFolder->genreEmpty;
     else
-        genre = m_application->getSettings()->value("Folders/GenreDefault", "%1").toString().arg(m_infos.genre);
+        genre = libraryFolder->genreDefault.arg(m_infos.genre);
 
+    // On enlève les slash
     title.replace('/', '_');
     artistName.replace('/', '_');
     albumTitle.replace('/', '_');
@@ -790,7 +794,7 @@ bool CSong::moveFile()
     discNumber.replace('/', '_');
     genre.replace('/', '_');
 
-    QString pathName = m_application->getSettings()->value("Folders/Format", "%2/%3%4/%6%5%1").toString();
+    QString pathName = libraryFolder->format;
     pathName.replace("%1", title);
     pathName.replace("%2", artistName);
     pathName.replace("%3", albumTitle);
@@ -831,7 +835,7 @@ bool CSong::moveFile()
     if (pathName.isEmpty())
         return false;
 
-    pathName = folder + pathName;
+    pathName = libraryFolder->pathName + pathName;
 
     QString extension;
 
@@ -844,14 +848,14 @@ bool CSong::moveFile()
         case FormatFLAC: extension = ".flac"; break;
     }
 
-    qDebug() << "CSong::moveFile: " << pathName + extension;
-
     // Comparaison entre l'ancien nom et le nouveau nom
     if (m_properties.fileName == pathName + extension)
     {
-        qDebug() << "CSong::moveFile: nom identique";
+        //qDebug() << "CSong::moveFile: nom identique";
         return false;
     }
+
+    //qDebug() << "CSong::moveFile: " << m_properties.fileName << " -> " << pathName + extension;
 
     // Ajout d'un suffixe si nécessaire
     if (QFileInfo(pathName + extension).exists())
@@ -2077,17 +2081,13 @@ void CSong::updateDatabase()
     if (m_isModified && (m_properties != m_propertiesDB || m_infos != m_infosDB))
     {
         // Déplacement du fichier
-        if (m_application->getSettings()->value("Folders/KeepOrganized", false).toBool() &&
-              (
-                m_infos.title       != m_infosDB.title       ||
-                m_infos.artistName  != m_infosDB.artistName  ||
-                m_infos.albumTitle  != m_infosDB.albumTitle  ||
-                m_infos.year        != m_infosDB.year        ||
-                m_infos.trackNumber != m_infosDB.trackNumber ||
-                m_infos.discNumber  != m_infosDB.discNumber  ||
-                m_infos.compilation != m_infosDB.compilation
-              )
-            )
+        if (m_infos.title       != m_infosDB.title       ||
+            m_infos.artistName  != m_infosDB.artistName  ||
+            m_infos.albumTitle  != m_infosDB.albumTitle  ||
+            m_infos.year        != m_infosDB.year        ||
+            m_infos.trackNumber != m_infosDB.trackNumber ||
+            m_infos.discNumber  != m_infosDB.discNumber  ||
+            m_infos.compilation != m_infosDB.compilation)
         {
             moveFile();
         }

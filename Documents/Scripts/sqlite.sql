@@ -134,7 +134,10 @@ CREATE TABLE play (
 
 CREATE TABLE libpath (
     path_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    path_location VARCHAR(512) NOT NULL UNIQUE
+    path_location VARCHAR(512) NOT NULL UNIQUE,
+    path_keep_organized INTEGER NOT NULL,
+    path_format VARCHAR(512) NOT NULL,
+    path_format_items TEXT
 );
 
 CREATE TABLE equalizer (

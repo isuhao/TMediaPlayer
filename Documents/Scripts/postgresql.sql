@@ -145,7 +145,10 @@ CREATE TABLE play (
 
 CREATE TABLE libpath (
     path_id SERIAL PRIMARY KEY,
-    path_location VARCHAR(512) NOT NULL UNIQUE
+    path_location VARCHAR(512) NOT NULL UNIQUE,
+    path_keep_organized INTEGER NOT NULL,
+    path_format VARCHAR(512) NOT NULL,
+    path_format_items TEXT
 );
 
 

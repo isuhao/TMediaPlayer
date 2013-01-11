@@ -18,16 +18,13 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CDialogPreferences.hpp"
+#include "CDialogPreferencesFolder.hpp"
 #include "../CApplication.hpp"
+#include "../CLibraryFolder.hpp"
 #include "../Language.hpp"
 #include <QSettings>
 #include <QDesktopServices>
 #include <QDir>
-#include <QSqlQuery>
-#include <QSqlError>
-#include <QFileDialog>
-
-#include <QtDebug>
 
 
 /**
@@ -123,44 +120,18 @@ CDialogPreferences::CDialogPreferences(CApplication * application, QSettings * s
     m_uiWidget->editLastFmDelayBeforeNotification->setValue(m_settings->value("LastFm/DelayBeforeNotification", 5000).toInt() / 1000);
     m_uiWidget->editLastFmPercentageBeforeScrobbling->setValue(m_settings->value("LastFm/PercentageBeforeScrobbling", 60).toInt());
 
-    // Organisation automatique des fichiers
-    m_uiWidget->groupOrganize->setChecked(m_settings->value("Folders/KeepOrganized", false).toBool());
-    m_uiWidget->editOrgFormat->setText(m_settings->value("Folders/Format", QString("%2/%4%3/%6%5%1")).toString());
-
-    m_uiWidget->editOrgTitleDefault->setText(m_settings->value("Folders/TitleDefault", QString("%1")).toString());
-    m_uiWidget->editOrgArtistDefault->setText(m_settings->value("Folders/ArtistDefault", QString("%1")).toString());
-    m_uiWidget->editOrgAlbumDefault->setText(m_settings->value("Folders/AlbumDefault", QString("%1")).toString());
-    m_uiWidget->editOrgYearDefault->setText(m_settings->value("Folders/YearDefault", QString("%1 - ")).toString());
-    m_uiWidget->editOrgTrackDefault->setText(m_settings->value("Folders/TrackDefault", QString("%1 ")).toString());
-    m_uiWidget->editOrgDiscDefault->setText(m_settings->value("Folders/DiscDefault", QString("%1-")).toString());
-    m_uiWidget->editOrgGenreDefault->setText(m_settings->value("Folders/GenreDefault", QString("%1")).toString());
-
-    m_uiWidget->editOrgTitleEmpty->setText(m_settings->value("Folders/TitleEmpty", tr("Unknown title")).toString());
-    m_uiWidget->editOrgArtistEmpty->setText(m_settings->value("Folders/ArtistEmpty", tr("Unknown artist")).toString());
-    m_uiWidget->editOrgAlbumEmpty->setText(m_settings->value("Folders/AlbumEmpty", tr("Unknown album")).toString());
-    m_uiWidget->editOrgYearEmpty->setText(m_settings->value("Folders/YearEmpty", QString()).toString());
-    m_uiWidget->editOrgTrackEmpty->setText(m_settings->value("Folders/TrackEmpty", QString()).toString());
-    m_uiWidget->editOrgDiscEmpty->setText(m_settings->value("Folders/DiscEmpty", QString()).toString());
-    m_uiWidget->editOrgGenreEmpty->setText(m_settings->value("Folders/GenreEmpty", tr("Unknown genre")).toString());
-
     // Liste des répertoires surveillés
-    QSqlQuery query(m_application->getDataBase());
+    QList<CLibraryFolder *> folders = m_application->getLibraryFolders();
 
-    if (!query.exec("SELECT path_id, path_location FROM libpath ORDER BY path_id"))
+    for (QList<CLibraryFolder *>::const_iterator it = folders.begin(); it != folders.end(); ++it)
     {
-        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-    }
-    else
-    {
-        while (query.next())
-        {
-            QListWidgetItem * item = new QListWidgetItem(query.value(1).toString());
-            item->setData(Qt::UserRole, query.value(0).toInt());
-            m_uiWidget->listFolders->addItem(item);
-        }
+        QListWidgetItem * item = new QListWidgetItem((*it)->pathName);
+        item->setData(Qt::UserRole, (*it)->id);
+        m_uiWidget->listFolders->addItem(item);
     }
 
     connect(m_uiWidget->btnAddFolder, SIGNAL(clicked()), this, SLOT(addFolder()));
+    connect(m_uiWidget->btnEditFolder, SIGNAL(clicked()), this, SLOT(editSelectedFolder()));
     connect(m_uiWidget->btnRemoveFolder, SIGNAL(clicked()), this, SLOT(removeSelectedFolder()));
 
     // Connexions des signaux des boutons
@@ -225,6 +196,7 @@ void CDialogPreferences::save()
     m_application->setPercentageBeforeScrobbling(m_uiWidget->editLastFmPercentageBeforeScrobbling->value());
 
     // Organisation automatique des fichiers
+/*
     m_settings->setValue("Folders/KeepOrganized", m_uiWidget->groupOrganize->isChecked());
     m_settings->setValue("Folders/Format", m_uiWidget->editOrgFormat->text());
 
@@ -243,7 +215,7 @@ void CDialogPreferences::save()
     m_settings->setValue("Folders/TrackEmpty", m_uiWidget->editOrgTrackEmpty->text());
     m_settings->setValue("Folders/DiscEmpty", m_uiWidget->editOrgDiscEmpty->text());
     m_settings->setValue("Folders/GenreEmpty", m_uiWidget->editOrgGenreEmpty->text());
-
+*/
     close();
 }
 
@@ -275,10 +247,16 @@ void CDialogPreferences::onDriverChange(const QString& name)
 
 /**
  * Ajoute un répertoire à la liste des répertoires surveillés.
+ *
+ * \todo Déplacer vers la boite de dialogue CDialogPreferencesFolder.
  */
 
 void CDialogPreferences::addFolder()
 {
+    CDialogPreferencesFolder * dialog = new CDialogPreferencesFolder(m_application, this, NULL);
+    dialog->show();
+
+/*
     QString pathName = QFileDialog::getExistingDirectory(this);
 
     if (pathName.isEmpty())
@@ -287,8 +265,11 @@ void CDialogPreferences::addFolder()
     pathName.replace('\\', '/');
 
     QSqlQuery query(m_application->getDataBase());
-    query.prepare("INSERT INTO libpath (path_location) VALUES (?)");
+    query.prepare("INSERT INTO libpath (path_location, path_keep_organized, path_format, path_format_items) VALUES (?)");
     query.bindValue(0, pathName);
+    query.bindValue(1, );
+    query.bindValue(2, );
+    query.bindValue(3, );
 
     if (!query.exec())
     {
@@ -326,8 +307,25 @@ void CDialogPreferences::addFolder()
     QListWidgetItem * item = new QListWidgetItem(pathName);
     item->setData(Qt::UserRole, pathId);
     m_uiWidget->listFolders->addItem(item);
+*/
+}
 
-    m_application->loadLibraryFolders();
+
+void CDialogPreferences::editSelectedFolder()
+{
+    QListWidgetItem * item = m_uiWidget->listFolders->currentItem();
+
+    if (!item)
+        return;
+
+    const int folderId = item->data(Qt::UserRole).toInt();
+    CLibraryFolder * folder = m_application->getLibraryFolder(folderId);
+
+    if (!folder)
+        return;
+
+    CDialogPreferencesFolder * dialog = new CDialogPreferencesFolder(m_application, this, folder);
+    dialog->show();
 }
 
 
@@ -342,34 +340,11 @@ void CDialogPreferences::removeSelectedFolder()
     if (!item)
         return;
 
-    const int pathId = item->data(Qt::UserRole).toInt();
+    const int folderId = item->data(Qt::UserRole).toInt();
 
-    QSqlQuery query(m_application->getDataBase());
-    query.prepare("DELETE FROM libpath WHERE path_id = ?");
-    query.bindValue(0, pathId);
+    // Suppression du répertoire
+    m_application->removeLibraryFolder(m_application->getLibraryFolder(folderId));
 
-    if (!query.exec())
-    {
-        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        return;
-    }
-
-    // Rechargement de la vue
-    m_uiWidget->listFolders->clear();
-
-    if (!query.exec("SELECT path_id, path_location FROM libpath ORDER BY path_id"))
-    {
-        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-    }
-    else
-    {
-        while (query.next())
-        {
-            QListWidgetItem * item = new QListWidgetItem(query.value(1).toString());
-            item->setData(Qt::UserRole, query.value(0).toInt());
-            m_uiWidget->listFolders->addItem(item);
-        }
-    }
-
-    m_application->loadLibraryFolders();
+    // Modification de la vue
+    m_uiWidget->listFolders->removeItemWidget(item);
 }

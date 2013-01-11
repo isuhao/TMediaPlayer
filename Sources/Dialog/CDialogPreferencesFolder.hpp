@@ -17,40 +17,37 @@ You should have received a copy of the GNU General Public License
 along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef FILE_C_DIALOG_PREFERENCES
-#define FILE_C_DIALOG_PREFERENCES
+#ifndef FILE_C_DIALOG_PREFERENCES_FOLDER
+#define FILE_C_DIALOG_PREFERENCES_FOLDER
 
 #include <QDialog>
-#include "ui_DialogPreferences.h"
+#include "ui_DialogPreferencesFolder.h"
 
 
 class CApplication;
-class QSettings;
-class QNetworkReply;
+class CLibraryFolder;
 
 
-class CDialogPreferences : public QDialog
+class CDialogPreferencesFolder : public QDialog
 {
     Q_OBJECT
 
 public:
 
-    CDialogPreferences(CApplication * application, QSettings * settings);
-    virtual ~CDialogPreferences();
+    CDialogPreferencesFolder(CApplication * application, QWidget * parent, CLibraryFolder * folder);
+    virtual ~CDialogPreferencesFolder();
 
 protected slots:
 
+    void chooseFolder();
     void save();
-    void onDriverChange(const QString& name);
-    void addFolder();
-    void editSelectedFolder();
-    void removeSelectedFolder();
 
 private:
 
-    Ui::DialogPreferences * m_uiWidget; ///< Widget utilisÃ© par la boite de dialogue.
-    CApplication * m_application;       ///< Pointeur sur l'application.
-    QSettings * m_settings;
+    Ui::DialogPreferencesFolder * m_uiWidget; ///< Widget utilisé par la boite de dialogue.
+    CApplication * m_application;             ///< Pointeur sur l'application.
+    CLibraryFolder * m_folder;                ///< Pointeur sur le dossier à modifier.
+    bool m_needDeleteFolder;
 };
 
-#endif // FILE_C_DIALOG_PREFERENCES
+#endif // FILE_C_DIALOG_PREFERENCES_FOLDER

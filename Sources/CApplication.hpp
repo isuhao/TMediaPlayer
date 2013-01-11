@@ -41,6 +41,7 @@ class CDynamicList;
 class CStaticPlayList;
 class CLibrary;
 class CListModel;
+class CLibraryFolder;
 class CWidgetLyrics;
 class QStandardItemModel;
 class QSettings;
@@ -85,7 +86,6 @@ public:
 
     bool initWindow();
     void showDatabaseError(const QString& msg, const QString& query, const QString& fileName, int line);
-    void loadLibraryFolders();
 
 
     // Préférences
@@ -180,6 +180,14 @@ public:
     void setCurrentEqualizerPreset(const TEqualizerPreset& equalizer);
 
 
+    // Dossiers de la médiathèque
+    inline QList<CLibraryFolder *> getLibraryFolders() const;
+    CLibraryFolder * getLibraryFolder(int folderId) const;
+    int getLibraryFolderId(const QString& fileName) const;
+    void addLibraryFolder(CLibraryFolder * folder);
+    void removeLibraryFolder(CLibraryFolder * folder);
+
+
     // Filtre de recherche
     QString getFilter() const;
 
@@ -190,7 +198,6 @@ public:
     void setDisplayedSongTable(CSongTable * songTable);
     void setCurrentSongItem(CSongTableItem * songItem, CSongTable * songTable);
     CSong * getSongFromId(int id) const;
-    QString getLibraryFolderFromFileName(const QString& fileName) const;
     CFolder * getFolderFromId(int id) const;
     IPlayList * getPlayListFromId(int id) const;
     QList<IPlayList *> getPlayListsWithSong(CSong * song) const;
@@ -376,7 +383,7 @@ private:
 
     QMap<QString, QFile *> m_logList;     ///< Liste des fichiers de log ouverts.
     QString m_applicationPath;            ///< Répertoire contenant l'application.
-    QStringList m_libraryFolders;         ///< Liste des répertoires de la médiathèque.
+    QList<CLibraryFolder *> m_libraryFolders; ///< Liste des répertoires de la médiathèque.
 
     QList<TNotification> m_infosNotified; ///< Liste des notifications.
 
@@ -504,6 +511,12 @@ inline bool CApplication::isPaused() const
 inline bool CApplication::isStopped() const
 {
     return (m_state == Stopped);
+}
+
+
+inline QList<CLibraryFolder *> CApplication::getLibraryFolders() const
+{
+    return m_libraryFolders;
 }
 
 #endif // FILE_C_APPLICATION

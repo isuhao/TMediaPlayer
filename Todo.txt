@@ -28,8 +28,6 @@
 
 - Gérer les répertoires à surveiller :
   - Analyser le répertoire récursivement au lancement de l'application.
-  - Stocker ces informations avec les données de la médiathèque.
-    - Pouvoir organiser différement chaque répertoire.
   - Supprimer les répertoires vides après déplacement des fichiers.
   - Déplacer les illustrations sous forme d'image en même temps que les morceaux.
   - Ajouter des options pour gérer la casse (extension en minuscule ou majuscule, chemin en minuscule, majuscule, ou normal).
