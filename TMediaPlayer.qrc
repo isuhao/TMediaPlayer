@@ -23,5 +23,6 @@
         <file alias="shuffle_on">Resources/icon_shuffle_on.png</file>
         <file alias="equalizer">Resources/equalizer.png</file>
         <file alias="cd">Resources/icon_cd.png</file>
+        <file alias="clear">Resources/clear.png</file>
     </qresource>
 </RCC>

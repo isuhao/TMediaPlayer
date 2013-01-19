@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string notr="true"/>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0,0,0,0,0,0,0,0,0,2,0,1">
+  <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0,0,0,0,0,0,0,0,0,2,0,1,0">
    <property name="spacing">
     <number>0</number>
    </property>
@@ -399,10 +399,55 @@
      </property>
     </widget>
    </item>
+   <item>
+    <widget class="QToolButton" name="btnClearFilter">
+     <property name="text">
+      <string>Clear</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../TMediaPlayer.qrc">
+       <normaloff>:/icons/clear</normaloff>:/icons/clear</iconset>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>btnPrevious</tabstop>
+  <tabstop>btnPlay</tabstop>
+  <tabstop>btnStop</tabstop>
+  <tabstop>btnNext</tabstop>
+  <tabstop>btnRepeat</tabstop>
+  <tabstop>btnShuffle</tabstop>
+  <tabstop>btnMute</tabstop>
+  <tabstop>sliderVolume</tabstop>
+  <tabstop>sliderPosition</tabstop>
+  <tabstop>songInfos</tabstop>
+  <tabstop>editFilter</tabstop>
+  <tabstop>btnClearFilter</tabstop>
+ </tabstops>
  <resources>
   <include location="../TMediaPlayer.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>btnClearFilter</sender>
+   <signal>clicked()</signal>
+   <receiver>editFilter</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>779</x>
+     <y>22</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>702</x>
+     <y>22</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

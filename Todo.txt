@@ -11,6 +11,7 @@
 - Problème graphique : si on modifie les informations d'un morceau, il faut mettre à jour la vue courante.
 - Problème graphique : lorsqu'on sélectionne une liste de lecture, il faut donner le focus à la vue.
 - Problème graphique : les menus peuvent sortir de l'écran et être partiellement masqués.
+- Problème grapgique : si on lit un morceau dans une liste dynamique et qu'un filtre est activé, lorsque la lecture du morceau se termine, il est masqué.
 
 - Fichier FLAC : problème avec les métadonnées pour le numéro de disque, et les commentaires (effacement impossible).
 
@@ -18,13 +19,16 @@
   Importance moyenne
 --------------------------------------------------
 
+- Boite de dialogue Edit Songs : Si un champ possède plusieurs valeurs différentes, les afficher dans une combo-box.
+
 - Améliorer la gestion du glisser-déposer dans la vue des listes de lecture.
   - Pouvoir désactiver le positionnement des listes et dossiers.
   - Améliorer l'affichage de l'indicateur.
   - Tester le mécanisme en profondeur.
 
-- Pouvoir importer les pistes d'un CD.
-- Modifier le menu contextuel pour enlever certains éléments ("Enlever de la médiathèque).
+- Lecture des CD-ROM :
+  - Pouvoir importer les pistes d'un CD-ROM.
+  - Modifier le menu contextuel pour enlever certains éléments ("Enlever de la médiathèque).
 
 - Gérer les répertoires à surveiller :
   - Analyser le répertoire récursivement au lancement de l'application.
