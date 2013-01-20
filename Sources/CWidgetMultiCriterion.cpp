@@ -54,7 +54,6 @@ CWidgetMultiCriterion::CWidgetMultiCriterion(CApplication * application, QWidget
 
 CWidgetMultiCriterion::~CWidgetMultiCriterion()
 {
-    //qDebug() << "CWidgetMultiCriterion::~CWidgetMultiCriterion()";
     delete m_uiWidget;
 }
 
@@ -67,13 +66,12 @@ CWidgetMultiCriterion::~CWidgetMultiCriterion()
 
 ICriteria * CWidgetMultiCriterion::getCriteria()
 {
-    qDebug() << "CWidgetMultiCriterion::getCriteria()";
     CMultiCriterion * criteria = new CMultiCriterion(m_application, this);
     criteria->setMultiCriterionType(CMultiCriterion::getMultiCriterionTypeFromInteger(m_uiWidget->listUnion->currentIndex()));
 
-    foreach (IWidgetCriteria * child, m_children)
+    for (QList<IWidgetCriteria *>::const_iterator child = m_children.begin(); child != m_children.end(); ++child)
     {
-        criteria->addChild(child->getCriteria());
+        criteria->addChild((*child)->getCriteria());
     }
 
     return criteria;

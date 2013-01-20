@@ -129,9 +129,9 @@ void CLyricWiki::replyFinished2(QNetworkReply * reply)
 
     QWebElementCollection elements = m_frame->findAllElements(".lyricbox");
 
-    foreach (QWebElement element, elements)
+    for (QWebElementCollection::iterator element = elements.begin(); element != elements.end(); ++element)
     {
-        element.removeAllChildren();
+        (*element).removeAllChildren();
     }
 
     reply->deleteLater();
@@ -145,12 +145,12 @@ void CLyricWiki::onPageFinished()
 
     QWebElementCollection elements = m_frame->findAllElements(".lyricbox");
 
-    foreach (QWebElement element, elements)
+    for (QWebElementCollection::iterator element = elements.begin(); element != elements.end(); ++element)
     {
-        element.firstChild().removeFromDocument();
-        element.lastChild().removeFromDocument();
-        element.lastChild().removeFromDocument();
-        lyrics = element.toPlainText().trimmed();
+        (*element).firstChild().removeFromDocument();
+        (*element).lastChild().removeFromDocument();
+        (*element).lastChild().removeFromDocument();
+        lyrics = (*element).toPlainText().trimmed();
     }
 
     emit lyricsFound(lyrics);

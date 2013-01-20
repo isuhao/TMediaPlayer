@@ -120,9 +120,7 @@ public:
     void initShuffle(CSongTableItem * firstSong = NULL);
     inline CSongTableItem * getCurrentSongItem() const;
     void replaceSong(CSong * oldSong, CSong * newSong);
-#ifdef FILTER_NEW_SYSTEM
     void applyFilter(const QString& filter);
-#endif
 
 signals:
 
@@ -131,9 +129,7 @@ signals:
 
 protected:
 
-#ifdef FILTER_NEW_SYSTEM
     void applyFilterForShuffleList(const QString& filter);
-#endif
 
 private:
 
@@ -792,16 +788,14 @@ private:
     }
 
 
-    CApplication * m_application; ///< Pointeur sur l'application.
-    bool m_canDrop;               ///< Indique si la vue peut recevoir des données (liste statique).
-    int m_columnSort;             ///< Numéro de la colonne triée.
-    CSongTableItem * m_currentSongItem;
+    CApplication * m_application;                  ///< Pointeur sur l'application.
+    bool m_canDrop;                                ///< Indique si la vue peut recevoir des données (liste statique).
+    int m_columnSort;                              ///< Numéro de la colonne triée.
+    CSongTableItem * m_currentSongItem;            ///< Pointeur sur le morceau courant.
     QList<CSongTableItem *> m_data;                ///< Liste des morceaux.
     QList<CSongTableItem *> m_dataShuffle;         ///< Liste des morceaux aléatoires.
-#ifdef FILTER_NEW_SYSTEM
     QList<CSongTableItem *> m_dataFiltered;        ///< Liste des morceaux filtrées.
     QList<CSongTableItem *> m_dataShuffleFiltered; ///< Liste des morceaux aléatoires filtrées.
-#endif
 };
 
 
@@ -816,6 +810,12 @@ inline int CSongTableModel::getNumSongs() const
     return m_data.size();
 }
 
+
+/**
+ * Retourne le morceau courant.
+ *
+ * \return Pointeur sur le morceau courant.
+ */
 
 inline CSongTableItem * CSongTableModel::getCurrentSongItem() const
 {

@@ -156,7 +156,7 @@
      </property>
      <property name="icon">
       <iconset resource="../TMediaPlayer.qrc">
-       <normaloff>:/icons/repeat_off</normaloff>:/icons/repeat_off</iconset>
+       <normaloff>:/icons/repeatOff</normaloff>:/icons/repeatOff</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -401,6 +401,9 @@
    </item>
    <item>
     <widget class="QToolButton" name="btnClearFilter">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="text">
       <string>Clear</string>
      </property>

@@ -74,8 +74,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 const int timerPeriod = 250; ///< Intervalle entre chaque mise-à-jour des informations.
 
-const QString appVersion = "1.0.39";     ///< Numéro de version de l'application.
-const QString appDate    = "19/01/2013"; ///< Date de sortie de cette version.
+const QString appVersion = "1.0.40";     ///< Numéro de version de l'application.
+const QString appDate    = "20/01/2013"; ///< Date de sortie de cette version.
 
 
 QString CApplication::getAppVersion() const
@@ -112,7 +112,7 @@ CApplication::CApplication() :
     m_widgetLyrics         (NULL),
     m_state                (Stopped),
     m_showRemainingTime    (false),
-    m_isRepeat             (false),
+    m_repeatMode           (NoRepeat),
     m_isShuffle            (false),
     m_isMute               (false),
     m_volume               (50),
@@ -160,37 +160,83 @@ CApplication::CApplication() :
     statusBar()->addPermanentWidget(m_listInfos);
 
     // Menus
-    connect(m_uiWidget->actionNewPlayList, SIGNAL(triggered()), this, SLOT(openDialogCreateStaticList()));
-    connect(m_uiWidget->actionNewDynamicPlayList, SIGNAL(triggered()), this, SLOT(openDialogCreateDynamicList()));
-    connect(m_uiWidget->actionNewFolder, SIGNAL(triggered()), this, SLOT(openDialogCreateFolder()));
-    connect(m_uiWidget->actionAddFiles, SIGNAL(triggered()), this, SLOT(openDialogAddSongs()));
-    connect(m_uiWidget->actionAddFolder, SIGNAL(triggered()), this, SLOT(openDialogAddFolder()));
-    connect(m_uiWidget->actionInformations, SIGNAL(triggered()), this, SLOT(openDialogSongInfos()));
-    connect(m_uiWidget->actionOpenInExplorer, SIGNAL(triggered()), this, SLOT(openSongInExplorer()));
-    connect(m_uiWidget->actionImportITunes, SIGNAL(triggered()), this, SLOT(importFromITunes()));
-    connect(m_uiWidget->actionImportSongbird, SIGNAL(triggered()), this, SLOT(importFromSongbird()));
-    connect(m_uiWidget->actionNotifications, SIGNAL(triggered()), this, SLOT(openDialogNotifications()));
-    connect(m_uiWidget->actionLastPlays, SIGNAL(triggered()), this, SLOT(openDialogLastPlays()));
+#if QT_VERSION >= 0x050000
+    connect(m_uiWidget->actionNewPlayList       , &QAction::triggered, this, &CApplication::openDialogCreateStaticList );
+    connect(m_uiWidget->actionNewDynamicPlayList, &QAction::triggered, this, &CApplication::openDialogCreateDynamicList);
+    connect(m_uiWidget->actionNewFolder         , &QAction::triggered, this, &CApplication::openDialogCreateFolder     );
+    connect(m_uiWidget->actionAddFiles          , &QAction::triggered, this, &CApplication::openDialogAddSongs         );
+    connect(m_uiWidget->actionAddFolder         , &QAction::triggered, this, &CApplication::openDialogAddFolder        );
+    connect(m_uiWidget->actionInformations      , &QAction::triggered, this, &CApplication::openDialogSongInfos        );
+    connect(m_uiWidget->actionOpenInExplorer    , &QAction::triggered, this, &CApplication::openSongInExplorer         );
+    connect(m_uiWidget->actionImportITunes      , &QAction::triggered, this, &CApplication::importFromITunes           );
+    connect(m_uiWidget->actionImportSongbird    , &QAction::triggered, this, &CApplication::importFromSongbird         );
+    connect(m_uiWidget->actionNotifications     , &QAction::triggered, this, &CApplication::openDialogNotifications    );
+    connect(m_uiWidget->actionLastPlays         , &QAction::triggered, this, &CApplication::openDialogLastPlays        );
 
-    connect(m_uiWidget->actionSelectAll, SIGNAL(triggered()), this, SLOT(selectAll()));
-    connect(m_uiWidget->actionSelectNone, SIGNAL(triggered()), this, SLOT(selectNone()));
-    connect(m_uiWidget->actionPreferences, SIGNAL(triggered()), this, SLOT(openDialogPreferences()));
+    connect(m_uiWidget->actionSelectAll         , &QAction::triggered, this, &CApplication::selectAll                  );
+    connect(m_uiWidget->actionSelectNone        , &QAction::triggered, this, &CApplication::selectNone                 );
+    connect(m_uiWidget->actionPreferences       , &QAction::triggered, this, &CApplication::openDialogPreferences      );
 
-    connect(m_uiWidget->actionPlay, SIGNAL(triggered()), this, SLOT(togglePlay()));
-    connect(m_uiWidget->actionPause, SIGNAL(triggered()), this, SLOT(pause()));
-    connect(m_uiWidget->actionStop, SIGNAL(triggered()), this, SLOT(stop()));
-    connect(m_uiWidget->actionPrevious, SIGNAL(triggered()), this, SLOT(previousSong()));
-    connect(m_uiWidget->actionNext, SIGNAL(triggered()), this, SLOT(nextSong()));
-    connect(m_uiWidget->actionRepeat, SIGNAL(triggered(bool)), this, SLOT(setRepeat(bool)));
-    connect(m_uiWidget->actionShuffle, SIGNAL(triggered(bool)), this, SLOT(setShuffle(bool)));
-    connect(m_uiWidget->actionMute, SIGNAL(triggered(bool)), this, SLOT(setMute(bool)));
-    connect(m_uiWidget->actionEqualizer, SIGNAL(triggered()), this, SLOT(openDialogEqualizer()));
+    connect(m_uiWidget->actionPlay              , &QAction::triggered, this, &CApplication::togglePlay                 );
+    connect(m_uiWidget->actionPause             , &QAction::triggered, this, &CApplication::pause                      );
+    connect(m_uiWidget->actionStop              , &QAction::triggered, this, &CApplication::stop                       );
+    connect(m_uiWidget->actionPrevious          , &QAction::triggered, this, &CApplication::previousSong               );
+    connect(m_uiWidget->actionNext              , &QAction::triggered, this, &CApplication::nextSong                   );
 
-    connect(m_uiWidget->actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
-    connect(m_uiWidget->actionAbout, SIGNAL(triggered()), this, SLOT(openDialogAbout()));
+#if __cplusplus < 201103L
+    connect(m_uiWidget->actionNoRepeat          , &QAction::triggered, this, &CApplication::setRepeatModeNoRepeat      );
+    connect(m_uiWidget->actionRepeatList        , &QAction::triggered, this, &CApplication::setRepeatModeRepeatList    );
+    connect(m_uiWidget->actionRepeatSong        , &QAction::triggered, this, &CApplication::setRepeatModeRepeatSong    );
+#else
+    connect(m_uiWidget->actionNoRepeat          , &QAction::triggered, [=](){ this->setRepeatMode(NoRepeat  ); });
+    connect(m_uiWidget->actionRepeatList        , &QAction::triggered, [=](){ this->setRepeatMode(RepeatList); });
+    connect(m_uiWidget->actionRepeatSong        , &QAction::triggered, [=](){ this->setRepeatMode(RepeatSong); });
+#endif
+
+    connect(m_uiWidget->actionShuffle           , &QAction::triggered, this, &CApplication::setShuffle                 );
+    connect(m_uiWidget->actionMute              , &QAction::triggered, this, &CApplication::setMute                    );
+    connect(m_uiWidget->actionEqualizer         , &QAction::triggered, this, &CApplication::openDialogEqualizer        );
+
+    connect(m_uiWidget->actionAboutQt           , &QAction::triggered, qApp, &QApplication::aboutQt                    );
+    connect(m_uiWidget->actionAbout             , &QAction::triggered, this, &CApplication::openDialogAbout            );
+
+
+    connect(this, &CApplication::songPlayStart, this, &CApplication::updateSongDescription);
+#else
+    connect(m_uiWidget->actionNewPlayList       , SIGNAL(triggered(    )), this, SLOT(openDialogCreateStaticList ()));
+    connect(m_uiWidget->actionNewDynamicPlayList, SIGNAL(triggered(    )), this, SLOT(openDialogCreateDynamicList()));
+    connect(m_uiWidget->actionNewFolder         , SIGNAL(triggered(    )), this, SLOT(openDialogCreateFolder     ()));
+    connect(m_uiWidget->actionAddFiles          , SIGNAL(triggered(    )), this, SLOT(openDialogAddSongs         ()));
+    connect(m_uiWidget->actionAddFolder         , SIGNAL(triggered(    )), this, SLOT(openDialogAddFolder        ()));
+    connect(m_uiWidget->actionInformations      , SIGNAL(triggered(    )), this, SLOT(openDialogSongInfos        ()));
+    connect(m_uiWidget->actionOpenInExplorer    , SIGNAL(triggered(    )), this, SLOT(openSongInExplorer         ()));
+    connect(m_uiWidget->actionImportITunes      , SIGNAL(triggered(    )), this, SLOT(importFromITunes           ()));
+    connect(m_uiWidget->actionImportSongbird    , SIGNAL(triggered(    )), this, SLOT(importFromSongbird         ()));
+    connect(m_uiWidget->actionNotifications     , SIGNAL(triggered(    )), this, SLOT(openDialogNotifications    ()));
+    connect(m_uiWidget->actionLastPlays         , SIGNAL(triggered(    )), this, SLOT(openDialogLastPlays        ()));
+
+    connect(m_uiWidget->actionSelectAll         , SIGNAL(triggered(    )), this, SLOT(selectAll                  ()));
+    connect(m_uiWidget->actionSelectNone        , SIGNAL(triggered(    )), this, SLOT(selectNone                 ()));
+    connect(m_uiWidget->actionPreferences       , SIGNAL(triggered(    )), this, SLOT(openDialogPreferences      ()));
+
+    connect(m_uiWidget->actionPlay              , SIGNAL(triggered(    )), this, SLOT(togglePlay                 ()));
+    connect(m_uiWidget->actionPause             , SIGNAL(triggered(    )), this, SLOT(pause                      ()));
+    connect(m_uiWidget->actionStop              , SIGNAL(triggered(    )), this, SLOT(stop                       ()));
+    connect(m_uiWidget->actionPrevious          , SIGNAL(triggered(    )), this, SLOT(previousSong               ()));
+    connect(m_uiWidget->actionNext              , SIGNAL(triggered(    )), this, SLOT(nextSong                   ()));
+    connect(m_uiWidget->actionNoRepeat          , SIGNAL(triggered(    )), this, SLOT(setRepeatModeNoRepeat      ()));
+    connect(m_uiWidget->actionRepeatList        , SIGNAL(triggered(    )), this, SLOT(setRepeatModeRepeatList    ()));
+    connect(m_uiWidget->actionRepeatSong        , SIGNAL(triggered(    )), this, SLOT(setRepeatModeRepeatSong    ()));
+    connect(m_uiWidget->actionShuffle           , SIGNAL(triggered(bool)), this, SLOT(setShuffle             (bool)));
+    connect(m_uiWidget->actionMute              , SIGNAL(triggered(bool)), this, SLOT(setMute                (bool)));
+    connect(m_uiWidget->actionEqualizer         , SIGNAL(triggered(    )), this, SLOT(openDialogEqualizer        ()));
+
+    connect(m_uiWidget->actionAboutQt           , SIGNAL(triggered(    )), qApp, SLOT(aboutQt                    ()));
+    connect(m_uiWidget->actionAbout             , SIGNAL(triggered(    )), this, SLOT(openDialogAbout            ()));
 
 
     connect(this, SIGNAL(songPlayStart(CSong *)), this, SLOT(updateSongDescription(CSong *)));
+#endif
 }
 
 
@@ -209,7 +255,7 @@ CApplication::~CApplication()
     // Enregistrement des paramètres
     m_settings->setValue("Preferences/Volume", m_volume);
     m_settings->setValue("Preferences/Shuffle", m_isShuffle);
-    m_settings->setValue("Preferences/Repeat", m_isRepeat);
+    m_settings->setValue("Preferences/Repeat", m_repeatMode);
 
     //dumpObjectTree();
 
@@ -280,9 +326,11 @@ bool CApplication::initWindow()
     connect(m_uiControl->btnPrevious, SIGNAL(clicked()), this, SLOT(previousSong()));
     connect(m_uiControl->btnNext, SIGNAL(clicked()), this, SLOT(nextSong()));
 
-    connect(m_uiControl->btnRepeat, SIGNAL(clicked()), this, SLOT(setRepeat()));
+    connect(m_uiControl->btnRepeat, SIGNAL(clicked()), this, SLOT(setNextRepeatMode()));
     connect(m_uiControl->btnShuffle, SIGNAL(clicked()), this, SLOT(setShuffle()));
     connect(m_uiControl->btnMute, SIGNAL(clicked()), this, SLOT(toggleMute()));
+
+    connect(m_uiControl->btnClearFilter, SIGNAL(clicked()), this, SLOT(clearFilter()));
 
     // Sliders
     connect(m_uiControl->sliderVolume, SIGNAL(sliderMoved(int)), this, SLOT(setVolume(int)));
@@ -328,7 +376,16 @@ bool CApplication::initWindow()
     // Paramètres de lecture
     setVolume(m_settings->value("Preferences/Volume", 50).toInt());
     setShuffle(m_settings->value("Preferences/Shuffle", false).toBool());
-    setRepeat(m_settings->value("Preferences/Repeat", false).toBool());
+
+    int repeatModeNum = m_settings->value("Preferences/Repeat", 0).toInt();
+
+    switch (repeatModeNum)
+    {
+        default:
+        case NoRepeat  : setRepeatMode(NoRepeat  ); break;
+        case RepeatList: setRepeatMode(RepeatList); break;
+        case RepeatSong: setRepeatMode(RepeatSong); break;
+    }
 
 
     // Chargement de la base de données
@@ -1108,56 +1165,6 @@ void CApplication::onPlayListChange(IPlayList * playList)
 
 
 /**
- * Indique si la répétition est active.
- *
- * \todo Définir le fonctionnement de la répétition.
- *
- * \return Booléen.
- */
-
-bool CApplication::isRepeat() const
-{
-    return m_isRepeat;
-}
-
-
-/**
- * Indique si la lecture aléatoire est active.
- *
- * \return Booléen.
- */
-
-bool CApplication::isShuffle() const
-{
-    return m_isShuffle;
-}
-
-
-/**
- * Indique si le son est coupé.
- *
- * \return Booléen.
- */
-
-bool CApplication::isMute() const
-{
-    return m_isMute;
-}
-
-
-/**
- * Donne le volume sonore.
- *
- * \return Volume sonore, entre 0 et 100.
- */
-
-int CApplication::getVolume() const
-{
-    return m_volume;
-}
-
-
-/**
  * Donne la position de lecture.
  *
  * \return Position de lecture, ou 0 si aucun morceau n'est en cours de lecture.
@@ -1521,17 +1528,11 @@ void CApplication::onFilterChange(const QString& filter)
     }
 
     m_displayedSongTable->applyFilter(filter);
-/*
-    // On applique le filtre à toutes les listes de lecture
-    QList<IPlayList *> playLists = getAllPlayLists();
 
-    for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
-    {
-        (*it)->applyFilter(filter);
-    }
-
-    m_library->applyFilter(filter);
-*/
+    if (filter.isEmpty())
+        m_uiControl->btnClearFilter->setEnabled(false);
+    else
+        m_uiControl->btnClearFilter->setEnabled(true);
 }
 
 
@@ -1733,7 +1734,7 @@ void CApplication::previousSong()
         // Premier morceau de la liste
         if (!songItem)
         {
-            if (m_isRepeat)
+            if (m_repeatMode == RepeatList)
             {
                 songItem = m_currentSongTable->getLastSong(m_isShuffle);
 
@@ -1816,7 +1817,10 @@ void CApplication::nextSong()
 
         setState(Stopped);
 
-        m_currentSongItem = m_currentSongTable->getNextSong(m_currentSongItem, m_isShuffle);
+        if (m_repeatMode != RepeatSong)
+        {
+            m_currentSongItem = m_currentSongTable->getNextSong(m_currentSongItem, m_isShuffle);
+        }
 
         if (m_currentSongItem && !m_currentSongItem->getSong()->isEnabled())
         {
@@ -1824,8 +1828,8 @@ void CApplication::nextSong()
             return;
         }
 
-        // Répétition de la liste
-        if (!m_currentSongItem && m_isRepeat)
+        // Fin de la liste et répétition de la liste activée
+        if (!m_currentSongItem && m_repeatMode == RepeatList)
         {
             m_currentSongItem = m_currentSongTable->getNextSong(NULL, m_isShuffle);
         }
@@ -1912,19 +1916,59 @@ void CApplication::playSong(CSongTableItem * songItem)
 }
 
 
-void CApplication::setRepeat()
+/**
+ * Passe au mode de répétition suivant.
+ */
+
+void CApplication::setNextRepeatMode()
 {
-    setRepeat(!m_isRepeat);
+    switch (m_repeatMode)
+    {
+        case NoRepeat  : setRepeatMode(RepeatList); break;
+        case RepeatList: setRepeatMode(RepeatSong); break;
+        case RepeatSong: setRepeatMode(NoRepeat  ); break;
+    }
 }
 
 
-void CApplication::setRepeat(bool repeat)
+/**
+ * Modifie le mode de répétition.
+ *
+ * \param repeatMode Mode de répétition.
+ */
+
+void CApplication::setRepeatMode(TRepeatMode repeatMode)
 {
-    if (repeat != m_isRepeat)
+    m_repeatMode = repeatMode;
+
+    switch (m_repeatMode)
     {
-        m_isRepeat = repeat;
-        m_uiControl->btnRepeat->setIcon(QPixmap(m_isRepeat ? ":/icons/repeat_on" : ":/icons/repeat_off"));
-        m_uiWidget->actionRepeat->setChecked(repeat);
+        case NoRepeat:
+
+            m_uiWidget->actionNoRepeat->setChecked(true);
+            m_uiWidget->actionRepeatList->setChecked(false);
+            m_uiWidget->actionRepeatSong->setChecked(false);
+                
+            m_uiControl->btnRepeat->setIcon(QPixmap(":/icons/repeatOff"));
+            break;
+
+        case RepeatList:
+
+            m_uiWidget->actionNoRepeat->setChecked(false);
+            m_uiWidget->actionRepeatList->setChecked(true);
+            m_uiWidget->actionRepeatSong->setChecked(false);
+                
+            m_uiControl->btnRepeat->setIcon(QPixmap(":/icons/repeatList"));
+            break;
+
+        case RepeatSong:
+
+            m_uiWidget->actionNoRepeat->setChecked(false);
+            m_uiWidget->actionRepeatList->setChecked(false);
+            m_uiWidget->actionRepeatSong->setChecked(true);
+                
+            m_uiControl->btnRepeat->setIcon(QPixmap(":/icons/repeatSong"));
+            break;
     }
 }
 
@@ -2891,7 +2935,6 @@ void CApplication::updateSongDescription(CSong * song)
             m_uiControl->lblTime->setText(durationTime.toString("m:ss")); /// \todo Stocker dans les settings
         }
 
-        //m_lyricsEdit->setText(song->getLyrics());
         m_widgetLyrics->setSong(song);
     }
     else
@@ -2902,7 +2945,6 @@ void CApplication::updateSongDescription(CSong * song)
         m_uiControl->lblPosition->setText("0:00");
         m_uiControl->lblTime->setText("0:00");
 
-        //m_lyricsEdit->setText(QString());
         m_widgetLyrics->setSong(song);
     }
 
@@ -2926,18 +2968,7 @@ void CApplication::updateListInformations()
         duration = duration.addMSecs(static_cast<int>(durationMS % 86400000));
         numSongs = m_displayedSongTable->getNumSongs();
     }
-/*
-    // Barre d'état
-    if (durationMS > 86400000)
-    {
-        int numDays = static_cast<int>(durationMS / 86400000);
-        m_listInfos->setText(tr("%n song(s), %1", "", numSongs).arg(tr("%n day(s) %1", "", numDays).arg(duration.toString())));
-    }
-    else
-    {
-        m_listInfos->setText(tr("%n song(s), %1", "", numSongs).arg(duration.toString()));
-    }
-*/
+
     m_listInfos->setText(tr("%n song(s), %1", "", numSongs).arg(durationToString(durationMS)));
 }
 
@@ -3393,7 +3424,13 @@ void CApplication::startPlay()
 }
 
 
-void CApplication::setState(State state)
+/**
+ * Modifie l'état de l'application.
+ *
+ * \param state État de l'application.
+ */
+
+void CApplication::setState(TState state)
 {
     switch (state)
     {

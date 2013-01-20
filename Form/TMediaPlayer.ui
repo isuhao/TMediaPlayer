@@ -79,6 +79,14 @@
     <property name="title">
      <string>&amp;Controls</string>
     </property>
+    <widget class="QMenu" name="menuRepeat">
+     <property name="title">
+      <string>Repeat</string>
+     </property>
+     <addaction name="actionNoRepeat"/>
+     <addaction name="actionRepeatList"/>
+     <addaction name="actionRepeatSong"/>
+    </widget>
     <addaction name="actionPlay"/>
     <addaction name="actionStop"/>
     <addaction name="separator"/>
@@ -86,7 +94,7 @@
     <addaction name="actionNext"/>
     <addaction name="separator"/>
     <addaction name="actionShuffle"/>
-    <addaction name="actionRepeat"/>
+    <addaction name="menuRepeat"/>
     <addaction name="separator"/>
     <addaction name="actionEqualizer"/>
    </widget>
@@ -236,18 +244,6 @@
     <string>Shuffle</string>
    </property>
   </action>
-  <action name="actionRepeat">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="../TMediaPlayer.qrc">
-     <normaloff>:/icons/repeat_on</normaloff>:/icons/repeat_on</iconset>
-   </property>
-   <property name="text">
-    <string>Repeat</string>
-   </property>
-  </action>
   <action name="actionPreferences">
    <property name="icon">
     <iconset resource="../TMediaPlayer.qrc">
@@ -308,6 +304,45 @@
   <action name="actionMute">
    <property name="text">
     <string>Mute</string>
+   </property>
+  </action>
+  <action name="actionNoRepeat">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../TMediaPlayer.qrc">
+     <normaloff>:/icons/repeatOff</normaloff>:/icons/repeatOff</iconset>
+   </property>
+   <property name="text">
+    <string>No repeat</string>
+   </property>
+  </action>
+  <action name="actionRepeatList">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../TMediaPlayer.qrc">
+     <normaloff>:/icons/repeatList</normaloff>:/icons/repeatList</iconset>
+   </property>
+   <property name="text">
+    <string>Repeat list</string>
+   </property>
+  </action>
+  <action name="actionRepeatSong">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../TMediaPlayer.qrc">
+     <normaloff>:/icons/repeatSong</normaloff>:/icons/repeatSong</iconset>
+   </property>
+   <property name="text">
+    <string>Repeat song</string>
    </property>
   </action>
  </widget>

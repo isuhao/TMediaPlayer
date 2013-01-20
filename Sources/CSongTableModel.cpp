@@ -69,10 +69,8 @@ m_currentSongItem   (NULL)
         m_data.append(new CSongTableItem(++i, *it));
     }
 
-#ifdef FILTER_NEW_SYSTEM
     // TODO: récupérer le filtre courant
     m_dataFiltered = m_data;
-#endif
 }
 
 
@@ -120,9 +118,7 @@ void CSongTableModel::setSongs(const QList<CSong *>& data)
     m_data.clear();
     m_dataShuffle.clear();
 
-#ifdef FILTER_NEW_SYSTEM
     m_dataFiltered.clear();
-#endif
 
     int i = 0;
 
@@ -131,10 +127,8 @@ void CSongTableModel::setSongs(const QList<CSong *>& data)
         m_data.append(new CSongTableItem(++i, *it));
     }
 
-#ifdef FILTER_NEW_SYSTEM
     // TODO: récupérer le filtre courant
     m_dataFiltered = m_data;
-#endif
 
     initShuffle();
 
@@ -193,11 +187,7 @@ bool CSongTableModel::hasSong(CSong * song) const
 
 int CSongTableModel::rowCount(const QModelIndex& parent) const
 {
-#ifdef FILTER_NEW_SYSTEM
     return m_dataFiltered.size();
-#else
-    return m_data.size();
-#endif
 }
 
 
@@ -233,11 +223,7 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
         return QFont("Segoe UI", 8);
     }
 
-#ifdef FILTER_NEW_SYSTEM
     QList<CSongTableItem *> data = m_dataFiltered;
-#else
-    QList<CSongTableItem *> data = m_data;
-#endif
 
     // Image
     if (role == Qt::DecorationRole)
@@ -497,11 +483,7 @@ QVariant CSongTableModel::data(const QModelIndex& index, int role) const
 
 bool CSongTableModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-#ifdef FILTER_NEW_SYSTEM
     QList<CSongTableItem *> data = m_dataFiltered;
-#else
-    QList<CSongTableItem *> data = m_data;
-#endif
 
     if (role == Qt::CheckStateRole && index.column() == CSongTable::ColTitle)
     {
@@ -646,7 +628,7 @@ void CSongTableModel::sort(int column, Qt::SortOrder order)
         }
     }
 
-#ifdef FILTER_NEW_SYSTEM
+    // Morceaux filtrés
     if (order == Qt::AscendingOrder)
     {
         switch (column)
@@ -735,7 +717,6 @@ void CSongTableModel::sort(int column, Qt::SortOrder order)
             case CSongTable::ColComposerSort    : qSort(m_dataFiltered.begin(), m_dataFiltered.end(), cmpSongComposerSortDesc    ); break;
         }
     }
-#endif
 
     emit layoutChanged();
     emit columnSorted(column, order);
@@ -971,13 +952,11 @@ void CSongTableModel::insertRow(CSong * song, int pos)
 
     m_dataShuffle.append(songItem);
 
-#ifdef FILTER_NEW_SYSTEM
     if (song->matchFilter(m_application->getFilter()))
     {
         m_dataFiltered.append(songItem);
         m_dataShuffleFiltered.append(songItem);
     }
-#endif
 
     emit layoutChanged();
 }
@@ -998,10 +977,9 @@ void CSongTableModel::removeRow(int row)
 
     CSongTableItem * songItem = m_data.takeAt(row);
     m_dataShuffle.removeOne(songItem);
-#ifdef FILTER_NEW_SYSTEM
+
     m_dataFiltered.removeOne(songItem);
     m_dataShuffleFiltered.removeOne(songItem);
-#endif
 
     delete songItem;
 
@@ -1031,10 +1009,8 @@ void CSongTableModel::removeSongs(const QList<CSong *>& songs)
             m_data.removeOne(*it);
             m_dataShuffle.removeOne(*it);
 
-#ifdef FILTER_NEW_SYSTEM
             m_dataFiltered.removeOne(*it);
             m_dataShuffleFiltered.removeOne(*it);
-#endif
 
             delete *it;
         }
@@ -1061,10 +1037,8 @@ void CSongTableModel::clear()
     m_data.clear();
     m_dataShuffle.clear();
 
-#ifdef FILTER_NEW_SYSTEM
     m_dataFiltered.clear();
     m_dataShuffleFiltered.clear();
-#endif
 
     emit layoutChanged();
 }
@@ -1097,12 +1071,7 @@ CSongTableItem * CSongTableModel::getSongItem(const QModelIndex& index) const
 
 CSongTableItem * CSongTableModel::getSongItem(int row) const
 {
-#ifdef FILTER_NEW_SYSTEM
     QList<CSongTableItem *> data = m_dataFiltered;
-#else
-    QList<CSongTableItem *> data = m_data;
-#endif
-
     return (row < data.size() && row >= 0 ? data.at(row) : NULL);
 }
 
@@ -1118,13 +1087,8 @@ int CSongTableModel::getRowForSongItem(CSongTableItem * songItem) const
 {
     if (!songItem)
         return -1;
-   
-#ifdef FILTER_NEW_SYSTEM
-    QList<CSongTableItem *> data = m_dataFiltered;
-#else
-    QList<CSongTableItem *> data = m_data;
-#endif
 
+    QList<CSongTableItem *> data = m_dataFiltered;
     return data.indexOf(songItem);
 }
 
@@ -1139,13 +1103,8 @@ int CSongTableModel::getRowForSongItem(CSongTableItem * songItem) const
 
 CSongTableItem * CSongTableModel::getPreviousSong(CSongTableItem * songItem, bool shuffle) const
 {
-#ifdef FILTER_NEW_SYSTEM
     QList<CSongTableItem *> data = m_dataFiltered;
     QList<CSongTableItem *> dataShuffle = m_dataShuffleFiltered;
-#else
-    QList<CSongTableItem *> data = m_data;
-    QList<CSongTableItem *> dataShuffle = m_dataShuffle;
-#endif
 
     if (songItem && !data.contains(songItem))
     {
@@ -1201,13 +1160,8 @@ CSongTableItem * CSongTableModel::getPreviousSong(CSongTableItem * songItem, boo
 
 CSongTableItem * CSongTableModel::getNextSong(CSongTableItem * songItem, bool shuffle) const
 {
-#ifdef FILTER_NEW_SYSTEM
     QList<CSongTableItem *> data = m_dataFiltered;
     QList<CSongTableItem *> dataShuffle = m_dataShuffleFiltered;
-#else
-    QList<CSongTableItem *> data = m_data;
-    QList<CSongTableItem *> dataShuffle = m_dataShuffle;
-#endif
 
     if (songItem && !data.contains(songItem))
     {
@@ -1282,13 +1236,8 @@ CSongTableItem * CSongTableModel::getNextSong(CSongTableItem * songItem, bool sh
 
 CSongTableItem * CSongTableModel::getLastSong(bool shuffle) const
 {
-#ifdef FILTER_NEW_SYSTEM
     QList<CSongTableItem *> data = m_dataFiltered;
     QList<CSongTableItem *> dataShuffle = m_dataShuffleFiltered;
-#else
-    QList<CSongTableItem *> data = m_data;
-    QList<CSongTableItem *> dataShuffle = m_dataShuffle;
-#endif
 
     // Aucun morceau dans le modèle
     if (data.isEmpty())
@@ -1355,10 +1304,8 @@ void CSongTableModel::initShuffle(CSongTableItem * firstSong)
         }
     }
 
-#ifdef FILTER_NEW_SYSTEM
     // Modification de la liste filtrée
     applyFilterForShuffleList(m_application->getFilter());
-#endif
 }
 
 
@@ -1379,7 +1326,6 @@ void CSongTableModel::replaceSong(CSong * oldSong, CSong * newSong)
     }
 }
 
-#ifdef FILTER_NEW_SYSTEM
 
 /**
  * Applique un filtre de recherche aux morceaux de la liste.
@@ -1415,6 +1361,12 @@ void CSongTableModel::applyFilter(const QString& filter)
 }
 
 
+/**
+ * Applique le filtre de recherche aux morceaux de la liste aléatoire.
+ *
+ * \param filter Filtre de recherche.
+ */
+
 void CSongTableModel::applyFilterForShuffleList(const QString& filter)
 {
     if (filter.isEmpty())
@@ -1433,5 +1385,3 @@ void CSongTableModel::applyFilterForShuffleList(const QString& filter)
         }
     }
 }
-
-#endif

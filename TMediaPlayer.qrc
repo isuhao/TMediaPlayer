@@ -17,12 +17,13 @@
         <file alias="library">Resources/icon_library.png</file>
         <file alias="song_paused">Resources/icon_song_paused.png</file>
         <file alias="song_playing">Resources/icon_song_playing.png</file>
-        <file alias="repeat_off">Resources/icon_repeat_off.png</file>
-        <file alias="repeat_on">Resources/icon_repeat_on.png</file>
+        <file alias="repeatOff">Resources/icon_repeat_off.png</file>
+        <file alias="repeatList">Resources/icon_repeat_on.png</file>
         <file alias="shuffle_off">Resources/icon_shuffle_off.png</file>
         <file alias="shuffle_on">Resources/icon_shuffle_on.png</file>
         <file alias="equalizer">Resources/equalizer.png</file>
         <file alias="cd">Resources/icon_cd.png</file>
         <file alias="clear">Resources/clear.png</file>
+        <file alias="repeatSong">Resources/icon_repeat_song.png</file>
     </qresource>
 </RCC>

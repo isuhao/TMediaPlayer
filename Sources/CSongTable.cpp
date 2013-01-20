@@ -301,17 +301,7 @@ qlonglong CSongTable::getTotalDuration() const
 
 void CSongTable::applyFilter(const QString& filter)
 {
-#ifdef FILTER_NEW_SYSTEM
     m_model->applyFilter(filter);
-#else
-    const int numRow = m_model->rowCount();
-
-    for (int row = 0; row < numRow; ++row)
-    {
-        CSongTableItem * songItem = m_model->getSongItem(row);
-        setRowHidden(row, !songItem->getSong()->matchFilter(filter));
-    }
-#endif
 }
 
 
@@ -788,9 +778,9 @@ void CSongTable::addToPlayList()
 
             QList<CSong *> songList;
 
-            foreach (QModelIndex index, indexList)
+            for (QModelIndexList::const_iterator index = indexList.begin(); index != indexList.end(); ++index)
             {
-                CSongTableItem * songItem = m_model->getSongItem(index);
+                CSongTableItem * songItem = m_model->getSongItem(*index);
 
                 if (!songList.contains(songItem->getSong()))
                 {

@@ -35,6 +35,8 @@ CDialogAbout::CDialogAbout(CApplication * application) :
 {
     Q_CHECK_PTR(application);
 
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+
     setAttribute(Qt::WA_DeleteOnClose);
     m_uiWidget->setupUi(this);
 

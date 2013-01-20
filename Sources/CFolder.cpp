@@ -55,9 +55,9 @@ CFolder::CFolder(CApplication * application, const QString& name) :
 CFolder::~CFolder()
 {
 /*
-    foreach (IPlayList * playList, m_playLists)
+    for (QList<IPlayList *>::const_iterator playList = m_playLists.begin(); playList != m_playLists.end(); ++playList)
     {
-        playList->updateDatabase();
+        (*playList)->updateDatabase();
         delete playList;
     }
 */

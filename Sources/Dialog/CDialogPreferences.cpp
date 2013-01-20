@@ -57,9 +57,9 @@ CDialogPreferences::CDialogPreferences(CApplication * application, QSettings * s
 
     m_uiWidget->editLanguage->addItem(tr("System language"));
 
-    foreach (QString langFile, langFiles)
+    for (QStringList::const_iterator langFile = langFiles.begin(); langFile != langFiles.end(); ++langFile)
     {
-        QString langISO2 = langFile.mid(13, 2);
+        const QString langISO2 = langFile->mid(13, 2);
         m_uiWidget->editLanguage->addItem(getLanguageName(getLanguageForISO2Code(langISO2)), langISO2);
     }
 
@@ -195,27 +195,6 @@ void CDialogPreferences::save()
     m_application->setDelayBeforeNotification(m_uiWidget->editLastFmDelayBeforeNotification->value() * 1000);
     m_application->setPercentageBeforeScrobbling(m_uiWidget->editLastFmPercentageBeforeScrobbling->value());
 
-    // Organisation automatique des fichiers
-/*
-    m_settings->setValue("Folders/KeepOrganized", m_uiWidget->groupOrganize->isChecked());
-    m_settings->setValue("Folders/Format", m_uiWidget->editOrgFormat->text());
-
-    m_settings->setValue("Folders/TitleDefault", m_uiWidget->editOrgTitleDefault->text());
-    m_settings->setValue("Folders/ArtistDefault", m_uiWidget->editOrgArtistDefault->text());
-    m_settings->setValue("Folders/AlbumDefault", m_uiWidget->editOrgAlbumDefault->text());
-    m_settings->setValue("Folders/YearDefault", m_uiWidget->editOrgYearDefault->text());
-    m_settings->setValue("Folders/TrackDefault", m_uiWidget->editOrgTrackDefault->text());
-    m_settings->setValue("Folders/DiscDefault", m_uiWidget->editOrgDiscDefault->text());
-    m_settings->setValue("Folders/GenreDefault", m_uiWidget->editOrgGenreDefault->text());
-
-    m_settings->setValue("Folders/TitleEmpty", m_uiWidget->editOrgTitleEmpty->text());
-    m_settings->setValue("Folders/ArtistEmpty", m_uiWidget->editOrgArtistEmpty->text());
-    m_settings->setValue("Folders/AlbumEmpty", m_uiWidget->editOrgAlbumEmpty->text());
-    m_settings->setValue("Folders/YearEmpty", m_uiWidget->editOrgYearEmpty->text());
-    m_settings->setValue("Folders/TrackEmpty", m_uiWidget->editOrgTrackEmpty->text());
-    m_settings->setValue("Folders/DiscEmpty", m_uiWidget->editOrgDiscEmpty->text());
-    m_settings->setValue("Folders/GenreEmpty", m_uiWidget->editOrgGenreEmpty->text());
-*/
     close();
 }
 
@@ -247,67 +226,12 @@ void CDialogPreferences::onDriverChange(const QString& name)
 
 /**
  * Ajoute un répertoire à la liste des répertoires surveillés.
- *
- * \todo Déplacer vers la boite de dialogue CDialogPreferencesFolder.
  */
 
 void CDialogPreferences::addFolder()
 {
     CDialogPreferencesFolder * dialog = new CDialogPreferencesFolder(m_application, this, NULL);
     dialog->show();
-
-/*
-    QString pathName = QFileDialog::getExistingDirectory(this);
-
-    if (pathName.isEmpty())
-        return;
-
-    pathName.replace('\\', '/');
-
-    QSqlQuery query(m_application->getDataBase());
-    query.prepare("INSERT INTO libpath (path_location, path_keep_organized, path_format, path_format_items) VALUES (?)");
-    query.bindValue(0, pathName);
-    query.bindValue(1, );
-    query.bindValue(2, );
-    query.bindValue(3, );
-
-    if (!query.exec())
-    {
-        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        return;
-    }
-
-    int pathId = -1;
-
-    if (m_application->getDataBase().driverName() == "QPSQL")
-    {
-        query.prepare("SELECT currval('libpath_seq')");
-
-        if (!query.exec())
-        {
-            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-            return;
-        }
-
-        if (query.next())
-        {
-            pathId = query.value(0).toInt();
-        }
-        else
-        {
-            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-            return;
-        }
-    }
-    else
-    {
-        pathId = query.lastInsertId().toInt();
-    }
-
-    QListWidgetItem * item = new QListWidgetItem(pathName);
-    item->setData(Qt::UserRole, pathId);
-    m_uiWidget->listFolders->addItem(item);
-*/
 }
 
 

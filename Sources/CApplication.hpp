@@ -72,12 +72,27 @@ public:
     QString getAppVersion() const;
     QString getAppDate() const;
 
+
     /// État de lecture.
-    enum State
+    enum TState
     {
         Stopped,
         Playing,
         Paused
+    };
+
+
+    /**
+     * Mode de répétition.
+     * \todo Implémenter la répétition de l'album ou de l'artiste.
+     */
+    enum TRepeatMode
+    {
+        NoRepeat     = 0, ///< Pas de répétition.
+        RepeatList   = 1, ///< Répétition de la liste.
+        RepeatSong   = 2  ///< Répétition du morceau.
+      //RepeatAlbum  = 3, ///< Répétition de l'album.
+      //RepeatArtist = 4  ///< Répétition de tous les morceaux de l'artiste.
     };
 
 
@@ -115,11 +130,11 @@ public:
 
     // Égaliseur
 
-    /// Structure contenant un réglage d'égaliseur.
+    /// Structure contenant un préréglage d'égaliseur.
     struct TEqualizerPreset
     {
-        int id;          ///< Identifiant du réglage en base de données.
-        QString name;    ///< Nom du réglage.
+        int id;          ///< Identifiant du préréglage en base de données.
+        QString name;    ///< Nom du préréglage.
         float value[10]; ///< Valeurs de gain de l'égaliseur.
 
         /// Constructeur par défaut.
@@ -211,10 +226,10 @@ public:
     inline bool isPlaying() const;
     inline bool isPaused() const;
     inline bool isStopped() const;
-    bool isRepeat() const;
-    bool isShuffle() const;
-    bool isMute() const;
-    int getVolume() const;
+    inline TRepeatMode getRepeatMode() const;
+    inline bool isShuffle() const;
+    inline bool isMute() const;
+    inline int getVolume() const;
     int getPosition() const;
 
     int getArtistId(const QString& name, const QString& nameSort);
@@ -261,9 +276,18 @@ public slots:
     void previousSong();
     void nextSong();
     void playSong(CSongTableItem * songItem);
-    void setRepeat();
-    void setRepeat(bool repeat);
+
+#if (QT_VERSION < 0x050000) || __cplusplus < 201103L
+    void setRepeatModeNoRepeat()   { setRepeatMode(NoRepeat  ); }
+    void setRepeatModeRepeatList() { setRepeatMode(RepeatList); }
+    void setRepeatModeRepeatSong() { setRepeatMode(RepeatSong); }
+#endif
+    void setNextRepeatMode();
+    void setRepeatMode(TRepeatMode repeatMode);
+
+#if QT_VERSION < 0x050000
     void setShuffle();
+#endif
     void setShuffle(bool shuffle);
     void setMute(bool mute);
     void toggleMute();
@@ -330,6 +354,7 @@ protected slots:
     void connectToLastFm();
     void onDialogEditSongClosed();
     void onFilterChange(const QString& filter);
+    void clearFilter() { onFilterChange(QString()); }
 
 protected:
 
@@ -341,7 +366,7 @@ protected:
     bool initSoundSystem();
     void loadDatabase();
     void startPlay();
-    void setState(State state);
+    void setState(TState state);
 
     void createDatabaseSQLite();
     void createDatabaseMySQL();
@@ -368,9 +393,9 @@ private:
     CLibrary * m_library;                 ///< Librairie (liste de tous les morceaux).
     CSongTable * m_displayedSongTable;    ///< Liste de morceaux affichée.
     CWidgetLyrics * m_widgetLyrics;       ///< Widget pour visualiser et modifier les paroles des morceaux.
-    State m_state;                        ///< État de lecture.
+    TState m_state;                       ///< État de lecture.
     bool m_showRemainingTime;             ///< Indique si on doit afficher le temps restant ou la durée du morceau en cours de lecture.
-    bool m_isRepeat;                      ///< Indique si la répétition est activée.
+    TRepeatMode m_repeatMode;             ///< Mode de répétition.
     bool m_isShuffle;                     ///< Indique si la lecture aléatoire est activée.
     bool m_isMute;                        ///< Indique si le son est coupé.
     int m_volume;                         ///< Volume sonore (entre 0 et 100).
@@ -387,13 +412,13 @@ private:
 
     QList<TNotification> m_infosNotified; ///< Liste des notifications.
 
-    // Last.fm
+    // État de Last.fm
     enum TLastFmState
     {
-        NoScrobble,
-        Started,
-        Notified,
-        Scrobbled
+        NoScrobble, ///< Pas de scrobble.
+        Started,    ///< Lecture commencé.
+        Notified,   ///< Notification de lecture.
+        Scrobbled   ///< Scrobble effectué.
     };
 
     bool m_lastFmEnableScrobble;          ///< Indique si le scrobbling est activé.
@@ -511,6 +536,54 @@ inline bool CApplication::isPaused() const
 inline bool CApplication::isStopped() const
 {
     return (m_state == Stopped);
+}
+
+
+/**
+ * Retourne le mode de répétition.
+ *
+ * \return Mode de répétition.
+ */
+
+inline CApplication::TRepeatMode CApplication::getRepeatMode() const
+{
+    return m_repeatMode;
+}
+
+
+/**
+ * Indique si la lecture aléatoire est active.
+ *
+ * \return Booléen.
+ */
+
+bool CApplication::isShuffle() const
+{
+    return m_isShuffle;
+}
+
+
+/**
+ * Indique si le son est coupé.
+ *
+ * \return Booléen.
+ */
+
+inline bool CApplication::isMute() const
+{
+    return m_isMute;
+}
+
+
+/**
+ * Donne le volume sonore.
+ *
+ * \return Volume sonore, entre 0 et 100.
+ */
+
+inline int CApplication::getVolume() const
+{
+    return m_volume;
 }
 
 
