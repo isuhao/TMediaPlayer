@@ -357,7 +357,6 @@ bool CSong::loadTags(bool readProperties)
 
         case CSong::FormatMP3:
         {
-
 #ifdef Q_OS_WIN32
 
 #if QT_VERSION >= 0x050000
@@ -413,7 +412,6 @@ bool CSong::loadTags(bool readProperties)
 
         case CSong::FormatOGG:
         {
-
 #ifdef Q_OS_WIN32
 
 #if QT_VERSION >= 0x050000
@@ -465,7 +463,6 @@ bool CSong::loadTags(bool readProperties)
 
         case CSong::FormatFLAC:
         {
-
 #ifdef Q_OS_WIN32
 
 #if QT_VERSION >= 0x050000
@@ -561,7 +558,6 @@ bool CSong::writeTags()
 
         case CSong::FormatMP3:
         {
-
 #ifdef Q_OS_WIN32
 
 #if QT_VERSION >= 0x050000
@@ -606,7 +602,6 @@ bool CSong::writeTags()
 
         case CSong::FormatOGG:
         {
-
 #ifdef Q_OS_WIN32
 
 #if QT_VERSION >= 0x050000
@@ -647,7 +642,6 @@ bool CSong::writeTags()
 
         case CSong::FormatFLAC:
         {
-
 #ifdef Q_OS_WIN32
 
 #if QT_VERSION >= 0x050000
@@ -3241,19 +3235,6 @@ bool CSong::loadTags(TagLib::Ogg::XiphComment * tags)
     }
 
     // Nombre de pistes
-    if (!tagMap["TRACKTOTAL"].isEmpty())
-    {
-        QString trackCount = QString::fromUtf8(tagMap["TRACKTOTAL"].toString().toCString(true));
-        bool ok;
-        setTrackCount(trackCount.toInt(&ok));
-
-        if (!ok || m_infos.trackCount <= 0)
-        {
-            stream << tr("Error: invalid tag \"%1\"").arg("TRACKTOTAL") << '\n';
-            setTrackCount(0); // est-ce utile ?
-        }
-    }
-
     if (!tagMap["TOTALTRACKS"].isEmpty())
     {
         if (!tagMap["TRACKTOTAL"].isEmpty())
@@ -3268,6 +3249,19 @@ bool CSong::loadTags(TagLib::Ogg::XiphComment * tags)
         if (!ok || m_infos.trackCount <= 0)
         {
             stream << tr("Error: invalid tag \"%1\"").arg("TOTALTRACKS") << '\n';
+            setTrackCount(0); // est-ce utile ?
+        }
+    }
+
+    if (!tagMap["TRACKTOTAL"].isEmpty())
+    {
+        QString trackCount = QString::fromUtf8(tagMap["TRACKTOTAL"].toString().toCString(true));
+        bool ok;
+        setTrackCount(trackCount.toInt(&ok));
+
+        if (!ok || m_infos.trackCount <= 0)
+        {
+            stream << tr("Error: invalid tag \"%1\"").arg("TRACKTOTAL") << '\n';
             setTrackCount(0); // est-ce utile ?
         }
     }
@@ -3353,31 +3347,45 @@ bool CSong::loadTags(TagLib::Ogg::XiphComment * tags)
     {
         QString discNumberStr = QString::fromUtf8(tagMap["DISCNUMBER"].toString().toCString(true));
         bool ok;
-        int discNumber = discNumberStr.toInt(&ok);
+        setDiscNumber(discNumberStr.toInt(&ok));
 
         if (!ok || m_infos.discNumber <= 0)
         {
             stream << tr("Error: invalid tag \"%1\"").arg("DISCNUMBER") << '\n';
-            discNumber = 0; // est-ce utile ?
+            setDiscNumber(0); // est-ce utile ?
         }
-
-        setDiscNumber(discNumber);
     }
 
     // Nombre de disques
+    if (!tagMap["TOTALDISCS"].isEmpty())
+    {
+        if (!tagMap["TOTALDISCS"].isEmpty())
+        {
+            stream << tr("Error: tags \"DISCTOTAL\" and \"TOTALDISCS\" are both present") << '\n';
+        }
+
+        QString discCountStr = QString::fromUtf8(tagMap["TOTALDISCS"].toString().toCString(true));
+        bool ok;
+        setDiscCount(discCountStr.toInt(&ok));
+
+        if (!ok || m_infos.trackCount <= 0)
+        {
+            stream << tr("Error: invalid tag \"%1\"").arg("TOTALDISCS") << '\n';
+            setDiscCount(0); // est-ce utile ?
+        }
+    }
+
     if (!tagMap["DISCTOTAL"].isEmpty())
     {
         QString discCountStr = QString::fromUtf8(tagMap["DISCTOTAL"].toString().toCString(true));
         bool ok;
-        int discCount = discCountStr.toInt(&ok);
+        setDiscCount(discCountStr.toInt(&ok));
 
         if (!ok || m_infos.discCount <= 0)
         {
             stream << tr("Error: invalid tag \"%1\"").arg("DISCTOTAL") << '\n';
-            discCount = 0; // est-ce utile ?
+            setDiscCount(0); // est-ce utile ?
         }
-
-        setDiscCount(discCount);
     }
 
     // Commentaires

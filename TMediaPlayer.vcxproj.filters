@@ -487,6 +487,9 @@
     <ClCompile Include="GeneratedFiles\Release\moc_CDialogPreferencesFolder.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Sources\CApplication.hpp">
@@ -763,6 +766,9 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_DialogPreferencesFolder.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Utils.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

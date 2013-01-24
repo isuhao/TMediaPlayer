@@ -169,7 +169,6 @@ void CDialogEditSong::applyChanges()
     song->setDiscCount(m_uiWidget->editDiscCount->text().toInt());
     song->setComments(m_uiWidget->editComments->toPlainText());
     song->setGenre(m_uiWidget->editGenre->currentText());
-    //song->setRating(m_uiWidget->editRating->value());
     song->setRating(m_ratingEditor->getRatingValue());
     song->setLyrics(m_uiWidget->editLyrics->toPlainText());
     song->setLanguage(getLanguageFromInteger(m_uiWidget->editLanguage->currentIndex()));
@@ -235,7 +234,6 @@ void CDialogEditSong::resetSummary()
     // Illustration
     if (song->getFormat() == CSong::FormatMP3)
     {
-
 #ifdef Q_OS_WIN32
 
 #if QT_VERSION >= 0x050000

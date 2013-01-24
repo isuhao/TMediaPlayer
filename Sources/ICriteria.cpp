@@ -56,7 +56,7 @@ ICriteria::ICriteria(CApplication * application, QObject * parent) :
 
 ICriteria::~ICriteria()
 {
-    //qDebug() << "ICriteria::~ICriteria()";
+
 }
 
 
@@ -121,19 +121,19 @@ void ICriteria::insertIntoDatabase(CApplication * application)
 
     if (m_id != -1)
     {
-        qWarning() << "ICriteria::insertIntoDatabase() : le critère a déjà été inséré dans la base de données";
+        application->logError(tr("the criteria is already in database"), __FUNCTION__, __FILE__, __LINE__);
         //return;
     }
 
     if (!m_playList)
     {
-        qWarning() << "ICriteria::insertIntoDatabase() : le critère n'a pas de liste associée";
+        application->logError(tr("the criteria has no associated playlist"), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
     if (m_playList->getId() <= 0)
     {
-        qWarning() << "ICriteria::insertIntoDatabase() : la liste associée au critère a un identifiant invalide";
+        application->logError(tr("the playlist associated to the criteria has an invalid identifier"), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
@@ -144,7 +144,7 @@ void ICriteria::insertIntoDatabase(CApplication * application)
 
         if (parentId <= 0)
         {
-            qWarning() << "ICriteria::insertIntoDatabase() : le critère a un parent, mais son identifiant est incorrect";
+            application->logError(tr("the criteria has a parent, but with an invalid identifier"), __FUNCTION__, __FILE__, __LINE__);
             parentId = 0;
         }
     }
@@ -211,22 +211,3 @@ void ICriteria::insertIntoDatabase(CApplication * application)
         m_id = query.lastInsertId().toInt();
     }
 }
-
-/*
-QList<int> ICriteria::getValidTypes() const
-{
-    return QList<int>();
-}
-
-
-bool ICriteria::isValidType(int type) const
-{
-    return false;
-}
-
-
-QList<int> ICriteria::getValidConditions() const
-{
-    return QList<int>();
-}
-*/

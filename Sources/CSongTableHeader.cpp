@@ -19,6 +19,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CSongTableHeader.hpp"
 #include "CSongTable.hpp"
+#include "Utils.hpp"
 #include <QMenu>
 #include <QContextMenuEvent>
 
@@ -106,18 +107,28 @@ CSongTableHeader::CSongTableHeader(QWidget * parent) :
 }
 
 
+/**
+ * Détruit l'en-tête du tableau.
+ */
+
 CSongTableHeader::~CSongTableHeader()
 {
-    //qDebug() << "CSongTableHeader::~CSongTableHeader()";
+
 }
 
 
+/**
+ * Affiche le menu contextuel.
+ *
+ * \param event Évènement d'affichage du menu contextuel.
+ */
+
 void CSongTableHeader::contextMenuEvent(QContextMenuEvent * event)
 {
-    //qDebug() << "CSongTableHeader::contextMenuEvent()";
+    Q_CHECK_PTR(event);
 
     QPoint point = event->pos();
-    m_contextMenu->move(mapToGlobal(point));
+    m_contextMenu->move(getCorrectMenuPosition(m_contextMenu, mapToGlobal(point)));
     m_contextMenu->show();
 
     QHeaderView::contextMenuEvent(event);

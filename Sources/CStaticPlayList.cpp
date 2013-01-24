@@ -23,7 +23,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CDynamicList.hpp"
 #include "CFolder.hpp"
 #include "CLibrary.hpp"
-#include "CDialogEditSong.hpp"
+#include "Utils.hpp"
+#include "Dialog/CDialogEditSong.hpp"
 
 #include <QSqlQuery>
 #include <QSqlError>
@@ -728,7 +729,8 @@ void CStaticPlayList::openCustomMenuProject(const QPoint& point)
         
         if (!severalSongs)
         {
-            menu->addAction(tr("Play"), this, SLOT(playSelectedSong()));
+            QAction * actionPlay = menu->addAction(tr("Play"), this, SLOT(playSelectedSong()));
+            menu->setDefaultAction(actionPlay);
             menu->addSeparator();
         }
 
@@ -835,7 +837,7 @@ void CStaticPlayList::openCustomMenuProject(const QPoint& point)
         menu->addSeparator();
         menu->addAction(tr("Remove duplicates"), this, SLOT(removeDuplicateSongs()));
 
-        menu->move(mapToGlobal(point));
+        menu->move(getCorrectMenuPosition(menu, mapToGlobal(point)));
         menu->show();
     }
 }

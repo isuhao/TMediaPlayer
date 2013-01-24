@@ -25,13 +25,13 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CApplication.hpp"
 #include "CFolder.hpp"
 #include "CCDRomDrive.hpp"
+#include "Utils.hpp"
 #include "Dialog/CDialogCDRomDriveInfos.hpp"
 
 #include <QHeaderView>
 #include <QMenu>
 #include <QDragMoveEvent>
 #include <QMimeData>
-#include <QDesktopWidget>
 
 #include <QtDebug>
 
@@ -484,21 +484,8 @@ void CPlayListView::openCustomMenuProject(const QPoint& point)
         }
     }
 
-    // Positionnement du menu pour éviter qu'il ne sorte de l'écran
-    QPoint menuPosition = mapToGlobal(point);
-    QDesktopWidget * desktopWidget = QApplication::desktop();
-    const QRect screen = desktopWidget->screenGeometry(this);
-
-    if (menuPosition.y() + menu->height() > screen.height())
-    {
-        if (menu->height() <= screen.height())
-            menuPosition.setY(screen.height() - menu->height());
-        else
-            menuPosition.setY(0);
-    }
-    
     // Affichage du menu
-    menu->move(menuPosition);
+    menu->move(getCorrectMenuPosition(menu, mapToGlobal(point)));
     menu->show();
 }
 

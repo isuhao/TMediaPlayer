@@ -143,7 +143,7 @@ void CListModel::loadFromDatabase()
                 }
                 else
                 {
-                    m_application->logError(tr("identifiant invalide"), __FUNCTION__, __FILE__, __LINE__);
+                    m_application->logError(tr("invalid identifier (%1)").arg(folderId), __FUNCTION__, __FILE__, __LINE__);
                 }
             }
         }
@@ -280,6 +280,9 @@ void CListModel::loadFromDatabase()
 
 /**
  * Efface les données du modèle.
+ * Les éléments permanents sont recrées (médiathèque, file d'attente, lecteurs de CD-ROM).
+ *
+ * \todo Implémenter la file d'attente.
  */
 
 void CListModel::clear()
@@ -300,6 +303,14 @@ void CListModel::clear()
     appendRow(libraryItem);
     m_songTableItems[libraryItem] = m_application->getLibrary();
 
+    // Ajout de la file d'attente
+/*
+    QStandardItem * queueItem = new QStandardItem(QPixmap(":/icons/queue"), tr("Queue"));
+    queueItem->setData(QVariant::fromValue(qobject_cast<CSongTable *>(m_application->getQueue())), Qt::UserRole + 1);
+
+    appendRow(queueItem);
+    m_songTableItems[queueItem] = m_application->getQueue();
+*/
     // Ajout des lecteurs de CD-ROM
     QList<CCDRomDrive *> drives = m_application->getCDRomDrives();
 
@@ -484,12 +495,12 @@ void CListModel::addFolder(CFolder * folder)
             }
             else
             {
-                m_application->logError("l'élément n'est ni un dossier, ni une liste de lecture", __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("l'élément n'est ni un dossier, ni une liste de lecture"), __FUNCTION__, __FILE__, __LINE__);
             }
         }
         else
         {
-            m_application->logError("position incorrecte dans un dossier", __FUNCTION__, __FILE__, __LINE__);
+            m_application->logError(tr("position incorrecte dans un dossier"), __FUNCTION__, __FILE__, __LINE__);
             invalidPosition = true;
         }
     }
@@ -581,7 +592,7 @@ void CListModel::removeFolder(CFolder * folder, bool recursive)
 
             if (!itemFolder)
             {
-                m_application->logError("dossier invalide", __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("invalid folder"), __FUNCTION__, __FILE__, __LINE__);
                 continue;
             }
 
@@ -602,7 +613,7 @@ void CListModel::removeFolder(CFolder * folder, bool recursive)
 
             if (!itemPlayList)
             {
-                m_application->logError("liste de lecture invalide", __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("invalid playlist"), __FUNCTION__, __FILE__, __LINE__);
                 continue;
             }
 
@@ -683,7 +694,7 @@ bool CListModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int
 
             if (!folderParent)
             {
-                m_application->logError("dossier invalide", __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("invalid folter"), __FUNCTION__, __FILE__, __LINE__);
                 return false;
             }
         }
@@ -694,7 +705,7 @@ bool CListModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int
 
             if (!playList)
             {
-                m_application->logError("liste de lecture invalide", __FUNCTION__, __FILE__, __LINE__);
+                m_application->logError(tr("invalid playlist"), __FUNCTION__, __FILE__, __LINE__);
                 return false;
             }
 

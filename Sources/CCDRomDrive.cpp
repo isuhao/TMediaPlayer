@@ -20,6 +20,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CCDRomDrive.hpp"
 #include "CApplication.hpp"
 #include "CSong.hpp"
+#include "Utils.hpp"
 #include "MusicBrainz/sha1.h"
 #include "MusicBrainz/base64.h"
 #include "MusicBrainz/CMusicBrainzLookup.hpp"
@@ -386,4 +387,68 @@ bool CCDRomDrive::updateDatabase()
 {
     // Les lecteurs ne sont pas enregistrés en base de données
     return false;
+}
+
+
+/**
+ * Affiche le menu contextuel.
+ *
+ * \param point Position du clic.
+ */
+
+void CCDRomDrive::openCustomMenuProject(const QPoint& point)
+{
+    QModelIndex index = indexAt(point);
+
+    if (index.isValid())
+    {
+        bool severalSongs = (selectionModel()->selectedRows().size() > 1);
+
+        if (!severalSongs)
+        {
+            m_selectedItem = m_model->getSongItem(index);
+        }
+
+        // Menu contextuel
+        QMenu * menu = new QMenu(this);
+        menu->setAttribute(Qt::WA_DeleteOnClose);
+        
+        if (!severalSongs)
+        {
+            QAction * actionPlay = menu->addAction(tr("Play"), this, SLOT(playSelectedSong()));
+            menu->setDefaultAction(actionPlay);
+            menu->addSeparator();
+        }
+
+        menu->addAction(tr("Informations..."), m_application, SLOT(openDialogSongInfos()));
+        menu->addAction(tr("Import..."), this, SLOT(importSelectedSongs()))->setEnabled(false);
+
+        if (!severalSongs)
+        {
+            menu->addAction(tr("Show in explorer"), m_application, SLOT(openSongInExplorer()));
+        }
+
+        menu->addSeparator();
+
+        if (!severalSongs)
+        {
+            QAction * actionCheck = menu->addAction(tr("Check song"), this, SLOT(checkSelection()));
+            QAction * actionUncheck = menu->addAction(tr("Uncheck song"), this, SLOT(uncheckSelection()));
+
+            bool songIsChecked = m_selectedItem->getSong()->isEnabled();
+
+            if (songIsChecked)
+                actionCheck->setEnabled(false);
+            else
+                actionUncheck->setEnabled(false);
+        }
+        else
+        {
+            menu->addAction(tr("Check selection"), this, SLOT(checkSelection()));
+            menu->addAction(tr("Uncheck selection"), this, SLOT(uncheckSelection()));
+        }
+
+        menu->move(getCorrectMenuPosition(menu, mapToGlobal(point)));
+        menu->show();
+    }
 }

@@ -27,6 +27,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CDynamicList.hpp"
 #include "CRatingDelegate.hpp"
 #include "CLibrary.hpp"
+#include "Utils.hpp"
 
 #include <QStringList>
 #include <QMouseEvent>
@@ -1289,7 +1290,8 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
 
         if (!severalSongs)
         {
-            menu->addAction(tr("Play"), this, SLOT(playSelectedSong()));
+            QAction * actionPlay = menu->addAction(tr("Play"), this, SLOT(playSelectedSong()));
+            menu->setDefaultAction(actionPlay);
             menu->addSeparator();
         }
 
@@ -1391,8 +1393,8 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
                 }
             }
         }
-
-        menu->move(mapToGlobal(point));
+        
+        menu->move(getCorrectMenuPosition(menu, mapToGlobal(point)));
         menu->show();
     }
 }

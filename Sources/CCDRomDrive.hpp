@@ -62,9 +62,10 @@ public slots:
 
     void ejectDisc();
 
-protected:
+protected slots:
 
     virtual bool updateDatabase();
+    virtual void openCustomMenuProject(const QPoint& point);
 
 private:
 
