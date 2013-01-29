@@ -124,6 +124,20 @@ private:
     bool m_differentComments;
     bool m_differentLyrics;
     QList<CSongTableItem *> m_songItemList;
+
+    // Widgets
+    QLineEdit * m_editTitleLE;
+    QLineEdit * m_editTitleLE_2;
+    QComboBox * m_editTitleCB;
+    QComboBox * m_editTitleCB_2;
+    QLineEdit * m_editTitleSortLE;
+    QComboBox * m_editTitleSortCB;
+    QLineEdit * m_editArtistLE;
+    QLineEdit * m_editArtistLE_2;
+    QComboBox * m_editArtistCB;
+    QComboBox * m_editArtistCB_2;
+    QLineEdit * m_editArtistSortLE;
+    QComboBox * m_editArtistSortCB;
 };
 
 #endif // FILE_C_DIALOG_EDIT_SONGS
