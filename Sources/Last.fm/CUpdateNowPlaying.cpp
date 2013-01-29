@@ -18,8 +18,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CUpdateNowPlaying.hpp"
-#include "CSong.hpp"
-#include "CApplication.hpp"
+#include "../CSong.hpp"
+#include "../CApplication.hpp"
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>

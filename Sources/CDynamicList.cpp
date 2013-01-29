@@ -23,8 +23,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CWidgetMultiCriterion.hpp"
 #include "CCriteria.hpp"
 #include "CFolder.hpp"
-#include "CDialogEditSong.hpp"
 #include "CLibrary.hpp"
+#include "Dialog/CDialogEditSong.hpp"
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QMessageBox>

@@ -111,7 +111,7 @@ void CListModel::loadFromDatabase()
 
             folderPositions[folder] = query.value(3).toInt();
 
-            if (folder->m_folder < 0)
+            if (query.value(2).toInt() < 0)
             {
                 m_application->logError(tr("le dossier parent a un identifiant invalide"), __FUNCTION__, __FILE__, __LINE__);
                 folder->m_folder = 0;
@@ -670,6 +670,8 @@ void CListModel::removePlayList(IPlayList * playList)
 
 bool CListModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex& parent)
 {
+    Q_UNUSED(column);
+
     Q_CHECK_PTR(data);
 
     if (action == Qt::IgnoreAction)
@@ -963,6 +965,8 @@ IPlayList * CListModel::getPlayListFromId(int id, const QList<IPlayList *> playL
 
 void CListModel::onPlayListRenamed(const QString& oldName, const QString& newName)
 {
+    Q_UNUSED(oldName);
+
     IPlayList * playList = qobject_cast<IPlayList *>(sender());
 
     if (playList)
@@ -977,6 +981,8 @@ void CListModel::onPlayListRenamed(const QString& oldName, const QString& newNam
 
 void CListModel::onFolderRenamed(const QString& oldName, const QString& newName)
 {
+    Q_UNUSED(oldName);
+
     CFolder * folder = qobject_cast<CFolder *>(sender());
 
     if (folder)

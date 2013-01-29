@@ -449,18 +449,22 @@ bool CApplication::initWindow()
 
     if (presetId > 0)
     {
-        TEqualizerPreset currentEqualizerPreset = getEqualizerPresetFromId(presetId);
-        bool currentEqualizerPresetDefined = true;
+        TEqualizerPreset * currentEqualizerPreset = getEqualizerPresetFromId(presetId);
 
-        for (int f = 0; f < 10; ++f)
+        if (currentEqualizerPreset)
         {
-            if (currentEqualizerPreset.value[f] != m_equalizerGains[f])
-                currentEqualizerPresetDefined = false;
-        }
+            bool currentEqualizerPresetDefined = true;
 
-        if (currentEqualizerPresetDefined)
-        {
-            m_currentEqualizerPreset = currentEqualizerPreset;
+            for (int f = 0; f < 10; ++f)
+            {
+                if (currentEqualizerPreset->value[f] != m_equalizerGains[f])
+                    currentEqualizerPresetDefined = false;
+            }
+
+            if (currentEqualizerPresetDefined)
+            {
+                m_currentEqualizerPreset = currentEqualizerPreset;
+            }
         }
     }
 
@@ -598,7 +602,7 @@ void CApplication::setEqualizerGain(TEqualizerFrequency frequency, double gain)
 {
     m_equalizerGains[frequency] = qBound(0.05, gain, 3.0);
     m_settings->setValue(QString("Equalizer/Gain_%1").arg(frequency), m_equalizerGains[frequency]);
-    FMOD_RESULT res = m_dsp[frequency]->setParameter(FMOD_DSP_PARAMEQ_GAIN, m_equalizerGains[frequency]);
+    /*FMOD_RESULT res =*/ m_dsp[frequency]->setParameter(FMOD_DSP_PARAMEQ_GAIN, m_equalizerGains[frequency]);
 }
 
 
@@ -649,14 +653,14 @@ void CApplication::setEqualizerEnabled(bool enabled)
     {
         for (int i = 0; i < 10; ++i)
         {
-            FMOD_RESULT res = m_dsp[i]->setParameter(FMOD_DSP_PARAMEQ_GAIN, m_equalizerGains[i]);
+            /*FMOD_RESULT res =*/ m_dsp[i]->setParameter(FMOD_DSP_PARAMEQ_GAIN, m_equalizerGains[i]);
         }
     }
     else
     {
         for (int i = 0; i < 10; ++i)
         {
-            FMOD_RESULT res = m_dsp[i]->setParameter(FMOD_DSP_PARAMEQ_GAIN, 1.0);
+            /*FMOD_RESULT res =*/ m_dsp[i]->setParameter(FMOD_DSP_PARAMEQ_GAIN, 1.0);
         }
     }
 }
@@ -676,10 +680,10 @@ bool CApplication::isEqualizerEnabled() const
 
 QString CApplication::getEqualizerPresetName(int id) const
 {
-    for (QList<TEqualizerPreset>::const_iterator it = m_equalizerPresets.begin(); it != m_equalizerPresets.end(); ++it)
+    for (QList<TEqualizerPreset *>::const_iterator it = m_equalizerPresets.begin(); it != m_equalizerPresets.end(); ++it)
     {
-        if (it->id == id)
-            return it->name;
+        if ((*it)->id == id)
+            return (*it)->name;
     }
 
     return QString();
@@ -688,34 +692,36 @@ QString CApplication::getEqualizerPresetName(int id) const
 
 int CApplication::getEqualizerPresetIdFromName(const QString& name) const
 {
-    for (QList<TEqualizerPreset>::const_iterator it = m_equalizerPresets.begin(); it != m_equalizerPresets.end(); ++it)
+    for (QList<TEqualizerPreset *>::const_iterator it = m_equalizerPresets.begin(); it != m_equalizerPresets.end(); ++it)
     {
-        if (it->name == name)
-            return it->id;
+        if ((*it)->name == name)
+            return (*it)->id;
     }
 
     return 0;
 }
 
 
-CApplication::TEqualizerPreset CApplication::getEqualizerPresetFromId(int id) const
+CApplication::TEqualizerPreset * CApplication::getEqualizerPresetFromId(int id) const
 {
-    for (QList<TEqualizerPreset>::const_iterator it = m_equalizerPresets.begin(); it != m_equalizerPresets.end(); ++it)
+    for (QList<TEqualizerPreset *>::const_iterator it = m_equalizerPresets.begin(); it != m_equalizerPresets.end(); ++it)
     {
-        if (it->id == id)
+        if ((*it)->id == id)
             return *it;
     }
 
-    return TEqualizerPreset();
+    return NULL;
 }
 
 
-void CApplication::saveEqualizerPreset(TEqualizerPreset& equalizer)
+void CApplication::saveEqualizerPreset(TEqualizerPreset * equalizer)
 {
+    Q_CHECK_PTR(equalizer);
+
     QSqlQuery query(m_dataBase);
 
     // Nouveau préréglage
-    if (equalizer.id <= 0)
+    if (equalizer->id <= 0)
     {
         query.prepare("INSERT INTO equalizer("
                           "equalizer_name, "
@@ -731,17 +737,17 @@ void CApplication::saveEqualizerPreset(TEqualizerPreset& equalizer)
                           "equalizer_val9"
                       ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-        query.bindValue( 0, equalizer.name);
-        query.bindValue( 1, equalizer.value[0]);
-        query.bindValue( 2, equalizer.value[1]);
-        query.bindValue( 3, equalizer.value[2]);
-        query.bindValue( 4, equalizer.value[3]);
-        query.bindValue( 5, equalizer.value[4]);
-        query.bindValue( 6, equalizer.value[5]);
-        query.bindValue( 7, equalizer.value[6]);
-        query.bindValue( 8, equalizer.value[7]);
-        query.bindValue( 9, equalizer.value[8]);
-        query.bindValue(10, equalizer.value[9]);
+        query.bindValue( 0, equalizer->name);
+        query.bindValue( 1, equalizer->value[0]);
+        query.bindValue( 2, equalizer->value[1]);
+        query.bindValue( 3, equalizer->value[2]);
+        query.bindValue( 4, equalizer->value[3]);
+        query.bindValue( 5, equalizer->value[4]);
+        query.bindValue( 6, equalizer->value[5]);
+        query.bindValue( 7, equalizer->value[6]);
+        query.bindValue( 8, equalizer->value[7]);
+        query.bindValue( 9, equalizer->value[8]);
+        query.bindValue(10, equalizer->value[9]);
 
         if (!query.exec())
         {
@@ -761,7 +767,7 @@ void CApplication::saveEqualizerPreset(TEqualizerPreset& equalizer)
 
             if (query.next())
             {
-                equalizer.id = query.value(0).toInt();
+                equalizer->id = query.value(0).toInt();
             }
             else
             {
@@ -771,7 +777,7 @@ void CApplication::saveEqualizerPreset(TEqualizerPreset& equalizer)
         }
         else
         {
-            equalizer.id = query.lastInsertId().toInt();
+            equalizer->id = query.lastInsertId().toInt();
         }
 
         m_equalizerPresets.append(equalizer);
@@ -792,31 +798,22 @@ void CApplication::saveEqualizerPreset(TEqualizerPreset& equalizer)
                         "equalizer_val9 = ? "
                       "WHERE equalizer_id = ?");
 
-        query.bindValue( 0, equalizer.name);
-        query.bindValue( 1, equalizer.value[0]);
-        query.bindValue( 2, equalizer.value[1]);
-        query.bindValue( 3, equalizer.value[2]);
-        query.bindValue( 4, equalizer.value[3]);
-        query.bindValue( 5, equalizer.value[4]);
-        query.bindValue( 6, equalizer.value[5]);
-        query.bindValue( 7, equalizer.value[6]);
-        query.bindValue( 8, equalizer.value[7]);
-        query.bindValue( 9, equalizer.value[8]);
-        query.bindValue(10, equalizer.value[9]);
-        query.bindValue(11, equalizer.id);
+        query.bindValue( 0, equalizer->name);
+        query.bindValue( 1, equalizer->value[0]);
+        query.bindValue( 2, equalizer->value[1]);
+        query.bindValue( 3, equalizer->value[2]);
+        query.bindValue( 4, equalizer->value[3]);
+        query.bindValue( 5, equalizer->value[4]);
+        query.bindValue( 6, equalizer->value[5]);
+        query.bindValue( 7, equalizer->value[6]);
+        query.bindValue( 8, equalizer->value[7]);
+        query.bindValue( 9, equalizer->value[8]);
+        query.bindValue(10, equalizer->value[9]);
+        query.bindValue(11, equalizer->id);
 
         if (!query.exec())
         {
             showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-
-        for (QList<TEqualizerPreset>::iterator it = m_equalizerPresets.begin(); it != m_equalizerPresets.end(); ++it)
-        {
-            if (it->id == equalizer.id)
-            {
-                *it = equalizer;
-                break;
-            }
         }
     }
 
@@ -824,22 +821,24 @@ void CApplication::saveEqualizerPreset(TEqualizerPreset& equalizer)
 }
 
 
-void CApplication::deleteEqualizerPreset(TEqualizerPreset& equalizer)
+void CApplication::deleteEqualizerPreset(TEqualizerPreset * equalizer)
 {
+    Q_CHECK_PTR(equalizer);
+
     // Suppression en base de données
-    if (equalizer.id > 0)
+    if (equalizer->id > 0)
     {
         QSqlQuery query(m_dataBase);
         
         query.prepare("DELETE FROM equalizer WHERE equalizer_id = ?");
-        query.bindValue(0, equalizer.id);
+        query.bindValue(0, equalizer->id);
 
         if (!query.exec())
         {
             showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         }
 
-        m_equalizerPresets.removeAt(m_equalizerPresets.indexOf(equalizer));
+        m_equalizerPresets.removeOne(equalizer);
 /*
         for (QList<TEqualizer>::iterator it = m_equalizers.begin(); it != m_equalizers.end(); ++it)
         {
@@ -851,30 +850,32 @@ void CApplication::deleteEqualizerPreset(TEqualizerPreset& equalizer)
             }
         }
 */
-        equalizer.id = 0;
+        equalizer->id = 0;
     }
-    
+
     m_currentEqualizerPreset = equalizer;
     m_settings->setValue("Equalizer/PresetName", QString());
 }
 
 
-void CApplication::setCurrentEqualizerPreset(const TEqualizerPreset& equalizer)
+void CApplication::setCurrentEqualizerPreset(TEqualizerPreset * equalizer)
 {
+    Q_CHECK_PTR(equalizer);
+
     m_currentEqualizerPreset = equalizer;
 
-    setEqualizerGain(EqFreq32 , equalizer.value[0]);
-    setEqualizerGain(EqFreq64 , equalizer.value[1]);
-    setEqualizerGain(EqFreq125, equalizer.value[2]);
-    setEqualizerGain(EqFreq250, equalizer.value[3]);
-    setEqualizerGain(EqFreq500, equalizer.value[4]);
-    setEqualizerGain(EqFreq1K , equalizer.value[5]);
-    setEqualizerGain(EqFreq2K , equalizer.value[6]);
-    setEqualizerGain(EqFreq4K , equalizer.value[7]);
-    setEqualizerGain(EqFreq8K , equalizer.value[8]);
-    setEqualizerGain(EqFreq16K, equalizer.value[9]);
+    setEqualizerGain(EqFreq32 , equalizer->value[0]);
+    setEqualizerGain(EqFreq64 , equalizer->value[1]);
+    setEqualizerGain(EqFreq125, equalizer->value[2]);
+    setEqualizerGain(EqFreq250, equalizer->value[3]);
+    setEqualizerGain(EqFreq500, equalizer->value[4]);
+    setEqualizerGain(EqFreq1K , equalizer->value[5]);
+    setEqualizerGain(EqFreq2K , equalizer->value[6]);
+    setEqualizerGain(EqFreq4K , equalizer->value[7]);
+    setEqualizerGain(EqFreq8K , equalizer->value[8]);
+    setEqualizerGain(EqFreq16K, equalizer->value[9]);
 
-    m_settings->setValue("Equalizer/PresetName", equalizer.name);
+    m_settings->setValue("Equalizer/PresetName", equalizer->name);
 }
 
 
@@ -3016,7 +3017,7 @@ void CApplication::updateTimer()
             {
                 if (m_lastFmTimeListened > m_delayBeforeNotification)
                 {
-                    CUpdateNowPlaying * query = new CUpdateNowPlaying(this, m_lastFmKey, m_currentSongItem->getSong());
+                    /*CUpdateNowPlaying * query =*/ new CUpdateNowPlaying(this, m_lastFmKey, m_currentSongItem->getSong());
                     m_lastFmState = Notified;
                 }
             }
@@ -3024,7 +3025,7 @@ void CApplication::updateTimer()
             {
                 if (m_lastFmTimeListened > 4 * 60000 || m_lastFmTimeListened > m_currentSongItem->getSong()->getDuration() * m_percentageBeforeScrobbling / 100)
                 {
-                    CScrobble * query = new CScrobble(this, m_lastFmKey, m_currentSongItem->getSong());
+                    /*CScrobble * query =*/ new CScrobble(this, m_lastFmKey, m_currentSongItem->getSong());
                     m_lastFmState = Scrobbled;
                 }
             }
@@ -3340,13 +3341,13 @@ void CApplication::loadDatabase()
     {
         while (query.next())
         {
-            TEqualizerPreset eq;
-            eq.id   = query.value(0).toInt();
-            eq.name = query.value(1).toString();
+            TEqualizerPreset * eq = new TEqualizerPreset();
+            eq->id   = query.value(0).toInt();
+            eq->name = query.value(1).toString();
 
             for (int f = 0; f < 10; ++f)
             {
-                eq.value[f] = query.value(2 + f).toFloat();
+                eq->value[f] = query.value(2 + f).toFloat();
             }
 
             m_equalizerPresets.append(eq);

@@ -44,7 +44,7 @@ public:
 
     void paint(QPainter * painter, const QRect& rect, const QPalette& palette, EditMode mode) const;
     QSize sizeHint() const;
-    QSize CRating::minimumSizeHint() const;
+    QSize minimumSizeHint() const;
     inline int getRating() const;
     inline void setRating(int rating);
 

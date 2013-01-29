@@ -187,6 +187,8 @@ bool CSongTableModel::hasSong(CSong * song) const
 
 int CSongTableModel::rowCount(const QModelIndex& parent) const
 {
+    Q_UNUSED(parent);
+
     return m_dataFiltered.size();
 }
 
@@ -200,6 +202,8 @@ int CSongTableModel::rowCount(const QModelIndex& parent) const
 
 int CSongTableModel::columnCount(const QModelIndex& parent) const
 {
+    Q_UNUSED(parent);
+
     return CSongTable::ColNumber;
 }
 
@@ -852,6 +856,10 @@ QMimeData * CSongTableModel::mimeData(const QModelIndexList& indexes) const
 
 bool CSongTableModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex& parent)
 {
+    Q_UNUSED(row);
+    Q_UNUSED(column);
+    Q_UNUSED(parent);
+
     Q_CHECK_PTR(data);
 
     if (action == Qt::IgnoreAction)

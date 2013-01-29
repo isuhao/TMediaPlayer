@@ -42,6 +42,7 @@ class CStaticPlayList;
 class CLibrary;
 class CListModel;
 class CLibraryFolder;
+class CDialogEditSong;
 class CWidgetLyrics;
 class QStandardItemModel;
 class QSettings;
@@ -185,14 +186,14 @@ public:
     double getEqualizerGain(TEqualizerFrequency frequency);
     void resetEqualizer();
     bool isEqualizerEnabled() const;
-    inline QList<TEqualizerPreset> getEqualizerPresetList() const;
+    inline QList<TEqualizerPreset *> getEqualizerPresetList() const;
     QString getEqualizerPresetName(int id) const;
     int getEqualizerPresetIdFromName(const QString& name) const;
-    TEqualizerPreset getEqualizerPresetFromId(int id) const;
-    inline TEqualizerPreset getCurrentEqualizerPreset() const;
-    void saveEqualizerPreset(TEqualizerPreset& equalizer);
-    void deleteEqualizerPreset(TEqualizerPreset& equalizer);
-    void setCurrentEqualizerPreset(const TEqualizerPreset& equalizer);
+    TEqualizerPreset * getEqualizerPresetFromId(int id) const;
+    inline TEqualizerPreset * getCurrentEqualizerPreset();
+    void saveEqualizerPreset(TEqualizerPreset * equalizer);
+    void deleteEqualizerPreset(TEqualizerPreset * equalizer);
+    void setCurrentEqualizerPreset(TEqualizerPreset * equalizer);
 
 
     // Dossiers de la médiathèque
@@ -403,8 +404,8 @@ private:
     // Égaliseur
     double m_equalizerGains[10];          ///< Gains de l'égaliseur.
     FMOD::DSP * m_dsp[10];                ///< Gains de l'égaliseur pour FMOD.
-    QList<TEqualizerPreset> m_equalizerPresets; ///< Liste des préréglages d'égaliseur.
-    TEqualizerPreset m_currentEqualizerPreset;  ///< Préréglage de l'égaliseur actuel.
+    QList<TEqualizerPreset *> m_equalizerPresets; ///< Liste des préréglages d'égaliseur.
+    TEqualizerPreset * m_currentEqualizerPreset;  ///< Préréglage de l'égaliseur actuel.
 
     QMap<QString, QFile *> m_logList;     ///< Liste des fichiers de log ouverts.
     QString m_applicationPath;            ///< Répertoire contenant l'application.
@@ -437,13 +438,13 @@ QList<CApplication::TNotification> CApplication::getNotifications() const
 }
 
 
-inline QList<CApplication::TEqualizerPreset> CApplication::getEqualizerPresetList() const
+inline QList<CApplication::TEqualizerPreset *> CApplication::getEqualizerPresetList() const
 {
     return m_equalizerPresets;
 }
 
 
-inline CApplication::TEqualizerPreset CApplication::getCurrentEqualizerPreset() const
+inline CApplication::TEqualizerPreset * CApplication::getCurrentEqualizerPreset()
 {
     return m_currentEqualizerPreset;
 }

@@ -114,8 +114,8 @@ CSong::CSong(CApplication * application) :
     m_cdRomTrackNumber (-1),
     m_isModified       (false),
     m_needWriteTags    (false),
-    m_id               (-1),
-    m_fileStatus       (true)
+    m_fileStatus       (true),
+    m_id               (-1)
 {
     Q_CHECK_PTR(application);
 }
@@ -140,8 +140,8 @@ CSong::CSong(const QString& fileName, CApplication * application) :
     m_cdRomTrackNumber (-1),
     m_isModified       (false),
     m_needWriteTags    (false),
-    m_id               (-1),
-    m_fileStatus       (true)
+    m_fileStatus       (true),
+    m_id               (-1)
 {
     Q_CHECK_PTR(application);
 
@@ -707,7 +707,7 @@ bool CSong::writeTags()
 
 bool CSong::moveFile()
 {
-    const unsigned int maxFolderLength = 50;
+    const int maxFolderLength = 50;
 
     // Recherche du répertoire de la médiathèque
     CLibraryFolder * libraryFolder = m_application->getLibraryFolder(m_application->getLibraryFolderId(m_properties.fileName));

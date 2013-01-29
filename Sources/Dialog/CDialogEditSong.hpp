@@ -21,7 +21,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #define FILE_C_DIALOG_EDIT_SONG
 
 #include <QDialog>
-#include "CSongTableModel.hpp"
+#include "../CSongTableModel.hpp"
 #include "ui_DialogEditSong.h"
 
 
@@ -50,7 +50,7 @@ public:
 
 signals:
 
-    void closed(); ///< Signal émis lorsque la boite de dialogue est fermée.
+    void closed(); ///< Signal Ã©mis lorsque la boite de dialogue est fermÃ©e.
 
 protected:
 

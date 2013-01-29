@@ -902,6 +902,10 @@ void CSongTable::uncheckSelection()
 
 void CSongTable::onRowCountChange(const QModelIndex& parent, int start, int end)
 {
+    Q_UNUSED(parent);
+    Q_UNUSED(start);
+    Q_UNUSED(end);
+
     emit rowCountChanged();
 }
 

@@ -18,7 +18,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CImporterITunes.hpp"
-#include "CApplication.hpp"
+#include "../CApplication.hpp"
 #include <QFileDialog>
 #include <QStandardItem>
 #include <QStandardItemModel>
