@@ -72,7 +72,7 @@ CDialogEqualizer::CDialogEqualizer(CApplication * application) :
     connect(btnOK, SIGNAL(clicked()), this, SLOT(close()));
     connect(btnReset, SIGNAL(clicked()), this, SLOT(reset()));
 
-    // Liste des préréglages
+    // Liste des prÃ©rÃ©glages
     m_uiWidget->listPreset->insertItem(0, tr("New preset..."));
     m_uiWidget->listPreset->insertItem(1, tr("Manual"));
     m_uiWidget->listPreset->insertSeparator(2);
@@ -96,7 +96,7 @@ CDialogEqualizer::~CDialogEqualizer()
 
 
 /**
- * Réinitialise les valeurs de l'égaliseur.
+ * RÃ©initialise les valeurs de l'Ã©galiseur.
  */
 
 void CDialogEqualizer::reset()
@@ -161,20 +161,20 @@ double CDialogEqualizer::convertSliderValueToGain(int value) const
 
 
 /**
- * Réinitialise la liste des préréglages.
+ * RÃ©initialise la liste des prÃ©rÃ©glages.
  */
 
 void CDialogEqualizer::resetPresetList()
 {
     m_uiWidget->listPreset->setCurrentIndex(1);
 
-    // Suppression des préréglages
+    // Suppression des prÃ©rÃ©glages
     while (m_uiWidget->listPreset->count() > 3)
     {
         m_uiWidget->listPreset->removeItem(3);
     }
 
-    // Remplissage de la liste des préréglages
+    // Remplissage de la liste des prÃ©rÃ©glages
     CApplication::TEqualizerPreset currentEqualizer = m_application->getCurrentEqualizerPreset();
     QList<CApplication::TEqualizerPreset> equalizers = m_application->getEqualizerPresetList();
 
@@ -255,7 +255,7 @@ void CDialogEqualizer::onSlider9Change(int value)
 
 void CDialogEqualizer::onListPresetChange(int index)
 {
-    // Nouveau préréglage
+    // Nouveau prÃ©rÃ©glage
     if (index == 0)
     {
         m_uiWidget->listPreset->setCurrentIndex(1);
@@ -278,7 +278,7 @@ void CDialogEqualizer::onListPresetChange(int index)
 
         return;
     }
-    // Affichage d'un préréglage
+    // Affichage d'un prÃ©rÃ©glage
     else if (index > 2)
     {
         m_uiWidget->btnRenamePreset->setEnabled(true);
@@ -335,7 +335,7 @@ void CDialogEqualizer::onPresetSave(const QString& name)
     eq.value[8] = convertSliderValueToGain(m_uiWidget->slider8->value());
     eq.value[9] = convertSliderValueToGain(m_uiWidget->slider9->value());
 
-    // Nom déjà utilisé
+    // Nom dÃ©jÃ  utilisÃ©
     if (eq.id > 0)
     {
         QMessageBox::StandardButton res = QMessageBox::question(this, QString(), tr("The preset \"%1\" already exists. Do you want to replace it?").arg(eq.name), QMessageBox::Yes | QMessageBox::No);
@@ -363,7 +363,7 @@ void CDialogEqualizer::onPresetRename(const QString& name)
 
     int presetIdNewName = m_application->getEqualizerPresetIdFromName(eq.name);
 
-    // Nom déjà utilisé
+    // Nom dÃ©jÃ  utilisÃ©
     if (presetIdNewName > 0 && presetIdNewName != presetId)
     {
         QMessageBox::StandardButton res = QMessageBox::question(this, QString(), tr("The preset \"%1\" already exists. Do you want to replace it?").arg(eq.name), QMessageBox::Yes | QMessageBox::No);
@@ -391,7 +391,7 @@ void CDialogEqualizer::onPresetRename(const QString& name)
 
 
 /**
- * Slot pour renommer un préréglage.
+ * Slot pour renommer un prÃ©rÃ©glage.
  * Affiche une boite de dialogue.
  */
 
@@ -410,7 +410,7 @@ void CDialogEqualizer::renameCurrentPreset()
 
 
 /**
- * Slot pour supprimer un préréglage.
+ * Slot pour supprimer un prÃ©rÃ©glage.
  * Affiche une boite de dialogue de confirmation.
  */
 
@@ -428,7 +428,7 @@ void CDialogEqualizer::deleteCurrentPreset()
     if (res == QMessageBox::No)
         return;
 
-    // Suppression du préréglage
+    // Suppression du prÃ©rÃ©glage
     m_application->deleteEqualizerPreset(eq);
     resetPresetList();
 }

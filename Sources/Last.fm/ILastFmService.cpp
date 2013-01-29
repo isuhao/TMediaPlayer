@@ -18,7 +18,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "ILastFmService.hpp"
-#include "CApplication.hpp"
+#include "../CApplication.hpp"
 #include <QCryptographicHash>
 #include <QDateTime>
 #include <QNetworkAccessManager>

@@ -10,9 +10,8 @@
 
 - Problème graphique : si on modifie les informations d'un morceau, il faut mettre à jour la vue courante.
 - Problème graphique : lorsqu'on sélectionne une liste de lecture, il faut donner le focus à la vue.
-- Problème graphique : si on lit un morceau dans une liste dynamique et qu'un filtre est activé, lorsque la lecture du morceau se termine, il est masqué.
+- Problème graphique : si on lit un morceau dans une liste dynamique et qu'un filtre est activé, lorsque la lecture du morceau se termine, il est masqué. [A VERIFIER]
 
-- Fichier FLAC : problème avec les métadonnées pour le numéro de disque. [CORRIGER : À TESTER]
 - Fichier FLAC : problème avec les commentaires (effacement impossible).
 
 --------------------------------------------------

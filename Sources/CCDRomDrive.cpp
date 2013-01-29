@@ -32,7 +32,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * \param driveName   Nom du lecteur.
  * \param application Pointeur sur la classe principale de l'application.
  * \param SCSIName    Nom SCSI du lecteur.
- * \param deviceName  Nom du périphérique.
+ * \param deviceName  Nom du pÃ©riphÃ©rique.
  */
 
 CCDRomDrive::CCDRomDrive(const QString& driveName, CApplication * application, const QString& SCSIName, const QString& deviceName) :
@@ -49,13 +49,13 @@ m_disc       (qPrintable(driveName))
         m_songs[track] = NULL;
     }
 
-    // Glisser-déposer
+    // Glisser-dÃ©poser
     setDragEnabled(false);
 }
 
 
 /**
- * Arrête la lecture du CD-ROM et libère les ressources.
+ * ArrÃªte la lecture du CD-ROM et libÃ¨re les ressources.
  */
 
 CCDRomDrive::~CCDRomDrive()
@@ -78,7 +78,7 @@ CCDRomDrive::~CCDRomDrive()
 /**
  * Indique s'il y a un disque dans le lecteur.
  *
- * \return Booléen.
+ * \return BoolÃ©en.
  */
 
 bool CCDRomDrive::hasCDInDrive()
@@ -135,7 +135,7 @@ bool CCDRomDrive::hasCDInDrive()
             return false;
         }
 
-        // Récupération des informations du CD-ROM
+        // RÃ©cupÃ©ration des informations du CD-ROM
         FMOD_TAG tag;
         m_discId = 0;
         m_musicBrainzId = QString();
@@ -147,7 +147,7 @@ bool CCDRomDrive::hasCDInDrive()
             {
                 FMOD_CDTOC * toc = reinterpret_cast<FMOD_CDTOC *>(tag.data);
 
-                // Calcul des durées des pistes
+                // Calcul des durÃ©es des pistes
                 for (int track = 0; track < toc->numtracks; ++track)
                 {
                     songDurations[track] = (toc->min[track] * 60) + toc->sec[track];
@@ -181,7 +181,7 @@ bool CCDRomDrive::hasCDInDrive()
                 // Calcul du DiscId de MusicBrainz
                 if (m_disc.readInfos())
                 {
-                    // Calcul des durées des pistes
+                    // Calcul des durÃ©es des pistes
                     for (int track = 1; track < 100; ++track)
                     {
                         if (track == m_disc.infos.lastTrack)
@@ -223,7 +223,7 @@ bool CCDRomDrive::hasCDInDrive()
         FMOD::Channel * channel = NULL;
         res = m_application->getSoundSystem()->playSound(FMOD_CHANNEL_FREE, m_sound, true, &channel);
 
-        // Création des morceaux
+        // CrÃ©ation des morceaux
         if (res == FMOD_OK && channel)
         {
             QList<CSong *> songs;
@@ -246,7 +246,7 @@ bool CCDRomDrive::hasCDInDrive()
 
                 CSong * song = new CSong(m_application);
 
-                // Recherche de la durée du morceau
+                // Recherche de la durÃ©e du morceau
                 res = m_sound->getLength(reinterpret_cast<unsigned int *>(&(song->m_properties.duration)), FMOD_TIMEUNIT_SENTENCE_MS);
 
                 if (res != FMOD_OK)
@@ -257,7 +257,7 @@ bool CCDRomDrive::hasCDInDrive()
                     song->m_properties.duration = songDurations[track+1];
                 }
 
-                // La norme définit la durée minimale d'un morceau à 2s
+                // La norme dÃ©finit la durÃ©e minimale d'un morceau Ã  2s
                 if (song->m_properties.duration < 2000)
                 {
                     delete song;
@@ -336,20 +336,20 @@ bool CCDRomDrive::hasCDInDrive()
 
 
 /**
- * Indique si la liste de morceaux a été modifiée.
+ * Indique si la liste de morceaux a Ã©tÃ© modifiÃ©e.
  *
- * \return Booléen (toujours false).
+ * \return BoolÃ©en (toujours false).
  */
 
 bool CCDRomDrive::isModified() const
 {
-    // Les lecteurs ne sont pas enregistrés en base de données
+    // Les lecteurs ne sont pas enregistrÃ©s en base de donnÃ©es
     return false;
 }
 
 
 /**
- * Éjecte le disque du lecteur.
+ * Ã‰jecte le disque du lecteur.
  */
 
 void CCDRomDrive::ejectDisc()
@@ -377,15 +377,15 @@ void CCDRomDrive::ejectDisc()
 
 
 /**
- * Met à jour la base de données avec les informations de la table.
- * Les lecteurs ne sont pas enregistrés en base de données, donc cette méthode ne fait rien.
+ * Met Ã  jour la base de donnÃ©es avec les informations de la table.
+ * Les lecteurs ne sont pas enregistrÃ©s en base de donnÃ©es, donc cette mÃ©thode ne fait rien.
  *
- * \return Booléen indiquant le succès de l'opération (toujours false).
+ * \return BoolÃ©en indiquant le succÃ¨s de l'opÃ©ration (toujours false).
  */
 
 bool CCDRomDrive::updateDatabase()
 {
-    // Les lecteurs ne sont pas enregistrés en base de données
+    // Les lecteurs ne sont pas enregistrÃ©s en base de donnÃ©es
     return false;
 }
 
