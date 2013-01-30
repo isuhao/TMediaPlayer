@@ -490,6 +490,15 @@
     <ClCompile Include="Sources\Utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_CEqualizerPreset.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_CEqualizerPreset.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\CEqualizerPreset.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Sources\CApplication.hpp">
@@ -689,6 +698,9 @@
     </CustomBuild>
     <CustomBuild Include="Sources\Dialog\CDialogPreferencesFolder.hpp">
       <Filter>Header Files\Dialog</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Sources\CEqualizerPreset.hpp">
+      <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

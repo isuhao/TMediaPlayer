@@ -20,13 +20,14 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #ifndef FILE_C_APPLICATION
 #define FILE_C_APPLICATION
 
+#include "CSongTableModel.hpp"
+#include "CEqualizerPreset.hpp"
 #include <QMainWindow>
 #include <QList>
 #include <QSqlDatabase>
 #include <QMutexLocker>
 #include <QFile>
 #include <QTranslator>
-#include "CSongTableModel.hpp"
 #include "ui_TMediaPlayer.h"
 #include "ui_WidgetControl.h"
 
@@ -43,6 +44,7 @@ class CLibrary;
 class CListModel;
 class CLibraryFolder;
 class CWidgetLyrics;
+class CEqualizerPreset;
 class QStandardItemModel;
 class QSettings;
 class QTextEdit;
@@ -129,70 +131,17 @@ public:
 
 
     // Égaliseur
-
-    /// Structure contenant un préréglage d'égaliseur.
-    struct TEqualizerPreset
-    {
-        int id;          ///< Identifiant du préréglage en base de données.
-        QString name;    ///< Nom du préréglage.
-        float value[10]; ///< Valeurs de gain de l'égaliseur.
-
-        /// Constructeur par défaut.
-        TEqualizerPreset() : id(0)
-        {
-            for (std::size_t f = 0; f < 10; ++f)
-                value[f] = 1.0f;
-        }
-
-        bool operator==(const TEqualizerPreset& other) const
-        {
-            return (id       == other.id       &&
-                    name     == other.name     && 
-                    value[0] == other.value[0] && 
-                    value[1] == other.value[1] && 
-                    value[2] == other.value[2] && 
-                    value[3] == other.value[3] && 
-                    value[4] == other.value[4] && 
-                    value[5] == other.value[5] && 
-                    value[6] == other.value[6] && 
-                    value[7] == other.value[7] && 
-                    value[8] == other.value[8] && 
-                    value[9] == other.value[9]);
-        }
-
-        bool operator!=(const TEqualizerPreset& other) const
-        {
-            return !operator==(other);
-        }
-    };
-
-    /// Fréquences de l'égaliseur.
-    enum TEqualizerFrequency
-    {
-        EqFreq32  = 0, ///< 32 Hz.
-        EqFreq64  = 1, ///< 64 Hz.
-        EqFreq125 = 2, ///< 125 Hz.
-        EqFreq250 = 3, ///< 250 Hz.
-        EqFreq500 = 4, ///< 500 Hz.
-        EqFreq1K  = 5, ///< 1 KHz.
-        EqFreq2K  = 6, ///< 2 kHz.
-        EqFreq4K  = 7, ///< 4 kHz.
-        EqFreq8K  = 8, ///< 8 kHz.
-        EqFreq16K = 9  ///< 16 kHz.
-    };
-
-    void setEqualizerGain(TEqualizerFrequency frequency, double gain);
-    double getEqualizerGain(TEqualizerFrequency frequency);
+    void setEqualizerGain(CEqualizerPreset::TFrequency frequency, double gain);
+    double getEqualizerGain(CEqualizerPreset::TFrequency frequency) const;
     void resetEqualizer();
     bool isEqualizerEnabled() const;
-    inline QList<TEqualizerPreset> getEqualizerPresetList() const;
-    QString getEqualizerPresetName(int id) const;
-    int getEqualizerPresetIdFromName(const QString& name) const;
-    TEqualizerPreset getEqualizerPresetFromId(int id) const;
-    inline TEqualizerPreset getCurrentEqualizerPreset() const;
-    void saveEqualizerPreset(TEqualizerPreset& equalizer);
-    void deleteEqualizerPreset(TEqualizerPreset& equalizer);
-    void setCurrentEqualizerPreset(const TEqualizerPreset& equalizer);
+    inline QList<CEqualizerPreset *> getEqualizerPresets() const;
+    void addEqualizerPreset(CEqualizerPreset * preset);
+    void deleteEqualizerPreset(CEqualizerPreset * preset);
+    CEqualizerPreset * getEqualizerPresetFromId(int id) const;
+    CEqualizerPreset * getEqualizerPresetFromName(const QString& name) const;
+    inline CEqualizerPreset * getCurrentEqualizerPreset() const;
+    void setCurrentEqualizerPreset(CEqualizerPreset * equalizer);
 
 
     // Dossiers de la médiathèque
@@ -401,16 +350,16 @@ private:
     int m_volume;                         ///< Volume sonore (entre 0 et 100).
 
     // Égaliseur
-    double m_equalizerGains[10];          ///< Gains de l'égaliseur.
-    FMOD::DSP * m_dsp[10];                ///< Gains de l'égaliseur pour FMOD.
-    QList<TEqualizerPreset> m_equalizerPresets; ///< Liste des préréglages d'égaliseur.
-    TEqualizerPreset m_currentEqualizerPreset;  ///< Préréglage de l'égaliseur actuel.
+    double m_equalizerGains[10];                  ///< Gains de l'égaliseur.
+    FMOD::DSP * m_dsp[10];                        ///< Gains de l'égaliseur pour FMOD.
+    QList<CEqualizerPreset *> m_equalizerPresets; ///< Liste des préréglages d'égaliseur.
+    CEqualizerPreset * m_currentEqualizerPreset;  ///< Préréglage de l'égaliseur actuel.
 
-    QMap<QString, QFile *> m_logList;     ///< Liste des fichiers de log ouverts.
-    QString m_applicationPath;            ///< Répertoire contenant l'application.
+    QMap<QString, QFile *> m_logList;         ///< Liste des fichiers de log ouverts.
+    QString m_applicationPath;                ///< Répertoire contenant l'application.
     QList<CLibraryFolder *> m_libraryFolders; ///< Liste des répertoires de la médiathèque.
 
-    QList<TNotification> m_infosNotified; ///< Liste des notifications.
+    QList<TNotification> m_infosNotified;     ///< Liste des notifications.
 
     // État de Last.fm
     enum TLastFmState
@@ -437,13 +386,13 @@ QList<CApplication::TNotification> CApplication::getNotifications() const
 }
 
 
-inline QList<CApplication::TEqualizerPreset> CApplication::getEqualizerPresetList() const
+inline QList<CEqualizerPreset *> CApplication::getEqualizerPresets() const
 {
     return m_equalizerPresets;
 }
 
 
-inline CApplication::TEqualizerPreset CApplication::getCurrentEqualizerPreset() const
+inline CEqualizerPreset * CApplication::getCurrentEqualizerPreset() const
 {
     return m_currentEqualizerPreset;
 }
