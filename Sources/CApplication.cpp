@@ -478,7 +478,7 @@ bool CApplication::initWindow()
 
         for (int f = 0; f < 10; ++f)
         {
-            if (preset->getValue(f) != m_equalizerGains[f])
+            if (std::abs(preset->getValue(f) - m_equalizerGains[f]) < std::numeric_limits<double>::epsilon())
                 currentEqualizerPresetDefined = false;
         }
 

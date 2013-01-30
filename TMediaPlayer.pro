@@ -37,6 +37,7 @@ SOURCES += \
     Sources/CLibraryFolder.cpp \
     Sources/CLibrary.cpp \
     Sources/CFolder.cpp \
+    Sources/CEqualizerPreset.cpp \
     Sources/CDynamicList.cpp \
     Sources/CDRomDrive.cpp \
     Sources/CCriteria.cpp \
@@ -91,6 +92,7 @@ HEADERS += \
     Sources/CLibraryFolder.hpp \
     Sources/CLibrary.hpp \
     Sources/CFolder.hpp \
+    Sources/CEqualizerPreset.hpp \
     Sources/CDynamicList.hpp \
     Sources/CDRomDrive.hpp \
     Sources/CCriteria.hpp \
