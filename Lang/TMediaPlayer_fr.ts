@@ -85,7 +85,7 @@ Erreur : %4</translation>
     </message>
     <message numerus="yes">
         <location filename="../Sources/CApplication.cpp" line="1146"/>
-        <location filename="../Sources/CApplication.cpp" line="4319"/>
+        <location filename="../Sources/CApplication.cpp" line="4328"/>
         <source>%n day(s) %1</source>
         <translation>
             <numerusform>%n jour %1</numerusform>
@@ -242,67 +242,67 @@ Erreur : %4</translation>
         <translation>impossible de déterminer le nombre de piste du lecteur de CD-ROM &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="273"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="285"/>
         <source>Track %1</source>
         <translation>Piste %1</translation>
     </message>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="243"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="255"/>
         <source>can&apos;t play track #%1 in CD-ROM drive &quot;%2&quot;</source>
         <translation>impossible de jouer la piste #%1 du lecteur de CD-ROM &quot;%2&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="254"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="266"/>
         <source>can&apos;t compute song duration for track #%1 in CD-ROM drive &quot;%2&quot;</source>
         <translation>impossible de calculer la durée de la piste #%1 du lecteur de CD-ROM &quot;%2&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="296"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="308"/>
         <source>can&apos;t find the format for track #%1 in CD-ROM drive &quot;%2&quot;</source>
         <translation>impossible de déterminer le format de la piste #%1 du lecteur de CD-ROM &quot;%2&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="303"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="315"/>
         <source>unknown format</source>
         <translation>format inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="418"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="430"/>
         <source>Play</source>
         <translation>Lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="423"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="435"/>
         <source>Informations...</source>
         <translation>Informations...</translation>
     </message>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="424"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="436"/>
         <source>Import...</source>
         <translation>Importer...</translation>
     </message>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="428"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="440"/>
         <source>Show in explorer</source>
         <translation>Afficher dans l&apos;explorateur</translation>
     </message>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="435"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="447"/>
         <source>Check song</source>
         <translation>Cocher le morceau</translation>
     </message>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="436"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="448"/>
         <source>Uncheck song</source>
         <translation>Décocher le morceau</translation>
     </message>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="447"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="459"/>
         <source>Check selection</source>
         <translation>Cocher la sélection</translation>
     </message>
     <message>
-        <location filename="../Sources/CCDRomDrive.cpp" line="448"/>
+        <location filename="../Sources/CCDRomDrive.cpp" line="460"/>
         <source>Uncheck selection</source>
         <translation>Décocher la sélection</translation>
     </message>
@@ -667,89 +667,89 @@ Erreur : %4</translation>
 <context>
     <name>CDialogEditSongs</name>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="353"/>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="368"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="328"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="343"/>
         <source>between %1 and %2 (total: %3)</source>
         <translation>entre %1 et %2 (total : %3)</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="448"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="423"/>
         <source>Song</source>
         <translation>Morceau</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="448"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="423"/>
         <source>Local time</source>
         <translation>Heure locale</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="448"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="423"/>
         <source>UTC</source>
         <translation>UTC</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="474"/>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="475"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="449"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="450"/>
         <source>dd/MM/yyyy HH:mm:ss</source>
         <translation>dd/MM/yyyy HH:mm:ss</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="348"/>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="363"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="323"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="338"/>
         <source>%1 (total: %2)</source>
         <translation>%1 (total: %2)</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="373"/>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="376"/>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="434"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="348"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="351"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="409"/>
         <source>%1 - %2</source>
         <translation>%1 - %2</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="383"/>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="387"/>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="388"/>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="389"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="358"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="362"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="363"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="364"/>
         <source>%1 kbit/s</source>
         <translation>%1 kbit/s</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="387"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="362"/>
         <source>%1 - %2 (average: %3)</source>
         <translation>%1 - %2 (moyenne : %3)</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="430"/>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="434"/>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="435"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="405"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="409"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="410"/>
         <source>%1 Hz</source>
         <translation>%1 Hz</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="439"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="414"/>
         <source>never</source>
         <translation>jamais</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="482"/>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="1472"/>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="1490"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="457"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="1293"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="1311"/>
         <source>Different values</source>
         <translation>Valeurs multiples</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="966"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="801"/>
         <source>Save</source>
         <translation>Enregistrer</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="967"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="802"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="968"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="803"/>
         <source>Apply</source>
         <translation>Appliquer</translation>
     </message>
@@ -1224,12 +1224,12 @@ Erreur : %4</translation>
     </message>
     <message>
         <location filename="../Sources/CListModel.cpp" line="616"/>
-        <location filename="../Sources/CListModel.cpp" line="708"/>
+        <location filename="../Sources/CListModel.cpp" line="709"/>
         <source>invalid playlist</source>
         <translation type="unfinished">liste de lecture invalide</translation>
     </message>
     <message>
-        <location filename="../Sources/CListModel.cpp" line="697"/>
+        <location filename="../Sources/CListModel.cpp" line="698"/>
         <source>invalid folter</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3038,41 +3038,41 @@ Voulez-vous les ajouter ?</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="344"/>
-        <location filename="../Form/DialogEditSongs.ui" line="809"/>
+        <location filename="../Form/DialogEditSongs.ui" line="830"/>
         <source>Artist</source>
         <translation>Artiste</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="358"/>
-        <location filename="../Form/DialogEditSongs.ui" line="854"/>
+        <location filename="../Form/DialogEditSongs.ui" line="361"/>
+        <location filename="../Form/DialogEditSongs.ui" line="881"/>
         <source>Album</source>
         <translation>Album</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="375"/>
-        <location filename="../Form/DialogEditSongs.ui" line="792"/>
+        <location filename="../Form/DialogEditSongs.ui" line="378"/>
+        <location filename="../Form/DialogEditSongs.ui" line="813"/>
         <source>Album artist</source>
         <translation>Artiste de l&apos;album</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="421"/>
+        <location filename="../Form/DialogEditSongs.ui" line="424"/>
         <source>Year</source>
         <translation>Année</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="453"/>
-        <location filename="../Form/DialogEditSongs.ui" line="460"/>
+        <location filename="../Form/DialogEditSongs.ui" line="456"/>
+        <location filename="../Form/DialogEditSongs.ui" line="463"/>
         <source>/</source>
         <translation>/</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="666"/>
-        <location filename="../Form/DialogEditSongs.ui" line="840"/>
+        <location filename="../Form/DialogEditSongs.ui" line="672"/>
+        <location filename="../Form/DialogEditSongs.ui" line="864"/>
         <source>Title</source>
         <translation>Titre</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="500"/>
+        <location filename="../Form/DialogEditSongs.ui" line="506"/>
         <source>Disc number</source>
         <translation>Numéro de disque</translation>
     </message>
@@ -3132,118 +3132,118 @@ Voulez-vous les ajouter ?</translation>
         <translation>Durée :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="520"/>
-        <location filename="../Form/DialogEditSongs.ui" line="888"/>
+        <location filename="../Form/DialogEditSongs.ui" line="526"/>
+        <location filename="../Form/DialogEditSongs.ui" line="918"/>
         <source>Composer</source>
         <translation>Compositeur</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="537"/>
+        <location filename="../Form/DialogEditSongs.ui" line="543"/>
         <source>Genre</source>
         <translation>Genre</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="557"/>
+        <location filename="../Form/DialogEditSongs.ui" line="563"/>
         <source>Comments</source>
         <translation>Commentaires</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="574"/>
+        <location filename="../Form/DialogEditSongs.ui" line="580"/>
         <source>Rating</source>
         <translation>Note</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="697"/>
+        <location filename="../Form/DialogEditSongs.ui" line="709"/>
         <source>Subtitle</source>
         <translation>Sous-titre</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="716"/>
+        <location filename="../Form/DialogEditSongs.ui" line="728"/>
         <source>Grouping</source>
         <translation>Regroupement</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="730"/>
+        <location filename="../Form/DialogEditSongs.ui" line="742"/>
         <source>BPM</source>
         <translation>BPM</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="758"/>
+        <location filename="../Form/DialogEditSongs.ui" line="770"/>
         <source>Sorting</source>
         <translation>Tri</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="823"/>
+        <location filename="../Form/DialogEditSongs.ui" line="847"/>
         <source>Sort Composer</source>
         <translation>Compositeur pour le tri</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="871"/>
+        <location filename="../Form/DialogEditSongs.ui" line="898"/>
         <source>Sort Album artist</source>
         <translation>Artiste de l&apos;album pour le tri</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="905"/>
+        <location filename="../Form/DialogEditSongs.ui" line="935"/>
         <source>Sort Title</source>
         <translation>Titre pour le tri</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="919"/>
+        <location filename="../Form/DialogEditSongs.ui" line="952"/>
         <source>Sort Artist</source>
         <translation>Artiste pour le tri</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="933"/>
+        <location filename="../Form/DialogEditSongs.ui" line="969"/>
         <source>Sort Album</source>
         <translation>Album pour le tri</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="1087"/>
+        <location filename="../Form/DialogEditSongs.ui" line="1123"/>
         <source>Options</source>
         <translation>Options</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="1113"/>
+        <location filename="../Form/DialogEditSongs.ui" line="1149"/>
         <source>Volume adjustment:</source>
         <translation>Ajustement du volume :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="1123"/>
+        <location filename="../Form/DialogEditSongs.ui" line="1159"/>
         <source>%</source>
         <translation>%</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="1146"/>
+        <location filename="../Form/DialogEditSongs.ui" line="1182"/>
         <source>Songs are enabled.</source>
         <translation>Les morceaux sont cochés.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="1163"/>
+        <location filename="../Form/DialogEditSongs.ui" line="1199"/>
         <source>Skip when shuffling.</source>
         <translation>Ne pas lire en lecture aléatoire.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="1180"/>
+        <location filename="../Form/DialogEditSongs.ui" line="1216"/>
         <source>Part of a compilation.</source>
         <translation>Fait partie d&apos;une compilation.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="1204"/>
+        <location filename="../Form/DialogEditSongs.ui" line="1240"/>
         <source>Lyrics</source>
         <translation>Paroles</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="1246"/>
+        <location filename="../Form/DialogEditSongs.ui" line="1282"/>
         <source>Language:</source>
         <translation>Langue :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="1279"/>
+        <location filename="../Form/DialogEditSongs.ui" line="1315"/>
         <source>Author:</source>
         <translation>Parolier :</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="1293"/>
+        <location filename="../Form/DialogEditSongs.ui" line="1329"/>
         <source>Plays</source>
         <translation>Lectures</translation>
     </message>

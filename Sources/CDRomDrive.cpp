@@ -234,6 +234,15 @@ void CDiscInfos::ejectDisc()
 #elif defined(Q_OS_LINUX)
 
 
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <linux/cdrom.h>
+
+
+#define XA_INTERVAL ((60 + 90 + 2) * CD_FRAMES)
+
+
 static int read_toc_header(int fd, int * first, int * last)
 {
 	struct cdrom_tochdr th;
@@ -270,7 +279,7 @@ static int read_toc_entry(int fd, int track_num, unsigned long * lba)
 	te.cdte_format = CDROM_LBA;
 
 	int ret = ioctl(fd, CDROMREADTOCENTRY, &te);
-	assert(te.cdte_format == CDROM_LBA);
+	Q_ASSERT(te.cdte_format == CDROM_LBA);
 
 	// in case the ioctl() was successful
 	if (ret == 0)
@@ -350,22 +359,22 @@ bool CDiscInfos::readInfos()
 		return false;
 	}
 
-	disc->firstTrack = first;
-	disc->lastTrack = last;
+	infos.firstTrack = first;
+	infos.lastTrack = last;
 
 	/*
 	 * Get the logical block address (lba) for the end of the audio data.
 	 * The "LEADOUT" track is the track beyond the final audio track, so
 	 * we're looking for the block address of the LEADOUT track.
 	 */
-	unsigned long lba;
+	unsigned long lba = 0;
 	read_leadout(fd, &lba);
-	disc->trackOffsets[0] = lba + 150;
+	infos.trackOffsets[0] = lba + 150;
 
 	for (int i = first; i <= last; ++i)
     {
 		read_toc_entry(fd, i, &lba);
-		disc->trackOffsets[i] = lba + 150;
+		infos.trackOffsets[i] = lba + 150;
 	}
 
 	close(fd);

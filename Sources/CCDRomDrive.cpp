@@ -196,15 +196,27 @@ bool CCDRomDrive::hasCDInDrive()
                     sha_init(&sha);
 
                     char tmp[17] = "";
+#ifdef Q_OS_WIN32
                     sprintf_s(tmp, "%02X", m_disc.infos.firstTrack);
+#else
+                    sprintf(tmp, "%02X", m_disc.infos.firstTrack);
+#endif
                     sha_update(&sha, reinterpret_cast<unsigned char *>(tmp), strlen(tmp));
 
+#ifdef Q_OS_WIN32
                     sprintf_s(tmp, "%02X", m_disc.infos.lastTrack);
+#else
+                    sprintf(tmp, "%02X", m_disc.infos.lastTrack);
+#endif
                     sha_update(&sha, reinterpret_cast<unsigned char *>(tmp), strlen(tmp));
 
                     for (int i = 0; i < 100; ++i)
                     {
+#ifdef Q_OS_WIN32
 	                    sprintf_s(tmp, "%08X", m_disc.infos.trackOffsets[i]);
+#else
+	                    sprintf(tmp, "%08X", m_disc.infos.trackOffsets[i]);
+#endif
 	                    sha_update(&sha, reinterpret_cast<unsigned char *>(tmp), strlen(tmp));
                     }
 
