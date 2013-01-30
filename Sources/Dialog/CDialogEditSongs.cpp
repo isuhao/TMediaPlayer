@@ -53,9 +53,6 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *>& songItemList, CAppli
     connect(m_uiWidget->chArtist, SIGNAL(toggled(bool)), m_uiWidget->chArtist_2, SLOT(setChecked(bool)));
     connect(m_uiWidget->chArtist_2, SIGNAL(toggled(bool)), m_uiWidget->chArtist, SLOT(setChecked(bool)));
 
-    connect(m_uiWidget->editAlbum, SIGNAL(textEdited(const QString&)), m_uiWidget->editAlbum_2, SLOT(setText(const QString&)));
-    connect(m_uiWidget->editAlbum_2, SIGNAL(textEdited(const QString&)), m_uiWidget->editAlbum, SLOT(setText(const QString&)));
-
     connect(m_uiWidget->chAlbum, SIGNAL(toggled(bool)), m_uiWidget->chAlbum_2, SLOT(setChecked(bool)));
     connect(m_uiWidget->chAlbum_2, SIGNAL(toggled(bool)), m_uiWidget->chAlbum, SLOT(setChecked(bool)));
 
@@ -112,9 +109,7 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *>& songItemList, CAppli
     QMap<QString, int> songArtist_V2;
     QMap<QString, int> songArtistSort_V2;
     QMap<QString, int> songAlbum_V2;
-    QString songAlbum;           bool songAlbumSim           = true;
     QMap<QString, int> songAlbumSort_V2;
-    QString songAlbumSort;       bool songAlbumSortSim       = true;
     QString songAlbumArtist;     bool songAlbumArtistSim     = true;
     QString songAlbumArtistSort; bool songAlbumArtistSortSim = true;
     QString songComposer;        bool songComposerSim        = true;
@@ -275,8 +270,6 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *>& songItemList, CAppli
 
         if (first)
         {
-            songAlbum           = song->getAlbumTitle();
-            songAlbumSort       = song->getAlbumTitleSort();
             songAlbumArtist     = song->getAlbumArtist();
             songAlbumArtistSort = song->getAlbumArtistSort();
             songComposer        = song->getComposer();
@@ -306,8 +299,6 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *>& songItemList, CAppli
         }
         else
         {
-            if (songAlbumSim           && song->getAlbumTitle()      != songAlbum          ) { songAlbumSim           = false; songAlbum          .clear(); }
-            if (songAlbumSortSim       && song->getAlbumTitleSort()  != songAlbumSort      ) { songAlbumSortSim       = false; songAlbumSort      .clear(); }
             if (songAlbumArtistSim     && song->getAlbumArtist()     != songAlbumArtist    ) { songAlbumArtistSim     = false; songAlbumArtist    .clear(); }
             if (songAlbumArtistSortSim && song->getAlbumArtistSort() != songAlbumArtistSort) { songAlbumArtistSortSim = false; songAlbumArtistSort.clear(); }
             if (songComposerSim        && song->getComposer()        != songComposer       ) { songComposerSim        = false; songComposer       .clear(); }
@@ -664,41 +655,111 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *>& songItemList, CAppli
 
         if (songArtistSort_V2.size() == 1)
         {
-            const QString songArtisteSort_V2_Song = songArtistSort_V2.keys().at(0);
-            m_editArtistSortLE->setText(songArtisteSort_V2_Song);
+            const QString songArtistSort_V2_Song = songArtistSort_V2.keys().at(0);
+            m_editArtistSortLE->setText(songArtistSort_V2_Song);
         }
 
         connect(m_editArtistSortLE, SIGNAL(textEdited(const QString&)), this, SLOT(onArtistSortChange(const QString&)));
     }
 
     connect(m_uiWidget->chArtistSort, SIGNAL(clicked(bool)), this, SLOT(onArtistSortChecked(bool)));
-
+    
 
     // Album
-    m_uiWidget->editAlbum->setText(songAlbum);
-    m_uiWidget->editAlbum_2->setText(songAlbum);
-
-    if (!songAlbumSim)
+    if (songAlbum_V2.size() > 1)
     {
-        m_uiWidget->editAlbum->setPlaceholderText(notSimText);
-        m_uiWidget->editAlbum_2->setPlaceholderText(notSimText);
+        m_editAlbumCB = new QComboBox(m_uiWidget->tabInfos);
+        m_editAlbumCB->setEditable(true);
+        m_editAlbumLE = m_editAlbumCB->lineEdit();
+        m_editAlbumCB->setInsertPolicy(QComboBox::NoInsert);
+        m_uiWidget->layoutInfos->addWidget(m_editAlbumCB, 4, 1, 1, 1);
+
+        m_editAlbumCB_2 = new QComboBox(m_uiWidget->tabSorting);
+        m_editAlbumCB_2->setEditable(true);
+        m_editAlbumLE_2 = m_editAlbumCB_2->lineEdit();
+        m_editAlbumCB_2->setInsertPolicy(QComboBox::NoInsert);
+        m_uiWidget->layoutSorting->addWidget(m_editAlbumCB_2, 5, 1, 1, 1);
+
+        for (QMap<QString, int>::const_iterator it = songAlbum_V2.begin(); it != songAlbum_V2.end(); ++it)
+        {
+            m_editAlbumCB->addItem(it.key());
+            m_editAlbumCB_2->addItem(it.key());
+        }
+
+        m_editAlbumCB->setCurrentIndex(-1);
+        m_editAlbumCB_2->setCurrentIndex(-1);
+
+        m_editAlbumLE->setPlaceholderText(notSimText);
+        m_editAlbumLE_2->setPlaceholderText(notSimText);
+
+        connect(m_editArtistCB, SIGNAL(editTextChanged(const QString&)), this, SLOT(onAlbumChange(const QString&)));
+        connect(m_editArtistCB_2, SIGNAL(editTextChanged(const QString&)), this, SLOT(onAlbumChange(const QString&)));
+
+        connect(m_editAlbumCB, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onAlbumChange(const QString&)));
+        connect(m_editAlbumCB_2, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onAlbumChange(const QString&)));
+    }
+    else
+    {
+        m_editAlbumLE = new QLineEdit(m_uiWidget->tabInfos);
+        m_uiWidget->layoutInfos->addWidget(m_editAlbumLE, 4, 1, 1, 1);
+
+        m_editAlbumLE_2 = new QLineEdit(m_uiWidget->tabSorting);
+        m_uiWidget->layoutSorting->addWidget(m_editAlbumLE_2, 5, 1, 1, 1);
+
+        if (songAlbum_V2.size() == 1)
+        {
+            const QString songAlbum_V2_Song = songAlbum_V2.keys().at(0);
+            m_editAlbumLE->setText(songAlbum_V2_Song);
+            m_editAlbumLE_2->setText(songAlbum_V2_Song);
+        }
+
+        connect(m_editAlbumLE, SIGNAL(textEdited(const QString&)), this, SLOT(onAlbumChange(const QString&)));
+        connect(m_editAlbumLE_2, SIGNAL(textEdited(const QString&)), this, SLOT(onAlbumChange(const QString&)));
     }
 
-    connect(m_uiWidget->editAlbum, SIGNAL(textEdited(const QString&)), this, SLOT(onAlbumChange(const QString&)));
-    connect(m_uiWidget->editAlbum_2, SIGNAL(textEdited(const QString&)), this, SLOT(onAlbumChange(const QString&)));
-    connect(m_uiWidget->chAlbum, SIGNAL(clicked(bool)), this, SLOT(onAlbumChecked(bool)));
-    connect(m_uiWidget->chAlbum_2, SIGNAL(clicked(bool)), this, SLOT(onAlbumChecked(bool)));
+    connect(m_editAlbumLE, SIGNAL(textEdited(const QString&)), m_editAlbumLE_2, SLOT(setText(const QString&)));
+    connect(m_editAlbumLE_2, SIGNAL(textEdited(const QString&)), m_editAlbumLE, SLOT(setText(const QString&)));
+
+    connect(m_uiWidget->chArtist, SIGNAL(clicked(bool)), this, SLOT(onAlbumChecked(bool)));
+    connect(m_uiWidget->chArtist_2, SIGNAL(clicked(bool)), this, SLOT(onAlbumChecked(bool)));
+
 
     // Album pour le tri
-    m_uiWidget->editAlbumSort->setText(songAlbumSort);
-
-    if (!songAlbumSortSim)
+    if (songAlbumSort_V2.size() > 1)
     {
-        m_uiWidget->editAlbumSort->setPlaceholderText(notSimText);
+        m_editAlbumSortCB = new QComboBox(m_uiWidget->tabSorting);
+        m_editAlbumSortCB->setEditable(true);
+        m_editAlbumSortLE = m_editAlbumSortCB->lineEdit();
+        m_editAlbumSortCB->setInsertPolicy(QComboBox::NoInsert);
+        m_uiWidget->layoutSorting->addWidget(m_editAlbumSortCB, 5, 3, 1, 1);
+
+        for (QMap<QString, int>::const_iterator it = songAlbumSort_V2.begin(); it != songAlbumSort_V2.end(); ++it)
+        {
+            m_editAlbumSortCB->addItem(it.key());
+        }
+
+        m_editAlbumSortCB->setCurrentIndex(-1);
+        m_editAlbumSortLE->setPlaceholderText(notSimText);
+
+        connect(m_editAlbumSortCB, SIGNAL(editTextChanged(const QString&)), this, SLOT(onAlbumSortChange(const QString&)));
+        connect(m_editAlbumSortCB, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onAlbumSortChange(const QString&)));
+    }
+    else
+    {
+        m_editAlbumSortLE = new QLineEdit(m_uiWidget->tabSorting);
+        m_uiWidget->layoutSorting->addWidget(m_editAlbumSortLE, 5, 3, 1, 1);
+
+        if (songAlbumSort_V2.size() == 1)
+        {
+            const QString songAlbumSort_V2_Song = songAlbumSort_V2.keys().at(0);
+            m_editAlbumSortLE->setText(songAlbumSort_V2_Song);
+        }
+
+        connect(m_editAlbumSortLE, SIGNAL(textEdited(const QString&)), this, SLOT(onAlbumSortChange(const QString&)));
     }
 
-    connect(m_uiWidget->editAlbumSort, SIGNAL(textEdited(const QString&)), this, SLOT(onAlbumSortChange(const QString&)));
     connect(m_uiWidget->chAlbumSort, SIGNAL(clicked(bool)), this, SLOT(onAlbumSortChecked(bool)));
+
 
     // Artiste de l'album
     m_uiWidget->editAlbumArtist->setText(songAlbumArtist);
@@ -1007,7 +1068,7 @@ void CDialogEditSongs::apply()
             song->setArtistName(m_editArtistLE->text());
 
         if (m_uiWidget->chAlbum->isChecked())
-            song->setAlbumTitle(m_uiWidget->editAlbum->text());
+            song->setAlbumTitle(m_editAlbumLE->text());
 
         if (m_uiWidget->chAlbumArtist->isChecked())
             song->setAlbumArtist(m_uiWidget->editAlbumArtist->text());
@@ -1022,7 +1083,7 @@ void CDialogEditSongs::apply()
             song->setArtistNameSort(m_editArtistSortLE->text());
 
         if (m_uiWidget->chAlbumSort->isChecked())
-            song->setAlbumTitleSort(m_uiWidget->editAlbumSort->text());
+            song->setAlbumTitleSort(m_editAlbumSortLE->text());
 
         if (m_uiWidget->chAlbumArtistSort->isChecked())
             song->setAlbumArtistSort(m_uiWidget->editAlbumArtistSort->text());
@@ -1142,17 +1203,24 @@ void CDialogEditSongs::onArtistSortChange(const QString& artistName)
 
 void CDialogEditSongs::onAlbumChange(const QString& albumTitle)
 {
-    m_uiWidget->editAlbum->setPlaceholderText(QString());
-    m_uiWidget->editAlbum_2->setPlaceholderText(QString());
+    m_editAlbumLE->setPlaceholderText(QString());
+    m_editAlbumLE_2->setPlaceholderText(QString());
 
     m_uiWidget->chAlbum->setChecked(true);
     m_uiWidget->chAlbum_2->setChecked(true);
+
+    // Synchronisation pour les combo-box
+    if (m_editAlbumLE->text() != albumTitle)
+        m_editAlbumLE->setText(albumTitle);
+
+    if (m_editAlbumLE_2->text() != albumTitle)
+        m_editAlbumLE_2->setText(albumTitle);
 }
 
 
 void CDialogEditSongs::onAlbumSortChange(const QString& albumTitle)
 {
-    m_uiWidget->editAlbumSort->setPlaceholderText(QString());
+    m_editAlbumSortLE->setPlaceholderText(QString());
     m_uiWidget->chAlbumSort->setChecked(true);
 }
 
@@ -1324,14 +1392,14 @@ void CDialogEditSongs::onArtistSortChecked(bool checked)
 
 void CDialogEditSongs::onAlbumChecked(bool checked)
 {
-    m_uiWidget->editAlbum->setPlaceholderText(QString());
-    m_uiWidget->editAlbum_2->setPlaceholderText(QString());
+    m_editAlbumLE->setPlaceholderText(QString());
+    m_editAlbumLE_2->setPlaceholderText(QString());
 }
 
 
 void CDialogEditSongs::onAlbumSortChecked(bool checked)
 {
-    m_uiWidget->editAlbumSort->setPlaceholderText(QString());
+    m_editAlbumSortLE->setPlaceholderText(QString());
 }
 
 

@@ -357,9 +357,6 @@
          <property name="text">
           <string>Album</string>
          </property>
-         <property name="buddy">
-          <cstring>editAlbum</cstring>
-         </property>
         </widget>
        </item>
        <item row="5" column="1">
@@ -424,9 +421,6 @@
           <cstring>editYear</cstring>
          </property>
         </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="QLineEdit" name="editAlbum"/>
        </item>
        <item row="6" column="1">
         <widget class="QLineEdit" name="editAlbumArtist"/>
@@ -764,17 +758,11 @@
        <item row="7" column="3">
         <widget class="QLineEdit" name="editAlbumArtistSort"/>
        </item>
-       <item row="5" column="3">
-        <widget class="QLineEdit" name="editAlbumSort"/>
-       </item>
        <item row="7" column="1">
         <widget class="QLineEdit" name="editAlbumArtist_2"/>
        </item>
        <item row="9" column="3">
         <widget class="QLineEdit" name="editComposerSort"/>
-       </item>
-       <item row="5" column="1">
-        <widget class="QLineEdit" name="editAlbum_2"/>
        </item>
        <item row="9" column="1">
         <widget class="QLineEdit" name="editComposer_2"/>
@@ -853,9 +841,6 @@
          <property name="text">
           <string>Album</string>
          </property>
-         <property name="buddy">
-          <cstring>editAlbum_2</cstring>
-         </property>
         </widget>
        </item>
        <item row="6" column="3">
@@ -931,9 +916,6 @@
          </property>
          <property name="text">
           <string>Sort Album</string>
-         </property>
-         <property name="buddy">
-          <cstring>editAlbumSort</cstring>
          </property>
         </widget>
        </item>
@@ -1330,7 +1312,6 @@
  <tabstops>
   <tabstop>tabWidget</tabstop>
   <tabstop>editYear</tabstop>
-  <tabstop>editAlbum</tabstop>
   <tabstop>editTrackNumber</tabstop>
   <tabstop>editTrackCount</tabstop>
   <tabstop>editAlbumArtist</tabstop>
@@ -1339,8 +1320,6 @@
   <tabstop>editComposer</tabstop>
   <tabstop>editComments</tabstop>
   <tabstop>editGenre</tabstop>
-  <tabstop>editAlbum_2</tabstop>
-  <tabstop>editAlbumSort</tabstop>
   <tabstop>editAlbumArtist_2</tabstop>
   <tabstop>editAlbumArtistSort</tabstop>
   <tabstop>editComposer_2</tabstop>
