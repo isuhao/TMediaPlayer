@@ -206,6 +206,11 @@ public:
         return m_cdRomDrives;
     }
 
+    inline QString getApplicationPath() const
+    {
+        return m_applicationPath;
+    }
+
     QFile * getLogFile(const QString& logName);
     void logError(const QString& message, const QString& function, const char * file, int line);
     void notifyInformation(const QString& message);

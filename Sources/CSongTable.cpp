@@ -1247,12 +1247,12 @@ void CSongTable::replaceSong(CSong * oldSong, CSong * newSong)
 
 void CSongTable::selectSongItem(CSongTableItem * songItem)
 {
-    selectionModel()->clearSelection();
+    selectionModel()->clear();
 
     if (songItem)
     {
         QModelIndex index = m_model->index(m_model->getRowForSongItem(songItem), 0);
-        selectionModel()->setCurrentIndex(index, QItemSelectionModel::Select | QItemSelectionModel::Rows);
+        setCurrentIndex(index);
         scrollTo(index/*, QAbstractItemView::PositionAtTop*/);
     }
 }

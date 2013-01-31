@@ -32,7 +32,26 @@ class CScrobble : public ILastFmService
 
 public:
 
+    struct TScrobbleInfos
+    {
+        QString title;       ///< Titre du morceau.
+        QString artist;      ///< Artiste.
+        QString album;       ///< Titre de l'album.
+        QString albumArtist; ///< Artiste de l'album, si différent de celui du morceau.
+        int duration;        ///< Durée en secondes.
+        int timestamp;       ///< Timestamp de fin de lecture.
+        int trackNumber;     ///< Numéro de piste.
+
+        /// Constructeur par défaut.
+        inline TScrobbleInfos() : duration(0), timestamp(0), trackNumber(0) { }
+    };
+
     CScrobble(CApplication * application, const QByteArray& sessionKey, CSong * song);
+    CScrobble(CApplication * application, const QByteArray& sessionKey, const TScrobbleInfos& song);
+
+protected:
+
+    void sendRequest();
 
 protected slots:
 
@@ -40,7 +59,7 @@ protected slots:
 
 private:
 
-    CSong * m_song;
+    TScrobbleInfos m_song; ///< Informations sur le morceau à scrobbler.
 };
 
 #endif // FILE_C_SCROBBLE
