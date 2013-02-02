@@ -309,6 +309,77 @@ bool CApplication::initWindow()
     }
 
 
+    // Last.fm
+    if (m_lastFmEnableScrobble)
+    {
+        QSqlDatabase dataBase = QSqlDatabase::addDatabase("QSQLITE", "lastfm");
+        dataBase.setDatabaseName(m_applicationPath + "lastfm.sqlite");
+
+        if (!dataBase.open())
+        {
+            qWarning() << "Erreur d'ouverture de la base lastfm.sqlite\n";
+        }
+        else
+        {
+            QSqlQuery query(dataBase);
+            QStringList tables = dataBase.tables(QSql::Tables);
+
+            if (!tables.contains("scrobbles"))
+            {
+                if (!query.exec("CREATE TABLE scrobbles ("
+                                    "time TIMESTAMP NOT NULL,"
+                                    "title VARCHAR(512) NOT NULL,"
+                                    "artist VARCHAR(512) NOT NULL,"
+                                    "album VARCHAR(512),"
+                                    "albumArtist VARCHAR(512),"
+                                    "duration INTEGER,"
+                                    "trackNumber INTEGER"
+                                ")"))
+                {
+                    showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                }
+            }
+
+            if (!query.exec("SELECT time, title, artist, album, albumArtist, duration, trackNumber FROM scrobbles ORDER BY time"))
+            {
+                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
+            else
+            {
+                QSqlQuery query2(dataBase);
+                query2.prepare("DELETE FROM scrobbles WHERE time = ?");
+
+                // Liste des scrobbles
+                while (query.next())
+                {
+                    CScrobble::TScrobbleInfos scrobble;
+
+                    scrobble.timestamp   = query.value(0).toInt();
+                    scrobble.title       = query.value(1).toString();
+                    scrobble.artist      = query.value(2).toString();
+                    scrobble.album       = query.value(3).toString();
+                    scrobble.albumArtist = query.value(4).toString();
+                    scrobble.duration    = query.value(5).toInt();
+                    scrobble.trackNumber = query.value(6).toInt();
+
+                    // Suppression de l'enregistrement
+                    query2.bindValue(0, scrobble.timestamp);
+
+                    if (!query2.exec())
+                    {
+                        showDatabaseError(query2.lastError().text(), query2.lastQuery(), __FILE__, __LINE__);
+                    }
+
+                    // Tentative de scrobble
+                    CScrobble * query = new CScrobble(this, m_lastFmKey, scrobble);
+                }
+            }
+
+            dataBase.close();
+        }
+    }
+
+
     // Barre de contrôle
     QWidget * widgetControl = new QWidget(this);
     m_uiControl->setupUi(widgetControl);
@@ -397,7 +468,7 @@ bool CApplication::initWindow()
     // Chargement de la base de données
     QString dbType = m_settings->value("Database/Type", QString("QSQLITE")).toString();
     m_settings->setValue("Database/Type", dbType);
-    m_dataBase = QSqlDatabase::addDatabase(dbType);
+    m_dataBase = QSqlDatabase::addDatabase(dbType, "library");
 
     QString dbHostName = m_settings->value("Database/Host", QString("localhost")).toString();
     int dbPort = m_settings->value("Database/Port", 0).toInt();

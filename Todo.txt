@@ -18,8 +18,6 @@
   Importance moyenne
 --------------------------------------------------
 
-- Last.fm : mémoriser les morceaux qui n'ont pas pu être scroblé, et tenter de les envoyer plus tard.
-
 - Boite de dialogue Edit Songs : Si un champ possède plusieurs valeurs différentes, les afficher dans une combo-box.
 
 - Améliorer la gestion du glisser-déposer dans la vue des listes de lecture.

@@ -52,6 +52,7 @@ public:
 protected:
 
     void sendRequest();
+    void logError();
 
 protected slots:
 

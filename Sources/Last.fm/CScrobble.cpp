@@ -25,6 +25,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QNetworkReply>
 #include <QTextStream>
 #include <QDomDocument>
+#include <QSqlQuery>
+#include <QSqlError>
 
 #include <QtDebug>
 
@@ -142,6 +144,59 @@ void CScrobble::sendRequest()
 }
 
 
+void CScrobble::logError()
+{
+    QSqlDatabase dataBase = QSqlDatabase::addDatabase("QSQLITE", "lastfm");
+    dataBase.setDatabaseName(m_application->getApplicationPath() + "lastfm.sqlite");
+
+    if (!dataBase.open())
+    {
+        qWarning() << "Erreur d'ouverture de la base lastfm.sqlite\n";
+        return;
+    }
+
+    QSqlQuery query(dataBase);
+    QStringList tables = dataBase.tables(QSql::Tables);
+
+    if (!tables.contains("scrobbles"))
+    {
+        if (!query.exec("CREATE TABLE scrobbles ("
+                            "time TIMESTAMP NOT NULL,"
+                            "title VARCHAR(512) NOT NULL,"
+                            "artist VARCHAR(512) NOT NULL,"
+                            "album VARCHAR(512),"
+                            "albumArtist VARCHAR(512),"
+                            "duration INTEGER,"
+                            "trackNumber INTEGER"
+                        ")"))
+        {
+            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            dataBase.close();
+            return;
+        }
+    }
+
+    query.prepare("INSERT INTO scrobbles(time, title, artist, album, albumArtist, duration, trackNumber) VALUES(?, ?, ?, ?, ?, ?, ?)");
+
+    query.bindValue(0, m_song.timestamp);
+    query.bindValue(1, m_song.title);
+    query.bindValue(2, m_song.artist);
+    query.bindValue(3, m_song.album);
+    query.bindValue(4, m_song.albumArtist);
+    query.bindValue(5, m_song.duration);
+    query.bindValue(6, m_song.trackNumber);
+
+    if (!query.exec())
+    {
+        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        dataBase.close();
+        return;
+    }
+
+    dataBase.close();
+}
+
+
 /**
  * Réception de la réponse au scrobble.
  *
@@ -171,6 +226,11 @@ void CScrobble::replyFinished(QNetworkReply * reply)
     if (reply->error() != QNetworkReply::NoError)
     {
         stream << tr("Erreur HTTP : ") << reply->error() << "\n";
+
+        if (reply->error() == QNetworkReply::HostNotFoundError)
+        {
+            logError();
+        }
     }
 
     QDomDocument doc;
@@ -187,44 +247,7 @@ void CScrobble::replyFinished(QNetworkReply * reply)
             if (racine.attribute("status", "failed") == "failed")
             {
                 status = false;
-
-                // Tentative d'ouverture du fichier lastfm_scrobble.xml.
-                // Si échec on crée le fichier avec la structure XML de base.
-                // Modification de l'arbre DOM : ajout d'un noeud avec le morceau à scrobbler.
-
-                // Tentative d'ouverture du fichier XML
-                QFile file(m_application->getApplicationPath() + "lastfm_scrobble.xml");
-
-                if (!file.open(QIODevice::ReadWrite | QIODevice::Text))
-                {
-                    //...
-                    qDebug() << "Erreur ouverture fichier XML";
-                }
-
-                // Chargement du document XML
-                QDomDocument docLastFM("lastfm_scrobble");
-
-                if (!docLastFM.setContent(&file))
-                {
-                    //...
-                    qDebug() << "Erreur chargement document XML";
-                }
-
-                QDomElement rootElement = docLastFM.documentElement();
-
-                if (rootElement.tagName() != "scrobbles")
-                {
-                    //...
-                    qDebug() << "Document XML invalide, node 'scrobbles' expected";
-                }
-
-                // Ajout du noeud avec le morceau à scrobbler
-                //...
-
-                // Enregistrement du fichier
-                //...
-
-                file.close();
+                logError();
             }
         }
         else
