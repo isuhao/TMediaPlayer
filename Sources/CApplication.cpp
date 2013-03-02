@@ -74,8 +74,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 const int timerPeriod = 250; ///< Intervalle entre chaque mise-à-jour des informations.
 
-const QString appVersion = "1.0.41";     ///< Numéro de version de l'application.
-const QString appDate    = "24/01/2013"; ///< Date de sortie de cette version.
+const QString appVersion = "1.0.42";     ///< Numéro de version de l'application.
+const QString appDate    = "02/03/2013"; ///< Date de sortie de cette version.
 
 
 QString CApplication::getAppVersion() const
@@ -4255,6 +4255,15 @@ void CApplication::createDatabasePostgreSQL()
 void CApplication::closeEvent(QCloseEvent * event)
 {
     Q_CHECK_PTR(event);
+
+    if (m_currentSongItem)
+    {
+        QMessageBox::StandardButton res = QMessageBox::question(this, QString(), tr("A song is being played. Are you sure you want to quit the application?"), QMessageBox::Yes | QMessageBox::No);
+
+        if (res == QMessageBox::No)
+            return;
+    }
+
     Q_CHECK_PTR(m_settings);
 
     m_settings->setValue("Window/WindowGeometry", saveGeometry());

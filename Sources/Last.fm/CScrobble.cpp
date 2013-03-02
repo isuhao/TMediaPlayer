@@ -264,11 +264,11 @@ void CScrobble::replyFinished(QNetworkReply * reply)
 
     if (status)
     {
-        m_application->notifyInformation(tr("Song scrobbled to Last.fm"));
+        m_application->notifyInformation(tr("Song scrobbled to Last.fm (%1 by %2)").arg(m_song.title).arg(m_song.artist));
     }
     else
     {
-        m_application->notifyInformation(tr("Can't scrobble the song to Last.fm"));
+        m_application->notifyInformation(tr("Can't scrobble the song to Last.fm (%1 by %2)").arg(m_song.title).arg(m_song.artist));
     }
 
     reply->deleteLater();

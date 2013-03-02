@@ -7,7 +7,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{636B2DBF-C6E8-448D-A78E-7894B72281E3}
 AppName=TMediaPlayer
-AppVersion=1.0.41
+AppVersion=1.0.42
 AppPublisher=Ted
 DefaultDirName={pf}\TMediaPlayer
 DefaultGroupName=TMediaPlayer
@@ -28,15 +28,15 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "..\Bin\TMediaPlayer.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\fmodex.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\tag.dll"; DestDir: "{app}"; Flags: ignoreversion              
-Source: "..\Bin\QtCore4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\QtGui4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\QtNetwork4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\QtSql4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\QtWebKit4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\QtXml4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Bin\Win32\Release\TMediaPlayer.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Bin\Win32\Release\fmodex.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Bin\Win32\Release\tag.dll"; DestDir: "{app}"; Flags: ignoreversion              
+Source: "..\Bin\Win32\Release\QtCore4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Bin\Win32\Release\QtGui4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Bin\Win32\Release\QtNetwork4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Bin\Win32\Release\QtSql4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Bin\Win32\Release\QtWebKit4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Bin\Win32\Release\QtXml4.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\Lang\*.qm"; DestDir: "{app}\Lang"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 

@@ -33,8 +33,8 @@ class CDialogLastPlays : public QDialog
 
 public:
 
-    CDialogLastPlays(CApplication * application);
-    ~CDialogLastPlays();
+    explicit CDialogLastPlays(CApplication * application);
+    virtual ~CDialogLastPlays();
 
 private:
 

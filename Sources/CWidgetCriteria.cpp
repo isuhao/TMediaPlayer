@@ -87,7 +87,6 @@ CWidgetCriteria::CWidgetCriteria(CApplication * application, QWidget * parent) :
 
 CWidgetCriteria::~CWidgetCriteria()
 {
-    //qDebug() << "CWidgetCriteria::~CWidgetCriteria()";
     delete m_uiWidget;
 }
 
@@ -102,8 +101,6 @@ CWidgetCriteria::~CWidgetCriteria()
 
 ICriteria * CWidgetCriteria::getCriteria()
 {
-    qDebug() << "CWidgetCriteria::getCriteria()";
-
     CCriteria * criteria = new CCriteria(m_application, this);
     criteria->m_type      = m_type;
     criteria->m_condition = m_condition;

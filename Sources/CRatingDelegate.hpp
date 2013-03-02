@@ -29,7 +29,7 @@ class CRatingDelegate : public QStyledItemDelegate
 
 public:
 
-    inline CRatingDelegate(QWidget * parent = NULL);
+    inline explicit CRatingDelegate(QWidget * parent = NULL);
 
     void paint(QPainter * painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const;

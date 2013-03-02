@@ -7,6 +7,7 @@
 
 - Bug : si on modifie une liste dynamique en cours de lecture, ben y'a un blem...
 - Bug : si une liste ne contient que des morceaux introuvables et que la répétition de liste est activée, la lecture entraine une boucle infinie.
+- Bug : si un filtre est appliqué et qu'on glisse des morceaux vers une liste statique, ce ne sont pas les bons morceaux qui sont ajoutés.
 
 - Problème graphique : si on modifie les informations d'un morceau, il faut mettre à jour la vue courante.
 - Problème graphique : lorsqu'on sélectionne une liste de lecture, il faut donner le focus à la vue.
@@ -17,6 +18,9 @@
 --------------------------------------------------
   Importance moyenne
 --------------------------------------------------
+
+- Déplacer la gestion de la base de données dans des bibliothèques externes.
+- Déplacer la gestion de la fenêtre principale dans une classe à part.
 
 - Boite de dialogue Edit Songs : Si un champ possède plusieurs valeurs différentes, les afficher dans une combo-box.
 
@@ -65,7 +69,6 @@
 
 - Installateur : pouvoir choisir la base de données à utiliser.
 
-- Lors de la fermeture de l'application, demander une confirmation si un morceau est en cours de lecture.
 - N'autoriser qu'une seule instance de l'application.
 
 - Recherche de paroles :

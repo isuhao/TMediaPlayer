@@ -43,7 +43,7 @@ class CDynamicList : public IPlayList
 public:
 
     explicit CDynamicList(CApplication * application, const QString& name = QString());
-    ~CDynamicList();
+    virtual ~CDynamicList();
 
     virtual bool isModified() const;
     CWidgetMultiCriterion * getWidget() const;
