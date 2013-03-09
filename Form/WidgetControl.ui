@@ -38,7 +38,7 @@
       </size>
      </property>
      <property name="text">
-      <string notr="true">Previous</string>
+      <string>Previous</string>
      </property>
      <property name="icon">
       <iconset resource="../TMediaPlayer.qrc">
@@ -64,7 +64,7 @@
       </size>
      </property>
      <property name="text">
-      <string notr="true">Play</string>
+      <string>Play</string>
      </property>
      <property name="icon">
       <iconset resource="../TMediaPlayer.qrc">
@@ -90,7 +90,7 @@
       </size>
      </property>
      <property name="text">
-      <string notr="true">Stop</string>
+      <string>Stop</string>
      </property>
      <property name="icon">
       <iconset resource="../TMediaPlayer.qrc">
@@ -116,7 +116,7 @@
       </size>
      </property>
      <property name="text">
-      <string notr="true">Next</string>
+      <string>Next</string>
      </property>
      <property name="icon">
       <iconset resource="../TMediaPlayer.qrc">
@@ -152,7 +152,7 @@
    <item>
     <widget class="QToolButton" name="btnRepeat">
      <property name="text">
-      <string notr="true">Repeat</string>
+      <string>Repeat</string>
      </property>
      <property name="icon">
       <iconset resource="../TMediaPlayer.qrc">
@@ -172,7 +172,7 @@
    <item>
     <widget class="QToolButton" name="btnShuffle">
      <property name="text">
-      <string notr="true">Shuffle</string>
+      <string>Shuffle</string>
      </property>
      <property name="icon">
       <iconset resource="../TMediaPlayer.qrc">
@@ -208,7 +208,7 @@
    <item>
     <widget class="QToolButton" name="btnMute">
      <property name="text">
-      <string notr="true">Mute</string>
+      <string>Mute</string>
      </property>
      <property name="icon">
       <iconset resource="../TMediaPlayer.qrc">

@@ -292,11 +292,6 @@ qlonglong CSongTable::getTotalDuration() const
  * Applique un filtre de recherche à la liste de lecture.
  * Les morceaux qui ne correspondent pas au filtre sont masqués.
  *
- * \todo Changer le système :
- *       - CSongTable::applyFilter appelle simplement la méthode CSongTableModel::applyFilter.
- *       - CSongTableModel::applyFilter parcourt la liste des morceaux et remplie une liste avec ceux qui correspondent (m_dataFiltered).
- *       - Les méthodes rowCount, data, etc. de CSongTableModel utilisent m_dataFiltered au lieu de m_data.
- *
  * \param filter Filtre de recherche.
  */
 

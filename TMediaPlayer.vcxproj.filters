@@ -782,6 +782,9 @@
     <ClCompile Include="GeneratedFiles\x64\Release\moc_CDialogRemoveFolder.cpp">
       <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\$(PlatformName)\qrc_TMediaPlayer.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Sources\CApplication.hpp">
@@ -799,35 +802,14 @@
     <CustomBuild Include="Sources\CStaticPlayList.hpp">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="Form\DialogEditDynamicPlayList.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Form\DialogEditSong.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Form\DialogEditStaticPlayList.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Form\TMediaPlayer.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="TMediaPlayer.qrc">
       <Filter>Resource Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Form\DialogEditSongs.ui">
-      <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="Sources\CSongTableHeader.hpp">
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="Sources\CPlayListView.hpp">
       <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Form\WidgetCriteria.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Form\WidgetMultiCriterion.ui">
-      <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="Sources\CWidgetCriteria.hpp">
       <Filter>Header Files</Filter>
@@ -840,9 +822,6 @@
     </CustomBuild>
     <CustomBuild Include="Sources\IWidgetCriteria.hpp">
       <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Form\DialogPreferences.ui">
-      <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="Sources\CMultiCriterion.hpp">
       <Filter>Header Files</Filter>
@@ -859,12 +838,6 @@
     <CustomBuild Include="Sources\Last.fm\CAuthentication.hpp">
       <Filter>Header Files\Last.fm</Filter>
     </CustomBuild>
-    <CustomBuild Include="Form\DialogEditMetadata.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Form\WidgetControl.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="Sources\Last.fm\CScrobble.hpp">
       <Filter>Header Files\Last.fm</Filter>
     </CustomBuild>
@@ -879,12 +852,6 @@
     </CustomBuild>
     <CustomBuild Include="Sources\Importer\CImporterITunes.hpp">
       <Filter>Header Files\Importer</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Form\DialogEditFolder.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Form\DialogEqualizer.ui">
-      <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="Sources\Dialog\CDialogEqualizer.hpp">
       <Filter>Header Files\Dialog</Filter>
@@ -925,14 +892,8 @@
     <CustomBuild Include="Sources\IPlayList.hpp">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="Form\DialogRemoveFolder.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="Sources\Dialog\CDialogRemoveFolder.hpp">
       <Filter>Header Files\Dialog</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Form\ImporterITunesPage3.ui">
-      <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="Sources\CLyricWiki.hpp">
       <Filter>Header Files</Filter>
@@ -940,14 +901,8 @@
     <CustomBuild Include="Sources\Dialog\CDialogNotifications.hpp">
       <Filter>Header Files\Dialog</Filter>
     </CustomBuild>
-    <CustomBuild Include="Form\DialogNotifications.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="Sources\Dialog\CDialogLastPlays.hpp">
       <Filter>Header Files\Dialog</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Form\DialogLastPlays.ui">
-      <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="Sources\CSliderStyle.hpp">
       <Filter>Header Files</Filter>
@@ -961,20 +916,11 @@
     <CustomBuild Include="Sources\Dialog\CDialogAbout.hpp">
       <Filter>Header Files\Dialog</Filter>
     </CustomBuild>
-    <CustomBuild Include="Form\DialogAbout.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Form\DialogCDRomDriveInfos.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="Sources\Dialog\CDialogCDRomDriveInfos.hpp">
       <Filter>Header Files\Dialog</Filter>
     </CustomBuild>
     <CustomBuild Include="Sources\MusicBrainz\CMusicBrainzLookup.hpp">
       <Filter>Header Files\MusicBrainz</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Form\DialogPreferencesFolder.ui">
-      <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="Sources\CLibraryFolder.hpp">
       <Filter>Header Files</Filter>
@@ -984,6 +930,63 @@
     </CustomBuild>
     <CustomBuild Include="Sources\CEqualizerPreset.hpp">
       <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Form\DialogAbout.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Form\DialogCDRomDriveInfos.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Form\DialogEditDynamicPlayList.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Form\DialogEditFolder.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Form\DialogEditMetadata.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Form\DialogEditSong.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Form\DialogEditSongs.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Form\DialogEditStaticPlayList.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Form\DialogEqualizer.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Form\DialogLastPlays.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Form\DialogNotifications.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Form\DialogPreferences.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Form\DialogPreferencesFolder.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Form\DialogRemoveFolder.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Form\ImporterITunesPage3.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Form\TMediaPlayer.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Form\WidgetControl.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Form\WidgetCriteria.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Form\WidgetMultiCriterion.ui">
+      <Filter>Form Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -1007,6 +1010,63 @@
     </ClInclude>
     <ClInclude Include="Sources\Utils.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_DialogAbout.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_DialogCDRomDriveInfos.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_DialogEditDynamicPlayList.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_DialogEditFolder.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_DialogEditMetadata.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_DialogEditSong.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_DialogEditSongs.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_DialogEditStaticPlayList.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_DialogEqualizer.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_DialogLastPlays.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_DialogNotifications.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_DialogPreferences.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_DialogPreferencesFolder.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_DialogRemoveFolder.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_ImporterITunesPage3.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_TMediaPlayer.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_WidgetControl.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_WidgetCriteria.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_WidgetMultiCriterion.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

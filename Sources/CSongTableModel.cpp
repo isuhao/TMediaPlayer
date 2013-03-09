@@ -127,8 +127,8 @@ void CSongTableModel::setSongs(const QList<CSong *>& data)
         m_data.append(new CSongTableItem(++i, *it));
     }
 
-    // TODO: récupérer le filtre courant
-    m_dataFiltered = m_data;
+    // Application du filtre de recherche
+    applyFilter(m_application->getFilter());
 
     initShuffle();
 
@@ -790,7 +790,7 @@ QMimeData * CSongTableModel::mimeData(const QModelIndexList& indexes) const
         {
             rows.append(it->row());
 
-            const QString fileName = m_data.at(it->row())->getSong()->getFileName();
+            const QString fileName = m_dataFiltered.at(it->row())->getSong()->getFileName();
 
             if (!fileList.contains(fileName))
             {
@@ -811,7 +811,7 @@ QMimeData * CSongTableModel::mimeData(const QModelIndexList& indexes) const
 
     for (QList<int>::const_iterator it = rows.begin(); it != rows.end(); ++it)
     {
-        streamSongs << m_data[*it]->getSong()->getId();
+        streamSongs << m_dataFiltered[*it]->getSong()->getId();
         streamRows << *it;
     }
 

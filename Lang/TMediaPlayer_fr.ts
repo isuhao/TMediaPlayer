@@ -2092,114 +2092,114 @@ Erreur : %4</translation>
         <translation>Fichier</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="827"/>
+        <location filename="../Sources/CSongTable.cpp" line="822"/>
         <source>Are you sure you want to remove the selected songs from the library?
 The files will not be deleted.</source>
         <translation>Êtes-vous sur de vouloir supprimer les morceaux sélectionnés de la médiathèque ?
 Les fichiers ne seront pas supprimés.</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="827"/>
+        <location filename="../Sources/CSongTable.cpp" line="822"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1080"/>
+        <location filename="../Sources/CSongTable.cpp" line="1075"/>
         <source>invalid identifier (%1)</source>
         <translation>identifiant invalide (%1)</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1293"/>
+        <location filename="../Sources/CSongTable.cpp" line="1288"/>
         <source>Play</source>
         <translation>Lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1298"/>
+        <location filename="../Sources/CSongTable.cpp" line="1293"/>
         <source>Informations...</source>
         <translation>Informations...</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="363"/>
+        <location filename="../Sources/CSongTable.cpp" line="358"/>
         <source>invalid pointer</source>
         <translation>pointeur invalide</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="398"/>
+        <location filename="../Sources/CSongTable.cpp" line="393"/>
         <source>invalid argument</source>
         <translation>argument invalide</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1302"/>
+        <location filename="../Sources/CSongTable.cpp" line="1297"/>
         <source>Edit metadata...</source>
         <translation>Éditer les métadonnées...</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1303"/>
+        <location filename="../Sources/CSongTable.cpp" line="1298"/>
         <source>Show in explorer</source>
         <translation>Afficher dans l&apos;explorateur</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1307"/>
+        <location filename="../Sources/CSongTable.cpp" line="1302"/>
         <source>Relocate</source>
         <translation>Relocaliser</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1312"/>
+        <location filename="../Sources/CSongTable.cpp" line="1307"/>
         <source>Remove from library</source>
         <translation>Enlever de la médiathèque</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1317"/>
+        <location filename="../Sources/CSongTable.cpp" line="1312"/>
         <source>Rename files</source>
         <translation>Renommer les fichiers</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1319"/>
+        <location filename="../Sources/CSongTable.cpp" line="1314"/>
         <source>Rename file</source>
         <translation>Renommer le fichier</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1324"/>
+        <location filename="../Sources/CSongTable.cpp" line="1319"/>
         <source>Check song</source>
         <translation>Cocher le morceau</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1325"/>
+        <location filename="../Sources/CSongTable.cpp" line="1320"/>
         <source>Uncheck song</source>
         <translation>Décocher le morceau</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1336"/>
+        <location filename="../Sources/CSongTable.cpp" line="1331"/>
         <source>Check selection</source>
         <translation>Cocher la sélection</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1337"/>
+        <location filename="../Sources/CSongTable.cpp" line="1332"/>
         <source>Uncheck selection</source>
         <translation>Décocher la sélection</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1346"/>
+        <location filename="../Sources/CSongTable.cpp" line="1341"/>
         <source>Playlists</source>
         <translation>Listes de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1348"/>
+        <location filename="../Sources/CSongTable.cpp" line="1343"/>
         <source>Library</source>
         <translation>Médiathèque</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1376"/>
+        <location filename="../Sources/CSongTable.cpp" line="1371"/>
         <source>Add to playlist</source>
         <translation>Ajouter à la liste de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1381"/>
+        <location filename="../Sources/CSongTable.cpp" line="1376"/>
         <source>There are no playlist</source>
         <translation>Il n&apos;y a pas de listes de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="827"/>
+        <location filename="../Sources/CSongTable.cpp" line="822"/>
         <source>Remove</source>
         <translation>Supprimer</translation>
     </message>
@@ -4130,6 +4130,41 @@ Voulez-vous les ajouter ?</translation>
 </context>
 <context>
     <name>WidgetControl</name>
+    <message>
+        <location filename="../Form/WidgetControl.ui" line="41"/>
+        <source>Previous</source>
+        <translation type="unfinished">Précédent</translation>
+    </message>
+    <message>
+        <location filename="../Form/WidgetControl.ui" line="67"/>
+        <source>Play</source>
+        <translation type="unfinished">Lecture</translation>
+    </message>
+    <message>
+        <location filename="../Form/WidgetControl.ui" line="93"/>
+        <source>Stop</source>
+        <translation type="unfinished">Stop</translation>
+    </message>
+    <message>
+        <location filename="../Form/WidgetControl.ui" line="119"/>
+        <source>Next</source>
+        <translation type="unfinished">Suivant</translation>
+    </message>
+    <message>
+        <location filename="../Form/WidgetControl.ui" line="155"/>
+        <source>Repeat</source>
+        <translation type="unfinished">Répétition</translation>
+    </message>
+    <message>
+        <location filename="../Form/WidgetControl.ui" line="175"/>
+        <source>Shuffle</source>
+        <translation type="unfinished">Aléatoire</translation>
+    </message>
+    <message>
+        <location filename="../Form/WidgetControl.ui" line="211"/>
+        <source>Mute</source>
+        <translation type="unfinished">Muet</translation>
+    </message>
     <message>
         <location filename="../Form/WidgetControl.ui" line="398"/>
         <source>Search...</source>

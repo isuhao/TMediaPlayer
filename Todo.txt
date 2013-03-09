@@ -7,11 +7,12 @@
 
 - Bug : si on modifie une liste dynamique en cours de lecture, ben y'a un blem...
 - Bug : si une liste ne contient que des morceaux introuvables et que la répétition de liste est activée, la lecture entraine une boucle infinie.
-- Bug : si un filtre est appliqué et qu'on glisse des morceaux vers une liste statique, ce ne sont pas les bons morceaux qui sont ajoutés.
+- Bug : si un filtre est appliqué et qu'on glisse des morceaux vers une liste statique, ce ne sont pas les bons morceaux qui sont ajoutés. [A VERIFIER]
 
 - Problème graphique : si on modifie les informations d'un morceau, il faut mettre à jour la vue courante.
 - Problème graphique : lorsqu'on sélectionne une liste de lecture, il faut donner le focus à la vue.
 - Problème graphique : si on lit un morceau dans une liste dynamique et qu'un filtre est activé, lorsque la lecture du morceau se termine, il est masqué. [A VERIFIER]
+- Problème graphique : si on lit un morceau dans une liste dynamique et qu'un filtre est activé, lorsque la lecture du morceau se termine, le filtre n'est plus utilisé. [A VERIFIER]
 
 - Fichier FLAC : problème avec les commentaires (effacement impossible).
 
