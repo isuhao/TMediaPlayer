@@ -54,6 +54,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QStandardItemModel>
 #include <QSettings>
 #include <QMessageBox>
+#include <QActionGroup>
 #include <QKeyEvent>
 #include <QSqlError>
 #include <QSqlQuery>
@@ -74,8 +75,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 const int timerPeriod = 250; ///< Intervalle entre chaque mise-à-jour des informations.
 
-const QString appVersion = "1.0.43";     ///< Numéro de version de l'application.
-const QString appDate    = "09/03/2013"; ///< Date de sortie de cette version.
+const QString appVersion = "1.0.44";     ///< Numéro de version de l'application.
+const QString appDate    = "10/03/2013"; ///< Date de sortie de cette version.
 
 
 QString CApplication::getAppVersion() const
@@ -149,6 +150,7 @@ CApplication::CApplication() :
 
     // Initialisation de l'interface graphique
     m_uiWidget->setupUi(this);
+    m_uiWidget->actionTogglePlay->setShortcut(Qt::Key_Space);
 
     // Last.fm
     m_lastFmEnableScrobble = m_settings->value("LastFm/EnableScrobble", false).toBool();
@@ -179,8 +181,7 @@ CApplication::CApplication() :
     connect(m_uiWidget->actionSelectNone        , &QAction::triggered, this, &CApplication::selectNone                 );
     connect(m_uiWidget->actionPreferences       , &QAction::triggered, this, &CApplication::openDialogPreferences      );
 
-    connect(m_uiWidget->actionPlay              , &QAction::triggered, this, &CApplication::togglePlay                 );
-    connect(m_uiWidget->actionPause             , &QAction::triggered, this, &CApplication::pause                      );
+    connect(m_uiWidget->actionTogglePlay        , &QAction::triggered, this, &CApplication::togglePlay                 );
     connect(m_uiWidget->actionStop              , &QAction::triggered, this, &CApplication::stop                       );
     connect(m_uiWidget->actionPrevious          , &QAction::triggered, this, &CApplication::previousSong               );
     connect(m_uiWidget->actionNext              , &QAction::triggered, this, &CApplication::nextSong                   );
@@ -221,8 +222,7 @@ CApplication::CApplication() :
     connect(m_uiWidget->actionSelectNone        , SIGNAL(triggered(    )), this, SLOT(selectNone                 ()));
     connect(m_uiWidget->actionPreferences       , SIGNAL(triggered(    )), this, SLOT(openDialogPreferences      ()));
 
-    connect(m_uiWidget->actionPlay              , SIGNAL(triggered(    )), this, SLOT(togglePlay                 ()));
-    connect(m_uiWidget->actionPause             , SIGNAL(triggered(    )), this, SLOT(pause                      ()));
+    connect(m_uiWidget->actionTogglePlay        , SIGNAL(triggered(    )), this, SLOT(togglePlay                 ()));
     connect(m_uiWidget->actionStop              , SIGNAL(triggered(    )), this, SLOT(stop                       ()));
     connect(m_uiWidget->actionPrevious          , SIGNAL(triggered(    )), this, SLOT(previousSong               ()));
     connect(m_uiWidget->actionNext              , SIGNAL(triggered(    )), this, SLOT(nextSong                   ()));
@@ -239,6 +239,11 @@ CApplication::CApplication() :
 
     connect(this, SIGNAL(songPlayStart(CSong *)), this, SLOT(updateSongDescription(CSong *)));
 #endif
+
+    QActionGroup * repeatActionGroup = new QActionGroup(this);
+    repeatActionGroup->addAction(m_uiWidget->actionNoRepeat);
+    repeatActionGroup->addAction(m_uiWidget->actionRepeatList);
+    repeatActionGroup->addAction(m_uiWidget->actionRepeatSong);
 }
 
 
@@ -393,7 +398,7 @@ bool CApplication::initWindow()
     // Connexions des signaux et des slots
     connect(m_uiControl->songInfos, SIGNAL(clicked()), this, SLOT(selectCurrentSong()));
 
-    connect(m_uiControl->btnPlay, SIGNAL(clicked()), this, SLOT(togglePlay()));
+    connect(m_uiControl->btnTogglePlay, SIGNAL(clicked()), this, SLOT(togglePlay()));
     connect(m_uiControl->btnStop, SIGNAL(clicked()), this, SLOT(stop()));
 
     connect(m_uiControl->btnPrevious, SIGNAL(clicked()), this, SLOT(previousSong()));
@@ -1672,7 +1677,7 @@ void CApplication::pause()
 
 
 /**
- * Lance ou interrompt la lecture.
+ * Inverse l'état de la lecture.
  */
 
 void CApplication::togglePlay()
@@ -1685,7 +1690,7 @@ void CApplication::togglePlay()
 
 
 /**
- * Active le morceau précédent du morceau actuel.
+ * Active le morceau précédent dans la liste en cours de lecture.
  * Si le morceau actuel est le premier de la liste, ou que la position de lecture est
  * supérieure à 4 secondes, on revient au début du morceau.
  */
@@ -1784,7 +1789,7 @@ void CApplication::previousSong()
 
 
 /**
- * Passe au morceau suivant.
+ * Passe au morceau suivant dans la liste en cours de lecture.
  */
 
 void CApplication::nextSong()
@@ -1925,41 +1930,43 @@ void CApplication::setRepeatMode(TRepeatMode repeatMode)
 
     switch (m_repeatMode)
     {
+        default:
         case NoRepeat:
-
             m_uiWidget->actionNoRepeat->setChecked(true);
-            m_uiWidget->actionRepeatList->setChecked(false);
-            m_uiWidget->actionRepeatSong->setChecked(false);
-                
+            m_uiWidget->menuRepeat->setIcon(QPixmap(":/icons/repeatOff"));
             m_uiControl->btnRepeat->setIcon(QPixmap(":/icons/repeatOff"));
             break;
 
         case RepeatList:
-
-            m_uiWidget->actionNoRepeat->setChecked(false);
             m_uiWidget->actionRepeatList->setChecked(true);
-            m_uiWidget->actionRepeatSong->setChecked(false);
-                
+            m_uiWidget->menuRepeat->setIcon(QPixmap(":/icons/repeatList"));
             m_uiControl->btnRepeat->setIcon(QPixmap(":/icons/repeatList"));
             break;
 
         case RepeatSong:
-
-            m_uiWidget->actionNoRepeat->setChecked(false);
-            m_uiWidget->actionRepeatList->setChecked(false);
             m_uiWidget->actionRepeatSong->setChecked(true);
-                
+            m_uiWidget->menuRepeat->setIcon(QPixmap(":/icons/repeatSong"));
             m_uiControl->btnRepeat->setIcon(QPixmap(":/icons/repeatSong"));
             break;
     }
 }
 
 
+/**
+ * Inverse l'état de la lecture aléatoire.
+ */
+
 void CApplication::setShuffle()
 {
     setShuffle(!m_isShuffle);
 }
 
+
+/**
+ * Active ou désactive la lecture aléatoire.
+ *
+ * \param shuffle Indique si la lecture aléatoire doit être activée.
+ */
 
 void CApplication::setShuffle(bool shuffle)
 {
@@ -1986,10 +1993,13 @@ void CApplication::setMute(bool mute)
 
         if (m_currentSongItem)
         {
-            m_currentSongItem->getSong()->setMute(mute);
+            m_currentSongItem->getSong()->setMute(m_isMute);
         }
 
-        m_uiControl->btnMute->setIcon(QPixmap(mute ? ":/icons/muet" : ":/icons/volume"));
+        m_uiWidget->actionMute->setChecked(m_isMute);
+        
+        m_uiWidget->actionMute->setIcon(QPixmap(m_isMute ? ":/icons/muet" : ":/icons/volume"));
+        m_uiControl->btnMute->setIcon(QPixmap(m_isMute ? ":/icons/muet" : ":/icons/volume"));
     }
 }
 
@@ -2388,9 +2398,8 @@ void CApplication::relocateSong()
     CSongTableItem * songItem = m_displayedSongTable->getSelectedSongItem();
 
     if (!songItem)
-    {
+
         return;
-    }
 
     CSong * song = songItem->getSong();
 
@@ -2399,9 +2408,7 @@ void CApplication::relocateSong()
         QString fileName = QFileDialog::getOpenFileName(this, QString(), QString(), tr("Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)"));
 
         if (fileName.isEmpty())
-        {
             return;
-        }
 
         const int newSongId = CSong::getId(this, fileName);
         CSong * newSong = getSongFromId(newSongId);
@@ -2410,12 +2417,14 @@ void CApplication::relocateSong()
         // Le fichier est déjà dans la médiathèque
         if (newSongId >= 0)
         {
-            QMessageBox::StandardButton res = QMessageBox::question(this, QString(), tr("This file is already in the library. Do you want to merge the two songs?"), QMessageBox::Yes | QMessageBox::No);
+            QMessageBox dialog(QMessageBox::Question, QString(), tr("This file is already in the library. Do you want to merge the two songs?"), QMessageBox::NoButton, this);
+            QPushButton * buttonYes = dialog.addButton(tr("Yes"), QMessageBox::YesRole);
+            QPushButton * buttonNo = dialog.addButton(tr("No"), QMessageBox::NoRole);
 
-            if (res == QMessageBox::No)
-            {
+            dialog.exec();
+
+            if (dialog.clickedButton() == buttonNo)
                 return;
-            }
 
             // Vérifier que le morceau n'est pas en cours de lecture
             //TODO...
@@ -2811,10 +2820,14 @@ void CApplication::removeSelectedItem()
     if (playList)
     {
         // Confirmation
-        if (QMessageBox::question(this, QString(), tr("Are you sure you want to delete this playlist?"), tr("Yes"), tr("No"), 0, 1) == 1)
-        {
+        QMessageBox dialog(QMessageBox::Question, QString(), tr("Are you sure you want to delete this playlist?"), QMessageBox::NoButton, this);
+        QPushButton * buttonYes = dialog.addButton(tr("Yes"), QMessageBox::YesRole);
+        QPushButton * buttonNo = dialog.addButton(tr("No"), QMessageBox::NoRole);
+
+        dialog.exec();
+
+        if (dialog.clickedButton() == buttonNo)
             return;
-        }
 
         if (playList == m_displayedSongTable)
         {
@@ -3382,30 +3395,30 @@ void CApplication::setState(TState state)
     switch (state)
     {
         case Playing:
-            m_uiControl->btnPlay->setIcon(QPixmap(":/icons/pause"));
+            m_uiControl->btnTogglePlay->setIcon(QPixmap(":/icons/pause"));
             m_uiControl->btnStop->setEnabled(true);
             m_uiControl->btnPrevious->setEnabled(true);
             m_uiControl->btnNext->setEnabled(true);
-            m_uiWidget->actionPlay->setText(tr("Pause"));
-            m_uiWidget->actionPlay->setIcon(QPixmap(":/icons/pause"));
+            m_uiWidget->actionTogglePlay->setText(tr("Pause"));
+            m_uiWidget->actionTogglePlay->setIcon(QPixmap(":/icons/pause"));
             break;
 
         case Paused:
-            m_uiControl->btnPlay->setIcon(QPixmap(":/icons/play"));
+            m_uiControl->btnTogglePlay->setIcon(QPixmap(":/icons/play"));
             m_uiControl->btnStop->setEnabled(true);
             m_uiControl->btnPrevious->setEnabled(true);
             m_uiControl->btnNext->setEnabled(true);
-            m_uiWidget->actionPlay->setText(tr("Play"));
-            m_uiWidget->actionPlay->setIcon(QPixmap(":/icons/play"));
+            m_uiWidget->actionTogglePlay->setText(tr("Play"));
+            m_uiWidget->actionTogglePlay->setIcon(QPixmap(":/icons/play"));
             break;
 
         case Stopped:
-            m_uiControl->btnPlay->setIcon(QPixmap(":/icons/play"));
+            m_uiControl->btnTogglePlay->setIcon(QPixmap(":/icons/play"));
             m_uiControl->btnStop->setEnabled(false);
             m_uiControl->btnPrevious->setEnabled(false);
             m_uiControl->btnNext->setEnabled(false);
-            m_uiWidget->actionPlay->setText(tr("Play"));
-            m_uiWidget->actionPlay->setIcon(QPixmap(":/icons/play"));
+            m_uiWidget->actionTogglePlay->setText(tr("Play"));
+            m_uiWidget->actionTogglePlay->setIcon(QPixmap(":/icons/play"));
             break;
     }
 }
@@ -4258,10 +4271,17 @@ void CApplication::closeEvent(QCloseEvent * event)
 
     if (m_currentSongItem)
     {
-        QMessageBox::StandardButton res = QMessageBox::question(this, QString(), tr("A song is being played. Are you sure you want to quit the application?"), QMessageBox::Yes | QMessageBox::No);
+        QMessageBox dialog(QMessageBox::Question, QString(), tr("A song is being played. Are you sure you want to quit the application?"), QMessageBox::NoButton, this);
+        QPushButton * buttonYes = dialog.addButton(tr("Yes"), QMessageBox::YesRole);
+        QPushButton * buttonNo = dialog.addButton(tr("No"), QMessageBox::NoRole);
 
-        if (res == QMessageBox::No)
+        dialog.exec();
+
+        if (dialog.clickedButton() == buttonNo)
+        {
+            event->ignore();
             return;
+        }
     }
 
     Q_CHECK_PTR(m_settings);
@@ -4269,9 +4289,17 @@ void CApplication::closeEvent(QCloseEvent * event)
     m_settings->setValue("Window/WindowGeometry", saveGeometry());
     m_settings->setValue("Window/WindowState", saveState());
 
+    event->accept();
     QMainWindow::closeEvent(event);
 }
 
+
+/**
+ * Convertit une durée en millisecondes en un texte affichable.
+ *
+ * \param durationMS Durée en millisecondes.
+ * \return Texte.
+ */
 
 QString CApplication::durationToString(qlonglong durationMS)
 {

@@ -10,9 +10,6 @@
     <height>45</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string notr="true"/>
-  </property>
   <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0,0,0,0,0,0,0,0,0,2,0,1,0">
    <property name="spacing">
     <number>0</number>
@@ -56,7 +53,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QToolButton" name="btnPlay">
+    <widget class="QToolButton" name="btnTogglePlay">
      <property name="minimumSize">
       <size>
        <width>40</width>
@@ -420,7 +417,7 @@
  </widget>
  <tabstops>
   <tabstop>btnPrevious</tabstop>
-  <tabstop>btnPlay</tabstop>
+  <tabstop>btnTogglePlay</tabstop>
   <tabstop>btnStop</tabstop>
   <tabstop>btnNext</tabstop>
   <tabstop>btnRepeat</tabstop>

@@ -1171,13 +1171,44 @@ void CSongTable::keyPressEvent(QKeyEvent * event)
 {
     Q_CHECK_PTR(event);
 
+    // Lancer la lecture du morceau courant
     if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
     {
         event->accept();
+
+        // Un morceau est en cours de lecture
+        if (!m_application->isStopped())
+        {
+            // Le morceau sélectionné est en cours de lecture
+            if (getSelectedSongItem() == m_application->getCurrentSongItem())
+            {
+                // La lecture n'est pas en pause, rien à faire
+                if (m_application->isPlaying())
+                    return;
+            }
+            else
+            {
+                // Un autre morceau est en cours de lecture, on l'arrête
+                m_application->stop();
+            }
+
+        }
+
+        // On démarre la lecture
         m_application->play();
         return;
     }
 
+    // Espace : changer l'état de la lecture
+    // Normalement ce raccourci est géré par l'action actionTogglePlay définie dans TMediaPlayer.ui
+    if (event->key() == Qt::Key_Space)
+    {
+        event->accept();
+        m_application->togglePlay();
+        return;
+    }
+
+    // Suppression du morceau courant
     if (event->key() == Qt::Key_Delete)
     {
         event->accept();

@@ -38,13 +38,19 @@
      <height>21</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menu_Fichier">
+   <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>&amp;File</string>
+    </property>
+    <property name="separatorsCollapsible">
+     <bool>true</bool>
     </property>
     <widget class="QMenu" name="menuImport">
      <property name="title">
       <string>Import</string>
+     </property>
+     <property name="separatorsCollapsible">
+      <bool>true</bool>
      </property>
      <addaction name="actionImportITunes"/>
      <addaction name="actionImportSongbird"/>
@@ -70,6 +76,9 @@
     <property name="title">
      <string>&amp;Edit</string>
     </property>
+    <property name="separatorsCollapsible">
+     <bool>true</bool>
+    </property>
     <addaction name="actionSelectAll"/>
     <addaction name="actionSelectNone"/>
     <addaction name="separator"/>
@@ -79,15 +88,25 @@
     <property name="title">
      <string>&amp;Controls</string>
     </property>
+    <property name="separatorsCollapsible">
+     <bool>true</bool>
+    </property>
     <widget class="QMenu" name="menuRepeat">
      <property name="title">
       <string>Repeat</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../TMediaPlayer.qrc">
+       <normaloff>:/icons/repeatOff</normaloff>:/icons/repeatOff</iconset>
+     </property>
+     <property name="separatorsCollapsible">
+      <bool>true</bool>
      </property>
      <addaction name="actionNoRepeat"/>
      <addaction name="actionRepeatList"/>
      <addaction name="actionRepeatSong"/>
     </widget>
-    <addaction name="actionPlay"/>
+    <addaction name="actionTogglePlay"/>
     <addaction name="actionStop"/>
     <addaction name="separator"/>
     <addaction name="actionPrevious"/>
@@ -96,16 +115,21 @@
     <addaction name="actionShuffle"/>
     <addaction name="menuRepeat"/>
     <addaction name="separator"/>
+    <addaction name="actionMute"/>
+    <addaction name="separator"/>
     <addaction name="actionEqualizer"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>&amp;Help</string>
     </property>
+    <property name="separatorsCollapsible">
+     <bool>true</bool>
+    </property>
     <addaction name="actionAboutQt"/>
     <addaction name="actionAbout"/>
    </widget>
-   <addaction name="menu_Fichier"/>
+   <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuControls"/>
    <addaction name="menuHelp"/>
@@ -137,6 +161,9 @@
    <property name="text">
     <string>E&amp;xit</string>
    </property>
+   <property name="menuRole">
+    <enum>QAction::QuitRole</enum>
+   </property>
   </action>
   <action name="actionNewPlayList">
    <property name="icon">
@@ -158,7 +185,13 @@
   </action>
   <action name="actionInformations">
    <property name="text">
-    <string>Informations...</string>
+    <string>&amp;Informations...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
   <action name="actionAddFolder">
@@ -175,13 +208,16 @@
    <property name="text">
     <string>Select all</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
+   </property>
   </action>
   <action name="actionSelectNone">
    <property name="text">
     <string>Select none</string>
    </property>
   </action>
-  <action name="actionPlay">
+  <action name="actionTogglePlay">
    <property name="icon">
     <iconset resource="../TMediaPlayer.qrc">
      <normaloff>:/icons/play</normaloff>:/icons/play</iconset>
@@ -192,17 +228,8 @@
    <property name="shortcut">
     <string>Space</string>
    </property>
-  </action>
-  <action name="actionPause">
-   <property name="icon">
-    <iconset resource="../TMediaPlayer.qrc">
-     <normaloff>:/icons/pause</normaloff>:/icons/pause</iconset>
-   </property>
-   <property name="text">
-    <string>Pause</string>
-   </property>
-   <property name="shortcut">
-    <string>Space</string>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
   <action name="actionStop">
@@ -243,6 +270,12 @@
    <property name="text">
     <string>Shuffle</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
   </action>
   <action name="actionPreferences">
    <property name="icon">
@@ -252,10 +285,16 @@
    <property name="text">
     <string>&amp;Preferences...</string>
    </property>
+   <property name="menuRole">
+    <enum>QAction::PreferencesRole</enum>
+   </property>
   </action>
   <action name="actionAboutQt">
    <property name="text">
-    <string>About Qt...</string>
+    <string>About &amp;Qt...</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::AboutQtRole</enum>
    </property>
   </action>
   <action name="actionImportITunes">
@@ -285,6 +324,12 @@
    <property name="text">
     <string>Equalizer...</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+E</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
   </action>
   <action name="actionNotifications">
    <property name="text">
@@ -300,10 +345,26 @@
    <property name="text">
     <string>&amp;About...</string>
    </property>
+   <property name="menuRole">
+    <enum>QAction::AboutRole</enum>
+   </property>
   </action>
   <action name="actionMute">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../TMediaPlayer.qrc">
+     <normaloff>:/icons/volume</normaloff>:/icons/volume</iconset>
+   </property>
    <property name="text">
-    <string>Mute</string>
+    <string>&amp;Mute</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+M</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
   <action name="actionNoRepeat">
@@ -320,6 +381,9 @@
    <property name="text">
     <string>No repeat</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>false</bool>
+   </property>
   </action>
   <action name="actionRepeatList">
    <property name="checkable">
@@ -332,6 +396,9 @@
    <property name="text">
     <string>Repeat list</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>false</bool>
+   </property>
   </action>
   <action name="actionRepeatSong">
    <property name="checkable">
@@ -343,6 +410,9 @@
    </property>
    <property name="text">
     <string>Repeat song</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>false</bool>
    </property>
   </action>
  </widget>
