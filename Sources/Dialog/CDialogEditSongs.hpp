@@ -144,6 +144,18 @@ private:
     QComboBox * m_editAlbumCB_2;
     QLineEdit * m_editAlbumSortLE;
     QComboBox * m_editAlbumSortCB;
+    QLineEdit * m_editAlbumArtistLE;
+    QLineEdit * m_editAlbumArtistLE_2;
+    QComboBox * m_editAlbumArtistCB;
+    QComboBox * m_editAlbumArtistCB_2;
+    QLineEdit * m_editAlbumArtistSortLE;
+    QComboBox * m_editAlbumArtistSortCB;
+    QLineEdit * m_editComposerLE;
+    QLineEdit * m_editComposerLE_2;
+    QComboBox * m_editComposerCB;
+    QComboBox * m_editComposerCB_2;
+    QLineEdit * m_editComposerSortLE;
+    QComboBox * m_editComposerSortCB;
 };
 
 #endif // FILE_C_DIALOG_EDIT_SONGS
