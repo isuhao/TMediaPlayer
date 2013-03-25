@@ -4,8 +4,8 @@
 <context>
     <name>CApplication</name>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="163"/>
-        <location filename="../Sources/CApplication.cpp" line="2967"/>
+        <location filename="../Sources/CApplication.cpp" line="174"/>
+        <location filename="../Sources/CApplication.cpp" line="2988"/>
         <source>%n song(s), %1</source>
         <translation>
             <numerusform>%n song, %1</numerusform>
@@ -13,64 +13,64 @@
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="312"/>
+        <location filename="../Sources/CApplication.cpp" line="323"/>
         <source>the application has already been initialized</source>
         <translation>the application has already been initialized</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="424"/>
+        <location filename="../Sources/CApplication.cpp" line="435"/>
         <source>Playlists</source>
         <translation>Playlists</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="437"/>
+        <location filename="../Sources/CApplication.cpp" line="448"/>
         <source>Lyrics</source>
         <translation>Lyrics</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="452"/>
+        <location filename="../Sources/CApplication.cpp" line="463"/>
         <source>Failed to init sound system with FMOD.</source>
         <translation>Failed to init sound system with FMOD.</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="504"/>
+        <location filename="../Sources/CApplication.cpp" line="515"/>
         <source>Failed to load database: %1.</source>
         <translation>Failed to load database: %1.</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="523"/>
+        <location filename="../Sources/CApplication.cpp" line="534"/>
         <source>createDSPByType #%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="528"/>
+        <location filename="../Sources/CApplication.cpp" line="539"/>
         <source>dsp-&gt;setParameter(FMOD_DSP_PARAMEQ_CENTER) #%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="533"/>
+        <location filename="../Sources/CApplication.cpp" line="544"/>
         <source>dsp-&gt;setParameter(FMOD_DSP_PARAMEQ_BANDWIDTH) #%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="538"/>
-        <location filename="../Sources/CApplication.cpp" line="704"/>
-        <location filename="../Sources/CApplication.cpp" line="758"/>
+        <location filename="../Sources/CApplication.cpp" line="549"/>
+        <location filename="../Sources/CApplication.cpp" line="715"/>
+        <location filename="../Sources/CApplication.cpp" line="769"/>
         <source>dsp-&gt;setParameter(FMOD_DSP_PARAMEQ_GAIN) #%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="543"/>
+        <location filename="../Sources/CApplication.cpp" line="554"/>
         <source>addDSP #%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="593"/>
+        <location filename="../Sources/CApplication.cpp" line="604"/>
         <source>Database error</source>
         <translation>Database error</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="593"/>
+        <location filename="../Sources/CApplication.cpp" line="604"/>
         <source>File: %1 (%2)
 
 Query: %3
@@ -83,13 +83,13 @@ Query: %3
 Error: %4</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="596"/>
+        <location filename="../Sources/CApplication.cpp" line="607"/>
         <source>Query: </source>
         <translation>Query: </translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="1133"/>
-        <location filename="../Sources/CApplication.cpp" line="1137"/>
+        <location filename="../Sources/CApplication.cpp" line="1144"/>
+        <location filename="../Sources/CApplication.cpp" line="1148"/>
         <source>%n selected song(s), %1</source>
         <translation>
             <numerusform>%n selected song, %1</numerusform>
@@ -97,79 +97,79 @@ Error: %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1457"/>
+        <location filename="../Sources/CApplication.cpp" line="1468"/>
         <source>%2 (%3 line %4): %1</source>
         <translation>%2 (%3 line %4): %1</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2393"/>
+        <location filename="../Sources/CApplication.cpp" line="2404"/>
         <source>several songs selected</source>
         <translation>several songs selected</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2535"/>
+        <location filename="../Sources/CApplication.cpp" line="2546"/>
         <source>error while loading the file &quot;%1&quot; with FMOD</source>
         <translation>error while loading the file &quot;%1&quot; with FMOD</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2544"/>
+        <location filename="../Sources/CApplication.cpp" line="2555"/>
         <source>can&apos;t compute song duration for file &quot;%1&quot;</source>
         <translation>can&apos;t compute song duration for file &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2553"/>
+        <location filename="../Sources/CApplication.cpp" line="2564"/>
         <source>can&apos;t find song format for file &quot;%1&quot;</source>
         <translation>can&apos;t find song format for file &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2560"/>
+        <location filename="../Sources/CApplication.cpp" line="2571"/>
         <source>unknown format</source>
         <translation>unknown format</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="4274"/>
+        <location filename="../Sources/CApplication.cpp" line="4295"/>
         <source>A song is being played. Are you sure you want to quit the application?</source>
         <translation>A song is being played. Are you sure you want to quit the application?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1425"/>
+        <location filename="../Sources/CApplication.cpp" line="1436"/>
         <source>can&apos;t open the log file &quot;%1&quot;</source>
         <translation>can&apos;t open the log file &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1513"/>
-        <location filename="../Sources/CApplication.cpp" line="1534"/>
-        <location filename="../Sources/CApplication.cpp" line="1550"/>
-        <location filename="../Sources/CApplication.cpp" line="1870"/>
-        <location filename="../Sources/CApplication.cpp" line="2626"/>
-        <location filename="../Sources/CApplication.cpp" line="2641"/>
-        <location filename="../Sources/CApplication.cpp" line="2690"/>
+        <location filename="../Sources/CApplication.cpp" line="1524"/>
+        <location filename="../Sources/CApplication.cpp" line="1545"/>
+        <location filename="../Sources/CApplication.cpp" line="1561"/>
+        <location filename="../Sources/CApplication.cpp" line="1881"/>
+        <location filename="../Sources/CApplication.cpp" line="2637"/>
+        <location filename="../Sources/CApplication.cpp" line="2652"/>
+        <location filename="../Sources/CApplication.cpp" line="2701"/>
         <source>invalid pointer</source>
         <translation>invalid pointer</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2051"/>
+        <location filename="../Sources/CApplication.cpp" line="2062"/>
         <source>invalid argument (%1)</source>
         <translation>invalid argument (%1)</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2163"/>
-        <location filename="../Sources/CApplication.cpp" line="2408"/>
+        <location filename="../Sources/CApplication.cpp" line="2174"/>
+        <location filename="../Sources/CApplication.cpp" line="2419"/>
         <source>Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)</source>
         <translation>Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2206"/>
+        <location filename="../Sources/CApplication.cpp" line="2217"/>
         <source>Loading files...</source>
         <translation>Loading files...</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2206"/>
+        <location filename="../Sources/CApplication.cpp" line="2217"/>
         <source>Abort</source>
         <translation>Abort</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="2235"/>
+        <location filename="../Sources/CApplication.cpp" line="2246"/>
         <source>%n song(s) added to the library.</source>
         <translation>
             <numerusform>%n song added to the library.</numerusform>
@@ -177,32 +177,32 @@ Error: %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2420"/>
+        <location filename="../Sources/CApplication.cpp" line="2431"/>
         <source>This file is already in the library. Do you want to merge the two songs?</source>
         <translation>This file is already in the library. Do you want to merge the two songs?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2823"/>
+        <location filename="../Sources/CApplication.cpp" line="2834"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Are you sure you want to delete this playlist?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2421"/>
-        <location filename="../Sources/CApplication.cpp" line="2824"/>
-        <location filename="../Sources/CApplication.cpp" line="4275"/>
+        <location filename="../Sources/CApplication.cpp" line="2432"/>
+        <location filename="../Sources/CApplication.cpp" line="2835"/>
+        <location filename="../Sources/CApplication.cpp" line="4296"/>
         <source>Yes</source>
         <translation>Yes</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2422"/>
-        <location filename="../Sources/CApplication.cpp" line="2825"/>
-        <location filename="../Sources/CApplication.cpp" line="4276"/>
+        <location filename="../Sources/CApplication.cpp" line="2433"/>
+        <location filename="../Sources/CApplication.cpp" line="2836"/>
+        <location filename="../Sources/CApplication.cpp" line="4297"/>
         <source>No</source>
         <translation>No</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="1133"/>
-        <location filename="../Sources/CApplication.cpp" line="4312"/>
+        <location filename="../Sources/CApplication.cpp" line="1144"/>
+        <location filename="../Sources/CApplication.cpp" line="4333"/>
         <source>%n day(s) %1</source>
         <translation>
             <numerusform>%n day %1</numerusform>
@@ -210,28 +210,28 @@ Error: %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3124"/>
+        <location filename="../Sources/CApplication.cpp" line="3145"/>
         <source>This program requires FMOD %1 or superior.</source>
         <translation>This program requires FMOD %1 or superior.</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3189"/>
+        <location filename="../Sources/CApplication.cpp" line="3210"/>
         <source>can&apos;t get number of CD-ROM drives</source>
         <translation>can&apos;t get number of CD-ROM drives</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3203"/>
+        <location filename="../Sources/CApplication.cpp" line="3224"/>
         <source>can&apos;t get name of drive #%1</source>
         <translation>can&apos;t get name of drive #%1</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3402"/>
+        <location filename="../Sources/CApplication.cpp" line="3423"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3411"/>
-        <location filename="../Sources/CApplication.cpp" line="3420"/>
+        <location filename="../Sources/CApplication.cpp" line="3432"/>
+        <location filename="../Sources/CApplication.cpp" line="3441"/>
         <source>Play</source>
         <translation>Play</translation>
     </message>
@@ -4018,7 +4018,7 @@ Would you like to add them?</translation>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="212"/>
         <source>Ctrl+A</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+A</translation>
     </message>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="217"/>
@@ -4062,27 +4062,27 @@ Would you like to add them?</translation>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="274"/>
         <source>Ctrl+S</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+S</translation>
     </message>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="294"/>
         <source>About &amp;Qt...</source>
-        <translation type="unfinished"></translation>
+        <translation>About &amp;Qt...</translation>
     </message>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="328"/>
         <source>Ctrl+E</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+E</translation>
     </message>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="361"/>
         <source>&amp;Mute</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Mute</translation>
     </message>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="364"/>
         <source>Ctrl+M</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+M</translation>
     </message>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="382"/>
@@ -4107,12 +4107,12 @@ Would you like to add them?</translation>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="188"/>
         <source>&amp;Informations...</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Informations...</translation>
     </message>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="191"/>
         <source>Ctrl+I</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+I</translation>
     </message>
     <message>
         <location filename="../Form/TMediaPlayer.ui" line="286"/>

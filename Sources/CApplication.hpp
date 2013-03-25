@@ -71,8 +71,8 @@ class CApplication : public QMainWindow
 
 public:
 
-    QString getAppVersion() const;
-    QString getAppDate() const;
+    static QString getAppVersion();
+    static QString getAppDate();
 
 
     /// État de lecture.
@@ -298,6 +298,10 @@ signals:
   //void folderRemoved(CFolder * folder);    ///< Signal émis lorsqu'un dossier est supprimé.
 
 protected slots:
+    
+#ifndef T_NO_SINGLE_APP
+	void activateThisWindow();
+#endif // T_NO_SINGLE_APP
 
     void onPlayEnd();
     void updateSongDescription(CSong * song);

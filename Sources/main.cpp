@@ -19,6 +19,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include <QApplication>
 #include <QTextCodec>
+#include <QLocalSocket>
 #include <ctime>
 #include "CApplication.hpp"
 
@@ -35,6 +36,17 @@ int main(int argc, char * argv[])
 
     QTextCodec * codec = QTextCodec::codecForName("UTF-8");
     QTextCodec::setCodecForLocale(codec);
+
+#ifndef T_NO_SINGLE_APP
+	QLocalSocket socket;
+	socket.connectToServer("tmediaplayer-" + CApplication::getAppVersion());
+
+	if (socket.waitForConnected(250))
+	{
+		// L'application est déjà lancée
+		return 0;
+	}
+#endif // T_NO_SINGLE_APP
 
     CApplication lecteur;
 

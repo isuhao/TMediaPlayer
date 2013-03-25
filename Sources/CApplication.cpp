@@ -65,6 +65,10 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QUrl>
 #include <QDockWidget>
 
+#ifndef T_NO_SINGLE_APP
+#  include <QLocalServer>
+#endif
+
 // FMOD
 #include <fmod/fmod.hpp>
 
@@ -75,17 +79,17 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 const int timerPeriod = 250; ///< Intervalle entre chaque mise-à-jour des informations.
 
-const QString appVersion = "1.0.44";     ///< Numéro de version de l'application.
-const QString appDate    = "10/03/2013"; ///< Date de sortie de cette version.
+const QString appVersion = "1.0.45";     ///< Numéro de version de l'application.
+const QString appDate    = "25/03/2013"; ///< Date de sortie de cette version.
 
 
-QString CApplication::getAppVersion() const
+QString CApplication::getAppVersion()
 {
     return appVersion;
 }
 
 
-QString CApplication::getAppDate() const
+QString CApplication::getAppDate()
 {
     return appDate;
 }
@@ -126,6 +130,13 @@ CApplication::CApplication() :
     m_lastFmLastPosition         (0),
     m_lastFmState                (NoScrobble)
 {
+
+#ifndef T_NO_SINGLE_APP
+	QLocalServer * server = new QLocalServer(this);
+	connect(server, SIGNAL(newConnection()), this, SLOT(activateThisWindow()));
+	server->listen("tmediaplayer-" + getAppVersion());
+#endif // T_NO_SINGLE_APP
+
     setDockNestingEnabled(true);
 
     // Chargement des paramètres de l'application
@@ -2858,6 +2869,16 @@ void CApplication::removeSelectedItem()
     }
 }
 
+#ifndef T_NO_SINGLE_APP
+
+void CApplication::activateThisWindow()
+{
+	setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+	raise();
+	activateWindow();
+}
+
+#endif // T_NO_SINGLE_APP
 
 /**
  * Méthode appelée quand la lecture d'un morceau se termine.
