@@ -20,6 +20,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CScrobble.hpp"
 #include "../CSong.hpp"
 #include "../CApplication.hpp"
+
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -225,7 +226,7 @@ void CScrobble::replyFinished(QNetworkReply * reply)
 
     if (reply->error() != QNetworkReply::NoError)
     {
-        stream << tr("Erreur HTTP : ") << reply->error() << "\n";
+        stream << tr("HTTP error: ") << reply->error() << "\n";
 
         if (reply->error() == QNetworkReply::HostNotFoundError)
         {
@@ -252,13 +253,13 @@ void CScrobble::replyFinished(QNetworkReply * reply)
         }
         else
         {
-            stream << "Réponse XML incorrecte (élément 'lfm' attendu)\n";
+            stream << tr("Réponse XML incorrecte (élément 'lfm' attendu)\n");
             status = false;
         }
     }
     else
     {
-        stream << "Document XML invalide (" << error << ")\n";
+        stream << tr("Document XML invalide (%1)\n").arg(error);
         status = false;
     }
 

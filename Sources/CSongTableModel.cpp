@@ -942,12 +942,20 @@ void CSongTableModel::insertRow(CSong * song, int pos)
 
     if (pos < 0 || pos >= m_data.size())
     {
-        songItem->m_position = m_data.size() - 1;
         m_data.append(songItem);
+        songItem->m_position = m_data.size();
     }
     else
     {
         m_data.insert(pos, songItem);
+
+        // Réorganisation des éléments
+        int itemPos = 1;
+
+        for (QList<CSongTableItem *>::const_iterator it = m_data.begin() /*+ pos*/; it != m_data.end(); ++it, ++itemPos)
+        {
+            (*it)->m_position = itemPos;
+        }
     }
 
     m_dataShuffle.append(songItem);

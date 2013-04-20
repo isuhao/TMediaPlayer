@@ -23,6 +23,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CStaticPlayList.hpp"
 #include "CDynamicList.hpp"
 #include "CApplication.hpp"
+#include "CQueuePlayList.hpp"
 #include "CFolder.hpp"
 #include "CCDRomDrive.hpp"
 #include "Utils.hpp"
@@ -343,9 +344,8 @@ void CPlayListView::dragMoveEvent(QDragMoveEvent * event)
         {
             CSongTable * songTable = m_model->data(index, Qt::UserRole + 1).value<CSongTable *>();
             //CFolder * folder = m_model->data(index, Qt::UserRole + 2).value<CFolder *>();
-            CStaticPlayList * playList = qobject_cast<CStaticPlayList *>(songTable);
 
-            if (songTable && playList)
+            if (songTable && (qobject_cast<CStaticPlayList *>(songTable) || qobject_cast<CQueuePlayList *>(songTable)))
             {
                 event->accept();
                 event->acceptProposedAction();

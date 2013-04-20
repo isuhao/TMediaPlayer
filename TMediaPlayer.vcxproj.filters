@@ -782,8 +782,26 @@
     <ClCompile Include="GeneratedFiles\x64\Release\moc_CDialogRemoveFolder.cpp">
       <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\$(PlatformName)\qrc_TMediaPlayer.cpp">
-      <Filter>Generated Files</Filter>
+    <ClCompile Include="GeneratedFiles\Win32\qrc_TMediaPlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\x64\qrc_TMediaPlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\CQueuePlayList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Win32\Debug\moc_CQueuePlayList.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\x64\Debug\moc_CQueuePlayList.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Win32\Release\moc_CQueuePlayList.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\x64\Release\moc_CQueuePlayList.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -987,6 +1005,9 @@
     </CustomBuild>
     <CustomBuild Include="Form\WidgetMultiCriterion.ui">
       <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Sources\CQueuePlayList.hpp">
+      <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

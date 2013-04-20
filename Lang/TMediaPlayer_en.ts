@@ -4,8 +4,8 @@
 <context>
     <name>CApplication</name>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="174"/>
-        <location filename="../Sources/CApplication.cpp" line="2988"/>
+        <location filename="../Sources/CApplication.cpp" line="176"/>
+        <location filename="../Sources/CApplication.cpp" line="3015"/>
         <source>%n song(s), %1</source>
         <translation>
             <numerusform>%n song, %1</numerusform>
@@ -13,64 +13,64 @@
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="323"/>
+        <location filename="../Sources/CApplication.cpp" line="327"/>
         <source>the application has already been initialized</source>
         <translation>the application has already been initialized</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="435"/>
+        <location filename="../Sources/CApplication.cpp" line="448"/>
         <source>Playlists</source>
         <translation>Playlists</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="448"/>
+        <location filename="../Sources/CApplication.cpp" line="461"/>
         <source>Lyrics</source>
         <translation>Lyrics</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="463"/>
+        <location filename="../Sources/CApplication.cpp" line="476"/>
         <source>Failed to init sound system with FMOD.</source>
         <translation>Failed to init sound system with FMOD.</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="515"/>
+        <location filename="../Sources/CApplication.cpp" line="528"/>
         <source>Failed to load database: %1.</source>
         <translation>Failed to load database: %1.</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="534"/>
+        <location filename="../Sources/CApplication.cpp" line="547"/>
         <source>createDSPByType #%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="539"/>
+        <location filename="../Sources/CApplication.cpp" line="552"/>
         <source>dsp-&gt;setParameter(FMOD_DSP_PARAMEQ_CENTER) #%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="544"/>
+        <location filename="../Sources/CApplication.cpp" line="557"/>
         <source>dsp-&gt;setParameter(FMOD_DSP_PARAMEQ_BANDWIDTH) #%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="549"/>
-        <location filename="../Sources/CApplication.cpp" line="715"/>
-        <location filename="../Sources/CApplication.cpp" line="769"/>
+        <location filename="../Sources/CApplication.cpp" line="562"/>
+        <location filename="../Sources/CApplication.cpp" line="728"/>
+        <location filename="../Sources/CApplication.cpp" line="782"/>
         <source>dsp-&gt;setParameter(FMOD_DSP_PARAMEQ_GAIN) #%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="554"/>
+        <location filename="../Sources/CApplication.cpp" line="567"/>
         <source>addDSP #%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="604"/>
+        <location filename="../Sources/CApplication.cpp" line="617"/>
         <source>Database error</source>
         <translation>Database error</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="604"/>
+        <location filename="../Sources/CApplication.cpp" line="617"/>
         <source>File: %1 (%2)
 
 Query: %3
@@ -83,13 +83,13 @@ Query: %3
 Error: %4</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="607"/>
+        <location filename="../Sources/CApplication.cpp" line="620"/>
         <source>Query: </source>
         <translation>Query: </translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="1144"/>
-        <location filename="../Sources/CApplication.cpp" line="1148"/>
+        <location filename="../Sources/CApplication.cpp" line="1157"/>
+        <location filename="../Sources/CApplication.cpp" line="1161"/>
         <source>%n selected song(s), %1</source>
         <translation>
             <numerusform>%n selected song, %1</numerusform>
@@ -97,79 +97,79 @@ Error: %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1468"/>
+        <location filename="../Sources/CApplication.cpp" line="1481"/>
         <source>%2 (%3 line %4): %1</source>
         <translation>%2 (%3 line %4): %1</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2404"/>
+        <location filename="../Sources/CApplication.cpp" line="2415"/>
         <source>several songs selected</source>
         <translation>several songs selected</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2546"/>
+        <location filename="../Sources/CApplication.cpp" line="2557"/>
         <source>error while loading the file &quot;%1&quot; with FMOD</source>
         <translation>error while loading the file &quot;%1&quot; with FMOD</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2555"/>
+        <location filename="../Sources/CApplication.cpp" line="2566"/>
         <source>can&apos;t compute song duration for file &quot;%1&quot;</source>
         <translation>can&apos;t compute song duration for file &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2564"/>
+        <location filename="../Sources/CApplication.cpp" line="2575"/>
         <source>can&apos;t find song format for file &quot;%1&quot;</source>
         <translation>can&apos;t find song format for file &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2571"/>
+        <location filename="../Sources/CApplication.cpp" line="2582"/>
         <source>unknown format</source>
         <translation>unknown format</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="4295"/>
+        <location filename="../Sources/CApplication.cpp" line="4326"/>
         <source>A song is being played. Are you sure you want to quit the application?</source>
         <translation>A song is being played. Are you sure you want to quit the application?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1436"/>
+        <location filename="../Sources/CApplication.cpp" line="1449"/>
         <source>can&apos;t open the log file &quot;%1&quot;</source>
         <translation>can&apos;t open the log file &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="1524"/>
-        <location filename="../Sources/CApplication.cpp" line="1545"/>
-        <location filename="../Sources/CApplication.cpp" line="1561"/>
-        <location filename="../Sources/CApplication.cpp" line="1881"/>
-        <location filename="../Sources/CApplication.cpp" line="2637"/>
-        <location filename="../Sources/CApplication.cpp" line="2652"/>
-        <location filename="../Sources/CApplication.cpp" line="2701"/>
+        <location filename="../Sources/CApplication.cpp" line="1537"/>
+        <location filename="../Sources/CApplication.cpp" line="1558"/>
+        <location filename="../Sources/CApplication.cpp" line="1574"/>
+        <location filename="../Sources/CApplication.cpp" line="1890"/>
+        <location filename="../Sources/CApplication.cpp" line="2648"/>
+        <location filename="../Sources/CApplication.cpp" line="2663"/>
+        <location filename="../Sources/CApplication.cpp" line="2712"/>
         <source>invalid pointer</source>
         <translation>invalid pointer</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2062"/>
+        <location filename="../Sources/CApplication.cpp" line="2073"/>
         <source>invalid argument (%1)</source>
         <translation>invalid argument (%1)</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2174"/>
-        <location filename="../Sources/CApplication.cpp" line="2419"/>
+        <location filename="../Sources/CApplication.cpp" line="2185"/>
+        <location filename="../Sources/CApplication.cpp" line="2430"/>
         <source>Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)</source>
         <translation>Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2217"/>
+        <location filename="../Sources/CApplication.cpp" line="2228"/>
         <source>Loading files...</source>
         <translation>Loading files...</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2217"/>
+        <location filename="../Sources/CApplication.cpp" line="2228"/>
         <source>Abort</source>
         <translation>Abort</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="2246"/>
+        <location filename="../Sources/CApplication.cpp" line="2257"/>
         <source>%n song(s) added to the library.</source>
         <translation>
             <numerusform>%n song added to the library.</numerusform>
@@ -177,32 +177,32 @@ Error: %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2431"/>
+        <location filename="../Sources/CApplication.cpp" line="2442"/>
         <source>This file is already in the library. Do you want to merge the two songs?</source>
         <translation>This file is already in the library. Do you want to merge the two songs?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2834"/>
+        <location filename="../Sources/CApplication.cpp" line="2845"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Are you sure you want to delete this playlist?</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2432"/>
-        <location filename="../Sources/CApplication.cpp" line="2835"/>
-        <location filename="../Sources/CApplication.cpp" line="4296"/>
+        <location filename="../Sources/CApplication.cpp" line="2443"/>
+        <location filename="../Sources/CApplication.cpp" line="2846"/>
+        <location filename="../Sources/CApplication.cpp" line="4327"/>
         <source>Yes</source>
         <translation>Yes</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="2433"/>
-        <location filename="../Sources/CApplication.cpp" line="2836"/>
-        <location filename="../Sources/CApplication.cpp" line="4297"/>
+        <location filename="../Sources/CApplication.cpp" line="2444"/>
+        <location filename="../Sources/CApplication.cpp" line="2847"/>
+        <location filename="../Sources/CApplication.cpp" line="4328"/>
         <source>No</source>
         <translation>No</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CApplication.cpp" line="1144"/>
-        <location filename="../Sources/CApplication.cpp" line="4333"/>
+        <location filename="../Sources/CApplication.cpp" line="1157"/>
+        <location filename="../Sources/CApplication.cpp" line="4364"/>
         <source>%n day(s) %1</source>
         <translation>
             <numerusform>%n day %1</numerusform>
@@ -210,28 +210,28 @@ Error: %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3145"/>
+        <location filename="../Sources/CApplication.cpp" line="3172"/>
         <source>This program requires FMOD %1 or superior.</source>
         <translation>This program requires FMOD %1 or superior.</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3210"/>
+        <location filename="../Sources/CApplication.cpp" line="3237"/>
         <source>can&apos;t get number of CD-ROM drives</source>
         <translation>can&apos;t get number of CD-ROM drives</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3224"/>
+        <location filename="../Sources/CApplication.cpp" line="3251"/>
         <source>can&apos;t get name of drive #%1</source>
         <translation>can&apos;t get name of drive #%1</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3423"/>
+        <location filename="../Sources/CApplication.cpp" line="3454"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../Sources/CApplication.cpp" line="3432"/>
-        <location filename="../Sources/CApplication.cpp" line="3441"/>
+        <location filename="../Sources/CApplication.cpp" line="3463"/>
+        <location filename="../Sources/CApplication.cpp" line="3472"/>
         <source>Play</source>
         <translation>Play</translation>
     </message>
@@ -1218,30 +1218,35 @@ Error: %4</translation>
 <context>
     <name>CListModel</name>
     <message>
-        <location filename="../Sources/CListModel.cpp" line="116"/>
+        <location filename="../Sources/CListModel.cpp" line="117"/>
         <source>le dossier parent a un identifiant invalide</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CListModel.cpp" line="146"/>
+        <location filename="../Sources/CListModel.cpp" line="147"/>
         <source>invalid identifier (%1)</source>
         <translation>invalid identifier (%1)</translation>
     </message>
     <message>
-        <location filename="../Sources/CListModel.cpp" line="152"/>
+        <location filename="../Sources/CListModel.cpp" line="153"/>
         <source>le dossier contenant le dossier a un identifiant invalide</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CListModel.cpp" line="182"/>
-        <location filename="../Sources/CListModel.cpp" line="253"/>
+        <location filename="../Sources/CListModel.cpp" line="183"/>
+        <location filename="../Sources/CListModel.cpp" line="254"/>
         <source>le dossier contenant la liste statique a un identifiant invalide</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CListModel.cpp" line="300"/>
+        <location filename="../Sources/CListModel.cpp" line="301"/>
         <source>Library</source>
         <translation>Library</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CListModel.cpp" line="308"/>
+        <source>Queue</source>
+        <translation>Queue</translation>
     </message>
     <message>
         <location filename="../Sources/CListModel.cpp" line="498"/>
@@ -1254,18 +1259,18 @@ Error: %4</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CListModel.cpp" line="595"/>
+        <location filename="../Sources/CListModel.cpp" line="594"/>
         <source>invalid folder</source>
         <translation>invalid folder</translation>
     </message>
     <message>
-        <location filename="../Sources/CListModel.cpp" line="616"/>
-        <location filename="../Sources/CListModel.cpp" line="709"/>
+        <location filename="../Sources/CListModel.cpp" line="615"/>
+        <location filename="../Sources/CListModel.cpp" line="708"/>
         <source>invalid playlist</source>
         <translation>invalid playlist</translation>
     </message>
     <message>
-        <location filename="../Sources/CListModel.cpp" line="698"/>
+        <location filename="../Sources/CListModel.cpp" line="697"/>
         <source>invalid folter</source>
         <translation>invalid folder</translation>
     </message>
@@ -1338,42 +1343,42 @@ Error: %4</translation>
 <context>
     <name>CPlayListView</name>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="78"/>
-        <location filename="../Sources/CPlayListView.cpp" line="82"/>
+        <location filename="../Sources/CPlayListView.cpp" line="79"/>
+        <location filename="../Sources/CPlayListView.cpp" line="83"/>
         <source>Edit...</source>
         <translation>Edit...</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="79"/>
-        <location filename="../Sources/CPlayListView.cpp" line="83"/>
+        <location filename="../Sources/CPlayListView.cpp" line="80"/>
+        <location filename="../Sources/CPlayListView.cpp" line="84"/>
         <source>Remove</source>
         <translation>Remove</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="85"/>
-        <location filename="../Sources/CPlayListView.cpp" line="90"/>
+        <location filename="../Sources/CPlayListView.cpp" line="86"/>
+        <location filename="../Sources/CPlayListView.cpp" line="91"/>
         <source>New playlist...</source>
         <translation>New playlist...</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="86"/>
-        <location filename="../Sources/CPlayListView.cpp" line="91"/>
+        <location filename="../Sources/CPlayListView.cpp" line="87"/>
+        <location filename="../Sources/CPlayListView.cpp" line="92"/>
         <source>New dynamic playlist...</source>
         <translation>New dynamic playlist...</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="87"/>
-        <location filename="../Sources/CPlayListView.cpp" line="92"/>
+        <location filename="../Sources/CPlayListView.cpp" line="88"/>
+        <location filename="../Sources/CPlayListView.cpp" line="93"/>
         <source>New folder...</source>
         <translation>New folder...</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="95"/>
+        <location filename="../Sources/CPlayListView.cpp" line="96"/>
         <source>Eject</source>
         <translation>Eject</translation>
     </message>
     <message>
-        <location filename="../Sources/CPlayListView.cpp" line="96"/>
+        <location filename="../Sources/CPlayListView.cpp" line="97"/>
         <source>Informations...</source>
         <translation>Informations...</translation>
     </message>
@@ -1384,56 +1389,161 @@ Error: %4</translation>
     </message>
 </context>
 <context>
+    <name>CQueuePlayList</name>
+    <message>
+        <location filename="../Sources/CQueuePlayList.cpp" line="117"/>
+        <source>Play</source>
+        <translation>Play</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CQueuePlayList.cpp" line="122"/>
+        <source>Informations...</source>
+        <translation>Informations...</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CQueuePlayList.cpp" line="126"/>
+        <source>Edit metadata...</source>
+        <translation>Edit metadata...</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CQueuePlayList.cpp" line="127"/>
+        <source>Show in explorer</source>
+        <translation>Show in explorer</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CQueuePlayList.cpp" line="131"/>
+        <source>Relocate</source>
+        <translation>Relocate</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CQueuePlayList.cpp" line="136"/>
+        <source>Remove from queue</source>
+        <translation>Remove from queue</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CQueuePlayList.cpp" line="137"/>
+        <source>Remove from library</source>
+        <translation>Remove from library</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CQueuePlayList.cpp" line="142"/>
+        <source>Rename files</source>
+        <translation>Rename files</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CQueuePlayList.cpp" line="144"/>
+        <source>Rename file</source>
+        <translation>Rename file</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CQueuePlayList.cpp" line="149"/>
+        <source>Check song</source>
+        <translation>Check song</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CQueuePlayList.cpp" line="150"/>
+        <source>Uncheck song</source>
+        <translation>Uncheck song</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CQueuePlayList.cpp" line="161"/>
+        <source>Check selection</source>
+        <translation>Check selection</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CQueuePlayList.cpp" line="162"/>
+        <source>Uncheck selection</source>
+        <translation>Uncheck selection</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CQueuePlayList.cpp" line="171"/>
+        <source>Playlists</source>
+        <translation>Playlists</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CQueuePlayList.cpp" line="173"/>
+        <source>Library</source>
+        <translation>Library</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CQueuePlayList.cpp" line="201"/>
+        <source>Add to playlist</source>
+        <translation>Add to playlist</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CQueuePlayList.cpp" line="206"/>
+        <source>There are no playlist</source>
+        <translation>There are no playlist</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CQueuePlayList.cpp" line="223"/>
+        <source>Remove duplicates</source>
+        <translation>Remove duplicates</translation>
+    </message>
+</context>
+<context>
     <name>CScrobble</name>
     <message>
-        <location filename="../Sources/Last.fm/CScrobble.cpp" line="129"/>
-        <location filename="../Sources/Last.fm/CScrobble.cpp" line="222"/>
+        <location filename="../Sources/Last.fm/CScrobble.cpp" line="130"/>
+        <location filename="../Sources/Last.fm/CScrobble.cpp" line="223"/>
         <source>Date:</source>
         <translation>Date:</translation>
     </message>
     <message>
-        <location filename="../Sources/Last.fm/CScrobble.cpp" line="130"/>
+        <location filename="../Sources/Last.fm/CScrobble.cpp" line="131"/>
         <source>Title:</source>
         <translation>Title:</translation>
     </message>
     <message>
-        <location filename="../Sources/Last.fm/CScrobble.cpp" line="131"/>
+        <location filename="../Sources/Last.fm/CScrobble.cpp" line="132"/>
         <source>Artist:</source>
         <translation>Artist:</translation>
     </message>
     <message>
-        <location filename="../Sources/Last.fm/CScrobble.cpp" line="132"/>
+        <location filename="../Sources/Last.fm/CScrobble.cpp" line="133"/>
         <source>Album:</source>
         <translation>Album:</translation>
     </message>
     <message>
-        <location filename="../Sources/Last.fm/CScrobble.cpp" line="133"/>
+        <location filename="../Sources/Last.fm/CScrobble.cpp" line="134"/>
         <source>URL:</source>
         <translation>URL:</translation>
     </message>
     <message>
-        <location filename="../Sources/Last.fm/CScrobble.cpp" line="134"/>
-        <location filename="../Sources/Last.fm/CScrobble.cpp" line="224"/>
+        <location filename="../Sources/Last.fm/CScrobble.cpp" line="135"/>
+        <location filename="../Sources/Last.fm/CScrobble.cpp" line="225"/>
         <source>Content:</source>
         <translation>Content:</translation>
     </message>
     <message>
-        <location filename="../Sources/Last.fm/CScrobble.cpp" line="223"/>
+        <location filename="../Sources/Last.fm/CScrobble.cpp" line="224"/>
         <source>Code:</source>
         <translation>Code:</translation>
     </message>
     <message>
-        <location filename="../Sources/Last.fm/CScrobble.cpp" line="228"/>
-        <source>Erreur HTTP : </source>
+        <location filename="../Sources/Last.fm/CScrobble.cpp" line="229"/>
+        <source>HTTP error: </source>
+        <translation>HTTP error: </translation>
+    </message>
+    <message>
+        <location filename="../Sources/Last.fm/CScrobble.cpp" line="256"/>
+        <source>RÃ©ponse XML incorrecte (Ã©lÃ©ment &apos;lfm&apos; attendu)
+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/Last.fm/CScrobble.cpp" line="267"/>
+        <location filename="../Sources/Last.fm/CScrobble.cpp" line="262"/>
+        <source>Document XML invalide (%1)
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/Last.fm/CScrobble.cpp" line="268"/>
         <source>Song scrobbled to Last.fm (%1 by %2)</source>
         <translation>Song scrobbled to Last.fm (%1 by %2)</translation>
     </message>
     <message>
-        <location filename="../Sources/Last.fm/CScrobble.cpp" line="271"/>
+        <location filename="../Sources/Last.fm/CScrobble.cpp" line="272"/>
         <source>Can&apos;t scrobble the song to Last.fm (%1 by %2)</source>
         <translation>Can&apos;t scrobble the song to Last.fm (%1 by %2)</translation>
     </message>
@@ -1902,67 +2012,67 @@ Error: %4</translation>
 <context>
     <name>CSongTable</name>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="270"/>
+        <location filename="../Sources/CSongTable.hpp" line="273"/>
         <source>Title</source>
         <translation>Title</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="271"/>
+        <location filename="../Sources/CSongTable.hpp" line="274"/>
         <source>Artist</source>
         <translation>Artist</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="272"/>
+        <location filename="../Sources/CSongTable.hpp" line="275"/>
         <source>Album</source>
         <translation>Album</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="273"/>
+        <location filename="../Sources/CSongTable.hpp" line="276"/>
         <source>Album artist</source>
         <translation>Album artist</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="274"/>
+        <location filename="../Sources/CSongTable.hpp" line="277"/>
         <source>Composer</source>
         <translation>Composer</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="275"/>
+        <location filename="../Sources/CSongTable.hpp" line="278"/>
         <source>Year</source>
         <translation>Year</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="276"/>
+        <location filename="../Sources/CSongTable.hpp" line="279"/>
         <source>Track</source>
         <translation>Track</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="277"/>
+        <location filename="../Sources/CSongTable.hpp" line="280"/>
         <source>Disc</source>
         <translation>Disc</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="278"/>
+        <location filename="../Sources/CSongTable.hpp" line="281"/>
         <source>Genre</source>
         <translation>Genre</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="279"/>
+        <location filename="../Sources/CSongTable.hpp" line="282"/>
         <source>Rating</source>
         <translation>Rating</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="280"/>
+        <location filename="../Sources/CSongTable.hpp" line="283"/>
         <source>Comments</source>
         <translation>Comments</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="281"/>
+        <location filename="../Sources/CSongTable.hpp" line="284"/>
         <source>Plays</source>
         <translation>Plays</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="282"/>
+        <location filename="../Sources/CSongTable.hpp" line="285"/>
         <source>Last played</source>
         <translation>Last played</translation>
     </message>
@@ -1971,239 +2081,254 @@ Error: %4</translation>
         <translation type="obsolete">File name</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="283"/>
+        <location filename="../Sources/CSongTable.hpp" line="286"/>
         <source>Pathname</source>
         <translation>Pathname</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="284"/>
+        <location filename="../Sources/CSongTable.hpp" line="287"/>
         <source>Bit rate</source>
         <translation>Bit rate</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="285"/>
+        <location filename="../Sources/CSongTable.hpp" line="288"/>
         <source>Format</source>
         <translation>Format</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="286"/>
+        <location filename="../Sources/CSongTable.hpp" line="289"/>
         <source>Duration</source>
         <translation>Duration</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="287"/>
+        <location filename="../Sources/CSongTable.hpp" line="290"/>
         <source>Sample rate</source>
         <translation>Sample rate</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="288"/>
+        <location filename="../Sources/CSongTable.hpp" line="291"/>
         <source>Creation date</source>
         <translation>Creation date</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="289"/>
+        <location filename="../Sources/CSongTable.hpp" line="292"/>
         <source>Modification date</source>
         <translation>Modification date</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="290"/>
+        <location filename="../Sources/CSongTable.hpp" line="293"/>
         <source>Channels</source>
         <translation>Channels</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="291"/>
+        <location filename="../Sources/CSongTable.hpp" line="294"/>
         <source>File size</source>
         <translation>File size</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="292"/>
+        <location filename="../Sources/CSongTable.hpp" line="295"/>
         <source>Lyrics</source>
         <translation>Lyrics</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="293"/>
+        <location filename="../Sources/CSongTable.hpp" line="296"/>
         <source>Language</source>
         <translation>Language</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="294"/>
+        <location filename="../Sources/CSongTable.hpp" line="297"/>
         <source>Lyricist</source>
         <translation>Lyricist</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="295"/>
+        <location filename="../Sources/CSongTable.hpp" line="298"/>
         <source>Grouping</source>
         <translation>Grouping</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="296"/>
+        <location filename="../Sources/CSongTable.hpp" line="299"/>
         <source>Subtitle</source>
         <translation>Subtitle</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="297"/>
+        <location filename="../Sources/CSongTable.hpp" line="300"/>
         <source>Track gain</source>
         <translation>Track gain</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="298"/>
+        <location filename="../Sources/CSongTable.hpp" line="301"/>
         <source>Track peak</source>
         <translation>Track peak</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="299"/>
+        <location filename="../Sources/CSongTable.hpp" line="302"/>
         <source>Album gain</source>
         <translation>Album gain</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="300"/>
+        <location filename="../Sources/CSongTable.hpp" line="303"/>
         <source>Album peak</source>
         <translation>Album peak</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="301"/>
+        <location filename="../Sources/CSongTable.hpp" line="304"/>
         <source>BPM</source>
         <translation>BPM</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="302"/>
+        <location filename="../Sources/CSongTable.hpp" line="305"/>
         <source>Sort Title</source>
         <translation>Sort Title</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="303"/>
+        <location filename="../Sources/CSongTable.hpp" line="306"/>
         <source>Sort Artist</source>
         <translation>Sort Artist</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="304"/>
+        <location filename="../Sources/CSongTable.hpp" line="307"/>
         <source>Sort Album</source>
         <translation>Sort Album</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="305"/>
+        <location filename="../Sources/CSongTable.hpp" line="308"/>
         <source>Sort Album artist</source>
         <translation>Sort Album artist</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="306"/>
+        <location filename="../Sources/CSongTable.hpp" line="309"/>
         <source>Sort Composer</source>
         <translation>Sort Composer</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.hpp" line="307"/>
+        <location filename="../Sources/CSongTable.hpp" line="310"/>
         <source>Filename</source>
         <translation>Filename</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="358"/>
+        <location filename="../Sources/CSongTable.cpp" line="385"/>
         <source>invalid pointer</source>
         <translation>invalid pointer</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="393"/>
+        <location filename="../Sources/CSongTable.cpp" line="420"/>
         <source>invalid argument</source>
         <translation>invalid argument</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="822"/>
+        <location filename="../Sources/CSongTable.cpp" line="849"/>
         <source>Are you sure you want to remove the selected songs from the library?
 The files will not be deleted.</source>
         <translation>Are you sure you want to remove the selected songs from the library?
 The files will not be deleted.</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="822"/>
+        <location filename="../Sources/CSongTable.cpp" line="849"/>
         <source>Remove</source>
         <translation>Remove</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="822"/>
+        <location filename="../Sources/CSongTable.cpp" line="849"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1075"/>
+        <location filename="../Sources/CSongTable.cpp" line="1128"/>
         <source>invalid identifier (%1)</source>
         <translation>invalid identifier (%1)</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1319"/>
+        <location filename="../Sources/CSongTable.cpp" line="1372"/>
         <source>Play</source>
         <translation>Play</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1324"/>
+        <location filename="../Sources/CSongTable.cpp" line="1377"/>
         <source>Informations...</source>
         <translation>Informations...</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1328"/>
+        <location filename="../Sources/CSongTable.cpp" line="1381"/>
         <source>Edit metadata...</source>
         <translation>Edit metadata...</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1329"/>
+        <location filename="../Sources/CSongTable.cpp" line="1382"/>
         <source>Show in explorer</source>
         <translation>Show in explorer</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1333"/>
+        <location filename="../Sources/CSongTable.cpp" line="1386"/>
         <source>Relocate</source>
         <translation>Relocate</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1338"/>
+        <location filename="../Sources/CSongTable.cpp" line="1391"/>
         <source>Remove from library</source>
         <translation>Remove from library</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1343"/>
+        <location filename="../Sources/CSongTable.cpp" line="1396"/>
         <source>Rename files</source>
         <translation>Rename files</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1345"/>
+        <location filename="../Sources/CSongTable.cpp" line="1398"/>
         <source>Rename file</source>
         <translation>Rename file</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1350"/>
+        <location filename="../Sources/CSongTable.cpp" line="1403"/>
         <source>Check song</source>
         <translation>Check song</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1351"/>
+        <location filename="../Sources/CSongTable.cpp" line="1404"/>
         <source>Uncheck song</source>
         <translation>Uncheck song</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1362"/>
+        <location filename="../Sources/CSongTable.cpp" line="1415"/>
         <source>Check selection</source>
         <translation>Check selection</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1363"/>
+        <location filename="../Sources/CSongTable.cpp" line="1416"/>
         <source>Uncheck selection</source>
         <translation>Uncheck selection</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1372"/>
+        <location filename="../Sources/CSongTable.cpp" line="1424"/>
+        <source>Queue</source>
+        <translation>Queue</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSongTable.cpp" line="1425"/>
+        <source>Add at the beginning</source>
+        <translation>Add at the beginning</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSongTable.cpp" line="1426"/>
+        <source>Add at the end</source>
+        <translation>Add at the end</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CSongTable.cpp" line="1430"/>
         <source>Playlists</source>
         <translation>Playlists</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1374"/>
+        <location filename="../Sources/CSongTable.cpp" line="1432"/>
         <source>Library</source>
         <translation>Library</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1402"/>
+        <location filename="../Sources/CSongTable.cpp" line="1460"/>
         <source>Add to playlist</source>
         <translation>Add to playlist</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTable.cpp" line="1407"/>
+        <location filename="../Sources/CSongTable.cpp" line="1465"/>
         <source>There are no playlist</source>
         <translation>There are no playlist</translation>
     </message>
@@ -2251,21 +2376,21 @@ The files will not be deleted.</translation>
         <translation>%1 dB</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTableModel.cpp" line="1111"/>
-        <location filename="../Sources/CSongTableModel.cpp" line="1168"/>
+        <location filename="../Sources/CSongTableModel.cpp" line="1119"/>
+        <location filename="../Sources/CSongTableModel.cpp" line="1176"/>
         <source>the requested item is not in the table</source>
         <translation>the requested item is not in the table</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTableModel.cpp" line="1121"/>
-        <location filename="../Sources/CSongTableModel.cpp" line="1178"/>
-        <location filename="../Sources/CSongTableModel.cpp" line="1210"/>
+        <location filename="../Sources/CSongTableModel.cpp" line="1129"/>
+        <location filename="../Sources/CSongTableModel.cpp" line="1186"/>
+        <location filename="../Sources/CSongTableModel.cpp" line="1218"/>
         <source>the shuffle list is incorrect</source>
         <translation>the shuffle list is incorrect</translation>
     </message>
     <message>
-        <location filename="../Sources/CSongTableModel.cpp" line="1128"/>
-        <location filename="../Sources/CSongTableModel.cpp" line="1185"/>
+        <location filename="../Sources/CSongTableModel.cpp" line="1136"/>
+        <location filename="../Sources/CSongTableModel.cpp" line="1193"/>
         <source>the requested item is not in the shuffle list</source>
         <translation>the requested item is not in the shuffle list</translation>
     </message>
@@ -2379,27 +2504,42 @@ Would you like to add them?</translation>
         <translation>Uncheck selection</translation>
     </message>
     <message>
+        <location filename="../Sources/CStaticPlayList.cpp" line="785"/>
+        <source>Queue</source>
+        <translation>Queue</translation>
+    </message>
+    <message>
         <location filename="../Sources/CStaticPlayList.cpp" line="786"/>
+        <source>Add at the beginning</source>
+        <translation>Add at the beginning</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CStaticPlayList.cpp" line="787"/>
+        <source>Add at the end</source>
+        <translation>Add at the end</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CStaticPlayList.cpp" line="791"/>
         <source>Playlists</source>
         <translation>Playlists</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="788"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="793"/>
         <source>Library</source>
         <translation>Library</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="816"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="821"/>
         <source>Add to playlist</source>
         <translation>Add to playlist</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="821"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="826"/>
         <source>There are no playlist</source>
         <translation>There are no playlist</translation>
     </message>
     <message>
-        <location filename="../Sources/CStaticPlayList.cpp" line="838"/>
+        <location filename="../Sources/CStaticPlayList.cpp" line="843"/>
         <source>Remove duplicates</source>
         <translation>Remove duplicates</translation>
     </message>

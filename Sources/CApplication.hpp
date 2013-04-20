@@ -36,6 +36,7 @@ class CSong;
 class CSongTable;
 class CFolder;
 class CCDRomDrive;
+class CQueuePlayList;
 class IPlayList;
 class CPlayListView;
 class CDynamicList;
@@ -201,6 +202,11 @@ public:
         return m_settings;
     }
 
+    inline CQueuePlayList * getQueue() const
+    {
+        return m_queue;
+    }
+
     inline QList<CCDRomDrive *> getCDRomDrives() const
     {
         return m_cdRomDrives;
@@ -216,7 +222,6 @@ public:
     void notifyInformation(const QString& message);
 
     void openDialogCreateStaticList(CFolder * folder, const QList<CSong *>& songs = QList<CSong *>());
-
     static QString durationToString(qlonglong durationMS);
 
 public slots:
@@ -238,10 +243,11 @@ public slots:
 #endif
     void setNextRepeatMode();
     void setRepeatMode(TRepeatMode repeatMode);
-
+    
 #if QT_VERSION < 0x050000
     void setShuffle();
 #endif
+
     void setShuffle(bool shuffle);
     void setMute(bool mute);
     void toggleMute();
@@ -257,6 +263,7 @@ public slots:
     void openDialogAddSongs();
     void openDialogAddFolder();
     void openDialogSongInfos();
+    
     void openDialogCreateStaticList();
     void openDialogCreateDynamicList(CFolder * folder = NULL);
     void openDialogCreateFolder(CFolder * folder = NULL);
@@ -273,6 +280,12 @@ public slots:
     void editSelectedItem();
     void removeSelectedItem();
     void onSongModified();
+    
+#if QT_VERSION >= 0x050000
+    void openDialogCreateStaticList_Slot(bool checked) { openDialogCreateStaticList(); }
+    void openDialogCreateDynamicList_Slot(bool checked) { openDialogCreateDynamicList(); }
+    void openDialogCreateFolder_Slot(bool checked) { openDialogCreateFolder(); }
+#endif
 
 signals:
 
@@ -338,6 +351,7 @@ private:
     Ui::WidgetControl * m_uiControl;      ///< Widget représentant la barre de contrôle.
     QTranslator m_translator;
     QList<CCDRomDrive *> m_cdRomDrives;   ///< Liste des lecteurs de CD-ROM.
+    CQueuePlayList * m_queue;             ///< File d'attente.
     FMOD::System * m_soundSystem;         ///< Système de son de FMOD.
     CPlayListView * m_playListView;       ///< Vue pour afficher les listes de lecture.
     CListModel * m_listModel;             ///< Modèle contenant les listes de lecture.

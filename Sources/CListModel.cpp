@@ -24,6 +24,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CDynamicList.hpp"
 #include "CLibrary.hpp"
 #include "CCDRomDrive.hpp"
+#include "CQueuePlayList.hpp"
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QMimeData>
@@ -304,13 +305,12 @@ void CListModel::clear()
     m_songTableItems[libraryItem] = m_application->getLibrary();
 
     // Ajout de la file d'attente
-/*
     QStandardItem * queueItem = new QStandardItem(QPixmap(":/icons/queue"), tr("Queue"));
     queueItem->setData(QVariant::fromValue(qobject_cast<CSongTable *>(m_application->getQueue())), Qt::UserRole + 1);
 
     appendRow(queueItem);
     m_songTableItems[queueItem] = m_application->getQueue();
-*/
+
     // Ajout des lecteurs de CD-ROM
     QList<CCDRomDrive *> drives = m_application->getCDRomDrives();
 
@@ -531,7 +531,6 @@ void CListModel::addPlayList(IPlayList * playList)
     if (dynamicList)
     {
         playListItem->setIcon(QPixmap(":/icons/dynamic_list"));
-
 
         connect(dynamicList, SIGNAL(listUpdated()), m_application, SLOT(updateListInformations()));
     }
@@ -787,15 +786,28 @@ bool CListModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int
         if (parent.isValid())
         {
             CSongTable * songTable = this->data(parent, Qt::UserRole + 1).value<CSongTable *>();
-            CStaticPlayList * playList = qobject_cast<CStaticPlayList *>(songTable);
-
-            if (songTable && playList)
+            
+            if (songTable)
             {
-                QByteArray encodedData = data->data("application/x-ted-media-songs");
-                QList<CSong *> songList = decodeDataSongs(encodedData);
+                CStaticPlayList * playList = qobject_cast<CStaticPlayList *>(songTable);
+                CQueuePlayList * queue = qobject_cast<CQueuePlayList *>(songTable);
 
-                playList->addSongs(songList);
-                return true;
+                if (playList)
+                {
+                    QByteArray encodedData = data->data("application/x-ted-media-songs");
+                    QList<CSong *> songList = decodeDataSongs(encodedData);
+                 
+                    playList->addSongs(songList);
+                    return true;
+                }
+                else if (queue)
+                {
+                    QByteArray encodedData = data->data("application/x-ted-media-songs");
+                    QList<CSong *> songList = decodeDataSongs(encodedData);
+                 
+                    queue->addSongs(songList);
+                    return true;
+                }
             }
 
             return false;

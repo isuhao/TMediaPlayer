@@ -44,6 +44,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CSliderStyle.hpp"
 #include "CWidgetLyrics.hpp"
 #include "CCDRomDrive.hpp"
+#include "CQueuePlayList.hpp"
 
 // Last.fm
 #include "Last.fm/CAuthentication.hpp"
@@ -79,8 +80,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 const int timerPeriod = 250; ///< Intervalle entre chaque mise-à-jour des informations.
 
-const QString appVersion = "1.0.45";     ///< Numéro de version de l'application.
-const QString appDate    = "25/03/2013"; ///< Date de sortie de cette version.
+const QString appVersion = "1.0.46";     ///< Numéro de version de l'application.
+const QString appDate    = "20/04/2013"; ///< Date de sortie de cette version.
 
 
 QString CApplication::getAppVersion()
@@ -103,6 +104,7 @@ CApplication::CApplication() :
     QMainWindow            (NULL),
     m_uiWidget             (new Ui::TMediaPlayer()),
     m_uiControl            (new Ui::WidgetControl()),
+    m_queue                (NULL),
     m_soundSystem          (NULL),
     m_playListView         (NULL),
     m_listModel            (NULL),
@@ -176,9 +178,9 @@ CApplication::CApplication() :
 
     // Menus
 #if QT_VERSION >= 0x050000
-    connect(m_uiWidget->actionNewPlayList       , &QAction::triggered, this, &CApplication::openDialogCreateStaticList );
-    connect(m_uiWidget->actionNewDynamicPlayList, &QAction::triggered, this, &CApplication::openDialogCreateDynamicList);
-    connect(m_uiWidget->actionNewFolder         , &QAction::triggered, this, &CApplication::openDialogCreateFolder     );
+    connect(m_uiWidget->actionNewPlayList       , &QAction::triggered, this, &CApplication::openDialogCreateStaticList_Slot );
+    connect(m_uiWidget->actionNewDynamicPlayList, &QAction::triggered, this, &CApplication::openDialogCreateDynamicList_Slot);
+    connect(m_uiWidget->actionNewFolder         , &QAction::triggered, this, &CApplication::openDialogCreateFolder_Slot     );
     connect(m_uiWidget->actionAddFiles          , &QAction::triggered, this, &CApplication::openDialogAddSongs         );
     connect(m_uiWidget->actionAddFolder         , &QAction::triggered, this, &CApplication::openDialogAddFolder        );
     connect(m_uiWidget->actionInformations      , &QAction::triggered, this, &CApplication::openDialogSongInfos        );
@@ -211,7 +213,8 @@ CApplication::CApplication() :
     connect(m_uiWidget->actionMute              , &QAction::triggered, this, &CApplication::setMute                    );
     connect(m_uiWidget->actionEqualizer         , &QAction::triggered, this, &CApplication::openDialogEqualizer        );
 
-    connect(m_uiWidget->actionAboutQt           , &QAction::triggered, qApp, &QApplication::aboutQt                    );
+    //connect(m_uiWidget->actionAboutQt           , &QAction::triggered, qApp, &QApplication::aboutQt                    );
+    connect(m_uiWidget->actionAboutQt           , SIGNAL(triggered(    )), qApp, SLOT(aboutQt                    ()));
     connect(m_uiWidget->actionAbout             , &QAction::triggered, this, &CApplication::openDialogAbout            );
 
 
@@ -278,6 +281,7 @@ CApplication::~CApplication()
     //dumpObjectTree();
 
     delete m_listModel;
+    delete m_queue;
 
     // Destruction des lecteurs de CD-ROM
     for (QList<CCDRomDrive *>::const_iterator drive = m_cdRomDrives.begin(); drive != m_cdRomDrives.end(); ++drive)
@@ -412,12 +416,21 @@ bool CApplication::initWindow()
     connect(m_uiControl->btnTogglePlay, SIGNAL(clicked()), this, SLOT(togglePlay()));
     connect(m_uiControl->btnStop, SIGNAL(clicked()), this, SLOT(stop()));
 
-    connect(m_uiControl->btnPrevious, SIGNAL(clicked()), this, SLOT(previousSong()));
-    connect(m_uiControl->btnNext, SIGNAL(clicked()), this, SLOT(nextSong()));
-
-    connect(m_uiControl->btnRepeat, SIGNAL(clicked()), this, SLOT(setNextRepeatMode()));
-    connect(m_uiControl->btnShuffle, SIGNAL(clicked()), this, SLOT(setShuffle()));
-    connect(m_uiControl->btnMute, SIGNAL(clicked()), this, SLOT(toggleMute()));
+#if QT_VERSION < 0x050000
+    connect(m_uiControl->btnPrevious, SIGNAL(clicked()), this, SLOT(previousSong())     );
+    connect(m_uiControl->btnNext    , SIGNAL(clicked()), this, SLOT(nextSong())         );
+    
+    connect(m_uiControl->btnRepeat  , SIGNAL(clicked()), this, SLOT(setNextRepeatMode()));
+    connect(m_uiControl->btnShuffle , SIGNAL(clicked()), this, SLOT(setShuffle())       );
+    connect(m_uiControl->btnMute    , SIGNAL(clicked()), this, SLOT(toggleMute())       );
+#else
+    connect(m_uiControl->btnPrevious, &QToolButton::clicked, this, &CApplication::previousSong     );
+    connect(m_uiControl->btnNext    , &QToolButton::clicked, this, &CApplication::nextSong         );
+    
+    connect(m_uiControl->btnRepeat  , &QToolButton::clicked, this, &CApplication::setNextRepeatMode);
+    connect(m_uiControl->btnShuffle , &QToolButton::clicked, this, &CApplication::setShuffle       );
+    connect(m_uiControl->btnMute    , &QToolButton::clicked, this, &CApplication::toggleMute       );
+#endif
 
     connect(m_uiControl->btnClearFilter, SIGNAL(clicked()), this, SLOT(clearFilter()));
 
@@ -1652,10 +1665,6 @@ void CApplication::stop()
 
         m_currentSongTable->m_model->setCurrentSong(NULL);
     }
-    else
-    {
-        Q_ASSERT(m_currentSongTable == NULL);
-    }
 
     m_currentSongTable = NULL;
     m_state = Stopped;
@@ -1962,6 +1971,7 @@ void CApplication::setRepeatMode(TRepeatMode repeatMode)
     }
 }
 
+#if QT_VERSION < 0x050000
 
 /**
  * Inverse l'état de la lecture aléatoire.
@@ -1972,6 +1982,7 @@ void CApplication::setShuffle()
     setShuffle(!m_isShuffle);
 }
 
+#endif
 
 /**
  * Active ou désactive la lecture aléatoire.
@@ -2890,10 +2901,26 @@ void CApplication::onPlayEnd()
 {
     if (m_currentSongItem)
     {
+        if (m_currentSongTable == m_queue)
+        {
+            m_queue->removeSongFromTable(m_currentSongItem->getPosition() - 1);
+        }
+
         CSong * currentSong = m_currentSongItem->getSong();
 
         updateSongDescription(NULL);
-        nextSong();
+
+        CSongTableItem * queueSong = m_queue->getSongItemForRow(0);
+
+        if (queueSong)
+        {
+            displaySongTable(m_queue);
+            playSong(queueSong);
+        }
+        else
+        {
+            nextSong();
+        }
 
         emit songPlayEnd(currentSong);
 
@@ -3234,6 +3261,10 @@ bool CApplication::initSoundSystem()
             }
         }
     }
+
+    // File d'attente
+    m_queue = new CQueuePlayList(this);
+    m_queue->hide();
 
     return ret;
 }

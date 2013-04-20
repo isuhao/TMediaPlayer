@@ -27,6 +27,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CDynamicList.hpp"
 #include "CRatingDelegate.hpp"
 #include "CLibrary.hpp"
+#include "CQueuePlayList.hpp"
 #include "Utils.hpp"
 
 #include <QStringList>
@@ -212,6 +213,12 @@ CSongTableItem * CSongTable::getSelectedSongItem() const
 }
 
 
+/**
+ * Retourne la liste des éléments sélectionnés.
+ *
+ * \return Liste des éléments sélectionnés.
+ */
+
 QList<CSongTableItem *> CSongTable::getSelectedSongItems() const
 {
     QList<CSongTableItem *> songItemList;
@@ -225,6 +232,26 @@ QList<CSongTableItem *> CSongTable::getSelectedSongItems() const
     }
 
     return songItemList;
+}
+
+
+/**
+ * Retourne la liste des morceaux sélectionnés.
+ *
+ * \return Liste des morceaux sélectionnés.
+ */
+
+QList<CSong *> CSongTable::getSelectedSongs() const
+{
+    QList<CSong *> songs;
+    QModelIndexList indexList = selectionModel()->selectedRows();
+
+    for (QModelIndexList::const_iterator it = indexList.begin(); it != indexList.end(); ++it)
+    {
+        songs.append(m_model->m_data.at(it->row())->getSong());
+    }
+
+    return songs;
 }
 
 
@@ -930,6 +957,32 @@ void CSongTable::onSelectionChange()
 }
 
 
+void CSongTable::addSongToQueueBegining()
+{
+    // Liste des morceaux sélectionnés
+    QList<CSong *> songs = getSelectedSongs();
+
+    if (songs.isEmpty())
+        return;
+
+    CQueuePlayList * queue = m_application->getQueue();
+    queue->addSongs(songs, 0);
+}
+
+
+void CSongTable::addSongToQueueEnd()
+{
+    // Liste des morceaux sélectionnés
+    QList<CSong *> songs = getSelectedSongs();
+
+    if (songs.isEmpty())
+        return;
+
+    CQueuePlayList * queue = m_application->getQueue();
+    queue->addSongs(songs, -1);
+}
+
+
 QString CSongTable::getColumnsInfos() const
 {
     QString str;
@@ -1367,6 +1420,11 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
 
         if (!severalSongs)
         {
+            // File d'attente
+            QMenu * menuQueue = menu->addMenu(tr("Queue"));
+            menuQueue->addAction(tr("Add at the beginning"), this, SLOT(addSongToQueueBegining()));
+            menuQueue->addAction(tr("Add at the end"), this, SLOT(addSongToQueueEnd()));
+
             // Listes de lecture contenant le morceau
             //TODO: gérer les dossiers
             QMenu * menuPlayList = menu->addMenu(tr("Playlists"));

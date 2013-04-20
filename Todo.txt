@@ -65,8 +65,6 @@
 
 - Installateur : pouvoir choisir la base de données à utiliser.
 
-- N'autoriser qu'une seule instance de l'application.
-
 - Recherche de paroles :
   - Ajouter un bouton pour rechercher les paroles dans les fenêtre "Edit Song(s)".
   - Pouvoir ajouter facilement d'autres sites (plugins ?).

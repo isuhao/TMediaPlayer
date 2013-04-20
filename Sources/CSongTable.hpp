@@ -129,6 +129,7 @@ public:
     int getRowForSongItem(CSongTableItem * songItem) const;
     CSongTableItem * getSelectedSongItem() const;
     QList<CSongTableItem *> getSelectedSongItems() const;
+    QList<CSong *> getSelectedSongs() const;
     CSongTableItem * getPreviousSong(CSongTableItem * songItem, bool shuffle) const;
     CSongTableItem * getNextSong(CSongTableItem * songItem, bool shuffle) const;
     CSongTableItem * getLastSong(bool shuffle) const;
@@ -170,6 +171,8 @@ protected slots:
     void uncheckSelection();
     void onRowCountChange(const QModelIndex& parent, int start, int end);
     void onSelectionChange();
+    void addSongToQueueBegining();
+    void addSongToQueueEnd();
 
 protected:
 

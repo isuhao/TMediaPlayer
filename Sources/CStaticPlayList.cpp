@@ -781,6 +781,11 @@ void CStaticPlayList::openCustomMenuProject(const QPoint& point)
 
         if (!severalSongs)
         {
+            // File d'attente
+            QMenu * menuQueue = menu->addMenu(tr("Queue"));
+            menuQueue->addAction(tr("Add at the beginning"), this, SLOT(addSongToQueueBegining()));
+            menuQueue->addAction(tr("Add at the end"), this, SLOT(addSongToQueueEnd()));
+
             // Listes de lecture contenant le morceau
             //TODO: gérer les dossiers
             QMenu * menuPlayList = menu->addMenu(tr("Playlists"));
