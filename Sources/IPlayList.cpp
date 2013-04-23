@@ -19,18 +19,18 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "IPlayList.hpp"
 #include "CFolder.hpp"
-#include "CApplication.hpp"
+#include "CMainWindow.hpp"
 #include <QSqlQuery>
 #include <QSqlError>
 
 
-IPlayList::IPlayList(CApplication * application, const QString& name) :
-    CSongTable           (application),
-    m_name               (name),
-  //m_position           (1),
-    m_folder             (NULL),
-    m_isPlayListModified (false),
-    m_folderChanging     (false)
+IPlayList::IPlayList(CMainWindow * application, const QString& name) :
+CMediaTableView           (application),
+m_name               (name),
+//m_position           (1),
+m_folder             (nullptr),
+m_isPlayListModified (false),
+m_folderChanging     (false)
 {
 
 }
@@ -38,7 +38,7 @@ IPlayList::IPlayList(CApplication * application, const QString& name) :
 
 IPlayList::~IPlayList()
 {
-    //qDebug() << "IPlayList::~IPlayList()";
+
 }
 
 
@@ -59,7 +59,7 @@ bool IPlayList::hasAncestor(CFolder * folder) const
 
 bool IPlayList::isModified() const
 {
-    return (m_isPlayListModified || CSongTable::isModified());
+    return (m_isPlayListModified || CMediaTableView::isModified());
 }
 
 
@@ -85,7 +85,7 @@ void IPlayList::setName(const QString& name)
 /**
  * Modifie le dossier contenant la liste de lecture.
  *
- * \param folder Pointeur sur le dossier qui contiendra la liste, ou NULL si la
+ * \param folder Pointeur sur le dossier qui contiendra la liste, ou nullptr si la
  *               liste n'est pas dans un dossier.
  */
 
@@ -161,7 +161,7 @@ bool IPlayList::updateDatabase()
         }
     }
 
-    return CSongTable::updateDatabase();
+    return CMediaTableView::updateDatabase();
 }
 
 

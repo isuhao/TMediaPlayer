@@ -27,17 +27,17 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 class CSong;
 class CDynamicList;
-class CApplication;
-class IWidgetCriteria;
+class CMainWindow;
+class IWidgetCriterion;
 
 
-class ICriteria : public QObject
+class ICriterion : public QObject
 {
     Q_OBJECT
 
     friend class CDynamicList;
-    friend class CWidgetCriteria;
-    friend class CMultiCriterion; /// La méthode ICriteria::setPlayList est innaccessible depuis CMultiCriterion::setPlayList !
+    friend class CWidgetCriterion;
+    friend class CMultiCriteria; /// La méthode ICriterion::setPlayList est innaccessible depuis CMultiCriteria::setPlayList !
 
 public:
 
@@ -160,8 +160,8 @@ public:
     Q_DECLARE_FLAGS(TUpdateConditions, TUpdateCondition)
 
 
-    explicit ICriteria(CApplication * application, QObject * parent = NULL);
-    virtual ~ICriteria();
+    explicit ICriterion(CMainWindow * application, QObject * parent = nullptr);
+    virtual ~ICriterion();
 
     inline int getId() const;
     inline int getType() const;
@@ -170,11 +170,11 @@ public:
     inline QVariant getValue2() const;
     inline CDynamicList * getPlayList() const;
 
-    virtual bool matchCriteria(CSong * song) const = 0;
+    virtual bool matchCriterion(CSong * song) const = 0;
     virtual QList<CSong *> getSongs(const QList<CSong *>& from, const QList<CSong *>& with = QList<CSong *>(), bool onlyChecked = false) const;
     virtual inline TUpdateConditions getUpdateConditions() const;
 
-    virtual IWidgetCriteria * getWidget() const = 0;
+    virtual IWidgetCriterion * getWidget() const = 0;
 
 protected:
 
@@ -182,20 +182,20 @@ protected:
     int m_condition;   ///< Condition. (TCondition)
     QVariant m_value1; ///< Valeur 1.
     QVariant m_value2; ///< Valeur 2.
-    CApplication * m_application;
+    CMainWindow * m_application;
 
     virtual void setPlayList(CDynamicList * playList);
-    virtual void insertIntoDatabase(CApplication * application);
+    virtual void insertIntoDatabase(CMainWindow * application);
 
 private:
 
-    int m_id;                      ///< Identifiant du critère en base de données.
-    int m_position;                ///< Position du critère.
-    ICriteria * m_parent;          ///< Pointeur sur le critère parent.
+    int m_id;                  ///< Identifiant du critère en base de données.
+    int m_position;            ///< Position du critère.
+    ICriterion * m_parent;     ///< Pointeur sur le critère parent.
     CDynamicList * m_playList; ///< Pointeur sur la liste de lecture dynamique.
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(ICriteria::TUpdateConditions)
+Q_DECLARE_OPERATORS_FOR_FLAGS(ICriterion::TUpdateConditions)
 
 
 /**
@@ -204,7 +204,7 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(ICriteria::TUpdateConditions)
  * \return Identifiant du critère.
  */
 
-inline int ICriteria::getId() const
+inline int ICriterion::getId() const
 {
     return m_id;
 }
@@ -216,37 +216,37 @@ inline int ICriteria::getId() const
  * \return Type du critère.
  */
 
-inline int ICriteria::getType() const
+inline int ICriterion::getType() const
 {
     return m_type;
 }
 
 
-inline int ICriteria::getCondition() const
+inline int ICriterion::getCondition() const
 {
     return m_condition;
 }
 
 
-inline QVariant ICriteria::getValue1() const
+inline QVariant ICriterion::getValue1() const
 {
     return m_value1;
 }
 
 
-inline QVariant ICriteria::getValue2() const
+inline QVariant ICriterion::getValue2() const
 {
     return m_value2;
 }
 
 
-inline CDynamicList * ICriteria::getPlayList() const
+inline CDynamicList * ICriterion::getPlayList() const
 {
     return m_playList;
 }
 
 
-inline ICriteria::TUpdateConditions ICriteria::getUpdateConditions() const
+inline ICriterion::TUpdateConditions ICriterion::getUpdateConditions() const
 {
     return UpdateNever;
 }

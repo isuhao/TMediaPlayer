@@ -46,8 +46,8 @@ public:
         inline TScrobbleInfos() : duration(0), timestamp(0), trackNumber(0) { }
     };
 
-    CScrobble(CApplication * application, const QByteArray& sessionKey, CSong * song);
-    CScrobble(CApplication * application, const QByteArray& sessionKey, const TScrobbleInfos& song);
+    CScrobble(CMainWindow * application, const QByteArray& sessionKey, CSong * song);
+    CScrobble(CMainWindow * application, const QByteArray& sessionKey, const TScrobbleInfos& song);
 
 protected:
 

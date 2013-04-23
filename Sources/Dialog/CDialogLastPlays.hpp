@@ -24,7 +24,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "ui_DialogLastPlays.h"
 
 
-class CApplication;
+class CMainWindow;
 
 
 class CDialogLastPlays : public QDialog
@@ -33,13 +33,13 @@ class CDialogLastPlays : public QDialog
 
 public:
 
-    explicit CDialogLastPlays(CApplication * application);
+    explicit CDialogLastPlays(CMainWindow * application);
     virtual ~CDialogLastPlays();
 
 private:
 
     Ui::DialogLastPlays * m_uiWidget;
-    CApplication * m_application;
+    CMainWindow * m_application;
 };
 
 #endif // FILE_C_DIALOG_LAST_PLAYS

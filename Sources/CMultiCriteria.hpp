@@ -20,7 +20,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #ifndef FILE_C_MULTI_CRITERION
 #define FILE_C_MULTI_CRITERION
 
-#include "ICriteria.hpp"
+#include "ICriterion.hpp"
 #include <QList>
 
 
@@ -28,49 +28,49 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * Critère contenant des sous-critères.
  */
 
-class CMultiCriterion : public ICriteria
+class CMultiCriteria : public ICriterion
 {
     Q_OBJECT
 
 public:
 
-    enum TMultiCriterionType
+    enum TMultiCriteriaType
     {
         Union        = 0, ///< N'importe quel critère.
         Intersection = 1  ///< Tous les critères.
     };
 
-    static inline TMultiCriterionType getMultiCriterionTypeFromInteger(int type);
+    static inline TMultiCriteriaType getMultiCriteriaTypeFromInteger(int type);
 
 
-    explicit CMultiCriterion(CApplication * application, QObject * parent = NULL);
-    virtual ~CMultiCriterion();
+    explicit CMultiCriteria(CMainWindow * application, QObject * parent = nullptr);
+    virtual ~CMultiCriteria();
 
-    TMultiCriterionType getMultiCriterionType() const;
-    inline QList<ICriteria *> getChildren() const;
+    TMultiCriteriaType getMultiCriteriaType() const;
+    inline QList<ICriterion *> getChildren() const;
     inline int getNumChildren() const;
 
-    void setMultiCriterionType(TMultiCriterionType type);
-    void addChild(ICriteria * child);
+    void setMultiCriteriaType(TMultiCriteriaType type);
+    void addChild(ICriterion * child);
 
-    virtual bool matchCriteria(CSong * song) const;
+    virtual bool matchCriterion(CSong * song) const;
     virtual QList<CSong *> getSongs(const QList<CSong *>& from, const QList<CSong *>& with = QList<CSong *>()) const;
     virtual TUpdateConditions getUpdateConditions() const;
 
-    virtual IWidgetCriteria * getWidget() const;
+    virtual IWidgetCriterion * getWidget() const;
 
 protected:
 
     virtual void setPlayList(CDynamicList * playList);
-    virtual void insertIntoDatabase(CApplication * application);
+    virtual void insertIntoDatabase(CMainWindow * application);
 
 private:
 
-    QList<ICriteria *> m_children;
+    QList<ICriterion *> m_children;
 };
 
 
-inline CMultiCriterion::TMultiCriterionType CMultiCriterion::getMultiCriterionTypeFromInteger(int type)
+inline CMultiCriteria::TMultiCriteriaType CMultiCriteria::getMultiCriteriaTypeFromInteger(int type)
 {
     switch (type)
     {
@@ -81,13 +81,13 @@ inline CMultiCriterion::TMultiCriterionType CMultiCriterion::getMultiCriterionTy
 }
 
 
-inline QList<ICriteria *> CMultiCriterion::getChildren() const
+inline QList<ICriterion *> CMultiCriteria::getChildren() const
 {
     return m_children;
 }
 
 
-inline int CMultiCriterion::getNumChildren() const
+inline int CMultiCriteria::getNumChildren() const
 {
     return m_children.size();
 }

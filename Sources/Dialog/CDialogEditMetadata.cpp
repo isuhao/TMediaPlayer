@@ -19,7 +19,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CDialogEditMetadata.hpp"
 #include "../CSong.hpp"
-#include "../CApplication.hpp"
+#include "../CMainWindow.hpp"
 #include <QPushButton>
 #include <QStandardItemModel>
 #include <QMessageBox>
@@ -51,7 +51,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * \param song        Morceau dont on veut afficher les métadonnées.
  */
 
-CDialogEditMetadata::CDialogEditMetadata(CApplication * application, CSong * song) :
+CDialogEditMetadata::CDialogEditMetadata(CMainWindow * application, CSong * song) :
     QDialog       (application),
     m_uiWidget    (new Ui::DialogEditMetadata()),
     m_application (application),
@@ -217,7 +217,7 @@ void CDialogEditMetadata::reset()
             initTagID3v1(file.ID3v1Tag(true));
             initTagID3v2(file.ID3v2Tag(true));
             initTagAPE(file.APETag(false));
-            initTagXiphComment(NULL);
+            initTagXiphComment(nullptr);
             //m_uiWidget->tabWidget->setTabEnabled(3, false);
             m_uiWidget->tabWidget->removeTab(3);
 
@@ -253,9 +253,9 @@ void CDialogEditMetadata::reset()
             m_uiWidget->tabWidget->removeTab(1);
             //m_uiWidget->tabWidget->setTabEnabled(2, false);
             m_uiWidget->tabWidget->removeTab(2);
-            initTagID3v1(NULL);
-            initTagID3v2(NULL);
-            initTagAPE(NULL);
+            initTagID3v1(nullptr);
+            initTagID3v2(nullptr);
+            initTagAPE(nullptr);
             initTagXiphComment(file.tag());
 
             break;
@@ -288,7 +288,7 @@ void CDialogEditMetadata::reset()
             initTagID3v2(file.ID3v2Tag(false));
             //m_uiWidget->tabWidget->setTabEnabled(2, false);
             m_uiWidget->tabWidget->removeTab(2);
-            initTagAPE(NULL);
+            initTagAPE(nullptr);
             initTagXiphComment(file.xiphComment(true));
 
             break;

@@ -23,10 +23,10 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QTreeView>
 
 
-class CListModel;
-class CSongTable;
+class CLibraryModel;
+class CMediaTableView;
 class CCDRomDrive;
-class CApplication;
+class CMainWindow;
 class CFolder;
 
 
@@ -34,22 +34,22 @@ class CFolder;
  * Vue utilisée pour afficher les listes de lecture sous forme d'un arbre.
  */
 
-class CPlayListView : public QTreeView
+class CLibraryView : public QTreeView
 {
     Q_OBJECT
 
 public:
 
-    explicit CPlayListView(CApplication * application);
+    explicit CLibraryView(CMainWindow * application);
 
-    CSongTable * getSongTable(const QModelIndex& index) const;
+    CMediaTableView * getSongTable(const QModelIndex& index) const;
     CFolder * getFolder(const QModelIndex& index) const;
-    CSongTable * getSelectedSongTable() const;
+    CMediaTableView * getSelectedSongTable() const;
     CFolder * getSelectedFolder() const;
     CCDRomDrive * getSelectedCDRomDrive() const;
-    QModelIndex getSongTableModelIndex(CSongTable * songTable) const;
+    QModelIndex getSongTableModelIndex(CMediaTableView * songTable) const;
     QModelIndex getFolderModelIndex(CFolder * folder) const;
-    void setModel(CListModel * model);
+    void setModel(CLibraryModel * model);
     void updateCDRomDrives();
 
 protected:
@@ -70,8 +70,8 @@ protected slots:
 
 private:
     
-    CApplication * m_application; ///< Pointeur sur l'application.
-    CListModel * m_model;         ///< Modèle utilisé pour afficher les listes de lecture.
+    CMainWindow * m_application; ///< Pointeur sur l'application.
+    CLibraryModel * m_model;         ///< Modèle utilisé pour afficher les listes de lecture.
     QMenu * m_menuPlaylist;       ///< Menu contextuel pour les listes de lecture.
     QMenu * m_menuFolder;         ///< Menu contextuel pour les dossiers.
     QMenu * m_menuCDRomDrive;     ///< Menu contextuel pour les lecteurs de CD-ROM.

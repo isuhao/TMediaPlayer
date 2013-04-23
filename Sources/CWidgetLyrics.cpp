@@ -18,7 +18,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CWidgetLyrics.hpp"
-#include "CApplication.hpp"
+#include "CMainWindow.hpp"
 #include "CSong.hpp"
 #include "CLyricWiki.hpp"
 
@@ -27,10 +27,10 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QGridLayout>
 
 
-CWidgetLyrics::CWidgetLyrics(CApplication * application) :
-    QWidget       (application),
-    m_application (application),
-    m_song        (NULL)
+CWidgetLyrics::CWidgetLyrics(CMainWindow * application) :
+QWidget       (application),
+m_application (application),
+m_song        (nullptr)
 {
     Q_CHECK_PTR(application);
 

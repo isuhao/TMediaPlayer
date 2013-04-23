@@ -18,13 +18,17 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CDialogEditSong.hpp"
-#include "../CSongTable.hpp"
-#include "../CApplication.hpp"
+#include "../CMediaTableView.hpp"
+#include "../CMainWindow.hpp"
 #include "../CRatingEditor.hpp"
+#include "../Utils.hpp"
+
+// Qt
 #include <QStandardItemModel>
 #include <QCloseEvent>
 #include <QSettings>
 
+// FMOD
 #include <mpegfile.h>
 #include <id3v2tag.h>
 
@@ -39,13 +43,13 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * \param application Pointeur sur l'application.
  */
 
-CDialogEditSong::CDialogEditSong(CSongTableItem * songItem, CSongTable * songTable, CApplication * application) :
-    QDialog        (application),
-    m_uiWidget     (new Ui::DialogEditSong()),
-    m_ratingEditor (new CRatingEditor()),
-    m_songTable    (songTable),
-    m_songItem     (songItem),
-    m_application  (application)
+CDialogEditSong::CDialogEditSong(CMediaTableItem * songItem, CMediaTableView * songTable, CMainWindow * application) :
+QDialog        (application),
+m_uiWidget     (new Ui::DialogEditSong()),
+m_ratingEditor (new CRatingEditor()),
+m_songTable    (songTable),
+m_songItem     (songItem),
+m_application  (application)
 {
     Q_CHECK_PTR(songItem);
     Q_CHECK_PTR(songTable);
@@ -98,7 +102,7 @@ CDialogEditSong::CDialogEditSong(CSongTableItem * songItem, CSongTable * songTab
 
     updateInfos();
 
-    CSongTableItem * songItemTest = m_songTable->getPreviousSong(m_songItem, false);
+    CMediaTableItem * songItemTest = m_songTable->getPreviousSong(m_songItem, false);
     m_uiWidget->btnPrevious->setEnabled(songItemTest);
 
     songItemTest = m_songTable->getNextSong(m_songItem, false);
@@ -116,7 +120,7 @@ CDialogEditSong::~CDialogEditSong()
 }
 
 
-void CDialogEditSong::setSongItem(CSongTableItem * songItem, CSongTable * songTable)
+void CDialogEditSong::setSongItem(CMediaTableItem * songItem, CMediaTableView * songTable)
 {
     Q_CHECK_PTR(songItem);
     Q_CHECK_PTR(songTable);
@@ -134,6 +138,7 @@ void CDialogEditSong::setSongItem(CSongTableItem * songItem, CSongTable * songTa
 
 void CDialogEditSong::closeEvent(QCloseEvent * event)
 {
+    Q_CHECK_PTR(event);
     event->accept();
     emit closed();
 }
@@ -213,7 +218,7 @@ void CDialogEditSong::resetSummary()
     m_uiWidget->valueAlbum->setText(song->getAlbumTitle());
 
     m_uiWidget->valueFileName->setText(song->getFileName());
-    m_uiWidget->valueFileSize->setText(CSong::getFileSize(song->getFileSize()));
+    m_uiWidget->valueFileSize->setText(getFileSize(song->getFileSize()));
     m_uiWidget->valueCreation->setText(song->getCreationDate().toString("dd/MM/yyyy HH:mm:ss"));
     m_uiWidget->valueModification->setText(song->getModificationDate().toString("dd/MM/yyyy HH:mm:ss"));
 
@@ -292,7 +297,7 @@ void CDialogEditSong::previousSong()
     if (settings->value("Preferences/EditSongAutoSave", false).toBool())
         applyChanges();
 
-    CSongTableItem * songItem = m_songTable->getPreviousSong(m_songItem, false);
+    CMediaTableItem * songItem = m_songTable->getPreviousSong(m_songItem, false);
 
     if (songItem)
     {
@@ -317,7 +322,7 @@ void CDialogEditSong::nextSong()
     if (settings->value("Preferences/EditSongAutoSave", false).toBool())
         applyChanges();
 
-    CSongTableItem * songItem = m_songTable->getNextSong(m_songItem, false);
+    CMediaTableItem * songItem = m_songTable->getNextSong(m_songItem, false);
 
     if (songItem)
     {

@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "CListModel.hpp"
-#include "CApplication.hpp"
+#include "CLibraryModel.hpp"
+#include "CMainWindow.hpp"
 #include "CFolder.hpp"
-#include "CStaticPlayList.hpp"
+#include "CStaticList.hpp"
 #include "CDynamicList.hpp"
 #include "CLibrary.hpp"
 #include "CCDRomDrive.hpp"
@@ -38,10 +38,10 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * \param application Pointeur sur l'application.
  */
 
-CListModel::CListModel(CApplication * application) :
-    QStandardItemModel (application),
-    m_application      (application),
-    m_rootFolder       (NULL)
+CLibraryModel::CLibraryModel(CMainWindow * application) :
+QStandardItemModel (application),
+m_application      (application),
+m_rootFolder       (nullptr)
 {
     Q_CHECK_PTR(application);
 }
@@ -52,7 +52,7 @@ CListModel::CListModel(CApplication * application) :
  * Enregistre les modifications sur les dossiers et les listes de lecture.
  */
 
-CListModel::~CListModel()
+CLibraryModel::~CLibraryModel()
 {
     // Met-à-jour tous les dossiers
     for (QList<CFolder *>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
@@ -84,7 +84,7 @@ CListModel::~CListModel()
  * Charge le modèle depuis la base de données.
  */
 
-void CListModel::loadFromDatabase()
+void CLibraryModel::loadFromDatabase()
 {
     clear();
 
@@ -165,7 +165,7 @@ void CListModel::loadFromDatabase()
     {
         while (query.next())
         {
-            CStaticPlayList * playList = new CStaticPlayList(m_application, query.value(1).toString());
+            CStaticList * playList = new CStaticList(m_application, query.value(1).toString());
             playList->m_id = query.value(0).toInt();
             playList->m_idPlayList = query.value(3).toInt();
             playList->initColumns(query.value(2).toString());
@@ -214,7 +214,7 @@ void CListModel::loadFromDatabase()
             playLists.append(playList);
             playList->hide();
 
-            connect(playList, SIGNAL(songStarted(CSongTableItem *)), m_application, SLOT(playSong(CSongTableItem *)));
+            connect(playList, SIGNAL(songStarted(CMediaTableItem *)), m_application, SLOT(playSong(CMediaTableItem *)));
             connect(playList, SIGNAL(nameChanged(const QString&, const QString&)), this, SLOT(onPlayListRenamed(const QString&, const QString&)));
             connect(playList, SIGNAL(rowCountChanged()), m_application, SLOT(updateListInformations()));
 
@@ -259,7 +259,7 @@ void CListModel::loadFromDatabase()
             playLists.append(playList);
             playList->hide();
 
-            connect(playList, SIGNAL(songStarted(CSongTableItem *)), m_application, SLOT(playSong(CSongTableItem *)));
+            connect(playList, SIGNAL(songStarted(CMediaTableItem *)), m_application, SLOT(playSong(CMediaTableItem *)));
             connect(playList, SIGNAL(nameChanged(const QString&, const QString&)), this, SLOT(onPlayListRenamed(const QString&, const QString&)));
             connect(playList, SIGNAL(rowCountChanged()), m_application, SLOT(updateListInformations()));
             connect(playList, SIGNAL(listUpdated()), m_application, SLOT(updateListInformations()));
@@ -286,7 +286,7 @@ void CListModel::loadFromDatabase()
  * \todo Implémenter la file d'attente.
  */
 
-void CListModel::clear()
+void CLibraryModel::clear()
 {
     QStandardItemModel::clear();
 
@@ -295,18 +295,18 @@ void CListModel::clear()
     m_folders.clear();
     m_playLists.clear();
 
-    m_rootFolder = NULL;
+    m_rootFolder = nullptr;
 
     // Ajout de la médiathèque au modèle
     QStandardItem * libraryItem = new QStandardItem(QPixmap(":/icons/library"), tr("Library"));
-    libraryItem->setData(QVariant::fromValue(qobject_cast<CSongTable *>(m_application->getLibrary())), Qt::UserRole + 1);
+    libraryItem->setData(QVariant::fromValue(qobject_cast<CMediaTableView *>(m_application->getLibrary())), Qt::UserRole + 1);
 
     appendRow(libraryItem);
     m_songTableItems[libraryItem] = m_application->getLibrary();
 
     // Ajout de la file d'attente
     QStandardItem * queueItem = new QStandardItem(QPixmap(":/icons/queue"), tr("Queue"));
-    queueItem->setData(QVariant::fromValue(qobject_cast<CSongTable *>(m_application->getQueue())), Qt::UserRole + 1);
+    queueItem->setData(QVariant::fromValue(qobject_cast<CMediaTableView *>(m_application->getQueue())), Qt::UserRole + 1);
 
     appendRow(queueItem);
     m_songTableItems[queueItem] = m_application->getQueue();
@@ -317,7 +317,7 @@ void CListModel::clear()
     for (QList<CCDRomDrive *>::const_iterator drive = drives.begin(); drive != drives.end(); ++drive)
     {
         QStandardItem * cdDriveItem = new QStandardItem(QPixmap(":/icons/cd"), (*drive)->getDriveName());
-        cdDriveItem->setData(QVariant::fromValue(qobject_cast<CSongTable *>(*drive)), Qt::UserRole + 1);
+        cdDriveItem->setData(QVariant::fromValue(qobject_cast<CMediaTableView *>(*drive)), Qt::UserRole + 1);
 
         if (!(*drive)->hasCDInDrive())
         {
@@ -336,7 +336,7 @@ void CListModel::clear()
  * Met à jour les informations sur les lecteurs de CD-ROM.
  */
 
-void CListModel::updateCDRomDrives()
+void CLibraryModel::updateCDRomDrives()
 {
     QList<CCDRomDrive *> drives = m_application->getCDRomDrives();
 
@@ -368,7 +368,7 @@ void CListModel::updateCDRomDrives()
  * \return Pointeur sur le dossier, ou NULL si \a id n'est pas valide.
  */
 
-CFolder * CListModel::getFolderFromId(int id) const
+CFolder * CLibraryModel::getFolderFromId(int id) const
 {
     return getFolderFromId(id, m_folders);
 }
@@ -381,13 +381,13 @@ CFolder * CListModel::getFolderFromId(int id) const
  * \return Pointeur sur la liste de lecture, ou NULL si \a id n'est pas valide.
  */
 
-IPlayList * CListModel::getPlayListFromId(int id) const
+IPlayList * CLibraryModel::getPlayListFromId(int id) const
 {
     return getPlayListFromId(id, m_playLists);
 }
 
 
-QModelIndex CListModel::getModelIndex(CFolder * folder) const
+QModelIndex CLibraryModel::getModelIndex(CFolder * folder) const
 {
     QStandardItem * item = m_folderItems.key(folder);
 
@@ -398,7 +398,7 @@ QModelIndex CListModel::getModelIndex(CFolder * folder) const
 }
 
 
-QModelIndex CListModel::getModelIndex(CSongTable * songTable) const
+QModelIndex CLibraryModel::getModelIndex(CMediaTableView * songTable) const
 {
     QStandardItem * item = m_songTableItems.key(songTable);
 
@@ -416,7 +416,7 @@ QModelIndex CListModel::getModelIndex(CSongTable * songTable) const
  * \param open  Indique si le dossier doit être ouvert ou fermé.
  */
 
-void CListModel::openFolder(const QModelIndex& index, bool open)
+void CLibraryModel::openFolder(const QModelIndex& index, bool open)
 {
     CFolder * folder = this->data(index, Qt::UserRole + 2).value<CFolder *>();
 
@@ -438,7 +438,7 @@ void CListModel::openFolder(const QModelIndex& index, bool open)
  * \param folder Dossier à ajouter.
  */
 
-void CListModel::addFolder(CFolder * folder)
+void CLibraryModel::addFolder(CFolder * folder)
 {
     Q_CHECK_PTR(folder);
 
@@ -513,7 +513,7 @@ void CListModel::addFolder(CFolder * folder)
  * \param playList Liste de lecture à ajouter.
  */
 
-void CListModel::addPlayList(IPlayList * playList)
+void CLibraryModel::addPlayList(IPlayList * playList)
 {
     Q_CHECK_PTR(playList);
 
@@ -523,7 +523,7 @@ void CListModel::addPlayList(IPlayList * playList)
     m_playLists.append(playList);
 
     QStandardItem * playListItem = new QStandardItem(playList->getName());
-    playListItem->setData(QVariant::fromValue(qobject_cast<CSongTable *>(playList)), Qt::UserRole + 1);
+    playListItem->setData(QVariant::fromValue(qobject_cast<CMediaTableView *>(playList)), Qt::UserRole + 1);
     m_songTableItems[playListItem] = playList;
 
     CDynamicList * dynamicList = qobject_cast<CDynamicList *>(playList);
@@ -536,7 +536,7 @@ void CListModel::addPlayList(IPlayList * playList)
     }
     else
     {
-        CStaticPlayList * staticList = qobject_cast<CStaticPlayList *>(playList);
+        CStaticList * staticList = qobject_cast<CStaticList *>(playList);
 
         if (staticList)
         {
@@ -548,7 +548,7 @@ void CListModel::addPlayList(IPlayList * playList)
     }
 
     connect(playList, SIGNAL(nameChanged(const QString&, const QString&)), this, SLOT(onPlayListRenamed(const QString&, const QString&)));
-    connect(playList, SIGNAL(songStarted(CSongTableItem *)), m_application, SLOT(playSong(CSongTableItem *)));
+    connect(playList, SIGNAL(songStarted(CMediaTableItem *)), m_application, SLOT(playSong(CMediaTableItem *)));
     connect(playList, SIGNAL(rowCountChanged()), m_application, SLOT(updateListInformations()));
 
     QStandardItem * itemParent = m_folderItems.key(playList->m_folder);
@@ -567,7 +567,7 @@ void CListModel::addPlayList(IPlayList * playList)
  * \param recursive Indique si on doit supprimer le contenu du dossier ou pas.
  */
 
-void CListModel::removeFolder(CFolder * folder, bool recursive)
+void CLibraryModel::removeFolder(CFolder * folder, bool recursive)
 {
     Q_CHECK_PTR(folder);
 
@@ -644,7 +644,7 @@ void CListModel::removeFolder(CFolder * folder, bool recursive)
  * \param playList Pointeur sur la liste de lecture à supprimer.
  */
 
-void CListModel::removePlayList(IPlayList * playList)
+void CLibraryModel::removePlayList(IPlayList * playList)
 {
     Q_CHECK_PTR(playList);
 
@@ -667,7 +667,7 @@ void CListModel::removePlayList(IPlayList * playList)
 }
 
 
-bool CListModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex& parent)
+bool CLibraryModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex& parent)
 {
     Q_UNUSED(column);
     Q_CHECK_PTR(data);
@@ -785,11 +785,11 @@ bool CListModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int
     {
         if (parent.isValid())
         {
-            CSongTable * songTable = this->data(parent, Qt::UserRole + 1).value<CSongTable *>();
+            CMediaTableView * songTable = this->data(parent, Qt::UserRole + 1).value<CMediaTableView *>();
             
             if (songTable)
             {
-                CStaticPlayList * playList = qobject_cast<CStaticPlayList *>(songTable);
+                CStaticList * playList = qobject_cast<CStaticList *>(songTable);
                 CQueuePlayList * queue = qobject_cast<CQueuePlayList *>(songTable);
 
                 if (playList)
@@ -817,7 +817,7 @@ bool CListModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int
         QByteArray encodedData = data->data("application/x-ted-media-songs");
         QList<CSong *> songs = decodeDataSongs(encodedData);
 
-        m_application->openDialogCreateStaticList(NULL, songs);
+        m_application->openDialogCreateStaticList(nullptr, songs);
 
         return true;
     }
@@ -826,7 +826,7 @@ bool CListModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int
 }
 
 
-QList<CSong *> CListModel::decodeDataSongs(const QByteArray& encodedData) const
+QList<CSong *> CLibraryModel::decodeDataSongs(const QByteArray& encodedData) const
 {
     QDataStream stream(encodedData);
 
@@ -846,7 +846,7 @@ QList<CSong *> CListModel::decodeDataSongs(const QByteArray& encodedData) const
 }
 
 
-bool CListModel::decodeDataList(const QByteArray& encodedData, int * playList, int * folder)
+bool CLibraryModel::decodeDataList(const QByteArray& encodedData, int * playList, int * folder)
 {
     Q_CHECK_PTR(playList);
     Q_CHECK_PTR(folder);
@@ -885,7 +885,7 @@ bool CListModel::decodeDataList(const QByteArray& encodedData, int * playList, i
  * \return Liste de types.
  */
 
-QStringList CListModel::mimeTypes() const
+QStringList CLibraryModel::mimeTypes() const
 {
     QStringList types;
     types << "application/x-ted-media-songs"; // Liste de morceaux
@@ -894,23 +894,23 @@ QStringList CListModel::mimeTypes() const
 }
 
 
-QMimeData * CListModel::mimeData(const QModelIndexList& indexes) const
+QMimeData * CLibraryModel::mimeData(const QModelIndexList& indexes) const
 {
 #ifdef ENABLE_DRAG_DROP_FOR_LISTS
     if (indexes.size() != 1)
-        return NULL;
+        return nullptr;
 
     QByteArray data;
     QDataStream streamData(&data, QIODevice::WriteOnly);
 
     // Médiathèque
     if (indexes[0].row() == 0 && !indexes[0].parent().isValid())
-        return NULL;
+        return nullptr;
 
     QStandardItem * item = itemFromIndex(indexes[0]);
 
     if (!item)
-        return NULL;
+        return nullptr;
 
     if (item->data(Qt::UserRole + 2).value<CFolder *>())
     {
@@ -920,14 +920,14 @@ QMimeData * CListModel::mimeData(const QModelIndexList& indexes) const
     else
     {
         streamData << 0;
-        streamData << item->data(Qt::UserRole + 1).value<CSongTable *>()->getIdPlayList();
+        streamData << item->data(Qt::UserRole + 1).value<CMediaTableView *>()->getIdPlayList();
     }
 
     QMimeData * mimeData = new QMimeData();
     mimeData->setData("application/x-ted-media-list", data);
     return mimeData;
 #else
-    return NULL;
+    return nullptr;
 #endif
 }
 
@@ -938,16 +938,16 @@ QMimeData * CListModel::mimeData(const QModelIndexList& indexes) const
  * \return Actions acceptées.
  */
 
-Qt::DropActions CListModel::supportedDropActions() const
+Qt::DropActions CLibraryModel::supportedDropActions() const
 {
     return (Qt::CopyAction | Qt::MoveAction);
 }
 
 
-CFolder * CListModel::getFolderFromId(int id, const QList<CFolder *> folders) const
+CFolder * CLibraryModel::getFolderFromId(int id, const QList<CFolder *> folders) const
 {
     if (id < 0)
-        return NULL;
+        return nullptr;
 
     for (QList<CFolder *>::const_iterator it = folders.begin(); it != folders.end(); ++it)
     {
@@ -955,14 +955,14 @@ CFolder * CListModel::getFolderFromId(int id, const QList<CFolder *> folders) co
             return (*it);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 
-IPlayList * CListModel::getPlayListFromId(int id, const QList<IPlayList *> playLists) const
+IPlayList * CLibraryModel::getPlayListFromId(int id, const QList<IPlayList *> playLists) const
 {
     if (id <= 0)
-        return NULL;
+        return nullptr;
 
     for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
     {
@@ -970,11 +970,11 @@ IPlayList * CListModel::getPlayListFromId(int id, const QList<IPlayList *> playL
             return (*it);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 
-void CListModel::onPlayListRenamed(const QString& oldName, const QString& newName)
+void CLibraryModel::onPlayListRenamed(const QString& oldName, const QString& newName)
 {
     Q_UNUSED(oldName);
 
@@ -990,7 +990,7 @@ void CListModel::onPlayListRenamed(const QString& oldName, const QString& newNam
 }
 
 
-void CListModel::onFolderRenamed(const QString& oldName, const QString& newName)
+void CLibraryModel::onFolderRenamed(const QString& oldName, const QString& newName)
 {
     Q_UNUSED(oldName);
 
@@ -1006,7 +1006,7 @@ void CListModel::onFolderRenamed(const QString& oldName, const QString& newName)
 }
 
 
-void CListModel::onPlayListChange()
+void CLibraryModel::onPlayListChange()
 {
     IPlayList * playList = qobject_cast<IPlayList *>(sender());
 

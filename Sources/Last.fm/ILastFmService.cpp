@@ -18,7 +18,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "ILastFmService.hpp"
-#include "../CApplication.hpp"
+#include "../CMainWindow.hpp"
 #include <QCryptographicHash>
 #include <QDateTime>
 #include <QNetworkAccessManager>
@@ -31,7 +31,7 @@ const QByteArray ILastFmService::m_secret = "b2ed8ec840ec1995003bb99fb02ace44";
 const QString ILastFmService::m_lastFmUrl = "http://ws.audioscrobbler.com/2.0/";
 
 
-ILastFmService::ILastFmService(CApplication * application, const QByteArray& sessionKey) :
+ILastFmService::ILastFmService(CMainWindow * application, const QByteArray& sessionKey) :
     QObject       (application),
     m_application (application),
     m_sessionKey  (sessionKey)

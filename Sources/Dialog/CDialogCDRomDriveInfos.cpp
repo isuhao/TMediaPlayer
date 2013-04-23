@@ -19,7 +19,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CDialogCDRomDriveInfos.hpp"
 #include "../CCDRomDrive.hpp"
-#include "../CApplication.hpp"
+#include "../CMainWindow.hpp"
 #include <QPushButton>
 
 
@@ -30,7 +30,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * \param application Pointeur sur la classe principale de l'application.
  */
 
-CDialogCDRomDriveInfos::CDialogCDRomDriveInfos(CCDRomDrive * cdRomDrive, CApplication * application) :
+CDialogCDRomDriveInfos::CDialogCDRomDriveInfos(CCDRomDrive * cdRomDrive, CMainWindow * application) :
     QDialog       (application),
     m_uiWidget    (new Ui::DialogCDRomDriveInfos()),
     m_application (application),

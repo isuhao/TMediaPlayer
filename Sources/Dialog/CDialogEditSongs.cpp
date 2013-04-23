@@ -18,8 +18,9 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CDialogEditSongs.hpp"
-#include "../CApplication.hpp"
+#include "../CMainWindow.hpp"
 #include "../CSpecialSpinBox.hpp"
+#include "../Utils.hpp"
 #include <QStandardItemModel>
 #include <QPushButton>
 
@@ -31,13 +32,13 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * \param application  Pointeur sur l'application.
  */
 
-CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *>& songItemList, CApplication * application) :
-    QDialog             (application),
-    m_uiWidget          (new Ui::DialogEditSongs()),
-    m_editRating        (NULL),
-    m_differentComments (false),
-    m_differentLyrics   (false),
-    m_songItemList      (songItemList)
+CDialogEditSongs::CDialogEditSongs(QList<CMediaTableItem *>& songItemList, CMainWindow * application) :
+QDialog             (application),
+m_uiWidget          (new Ui::DialogEditSongs()),
+m_editRating        (nullptr),
+m_differentComments (false),
+m_differentLyrics   (false),
+m_songItemList      (songItemList)
 {
     Q_CHECK_PTR(application);
     Q_ASSERT(songItemList.size() > 1);
@@ -138,7 +139,7 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *>& songItemList, CAppli
     bool first = true;
 
     // On parcourt la liste des morceaux sélectionnés pour trouver les informations à afficher
-    for (QList<CSongTableItem *>::const_iterator it = m_songItemList.begin(); it != m_songItemList.end(); ++it)
+    for (QList<CMediaTableItem *>::const_iterator it = m_songItemList.begin(); it != m_songItemList.end(); ++it)
     {
         Q_CHECK_PTR(*it);
         CSong * song = (*it)->getSong();
@@ -350,29 +351,29 @@ CDialogEditSongs::CDialogEditSongs(QList<CSongTableItem *>& songItemList, CAppli
     // Résumé
     if (durationMin == durationMax)
     {
-        m_uiWidget->valueDuration->setText(tr("%1 (total: %2)").arg(CApplication::durationToString(durationMin))
-                                                               .arg(CApplication::durationToString(durationTotal)));
+        m_uiWidget->valueDuration->setText(tr("%1 (total: %2)").arg(durationToString(durationMin))
+                                                               .arg(durationToString(durationTotal)));
     }
     else
     {
-        m_uiWidget->valueDuration->setText(tr("between %1 and %2 (total: %3)").arg(CApplication::durationToString(durationMin))
-                                                                              .arg(CApplication::durationToString(durationMax))
-                                                                              .arg(CApplication::durationToString(durationTotal)));
+        m_uiWidget->valueDuration->setText(tr("between %1 and %2 (total: %3)").arg(durationToString(durationMin))
+                                                                              .arg(durationToString(durationMax))
+                                                                              .arg(durationToString(durationTotal)));
     }
 
-    QString fileSizeMinStr = CSong::getFileSize(fileSizeMin);
-    QString fileSizeMaxStr = CSong::getFileSize(fileSizeMax);
+    QString fileSizeMinStr = getFileSize(fileSizeMin);
+    QString fileSizeMaxStr = getFileSize(fileSizeMax);
 
     if (fileSizeMinStr == fileSizeMaxStr)
     {
         m_uiWidget->valueFilesSize->setText(tr("%1 (total: %2)").arg(fileSizeMinStr)
-                                                                .arg(CSong::getFileSize(fileSizeTotal)));
+                                                                .arg(getFileSize(fileSizeTotal)));
     }
     else
     {
         m_uiWidget->valueFilesSize->setText(tr("between %1 and %2 (total: %3)").arg(fileSizeMinStr)
                                                                                .arg(fileSizeMaxStr)
-                                                                               .arg(CSong::getFileSize(fileSizeTotal)));
+                                                                               .arg(getFileSize(fileSizeTotal)));
     }
 
     m_uiWidget->valueCreation->setText(tr("%1 - %2").arg(creationMin.toString("dd/MM/yyyy HH:mm:ss"))
@@ -1220,7 +1221,7 @@ CDialogEditSongs::~CDialogEditSongs()
 void CDialogEditSongs::apply()
 {
     // Modification de chaque morceau
-    for (QList<CSongTableItem *>::const_iterator it = m_songItemList.begin(); it != m_songItemList.end(); ++it)
+    for (QList<CMediaTableItem *>::const_iterator it = m_songItemList.begin(); it != m_songItemList.end(); ++it)
     {
         CSong * song = (*it)->getSong();
 

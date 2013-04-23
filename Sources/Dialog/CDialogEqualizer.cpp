@@ -18,7 +18,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CDialogEqualizer.hpp"
-#include "../CApplication.hpp"
+#include "../CMainWindow.hpp"
 #include <QPushButton>
 #include <QInputDialog>
 #include <QMessageBox>
@@ -30,7 +30,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * \param application Pointeur sur la classe principale de l'application.
  */
 
-CDialogEqualizer::CDialogEqualizer(CApplication * application) :
+CDialogEqualizer::CDialogEqualizer(CMainWindow * application) :
     QDialog       (application),
     m_uiWidget    (new Ui::DialogEqualizer()),
     m_application (application)
@@ -196,70 +196,70 @@ void CDialogEqualizer::resetPresetList()
 void CDialogEqualizer::onSlider0Change(int value)
 {
     m_uiWidget->listPreset->setCurrentIndex(1);
-    m_application->setCurrentEqualizerPreset(NULL);
+    m_application->setCurrentEqualizerPreset(nullptr);
     m_application->setEqualizerGain(CEqualizerPreset::Frequency32, convertSliderValueToGain(value));
 }
 
 void CDialogEqualizer::onSlider1Change(int value)
 {
     m_uiWidget->listPreset->setCurrentIndex(1);
-    m_application->setCurrentEqualizerPreset(NULL);
+    m_application->setCurrentEqualizerPreset(nullptr);
     m_application->setEqualizerGain(CEqualizerPreset::Frequency64, convertSliderValueToGain(value));
 }
 
 void CDialogEqualizer::onSlider2Change(int value)
 {
     m_uiWidget->listPreset->setCurrentIndex(1);
-    m_application->setCurrentEqualizerPreset(NULL);
+    m_application->setCurrentEqualizerPreset(nullptr);
     m_application->setEqualizerGain(CEqualizerPreset::Frequency125, convertSliderValueToGain(value));
 }
 
 void CDialogEqualizer::onSlider3Change(int value)
 {
     m_uiWidget->listPreset->setCurrentIndex(1);
-    m_application->setCurrentEqualizerPreset(NULL);
+    m_application->setCurrentEqualizerPreset(nullptr);
     m_application->setEqualizerGain(CEqualizerPreset::Frequency250, convertSliderValueToGain(value));
 }
 
 void CDialogEqualizer::onSlider4Change(int value)
 {
     m_uiWidget->listPreset->setCurrentIndex(1);
-    m_application->setCurrentEqualizerPreset(NULL);
+    m_application->setCurrentEqualizerPreset(nullptr);
     m_application->setEqualizerGain(CEqualizerPreset::Frequency500, convertSliderValueToGain(value));
 }
 
 void CDialogEqualizer::onSlider5Change(int value)
 {
     m_uiWidget->listPreset->setCurrentIndex(1);
-    m_application->setCurrentEqualizerPreset(NULL);
+    m_application->setCurrentEqualizerPreset(nullptr);
     m_application->setEqualizerGain(CEqualizerPreset::Frequency1K, convertSliderValueToGain(value));
 }
 
 void CDialogEqualizer::onSlider6Change(int value)
 {
     m_uiWidget->listPreset->setCurrentIndex(1);
-    m_application->setCurrentEqualizerPreset(NULL);
+    m_application->setCurrentEqualizerPreset(nullptr);
     m_application->setEqualizerGain(CEqualizerPreset::Frequency2K, convertSliderValueToGain(value));
 }
 
 void CDialogEqualizer::onSlider7Change(int value)
 {
     m_uiWidget->listPreset->setCurrentIndex(1);
-    m_application->setCurrentEqualizerPreset(NULL);
+    m_application->setCurrentEqualizerPreset(nullptr);
     m_application->setEqualizerGain(CEqualizerPreset::Frequency4K, convertSliderValueToGain(value));
 }
 
 void CDialogEqualizer::onSlider8Change(int value)
 {
     m_uiWidget->listPreset->setCurrentIndex(1);
-    m_application->setCurrentEqualizerPreset(NULL);
+    m_application->setCurrentEqualizerPreset(nullptr);
     m_application->setEqualizerGain(CEqualizerPreset::Frequency8K, convertSliderValueToGain(value));
 }
 
 void CDialogEqualizer::onSlider9Change(int value)
 {
     m_uiWidget->listPreset->setCurrentIndex(1);
-    m_application->setCurrentEqualizerPreset(NULL);
+    m_application->setCurrentEqualizerPreset(nullptr);
     m_application->setEqualizerGain(CEqualizerPreset::Frequency16K, convertSliderValueToGain(value));
 }
 

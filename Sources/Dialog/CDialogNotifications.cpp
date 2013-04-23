@@ -18,11 +18,11 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CDialogNotifications.hpp"
-#include "../CApplication.hpp"
+#include "../CMainWindow.hpp"
 #include <QPushButton>
 
 
-CDialogNotifications::CDialogNotifications(CApplication * application) :
+CDialogNotifications::CDialogNotifications(CMainWindow * application) :
     QDialog       (application),
     m_uiWidget    (new Ui::DialogNotifications()),
     m_application (application)
@@ -35,7 +35,7 @@ CDialogNotifications::CDialogNotifications(CApplication * application) :
     m_uiWidget->table->setSortingEnabled(false);
 
     // Remplissage du tableau
-    QList<CApplication::TNotification> notifications = m_application->getNotifications();
+    QList<CMainWindow::TNotification> notifications = m_application->getNotifications();
     m_uiWidget->table->setRowCount(notifications.size());
 
     for (int row = 0; row < notifications.size(); ++row)

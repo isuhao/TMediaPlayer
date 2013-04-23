@@ -24,7 +24,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "ui_DialogPreferences.h"
 
 
-class CApplication;
+class CMainWindow;
 class QSettings;
 class QNetworkReply;
 
@@ -35,7 +35,7 @@ class CDialogPreferences : public QDialog
 
 public:
 
-    CDialogPreferences(CApplication * application, QSettings * settings);
+    CDialogPreferences(CMainWindow * application, QSettings * settings);
     virtual ~CDialogPreferences();
 
 protected slots:
@@ -49,7 +49,7 @@ protected slots:
 private:
 
     Ui::DialogPreferences * m_uiWidget; ///< Widget utilisé par la boite de dialogue.
-    CApplication * m_application;       ///< Pointeur sur l'application.
+    CMainWindow * m_application;       ///< Pointeur sur l'application.
     QSettings * m_settings;
 };
 

@@ -23,8 +23,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "IPlayList.hpp"
 
 
-class ICriteria;
-class CWidgetMultiCriterion;
+class ICriterion;
+class CWidgetMultiCriteria;
 
 
 /**
@@ -37,16 +37,16 @@ class CDynamicList : public IPlayList
     Q_OBJECT
 
     friend class CDialogEditDynamicList;
-    friend class CApplication;
-    friend class CListModel;
+    friend class CMainWindow;
+    friend class CLibraryModel;
 
 public:
 
-    explicit CDynamicList(CApplication * application, const QString& name = QString());
+    explicit CDynamicList(CMainWindow * application, const QString& name = QString());
     virtual ~CDynamicList();
 
     virtual bool isModified() const;
-    CWidgetMultiCriterion * getWidget() const;
+    CWidgetMultiCriteria * getWidget() const;
 
     inline int getId() const;
     inline bool isAutoUpdate() const;
@@ -71,14 +71,14 @@ protected:
     virtual bool updateDatabase();
     virtual void removeFromDatabase();
     void loadFromDatabase();
-    void setCriteria(ICriteria * criteria);
+    void setCriterion(ICriterion * criteria);
     void setAutoUpdate(bool autoUpdate = true);
     void setOnlyChecked(bool onlyChecked = true);
 
 private:
     
     int m_id;                     ///< Identifiant de la liste en base de données.
-    ICriteria * m_mainCriteria;   ///< Critère parent de la liste.
+    ICriterion * m_mainCriterion;   ///< Critère parent de la liste.
     bool m_isDynamicListModified; ///< Indique si la liste a été modifiée.
     bool m_autoUpdate;            ///< Indique si la liste doit être mise à jour automatiquement.
     bool m_onlyChecked;           ///< Indique si on doit utiliser uniquement les morceaux cochés.

@@ -24,7 +24,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "ui_DialogAbout.h"
 
 
-class CApplication;
+class CMainWindow;
 
 
 /**
@@ -37,13 +37,13 @@ class CDialogAbout : public QDialog
 
 public:
 
-    explicit CDialogAbout(CApplication * application);
+    explicit CDialogAbout(CMainWindow * application);
     virtual ~CDialogAbout();
 
 private:
 
     Ui::DialogAbout * m_uiWidget; ///< Pointeur sur le widget de la boite de dialogue.
-    CApplication * m_application; ///< Pointeur sur la classe principale de l'application.
+    CMainWindow * m_application; ///< Pointeur sur la classe principale de l'application.
 };
 
 #endif // FILE_C_DIALOG_ABOUT

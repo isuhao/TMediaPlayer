@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "CStaticPlayList.hpp"
-#include "CApplication.hpp"
-#include "CSongTableModel.hpp"
+#include "CStaticList.hpp"
+#include "CMainWindow.hpp"
+#include "CMediaTableItem.hpp"
 #include "CDynamicList.hpp"
 #include "CFolder.hpp"
 #include "CLibrary.hpp"
@@ -44,10 +44,10 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * \param name        Nom de la liste de lecture.
  */
 
-CStaticPlayList::CStaticPlayList(CApplication * application, const QString& name) :
-    IPlayList              (application, name),
-    m_id                   (-1),
-    m_isStaticListModified (false)
+CStaticList::CStaticList(CMainWindow * application, const QString& name) :
+IPlayList              (application, name),
+m_id                   (-1),
+m_isStaticListModified (false)
 {
     m_model->setCanDrop(true);
 
@@ -61,7 +61,7 @@ CStaticPlayList::CStaticPlayList(CApplication * application, const QString& name
  * Détruit la liste de lecture statique.
  */
 
-CStaticPlayList::~CStaticPlayList()
+CStaticList::~CStaticList()
 {
 
 }
@@ -73,7 +73,7 @@ CStaticPlayList::~CStaticPlayList()
  * \return Booléen.
  */
 
-bool CStaticPlayList::isModified() const
+bool CStaticList::isModified() const
 {
     return (m_isStaticListModified || IPlayList::isModified());
 }
@@ -88,7 +88,7 @@ bool CStaticPlayList::isModified() const
  * \param pos  Position où ajouter la chanson. Si négatif, la chanson est ajoutée à la fin de la liste.
  */
 
-void CStaticPlayList::addSong(CSong * song, int pos)
+void CStaticList::addSong(CSong * song, int pos)
 {
     if (!song)
     {
@@ -98,7 +98,7 @@ void CStaticPlayList::addSong(CSong * song, int pos)
 
     //...
 
-    CSongTable::addSongToTable(song, pos);
+    CMediaTableView::addSongToTable(song, pos);
     emit songAdded(song);
 }
 
@@ -111,7 +111,7 @@ void CStaticPlayList::addSong(CSong * song, int pos)
  * \param confirm Indique si on doit demander une confirmation 
  */
 
-void CStaticPlayList::addSongs(const QList<CSong *>& songs, bool confirm)
+void CStaticList::addSongs(const QList<CSong *>& songs, bool confirm)
 {
     if (m_id <= 0)
     {
@@ -120,9 +120,7 @@ void CStaticPlayList::addSongs(const QList<CSong *>& songs, bool confirm)
     }
 
     if (songs.isEmpty())
-    {
         return;
-    }
 
     bool skipDuplicate = false;
 
@@ -220,7 +218,7 @@ void CStaticPlayList::addSongs(const QList<CSong *>& songs, bool confirm)
             continue;
         }
         
-        CSongTable::addSongToTable(*it, songPosition + songNum);
+        CMediaTableView::addSongToTable(*it, songPosition + songNum);
         emit songAdded(*it);
         ++songNum;
     }
@@ -240,15 +238,15 @@ void CStaticPlayList::addSongs(const QList<CSong *>& songs, bool confirm)
  * \param confirm Demande une confirmation avant d'enlever le morceau de la liste.
  */
 
-void CStaticPlayList::removeSong(CSong * song, bool confirm)
+void CStaticList::removeSong(CSong * song, bool confirm)
 {
     Q_CHECK_PTR(song);
 
-    QList<CSongTableItem *> songItemList;
+    QList<CMediaTableItem *> songItemList;
 
     for (int row = 0; row < m_model->rowCount(); ++row)
     {
-        CSongTableItem * songItem = m_model->getSongItem(row);
+        CMediaTableItem * songItem = m_model->getSongItem(row);
 
         if (songItem->getSong() == song)
         {
@@ -267,7 +265,7 @@ void CStaticPlayList::removeSong(CSong * song, bool confirm)
  * \param confirm  Demande une confirmation avant d'enlever le morceau de la liste.
  */
 
-void CStaticPlayList::removeSong(CSongTableItem * songItem, bool confirm)
+void CStaticList::removeSong(CMediaTableItem * songItem, bool confirm)
 {
     Q_CHECK_PTR(songItem);
 
@@ -321,18 +319,18 @@ void CStaticPlayList::removeSong(CSongTableItem * songItem, bool confirm)
  * \param confirm Demande une confirmation avant d'enlever les morceaux de la liste.
  */
 
-void CStaticPlayList::removeSongs(const QList<CSong *>& songs, bool confirm)
+void CStaticList::removeSongs(const QList<CSong *>& songs, bool confirm)
 {
     if (songs.isEmpty())
     {
         return;
     }
 
-    QList<CSongTableItem *> songItemList;
+    QList<CMediaTableItem *> songItemList;
 
     for (int row = 0; row < m_model->rowCount(); ++row)
     {
-        CSongTableItem * songItem = m_model->getSongItem(row);
+        CMediaTableItem * songItem = m_model->getSongItem(row);
 
         if (songs.contains(songItem->getSong()))
         {
@@ -351,7 +349,7 @@ void CStaticPlayList::removeSongs(const QList<CSong *>& songs, bool confirm)
  * \param confirm      Demande une confirmation avant d'enlever les morceaux de la liste.
  */
 
-void CStaticPlayList::removeSongs(const QList<CSongTableItem *>& songItemList, bool confirm)
+void CStaticList::removeSongs(const QList<CMediaTableItem *>& songItemList, bool confirm)
 {
     if (songItemList.isEmpty())
     {
@@ -374,7 +372,7 @@ void CStaticPlayList::removeSongs(const QList<CSongTableItem *>& songItemList, b
 
     QList<CSong *> songList;
 
-    for (QList<CSongTableItem *>::const_iterator it = songItemList.begin(); it != songItemList.end(); ++it)
+    for (QList<CMediaTableItem *>::const_iterator it = songItemList.begin(); it != songItemList.end(); ++it)
     {
         int row = m_model->getRowForSongItem(*it);
 
@@ -419,7 +417,7 @@ void CStaticPlayList::removeSongs(const QList<CSongTableItem *>& songItemList, b
  * \todo Si la liste est en cours de lecture, il faut mettre à jour le pointeur sur le morceau en cours.
  */
 
-void CStaticPlayList::removeSelectedSongs()
+void CStaticList::removeSelectedSongs()
 {
     // Liste des morceaux sélectionnés
     const QModelIndexList indexList = selectionModel()->selectedRows();
@@ -429,32 +427,32 @@ void CStaticPlayList::removeSelectedSongs()
         return;
     
     // Si on est en train de lire un morceau de la liste, il faut mettre à jour les informations sur le morceau courant
-    CSongTableItem * currentItem = m_model->getCurrentSongItem();
-    CSong * currentSong = (currentItem ? currentItem->getSong() : NULL);
+    CMediaTableItem * currentItem = m_model->getCurrentSongItem();
+    CSong * currentSong = (currentItem ? currentItem->getSong() : nullptr);
 
     CDialogEditSong * dialogEditSong = m_application->getDialogEditSong();
-    CSong * currentSongInDialogEditSong = NULL;
+    CSong * currentSongInDialogEditSong = nullptr;
 
     if (dialogEditSong)
     {
         if (dialogEditSong->getSongTable() == this)
             currentSongInDialogEditSong = dialogEditSong->getSongItem()->getSong();
         else
-            dialogEditSong = NULL;
+            dialogEditSong = nullptr;
     }
 
-    QList<CSongTableItem *> songItemList;
+    QList<CMediaTableItem *> songItemList;
 
     // On parcourt la liste des morceaux sélectionnés
     for (QModelIndexList::const_iterator it = indexList.begin(); it != indexList.end(); ++it)
     {
-        CSongTableItem * songItem = m_model->getSongItem(*it);
+        CMediaTableItem * songItem = m_model->getSongItem(*it);
 
         // Morceau en cours de lecture
         if (m_application->getCurrentSongItem() == songItem)
         {
-            currentItem = NULL;
-            currentSong = NULL;
+            currentItem = nullptr;
+            currentSong = nullptr;
         }
 
         songItemList.append(songItem);
@@ -467,7 +465,7 @@ void CStaticPlayList::removeSelectedSongs()
     // On change le morceau courant affiché dans la liste
     if (currentSong)
     {
-        CSongTableItem * currentItemAfter = getFirstSongItem(currentSong);
+        CMediaTableItem * currentItemAfter = getFirstSongItem(currentSong);
         m_model->setCurrentSong(currentItemAfter);
         //m_application->m_currentSongItem = currentItemAfter;
         m_application->setCurrentSongItem(currentItemAfter, this);
@@ -475,7 +473,7 @@ void CStaticPlayList::removeSelectedSongs()
 
     if (dialogEditSong)
     {
-        CSongTableItem * songItem = getFirstSongItem(currentSongInDialogEditSong);
+        CMediaTableItem * songItem = getFirstSongItem(currentSongInDialogEditSong);
 
         if (songItem)
             dialogEditSong->setSongItem(songItem, this);
@@ -491,7 +489,7 @@ void CStaticPlayList::removeSelectedSongs()
  * \todo Tester complètement.
  */
 
-void CStaticPlayList::removeDuplicateSongs()
+void CStaticList::removeDuplicateSongs()
 {
     QList<CSong *> songs = getSongs();
     QList<CSong *> songsNew;
@@ -535,7 +533,7 @@ void CStaticPlayList::removeDuplicateSongs()
  * Si la liste n'existe pas en base de données, elle est ajoutée.
  */
 
-bool CStaticPlayList::updateDatabase()
+bool CStaticList::updateDatabase()
 {
     if (!getFolder())
     {
@@ -666,7 +664,7 @@ bool CStaticPlayList::updateDatabase()
  * Supprime la liste de la base de données.
  */
 
-void CStaticPlayList::removeFromDatabase()
+void CStaticList::removeFromDatabase()
 {
     if (m_id <= 0)
     {
@@ -710,7 +708,7 @@ void CStaticPlayList::removeFromDatabase()
  * \param point Position du clic.
  */
 
-void CStaticPlayList::openCustomMenuProject(const QPoint& point)
+void CStaticList::openCustomMenuProject(const QPoint& point)
 {
     QModelIndex index = indexAt(point);
 
@@ -808,7 +806,7 @@ void CStaticPlayList::openCustomMenuProject(const QPoint& point)
                     {
                         m_actionGoToSongTable[*it]->setIcon(QPixmap(":/icons/dynamic_list"));
                     }
-                    else if (qobject_cast<CStaticPlayList *>(*it))
+                    else if (qobject_cast<CStaticList *>(*it))
                     {
                         m_actionGoToSongTable[*it]->setIcon(QPixmap(":/icons/playlist"));
                     }
@@ -830,7 +828,7 @@ void CStaticPlayList::openCustomMenuProject(const QPoint& point)
         {
             for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
             {
-                CStaticPlayList * staticList = qobject_cast<CStaticPlayList *>(*it);
+                CStaticList * staticList = qobject_cast<CStaticList *>(*it);
                 if (staticList)
                 {
                     m_actionAddToPlayList[staticList] = menuAddToPlayList->addAction(QPixmap(":/icons/playlist"), (*it)->getName());
@@ -855,7 +853,7 @@ void CStaticPlayList::openCustomMenuProject(const QPoint& point)
  * \param event Évènement du clavier.
  */
 
-void CStaticPlayList::keyPressEvent(QKeyEvent * event)
+void CStaticList::keyPressEvent(QKeyEvent * event)
 {
     Q_CHECK_PTR(event);
 
@@ -877,7 +875,7 @@ void CStaticPlayList::keyPressEvent(QKeyEvent * event)
  * \param event Évènement de déplacement.
  */
 
-void CStaticPlayList::dragMoveEvent(QDragMoveEvent * event)
+void CStaticList::dragMoveEvent(QDragMoveEvent * event)
 {
     IPlayList::dragMoveEvent(event);
 
@@ -901,7 +899,7 @@ void CStaticPlayList::dragMoveEvent(QDragMoveEvent * event)
 }
 
 
-void CStaticPlayList::dropEvent(QDropEvent * event)
+void CStaticList::dropEvent(QDropEvent * event)
 {
     event->ignore();
 
@@ -972,7 +970,7 @@ void CStaticPlayList::dropEvent(QDropEvent * event)
 }
 
 
-void CStaticPlayList::paintEvent(QPaintEvent * event)
+void CStaticList::paintEvent(QPaintEvent * event)
 {
     IPlayList::paintEvent(event);
 

@@ -17,13 +17,13 @@ You should have received a copy of the GNU General Public License
 along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "CSongTable.hpp"
-#include "CSongTableModel.hpp"
+#include "CMediaTableView.hpp"
+#include "CMediaTableModel.hpp"
 #include "CSong.hpp"
-#include "CApplication.hpp"
+#include "CMainWindow.hpp"
 #include "IPlayList.hpp"
-#include "CSongTableHeader.hpp"
-#include "CStaticPlayList.hpp"
+#include "CMediaTableHeader.hpp"
+#include "CStaticList.hpp"
 #include "CDynamicList.hpp"
 #include "CRatingDelegate.hpp"
 #include "CLibrary.hpp"
@@ -50,24 +50,24 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * \param application Pointeur sur l'application.
  */
 
-CSongTable::CSongTable(CApplication * application) :
-    QTableView        (application),
-    m_application     (application),
-    m_model           (NULL),
-    m_idPlayList      (-1),
-    m_columnSort      (ColArtist),
-    m_sortOrder       (Qt::AscendingOrder),
-    m_automaticSort   (true),
-    m_selectedItem    (NULL),
-    m_isModified      (false),
-    m_isColumnMoving  (false)
+CMediaTableView::CMediaTableView(CMainWindow * application) :
+QTableView        (application),
+m_application     (application),
+m_model           (nullptr),
+m_idPlayList      (-1),
+m_columnSort      (ColArtist),
+m_sortOrder       (Qt::AscendingOrder),
+m_automaticSort   (true),
+m_selectedItem    (nullptr),
+m_isModified      (false),
+m_isColumnMoving  (false)
 {
-    Q_CHECK_PTR(application);
+    Q_CHECK_PTR(m_application);
 
     setItemDelegate(new CRatingDelegate());
     setEditTriggers(QAbstractItemView::SelectedClicked);
 
-    m_model = new CSongTableModel(m_application, this);
+    m_model = new CMediaTableModel(m_application, this);
     setModel(m_model);
 
     connect(m_model, SIGNAL(rowsInserted(const QModelIndex&, int, int)), this, SLOT(onRowCountChange(const QModelIndex&, int, int)));
@@ -97,7 +97,7 @@ CSongTable::CSongTable(CApplication * application) :
     setDragEnabled(true);
 
     // Modification des colonnes
-    CSongTableHeader * header = new CSongTableHeader(this);
+    CMediaTableHeader * header = new CMediaTableHeader(this);
     setHorizontalHeader(header);
 
 #if QT_VERSION >= 0x050000
@@ -124,7 +124,7 @@ CSongTable::CSongTable(CApplication * application) :
  * Détruit la liste de morceaux.
  */
 
-CSongTable::~CSongTable()
+CMediaTableView::~CMediaTableView()
 {
 
 }
@@ -136,7 +136,7 @@ CSongTable::~CSongTable()
  * \return Liste des morceaux.
  */
 
-QList<CSong *> CSongTable::getSongs() const
+QList<CSong *> CMediaTableView::getSongs() const
 {
     return m_model->getSongs();
 }
@@ -146,15 +146,15 @@ QList<CSong *> CSongTable::getSongs() const
  * Retourne le premier item correspond à un morceau dans la liste.
  *
  * \param song Morceau à rechercher.
- * \return Pointeur sur l'item, ou NULL si le morceau n'est pas dans la liste.
+ * \return Pointeur sur l'item, ou nullptr si le morceau n'est pas dans la liste.
  */
 
-CSongTableItem * CSongTable::getFirstSongItem(CSong * song) const
+CMediaTableItem * CMediaTableView::getFirstSongItem(CSong * song) const
 {
     if (!song)
-        return NULL;
+        return nullptr;
 
-    for (QList<CSongTableItem *>::const_iterator it = m_model->m_data.begin(); it != m_model->m_data.end(); ++it)
+    for (QList<CMediaTableItem *>::const_iterator it = m_model->m_data.begin(); it != m_model->m_data.end(); ++it)
     {
         if ((*it)->getSong() == song)
         {
@@ -162,7 +162,7 @@ CSongTableItem * CSongTable::getFirstSongItem(CSong * song) const
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 
@@ -170,16 +170,16 @@ CSongTableItem * CSongTable::getFirstSongItem(CSong * song) const
  * Retourne le pointeur sur l'item à une ligne donnée.
  *
  * \param row Numéro de la ligne (à partir de 0).
- * \return Pointeur sur l'item, ou NULL.
+ * \return Pointeur sur l'item, ou nullptr.
  */
 
-CSongTableItem * CSongTable::getSongItemForRow(int row) const
+CMediaTableItem * CMediaTableView::getSongItemForRow(int row) const
 {
     return m_model->getSongItem(row);
 }
 
 
-int CSongTable::getRowForSongItem(CSongTableItem * songItem) const
+int CMediaTableView::getRowForSongItem(CMediaTableItem * songItem) const
 {
     if (songItem)
         return m_model->getRowForSongItem(songItem);
@@ -191,10 +191,10 @@ int CSongTable::getRowForSongItem(CSongTableItem * songItem) const
 /**
  * Retourne le premier item sélectionné dans la table.
  *
- * \return Pointeur sur l'item, ou NULL si aucun n'est sélectionné.
+ * \return Pointeur sur l'item, ou nullptr si aucun n'est sélectionné.
  */
 
-CSongTableItem * CSongTable::getSelectedSongItem() const
+CMediaTableItem * CMediaTableView::getSelectedSongItem() const
 {
     // On cherche la première ligne sélectionnée
     int row = -1;
@@ -208,7 +208,7 @@ CSongTableItem * CSongTable::getSelectedSongItem() const
         }
     }
 
-    return (row < 0 ? NULL : m_model->getSongItem(row));
+    return (row < 0 ? nullptr : m_model->getSongItem(row));
     //return m_model->getSongItem(selectionModel()->currentIndex());
 }
 
@@ -219,14 +219,14 @@ CSongTableItem * CSongTable::getSelectedSongItem() const
  * \return Liste des éléments sélectionnés.
  */
 
-QList<CSongTableItem *> CSongTable::getSelectedSongItems() const
+QList<CMediaTableItem *> CMediaTableView::getSelectedSongItems() const
 {
-    QList<CSongTableItem *> songItemList;
+    QList<CMediaTableItem *> songItemList;
     QModelIndexList indexList = selectionModel()->selectedRows();
 
     for (QModelIndexList::const_iterator it = indexList.begin(); it != indexList.end(); ++it)
     {
-        CSongTableItem * songItem = m_model->getSongItem(*it);
+        CMediaTableItem * songItem = m_model->getSongItem(*it);
         if (songItem)
             songItemList.append(songItem);
     }
@@ -241,7 +241,7 @@ QList<CSongTableItem *> CSongTable::getSelectedSongItems() const
  * \return Liste des morceaux sélectionnés.
  */
 
-QList<CSong *> CSongTable::getSelectedSongs() const
+QList<CSong *> CMediaTableView::getSelectedSongs() const
 {
     QList<CSong *> songs;
     QModelIndexList indexList = selectionModel()->selectedRows();
@@ -258,12 +258,12 @@ QList<CSong *> CSongTable::getSelectedSongs() const
 /**
  * Chercher le morceau précédant un autre morceau.
  *
- * \param songItem Morceau actuel, ou NULL.
+ * \param songItem Morceau actuel, ou nullptr.
  * \param shuffle  Indique si la lecture est aléatoire.
- * \return Morceau précédant, ou NULL.
+ * \return Morceau précédant, ou nullptr.
  */
 
-CSongTableItem * CSongTable::getPreviousSong(CSongTableItem * songItem, bool shuffle) const
+CMediaTableItem * CMediaTableView::getPreviousSong(CMediaTableItem * songItem, bool shuffle) const
 {
     return m_model->getPreviousSong(songItem, shuffle);
 }
@@ -272,12 +272,12 @@ CSongTableItem * CSongTable::getPreviousSong(CSongTableItem * songItem, bool shu
 /**
  * Chercher le morceau suivant un autre morceau.
  *
- * \param songItem Morceau actuel, ou NULL.
+ * \param songItem Morceau actuel, ou nullptr.
  * \param shuffle  Indique si la lecture est aléatoire.
- * \return Morceau suivant, ou NULL.
+ * \return Morceau suivant, ou nullptr.
  */
 
-CSongTableItem * CSongTable::getNextSong(CSongTableItem * songItem, bool shuffle) const
+CMediaTableItem * CMediaTableView::getNextSong(CMediaTableItem * songItem, bool shuffle) const
 {
     return m_model->getNextSong(songItem, shuffle);
 }
@@ -287,10 +287,10 @@ CSongTableItem * CSongTable::getNextSong(CSongTableItem * songItem, bool shuffle
  * Retourne le dernier morceau de la liste.
  *
  * \param shuffle Indique si la lecture est aléatoire.
- * \return Dernier morceau de la liste, ou NULL si la liste est vide.
+ * \return Dernier morceau de la liste, ou nullptr si la liste est vide.
  */
 
-CSongTableItem * CSongTable::getLastSong(bool shuffle) const
+CMediaTableItem * CMediaTableView::getLastSong(bool shuffle) const
 {
     return m_model->getLastSong(shuffle);
 }
@@ -302,11 +302,11 @@ CSongTableItem * CSongTable::getLastSong(bool shuffle) const
  * \return Durée totale en millisecondes.
  */
 
-qlonglong CSongTable::getTotalDuration() const
+qlonglong CMediaTableView::getTotalDuration() const
 {
     qlonglong duration = 0;
 
-    for (QList<CSongTableItem *>::const_iterator songItem = m_model->m_data.begin(); songItem != m_model->m_data.end(); ++songItem)
+    for (QList<CMediaTableItem *>::const_iterator songItem = m_model->m_data.begin(); songItem != m_model->m_data.end(); ++songItem)
     {
         duration += (*songItem)->getSong()->getDuration();
     }
@@ -322,7 +322,7 @@ qlonglong CSongTable::getTotalDuration() const
  * \param filter Filtre de recherche.
  */
 
-void CSongTable::applyFilter(const QString& filter)
+void CMediaTableView::applyFilter(const QString& filter)
 {
     m_model->applyFilter(filter);
 }
@@ -336,7 +336,7 @@ void CSongTable::applyFilter(const QString& filter)
  * \param pos  Position où placer le morceau. Si négatif, le morceau est ajouté à la fin de la liste.
  */
 
-void CSongTable::addSongToTable(CSong * song, int pos)
+void CMediaTableView::addSongToTable(CSong * song, int pos)
 {
     Q_CHECK_PTR(song);
 
@@ -356,7 +356,7 @@ void CSongTable::addSongToTable(CSong * song, int pos)
  * \param songs Liste des morceaux à ajouter.
  */
 
-void CSongTable::addSongsToTable(const QList<CSong *>& songs)
+void CMediaTableView::addSongsToTable(const QList<CSong *>& songs)
 {
     for (QList<CSong *>::const_iterator song = songs.begin(); song != songs.end(); ++song)
     {
@@ -378,7 +378,7 @@ void CSongTable::addSongsToTable(const QList<CSong *>& songs)
  * \param song Pointeur sur la chanson à enlever.
  */
 
-void CSongTable::removeSongFromTable(CSong * song)
+void CMediaTableView::removeSongFromTable(CSong * song)
 {
     if (!song)
     {
@@ -388,7 +388,7 @@ void CSongTable::removeSongFromTable(CSong * song)
 
     int row = 0;
 
-    for (QList<CSongTableItem *>::const_iterator it = m_model->m_data.begin(); it != m_model->m_data.end(); ++it, ++row)
+    for (QList<CMediaTableItem *>::const_iterator it = m_model->m_data.begin(); it != m_model->m_data.end(); ++it, ++row)
     {
         if ((*it)->getSong() == song)
         {
@@ -410,7 +410,7 @@ void CSongTable::removeSongFromTable(CSong * song)
  * \param row Position de la chanson dans la liste (à partir de 0).
  */
 
-void CSongTable::removeSongFromTable(int row)
+void CMediaTableView::removeSongFromTable(int row)
 {
     if (row < 0)
         return;
@@ -430,7 +430,7 @@ void CSongTable::removeSongFromTable(int row)
 }
 
 
-void CSongTable::removeSongsFromTable(const QList<CSong *>& songs)
+void CMediaTableView::removeSongsFromTable(const QList<CSong *>& songs)
 {
     m_model->removeSongs(songs);
 
@@ -446,7 +446,7 @@ void CSongTable::removeSongsFromTable(const QList<CSong *>& songs)
  * Aucune modification n'a lieu en base de données, et aucun signal n'est envoyé.
  */
 
-void CSongTable::removeAllSongsFromTable()
+void CMediaTableView::removeAllSongsFromTable()
 {
     m_model->clear();
 }
@@ -458,7 +458,7 @@ void CSongTable::removeAllSongsFromTable()
  * \param firstSong Morceau à placer au début de la liste.
  */
 
-void CSongTable::initShuffle(CSongTableItem * firstSong)
+void CMediaTableView::initShuffle(CMediaTableItem * firstSong)
 {
     m_model->initShuffle(firstSong);
 }
@@ -479,7 +479,7 @@ void CSongTable::initShuffle(CSongTableItem * firstSong)
  * \param str Chaine de caractères contenant la disposition des colonnes.
  */
 
-void CSongTable::initColumns(const QString& str)
+void CMediaTableView::initColumns(const QString& str)
 {
     bool isValid = false;
 
@@ -585,7 +585,7 @@ void CSongTable::initColumns(const QString& str)
     m_columns[0].visible = true;
 
     m_isColumnMoving = true;
-    CSongTableHeader * header = qobject_cast<CSongTableHeader *>(horizontalHeader());
+    CMediaTableHeader * header = qobject_cast<CMediaTableHeader *>(horizontalHeader());
 /*
     QString debugStr1 = "";
     QString debugStr2 = "";
@@ -658,7 +658,7 @@ void CSongTable::initColumns(const QString& str)
  * \param show   Indique si la colonne doit être affiché ou masqué.
  */
 
-void CSongTable::showColumn(int column, bool show)
+void CMediaTableView::showColumn(int column, bool show)
 {
     if (column < 0 || column >= ColNumber)
         return;
@@ -721,7 +721,7 @@ void CSongTable::showColumn(int column, bool show)
  * Mémorise les lignes sélectionnées.
  */
 
-void CSongTable::onSortAboutToChange()
+void CMediaTableView::onSortAboutToChange()
 {
     m_selectedItems = getSelectedSongItems();
     m_currentItem = m_model->getSongItem(selectionModel()->currentIndex());
@@ -735,7 +735,7 @@ void CSongTable::onSortAboutToChange()
  * \param order  Ordre croissant ou décroissant.
  */
 
-void CSongTable::sortColumn(int column, Qt::SortOrder order)
+void CMediaTableView::sortColumn(int column, Qt::SortOrder order)
 {
     if (column < 0 || column >= ColNumber)
         return;
@@ -750,7 +750,7 @@ void CSongTable::sortColumn(int column, Qt::SortOrder order)
         // Mise-à-jour de la sélection
         selectionModel()->clearSelection();
 
-        for (QList<CSongTableItem *>::const_iterator songItem = m_selectedItems.begin(); songItem != m_selectedItems.end(); ++songItem)
+        for (QList<CMediaTableItem *>::const_iterator songItem = m_selectedItems.begin(); songItem != m_selectedItems.end(); ++songItem)
         {
             selectionModel()->select(m_model->index(m_model->getRowForSongItem(*songItem), 0), QItemSelectionModel::Select | QItemSelectionModel::Rows);
         }
@@ -761,19 +761,19 @@ void CSongTable::sortColumn(int column, Qt::SortOrder order)
 }
 
 
-void CSongTable::sort()
+void CMediaTableView::sort()
 {
     m_model->sort(m_columnSort, m_sortOrder);
 }
 
 
-void CSongTable::goToSongTable()
+void CMediaTableView::goToSongTable()
 {
     QAction * action = qobject_cast<QAction *>(sender());
 
     if (action)
     {
-        CSongTable * songTable = m_actionGoToSongTable.key(action);
+        CMediaTableView * songTable = m_actionGoToSongTable.key(action);
 
         if (songTable)
         {
@@ -783,13 +783,13 @@ void CSongTable::goToSongTable()
 }
 
 
-void CSongTable::addToPlayList()
+void CMediaTableView::addToPlayList()
 {
     QAction * action = qobject_cast<QAction *>(sender());
 
     if (action)
     {
-        CStaticPlayList * playList = m_actionAddToPlayList.key(action);
+        CStaticList * playList = m_actionAddToPlayList.key(action);
 
         if (playList)
         {
@@ -803,7 +803,7 @@ void CSongTable::addToPlayList()
 
             for (QModelIndexList::const_iterator index = indexList.begin(); index != indexList.end(); ++index)
             {
-                CSongTableItem * songItem = m_model->getSongItem(*index);
+                CMediaTableItem * songItem = m_model->getSongItem(*index);
 
                 if (!songList.contains(songItem->getSong()))
                 {
@@ -823,7 +823,7 @@ void CSongTable::addToPlayList()
  * Retire les morceaux sélectionnés de la médiathèque.
  */
 
-void CSongTable::removeSongsFromLibrary()
+void CMediaTableView::removeSongsFromLibrary()
 {
     // Liste des morceaux sélectionnés
     QModelIndexList indexList = selectionModel()->selectedRows();
@@ -833,7 +833,7 @@ void CSongTable::removeSongsFromLibrary()
 
     for (QModelIndexList::const_iterator it = indexList.begin(); it != indexList.end(); ++it)
     {
-        CSongTableItem * songItem = m_model->getSongItem(*it);
+        CMediaTableItem * songItem = m_model->getSongItem(*it);
 
         if (m_application->getCurrentSongItem() == songItem)
             needStop = true;
@@ -858,7 +858,7 @@ void CSongTable::removeSongsFromLibrary()
 }
 
 
-void CSongTable::moveSongs()
+void CMediaTableView::moveSongs()
 {
     // Liste des morceaux sélectionnés
     QModelIndexList indexList = selectionModel()->selectedRows();
@@ -867,7 +867,7 @@ void CSongTable::moveSongs()
 
     for (QModelIndexList::const_iterator it = indexList.begin(); it != indexList.end(); ++it)
     {
-        CSongTableItem * songItem = m_model->getSongItem(*it);
+        CMediaTableItem * songItem = m_model->getSongItem(*it);
         CSong * song = songItem->getSong();
 
         if (!songList.contains(song))
@@ -888,7 +888,7 @@ void CSongTable::moveSongs()
  * Coche tous les morceaux sélectionnés dans la liste.
  */
 
-void CSongTable::checkSelection()
+void CMediaTableView::checkSelection()
 {
     // Liste des morceaux sélectionnés
     QModelIndexList indexList = selectionModel()->selectedRows();
@@ -907,7 +907,7 @@ void CSongTable::checkSelection()
  * Décoche tous les morceaux sélectionnés dans la liste.
  */
 
-void CSongTable::uncheckSelection()
+void CMediaTableView::uncheckSelection()
 {
     // Liste des morceaux sélectionnés
     QModelIndexList indexList = selectionModel()->selectedRows();
@@ -922,7 +922,7 @@ void CSongTable::uncheckSelection()
 }
 
 
-void CSongTable::onRowCountChange(const QModelIndex& parent, int start, int end)
+void CMediaTableView::onRowCountChange(const QModelIndex& parent, int start, int end)
 {
     emit rowCountChanged();
 }
@@ -932,13 +932,13 @@ void CSongTable::onRowCountChange(const QModelIndex& parent, int start, int end)
  * Méthode appellée lorsque la sélection change.
  */
 
-void CSongTable::onSelectionChange()
+void CMediaTableView::onSelectionChange()
 {
     // On vérifie que cette table est actuellement affichée
     if (m_application->getDisplayedSongTable() != this)
         return;
 
-    QList<CSongTableItem *> songItems = getSelectedSongItems();
+    QList<CMediaTableItem *> songItems = getSelectedSongItems();
 
     const int numSongs = songItems.size();
 
@@ -948,7 +948,7 @@ void CSongTable::onSelectionChange()
     // Durée totale sélectionnée
     qlonglong durationMS = 0;
 
-    for (QList<CSongTableItem *>::const_iterator it = songItems.begin(); it != songItems.end(); ++it)
+    for (QList<CMediaTableItem *>::const_iterator it = songItems.begin(); it != songItems.end(); ++it)
     {
         durationMS += (*it)->getSong()->getDuration();
     }
@@ -957,7 +957,7 @@ void CSongTable::onSelectionChange()
 }
 
 
-void CSongTable::addSongToQueueBegining()
+void CMediaTableView::addSongToQueueBegining()
 {
     // Liste des morceaux sélectionnés
     QList<CSong *> songs = getSelectedSongs();
@@ -970,7 +970,7 @@ void CSongTable::addSongToQueueBegining()
 }
 
 
-void CSongTable::addSongToQueueEnd()
+void CMediaTableView::addSongToQueueEnd()
 {
     // Liste des morceaux sélectionnés
     QList<CSong *> songs = getSelectedSongs();
@@ -983,7 +983,7 @@ void CSongTable::addSongToQueueEnd()
 }
 
 
-QString CSongTable::getColumnsInfos() const
+QString CMediaTableView::getColumnsInfos() const
 {
     QString str;
     int currentPos = 0;
@@ -1026,7 +1026,7 @@ QString CSongTable::getColumnsInfos() const
 
 
 /*
-void CSongTable::mousePressEvent(QMouseEvent * event)
+void CMediaTableView::mousePressEvent(QMouseEvent * event)
 {
     Q_CHECK_PTR(event);
 
@@ -1066,7 +1066,7 @@ void CSongTable::mousePressEvent(QMouseEvent * event)
 }
 */
 
-void CSongTable::columnMoved(int logicalIndex, int oldVisualIndex, int newVisualIndex)
+void CMediaTableView::columnMoved(int logicalIndex, int oldVisualIndex, int newVisualIndex)
 {
     if (!m_isColumnMoving)
     {
@@ -1102,7 +1102,7 @@ void CSongTable::columnMoved(int logicalIndex, int oldVisualIndex, int newVisual
 }
 
 
-void CSongTable::columnResized(int logicalIndex, int oldSize, int newSize)
+void CMediaTableView::columnResized(int logicalIndex, int oldSize, int newSize)
 {
     m_columns[logicalIndex].width = newSize;
 
@@ -1119,7 +1119,7 @@ void CSongTable::columnResized(int logicalIndex, int oldSize, int newSize)
  * \return Booléen indiquant le succès de l'opération.
  */
 
-bool CSongTable::updateDatabase()
+bool CMediaTableView::updateDatabase()
 {
     if (m_isModified)
     {
@@ -1151,7 +1151,7 @@ bool CSongTable::updateDatabase()
 }
 
 
-void CSongTable::startDrag(Qt::DropActions supportedActions)
+void CMediaTableView::startDrag(Qt::DropActions supportedActions)
 {
     QModelIndexList indexes = selectedIndexes();
     QList<int> rows;
@@ -1220,7 +1220,7 @@ void CSongTable::startDrag(Qt::DropActions supportedActions)
  * \param event Évènement du clavier.
  */
 
-void CSongTable::keyPressEvent(QKeyEvent * event)
+void CMediaTableView::keyPressEvent(QKeyEvent * event)
 {
     Q_CHECK_PTR(event);
 
@@ -1279,7 +1279,7 @@ void CSongTable::keyPressEvent(QKeyEvent * event)
  * \param event Évènement de la souris.
  */
 
-void CSongTable::mouseDoubleClickEvent(QMouseEvent * event)
+void CMediaTableView::mouseDoubleClickEvent(QMouseEvent * event)
 {
     Q_CHECK_PTR(event);
 
@@ -1306,13 +1306,13 @@ void CSongTable::mouseDoubleClickEvent(QMouseEvent * event)
  * \return Booléen.
  */
 
-bool CSongTable::isModified() const
+bool CMediaTableView::isModified() const
 {
     return m_isModified;
 }
 
 
-void CSongTable::replaceSong(CSong * oldSong, CSong * newSong)
+void CMediaTableView::replaceSong(CSong * oldSong, CSong * newSong)
 {
     m_model->replaceSong(oldSong, newSong);
 }
@@ -1324,7 +1324,7 @@ void CSongTable::replaceSong(CSong * oldSong, CSong * newSong)
  * \param songItem Morceau à sélectionner.
  */
 
-void CSongTable::selectSongItem(CSongTableItem * songItem)
+void CMediaTableView::selectSongItem(CMediaTableItem * songItem)
 {
     selectionModel()->clear();
 
@@ -1337,7 +1337,7 @@ void CSongTable::selectSongItem(CSongTableItem * songItem)
 }
 
 
-void CSongTable::playSelectedSong()
+void CMediaTableView::playSelectedSong()
 {
     m_application->playSong(m_selectedItem);
 }
@@ -1349,10 +1349,10 @@ void CSongTable::playSelectedSong()
  * \param point Position du clic.
  */
 
-void CSongTable::openCustomMenuProject(const QPoint& point)
+void CMediaTableView::openCustomMenuProject(const QPoint& point)
 {
     QModelIndex index = indexAt(point);
-    m_selectedItem = NULL;
+    m_selectedItem = nullptr;
 
     if (index.isValid())
     {
@@ -1428,7 +1428,7 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
             // Listes de lecture contenant le morceau
             //TODO: gérer les dossiers
             QMenu * menuPlayList = menu->addMenu(tr("Playlists"));
-            CSongTable * library = m_application->getLibrary();
+            CMediaTableView * library = m_application->getLibrary();
             m_actionGoToSongTable[library] = menuPlayList->addAction(QPixmap(":/icons/library"), tr("Library"));
             connect(m_actionGoToSongTable[library], SIGNAL(triggered()), this, SLOT(goToSongTable()));
 
@@ -1447,7 +1447,7 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
                     {
                         m_actionGoToSongTable[*it]->setIcon(QPixmap(":/icons/dynamic_list"));
                     }
-                    else if (qobject_cast<CStaticPlayList *>(*it))
+                    else if (qobject_cast<CStaticList *>(*it))
                     {
                         m_actionGoToSongTable[*it]->setIcon(QPixmap(":/icons/playlist"));
                     }
@@ -1469,7 +1469,7 @@ void CSongTable::openCustomMenuProject(const QPoint& point)
         {
             for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
             {
-                CStaticPlayList * staticList = qobject_cast<CStaticPlayList *>(*it);
+                CStaticList * staticList = qobject_cast<CStaticList *>(*it);
                 if (staticList)
                 {
                     m_actionAddToPlayList[staticList] = menuAddToPlayList->addAction(QPixmap(":/icons/playlist"), (*it)->getName());

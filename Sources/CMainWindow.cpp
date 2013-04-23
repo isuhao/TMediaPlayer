@@ -17,14 +17,14 @@ You should have received a copy of the GNU General Public License
 along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "CApplication.hpp"
+#include "CMainWindow.hpp"
 #include "CSong.hpp"
-#include "CSongTableModel.hpp"
-#include "CStaticPlayList.hpp"
+#include "CMediaTableModel.hpp"
+#include "CStaticList.hpp"
 #include "CDynamicList.hpp"
 #include "CFolder.hpp"
-#include "CPlayListView.hpp"
-#include "CListModel.hpp"
+#include "CLibraryView.hpp"
+#include "CLibraryModel.hpp"
 #include "CLyricWiki.hpp"
 #include "CLibraryFolder.hpp"
 #include "Dialog/CDialogEditDynamicList.hpp"
@@ -45,6 +45,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CWidgetLyrics.hpp"
 #include "CCDRomDrive.hpp"
 #include "CQueuePlayList.hpp"
+#include "Utils.hpp"
 
 // Last.fm
 #include "Last.fm/CAuthentication.hpp"
@@ -84,13 +85,13 @@ const QString appVersion = "1.0.46";     ///< Numéro de version de l'applicatio
 const QString appDate    = "20/04/2013"; ///< Date de sortie de cette version.
 
 
-QString CApplication::getAppVersion()
+QString CMainWindow::getAppVersion()
 {
     return appVersion;
 }
 
 
-QString CApplication::getAppDate()
+QString CMainWindow::getAppDate()
 {
     return appDate;
 }
@@ -100,37 +101,37 @@ QString CApplication::getAppDate()
  * Constructeur de la classe principale de l'application.
  */
 
-CApplication::CApplication() :
-    QMainWindow            (NULL),
-    m_uiWidget             (new Ui::TMediaPlayer()),
-    m_uiControl            (new Ui::WidgetControl()),
-    m_queue                (NULL),
-    m_soundSystem          (NULL),
-    m_playListView         (NULL),
-    m_listModel            (NULL),
-    m_dialogEditSong       (NULL),
-    m_settings             (NULL),
-    m_timer                (NULL),
-    m_listInfos            (NULL),
-    m_currentSongItem      (NULL),
-    m_currentSongTable     (NULL),
-    m_library              (NULL),
-    m_displayedSongTable   (NULL),
-    m_widgetLyrics         (NULL),
-    m_state                (Stopped),
-    m_showRemainingTime    (false),
-    m_repeatMode           (NoRepeat),
-    m_isShuffle            (false),
-    m_isMute               (false),
-    m_volume               (50),
+CMainWindow::CMainWindow() :
+QMainWindow            (nullptr),
+m_uiWidget             (new Ui::TMediaPlayer()),
+m_uiControl            (new Ui::WidgetControl()),
+m_queue                (nullptr),
+m_soundSystem          (nullptr),
+m_playListView         (nullptr),
+m_listModel            (nullptr),
+m_dialogEditSong       (nullptr),
+m_settings             (nullptr),
+m_timer                (nullptr),
+m_listInfos            (nullptr),
+m_currentSongItem      (nullptr),
+m_currentSongTable     (nullptr),
+m_library              (nullptr),
+m_displayedSongTable   (nullptr),
+m_widgetLyrics         (nullptr),
+m_state                (Stopped),
+m_showRemainingTime    (false),
+m_repeatMode           (NoRepeat),
+m_isShuffle            (false),
+m_isMute               (false),
+m_volume               (50),
 
-    // Last.fm
-    m_lastFmEnableScrobble       (false),
-    m_delayBeforeNotification    (5000),
-    m_percentageBeforeScrobbling (60),
-    m_lastFmTimeListened         (0),
-    m_lastFmLastPosition         (0),
-    m_lastFmState                (NoScrobble)
+// Last.fm
+m_lastFmEnableScrobble       (false),
+m_delayBeforeNotification    (5000),
+m_percentageBeforeScrobbling (60),
+m_lastFmTimeListened         (0),
+m_lastFmLastPosition         (0),
+m_lastFmState                (NoScrobble)
 {
 
 #ifndef T_NO_SINGLE_APP
@@ -151,7 +152,7 @@ CApplication::CApplication() :
         m_translator.load(QString("Lang/TMediaPlayer_") + QLocale::system().name());
 
     qApp->installTranslator(&m_translator);
-    
+
 #if QT_VERSION >= 0x050000
     m_applicationPath = QStandardPaths::writableLocation(QStandardPaths::DataLocation) + QDir::separator();
 #else
@@ -161,15 +162,16 @@ CApplication::CApplication() :
     // Création du répertoire si nécessaire
     QDir(m_applicationPath).mkpath(".");
 
-    // Initialisation de l'interface graphique
-    m_uiWidget->setupUi(this);
-    m_uiWidget->actionTogglePlay->setShortcut(Qt::Key_Space);
-
     // Last.fm
     m_lastFmEnableScrobble = m_settings->value("LastFm/EnableScrobble", false).toBool();
     m_delayBeforeNotification = m_settings->value("LastFm/DelayBeforeNotification", 5000).toInt();
     m_percentageBeforeScrobbling = m_settings->value("LastFm/PercentageBeforeScrobbling", 60).toInt();
     m_lastFmKey = m_settings->value("LastFm/SessionKey", "").toByteArray();
+
+
+    // Initialisation de l'interface graphique
+    m_uiWidget->setupUi(this);
+    m_uiWidget->actionTogglePlay->setShortcut(Qt::Key_Space);
 
     // Barre d'état
     QTime duration(0, 0);
@@ -178,47 +180,47 @@ CApplication::CApplication() :
 
     // Menus
 #if QT_VERSION >= 0x050000
-    connect(m_uiWidget->actionNewPlayList       , &QAction::triggered, this, &CApplication::openDialogCreateStaticList_Slot );
-    connect(m_uiWidget->actionNewDynamicPlayList, &QAction::triggered, this, &CApplication::openDialogCreateDynamicList_Slot);
-    connect(m_uiWidget->actionNewFolder         , &QAction::triggered, this, &CApplication::openDialogCreateFolder_Slot     );
-    connect(m_uiWidget->actionAddFiles          , &QAction::triggered, this, &CApplication::openDialogAddSongs         );
-    connect(m_uiWidget->actionAddFolder         , &QAction::triggered, this, &CApplication::openDialogAddFolder        );
-    connect(m_uiWidget->actionInformations      , &QAction::triggered, this, &CApplication::openDialogSongInfos        );
-    connect(m_uiWidget->actionOpenInExplorer    , &QAction::triggered, this, &CApplication::openSongInExplorer         );
-    connect(m_uiWidget->actionImportITunes      , &QAction::triggered, this, &CApplication::importFromITunes           );
-    connect(m_uiWidget->actionImportSongbird    , &QAction::triggered, this, &CApplication::importFromSongbird         );
-    connect(m_uiWidget->actionNotifications     , &QAction::triggered, this, &CApplication::openDialogNotifications    );
-    connect(m_uiWidget->actionLastPlays         , &QAction::triggered, this, &CApplication::openDialogLastPlays        );
+    connect(m_uiWidget->actionNewPlayList       , &QAction::triggered, this, &CMainWindow::openDialogCreateStaticList_Slot );
+    connect(m_uiWidget->actionNewDynamicPlayList, &QAction::triggered, this, &CMainWindow::openDialogCreateDynamicList_Slot);
+    connect(m_uiWidget->actionNewFolder         , &QAction::triggered, this, &CMainWindow::openDialogCreateFolder_Slot     );
+    connect(m_uiWidget->actionAddFiles          , &QAction::triggered, this, &CMainWindow::openDialogAddSongs         );
+    connect(m_uiWidget->actionAddFolder         , &QAction::triggered, this, &CMainWindow::openDialogAddFolder        );
+    connect(m_uiWidget->actionInformations      , &QAction::triggered, this, &CMainWindow::openDialogSongInfos        );
+    connect(m_uiWidget->actionOpenInExplorer    , &QAction::triggered, this, &CMainWindow::openSongInExplorer         );
+    connect(m_uiWidget->actionImportITunes      , &QAction::triggered, this, &CMainWindow::importFromITunes           );
+    connect(m_uiWidget->actionImportSongbird    , &QAction::triggered, this, &CMainWindow::importFromSongbird         );
+    connect(m_uiWidget->actionNotifications     , &QAction::triggered, this, &CMainWindow::openDialogNotifications    );
+    connect(m_uiWidget->actionLastPlays         , &QAction::triggered, this, &CMainWindow::openDialogLastPlays        );
 
-    connect(m_uiWidget->actionSelectAll         , &QAction::triggered, this, &CApplication::selectAll                  );
-    connect(m_uiWidget->actionSelectNone        , &QAction::triggered, this, &CApplication::selectNone                 );
-    connect(m_uiWidget->actionPreferences       , &QAction::triggered, this, &CApplication::openDialogPreferences      );
+    connect(m_uiWidget->actionSelectAll         , &QAction::triggered, this, &CMainWindow::selectAll                  );
+    connect(m_uiWidget->actionSelectNone        , &QAction::triggered, this, &CMainWindow::selectNone                 );
+    connect(m_uiWidget->actionPreferences       , &QAction::triggered, this, &CMainWindow::openDialogPreferences      );
 
-    connect(m_uiWidget->actionTogglePlay        , &QAction::triggered, this, &CApplication::togglePlay                 );
-    connect(m_uiWidget->actionStop              , &QAction::triggered, this, &CApplication::stop                       );
-    connect(m_uiWidget->actionPrevious          , &QAction::triggered, this, &CApplication::previousSong               );
-    connect(m_uiWidget->actionNext              , &QAction::triggered, this, &CApplication::nextSong                   );
+    connect(m_uiWidget->actionTogglePlay        , &QAction::triggered, this, &CMainWindow::togglePlay                 );
+    connect(m_uiWidget->actionStop              , &QAction::triggered, this, &CMainWindow::stop                       );
+    connect(m_uiWidget->actionPrevious          , &QAction::triggered, this, &CMainWindow::previousSong               );
+    connect(m_uiWidget->actionNext              , &QAction::triggered, this, &CMainWindow::nextSong                   );
 
 #if __cplusplus < 201103L
-    connect(m_uiWidget->actionNoRepeat          , &QAction::triggered, this, &CApplication::setRepeatModeNoRepeat      );
-    connect(m_uiWidget->actionRepeatList        , &QAction::triggered, this, &CApplication::setRepeatModeRepeatList    );
-    connect(m_uiWidget->actionRepeatSong        , &QAction::triggered, this, &CApplication::setRepeatModeRepeatSong    );
+    connect(m_uiWidget->actionNoRepeat          , &QAction::triggered, this, &CMainWindow::setRepeatModeNoRepeat      );
+    connect(m_uiWidget->actionRepeatList        , &QAction::triggered, this, &CMainWindow::setRepeatModeRepeatList    );
+    connect(m_uiWidget->actionRepeatSong        , &QAction::triggered, this, &CMainWindow::setRepeatModeRepeatSong    );
 #else
     connect(m_uiWidget->actionNoRepeat          , &QAction::triggered, [=](){ this->setRepeatMode(NoRepeat  ); });
     connect(m_uiWidget->actionRepeatList        , &QAction::triggered, [=](){ this->setRepeatMode(RepeatList); });
     connect(m_uiWidget->actionRepeatSong        , &QAction::triggered, [=](){ this->setRepeatMode(RepeatSong); });
 #endif
 
-    connect(m_uiWidget->actionShuffle           , &QAction::triggered, this, &CApplication::setShuffle                 );
-    connect(m_uiWidget->actionMute              , &QAction::triggered, this, &CApplication::setMute                    );
-    connect(m_uiWidget->actionEqualizer         , &QAction::triggered, this, &CApplication::openDialogEqualizer        );
+    connect(m_uiWidget->actionShuffle           , &QAction::triggered, this, &CMainWindow::setShuffle                 );
+    connect(m_uiWidget->actionMute              , &QAction::triggered, this, &CMainWindow::setMute                    );
+    connect(m_uiWidget->actionEqualizer         , &QAction::triggered, this, &CMainWindow::openDialogEqualizer        );
 
     //connect(m_uiWidget->actionAboutQt           , &QAction::triggered, qApp, &QApplication::aboutQt                    );
     connect(m_uiWidget->actionAboutQt           , SIGNAL(triggered(    )), qApp, SLOT(aboutQt                    ()));
-    connect(m_uiWidget->actionAbout             , &QAction::triggered, this, &CApplication::openDialogAbout            );
+    connect(m_uiWidget->actionAbout             , &QAction::triggered, this, &CMainWindow::openDialogAbout            );
 
 
-    connect(this, &CApplication::songPlayStart, this, &CApplication::updateSongDescription);
+    connect(this, &CMainWindow::songPlayStart, this, &CMainWindow::updateSongDescription);
 #else
     connect(m_uiWidget->actionNewPlayList       , SIGNAL(triggered(    )), this, SLOT(openDialogCreateStaticList ()));
     connect(m_uiWidget->actionNewDynamicPlayList, SIGNAL(triggered(    )), this, SLOT(openDialogCreateDynamicList()));
@@ -265,7 +267,7 @@ CApplication::CApplication() :
  * Libère les ressources utilisées par l'application.
  */
 
-CApplication::~CApplication()
+CMainWindow::~CMainWindow()
 {
     if (m_timer)
     {
@@ -318,7 +320,7 @@ CApplication::~CApplication()
  * Initialise l'interface graphique et charge les données.
  */
 
-bool CApplication::initWindow()
+bool CMainWindow::initWindow()
 {
     static bool init = false;
 
@@ -391,7 +393,7 @@ bool CApplication::initWindow()
                     }
 
                     // Tentative de scrobble
-                    CScrobble * query = new CScrobble(this, m_lastFmKey, scrobble);
+                    /*CScrobble * queryScrobble =*/ new CScrobble(this, m_lastFmKey, scrobble);
                 }
             }
 
@@ -419,17 +421,17 @@ bool CApplication::initWindow()
 #if QT_VERSION < 0x050000
     connect(m_uiControl->btnPrevious, SIGNAL(clicked()), this, SLOT(previousSong())     );
     connect(m_uiControl->btnNext    , SIGNAL(clicked()), this, SLOT(nextSong())         );
-    
+
     connect(m_uiControl->btnRepeat  , SIGNAL(clicked()), this, SLOT(setNextRepeatMode()));
     connect(m_uiControl->btnShuffle , SIGNAL(clicked()), this, SLOT(setShuffle())       );
     connect(m_uiControl->btnMute    , SIGNAL(clicked()), this, SLOT(toggleMute())       );
 #else
-    connect(m_uiControl->btnPrevious, &QToolButton::clicked, this, &CApplication::previousSong     );
-    connect(m_uiControl->btnNext    , &QToolButton::clicked, this, &CApplication::nextSong         );
-    
-    connect(m_uiControl->btnRepeat  , &QToolButton::clicked, this, &CApplication::setNextRepeatMode);
-    connect(m_uiControl->btnShuffle , &QToolButton::clicked, this, &CApplication::setShuffle       );
-    connect(m_uiControl->btnMute    , &QToolButton::clicked, this, &CApplication::toggleMute       );
+    connect(m_uiControl->btnPrevious, &QToolButton::clicked, this, &CMainWindow::previousSong     );
+    connect(m_uiControl->btnNext    , &QToolButton::clicked, this, &CMainWindow::nextSong         );
+
+    connect(m_uiControl->btnRepeat  , &QToolButton::clicked, this, &CMainWindow::setNextRepeatMode);
+    connect(m_uiControl->btnShuffle , &QToolButton::clicked, this, &CMainWindow::setShuffle       );
+    connect(m_uiControl->btnMute    , &QToolButton::clicked, this, &CMainWindow::toggleMute       );
 #endif
 
     connect(m_uiControl->btnClearFilter, SIGNAL(clicked()), this, SLOT(clearFilter()));
@@ -443,7 +445,7 @@ bool CApplication::initWindow()
 
 
     // Dock "Playlists"
-    m_playListView = new CPlayListView(this);
+    m_playListView = new CLibraryView(this);
 
     QDockWidget * dockPlayLists = new QDockWidget(tr("Playlists"), this);
     dockPlayLists->setObjectName("dock_playlists");
@@ -561,7 +563,7 @@ bool CApplication::initWindow()
         if (res != FMOD_OK)
             logError(tr("dsp->setParameter(FMOD_DSP_PARAMEQ_GAIN) #%1").arg(i), __FUNCTION__, __FILE__, __LINE__);
 
-        res = m_soundSystem->addDSP(m_dsp[i], NULL);
+        res = m_soundSystem->addDSP(m_dsp[i], nullptr);
 
         if (res != FMOD_OK)
             logError(tr("addDSP #%1").arg(i), __FUNCTION__, __FILE__, __LINE__);
@@ -593,7 +595,7 @@ bool CApplication::initWindow()
     connect(m_timer, SIGNAL(timeout()), this, SLOT(updateTimer()));
     m_timer->start(timerPeriod);
 
-    updateSongDescription(NULL);
+    updateSongDescription(nullptr);
     setState(Stopped);
 
     init = true;
@@ -610,7 +612,7 @@ bool CApplication::initWindow()
  * \param line     Ligne du fichier à l'origine de l'erreur.
  */
 
-void CApplication::showDatabaseError(const QString& msg, const QString& query, const QString& fileName, int line)
+void CMainWindow::showDatabaseError(const QString& msg, const QString& query, const QString& fileName, int line)
 {
 
 #ifdef QT_DEBUG
@@ -627,7 +629,7 @@ void CApplication::showDatabaseError(const QString& msg, const QString& query, c
  * \param height Hauteur des lignes en pixels, entre 15 et 50.
  */
 
-void CApplication::setRowHeight(int height)
+void CMainWindow::setRowHeight(int height)
 {
     height = qBound(15, height, 50);
     m_settings->setValue("Preferences/RowHeight", height);
@@ -650,7 +652,7 @@ void CApplication::setRowHeight(int height)
  * \return Hauteur des lignes en pixels (par défaut, 19).
  */
 
-int CApplication::getRowHeight() const
+int CMainWindow::getRowHeight() const
 {
     return m_settings->value("Preferences/RowHeight", 19).toInt();
 }
@@ -662,14 +664,14 @@ int CApplication::getRowHeight() const
  * \param show Booléen.
  */
 
-void CApplication::showButtonStop(bool show)
+void CMainWindow::showButtonStop(bool show)
 {
     m_settings->setValue("Preferences/ShowButtonStop", show);
     m_uiControl->btnStop->setVisible(show);
 }
 
 
-void CApplication::showRemainingTime(bool show)
+void CMainWindow::showRemainingTime(bool show)
 {
     m_settings->setValue("Preferences/ShowRemainingTime", show);
     m_showRemainingTime = show;
@@ -682,7 +684,7 @@ void CApplication::showRemainingTime(bool show)
  * \param enable Booléen.
  */
 
-void CApplication::enableScrobbling(bool enable)
+void CMainWindow::enableScrobbling(bool enable)
 {
     m_lastFmEnableScrobble = enable;
     m_settings->setValue("LastFm/EnableScrobble", enable);
@@ -695,7 +697,7 @@ void CApplication::enableScrobbling(bool enable)
  * \param delay Délai en millisecondes.
  */
 
-void CApplication::setDelayBeforeNotification(int delay)
+void CMainWindow::setDelayBeforeNotification(int delay)
 {
     delay = qBound(2000, delay, 20000);
     m_delayBeforeNotification = delay;
@@ -703,7 +705,7 @@ void CApplication::setDelayBeforeNotification(int delay)
 }
 
 
-void CApplication::setPercentageBeforeScrobbling(int percentage)
+void CMainWindow::setPercentageBeforeScrobbling(int percentage)
 {
     percentage = qBound(50, percentage, 100);
     m_percentageBeforeScrobbling = percentage;
@@ -718,7 +720,7 @@ void CApplication::setPercentageBeforeScrobbling(int percentage)
  * \param gain      Valeur du gain (entre 0.05 et 3).
  */
 
-void CApplication::setEqualizerGain(CEqualizerPreset::TFrequency frequency, double gain)
+void CMainWindow::setEqualizerGain(CEqualizerPreset::TFrequency frequency, double gain)
 {
     m_equalizerGains[frequency] = qBound(0.05, gain, 3.0);
     m_settings->setValue(QString("Equalizer/Gain_%1").arg(frequency), m_equalizerGains[frequency]);
@@ -736,7 +738,7 @@ void CApplication::setEqualizerGain(CEqualizerPreset::TFrequency frequency, doub
  * \return Valeur du gain (entre 0.05 et 3).
  */
 
-double CApplication::getEqualizerGain(CEqualizerPreset::TFrequency frequency) const
+double CMainWindow::getEqualizerGain(CEqualizerPreset::TFrequency frequency) const
 {
     return m_equalizerGains[frequency];
 }
@@ -747,7 +749,7 @@ double CApplication::getEqualizerGain(CEqualizerPreset::TFrequency frequency) co
  * Tous les gains sont définis à 1.
  */
 
-void CApplication::resetEqualizer()
+void CMainWindow::resetEqualizer()
 {
     setEqualizerGain(CEqualizerPreset::Frequency32 , 1.0f);
     setEqualizerGain(CEqualizerPreset::Frequency64 , 1.0f);
@@ -768,7 +770,7 @@ void CApplication::resetEqualizer()
  * \param enabled Booléen.
  */
 
-void CApplication::setEqualizerEnabled(bool enabled)
+void CMainWindow::setEqualizerEnabled(bool enabled)
 {
     FMOD_RESULT res;
 
@@ -790,32 +792,32 @@ void CApplication::setEqualizerEnabled(bool enabled)
  * \return Booléen.
  */
 
-bool CApplication::isEqualizerEnabled() const
+bool CMainWindow::isEqualizerEnabled() const
 {
     return m_settings->value(QString("Equalizer/Enabled"), false).toBool();
 }
 
 
-void CApplication::addEqualizerPreset(CEqualizerPreset * preset)
+void CMainWindow::addEqualizerPreset(CEqualizerPreset * preset)
 {
     if (!preset)
         return;
 
     if (m_equalizerPresets.contains(preset))
         return;
-    
+
     m_equalizerPresets.append(preset);
 }
 
 
-void CApplication::deleteEqualizerPreset(CEqualizerPreset * preset)
+void CMainWindow::deleteEqualizerPreset(CEqualizerPreset * preset)
 {
     if (!preset)
         return;
 
     if (m_currentEqualizerPreset == preset)
     {
-        m_currentEqualizerPreset = NULL;
+        m_currentEqualizerPreset = nullptr;
         m_settings->setValue("Equalizer/PresetName", QString());
     }
 
@@ -830,10 +832,10 @@ void CApplication::deleteEqualizerPreset(CEqualizerPreset * preset)
  * Retourne le préréglage d'égaliseur correspondant à un identifiant.
  *
  * \param id Identifiant du préréglage.
- * \return Pointeur sur le préréglage, ou NULL.
+ * \return Pointeur sur le préréglage, ou nullptr.
  */
 
-CEqualizerPreset * CApplication::getEqualizerPresetFromId(int id) const
+CEqualizerPreset * CMainWindow::getEqualizerPresetFromId(int id) const
 {
     for (QList<CEqualizerPreset *>::const_iterator it = m_equalizerPresets.begin(); it != m_equalizerPresets.end(); ++it)
     {
@@ -841,7 +843,7 @@ CEqualizerPreset * CApplication::getEqualizerPresetFromId(int id) const
             return *it;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 
@@ -849,10 +851,10 @@ CEqualizerPreset * CApplication::getEqualizerPresetFromId(int id) const
  * Retourne le préréglage d'égaliseur correspondant à un nom.
  *
  * \param name Nom du préréglage.
- * \return Pointeur sur le préréglage, ou NULL.
+ * \return Pointeur sur le préréglage, ou nullptr.
  */
 
-CEqualizerPreset * CApplication::getEqualizerPresetFromName(const QString& name) const
+CEqualizerPreset * CMainWindow::getEqualizerPresetFromName(const QString& name) const
 {
     for (QList<CEqualizerPreset *>::const_iterator it = m_equalizerPresets.begin(); it != m_equalizerPresets.end(); ++it)
     {
@@ -860,11 +862,11 @@ CEqualizerPreset * CApplication::getEqualizerPresetFromName(const QString& name)
             return *it;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 
-void CApplication::setCurrentEqualizerPreset(CEqualizerPreset * equalizer)
+void CMainWindow::setCurrentEqualizerPreset(CEqualizerPreset * equalizer)
 {
     if (!equalizer)
     {
@@ -895,7 +897,7 @@ void CApplication::setCurrentEqualizerPreset(CEqualizerPreset * equalizer)
  * \return Filtre de recherche.
  */
 
-QString CApplication::getFilter() const
+QString CMainWindow::getFilter() const
 {
     return m_uiControl->editFilter->text().trimmed();
 }
@@ -908,7 +910,7 @@ QString CApplication::getFilter() const
  * \param songTable Liste de morceaux à afficher.
  */
 
-void CApplication::setDisplayedSongTable(CSongTable * songTable)
+void CMainWindow::setDisplayedSongTable(CMediaTableView * songTable)
 {
     m_displayedSongTable = (songTable ? songTable : m_library);
 }
@@ -923,7 +925,7 @@ void CApplication::setDisplayedSongTable(CSongTable * songTable)
  * \param songTable Liste de lecture courante.
  */
 
-void CApplication::setCurrentSongItem(CSongTableItem * songItem, CSongTable * songTable)
+void CMainWindow::setCurrentSongItem(CMediaTableItem * songItem, CMediaTableView * songTable)
 {
     m_currentSongItem = songItem;
     m_currentSongTable = songTable;
@@ -934,20 +936,20 @@ void CApplication::setCurrentSongItem(CSongTableItem * songItem, CSongTable * so
  * Retourne le pointeur sur un morceau à partir de son identifiant en base de données.
  *
  * \param id Identifiant du morceau.
- * \return Pointeur sur le morceau, ou NULL si l'identifiant est invalide.
+ * \return Pointeur sur le morceau, ou nullptr si l'identifiant est invalide.
  */
 
-CSong * CApplication::getSongFromId(int id) const
+CSong * CMainWindow::getSongFromId(int id) const
 {
     if (id <= 0)
-        return NULL;
+        return nullptr;
 
     const QMap<int, CSong *> songList = m_library->getSongsMap();
     return songList.value(id);
 }
 
 
-CLibraryFolder * CApplication::getLibraryFolder(int folderId) const
+CLibraryFolder * CMainWindow::getLibraryFolder(int folderId) const
 {
     for (QList<CLibraryFolder *>::const_iterator it = m_libraryFolders.begin(); it != m_libraryFolders.end(); ++it)
     {
@@ -955,11 +957,11 @@ CLibraryFolder * CApplication::getLibraryFolder(int folderId) const
             return *it;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 
-int CApplication::getLibraryFolderId(const QString& fileName) const
+int CMainWindow::getLibraryFolderId(const QString& fileName) const
 {
     for (QList<CLibraryFolder *>::const_iterator it = m_libraryFolders.begin(); it != m_libraryFolders.end(); ++it)
     {
@@ -971,7 +973,7 @@ int CApplication::getLibraryFolderId(const QString& fileName) const
 }
 
 
-void CApplication::addLibraryFolder(CLibraryFolder * folder)
+void CMainWindow::addLibraryFolder(CLibraryFolder * folder)
 {
     if (!folder || m_libraryFolders.contains(folder))
         return;
@@ -986,7 +988,7 @@ void CApplication::addLibraryFolder(CLibraryFolder * folder)
  * \param folder Pointeur sur le répertoire à supprimer.
  */
 
-void CApplication::removeLibraryFolder(CLibraryFolder * folder)
+void CMainWindow::removeLibraryFolder(CLibraryFolder * folder)
 {
     if (!folder)
         return;
@@ -1013,10 +1015,10 @@ void CApplication::removeLibraryFolder(CLibraryFolder * folder)
  * Retourne le dossier correspondant à un identifiant.
  *
  * \param id Identifiant du dossier.
- * \return Pointeur sur le dossier, ou NULL si \a id n'est pas valide.
+ * \return Pointeur sur le dossier, ou nullptr si \a id n'est pas valide.
  */
 
-CFolder * CApplication::getFolderFromId(int id) const
+CFolder * CMainWindow::getFolderFromId(int id) const
 {
     return m_listModel->getFolderFromId(id);
 }
@@ -1026,10 +1028,10 @@ CFolder * CApplication::getFolderFromId(int id) const
  * Retourne la liste de lecture correspondant à un identifiant.
  *
  * \param id Identifiant de la liste.
- * \return Pointeur sur la liste de lecture, ou NULL si \a id n'est pas valide.
+ * \return Pointeur sur la liste de lecture, ou nullptr si \a id n'est pas valide.
  */
 
-IPlayList * CApplication::getPlayListFromId(int id) const
+IPlayList * CMainWindow::getPlayListFromId(int id) const
 {
     return m_listModel->getPlayListFromId(id);
 }
@@ -1042,7 +1044,7 @@ IPlayList * CApplication::getPlayListFromId(int id) const
  * \return Liste des listes de lecture.
  */
 
-QList<IPlayList *> CApplication::getPlayListsWithSong(CSong * song) const
+QList<IPlayList *> CMainWindow::getPlayListsWithSong(CSong * song) const
 {
     Q_CHECK_PTR(song);
 
@@ -1065,7 +1067,7 @@ QList<IPlayList *> CApplication::getPlayListsWithSong(CSong * song) const
  * \return Listes de lecture.
  */
 
-QList<IPlayList *> CApplication::getAllPlayLists() const
+QList<IPlayList *> CMainWindow::getAllPlayLists() const
 {
     return m_listModel->getPlayLists();
 }
@@ -1078,7 +1080,7 @@ QList<IPlayList *> CApplication::getAllPlayLists() const
  * \param songs Liste des morceaux à enlever.
  */
 
-void CApplication::removeSongs(const QList<CSong *> songs)
+void CMainWindow::removeSongs(const QList<CSong *> songs)
 {
     m_library->removeSongsFromTable(songs);
 
@@ -1094,7 +1096,7 @@ void CApplication::removeSongs(const QList<CSong *> songs)
 
     for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
     {
-        CStaticPlayList * playList = qobject_cast<CStaticPlayList *>(*it);
+        CStaticList * playList = qobject_cast<CStaticList *>(*it);
         CDynamicList * dynamicList = qobject_cast<CDynamicList *>(*it);
 
         if (playList)
@@ -1143,7 +1145,7 @@ void CApplication::removeSongs(const QList<CSong *> songs)
 }
 
 
-void CApplication::setSelectionInformations(int numSongs, qlonglong durationMS)
+void CMainWindow::setSelectionInformations(int numSongs, qlonglong durationMS)
 {
     if (numSongs > 1)
     {
@@ -1168,7 +1170,7 @@ void CApplication::setSelectionInformations(int numSongs, qlonglong durationMS)
 }
 
 
-void CApplication::onPlayListChange(IPlayList * playList)
+void CMainWindow::onPlayListChange(IPlayList * playList)
 {
     if (playList)
         emit listModified(playList);
@@ -1181,7 +1183,7 @@ void CApplication::onPlayListChange(IPlayList * playList)
  * \return Position de lecture, ou 0 si aucun morceau n'est en cours de lecture.
  */
 
-int CApplication::getPosition() const
+int CMainWindow::getPosition() const
 {
     return (m_currentSongItem ? m_currentSongItem->getSong()->getPosition() : 0);
 }
@@ -1195,7 +1197,7 @@ int CApplication::getPosition() const
  * \return Identifiant de l'artiste, ou -1 en cas d'erreur.
  */
 
-int CApplication::getArtistId(const QString& name, const QString& nameSort)
+int CMainWindow::getArtistId(const QString& name, const QString& nameSort)
 {
     Q_ASSERT(!name.isNull());
     Q_ASSERT(!nameSort.isNull());
@@ -1261,7 +1263,7 @@ int CApplication::getArtistId(const QString& name, const QString& nameSort)
  * \return Identifiant de l'album, ou -1 en cas d'erreur.
  */
 
-int CApplication::getAlbumId(const QString& title, const QString& titleSort)
+int CMainWindow::getAlbumId(const QString& title, const QString& titleSort)
 {
     Q_ASSERT(!title.isNull());
     Q_ASSERT(!titleSort.isNull());
@@ -1326,7 +1328,7 @@ int CApplication::getAlbumId(const QString& title, const QString& titleSort)
  * \return Identifiant du genre, ou -1 en cas d'erreur.
  */
 
-int CApplication::getGenreId(const QString& name)
+int CMainWindow::getGenreId(const QString& name)
 {
     Q_ASSERT(!name.isNull());
 
@@ -1390,7 +1392,7 @@ int CApplication::getGenreId(const QString& name)
  *         par les morceaux, en plus de certains genres prédéfinis.
  */
 
-QStringList CApplication::getGenreList()
+QStringList CMainWindow::getGenreList()
 {
     QStringList genres;
 
@@ -1435,7 +1437,7 @@ QStringList CApplication::getGenreList()
  * \return Pointeur sur le fichier ouvert en écriture.
  */
 
-QFile * CApplication::getLogFile(const QString& logName)
+QFile * CMainWindow::getLogFile(const QString& logName)
 {
     QString fileName = logName + QDateTime::currentDateTime().toString("-yyyy-MM-dd");
 
@@ -1447,7 +1449,7 @@ QFile * CApplication::getLogFile(const QString& logName)
         if (!logFile->open(QIODevice::WriteOnly | QIODevice::Append))
         {
             logError(tr("can't open the log file \"%1\"").arg(logFileName), __FUNCTION__, __FILE__, __LINE__);
-            return NULL;
+            return nullptr;
         }
 
         m_logList[fileName] = logFile;
@@ -1466,11 +1468,11 @@ QFile * CApplication::getLogFile(const QString& logName)
  * \param line     Ligne dans le fichier source.
  */
 
-void CApplication::logError(const QString& message, const QString& function, const char * file, int line)
+void CMainWindow::logError(const QString& message, const QString& function, const char * file, int line)
 {
-    static QFile * logFile = NULL;
+    static QFile * logFile = nullptr;
     static bool fileOpened = false;
-    
+
     // L'ouverture du fichier n'est tentée qu'une seule fois pour éviter des appels récursifs infinis entre getLogFile et logError.
     if (!fileOpened || !logFile)
     {
@@ -1496,7 +1498,7 @@ void CApplication::logError(const QString& message, const QString& function, con
  * \param message Message à afficher.
  */
 
-void CApplication::notifyInformation(const QString& message)
+void CMainWindow::notifyInformation(const QString& message)
 {
     statusBar()->showMessage(message, 5000);
     m_infosNotified << TNotification(message, QDateTime::currentDateTime());
@@ -1508,7 +1510,7 @@ void CApplication::notifyInformation(const QString& message)
  * Le navigateur doit s'ouvrir pour que l'utilisateur puisse se connecter.
  */
 
-void CApplication::connectToLastFm()
+void CMainWindow::connectToLastFm()
 {
     new CAuthentication(this);
 }
@@ -1518,9 +1520,9 @@ void CApplication::connectToLastFm()
  * Méthode appellée lorsqu'on ferme la boite de dialogue de modification d'un morceau.
  */
 
-void CApplication::onDialogEditSongClosed()
+void CMainWindow::onDialogEditSongClosed()
 {
-    m_dialogEditSong = NULL;
+    m_dialogEditSong = nullptr;
 }
 
 
@@ -1530,7 +1532,7 @@ void CApplication::onDialogEditSongClosed()
  * \param filter Filtre de recherche.
  */
 
-void CApplication::onFilterChange(const QString& filter)
+void CMainWindow::onFilterChange(const QString& filter)
 {
     if (!m_displayedSongTable)
     {
@@ -1551,7 +1553,7 @@ void CApplication::onFilterChange(const QString& filter)
  * Sélectionne tous les morceaux de la liste affichée.
  */
 
-void CApplication::selectAll()
+void CMainWindow::selectAll()
 {
     if (!m_displayedSongTable)
     {
@@ -1567,7 +1569,7 @@ void CApplication::selectAll()
  * Désélectionne tous les morceaux de la liste affichée.
  */
 
-void CApplication::selectNone()
+void CMainWindow::selectNone()
 {
     if (!m_displayedSongTable)
     {
@@ -1583,7 +1585,7 @@ void CApplication::selectNone()
  * Démarre la lecture du morceau sélectionné.
  */
 
-void CApplication::play()
+void CMainWindow::play()
 {
     if (m_currentSongItem)
     {
@@ -1621,7 +1623,7 @@ void CApplication::play()
                 m_currentSongTable->initShuffle();
 
             // Lecture du premier morceau de la liste
-            m_currentSongItem = m_currentSongTable->getNextSong(NULL, m_isShuffle);
+            m_currentSongItem = m_currentSongTable->getNextSong(nullptr, m_isShuffle);
 
             if (m_currentSongItem && !m_currentSongItem->getSong()->isEnabled())
             {
@@ -1632,7 +1634,7 @@ void CApplication::play()
 
         if (!m_currentSongItem)
         {
-            m_currentSongTable = NULL;
+            m_currentSongTable = nullptr;
             return;
         }
 
@@ -1652,7 +1654,7 @@ void CApplication::play()
  * Arrête la lecture.
  */
 
-void CApplication::stop()
+void CMainWindow::stop()
 {
     if (m_currentSongItem)
     {
@@ -1660,13 +1662,13 @@ void CApplication::stop()
 
         m_currentSongItem->getSong()->stop();
         emit songStopped(m_currentSongItem->getSong());
-        updateSongDescription(NULL);
-        m_currentSongItem = NULL;
+        updateSongDescription(nullptr);
+        m_currentSongItem = nullptr;
 
-        m_currentSongTable->m_model->setCurrentSong(NULL);
+        m_currentSongTable->m_model->setCurrentSong(nullptr);
     }
 
-    m_currentSongTable = NULL;
+    m_currentSongTable = nullptr;
     m_state = Stopped;
 
     setState(Stopped);
@@ -1680,7 +1682,7 @@ void CApplication::stop()
  * Met la lecture en pause.
  */
 
-void CApplication::pause()
+void CMainWindow::pause()
 {
     if (m_currentSongItem)
     {
@@ -1700,7 +1702,7 @@ void CApplication::pause()
  * Inverse l'état de la lecture.
  */
 
-void CApplication::togglePlay()
+void CMainWindow::togglePlay()
 {
     if (m_state != Playing)
         play();
@@ -1715,7 +1717,7 @@ void CApplication::togglePlay()
  * supérieure à 4 secondes, on revient au début du morceau.
  */
 
-void CApplication::previousSong()
+void CMainWindow::previousSong()
 {
     if (m_currentSongItem)
     {
@@ -1731,12 +1733,12 @@ void CApplication::previousSong()
         }
 
         m_currentSongItem->getSong()->stop();
-        updateSongDescription(NULL);
-        m_currentSongTable->m_model->setCurrentSong(NULL);
+        updateSongDescription(nullptr);
+        m_currentSongTable->m_model->setCurrentSong(nullptr);
 
         setState(Stopped);
 
-        CSongTableItem * songItem = m_currentSongTable->getPreviousSong(m_currentSongItem, m_isShuffle);
+        CMediaTableItem * songItem = m_currentSongTable->getPreviousSong(m_currentSongItem, m_isShuffle);
 
         // Premier morceau de la liste
         if (!songItem)
@@ -1747,8 +1749,8 @@ void CApplication::previousSong()
 
                 if (!songItem)
                 {
-                    m_currentSongTable = NULL;
-                    m_currentSongItem = NULL;
+                    m_currentSongTable = nullptr;
+                    m_currentSongItem = nullptr;
                     m_state = Stopped;
                     return;
                 }
@@ -1795,8 +1797,8 @@ void CApplication::previousSong()
         }
         else
         {
-            m_currentSongItem = NULL;
-            m_currentSongTable = NULL;
+            m_currentSongItem = nullptr;
+            m_currentSongTable = nullptr;
             m_state = Stopped;
             return;
         }
@@ -1812,15 +1814,15 @@ void CApplication::previousSong()
  * Passe au morceau suivant dans la liste en cours de lecture.
  */
 
-void CApplication::nextSong()
+void CMainWindow::nextSong()
 {
     if (m_currentSongItem)
     {
         Q_CHECK_PTR(m_currentSongTable);
 
         m_currentSongItem->getSong()->stop();
-        updateSongDescription(NULL);
-        m_currentSongTable->m_model->setCurrentSong(NULL);
+        updateSongDescription(nullptr);
+        m_currentSongTable->m_model->setCurrentSong(nullptr);
 
         setState(Stopped);
 
@@ -1838,12 +1840,12 @@ void CApplication::nextSong()
         // Fin de la liste et répétition de la liste activée
         if (!m_currentSongItem && m_repeatMode == RepeatList)
         {
-            m_currentSongItem = m_currentSongTable->getNextSong(NULL, m_isShuffle);
+            m_currentSongItem = m_currentSongTable->getNextSong(nullptr, m_isShuffle);
         }
 
         if (!m_currentSongItem)
         {
-            m_currentSongTable = NULL;
+            m_currentSongTable = nullptr;
             m_state = Stopped;
             return;
         }
@@ -1883,7 +1885,7 @@ void CApplication::nextSong()
  * \param songItem Morceau à lire.
  */
 
-void CApplication::playSong(CSongTableItem * songItem)
+void CMainWindow::playSong(CMediaTableItem * songItem)
 {
     if (!songItem)
     {
@@ -1896,8 +1898,8 @@ void CApplication::playSong(CSongTableItem * songItem)
         Q_CHECK_PTR(m_currentSongTable);
 
         m_currentSongItem->getSong()->stop();
-        updateSongDescription(NULL);
-        m_currentSongTable->m_model->setCurrentSong(NULL);
+        updateSongDescription(nullptr);
+        m_currentSongTable->m_model->setCurrentSong(nullptr);
     }
 
     m_currentSongItem = songItem;
@@ -1917,8 +1919,8 @@ void CApplication::playSong(CSongTableItem * songItem)
     else
     {
         setState(Stopped);
-        m_currentSongItem = NULL;
-        m_currentSongTable = NULL;
+        m_currentSongItem = nullptr;
+        m_currentSongTable = nullptr;
     }
 }
 
@@ -1927,7 +1929,7 @@ void CApplication::playSong(CSongTableItem * songItem)
  * Passe au mode de répétition suivant.
  */
 
-void CApplication::setNextRepeatMode()
+void CMainWindow::setNextRepeatMode()
 {
     switch (m_repeatMode)
     {
@@ -1944,7 +1946,7 @@ void CApplication::setNextRepeatMode()
  * \param repeatMode Mode de répétition.
  */
 
-void CApplication::setRepeatMode(TRepeatMode repeatMode)
+void CMainWindow::setRepeatMode(TRepeatMode repeatMode)
 {
     m_repeatMode = repeatMode;
 
@@ -1977,7 +1979,7 @@ void CApplication::setRepeatMode(TRepeatMode repeatMode)
  * Inverse l'état de la lecture aléatoire.
  */
 
-void CApplication::setShuffle()
+void CMainWindow::setShuffle()
 {
     setShuffle(!m_isShuffle);
 }
@@ -1990,7 +1992,7 @@ void CApplication::setShuffle()
  * \param shuffle Indique si la lecture aléatoire doit être activée.
  */
 
-void CApplication::setShuffle(bool shuffle)
+void CMainWindow::setShuffle(bool shuffle)
 {
     if (shuffle != m_isShuffle)
     {
@@ -2007,7 +2009,7 @@ void CApplication::setShuffle(bool shuffle)
  * \param mute True pour couper le son, false pour le remettre.
  */
 
-void CApplication::setMute(bool mute)
+void CMainWindow::setMute(bool mute)
 {
     if (mute != m_isMute)
     {
@@ -2019,7 +2021,7 @@ void CApplication::setMute(bool mute)
         }
 
         m_uiWidget->actionMute->setChecked(m_isMute);
-        
+
         m_uiWidget->actionMute->setIcon(QPixmap(m_isMute ? ":/icons/muet" : ":/icons/volume"));
         m_uiControl->btnMute->setIcon(QPixmap(m_isMute ? ":/icons/muet" : ":/icons/volume"));
     }
@@ -2030,7 +2032,7 @@ void CApplication::setMute(bool mute)
  * Active ou désactive le son.
  */
 
-void CApplication::toggleMute()
+void CMainWindow::toggleMute()
 {
     setMute(!m_isMute);
 }
@@ -2042,7 +2044,7 @@ void CApplication::toggleMute()
  * \param volume Volume du son (entre 0 et 100).
  */
 
-void CApplication::setVolume(int volume)
+void CMainWindow::setVolume(int volume)
 {
     volume = qBound(0, volume, 100);
 
@@ -2066,7 +2068,7 @@ void CApplication::setVolume(int volume)
  * \param position Position de lecture, en millisecondes.
  */
 
-void CApplication::setPosition(int position)
+void CMainWindow::setPosition(int position)
 {
     if (position < 0)
     {
@@ -2109,7 +2111,7 @@ void CApplication::setPosition(int position)
  * Affiche la boite de dialogue pour modifier les préférences.
  */
 
-void CApplication::openDialogPreferences()
+void CMainWindow::openDialogPreferences()
 {
     CDialogPreferences * dialog = new CDialogPreferences(this, m_settings);
     dialog->show();
@@ -2120,7 +2122,7 @@ void CApplication::openDialogPreferences()
  * Affiche la boite de dialogue pour voir la liste des notifications.
  */
 
-void CApplication::openDialogNotifications()
+void CMainWindow::openDialogNotifications()
 {
     CDialogNotifications * dialog = new CDialogNotifications(this);
     dialog->show();
@@ -2131,7 +2133,7 @@ void CApplication::openDialogNotifications()
  * Affiche la boite de dialogue pour voir les dernières écoutes.
  */
 
-void CApplication::openDialogLastPlays()
+void CMainWindow::openDialogLastPlays()
 {
     CDialogLastPlays * dialog = new CDialogLastPlays(this);
     dialog->show();
@@ -2142,7 +2144,7 @@ void CApplication::openDialogLastPlays()
  * Affiche la boite de dialogue pour modifier les paramètres de l'égaliseur.
  */
 
-void CApplication::openDialogEqualizer()
+void CMainWindow::openDialogEqualizer()
 {
     CDialogEqualizer * dialog = new CDialogEqualizer(this);
     dialog->show();
@@ -2153,12 +2155,12 @@ void CApplication::openDialogEqualizer()
  * Affiche la boite de dialogue pour visualiser et modifier les métadonnées d'un morceau.
  */
 
-void CApplication::openDialogEditMetadata()
+void CMainWindow::openDialogEditMetadata()
 {
     Q_CHECK_PTR(m_displayedSongTable);
 
     // Liste des morceaux sélectionnés
-    QList<CSongTableItem *> songItemList = m_displayedSongTable->getSelectedSongItems();
+    QList<CMediaTableItem *> songItemList = m_displayedSongTable->getSelectedSongItems();
 
     if (songItemList.size() > 1)
     {
@@ -2166,7 +2168,7 @@ void CApplication::openDialogEditMetadata()
     }
 
     // Recherche du morceau sélectionné
-    CSongTableItem * songItem = m_displayedSongTable->getSelectedSongItem();
+    CMediaTableItem * songItem = m_displayedSongTable->getSelectedSongItem();
 
     if (songItem)
     {
@@ -2180,7 +2182,7 @@ void CApplication::openDialogEditMetadata()
  * Affiche une boite de dialogue pour sélectionner des fichiers à ajouter à la médiathèque.
  */
 
-void CApplication::openDialogAddSongs()
+void CMainWindow::openDialogAddSongs()
 {
     QStringList fileList = QFileDialog::getOpenFileNames(this, QString(), m_settings->value("Preferences/LastDirectory", QString()).toString(), tr("Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)"));
 
@@ -2198,7 +2200,7 @@ void CApplication::openDialogAddSongs()
  * Affiche une boite de dialogue pour ajouter un dossier à la médiathèque.
  */
 
-void CApplication::openDialogAddFolder()
+void CMainWindow::openDialogAddFolder()
 {
     QString folder = QFileDialog::getExistingDirectory(this, QString(), m_settings->value("Preferences/LastDirectory", QString()).toString());
 
@@ -2218,7 +2220,7 @@ void CApplication::openDialogAddFolder()
  * \param fileList Liste des fichiers à ajouter.
  */
 
-void CApplication::importSongs(const QStringList& fileList)
+void CMainWindow::importSongs(const QStringList& fileList)
 {
     if (fileList.isEmpty())
         return;
@@ -2263,12 +2265,12 @@ void CApplication::importSongs(const QStringList& fileList)
  * Affiche une boite de dialogue pour visualiser et éditer les informations du morceau sélectionné.
  */
 
-void CApplication::openDialogSongInfos()
+void CMainWindow::openDialogSongInfos()
 {
     Q_CHECK_PTR(m_displayedSongTable);
 
     // Liste des morceaux sélectionnés
-    QList<CSongTableItem *> songItemList = m_displayedSongTable->getSelectedSongItems();
+    QList<CMediaTableItem *> songItemList = m_displayedSongTable->getSelectedSongItems();
 
     if (songItemList.size() > 1)
     {
@@ -2279,7 +2281,7 @@ void CApplication::openDialogSongInfos()
     }
 
     // Recherche du morceau sélectionné
-    CSongTableItem * songItem = m_displayedSongTable->getSelectedSongItem();
+    CMediaTableItem * songItem = m_displayedSongTable->getSelectedSongItem();
 
     if (songItem)
     {
@@ -2294,9 +2296,9 @@ void CApplication::openDialogSongInfos()
  * Affiche la boite de dialogue pour crée une nouvelle liste de lecture statique.
  */
 
-void CApplication::openDialogCreateStaticList()
+void CMainWindow::openDialogCreateStaticList()
 {
-    openDialogCreateStaticList(NULL);
+    openDialogCreateStaticList(nullptr);
 }
 
 
@@ -2307,12 +2309,12 @@ void CApplication::openDialogCreateStaticList()
  * \param songs  Liste de morceaux à ajouter à la liste.
  */
 
-void CApplication::openDialogCreateStaticList(CFolder * folder, const QList<CSong *>& songs)
+void CMainWindow::openDialogCreateStaticList(CFolder * folder, const QList<CSong *>& songs)
 {
     if (!folder)
         folder = m_listModel->getRootFolder();
 
-    CDialogEditStaticPlayList * dialog = new CDialogEditStaticPlayList(NULL, this, folder, songs);
+    CDialogEditStaticPlayList * dialog = new CDialogEditStaticPlayList(nullptr, this, folder, songs);
     dialog->show();
 }
 
@@ -2323,12 +2325,12 @@ void CApplication::openDialogCreateStaticList(CFolder * folder, const QList<CSon
  * \param folder Pointeur sur le dossier où créer la liste.
  */
 
-void CApplication::openDialogCreateDynamicList(CFolder * folder)
+void CMainWindow::openDialogCreateDynamicList(CFolder * folder)
 {
     if (!folder)
         folder = m_listModel->getRootFolder();
 
-    CDialogEditDynamicList * dialog = new CDialogEditDynamicList(NULL, this, folder);
+    CDialogEditDynamicList * dialog = new CDialogEditDynamicList(nullptr, this, folder);
     dialog->show();
 }
 
@@ -2339,12 +2341,12 @@ void CApplication::openDialogCreateDynamicList(CFolder * folder)
  * \param folder Pointeur sur le dossier où créer le dossier.
  */
 
-void CApplication::openDialogCreateFolder(CFolder * folder)
+void CMainWindow::openDialogCreateFolder(CFolder * folder)
 {
     if (!folder)
         folder = m_listModel->getRootFolder();
 
-    CDialogEditFolder * dialog = new CDialogEditFolder(NULL, this, folder);
+    CDialogEditFolder * dialog = new CDialogEditFolder(nullptr, this, folder);
     dialog->show();
 }
 
@@ -2355,7 +2357,7 @@ void CApplication::openDialogCreateFolder(CFolder * folder)
  * \param playList Liste à modifier.
  */
 
-void CApplication::openDialogEditStaticPlayList(CStaticPlayList * playList)
+void CMainWindow::openDialogEditStaticPlayList(CStaticList * playList)
 {
     CDialogEditStaticPlayList * dialog = new CDialogEditStaticPlayList(playList, this, playList->getFolder());
     dialog->show();
@@ -2368,7 +2370,7 @@ void CApplication::openDialogEditStaticPlayList(CStaticPlayList * playList)
  * \param playList Liste à modifier.
  */
 
-void CApplication::openDialogEditDynamicList(CDynamicList * playList)
+void CMainWindow::openDialogEditDynamicList(CDynamicList * playList)
 {
     CDialogEditDynamicList * dialog = new CDialogEditDynamicList(playList, this, playList->getFolder());
     dialog->show();
@@ -2381,7 +2383,7 @@ void CApplication::openDialogEditDynamicList(CDynamicList * playList)
  * \param folder Dossier à modifier.
  */
 
-void CApplication::openDialogEditFolder(CFolder * folder)
+void CMainWindow::openDialogEditFolder(CFolder * folder)
 {
     CDialogEditFolder * dialog = new CDialogEditFolder(folder, this, folder->getFolder());
     dialog->show();
@@ -2392,7 +2394,7 @@ void CApplication::openDialogEditFolder(CFolder * folder)
  * Affiche la boite de dialogue "À propos".
  */
 
-void CApplication::openDialogAbout()
+void CMainWindow::openDialogAbout()
 {
     CDialogAbout * dialog = new CDialogAbout(this);
     dialog->show();
@@ -2403,12 +2405,12 @@ void CApplication::openDialogAbout()
  * Affiche une boite de dialogue pour relocaliser un morceau.
  */
 
-void CApplication::relocateSong()
+void CMainWindow::relocateSong()
 {
     Q_CHECK_PTR(m_displayedSongTable);
 
     // Liste des morceaux sélectionnés
-    QList<CSongTableItem *> songItemList = m_displayedSongTable->getSelectedSongItems();
+    QList<CMediaTableItem *> songItemList = m_displayedSongTable->getSelectedSongItems();
 
     if (songItemList.size() > 1)
     {
@@ -2417,7 +2419,7 @@ void CApplication::relocateSong()
     }
 
     // Recherche du morceau sélectionné
-    CSongTableItem * songItem = m_displayedSongTable->getSelectedSongItem();
+    CMediaTableItem * songItem = m_displayedSongTable->getSelectedSongItem();
 
     if (!songItem)
 
@@ -2468,7 +2470,7 @@ void CApplication::relocateSong()
 
             for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
             {
-                if (qobject_cast<CStaticPlayList *>(*it))
+                if (qobject_cast<CStaticList *>(*it))
                 {
                     (*it)->replaceSong(song, newSong);
                 }
@@ -2549,8 +2551,8 @@ void CApplication::relocateSong()
         FMOD::Sound * sound;
 
         // Chargement du son
-        //res = m_soundSystem->createStream(qPrintable(fileName), FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, NULL, &sound);
-        res = m_soundSystem->createStream(reinterpret_cast<const char *>(fileName.utf16()), FMOD_UNICODE | FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, NULL, &sound);
+        //res = m_soundSystem->createStream(qPrintable(fileName), FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, nullptr, &sound);
+        res = m_soundSystem->createStream(reinterpret_cast<const char *>(fileName.utf16()), FMOD_UNICODE | FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, nullptr, &sound);
 
         if (res != FMOD_OK || !sound)
         {
@@ -2568,7 +2570,7 @@ void CApplication::relocateSong()
         }
 
         // Recherche du format du morceau
-        res = sound->getFormat(&type, NULL, NULL, NULL);
+        res = sound->getFormat(&type, nullptr, nullptr, nullptr);
 
         if (res != FMOD_OK)
         {
@@ -2614,7 +2616,7 @@ void CApplication::relocateSong()
  * Ouvre la fenêtre pour importer la médiathèque depuis iTunes.
  */
 
-void CApplication::importFromITunes()
+void CMainWindow::importFromITunes()
 {
     CImporterITunes * dialog = new CImporterITunes(this);
     dialog->show();
@@ -2627,7 +2629,7 @@ void CApplication::importFromITunes()
  * \todo Implémentation.
  */
 
-void CApplication::importFromSongbird()
+void CMainWindow::importFromSongbird()
 {
     //CImporterSongbird * dialog = new CImporterSongbird(this);
     //dialog->show();
@@ -2640,7 +2642,7 @@ void CApplication::importFromSongbird()
  * \param playList Pointeur sur la liste de lecture à ajouter.
  */
 
-void CApplication::addPlayList(IPlayList * playList)
+void CMainWindow::addPlayList(IPlayList * playList)
 {
     if (playList)
         m_listModel->addPlayList(playList);
@@ -2655,7 +2657,7 @@ void CApplication::addPlayList(IPlayList * playList)
  * \param folder Pointeur sur le dossier à ajouter.
  */
 
-void CApplication::addFolder(CFolder * folder)
+void CMainWindow::addFolder(CFolder * folder)
 {
     if (folder)
         m_listModel->addFolder(folder);
@@ -2672,7 +2674,7 @@ void CApplication::addFolder(CFolder * folder)
  * \return Pointeur sur le morceau.
  */
 
-CSong * CApplication::addSong(const QString& fileName)
+CSong * CMainWindow::addSong(const QString& fileName)
 {
     CSong * song = CSong::loadFromFile(this, fileName);
 
@@ -2692,7 +2694,7 @@ CSong * CApplication::addSong(const QString& fileName)
  * Sélectionne le morceau en cours de lecture.
  */
 
-void CApplication::selectCurrentSong()
+void CMainWindow::selectCurrentSong()
 {
     selectSong(m_currentSongTable, m_currentSongItem);
 }
@@ -2705,7 +2707,7 @@ void CApplication::selectCurrentSong()
  * \param songItem  Morceau à sélectionner.
  */
 
-void CApplication::selectSong(CSongTable * songTable, CSongTableItem * songItem)
+void CMainWindow::selectSong(CMediaTableView * songTable, CMediaTableItem * songItem)
 {
     if (!songTable || !songItem)
     {
@@ -2724,7 +2726,7 @@ void CApplication::selectSong(CSongTable * songTable, CSongTableItem * songItem)
  * Le signal songModified est émis.
  */
 
-void CApplication::onSongModified()
+void CMainWindow::onSongModified()
 {
     CSong * song = qobject_cast<CSong *>(sender());
 
@@ -2742,7 +2744,7 @@ void CApplication::onSongModified()
  * \return Liste des fichiers du répertoire.
  */
 
-QStringList CApplication::importFolder(const QString& pathName)
+QStringList CMainWindow::importFolder(const QString& pathName)
 {
     QStringList fileList;
     QDir dir(pathName);
@@ -2769,10 +2771,10 @@ QStringList CApplication::importFolder(const QString& pathName)
  * Affiche le morceau sélectionné dans l'explorateur de fichiers.
  */
 
-void CApplication::openSongInExplorer()
+void CMainWindow::openSongInExplorer()
 {
     // Recherche du morceau sélectionné
-    CSongTableItem * songItem = m_displayedSongTable->getSelectedSongItem();
+    CMediaTableItem * songItem = m_displayedSongTable->getSelectedSongItem();
 
     if (!songItem)
     {
@@ -2792,13 +2794,13 @@ void CApplication::openSongInExplorer()
  * Ouvre la boite de dialogue pour modifier la liste de lecture ou le dossier selectionné dans la vue.
  */
 
-void CApplication::editSelectedItem()
+void CMainWindow::editSelectedItem()
 {
     IPlayList * playList = qobject_cast<IPlayList *>(m_playListView->getSelectedSongTable());
 
     if (playList)
     {
-        CStaticPlayList * staticList = qobject_cast<CStaticPlayList *>(playList);
+        CStaticList * staticList = qobject_cast<CStaticList *>(playList);
 
         if (staticList)
         {
@@ -2828,14 +2830,14 @@ void CApplication::editSelectedItem()
 
 
 /**
- * Supprime la liste de lecture ou le dossier sélectionné dans la vue CPlayListView.
+ * Supprime la liste de lecture ou le dossier sélectionné dans la vue CLibraryView.
  * Affiche une boite de dialogue de confirmation.
  *
  * \todo Gérer les dossiers.
  * \todo Gérer le cas où la liste est utilisée dans un critère d'une liste dynamique.
  */
 
-void CApplication::removeSelectedItem()
+void CMainWindow::removeSelectedItem()
 {
     IPlayList * playList = qobject_cast<IPlayList *>(m_playListView->getSelectedSongTable());
 
@@ -2882,7 +2884,7 @@ void CApplication::removeSelectedItem()
 
 #ifndef T_NO_SINGLE_APP
 
-void CApplication::activateThisWindow()
+void CMainWindow::activateThisWindow()
 {
 	setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
 	raise();
@@ -2897,7 +2899,7 @@ void CApplication::activateThisWindow()
  * \todo Pouvoir arrêter la lecture ou fermer l'application à la fin d'un morceau.
  */
 
-void CApplication::onPlayEnd()
+void CMainWindow::onPlayEnd()
 {
     if (m_currentSongItem)
     {
@@ -2908,9 +2910,9 @@ void CApplication::onPlayEnd()
 
         CSong * currentSong = m_currentSongItem->getSong();
 
-        updateSongDescription(NULL);
+        updateSongDescription(nullptr);
 
-        CSongTableItem * queueSong = m_queue->getSongItemForRow(0);
+        CMediaTableItem * queueSong = m_queue->getSongItemForRow(0);
 
         if (queueSong)
         {
@@ -2930,12 +2932,12 @@ void CApplication::onPlayEnd()
         for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
         {
             int col = (*it)->getColumnSorted();
-            if (col == CSongTable::ColPlayCount || col == CSongTable::ColLastPlayTime)
+            if (col == CMediaTableView::ColPlayCount || col == CMediaTableView::ColLastPlayTime)
                 (*it)->sort();
         }
-        
+
         int col = m_library->getColumnSorted();
-        if (col == CSongTable::ColPlayCount || col == CSongTable::ColLastPlayTime)
+        if (col == CMediaTableView::ColPlayCount || col == CMediaTableView::ColLastPlayTime)
             m_library->sort();
 
         //m_library->update(); // Why ???
@@ -2946,10 +2948,10 @@ void CApplication::onPlayEnd()
 /**
  * Met à jour les informations sur le morceau en cours de lecture.
  *
- * \param song Morceau à utiliser, ou NULL pour n'afficher aucune information.
+ * \param song Morceau à utiliser, ou nullptr pour n'afficher aucune information.
  */
 
-void CApplication::updateSongDescription(CSong * song)
+void CMainWindow::updateSongDescription(CSong * song)
 {
     if (song)
     {
@@ -2999,7 +3001,7 @@ void CApplication::updateSongDescription(CSong * song)
  * Met à jour les informations sur la liste de morceaux affichée.
  */
 
-void CApplication::updateListInformations()
+void CMainWindow::updateListInformations()
 {
     QTime duration(0, 0);
     int numSongs = 0;
@@ -3020,7 +3022,7 @@ void CApplication::updateListInformations()
  * Met à jour la position de lecture depuis la position du curseur.
  */
 
-void CApplication::updatePosition()
+void CMainWindow::updatePosition()
 {
     setPosition(m_uiControl->sliderPosition->value());
 }
@@ -3031,7 +3033,7 @@ void CApplication::updatePosition()
  * et pour passer au morceau suivant si nécessaire.
  */
 
-void CApplication::updateTimer()
+void CMainWindow::updateTimer()
 {
     // Vérification des lecteurs de CD-ROM
     static int timerCDRomDrive = 0;
@@ -3107,9 +3109,9 @@ void CApplication::updateTimer()
 }
 
 
-void CApplication::selectPlayListFromTreeView(const QModelIndex& index)
+void CMainWindow::selectPlayListFromTreeView(const QModelIndex& index)
 {
-    CSongTable * songTable = m_playListView->getSongTable(index);
+    CMediaTableView * songTable = m_playListView->getSongTable(index);
 
     if (songTable)
     {
@@ -3124,14 +3126,15 @@ void CApplication::selectPlayListFromTreeView(const QModelIndex& index)
  * \param songTable Liste de morceaux à afficher.
  */
 
-void CApplication::displaySongTable(CSongTable * songTable)
+void CMainWindow::displaySongTable(CMediaTableView * songTable)
 {
-    Q_CHECK_PTR(songTable);
+    if (songTable == nullptr)
+        return;
 
     if (songTable != m_displayedSongTable)
     {
         if (m_displayedSongTable)
-            m_displayedSongTable->setParent(NULL);
+            m_displayedSongTable->setParent(nullptr);
 
         m_playListView->selectionModel()->clearSelection();
         m_playListView->selectionModel()->setCurrentIndex(m_playListView->getSongTableModelIndex(songTable), QItemSelectionModel::Select | QItemSelectionModel::Rows);
@@ -3153,7 +3156,7 @@ void CApplication::displaySongTable(CSongTable * songTable)
  * \return Booléen indiquant le succès ou l'échec du chargement.
  */
 
-bool CApplication::initSoundSystem()
+bool CMainWindow::initSoundSystem()
 {
     bool ret = true;
     FMOD_RESULT res;
@@ -3188,7 +3191,7 @@ bool CApplication::initSoundSystem()
     {
         FMOD_CAPS caps;
         FMOD_SPEAKERMODE speakermode;
-        res = m_soundSystem->getDriverCaps(0, &caps, NULL, &speakermode);
+        res = m_soundSystem->getDriverCaps(0, &caps, nullptr, &speakermode);
         if (res != FMOD_OK)
             return false;
 
@@ -3257,7 +3260,7 @@ bool CApplication::initSoundSystem()
 
                 m_cdRomDrives.append(cdRomDrive);
 
-                connect(cdRomDrive, SIGNAL(songStarted(CSongTableItem *)), this, SLOT(playSong(CSongTableItem *)));
+                connect(cdRomDrive, SIGNAL(songStarted(CMediaTableItem *)), this, SLOT(playSong(CMediaTableItem *)));
             }
         }
     }
@@ -3273,10 +3276,10 @@ bool CApplication::initSoundSystem()
 /**
  * Charge la base de données.
  *
- * \todo Utiliser des méthodes dédiées dans les classes CSongTable et CFolder.
+ * \todo Utiliser des méthodes dédiées dans les classes CMediaTableView et CFolder.
  */
 
-void CApplication::loadDatabase()
+void CMainWindow::loadDatabase()
 {
     QSqlQuery query(m_dataBase);
 
@@ -3332,7 +3335,7 @@ void CApplication::loadDatabase()
         while (query.next())
         {
             CLibraryFolder * libraryFolder = new CLibraryFolder(this);
-            
+
             libraryFolder->id            = query.value(0).toInt();
             libraryFolder->pathName      = query.value(1).toString();
             libraryFolder->keepOrganized = query.value(2).toBool();
@@ -3349,7 +3352,7 @@ void CApplication::loadDatabase()
     m_library = new CLibrary(this);
     m_library->m_idPlayList = 0;
     setCentralWidget(m_library);
-    connect(m_library, SIGNAL(songStarted(CSongTableItem *)), this, SLOT(playSong(CSongTableItem *)));
+    connect(m_library, SIGNAL(songStarted(CMediaTableItem *)), this, SLOT(playSong(CMediaTableItem *)));
 
     if (!query.exec("SELECT list_columns FROM playlist WHERE playlist_id = 0"))
     {
@@ -3372,7 +3375,7 @@ void CApplication::loadDatabase()
 
 
     // Chargement des listes de lecture et des dossiers
-    m_listModel = new CListModel(this);
+    m_listModel = new CLibraryModel(this);
     m_listModel->loadFromDatabase();
 
     m_playListView->setModel(m_listModel);
@@ -3386,7 +3389,7 @@ void CApplication::loadDatabase()
  * Démarre la lecture du morceau.
  */
 
-void CApplication::startPlay()
+void CMainWindow::startPlay()
 {
     Q_CHECK_PTR(m_currentSongItem);
     Q_CHECK_PTR(m_currentSongTable);
@@ -3442,7 +3445,7 @@ void CApplication::startPlay()
  * \param state État de l'application.
  */
 
-void CApplication::setState(TState state)
+void CMainWindow::setState(TState state)
 {
     switch (state)
     {
@@ -3480,7 +3483,7 @@ void CApplication::setState(TState state)
  * Crée la structure de la base de données pour SQLite.
  */
 
-void CApplication::createDatabaseSQLite()
+void CMainWindow::createDatabaseSQLite()
 {
     QSqlQuery query(m_dataBase);
     QStringList tables = m_dataBase.tables(QSql::Tables);
@@ -3740,7 +3743,7 @@ void CApplication::createDatabaseSQLite()
  * Crée la structure de la base de données pour MySQL.
  */
 
-void CApplication::createDatabaseMySQL()
+void CMainWindow::createDatabaseMySQL()
 {
     QSqlQuery query(m_dataBase);
     QStringList tables = m_dataBase.tables(QSql::Tables);
@@ -4000,7 +4003,7 @@ void CApplication::createDatabaseMySQL()
  * Crée la structure de la base de données pour PostgreSQL.
  */
 
-void CApplication::createDatabasePostgreSQL()
+void CMainWindow::createDatabasePostgreSQL()
 {
     QSqlQuery query(m_dataBase);
     QStringList tables = m_dataBase.tables(QSql::Tables);
@@ -4317,7 +4320,7 @@ void CApplication::createDatabasePostgreSQL()
  * \param event Évènement de fermeture.
  */
 
-void CApplication::closeEvent(QCloseEvent * event)
+void CMainWindow::closeEvent(QCloseEvent * event)
 {
     Q_CHECK_PTR(event);
 
@@ -4343,28 +4346,4 @@ void CApplication::closeEvent(QCloseEvent * event)
 
     event->accept();
     QMainWindow::closeEvent(event);
-}
-
-
-/**
- * Convertit une durée en millisecondes en un texte affichable.
- *
- * \param durationMS Durée en millisecondes.
- * \return Texte.
- */
-
-QString CApplication::durationToString(qlonglong durationMS)
-{
-    QTime duration(0, 0);
-    duration = duration.addMSecs(static_cast<int>(durationMS % 86400000));
-
-    if (durationMS > 86400000)
-    {
-        int numDays = static_cast<int>(durationMS / 86400000);
-        return tr("%n day(s) %1", "", numDays).arg(duration.toString());
-    }
-    else
-    {
-        return duration.toString();
-    }
 }

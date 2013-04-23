@@ -17,8 +17,10 @@ You should have received a copy of the GNU General Public License
 along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef FILE_C_UTILS
-#define FILE_C_UTILS
+#ifndef FILE_C_UTILS_HPP_
+#define FILE_C_UTILS_HPP_
+
+#include <QString>
 
 
 class QMenu;
@@ -26,5 +28,7 @@ class QPoint;
 
 
 QPoint getCorrectMenuPosition(QMenu * menu, const QPoint& menuPosition);
+QString durationToString(qlonglong durationMS);
+QString getFileSize(qlonglong fileSize);
 
-#endif // FILE_C_UTILS
+#endif // FILE_C_UTILS_HPP_

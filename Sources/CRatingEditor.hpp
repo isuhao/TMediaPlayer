@@ -30,7 +30,7 @@ class CRatingEditor : public QWidget
 
 public:
 
-    explicit CRatingEditor(QWidget * parent = NULL);
+    explicit CRatingEditor(QWidget * parent = nullptr);
 
     virtual QSize sizeHint() const;
     virtual QSize minimumSizeHint() const;

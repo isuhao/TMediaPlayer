@@ -18,7 +18,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CLyricWiki.hpp"
-#include "CApplication.hpp"
+#include "CMainWindow.hpp"
 #include "CSong.hpp"
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
@@ -32,10 +32,10 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QtDebug>
 
 
-CLyricWiki::CLyricWiki(CApplication * application, CSong * song) :
-    QObject       (application),
-    m_application (application),
-    m_song        (song)
+CLyricWiki::CLyricWiki(CMainWindow * application, CSong * song) :
+QObject       (application),
+m_application (application),
+m_song        (song)
 {
     Q_CHECK_PTR(application);
     Q_CHECK_PTR(song);

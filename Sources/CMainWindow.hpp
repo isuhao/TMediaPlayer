@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef FILE_C_APPLICATION
-#define FILE_C_APPLICATION
+#ifndef FILE_C_MAIN_WINDOW_HPP_
+#define FILE_C_MAIN_WINDOW_HPP_
 
-#include "CSongTableModel.hpp"
+#include "CMediaTableModel.hpp"
 #include "CEqualizerPreset.hpp"
 #include <QMainWindow>
 #include <QList>
@@ -33,16 +33,16 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 
 class CSong;
-class CSongTable;
+class CMediaTableView;
 class CFolder;
 class CCDRomDrive;
 class CQueuePlayList;
 class IPlayList;
-class CPlayListView;
+class CLibraryView;
 class CDynamicList;
-class CStaticPlayList;
+class CStaticList;
 class CLibrary;
-class CListModel;
+class CLibraryModel;
 class CLibraryFolder;
 class CWidgetLyrics;
 class CEqualizerPreset;
@@ -62,10 +62,10 @@ namespace FMOD
  * Contient la librairie et toutes les listes de lecture, et les paramètres de lecture.
  */
 
-class CApplication : public QMainWindow
+class CMainWindow : public QMainWindow
 {
     Q_OBJECT
-        
+
     friend class CDialogEditStaticPlayList;
     friend class CDialogEditDynamicList;
     friend class CDialogEditFolder;
@@ -99,8 +99,8 @@ public:
     };
 
 
-    CApplication();
-    virtual ~CApplication();
+    CMainWindow();
+    virtual ~CMainWindow();
 
     bool initWindow();
     void showDatabaseError(const QString& msg, const QString& query, const QString& fileName, int line);
@@ -156,12 +156,12 @@ public:
     // Filtre de recherche
     QString getFilter() const;
 
-    inline CSongTableItem * getCurrentSongItem() const;
-    inline CSongTable * getCurrentSongTable() const;
+    inline CMediaTableItem * getCurrentSongItem() const;
+    inline CMediaTableView * getCurrentSongTable() const;
     inline CLibrary * getLibrary() const;
-    inline CSongTable * getDisplayedSongTable() const;
-    void setDisplayedSongTable(CSongTable * songTable);
-    void setCurrentSongItem(CSongTableItem * songItem, CSongTable * songTable);
+    inline CMediaTableView * getDisplayedSongTable() const;
+    void setDisplayedSongTable(CMediaTableView * songTable);
+    void setCurrentSongItem(CMediaTableItem * songItem, CMediaTableView * songTable);
     CSong * getSongFromId(int id) const;
     CFolder * getFolderFromId(int id) const;
     IPlayList * getPlayListFromId(int id) const;
@@ -222,7 +222,6 @@ public:
     void notifyInformation(const QString& message);
 
     void openDialogCreateStaticList(CFolder * folder, const QList<CSong *>& songs = QList<CSong *>());
-    static QString durationToString(qlonglong durationMS);
 
 public slots:
 
@@ -234,7 +233,7 @@ public slots:
     void togglePlay();
     void previousSong();
     void nextSong();
-    void playSong(CSongTableItem * songItem);
+    void playSong(CMediaTableItem * songItem);
 
 #if (QT_VERSION < 0x050000) || __cplusplus < 201103L
     void setRepeatModeNoRepeat()   { setRepeatMode(NoRepeat  ); }
@@ -243,7 +242,7 @@ public slots:
 #endif
     void setNextRepeatMode();
     void setRepeatMode(TRepeatMode repeatMode);
-    
+
 #if QT_VERSION < 0x050000
     void setShuffle();
 #endif
@@ -263,11 +262,11 @@ public slots:
     void openDialogAddSongs();
     void openDialogAddFolder();
     void openDialogSongInfos();
-    
+
     void openDialogCreateStaticList();
-    void openDialogCreateDynamicList(CFolder * folder = NULL);
-    void openDialogCreateFolder(CFolder * folder = NULL);
-    void openDialogEditStaticPlayList(CStaticPlayList * playList);
+    void openDialogCreateDynamicList(CFolder * folder = nullptr);
+    void openDialogCreateFolder(CFolder * folder = nullptr);
+    void openDialogEditStaticPlayList(CStaticList * playList);
     void openDialogEditDynamicList(CDynamicList * playList);
     void openDialogEditFolder(CFolder * folder);
     void openDialogAbout();
@@ -275,12 +274,12 @@ public slots:
     void importFromITunes();
     void importFromSongbird();
     void selectCurrentSong();
-    void selectSong(CSongTable * songTable, CSongTableItem * songItem);
+    void selectSong(CMediaTableView * songTable, CMediaTableItem * songItem);
     void openSongInExplorer();
     void editSelectedItem();
     void removeSelectedItem();
     void onSongModified();
-    
+
 #if QT_VERSION >= 0x050000
     void openDialogCreateStaticList_Slot(bool checked) { openDialogCreateStaticList(); }
     void openDialogCreateDynamicList_Slot(bool checked) { openDialogCreateDynamicList(); }
@@ -311,9 +310,9 @@ signals:
   //void folderRemoved(CFolder * folder);    ///< Signal émis lorsqu'un dossier est supprimé.
 
 protected slots:
-    
+
 #ifndef T_NO_SINGLE_APP
-	void activateThisWindow();
+    void activateThisWindow();
 #endif // T_NO_SINGLE_APP
 
     void onPlayEnd();
@@ -333,7 +332,7 @@ protected:
     void addFolder(CFolder * folder);
     QStringList importFolder(const QString& pathName);
     void importSongs(const QStringList& fileList);
-    void displaySongTable(CSongTable * songTable);
+    void displaySongTable(CMediaTableView * songTable);
     bool initSoundSystem();
     void loadDatabase();
     void startPlay();
@@ -353,17 +352,17 @@ private:
     QList<CCDRomDrive *> m_cdRomDrives;   ///< Liste des lecteurs de CD-ROM.
     CQueuePlayList * m_queue;             ///< File d'attente.
     FMOD::System * m_soundSystem;         ///< Système de son de FMOD.
-    CPlayListView * m_playListView;       ///< Vue pour afficher les listes de lecture.
-    CListModel * m_listModel;             ///< Modèle contenant les listes de lecture.
+    CLibraryView * m_playListView;       ///< Vue pour afficher les listes de lecture.
+    CLibraryModel * m_listModel;             ///< Modèle contenant les listes de lecture.
     CDialogEditSong * m_dialogEditSong;   ///< Pointeur sur la boite de dialogue pour modifier les informations d'un morceau.
     QSqlDatabase m_dataBase;              ///< Base de données.
     QSettings * m_settings;               ///< Paramètres de l'application.
     QTimer * m_timer;                     ///< Timer pour mettre à jour l'affichage.
     QLabel * m_listInfos;                 ///< Label pour afficher les informations sur la liste affichée.
-    CSongTableItem * m_currentSongItem;   ///< Pointeur sur l'item en cours de lecture.
-    CSongTable * m_currentSongTable;      ///< Liste de morceaux contenant le morceau en cours de lecture.
+    CMediaTableItem * m_currentSongItem;   ///< Pointeur sur l'item en cours de lecture.
+    CMediaTableView * m_currentSongTable;      ///< Liste de morceaux contenant le morceau en cours de lecture.
     CLibrary * m_library;                 ///< Librairie (liste de tous les morceaux).
-    CSongTable * m_displayedSongTable;    ///< Liste de morceaux affichée.
+    CMediaTableView * m_displayedSongTable;    ///< Liste de morceaux affichée.
     CWidgetLyrics * m_widgetLyrics;       ///< Widget pour visualiser et modifier les paroles des morceaux.
     TState m_state;                       ///< État de lecture.
     bool m_showRemainingTime;             ///< Indique si on doit afficher le temps restant ou la durée du morceau en cours de lecture.
@@ -384,11 +383,11 @@ private:
 
     QList<TNotification> m_infosNotified;     ///< Liste des notifications.
 
-    // État de Last.fm
+    // États de Last.fm
     enum TLastFmState
     {
         NoScrobble, ///< Pas de scrobble.
-        Started,    ///< Lecture commencé.
+        Started,    ///< Lecture commencée.
         Notified,   ///< Notification de lecture.
         Scrobbled   ///< Scrobble effectué.
     };
@@ -403,19 +402,19 @@ private:
 };
 
 
-QList<CApplication::TNotification> CApplication::getNotifications() const
+QList<CMainWindow::TNotification> CMainWindow::getNotifications() const
 {
     return m_infosNotified;
 }
 
 
-inline QList<CEqualizerPreset *> CApplication::getEqualizerPresets() const
+inline QList<CEqualizerPreset *> CMainWindow::getEqualizerPresets() const
 {
     return m_equalizerPresets;
 }
 
 
-inline CEqualizerPreset * CApplication::getCurrentEqualizerPreset() const
+inline CEqualizerPreset * CMainWindow::getCurrentEqualizerPreset() const
 {
     return m_currentEqualizerPreset;
 }
@@ -424,10 +423,10 @@ inline CEqualizerPreset * CApplication::getCurrentEqualizerPreset() const
 /**
  * Retourne la chanson actuellement lue.
  *
- * \return Chanson en cours de lecture, ou NULL.
+ * \return Chanson en cours de lecture, ou nullptr.
  */
 
-inline CSongTableItem * CApplication::getCurrentSongItem() const
+inline CMediaTableItem * CMainWindow::getCurrentSongItem() const
 {
     return m_currentSongItem;
 }
@@ -436,10 +435,10 @@ inline CSongTableItem * CApplication::getCurrentSongItem() const
 /**
  * Retourne la liste de morceaux actuellement lue.
  *
- * \return Liste de morceaux en cours de lecture, ou NULL.
+ * \return Liste de morceaux en cours de lecture, ou nullptr.
  */
 
-inline CSongTable * CApplication::getCurrentSongTable() const
+inline CMediaTableView * CMainWindow::getCurrentSongTable() const
 {
     return m_currentSongTable;
 }
@@ -451,7 +450,7 @@ inline CSongTable * CApplication::getCurrentSongTable() const
  * \return Médiathèque, qui contient l'ensemble des morceaux.
  */
 
-inline CLibrary * CApplication::getLibrary() const
+inline CLibrary * CMainWindow::getLibrary() const
 {
     return m_library;
 }
@@ -463,13 +462,13 @@ inline CLibrary * CApplication::getLibrary() const
  * \return Liste de morceaux affichée.
  */
 
-inline CSongTable * CApplication::getDisplayedSongTable() const
+inline CMediaTableView * CMainWindow::getDisplayedSongTable() const
 {
     return m_displayedSongTable;
 }
 
 
-inline CDialogEditSong * CApplication::getDialogEditSong() const
+inline CDialogEditSong * CMainWindow::getDialogEditSong() const
 {
     return m_dialogEditSong;
 }
@@ -481,7 +480,7 @@ inline CDialogEditSong * CApplication::getDialogEditSong() const
  * \return Booléen.
  */
 
-inline bool CApplication::isPlaying() const
+inline bool CMainWindow::isPlaying() const
 {
     return (m_state == Playing);
 }
@@ -493,7 +492,7 @@ inline bool CApplication::isPlaying() const
  * \return Booléen.
  */
 
-inline bool CApplication::isPaused() const
+inline bool CMainWindow::isPaused() const
 {
     return (m_state == Paused);
 }
@@ -505,7 +504,7 @@ inline bool CApplication::isPaused() const
  * \return Booléen.
  */
 
-inline bool CApplication::isStopped() const
+inline bool CMainWindow::isStopped() const
 {
     return (m_state == Stopped);
 }
@@ -517,7 +516,7 @@ inline bool CApplication::isStopped() const
  * \return Mode de répétition.
  */
 
-inline CApplication::TRepeatMode CApplication::getRepeatMode() const
+inline CMainWindow::TRepeatMode CMainWindow::getRepeatMode() const
 {
     return m_repeatMode;
 }
@@ -529,7 +528,7 @@ inline CApplication::TRepeatMode CApplication::getRepeatMode() const
  * \return Booléen.
  */
 
-bool CApplication::isShuffle() const
+bool CMainWindow::isShuffle() const
 {
     return m_isShuffle;
 }
@@ -541,7 +540,7 @@ bool CApplication::isShuffle() const
  * \return Booléen.
  */
 
-inline bool CApplication::isMute() const
+inline bool CMainWindow::isMute() const
 {
     return m_isMute;
 }
@@ -553,15 +552,15 @@ inline bool CApplication::isMute() const
  * \return Volume sonore, entre 0 et 100.
  */
 
-inline int CApplication::getVolume() const
+inline int CMainWindow::getVolume() const
 {
     return m_volume;
 }
 
 
-inline QList<CLibraryFolder *> CApplication::getLibraryFolders() const
+inline QList<CLibraryFolder *> CMainWindow::getLibraryFolders() const
 {
     return m_libraryFolders;
 }
 
-#endif // FILE_C_APPLICATION
+#endif // FILE_C_MAIN_WINDOW_HPP_

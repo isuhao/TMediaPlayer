@@ -37,7 +37,7 @@ class CAuthentication : public ILastFmService
 
 public:
 
-    explicit CAuthentication(CApplication * application);
+    explicit CAuthentication(CMainWindow * application);
 
 protected slots:
 

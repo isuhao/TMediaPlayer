@@ -24,7 +24,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QWidget>
 
 
-class CApplication;
+class CMainWindow;
 class CSong;
 class QTextEdit;
 class QPushButton;
@@ -37,7 +37,7 @@ class CWidgetLyrics : public QWidget
 
 public:
 
-    explicit CWidgetLyrics(CApplication * application);
+    explicit CWidgetLyrics(CMainWindow * application);
 
     void setSong(CSong * song);
 
@@ -51,7 +51,7 @@ protected slots:
 
 private:
 
-    CApplication * m_application;
+    CMainWindow * m_application;
     CSong * m_song;
     QGridLayout * m_layout;
     QTextEdit * m_textEdit;

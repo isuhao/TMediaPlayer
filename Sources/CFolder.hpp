@@ -27,10 +27,10 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QModelIndex>
 
 
-class CApplication;
+class CMainWindow;
 class IPlayList;
-class CListModel;
-class CPlayListView;
+class CLibraryModel;
+class CLibraryView;
 class CDialogEditFolder;
 class CDialogRemoveFolder;
 
@@ -43,9 +43,9 @@ class CFolder : public QObject
 {
     Q_OBJECT
 
-    friend class CApplication;
-    friend class CListModel;
-    friend class CPlayListView;
+    friend class CMainWindow;
+    friend class CLibraryModel;
+    friend class CLibraryView;
     friend class CDialogEditFolder;
     friend class CDialogRemoveFolder;
 
@@ -57,11 +57,11 @@ public:
         IPlayList * playList; ///< Pointeur sur la liste de lecture.
         CFolder * folder;     ///< Pointeur sur le dossier.
 
-        inline TFolderItem(int pposition, IPlayList * pplayList) : position(pposition), playList(pplayList), folder(NULL) { }
-        inline TFolderItem(int pposition, CFolder * pfolder) : position(pposition), playList(NULL), folder(pfolder) { }
+        inline TFolderItem(int pposition, IPlayList * pplayList) : position(pposition), playList(pplayList), folder(nullptr) { }
+        inline TFolderItem(int pposition, CFolder * pfolder) : position(pposition), playList(nullptr), folder(pfolder) { }
     };
 
-    explicit CFolder(CApplication * application, const QString& name = QString());
+    explicit CFolder(CMainWindow * application, const QString& name = QString());
     virtual ~CFolder();
 
     inline int getId() const;
@@ -89,7 +89,7 @@ signals:
      */
 
     void nameChanged(const QString& oldName, const QString& newName);
-    
+
     /**
      * Signal émis lorsque le dossier contenant le dossier change.
      * Utilisez la méthode sender() dans le slot pour connaitre le dossier.
@@ -114,19 +114,19 @@ public slots:
     void setOpen(bool open = true);
 
 protected:
-    
+
     virtual bool updateDatabase();
     virtual void removeFromDatabase(bool recursive = false);
     void fixPositions();
 
 private:
-    
+
     void addPlayListItem(IPlayList * playList, int position = -1);
     void addFolderItem(CFolder * folder, int position = -1);
     void removePlayListItem(IPlayList * playList);
     void removeFolderItem(CFolder * folder);
 
-    CApplication * m_application;   ///< Pointeur sur l'application.
+    CMainWindow * m_application;   ///< Pointeur sur l'application.
     int m_id;                       ///< Identifiant du dossier en base de données.
     QString m_name;                 ///< Nom du dossier.
     bool m_open;                    ///< Indique si le dossier est ouvert ou fermé.

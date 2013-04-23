@@ -18,7 +18,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CDialogAbout.hpp"
-#include "../CApplication.hpp"
+#include "../CMainWindow.hpp"
 #include <QPushButton>
 
 
@@ -28,7 +28,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * \param application Pointeur sur la classe principale de l'application.
  */
 
-CDialogAbout::CDialogAbout(CApplication * application) :
+CDialogAbout::CDialogAbout(CMainWindow * application) :
     QDialog       (application),
     m_uiWidget    (new Ui::DialogAbout()),
     m_application (application)

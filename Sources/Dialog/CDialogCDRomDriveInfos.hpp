@@ -24,7 +24,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "ui_DialogCDRomDriveInfos.h"
 
 
-class CApplication;
+class CMainWindow;
 class CCDRomDrive;
 
 
@@ -38,13 +38,13 @@ class CDialogCDRomDriveInfos : public QDialog
 
 public:
 
-    CDialogCDRomDriveInfos(CCDRomDrive * cdRomDrive, CApplication * application);
+    CDialogCDRomDriveInfos(CCDRomDrive * cdRomDrive, CMainWindow * application);
     virtual ~CDialogCDRomDriveInfos();
 
 private:
 
     Ui::DialogCDRomDriveInfos * m_uiWidget; ///< Pointeur sur le widget de la boite de dialogue.
-    CApplication * m_application;           ///< Pointeur sur la classe principale de l'application.
+    CMainWindow * m_application;           ///< Pointeur sur la classe principale de l'application.
     CCDRomDrive * m_cdRomDrive;             ///< Pointeur sur le lecteur de CD-ROM.
 };
 

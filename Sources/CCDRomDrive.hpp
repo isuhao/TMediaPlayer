@@ -20,11 +20,11 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #ifndef FILE_C_CDROM_DRIVE
 #define FILE_C_CDROM_DRIVE
 
-#include "CSongTable.hpp"
+#include "CMediaTableView.hpp"
 #include "CDRomDrive.hpp"
 
 
-class CApplication;
+class CMainWindow;
 class CSong;
 
 namespace FMOD
@@ -39,13 +39,13 @@ namespace FMOD
  * sont gérées différement par FMOD.
  */
 
-class CCDRomDrive : public CSongTable
+class CCDRomDrive : public CMediaTableView
 {
     Q_OBJECT
 
 public:
 
-    CCDRomDrive(const QString& driveName, CApplication * application, const QString& SCSIName = QString(), const QString& deviceName = QString());
+    CCDRomDrive(const QString& driveName, CMainWindow * application, const QString& SCSIName = QString(), const QString& deviceName = QString());
     virtual ~CCDRomDrive();
 
     inline QString getDriveName() const;
@@ -138,13 +138,13 @@ inline QString CCDRomDrive::getMusicBrainzDiscId() const
  * Retourne le morceau correspondant à un numéro de piste.
  *
  * \param trackNumber Numéro de piste (entre 0 et 99).
- * \return Pointeur sur le morceau, ou NULL.
+ * \return Pointeur sur le morceau, ou nullptr.
  */
 
 inline CSong * CCDRomDrive::getSong(int trackNumber) const
 {
     if (trackNumber < 0 || trackNumber >= 100)
-        return NULL;
+        return nullptr;
 
     return m_songs[trackNumber];
 }

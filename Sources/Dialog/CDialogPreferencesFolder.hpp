@@ -24,7 +24,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "ui_DialogPreferencesFolder.h"
 
 
-class CApplication;
+class CMainWindow;
 class CLibraryFolder;
 
 
@@ -34,7 +34,7 @@ class CDialogPreferencesFolder : public QDialog
 
 public:
 
-    CDialogPreferencesFolder(CApplication * application, QWidget * parent, CLibraryFolder * folder);
+    CDialogPreferencesFolder(CMainWindow * application, QWidget * parent, CLibraryFolder * folder);
     virtual ~CDialogPreferencesFolder();
 
 protected slots:
@@ -45,7 +45,7 @@ protected slots:
 private:
 
     Ui::DialogPreferencesFolder * m_uiWidget; ///< Widget utilisé par la boite de dialogue.
-    CApplication * m_application;             ///< Pointeur sur l'application.
+    CMainWindow * m_application;             ///< Pointeur sur l'application.
     CLibraryFolder * m_folder;                ///< Pointeur sur le dossier à modifier.
     bool m_needDeleteFolder;
 };

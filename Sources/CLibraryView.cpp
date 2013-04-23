@@ -17,12 +17,12 @@ You should have received a copy of the GNU General Public License
 along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "CPlayListView.hpp"
-#include "CListModel.hpp"
+#include "CLibraryView.hpp"
+#include "CLibraryModel.hpp"
 #include "IPlayList.hpp"
-#include "CStaticPlayList.hpp"
+#include "CStaticList.hpp"
 #include "CDynamicList.hpp"
-#include "CApplication.hpp"
+#include "CMainWindow.hpp"
 #include "CQueuePlayList.hpp"
 #include "CFolder.hpp"
 #include "CCDRomDrive.hpp"
@@ -47,14 +47,14 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * \param application Pointeur sur l'application.
  */
 
-CPlayListView::CPlayListView(CApplication * application) :
-    QTreeView        (application),
-    m_application    (application),
-    m_model          (NULL),
-    m_menuPlaylist   (NULL),
-    m_menuFolder     (NULL),
-    m_menuCDRomDrive (NULL),
-    m_menuDefault    (NULL)
+CLibraryView::CLibraryView(CMainWindow * application) :
+QTreeView        (application),
+m_application    (application),
+m_model          (nullptr),
+m_menuPlaylist   (nullptr),
+m_menuFolder     (nullptr),
+m_menuCDRomDrive (nullptr),
+m_menuDefault    (nullptr)
 {
     Q_CHECK_PTR(application);
 
@@ -62,7 +62,7 @@ CPlayListView::CPlayListView(CApplication * application) :
     setUniformRowHeights(true);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     
-    //m_model = new CListModel(m_application);
+    //m_model = new CLibraryModel(m_application);
     //setModel(m_model);
 
     // Glisser-déposer
@@ -108,9 +108,9 @@ CPlayListView::CPlayListView(CApplication * application) :
  * \return Liste de morceaux, ou NULL.
  */
 
-CSongTable * CPlayListView::getSongTable(const QModelIndex& index) const
+CMediaTableView * CLibraryView::getSongTable(const QModelIndex& index) const
 {
-    return m_model->data(index, Qt::UserRole + 1).value<CSongTable *>();
+    return m_model->data(index, Qt::UserRole + 1).value<CMediaTableView *>();
 }
 
 
@@ -121,7 +121,7 @@ CSongTable * CPlayListView::getSongTable(const QModelIndex& index) const
  * \return Dossier, ou NULL.
  */
 
-CFolder * CPlayListView::getFolder(const QModelIndex& index) const
+CFolder * CLibraryView::getFolder(const QModelIndex& index) const
 {
     return m_model->data(index, Qt::UserRole + 2).value<CFolder *>();
 }
@@ -133,10 +133,10 @@ CFolder * CPlayListView::getFolder(const QModelIndex& index) const
  * \return Liste de morceaux sélectionnée, ou NULL.
  */
 
-CSongTable * CPlayListView::getSelectedSongTable() const
+CMediaTableView * CLibraryView::getSelectedSongTable() const
 {
     QModelIndex index = selectionModel()->currentIndex();
-    return (index.isValid() ? getSongTable(index) : NULL);
+    return (index.isValid() ? getSongTable(index) : nullptr);
 }
 
 
@@ -146,10 +146,10 @@ CSongTable * CPlayListView::getSelectedSongTable() const
  * \return Dossier sélectionné, ou NULL.
  */
 
-CFolder * CPlayListView::getSelectedFolder() const
+CFolder * CLibraryView::getSelectedFolder() const
 {
     QModelIndex index = selectionModel()->currentIndex();
-    return (index.isValid() ? getFolder(index) : NULL);
+    return (index.isValid() ? getFolder(index) : nullptr);
 }
 
 
@@ -159,17 +159,17 @@ CFolder * CPlayListView::getSelectedFolder() const
  * \return Lecteur de CD-ROM sélectionné, ou NULL.
  */
 
-CCDRomDrive * CPlayListView::getSelectedCDRomDrive() const
+CCDRomDrive * CLibraryView::getSelectedCDRomDrive() const
 {
     QModelIndex index = selectionModel()->currentIndex();
 
     if (!index.isValid())
-        return NULL;
+        return nullptr;
 
-    CSongTable * songTable = getSongTable(index);
+    CMediaTableView * songTable = getSongTable(index);
 
     if (!songTable)
-        return NULL;
+        return nullptr;
 
     CCDRomDrive * cdRomDrive = qobject_cast<CCDRomDrive *>(songTable);
     return cdRomDrive;
@@ -183,7 +183,7 @@ CCDRomDrive * CPlayListView::getSelectedCDRomDrive() const
  * \return Index de la liste de morceaux.
  */
 
-QModelIndex CPlayListView::getSongTableModelIndex(CSongTable * songTable) const
+QModelIndex CLibraryView::getSongTableModelIndex(CMediaTableView * songTable) const
 {
     if (!songTable)
         return QModelIndex();
@@ -199,7 +199,7 @@ QModelIndex CPlayListView::getSongTableModelIndex(CSongTable * songTable) const
  * \return Index du dossier.
  */
 
-QModelIndex CPlayListView::getFolderModelIndex(CFolder * folder) const
+QModelIndex CLibraryView::getFolderModelIndex(CFolder * folder) const
 {
     if (!folder)
         return QModelIndex();
@@ -214,7 +214,7 @@ QModelIndex CPlayListView::getFolderModelIndex(CFolder * folder) const
  * \param model Pointeur sur le modèle à utiliser.
  */
 
-void CPlayListView::setModel(CListModel * model)
+void CLibraryView::setModel(CLibraryModel * model)
 {
     Q_CHECK_PTR(model);
     m_model = model;
@@ -240,7 +240,7 @@ void CPlayListView::setModel(CListModel * model)
 
         QStandardItem * item = m_model->item(index.row());
 
-        if (item == NULL)
+        if (item == nullptr)
             continue;
 
         setRowHidden(index.row(), index.parent(), !item->isEnabled());
@@ -253,7 +253,7 @@ void CPlayListView::setModel(CListModel * model)
  * Affiche ou masque les éléments correspondant aux lecteurs.
  */
 
-void CPlayListView::updateCDRomDrives()
+void CLibraryView::updateCDRomDrives()
 {
     Q_CHECK_PTR(m_model);
     m_model->updateCDRomDrives();
@@ -269,7 +269,7 @@ void CPlayListView::updateCDRomDrives()
 
         QStandardItem * item = m_model->item(index.row());
 
-        if (item == NULL)
+        if (item == nullptr)
             continue;
 
         setRowHidden(index.row(), index.parent(), !item->isEnabled());
@@ -284,7 +284,7 @@ void CPlayListView::updateCDRomDrives()
  * \param event Évènement du clavier.
  */
 
-void CPlayListView::keyPressEvent(QKeyEvent * event)
+void CLibraryView::keyPressEvent(QKeyEvent * event)
 {
     Q_CHECK_PTR(event);
 
@@ -306,7 +306,7 @@ void CPlayListView::keyPressEvent(QKeyEvent * event)
  * \param event Évènement.
  */
 
-void CPlayListView::dragMoveEvent(QDragMoveEvent * event)
+void CLibraryView::dragMoveEvent(QDragMoveEvent * event)
 {
     Q_CHECK_PTR(event);
 
@@ -342,17 +342,17 @@ void CPlayListView::dragMoveEvent(QDragMoveEvent * event)
 
         if (dataList.isEmpty())
         {
-            CSongTable * songTable = m_model->data(index, Qt::UserRole + 1).value<CSongTable *>();
+            CMediaTableView * songTable = m_model->data(index, Qt::UserRole + 1).value<CMediaTableView *>();
             //CFolder * folder = m_model->data(index, Qt::UserRole + 2).value<CFolder *>();
 
-            if (songTable && (qobject_cast<CStaticPlayList *>(songTable) || qobject_cast<CQueuePlayList *>(songTable)))
+            if (songTable && (qobject_cast<CStaticList *>(songTable) || qobject_cast<CQueuePlayList *>(songTable)))
             {
                 event->accept();
                 event->acceptProposedAction();
             }
             /*else if (folder)
             {
-                qDebug() << "CPlayListView::dragMoveEvent() : move in folder";
+                qDebug() << "CLibraryView::dragMoveEvent() : move in folder";
                 //...
                 event->ignore();
                 return;
@@ -370,7 +370,7 @@ void CPlayListView::dragMoveEvent(QDragMoveEvent * event)
             int playListId;
             int folderId;
 
-            CListModel::decodeDataList(dataList, &playListId, &folderId);
+            CLibraryModel::decodeDataList(dataList, &playListId, &folderId);
 
             if (folderId > 0)
             {
@@ -384,7 +384,7 @@ void CPlayListView::dragMoveEvent(QDragMoveEvent * event)
                     return;
                 }
 
-                CSongTable * songTable = m_model->data(index, Qt::UserRole + 1).value<CSongTable *>();
+                CMediaTableView * songTable = m_model->data(index, Qt::UserRole + 1).value<CMediaTableView *>();
 
                 if (songTable)
                 {
@@ -446,7 +446,7 @@ void CPlayListView::dragMoveEvent(QDragMoveEvent * event)
  * \param point Position du clic.
  */
 
-void CPlayListView::openCustomMenuProject(const QPoint& point)
+void CLibraryView::openCustomMenuProject(const QPoint& point)
 {
     QMenu * menu = m_menuDefault; // Menu à afficher
     QModelIndex index = indexAt(point);
@@ -457,7 +457,7 @@ void CPlayListView::openCustomMenuProject(const QPoint& point)
 
         if (item)
         {
-            CSongTable * songTable = item->data(Qt::UserRole + 1).value<CSongTable *>();
+            CMediaTableView * songTable = item->data(Qt::UserRole + 1).value<CMediaTableView *>();
 
             if (songTable)
             {
@@ -490,13 +490,13 @@ void CPlayListView::openCustomMenuProject(const QPoint& point)
 }
 
 
-void CPlayListView::onItemCollapsed(const QModelIndex& index)
+void CLibraryView::onItemCollapsed(const QModelIndex& index)
 {
     m_model->openFolder(index, false);
 }
 
 
-void CPlayListView::onItemExpanded(const QModelIndex& index)
+void CLibraryView::onItemExpanded(const QModelIndex& index)
 {
     m_model->openFolder(index, true);
 }
@@ -506,7 +506,7 @@ void CPlayListView::onItemExpanded(const QModelIndex& index)
  * Slot pour créer une liste statique à l'intérieur d'un dossier.
  */
 
-void CPlayListView::createStaticList()
+void CLibraryView::createStaticList()
 {
     CFolder * folder = getSelectedFolder();
     m_application->openDialogCreateStaticList(folder);
@@ -517,7 +517,7 @@ void CPlayListView::createStaticList()
  * Slot pour créer une liste dynamique à l'intérieur d'un dossier.
  */
 
-void CPlayListView::createDynamicList()
+void CLibraryView::createDynamicList()
 {
     CFolder * folder = getSelectedFolder();
     m_application->openDialogCreateDynamicList(folder);
@@ -528,7 +528,7 @@ void CPlayListView::createDynamicList()
  * Slot pour créer un dossier à l'intérieur d'un autre dossier.
  */
 
-void CPlayListView::createFolder()
+void CLibraryView::createFolder()
 {
     CFolder * folder = getSelectedFolder();
     m_application->openDialogCreateFolder(folder);
@@ -539,7 +539,7 @@ void CPlayListView::createFolder()
  * Éjecte le CD-ROM du lecteur de CD-ROM actuellement sélectionné.
  */
 
-void CPlayListView::ejectCDRom()
+void CLibraryView::ejectCDRom()
 {
     CCDRomDrive * cdRomDrive = getSelectedCDRomDrive();
 
@@ -554,7 +554,7 @@ void CPlayListView::ejectCDRom()
  * Affiche les informations sur le lecteur de CD-ROM actuellement sélectionné.
  */
 
-void CPlayListView::informationsAboutCDRomDrive()
+void CLibraryView::informationsAboutCDRomDrive()
 {
     CCDRomDrive * cdRomDrive = getSelectedCDRomDrive();
 

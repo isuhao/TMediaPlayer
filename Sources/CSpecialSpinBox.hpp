@@ -34,7 +34,7 @@ class CSpecialSpinBox : public QSpinBox
 
 public:
 
-    explicit CSpecialSpinBox(QWidget * parent = NULL);
+    explicit CSpecialSpinBox(QWidget * parent = nullptr);
     void setPlaceholderText(const QString& text);
     void setSpecialValue(int value);
 

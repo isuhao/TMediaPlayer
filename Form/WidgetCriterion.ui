@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>WidgetCriteria</class>
- <widget class="QWidget" name="WidgetCriteria">
+ <class>WidgetCriterion</class>
+ <widget class="QWidget" name="WidgetCriterion">
   <property name="sizePolicy">
    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
     <horstretch>0</horstretch>

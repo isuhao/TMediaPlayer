@@ -18,7 +18,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CCDRomDrive.hpp"
-#include "CApplication.hpp"
+#include "CMainWindow.hpp"
 #include "CSong.hpp"
 #include "Utils.hpp"
 #include "MusicBrainz/sha1.h"
@@ -35,18 +35,18 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * \param deviceName  Nom du périphérique.
  */
 
-CCDRomDrive::CCDRomDrive(const QString& driveName, CApplication * application, const QString& SCSIName, const QString& deviceName) :
-CSongTable   (application),
-m_driveName  (driveName),
-m_SCSIName   (SCSIName),
-m_deviceName (deviceName),
-m_discId     (0),
-m_sound      (NULL),
-m_disc       (qPrintable(driveName))
+CCDRomDrive::CCDRomDrive(const QString& driveName, CMainWindow * application, const QString& SCSIName, const QString& deviceName) :
+CMediaTableView (application),
+m_driveName     (driveName),
+m_SCSIName      (SCSIName),
+m_deviceName    (deviceName),
+m_discId        (0),
+m_sound         (nullptr),
+m_disc          (qPrintable(driveName))
 {
     for (int track = 0; track < 100; ++track)
     {
-        m_songs[track] = NULL;
+        m_songs[track] = nullptr;
     }
 
     // Glisser-déposer
@@ -64,13 +64,13 @@ CCDRomDrive::~CCDRomDrive()
     for (int track = 0; track < 100; ++track)
     {
         delete m_songs[track];
-        m_songs[track] = NULL;
+        m_songs[track] = nullptr;
     }
 
     if (m_sound)
     {
         m_sound->release();
-        m_sound = NULL;
+        m_sound = nullptr;
     }
 }
 
@@ -97,11 +97,11 @@ bool CCDRomDrive::hasCDInDrive()
             for (int track = 0; track < 100; ++track)
             {
                 delete m_songs[track];
-                m_songs[track] = NULL;
+                m_songs[track] = nullptr;
             }
 
             m_sound->release();
-            m_sound = NULL;
+            m_sound = nullptr;
 
             m_discId = 0;
             m_musicBrainzId = QString();
@@ -122,7 +122,7 @@ bool CCDRomDrive::hasCDInDrive()
         if (res != FMOD_OK || !m_sound)
         {
             m_application->logError(tr("the CD-ROM drive \"%1\" can't be opened with FMOD").arg(m_driveName), __FUNCTION__, __FILE__, __LINE__);
-            m_sound = NULL;
+            m_sound = nullptr;
             return false;
         }
 
@@ -141,7 +141,7 @@ bool CCDRomDrive::hasCDInDrive()
         m_musicBrainzId = QString();
         int songDurations[100] = { 0 };
 
-        while (m_sound->getTag(NULL, -1, &tag) == FMOD_OK)
+        while (m_sound->getTag(nullptr, -1, &tag) == FMOD_OK)
         {
             if (tag.datatype == FMOD_TAGDATATYPE_CDTOC)
             {
@@ -192,7 +192,7 @@ bool CCDRomDrive::hasCDInDrive()
                             songDurations[track] = (1000 * (m_disc.infos.trackOffsets[track+1] - m_disc.infos.trackOffsets[track]) / 75);
                     }
 
-	                SHA_INFO sha;
+                    SHA_INFO sha;
                     sha_init(&sha);
 
                     char tmp[17] = "";
@@ -213,11 +213,11 @@ bool CCDRomDrive::hasCDInDrive()
                     for (int i = 0; i < 100; ++i)
                     {
 #ifdef Q_OS_WIN32
-	                    sprintf_s(tmp, "%08X", m_disc.infos.trackOffsets[i]);
+                        sprintf_s(tmp, "%08X", m_disc.infos.trackOffsets[i]);
 #else
-	                    sprintf(tmp, "%08X", m_disc.infos.trackOffsets[i]);
+                        sprintf(tmp, "%08X", m_disc.infos.trackOffsets[i]);
 #endif
-	                    sha_update(&sha, reinterpret_cast<unsigned char *>(tmp), strlen(tmp));
+                        sha_update(&sha, reinterpret_cast<unsigned char *>(tmp), strlen(tmp));
                     }
 
                     unsigned char digest[20] = "";
@@ -232,7 +232,7 @@ bool CCDRomDrive::hasCDInDrive()
             }
         }
 
-        FMOD::Channel * channel = NULL;
+        FMOD::Channel * channel = nullptr;
         res = m_application->getSoundSystem()->playSound(FMOD_CHANNEL_FREE, m_sound, true, &channel);
 
         // Création des morceaux
@@ -242,7 +242,7 @@ bool CCDRomDrive::hasCDInDrive()
 
             for (int track = 0; track < 100; ++track)
             {
-                m_songs[track] = NULL;
+                m_songs[track] = nullptr;
             }
 
             for (int track = 0; track < numTracks && track < 100; ++track)
@@ -281,7 +281,7 @@ bool CCDRomDrive::hasCDInDrive()
                 song->m_channel          = channel;
                 song->m_cdRomDrive       = this;
                 song->m_cdRomTrackNumber = track;
-                
+
                 song->m_infos.title       = tr("Track %1").arg(track + 1);
                 song->m_infos.trackNumber = track + 1;
                 song->m_infos.trackCount  = numTracks;
@@ -294,11 +294,11 @@ bool CCDRomDrive::hasCDInDrive()
                 // Recherche du format du morceau
                 FMOD_SOUND_TYPE type;
                 FMOD_SOUND_FORMAT format;
-                res = m_sound->getFormat(&type, &format, &(song->m_properties.numChannels), NULL);
+                res = m_sound->getFormat(&type, &format, &(song->m_properties.numChannels), nullptr);
 
                 if (song->m_properties.numChannels <= 0)
                     song->m_properties.numChannels = 1;
-                
+
                 song->m_properties.sampleRate = 44100;
                 song->m_properties.bitRate    = song->m_properties.sampleRate * 16 * song->m_properties.numChannels / 1000;
                 song->m_properties.fileSize   = (static_cast<qlonglong>(song->m_properties.duration) * static_cast<qlonglong>(song->m_properties.bitRate)) / 8; // 8 bits par octet
@@ -343,7 +343,7 @@ bool CCDRomDrive::hasCDInDrive()
         CMusicBrainzLookup * lookup = new CMusicBrainzLookup(this, m_application);
     }
 
-    return (m_sound != NULL);
+    return (m_sound != nullptr);
 }
 
 
@@ -374,13 +374,13 @@ void CCDRomDrive::ejectDisc()
     for (int track = 0; track < 100; ++track)
     {
         delete m_songs[track];
-        m_songs[track] = NULL;
+        m_songs[track] = nullptr;
     }
 
     if (m_sound)
     {
         m_sound->release();
-        m_sound = NULL;
+        m_sound = nullptr;
     }
 
     m_discId = 0;
@@ -424,7 +424,7 @@ void CCDRomDrive::openCustomMenuProject(const QPoint& point)
         // Menu contextuel
         QMenu * menu = new QMenu(this);
         menu->setAttribute(Qt::WA_DeleteOnClose);
-        
+
         if (!severalSongs)
         {
             QAction * actionPlay = menu->addAction(tr("Play"), this, SLOT(playSelectedSong()));

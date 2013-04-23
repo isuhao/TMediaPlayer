@@ -18,14 +18,14 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CEqualizerPreset.hpp"
-#include "CApplication.hpp"
+#include "CMainWindow.hpp"
 
 #include <QSqlQuery>
 #include <QSqlError>
 
 
 /// Constructeur par défaut.
-CEqualizerPreset::CEqualizerPreset(CApplication * application) :
+CEqualizerPreset::CEqualizerPreset(CMainWindow * application) :
 QObject       (application),
 m_application (application),
 m_id          (-1)
@@ -192,7 +192,7 @@ void CEqualizerPreset::removeFromDataBase()
 }
 
 
-QList<CEqualizerPreset *> CEqualizerPreset::loadFromDatabase(CApplication * application)
+QList<CEqualizerPreset *> CEqualizerPreset::loadFromDatabase(CMainWindow * application)
 {
     Q_CHECK_PTR(application);
 

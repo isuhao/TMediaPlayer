@@ -20,14 +20,14 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #ifndef FILE_C_WIDGET_MULTI_CRITERION
 #define FILE_C_WIDGET_MULTI_CRITERION
 
-#include "IWidgetCriteria.hpp"
-#include "CMultiCriterion.hpp" // Si on ne l'inclut pas, l'intellisense bug...
-#include "ui_WidgetMultiCriterion.h"
+#include "IWidgetCriterion.hpp"
+#include "CMultiCriteria.hpp" // Si on ne l'inclut pas, l'intellisense bug...
+#include "ui_WidgetMultiCriteria.h"
 #include <QList>
 #include <QMap>
 
 
-class CMultiCriterion;
+class CMultiCriteria;
 class QPushButton;
 
 
@@ -35,33 +35,33 @@ class QPushButton;
  * Widget permettant d'éditer un sous-critère d'une liste dynamique.
  */
 
-class CWidgetMultiCriterion : public IWidgetCriteria
+class CWidgetMultiCriteria : public IWidgetCriterion
 {
     Q_OBJECT
 
-    friend class CMultiCriterion;
+    friend class CMultiCriteria;
 
 public:
 
-    explicit CWidgetMultiCriterion(CApplication * application, QWidget * parent = NULL);
-    virtual ~CWidgetMultiCriterion();
+    explicit CWidgetMultiCriteria(CMainWindow * application, QWidget * parent = nullptr);
+    virtual ~CWidgetMultiCriteria();
 
-    virtual ICriteria * getCriteria();
+    virtual ICriterion * getCriterion();
 
 protected slots:
 
-    void setMultiCriterionType(int type);
-    void addCriteria();
-    void addMultiCriterion();
-    void removeCriteria(int row);
-    void removeCriteriaFromButton();
+    void setMultiCriteriaType(int type);
+    void addCriterion();
+    void addMultiCriteria();
+    void removeCriterion(int row);
+    void removeCriterionFromButton();
 
 private:
 
-    void addCriteria(IWidgetCriteria * criteriaWidget);
+    void addCriterion(IWidgetCriterion * criteriaWidget);
 
-    Ui::WidgetMultiCriterion * m_uiWidget;
-    QList<IWidgetCriteria *> m_children;
+    Ui::WidgetMultiCriteria * m_uiWidget;
+    QList<IWidgetCriterion *> m_children;
     QMap<QPushButton *, int> m_btnRemove;
 };
 

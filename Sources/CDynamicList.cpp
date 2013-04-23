@@ -18,10 +18,10 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CDynamicList.hpp"
-#include "CApplication.hpp"
-#include "CMultiCriterion.hpp"
-#include "CWidgetMultiCriterion.hpp"
-#include "CCriteria.hpp"
+#include "CMainWindow.hpp"
+#include "CMultiCriteria.hpp"
+#include "CWidgetMultiCriteria.hpp"
+#include "CCriterion.hpp"
 #include "CFolder.hpp"
 #include "CLibrary.hpp"
 #include "Dialog/CDialogEditSong.hpp"
@@ -39,16 +39,16 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * \param name        Nom de la liste de lecture.
  */
 
-CDynamicList::CDynamicList(CApplication * application, const QString& name) :
-    IPlayList               (application, name),
-    m_id                    (-1),
-    m_mainCriteria          (NULL),
-    m_isDynamicListModified (false),
-    m_autoUpdate            (true),
-    m_onlyChecked           (false),
-    m_numItems              (0)
+CDynamicList::CDynamicList(CMainWindow * application, const QString& name) :
+IPlayList               (application, name),
+m_id                    (-1),
+m_mainCriterion         (nullptr),
+m_isDynamicListModified (false),
+m_autoUpdate            (true),
+m_onlyChecked           (false),
+m_numItems              (0)
 {
-    m_mainCriteria = new CMultiCriterion(m_application, this);
+    m_mainCriterion = new CMultiCriteria(m_application, this);
 }
 
 
@@ -80,10 +80,10 @@ bool CDynamicList::isModified() const
  * \return Widget.
  */
 
-CWidgetMultiCriterion * CDynamicList::getWidget() const
+CWidgetMultiCriteria * CDynamicList::getWidget() const
 {
-    IWidgetCriteria * widget = m_mainCriteria->getWidget();
-    return qobject_cast<CWidgetMultiCriterion *>(widget);
+    IWidgetCriterion * widget = m_mainCriterion->getWidget();
+    return qobject_cast<CWidgetMultiCriteria *>(widget);
 }
 
 
@@ -97,21 +97,21 @@ CWidgetMultiCriterion * CDynamicList::getWidget() const
 void CDynamicList::updateList()
 {
     // Si on est en train de lire un morceau de la liste, il faut mettre à jour les informations sur le morceau courant
-    CSongTableItem * currentItem = m_model->getCurrentSongItem();
-    CSong * currentSong = (currentItem ? currentItem->getSong() : NULL);
+    CMediaTableItem * currentItem = m_model->getCurrentSongItem();
+    CSong * currentSong = (currentItem ? currentItem->getSong() : nullptr);
 
     CDialogEditSong * dialogEditSong = m_application->getDialogEditSong();
-    CSong * currentSongInDialogEditSong = NULL;
+    CSong * currentSongInDialogEditSong = nullptr;
 
     if (dialogEditSong)
     {
         if (dialogEditSong->getSongTable() == this)
             currentSongInDialogEditSong = dialogEditSong->getSongItem()->getSong();
         else
-            dialogEditSong = NULL;
+            dialogEditSong = nullptr;
     }
 
-    QList<CSong *> songs = m_mainCriteria->getSongs(m_application->getLibrary()->getSongs(), QList<CSong *>(), m_onlyChecked);
+    QList<CSong *> songs = m_mainCriterion->getSongs(m_application->getLibrary()->getSongs(), QList<CSong *>(), m_onlyChecked);
 
     //TODO: nombre d'éléments
     //1) Trier la liste selon le critère demandé
@@ -132,8 +132,8 @@ void CDynamicList::updateList()
             selectedSongs.append(song);
     }
 
-    CSongTableItem * selectedSongItem = getSongItemForRow(selectionModel()->currentIndex().row());
-    CSong * selectedSong = (selectedSongItem ? selectedSongItem->getSong() : NULL);
+    CMediaTableItem * selectedSongItem = getSongItemForRow(selectionModel()->currentIndex().row());
+    CSong * selectedSong = (selectedSongItem ? selectedSongItem->getSong() : nullptr);
 
 
     m_model->setSongs(songs);
@@ -145,7 +145,7 @@ void CDynamicList::updateList()
 
     for (QList<CSong *>::const_iterator song = selectedSongs.begin(); song != selectedSongs.end(); ++song)
     {
-        CSongTableItem * songItem = getFirstSongItem(*song);
+        CMediaTableItem * songItem = getFirstSongItem(*song);
 
         if (songItem)
             selectionModel()->select(m_model->index(m_model->getRowForSongItem(songItem), 0), QItemSelectionModel::Select | QItemSelectionModel::Rows);
@@ -158,7 +158,7 @@ void CDynamicList::updateList()
     // On change le morceau courant affiché dans la liste
     if (currentSong)
     {
-        CSongTableItem * currentItemAfter = getFirstSongItem(currentSong);
+        CMediaTableItem * currentItemAfter = getFirstSongItem(currentSong);
         m_model->setCurrentSong(currentItemAfter);
         //m_application->m_currentSongItem = currentItemAfter;
         m_application->setCurrentSongItem(currentItemAfter, this);
@@ -289,11 +289,11 @@ bool CDynamicList::updateDatabase()
         }
 
         // Insertion des nouveaux critères
-        m_mainCriteria->insertIntoDatabase(m_application);
+        m_mainCriterion->insertIntoDatabase(m_application);
 
         query.prepare("UPDATE dynamic_list SET criteria_id = ? WHERE dynamic_list_id = ?");
 
-        query.bindValue(0, m_mainCriteria->getId());
+        query.bindValue(0, m_mainCriterion->getId());
         query.bindValue(1, m_id);
 
         if (!query.exec())
@@ -340,11 +340,11 @@ bool CDynamicList::updateDatabase()
         }
 
         // Insertion des nouveaux critères
-        m_mainCriteria->insertIntoDatabase(m_application);
+        m_mainCriterion->insertIntoDatabase(m_application);
 
         query.prepare("UPDATE dynamic_list SET criteria_id = ? WHERE dynamic_list_id = ?");
 
-        query.bindValue(0, m_mainCriteria->getId());
+        query.bindValue(0, m_mainCriterion->getId());
         query.bindValue(1, m_id);
 
         if (!query.exec())
@@ -412,8 +412,8 @@ void CDynamicList::loadFromDatabase()
         return;
     }
 
-    delete m_mainCriteria;
-    m_mainCriteria = NULL;
+    delete m_mainCriterion;
+    m_mainCriterion = nullptr;
 
     QSqlQuery query(m_application->getDataBase());
 
@@ -428,31 +428,31 @@ void CDynamicList::loadFromDatabase()
         return;
     }
 
-    QMap<int, ICriteria *> criteriaList;
+    QMap<int, ICriterion *> criteriaList;
 
     while (query.next())
     {
-        ICriteria * criteria = NULL;
+        ICriterion * criteria = nullptr;
 
-        if (query.value(3).toInt() == ICriteria::TypeUnion)
+        if (query.value(3).toInt() == ICriterion::TypeUnion)
         {
-            CMultiCriterion * multiCriterion = new CMultiCriterion(m_application, this);
-            multiCriterion->setMultiCriterionType(CMultiCriterion::Union);
-            criteria = multiCriterion;
+            CMultiCriteria * multiCriteria = new CMultiCriteria(m_application, this);
+            multiCriteria->setMultiCriteriaType(CMultiCriteria::Union);
+            criteria = multiCriteria;
         }
-        else if (query.value(3).toInt() == ICriteria::TypeIntersection)
+        else if (query.value(3).toInt() == ICriterion::TypeIntersection)
         {
-            CMultiCriterion * multiCriterion = new CMultiCriterion(m_application, this);
-            multiCriterion->setMultiCriterionType(CMultiCriterion::Intersection);
-            criteria = multiCriterion;
+            CMultiCriteria * multiCriteria = new CMultiCriteria(m_application, this);
+            multiCriteria->setMultiCriteriaType(CMultiCriteria::Intersection);
+            criteria = multiCriteria;
         }
         else
         {
-            criteria = new CCriteria(m_application, this);
+            criteria = new CCriterion(m_application, this);
         }
 
         criteria->m_id        = query.value(0).toInt();
-        criteria->m_parent    = reinterpret_cast<ICriteria *>(query.value(1).toInt());
+        criteria->m_parent    = reinterpret_cast<ICriterion *>(query.value(1).toInt());
       //criteria->m_position  = query.value(2).toInt();
         criteria->m_playList  = this;
 
@@ -467,24 +467,24 @@ void CDynamicList::loadFromDatabase()
     if (criteriaList.isEmpty())
     {
         m_application->logError(tr("dynamic list with no criteria"), __FUNCTION__, __FILE__, __LINE__);
-        m_mainCriteria = new CCriteria(m_application, this);
+        m_mainCriterion = new CCriterion(m_application, this);
         return;
     }
 
     // Imbrication des critères
-    for (QMap<int, ICriteria *>::const_iterator it = criteriaList.begin(); it != criteriaList.end(); ++it)
+    for (QMap<int, ICriterion *>::const_iterator it = criteriaList.begin(); it != criteriaList.end(); ++it)
     {
         long parentId = reinterpret_cast<long>(it.value()->m_parent);
 
         if (parentId == 0)
         {
-            if (m_mainCriteria)
+            if (m_mainCriterion)
             {
                 m_application->logError(tr("dynamic list with several main criterion"), __FUNCTION__, __FILE__, __LINE__);
                 continue;
             }
 
-            m_mainCriteria = it.value();
+            m_mainCriterion = it.value();
         }
         else
         {
@@ -494,39 +494,39 @@ void CDynamicList::loadFromDatabase()
                 continue;
             }
 
-            CMultiCriterion * multiCriterion = qobject_cast<CMultiCriterion *>(criteriaList[parentId]);
+            CMultiCriteria * multiCriteria = qobject_cast<CMultiCriteria *>(criteriaList[parentId]);
 
-            if (!multiCriterion)
+            if (!multiCriteria)
             {
                 qWarning() << "CDynamicList::loadFromDatabase() : la parent du critère n'est pas un multi-critères";
                 continue;
             }
 
-            multiCriterion->addChild(it.value());
+            multiCriteria->addChild(it.value());
         }
     }
 
     // Conditions de mise à jour
     if (m_autoUpdate)
     {
-        ICriteria::TUpdateConditions conditions = m_mainCriteria->getUpdateConditions();
+        ICriterion::TUpdateConditions conditions = m_mainCriterion->getUpdateConditions();
 
-        if (conditions.testFlag(ICriteria::UpdateOnSongAdded))
+        if (conditions.testFlag(ICriterion::UpdateOnSongAdded))
             connect(m_application, SIGNAL(songsAdded()), this, SLOT(updateList()), Qt::UniqueConnection);
 
-        if (conditions.testFlag(ICriteria::UpdateOnSongRemoved))
+        if (conditions.testFlag(ICriterion::UpdateOnSongRemoved))
             connect(m_application, SIGNAL(songRemoved(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
 
-        if (conditions.testFlag(ICriteria::UpdateOnSongModified))
+        if (conditions.testFlag(ICriterion::UpdateOnSongModified))
             connect(m_application, SIGNAL(songModified(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
 
-        if (conditions.testFlag(ICriteria::UpdateOnSongMoved))
+        if (conditions.testFlag(ICriterion::UpdateOnSongMoved))
             connect(m_application, SIGNAL(songMoved(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
 
-        if (conditions.testFlag(ICriteria::UpdateOnSongPlayEnd))
+        if (conditions.testFlag(ICriterion::UpdateOnSongPlayEnd))
             connect(m_application, SIGNAL(songPlayEnd(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
 
-        //if (conditions.testFlag(ICriteria::UpdateOnListModified))
+        //if (conditions.testFlag(ICriterion::UpdateOnListModified))
             //connect(m_application, SIGNAL(listModified(IPlayList *)), this, SLOT(updateList()), Qt::UniqueConnection);
     }
 }
@@ -539,14 +539,14 @@ void CDynamicList::loadFromDatabase()
  * \param criteria Nouveau critère.
  */
 
-void CDynamicList::setCriteria(ICriteria * criteria)
+void CDynamicList::setCriterion(ICriterion * criteria)
 {
     Q_CHECK_PTR(criteria);
 
-    delete m_mainCriteria;
+    delete m_mainCriterion;
     criteria->setParent(this);
     criteria->setPlayList(this);
-    m_mainCriteria = criteria;
+    m_mainCriterion = criteria;
     m_isDynamicListModified = true;
 
     // Conditions de mise à jour
@@ -559,24 +559,24 @@ void CDynamicList::setCriteria(ICriteria * criteria)
         disconnect(m_application, SIGNAL(songPlayEnd(CSong *)     ), this, SLOT(updateList()));
         //disconnect(m_application, SIGNAL(listModified(IPlayList *)), this, SLOT(updateList()));
 
-        ICriteria::TUpdateConditions conditions = m_mainCriteria->getUpdateConditions();
+        ICriterion::TUpdateConditions conditions = m_mainCriterion->getUpdateConditions();
 
-        if (conditions.testFlag(ICriteria::UpdateOnSongAdded))
+        if (conditions.testFlag(ICriterion::UpdateOnSongAdded))
             connect(m_application, SIGNAL(songsAdded()), this, SLOT(updateList()), Qt::UniqueConnection);
 
-        if (conditions.testFlag(ICriteria::UpdateOnSongRemoved))
+        if (conditions.testFlag(ICriterion::UpdateOnSongRemoved))
             connect(m_application, SIGNAL(songRemoved(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
 
-        if (conditions.testFlag(ICriteria::UpdateOnSongModified))
+        if (conditions.testFlag(ICriterion::UpdateOnSongModified))
             connect(m_application, SIGNAL(songModified(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
 
-        if (conditions.testFlag(ICriteria::UpdateOnSongMoved))
+        if (conditions.testFlag(ICriterion::UpdateOnSongMoved))
             connect(m_application, SIGNAL(songMoved(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
 
-        if (conditions.testFlag(ICriteria::UpdateOnSongPlayEnd))
+        if (conditions.testFlag(ICriterion::UpdateOnSongPlayEnd))
             connect(m_application, SIGNAL(songPlayEnd(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
 
-        //if (conditions.testFlag(ICriteria::UpdateOnListModified))
+        //if (conditions.testFlag(ICriterion::UpdateOnListModified))
             //connect(m_application, SIGNAL(listModified(IPlayList *)), this, SLOT(updateList()), Qt::UniqueConnection);
     }
 

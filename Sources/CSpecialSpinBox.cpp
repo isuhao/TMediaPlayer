@@ -22,9 +22,9 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 
 CSpecialSpinBox::CSpecialSpinBox(QWidget * parent) :
-    QSpinBox       (parent),
-    m_spacialValue (-1),
-    m_savedMax     (-1)
+QSpinBox       (parent),
+m_spacialValue (-1),
+m_savedMax     (-1)
 {
 
 }

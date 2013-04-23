@@ -21,12 +21,13 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QTextCodec>
 #include <QLocalSocket>
 #include <ctime>
-#include "CApplication.hpp"
+
+#include "CMainWindow.hpp"
 
 
 int main(int argc, char * argv[])
 {
-    srand(time(NULL));
+    srand(time(nullptr));
 
     QApplication app(argc, argv);
     app.setWindowIcon(QPixmap(":/icons/TMediaPlayer"));
@@ -39,23 +40,23 @@ int main(int argc, char * argv[])
 
 #ifndef T_NO_SINGLE_APP
 	QLocalSocket socket;
-	socket.connectToServer("tmediaplayer-" + CApplication::getAppVersion());
+	socket.connectToServer("tmediaplayer-" + CMainWindow::getAppVersion());
 
 	if (socket.waitForConnected(250))
 	{
-		// L'application est dÈj‡ lancÈe
+		// L'application est d√©j√† lanc√©e
 		return 0;
 	}
 #endif // T_NO_SINGLE_APP
 
-    CApplication lecteur;
+    CMainWindow window;
 
-    if (!lecteur.initWindow())
+    if (!window.initWindow())
     {
         return EXIT_FAILURE;
     }
 
-    lecteur.show();
+    window.show();
 
     return app.exec();
 }

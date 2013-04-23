@@ -18,7 +18,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CSong.hpp"
-#include "CApplication.hpp"
+#include "CMainWindow.hpp"
 #include "CLibraryFolder.hpp"
 #include "CCDRomDrive.hpp"
 #include <QSqlQuery>
@@ -48,50 +48,50 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 
 CSong::TSongInfos::TSongInfos() :
-    isEnabled       (true),
-    title           (""),
-    subTitle        (""),
-    grouping        (""),
-    artistName      (""),
-    albumTitle      (""),
-    albumArtist     (""),
-    composer        (""),
-    titleSort       (""),
-    artistNameSort  (""),
-    albumTitleSort  (""),
-    albumArtistSort (""),
-    composerSort    (""),
-    year            (0),
-    trackNumber     (0),
-    trackCount      (0),
-    discNumber      (0),
-    discCount       (0),
-    genre           (""),
-    rating          (0),
-    comments        (""),
-    bpm             (0),
-    lyrics          (""),
-    language        (LangUnknown),
-    lyricist        (""),
-    compilation     (false),
-    skipShuffle     (false),
-    trackGain       (std::numeric_limits<float>::infinity()),
-    trackPeak       (std::numeric_limits<float>::infinity()),
-    albumGain       (std::numeric_limits<float>::infinity()),
-    albumPeak       (std::numeric_limits<float>::infinity())
+isEnabled       (true),
+title           (""),
+subTitle        (""),
+grouping        (""),
+artistName      (""),
+albumTitle      (""),
+albumArtist     (""),
+composer        (""),
+titleSort       (""),
+artistNameSort  (""),
+albumTitleSort  (""),
+albumArtistSort (""),
+composerSort    (""),
+year            (0),
+trackNumber     (0),
+trackCount      (0),
+discNumber      (0),
+discCount       (0),
+genre           (""),
+rating          (0),
+comments        (""),
+bpm             (0),
+lyrics          (""),
+language        (LangUnknown),
+lyricist        (""),
+compilation     (false),
+skipShuffle     (false),
+trackGain       (std::numeric_limits<float>::infinity()),
+trackPeak       (std::numeric_limits<float>::infinity()),
+albumGain       (std::numeric_limits<float>::infinity()),
+albumPeak       (std::numeric_limits<float>::infinity())
 {
 
 }
 
 
 CSong::TSongProperties::TSongProperties() :
-    fileName    (QString()),
-    fileSize    (0),
-    bitRate     (0),
-    sampleRate  (0),
-    format      (CSong::FormatUnknown),
-    numChannels (0),
-    duration    (0)
+fileName    (QString()),
+fileSize    (0),
+bitRate     (0),
+sampleRate  (0),
+format      (CSong::FormatUnknown),
+numChannels (0),
+duration    (0)
 {
 
 }
@@ -105,17 +105,17 @@ CSong::TSongProperties::TSongProperties() :
  * \param application Pointeur sur la classe principale de l'application.
  */
 
-CSong::CSong(CApplication * application) :
-    QObject            (application),
-    m_application      (application),
-    m_sound            (NULL),
-    m_channel          (NULL),
-    m_cdRomDrive       (NULL),
-    m_cdRomTrackNumber (-1),
-    m_isModified       (false),
-    m_needWriteTags    (false),
-    m_id               (-1),
-    m_fileStatus       (true)
+CSong::CSong(CMainWindow * application) :
+QObject            (application),
+m_application      (application),
+m_sound            (nullptr),
+m_channel          (nullptr),
+m_cdRomDrive       (nullptr),
+m_cdRomTrackNumber (-1),
+m_isModified       (false),
+m_needWriteTags    (false),
+m_id               (-1),
+m_fileStatus       (true)
 {
     Q_CHECK_PTR(application);
 }
@@ -131,17 +131,17 @@ CSong::CSong(CApplication * application) :
  * \param application Pointeur sur la classe principale de l'application.
  */
 
-CSong::CSong(const QString& fileName, CApplication * application) :
-    QObject            (application),
-    m_application      (application),
-    m_sound            (NULL),
-    m_channel          (NULL),
-    m_cdRomDrive       (NULL),
-    m_cdRomTrackNumber (-1),
-    m_isModified       (false),
-    m_needWriteTags    (false),
-    m_id               (-1),
-    m_fileStatus       (true)
+CSong::CSong(const QString& fileName, CMainWindow * application) :
+QObject            (application),
+m_application      (application),
+m_sound            (nullptr),
+m_channel          (nullptr),
+m_cdRomDrive       (nullptr),
+m_cdRomTrackNumber (-1),
+m_isModified       (false),
+m_needWriteTags    (false),
+m_id               (-1),
+m_fileStatus       (true)
 {
     Q_CHECK_PTR(application);
 
@@ -168,10 +168,10 @@ CSong::~CSong()
         if (m_sound)
         {
             m_sound->release();
-            m_sound = NULL;
+            m_sound = nullptr;
         }
 
-        m_channel = NULL;
+        m_channel = nullptr;
 
         // Mise à jour du fichier
         if (m_needWriteTags)
@@ -713,7 +713,7 @@ bool CSong::moveFile()
     CLibraryFolder * libraryFolder = m_application->getLibraryFolder(m_application->getLibraryFolderId(m_properties.fileName));
 
     // Le fichier n'est pas dans un répertoire de la médiathèque
-    if (libraryFolder == NULL)
+    if (libraryFolder == nullptr)
         return false;
 
     // Le répertoire n'est pas automatiquement organisé
@@ -1010,7 +1010,7 @@ bool CSong::isEnded() const
  * \return Identifiant du fichier, ou -1 s'il n'existe pas.
  */
 
-int CSong::getId(CApplication * application, const QString& fileName)
+int CSong::getId(CMainWindow * application, const QString& fileName)
 {
     QSqlQuery query(application->getDataBase());
     query.prepare("SELECT song_id FROM song WHERE song_filename = ?");
@@ -1063,32 +1063,32 @@ int CSong::getId(CApplication * application, const QString& fileName)
 
 /**
  * Crée un morceau à partir d'un fichier.
- * Si le fichier est déjà présent en base de données, la méthode retourne NULL.
+ * Si le fichier est déjà présent en base de données, la méthode retourne nullptr.
  *
  * \param application Pointeur sur la classe principale de l'application.
  * \param fileName    Fichier à lire.
- * \return Pointeur sur le son crée, ou NULL en cas d'erreur.
+ * \return Pointeur sur le son crée, ou nullptr en cas d'erreur.
  */
 
-CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
+CSong * CSong::loadFromFile(CMainWindow * application, const QString& fileName)
 {
     if (getId(application, fileName) >= 0)
     {
         application->logError(tr("the file \"%1\" is already in library").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
-        return NULL;
+        return nullptr;
     }
 
     FMOD_RESULT res;
     FMOD::Sound * sound;
 
     // Chargement du son
-    //res = application->getSoundSystem()->createStream(qPrintable(fileName), FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, NULL, &sound);
-    res = application->getSoundSystem()->createStream(reinterpret_cast<const char *>(fileName.utf16()), FMOD_UNICODE | FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, NULL, &sound);
+    //res = application->getSoundSystem()->createStream(qPrintable(fileName), FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, nullptr, &sound);
+    res = application->getSoundSystem()->createStream(reinterpret_cast<const char *>(fileName.utf16()), FMOD_UNICODE | FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, nullptr, &sound);
 
     if (res != FMOD_OK || !sound)
     {
         application->logError(tr("the file \"%1\" can't be opened with FMOD").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
-        return NULL;
+        return nullptr;
     }
 
     // Création du morceau
@@ -1109,7 +1109,7 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
 
     // Recherche du format du morceau
     FMOD_SOUND_TYPE type;
-    res = sound->getFormat(&type, NULL, NULL, NULL);
+    res = sound->getFormat(&type, nullptr, nullptr, nullptr);
 
     if (res != FMOD_OK)
     {
@@ -1122,7 +1122,7 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
             default:
                 application->logError(tr("unknown format"), __FUNCTION__, __FILE__, __LINE__);
                 delete song;
-                return NULL;
+                return nullptr;
 
             case FMOD_SOUND_TYPE_MPEG:
                 song->m_properties.format = CSong::FormatMP3;
@@ -1144,7 +1144,7 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
     if (!song->loadTags(true))
     {
         delete song;
-        return NULL;
+        return nullptr;
     }
 
     song->updateDatabase();
@@ -1161,7 +1161,7 @@ CSong * CSong::loadFromFile(CApplication * application, const QString& fileName)
  * \return Liste des morceaux.
  */
 
-QList<CSong *> CSong::loadAllSongsFromDatabase(CApplication * application)
+QList<CSong *> CSong::loadAllSongsFromDatabase(CMainWindow * application)
 {
     QList<CSong *> songList;
 
@@ -1312,50 +1312,6 @@ QList<CSong *> CSong::loadAllSongsFromDatabase(CApplication * application)
     }
 
     return songList;
-}
-
-
-/**
- * Convertit un nombre d'octets en chaine de caractères plus compréhensible.
- *
- * \param fileSize Nombre d'octets.
- * \return Chaine de caractère utilisant les préfixes binaires (Kio, Mio, Gio, pour
- *         respectivement 1024, 1024*1024, et 1024*1024*1024 octets).
- */
-
-QString CSong::getFileSize(qlonglong fileSize)
-{
-    Q_ASSERT(fileSize >= 0);
-
-    // Plus de 1 Tio
-    if (fileSize >= 1099511627776L/*1024 * 1024 * 1024 * 1024*/)
-    {
-        float fileSizeDisplay = static_cast<float>(static_cast<int>(static_cast<float>(10 * fileSize) / (1099511627776L/*1024 * 1024 * 1024 * 1024*/))) / 10;
-        return tr("%1 Tio").arg(fileSizeDisplay);
-    }
-    // Plus de 1 Gio
-    else if (fileSize >= 1073741824L/*1024 * 1024 * 1024*/)
-    {
-        float fileSizeDisplay = static_cast<float>(static_cast<int>(static_cast<float>(10 * fileSize) / (1073741824L/*1024 * 1024 * 1024*/))) / 10;
-        return tr("%1 Gio").arg(fileSizeDisplay);
-    }
-    // Plus de 1 Mio
-    else if (fileSize >= 1048576L/*1024 * 1024*/)
-    {
-        float fileSizeDisplay = static_cast<float>(static_cast<int>(static_cast<float>(10 * fileSize) / (1048576L/*1024 * 1024*/))) / 10;
-        return tr("%1 Mio").arg(fileSizeDisplay);
-    }
-    // Moins de 1 Kio
-    else if (fileSize >= 1024)
-    {
-        float fileSizeDisplay = static_cast<float>(static_cast<int>(static_cast<float>(10 * fileSize) / 1024)) / 10;
-        return tr("%1 Kio").arg(fileSizeDisplay);
-    }
-    // Moins de 1 Kio
-    else
-    {
-        return tr("%n byte(s)", "", fileSize);
-    }
 }
 
 
@@ -1867,8 +1823,8 @@ void CSong::startPlay()
     else
     {
         m_fileStatus = false;
-        m_sound = NULL;
-        m_channel = NULL;
+        m_sound = nullptr;
+        m_channel = nullptr;
     }
 }
 
@@ -1935,8 +1891,8 @@ bool CSong::loadSound()
     FMOD_RESULT res;
 
     // Chargement du son
-    //res = m_application->getSoundSystem()->createStream(qPrintable(m_properties.fileName), FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, NULL, &m_sound);
-    res = m_application->getSoundSystem()->createStream(reinterpret_cast<const char *>(m_properties.fileName.utf16()), FMOD_UNICODE | FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, NULL, &m_sound);
+    //res = m_application->getSoundSystem()->createStream(qPrintable(m_properties.fileName), FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, nullptr, &m_sound);
+    res = m_application->getSoundSystem()->createStream(reinterpret_cast<const char *>(m_properties.fileName.utf16()), FMOD_UNICODE | FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, nullptr, &m_sound);
 
     if (res == FMOD_OK && m_sound)
     {
@@ -1980,8 +1936,8 @@ bool CSong::loadSound()
 
     m_application->logError(tr("the file \"%1\" can't be opened with FMOD").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
 
-    m_sound = NULL;
-    m_channel = NULL;
+    m_sound = nullptr;
+    m_channel = nullptr;
     return false;
 }
 
@@ -2049,8 +2005,8 @@ void CSong::stop()
         {
             // Fermeture du fichier
             m_sound->release();
-            m_sound = NULL;
-            m_channel = NULL;
+            m_sound = nullptr;
+            m_channel = nullptr;
 
             // Écriture des métadonnées
             if (m_needWriteTags)

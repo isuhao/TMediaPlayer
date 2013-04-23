@@ -18,7 +18,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CImporterITunes.hpp"
-#include "../CApplication.hpp"
+#include "../CMainWindow.hpp"
 #include <QFileDialog>
 #include <QStandardItem>
 #include <QStandardItemModel>
@@ -32,7 +32,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QtDebug>
 
 
-CImporterITunes::CImporterITunes(CApplication * application) :
+CImporterITunes::CImporterITunes(CMainWindow * application) :
     QWizard       (application),
     m_application (application),
     m_library     (new CITunesLibrary(application, this))
@@ -213,7 +213,7 @@ CITunesWizardPage3::~CITunesWizardPage3()
 }
 
 
-CITunesWizardPage4::CITunesWizardPage4(CApplication * application, CITunesLibrary * library, QWidget * parent) :
+CITunesWizardPage4::CITunesWizardPage4(CMainWindow * application, CITunesLibrary * library, QWidget * parent) :
     QWizardPage   (parent),
     m_library     (library),
     m_application (application)
@@ -421,7 +421,7 @@ bool CITunesWizardPage1::validateCurrentPage()
 }
 */
 
-CITunesLibrary::CITunesLibrary(CApplication * application, QObject * parent) :
+CITunesLibrary::CITunesLibrary(CMainWindow * application, QObject * parent) :
     QObject       (parent),
     m_isLoaded    (false),
     m_application (application)
@@ -937,7 +937,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
 
                         playListID = nodeListAttrValue.text();
                     }
-                    else if (nodeListAttr.text() == "Smart Info" || nodeListAttr.text() == "Smart Criteria")
+                    else if (nodeListAttr.text() == "Smart Info" || nodeListAttr.text() == "Smart Criterion")
                     {
                         isDynamic = true;
                     }

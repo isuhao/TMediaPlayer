@@ -34,7 +34,7 @@ class QLineEdit;
 class QStandardItemModel;
 class QToolButton;
 class QTreeView;
-class CApplication;
+class CMainWindow;
 class CITunesLibrary;
 class CITunesWizardPage1;
 class CITunesWizardPage2;
@@ -48,7 +48,7 @@ class CImporterITunes : public QWizard
 
 public:
 
-    explicit CImporterITunes(CApplication * application);
+    explicit CImporterITunes(CMainWindow * application);
     virtual ~CImporterITunes();
 
     QStringList getSelectedItems() const;
@@ -56,7 +56,7 @@ public:
 
 private:
 
-    CApplication * m_application;
+    CMainWindow * m_application;
     CITunesLibrary * m_library;
     CITunesWizardPage1 * m_page1;
     CITunesWizardPage2 * m_page2;
@@ -71,7 +71,7 @@ class CITunesWizardPage1 : public QWizardPage
 
 public:
 
-    explicit CITunesWizardPage1(CITunesLibrary * library, QWidget * parent = NULL);
+    explicit CITunesWizardPage1(CITunesLibrary * library, QWidget * parent = nullptr);
 
     virtual bool isComplete() const;
 
@@ -95,7 +95,7 @@ class CITunesWizardPage2 : public QWizardPage
 
 public:
 
-    explicit CITunesWizardPage2(CITunesLibrary * library, QWidget * parent = NULL);
+    explicit CITunesWizardPage2(CITunesLibrary * library, QWidget * parent = nullptr);
 
     virtual void initializePage();
     virtual void cleanupPage();
@@ -118,7 +118,7 @@ class CITunesWizardPage3 : public QWizardPage
 
 public:
 
-    explicit CITunesWizardPage3(CITunesLibrary * library, QWidget * parent = NULL);
+    explicit CITunesWizardPage3(CITunesLibrary * library, QWidget * parent = nullptr);
     virtual ~CITunesWizardPage3();
 
 private:
@@ -134,14 +134,14 @@ class CITunesWizardPage4 : public QWizardPage
 
 public:
 
-    CITunesWizardPage4(CApplication * application, CITunesLibrary * library, QWidget * parent = NULL);
+    CITunesWizardPage4(CMainWindow * application, CITunesLibrary * library, QWidget * parent = nullptr);
 
     virtual void initializePage();
 
 private:
     
     CITunesLibrary * m_library;
-    CApplication * m_application;
+    CMainWindow * m_application;
 };
 
 
@@ -164,7 +164,7 @@ public:
         inline TSong() : id(0), playCount(0), rating(0), enabled(true), compilation(false) { }
     };
 
-    explicit CITunesLibrary(CApplication * application, QObject * parent = NULL);
+    explicit CITunesLibrary(CMainWindow * application, QObject * parent = nullptr);
     virtual ~CITunesLibrary();
 
     bool loadFile(const QString& fileName);
@@ -199,7 +199,7 @@ private:
     };
 
     bool m_isLoaded;                    ///< Indique si la médiathèque a été chargée.
-    CApplication * m_application;
+    CMainWindow * m_application;
     QString m_fileName;                 ///< Fichier contenant la médiathèque.
     QDomDocument m_document;            ///< Document XML.
     QMap<int, TSong> m_songs;           ///< Liste des morceaux de la médiathèque.

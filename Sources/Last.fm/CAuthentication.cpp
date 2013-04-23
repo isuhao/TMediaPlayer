@@ -18,7 +18,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CAuthentication.hpp"
-#include "../CApplication.hpp"
+#include "../CMainWindow.hpp"
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -26,10 +26,10 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QtXml>
 
 
-CAuthentication::CAuthentication(CApplication * application) :
-    ILastFmService (application, ""),
-    m_timerLastFm  (NULL),
-    m_numRequests  (0)
+CAuthentication::CAuthentication(CMainWindow * application) :
+ILastFmService (application, ""),
+m_timerLastFm  (nullptr),
+m_numRequests  (0)
 {
     QMap<QByteArray, QByteArray> args;
     args["method"]  = "auth.getToken";
@@ -153,7 +153,7 @@ void CAuthentication::getLastFmSession()
     {
         m_timerLastFm->stop();
         delete m_timerLastFm;
-        m_timerLastFm = NULL;
+        m_timerLastFm = nullptr;
         m_numRequests = 0;
         return;
     }
@@ -232,6 +232,6 @@ void CAuthentication::replyLastFmFinished(QNetworkReply * reply)
 
     m_timerLastFm->stop();
     delete m_timerLastFm;
-    m_timerLastFm = NULL;
+    m_timerLastFm = nullptr;
     m_numRequests = 0;
 }

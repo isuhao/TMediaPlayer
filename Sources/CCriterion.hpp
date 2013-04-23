@@ -17,20 +17,29 @@ You should have received a copy of the GNU General Public License
 along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "IWidgetCriteria.hpp"
+#ifndef FILE_C_CRITERIA
+#define FILE_C_CRITERIA
+
+#include "ICriterion.hpp"
 
 
-IWidgetCriteria::IWidgetCriteria(CApplication * application, QWidget * parent) :
-    QWidget       (parent),
-    m_type        (ICriteria::TypeInvalid),
-    m_condition   (ICriteria::CondInvalid),
-    m_application (application)
+/**
+ * Critère simple.
+ */
+
+class CCriterion : public ICriterion
 {
-    Q_CHECK_PTR(application);
-}
+    Q_OBJECT
 
+public:
 
-IWidgetCriteria::~IWidgetCriteria()
-{
+    explicit CCriterion(CMainWindow * application, QObject * parent = nullptr);
+    virtual ~CCriterion();
 
-}
+    virtual bool matchCriterion(CSong * song) const;
+    virtual QList<CSong *> getSongs(const QList<CSong *>& from, const QList<CSong *>& with = QList<CSong *>()) const;
+    virtual TUpdateConditions getUpdateConditions() const;
+    virtual IWidgetCriterion * getWidget() const;
+};
+
+#endif // FILE_C_CRITERIA

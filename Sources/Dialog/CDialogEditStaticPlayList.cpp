@@ -18,8 +18,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CDialogEditStaticPlayList.hpp"
-#include "../CStaticPlayList.hpp"
-#include "../CApplication.hpp"
+#include "../CStaticList.hpp"
+#include "../CMainWindow.hpp"
 #include <QStandardItemModel>
 #include <QMessageBox>
 #include <QPushButton>
@@ -27,7 +27,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QtDebug>
 
 
-CDialogEditStaticPlayList::CDialogEditStaticPlayList(CStaticPlayList * playList, CApplication * application, CFolder * folder, const QList<CSong *>& songs) :
+CDialogEditStaticPlayList::CDialogEditStaticPlayList(CStaticList * playList, CMainWindow * application, CFolder * folder, const QList<CSong *>& songs) :
     QDialog       (application),
     m_uiWidget    (new Ui::DialogEditStaticPlayList()),
     m_playList    (playList),
@@ -42,7 +42,7 @@ CDialogEditStaticPlayList::CDialogEditStaticPlayList(CStaticPlayList * playList,
 
     if (!m_playList)
     {
-        m_playList = new CStaticPlayList(m_application);
+        m_playList = new CStaticList(m_application);
     }
 
     m_uiWidget->editName->setText(m_playList->getName());

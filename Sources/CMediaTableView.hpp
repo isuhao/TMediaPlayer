@@ -17,29 +17,30 @@ You should have received a copy of the GNU General Public License
 along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef FILE_C_SONG_TABLE
-#define FILE_C_SONG_TABLE
+#ifndef FILE_C_MEDIA_TABLE_VIEW_HPP_
+#define FILE_C_MEDIA_TABLE_VIEW_HPP_
 
 #include <QObject>
 #include <QVariant>
 #include <QList>
 #include <QTableView>
 #include <QMap>
-#include "CSongTableModel.hpp"
+
+#include "CMediaTableModel.hpp"
 
 
 class CSong;
-class CApplication;
-class CStaticPlayList;
+class CMainWindow;
+class CStaticList;
 class QMenu;
 class QAction;
 
 
-class CSongTable : public QTableView
+class CMediaTableView : public QTableView
 {
     Q_OBJECT
 
-    friend class CApplication;
+    friend class CMainWindow;
     friend class CFolder;
 
 public:
@@ -50,12 +51,12 @@ public:
      * Procédure pour ajouter un type de colonne (par exemple "ColBidule") :
      * - Ajouter la valeur "ColBidule" dans l'énumération TColumnType.
      * - Incrémenter la valeur de ColNumber dans l'énumération TColumnType.
-     * - Modifier la méthode CSongTable::getColumnTypeFromInteger.
-     * - Modifier la méthode CSongTable::getColumnTypeName.
-     * - Dans la liste des slots de CSongTableHeader, ajouter le slot "showColBidule".
-     * - Dans le constructeur de CSongTableHeader, ajouter la ligne "T_CREATE_ACTION(ColBidule)".
-     * - Modifier la méthode CSongTableModel::data pour afficher les données.
-     * - Modifier la méthode CSongTableModel::sort pour trier les données.
+     * - Modifier la méthode CMediaTableView::getColumnTypeFromInteger.
+     * - Modifier la méthode CMediaTableView::getColumnTypeName.
+     * - Dans la liste des slots de CMediaTableHeader, ajouter le slot "showColBidule".
+     * - Dans le constructeur de CMediaTableHeader, ajouter la ligne "T_CREATE_ACTION(ColBidule)".
+     * - Modifier la méthode CMediaTableModel::data pour afficher les données.
+     * - Modifier la méthode CMediaTableModel::sort pour trier les données.
      */
 
     enum TColumnType
@@ -119,20 +120,20 @@ public:
     };
 
 
-    explicit CSongTable(CApplication * application);
-    virtual ~CSongTable();
+    explicit CMediaTableView(CMainWindow * application);
+    virtual ~CMediaTableView();
 
     QList<CSong *> getSongs() const;
     inline int getNumSongs() const;
-    CSongTableItem * getFirstSongItem(CSong * song) const;
-    CSongTableItem * getSongItemForRow(int row) const;
-    int getRowForSongItem(CSongTableItem * songItem) const;
-    CSongTableItem * getSelectedSongItem() const;
-    QList<CSongTableItem *> getSelectedSongItems() const;
+    CMediaTableItem * getFirstSongItem(CSong * song) const;
+    CMediaTableItem * getSongItemForRow(int row) const;
+    int getRowForSongItem(CMediaTableItem * songItem) const;
+    CMediaTableItem * getSelectedSongItem() const;
+    QList<CMediaTableItem *> getSelectedSongItems() const;
     QList<CSong *> getSelectedSongs() const;
-    CSongTableItem * getPreviousSong(CSongTableItem * songItem, bool shuffle) const;
-    CSongTableItem * getNextSong(CSongTableItem * songItem, bool shuffle) const;
-    CSongTableItem * getLastSong(bool shuffle) const;
+    CMediaTableItem * getPreviousSong(CMediaTableItem * songItem, bool shuffle) const;
+    CMediaTableItem * getNextSong(CMediaTableItem * songItem, bool shuffle) const;
+    CMediaTableItem * getLastSong(bool shuffle) const;
     qlonglong getTotalDuration() const;
     void applyFilter(const QString& filter);
     inline bool hasSong(CSong * song) const;
@@ -144,13 +145,13 @@ public:
 
 public slots:
 
-    void selectSongItem(CSongTableItem * songItem);
+    void selectSongItem(CMediaTableItem * songItem);
     void playSelectedSong();
 
 signals:
 
-    void songSelected(CSongTableItem *); ///< Signal émis quand un morceau est sélectionné.
-    void songStarted(CSongTableItem *);  ///< Signal émis quand un morceau est lancé (double-clic).
+    void songSelected(CMediaTableItem *); ///< Signal émis quand un morceau est sélectionné.
+    void songStarted(CMediaTableItem *);  ///< Signal émis quand un morceau est lancé (double-clic).
     void columnChanged();                ///< Signal émis lorsque les colonnes sont modifiées.
     void rowCountChanged();              ///< Signal émis lorsque le nombre de morceaux de la liste change.
 
@@ -182,7 +183,7 @@ protected:
     void removeSongFromTable(int row);
     void removeSongsFromTable(const QList<CSong *>& songs);
     void removeAllSongsFromTable();
-    void initShuffle(CSongTableItem * firstSong = NULL);
+    void initShuffle(CMediaTableItem * firstSong = nullptr);
 
     virtual void initColumns(const QString& str);
     QString getColumnsInfos() const;
@@ -194,29 +195,29 @@ protected:
     virtual void keyPressEvent(QKeyEvent * event);
     virtual void mouseDoubleClickEvent(QMouseEvent * event);
 
-    CApplication * m_application;
-    CSongTableModel * m_model;    ///< Modèle utilisé pour afficher les morceaux.
+    CMainWindow * m_application;
+    CMediaTableModel * m_model;    ///< Modèle utilisé pour afficher les morceaux.
     TColumn m_columns[ColNumber]; ///< Liste des colonnes.
     int m_idPlayList;             ///< Identifiant de la liste de lecture en base de données.
     int m_columnSort;             ///< Numéro de la colonne triée.
     Qt::SortOrder m_sortOrder;    ///< Ordre de tri.
     bool m_automaticSort;         ///< Indique si le tri est automatique lorsqu'on modifie la table.
-    CSongTableItem * m_selectedItem;
-    QMap<CSongTable *, QAction *> m_actionGoToSongTable;
-    QMap<CStaticPlayList *, QAction *> m_actionAddToPlayList;
+    CMediaTableItem * m_selectedItem;
+    QMap<CMediaTableView *, QAction *> m_actionGoToSongTable;
+    QMap<CStaticList *, QAction *> m_actionAddToPlayList;
 
 private:
 
     bool m_isModified;            ///< Indique si les informations de la liste ont été modifiées.
     bool m_isColumnMoving;        ///< Indique si les colonnes sont en cours de positionnement.
-    QList<CSongTableItem *> m_selectedItems; ///< Morceaux sélectionnés avant le tri.
-    CSongTableItem * m_currentItem;          ///< Morceau actif avant le tri.
+    QList<CMediaTableItem *> m_selectedItems; ///< Morceaux sélectionnés avant le tri.
+    CMediaTableItem * m_currentItem;          ///< Morceau actif avant le tri.
 };
 
-Q_DECLARE_METATYPE(CSongTable *)
+Q_DECLARE_METATYPE(CMediaTableView *)
 
 
-inline CSongTable::TColumnType CSongTable::getColumnTypeFromInteger(int column)
+inline CMediaTableView::TColumnType CMediaTableView::getColumnTypeFromInteger(int column)
 {
     switch (column)
     {
@@ -264,7 +265,7 @@ inline CSongTable::TColumnType CSongTable::getColumnTypeFromInteger(int column)
 }
 
 
-inline QString CSongTable::getColumnTypeName(CSongTable::TColumnType column)
+inline QString CMediaTableView::getColumnTypeName(CMediaTableView::TColumnType column)
 {
     switch (column)
     {
@@ -318,7 +319,7 @@ inline QString CSongTable::getColumnTypeName(CSongTable::TColumnType column)
  * \return Nombre de morceaux.
  */
 
-inline int CSongTable::getNumSongs() const
+inline int CMediaTableView::getNumSongs() const
 {
     return m_model->getNumSongs();
 }
@@ -331,21 +332,21 @@ inline int CSongTable::getNumSongs() const
  * \return Booléen.
  */
 
-inline bool CSongTable::hasSong(CSong * song) const
+inline bool CMediaTableView::hasSong(CSong * song) const
 {
     return m_model->hasSong(song);
 }
 
 
-inline int CSongTable::getColumnSorted() const
+inline int CMediaTableView::getColumnSorted() const
 {
     return m_columnSort;
 }
 
 
-inline int CSongTable::getIdPlayList() const
+inline int CMediaTableView::getIdPlayList() const
 {
     return m_idPlayList;
 }
 
-#endif // FILE_C_SONG_TABLE
+#endif // FILE_C_MEDIA_TABLE_VIEW_HPP_

@@ -18,7 +18,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CDialogPreferencesFolder.hpp"
-#include "../CApplication.hpp"
+#include "../CMainWindow.hpp"
 #include "../CLibraryFolder.hpp"
 
 #include <QPushButton>
@@ -36,7 +36,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * \param folder      Pointeur sur le dossier à modifier.
  */
 
-CDialogPreferencesFolder::CDialogPreferencesFolder(CApplication * application, QWidget * parent, CLibraryFolder * folder) :
+CDialogPreferencesFolder::CDialogPreferencesFolder(CMainWindow * application, QWidget * parent, CLibraryFolder * folder) :
 QDialog            (parent),
 m_uiWidget         (new Ui::DialogPreferencesFolder()),
 m_application      (application),

@@ -24,7 +24,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QString>
 
 
-class CApplication;
+class CMainWindow;
 class CCDRomDrive;
 class QNetworkReply;
 class QNetworkAccessManager;
@@ -37,7 +37,7 @@ class CMusicBrainzLookup : public QObject
 
 public:
 
-    CMusicBrainzLookup(CCDRomDrive * cdRomDrive, CApplication * application);
+    CMusicBrainzLookup(CCDRomDrive * cdRomDrive, CMainWindow * application);
     virtual ~CMusicBrainzLookup();
 
 protected slots:
@@ -50,7 +50,7 @@ protected:
 
     static const QString m_lookupUrl; ///< URL pour effectuer les requêtes sur MusicBrainz.
 
-    CApplication * m_application; ///< Pointeur sur la classe principale de l'application.
+    CMainWindow * m_application; ///< Pointeur sur la classe principale de l'application.
     CCDRomDrive * m_cdRomDrive;   ///< Pointeur sur le lecteur de CD-ROM.
     QString m_musicBrainzId;      ///< Identifiant du disque pour MusicBrainz.
     QNetworkAccessManager * m_networkManager;

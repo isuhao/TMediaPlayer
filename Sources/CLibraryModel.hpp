@@ -17,15 +17,15 @@ You should have received a copy of the GNU General Public License
 along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef FILE_C_LIST_MODEL
-#define FILE_C_LIST_MODEL
+#ifndef FILE_C_LIBRARY_MODEL_HPP_
+#define FILE_C_LIBRARY_MODEL_HPP_
 
 #include <QStandardItemModel>
 
-class CApplication;
+class CMainWindow;
 class CFolder;
 class CSong;
-class CSongTable;
+class CMediaTableView;
 class CCDRomDrive;
 class IPlayList;
 
@@ -34,14 +34,14 @@ class IPlayList;
  * Modèle permettant de stocker les listes de lecture et les dossiers.
  */
 
-class CListModel : public QStandardItemModel
+class CLibraryModel : public QStandardItemModel ///TODO: hériter de QAbstractItemModel
 {
     Q_OBJECT
 
 public:
 
-    explicit CListModel(CApplication * application);
-    virtual ~CListModel();
+    explicit CLibraryModel(CMainWindow * application);
+    virtual ~CLibraryModel();
 
     void loadFromDatabase();
     virtual void clear();
@@ -54,7 +54,7 @@ public:
     CFolder * getFolderFromId(int id) const;
     IPlayList * getPlayListFromId(int id) const;
     QModelIndex getModelIndex(CFolder * folder) const;
-    QModelIndex getModelIndex(CSongTable * songTable) const;
+    QModelIndex getModelIndex(CMediaTableView * songTable) const;
     void openFolder(const QModelIndex& index, bool open);
 
     void addFolder(CFolder * folder);
@@ -82,23 +82,23 @@ private:
     CFolder * getFolderFromId(int id, const QList<CFolder *> folders) const;
     IPlayList * getPlayListFromId(int id, const QList<IPlayList *> playLists) const;
 
-    CApplication * m_application; ///< Pointeur sur l'application.
+    CMainWindow * m_application; ///< Pointeur sur l'application.
     CFolder * m_rootFolder;       ///< Dossier principal.
     QMap<QStandardItem *, CFolder *>     m_folderItems;    ///< Tableau des items associés aux dossiers.
-    QMap<QStandardItem *, CSongTable *>  m_songTableItems; ///< Tableau des items associés aux listes de lecture.
+    QMap<QStandardItem *, CMediaTableView *>  m_songTableItems; ///< Tableau des items associés aux listes de lecture.
     QMap<QStandardItem *, CCDRomDrive *> m_cdRomDrives;    ///< Tableau des items associés aux lecteurs de CD-ROM.
     QList<CFolder *> m_folders;         ///< Liste des dossiers.
     QList<IPlayList *> m_playLists;     ///< Liste des listes de lecture.
 };
 
 
-inline QList<CFolder *> CListModel::getFolders() const
+inline QList<CFolder *> CLibraryModel::getFolders() const
 {
     return m_folders;
 }
 
 
-inline QList<IPlayList *> CListModel::getPlayLists() const
+inline QList<IPlayList *> CLibraryModel::getPlayLists() const
 {
     return m_playLists;
 }
@@ -110,9 +110,9 @@ inline QList<IPlayList *> CListModel::getPlayLists() const
  * \return Pointeur sur le dossier principal.
  */
 
-inline CFolder * CListModel::getRootFolder() const
+inline CFolder * CLibraryModel::getRootFolder() const
 {
     return m_rootFolder;
 }
 
-#endif // FILE_C_LIST_MODEL
+#endif // FILE_C_LIBRARY_MODEL_HPP_

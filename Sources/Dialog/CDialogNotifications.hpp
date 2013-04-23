@@ -24,7 +24,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "ui_DialogNotifications.h"
 
 
-class CApplication;
+class CMainWindow;
 
 
 class CDialogNotifications : public QDialog
@@ -33,13 +33,13 @@ class CDialogNotifications : public QDialog
 
 public:
 
-    explicit CDialogNotifications(CApplication * application);
+    explicit CDialogNotifications(CMainWindow * application);
     virtual ~CDialogNotifications();
 
 private:
 
     Ui::DialogNotifications * m_uiWidget;
-    CApplication * m_application;
+    CMainWindow * m_application;
 };
 
 #endif // FILE_C_DIALOG_NOTIFICATIONS

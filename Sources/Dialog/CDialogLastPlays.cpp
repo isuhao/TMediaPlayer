@@ -18,13 +18,13 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CDialogLastPlays.hpp"
-#include "../CApplication.hpp"
+#include "../CMainWindow.hpp"
 #include <QPushButton>
 #include <QSqlError>
 #include <QSqlQuery>
 
 
-CDialogLastPlays::CDialogLastPlays(CApplication * application) :
+CDialogLastPlays::CDialogLastPlays(CMainWindow * application) :
     QDialog       (application),
     m_uiWidget    (new Ui::DialogLastPlays()),
     m_application (application)

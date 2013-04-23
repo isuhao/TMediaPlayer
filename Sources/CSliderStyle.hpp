@@ -27,7 +27,7 @@ class CSliderStyle : public QProxyStyle
 {
 public:
 
-    virtual int styleHint(StyleHint hint, const QStyleOption * option = NULL, const QWidget * widget = NULL, QStyleHintReturn * returnData = NULL) const
+    virtual int styleHint(StyleHint hint, const QStyleOption * option = nullptr, const QWidget * widget = nullptr, QStyleHintReturn * returnData = nullptr) const
     {
         if (hint == QStyle::SH_Slider_AbsoluteSetButtons)
             return Qt::LeftButton;

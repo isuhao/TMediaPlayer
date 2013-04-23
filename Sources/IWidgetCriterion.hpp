@@ -21,29 +21,29 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #define FILE_I_WIDGET_CRITERIA
 
 #include <QWidget>
-#include "ICriteria.hpp"
+#include "ICriterion.hpp"
 
 
 /**
  * Widget représentant un critère multiple.
  */
 
-class IWidgetCriteria : public QWidget
+class IWidgetCriterion : public QWidget
 {
     Q_OBJECT
 
 public:
 
-    explicit IWidgetCriteria(CApplication * application, QWidget * parent = NULL);
-    virtual ~IWidgetCriteria();
+    explicit IWidgetCriterion(CMainWindow * application, QWidget * parent = nullptr);
+    virtual ~IWidgetCriterion();
 
-    virtual ICriteria * getCriteria() = 0;
+    virtual ICriterion * getCriterion() = 0;
     
 protected:
 
-    ICriteria::TType m_type;           ///< Type de critère.
-    ICriteria::TCondition m_condition; ///< Condition de recherche.
-    CApplication * m_application;      ///< Pointeur sur l'application.
+    ICriterion::TType m_type;           ///< Type de critère.
+    ICriterion::TCondition m_condition; ///< Condition de recherche.
+    CMainWindow * m_application;      ///< Pointeur sur l'application.
 };
 
 #endif // FILE_I_WIDGET_CRITERIA

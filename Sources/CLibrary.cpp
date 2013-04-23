@@ -20,8 +20,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CLibrary.hpp"
 
 
-CLibrary::CLibrary(CApplication * application) :
-    CSongTable (application)
+CLibrary::CLibrary(CMainWindow * application) :
+CMediaTableView (application)
 {
 
 }
@@ -99,7 +99,7 @@ void CLibrary::removeSong(int pos)
 {
     removeSongFromTable(pos);
 
-    CSongTableItem * item = m_model->getSongItem(pos);
+    CMediaTableItem * item = m_model->getSongItem(pos);
 
     if (item)
     {

@@ -25,8 +25,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 
 class CDynamicList;
-class CApplication;
-class CWidgetMultiCriterion;
+class CMainWindow;
+class CWidgetMultiCriteria;
 class CFolder;
 
 
@@ -40,7 +40,7 @@ class CDialogEditDynamicList : public QDialog
 
 public:
 
-    CDialogEditDynamicList(CDynamicList * playList, CApplication * application, CFolder * folder);
+    CDialogEditDynamicList(CDynamicList * playList, CMainWindow * application, CFolder * folder);
     virtual ~CDialogEditDynamicList();
 
 public slots:
@@ -54,9 +54,9 @@ protected slots:
 private:
     
     Ui::DialogEditDynamicPlayList * m_uiWidget;
-    CWidgetMultiCriterion * m_widgetCriterion;
+    CWidgetMultiCriteria * m_widgetCriteria;
     CDynamicList * m_playList;
-    CApplication * m_application;
+    CMainWindow * m_application;
     CFolder * m_folder;
 };
 

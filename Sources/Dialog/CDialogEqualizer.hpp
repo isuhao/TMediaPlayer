@@ -24,7 +24,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "ui_DialogEqualizer.h"
 
 
-class CApplication;
+class CMainWindow;
 
 
 /**
@@ -39,7 +39,7 @@ class CDialogEqualizer : public QDialog
 
 public:
 
-    explicit CDialogEqualizer(CApplication * application);
+    explicit CDialogEqualizer(CMainWindow * application);
     virtual ~CDialogEqualizer();
 
 public slots:
@@ -74,7 +74,7 @@ protected slots:
 private:
 
     Ui::DialogEqualizer * m_uiWidget; ///< Pointeur sur le widget de la boite de dialogue.
-    CApplication * m_application;     ///< Pointeur sur la classe principale de l'application.
+    CMainWindow * m_application;     ///< Pointeur sur la classe principale de l'application.
 };
 
 #endif // FILE_C_DIALOG_EQUALIZER

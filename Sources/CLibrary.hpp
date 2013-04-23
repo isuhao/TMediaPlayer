@@ -20,18 +20,18 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #ifndef FILE_C_LIBRARY
 #define FILE_C_LIBRARY
 
-#include "CSongTable.hpp"
+#include "CMediaTableView.hpp"
 
 class CSong;
 
 
-class CLibrary : public CSongTable
+class CLibrary : public CMediaTableView
 {
     Q_OBJECT
 
 public:
 
-    explicit CLibrary(CApplication * application);
+    explicit CLibrary(CMainWindow * application);
     
     void deleteSongs();
     inline QMap<int, CSong *> getSongsMap() const;

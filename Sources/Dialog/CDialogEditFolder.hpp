@@ -24,7 +24,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "ui_DialogEditFolder.h"
 
 
-class CApplication;
+class CMainWindow;
 class CFolder;
 
 
@@ -34,7 +34,7 @@ class CDialogEditFolder : public QDialog
 
 public:
 
-    CDialogEditFolder(CFolder * folder, CApplication * application, CFolder * folderParent = NULL);
+    CDialogEditFolder(CFolder * folder, CMainWindow * application, CFolder * folderParent = nullptr);
     virtual ~CDialogEditFolder();
 
 protected slots:
@@ -45,7 +45,7 @@ private:
     
     Ui::DialogEditFolder * m_uiWidget;
     CFolder * m_folder;
-    CApplication * m_application;
+    CMainWindow * m_application;
     CFolder * m_folderParent;
 };
 

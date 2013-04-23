@@ -20,16 +20,16 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #ifndef FILE_C_QUEUE_PLAYLIST
 #define FILE_C_QUEUE_PLAYLIST
 
-#include "CSongTable.hpp"
+#include "CMediaTableView.hpp"
 
 
-class CQueuePlayList : public CSongTable
+class CQueuePlayList : public CMediaTableView
 {
     Q_OBJECT
 
 public:
 
-    explicit CQueuePlayList(CApplication * application);
+    explicit CQueuePlayList(CMainWindow * application);
     virtual ~CQueuePlayList();
 
     virtual bool isModified() const;
@@ -41,7 +41,7 @@ protected slots:
     virtual bool updateDatabase();
     virtual void openCustomMenuProject(const QPoint& point);
     void removeSelectedSongs();
-    void removeSongs(const QList<CSongTableItem *>& songItemList);
+    void removeSongs(const QList<CMediaTableItem *>& songItemList);
 
 protected:
 

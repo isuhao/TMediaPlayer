@@ -31,7 +31,7 @@ class CLibraryFolder : public QObject
 
 public:
 
-    explicit CLibraryFolder(QObject * parent = NULL);
+    explicit CLibraryFolder(QObject * parent = nullptr);
 
     QString convertFormatItemsToString() const;
     void convertStringToFormatItems(const QString& formatItems);

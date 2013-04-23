@@ -17,29 +17,29 @@ You should have received a copy of the GNU General Public License
 along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef FILE_C_WIDGET_CRITERIA
-#define FILE_C_WIDGET_CRITERIA
+#ifndef FILE_C_WIDGET_CRITERION_HPP_
+#define FILE_C_WIDGET_CRITERION_HPP_
 
-#include "IWidgetCriteria.hpp"
-#include "ui_WidgetCriteria.h"
+#include "IWidgetCriterion.hpp"
+#include "ui_WidgetCriterion.h"
 
 
 /**
  * Widget permettant d'éditer un critère d'une liste dynamique.
  */
 
-class CWidgetCriteria : public IWidgetCriteria
+class CWidgetCriterion : public IWidgetCriterion
 {
     Q_OBJECT
 
-    friend class CCriteria;
+    friend class CCriterion;
 
 public:
 
-    explicit CWidgetCriteria(CApplication * application, QWidget * parent = NULL);
-    virtual ~CWidgetCriteria();
+    explicit CWidgetCriterion(CMainWindow * application, QWidget * parent = nullptr);
+    virtual ~CWidgetCriterion();
 
-    virtual ICriteria * getCriteria();
+    virtual ICriterion * getCriterion();
 
 protected slots:
 
@@ -52,7 +52,7 @@ protected slots:
 
 private:
 
-    Ui::WidgetCriteria * m_uiWidget;
+    Ui::WidgetCriterion * m_uiWidget;
 };
 
-#endif // FILE_C_WIDGET_CRITERIA
+#endif // FILE_C_WIDGET_CRITERION_HPP_

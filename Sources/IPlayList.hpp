@@ -17,11 +17,11 @@ You should have received a copy of the GNU General Public License
 along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef FILE_I_PLAYLIST
-#define FILE_I_PLAYLIST
+#ifndef FILE_I_PLAYLIST_HPP_
+#define FILE_I_PLAYLIST_HPP_
 
 #include <QString>
-#include "CSongTable.hpp"
+#include "CMediaTableView.hpp"
 
 
 class CFolder;
@@ -32,18 +32,18 @@ class CFolder;
  * Gère les paramètres communs aux listes : le nom, le dossier, et la position dans le dossier.
  */
 
-class IPlayList : public CSongTable
+class IPlayList : public CMediaTableView
 {
     Q_OBJECT
 
-    friend class CApplication;
+    friend class CMainWindow;
     friend class CFolder;
-    friend class CPlayListView;
-    friend class CListModel;
+    friend class CLibraryView;
+    friend class CLibraryModel;
 
 public:
 
-    explicit IPlayList(CApplication * application, const QString& name = QString());
+    explicit IPlayList(CMainWindow * application, const QString& name = QString());
     virtual ~IPlayList() = 0;
 
     inline QString getName() const;
@@ -117,7 +117,7 @@ inline QString IPlayList::getName() const
 /**
  * Retourne le dossier contenant la liste de lecture.
  *
- * \return Pointeur sur le dossier, ou NULL si la liste est à la racine.
+ * \return Pointeur sur le dossier, ou nullptr si la liste est à la racine.
  */
 
 inline CFolder * IPlayList::getFolder() const
@@ -125,4 +125,4 @@ inline CFolder * IPlayList::getFolder() const
     return m_folder;
 }
 
-#endif // FILE_I_PLAYLIST
+#endif // FILE_I_PLAYLIST_HPP_

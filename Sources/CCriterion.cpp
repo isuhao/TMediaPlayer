@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "CCriteria.hpp"
+#include "CCriterion.hpp"
 #include "IPlayList.hpp"
-#include "CApplication.hpp"
+#include "CMainWindow.hpp"
 #include "CSong.hpp"
 
 #include <QtDebug>
@@ -32,8 +32,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * \param parent      Pointeur sur l'objet parent.
  */
 
-CCriteria::CCriteria(CApplication * application, QObject * parent) :
-    ICriteria (application, parent)
+CCriterion::CCriterion(CMainWindow * application, QObject * parent) :
+ICriterion (application, parent)
 {
 
 }
@@ -43,7 +43,7 @@ CCriteria::CCriteria(CApplication * application, QObject * parent) :
  * Détruit le critère.
  */
 
-CCriteria::~CCriteria()
+CCriterion::~CCriterion()
 {
 
 }
@@ -56,21 +56,21 @@ CCriteria::~CCriteria()
  * \return Booléen.
  */
 
-bool CCriteria::matchCriteria(CSong * song) const
+bool CCriterion::matchCriterion(CSong * song) const
 {
     Q_CHECK_PTR(song);
 
-    if ((m_type >> 8) == ICriteria::TypeMaskBoolean)
+    if ((m_type >> 8) == ICriterion::TypeMaskBoolean)
     {
-        if (m_type == ICriteria::TypeLanguage)
+        if (m_type == ICriterion::TypeLanguage)
         {
             const TLanguage lng = getLanguageForISO2Code(m_value1.toString());
 
-            if (m_condition == ICriteria::CondIs)
+            if (m_condition == ICriterion::CondIs)
             {
                 return (song->getLanguage() == lng);
             }
-            else if (m_condition == ICriteria::CondIsNot)
+            else if (m_condition == ICriterion::CondIsNot)
             {
                 return (song->getLanguage() != lng);
             }
@@ -80,15 +80,15 @@ bool CCriteria::matchCriteria(CSong * song) const
                 return false;
             }
         }
-        else if (m_type == ICriteria::TypeFormat)
+        else if (m_type == ICriterion::TypeFormat)
         {
             const CSong::TFormat format = CSong::getFormatFromInteger(m_value1.toInt());
 
-            if (m_condition == ICriteria::CondIs)
+            if (m_condition == ICriterion::CondIs)
             {
                 return (song->getFormat() == format);
             }
-            else if (m_condition == ICriteria::CondIsNot)
+            else if (m_condition == ICriterion::CondIsNot)
             {
                 return (song->getFormat() != format);
             }
@@ -98,25 +98,25 @@ bool CCriteria::matchCriteria(CSong * song) const
                 return false;
             }
         }
-        else if (m_type == ICriteria::TypePlayList)
+        else if (m_type == ICriterion::TypePlayList)
         {
-            //qWarning() << "CCriteria::matchCriteria() : le critère TypePlayList doit être géré par la fonction appelante";
+            //qWarning() << "CCriterion::matchCriterion() : le critère TypePlayList doit être géré par la fonction appelante";
             return false;
         }
         else
         {
-            qWarning() << "CCriteria::matchCriteria() : le type de critère n'est pas géré";
+            qWarning() << "CCriterion::matchCriterion() : le type de critère n'est pas géré";
             return false;
         }
     }
-    else if ((m_type >> 8) == ICriteria::TypeMaskString)
+    else if ((m_type >> 8) == ICriterion::TypeMaskString)
     {
         QString str;
 
         switch (m_type)
         {
             default:
-                qWarning() << "CCriteria::matchCriteria() : le type de critère n'est pas géré";
+                qWarning() << "CCriterion::matchCriterion() : le type de critère n'est pas géré";
                 return false;
 
             case TypeTitle      : str = song->getTitle();       break;
@@ -130,9 +130,9 @@ bool CCriteria::matchCriteria(CSong * song) const
             case TypeFileName   : str = song->getFileName();    break;
         }
 
-        if ((m_condition >> 8) != ICriteria::CondMaskString)
+        if ((m_condition >> 8) != ICriterion::CondMaskString)
         {
-            qWarning() << "CCriteria::matchCriteria() : la condition et le type ne correspondent pas";
+            qWarning() << "CCriterion::matchCriterion() : la condition et le type ne correspondent pas";
             return false;
         }
 
@@ -151,14 +151,14 @@ bool CCriteria::matchCriteria(CSong * song) const
             case CondStringRegex      : return (str.contains(QRegExp(m_value1.toString())));
         }
     }
-    else if ((m_type >> 8) == ICriteria::TypeMaskNumber)
+    else if ((m_type >> 8) == ICriterion::TypeMaskNumber)
     {
         int num;
 
         switch (m_type)
         {
             default:
-                qWarning() << "CCriteria::matchCriteria() : le type de critère n'est pas géré";
+                qWarning() << "CCriterion::matchCriterion() : le type de critère n'est pas géré";
                 return false;
 
             case TypeYear       : num = song->getYear();       break;
@@ -172,9 +172,9 @@ bool CCriteria::matchCriteria(CSong * song) const
             case TypeFileSize   : num = song->getFileSize();   break;
         }
 
-        if ((m_condition >> 8) != ICriteria::CondMaskNumber)
+        if ((m_condition >> 8) != ICriterion::CondMaskNumber)
         {
-            qWarning() << "CCriteria::matchCriteria() : la condition et le type ne correspondent pas";
+            qWarning() << "CCriterion::matchCriterion() : la condition et le type ne correspondent pas";
             return false;
         }
 
@@ -191,22 +191,22 @@ bool CCriteria::matchCriteria(CSong * song) const
             case CondNumberBetween    : return (num >= m_value1.toInt() && num <= m_value2.toInt());
         }
     }
-    else if ((m_type >> 8) == ICriteria::TypeMaskTime)
+    else if ((m_type >> 8) == ICriterion::TypeMaskTime)
     {
         QTime time = QTime(0, 0);
 
         switch (m_type)
         {
             default:
-                qWarning() << "CCriteria::matchCriteria() : le type de critère n'est pas géré";
+                qWarning() << "CCriterion::matchCriterion() : le type de critère n'est pas géré";
                 return false;
 
             case TypeDuration: time = time.addMSecs(song->getDuration()); break;
         }
 
-        if ((m_condition >> 8) != ICriteria::CondMaskTime)
+        if ((m_condition >> 8) != ICriterion::CondMaskTime)
         {
-            qWarning() << "CCriteria::matchCriteria() : la condition et le type ne correspondent pas";
+            qWarning() << "CCriterion::matchCriterion() : la condition et le type ne correspondent pas";
             return false;
         }
 
@@ -223,14 +223,14 @@ bool CCriteria::matchCriteria(CSong * song) const
             case CondTimeBetween    : return (time >= m_value1.toTime() && time <= m_value2.toTime());
         }
     }
-    else if ((m_type >> 8) == ICriteria::TypeMaskDate)
+    else if ((m_type >> 8) == ICriterion::TypeMaskDate)
     {
         QDateTime date;
 
         switch (m_type)
         {
             default:
-                qWarning() << "CCriteria::matchCriteria() : le type de critère n'est pas géré";
+                qWarning() << "CCriterion::matchCriterion() : le type de critère n'est pas géré";
                 return false;
 
             case TypeLastPlayTime: date = song->getLastPlay(); break;
@@ -238,9 +238,9 @@ bool CCriteria::matchCriteria(CSong * song) const
             case TypeModified    : date = song->getModificationDate(); break;
         }
 
-        if ((m_condition >> 8) != ICriteria::CondMaskDate)
+        if ((m_condition >> 8) != ICriterion::CondMaskDate)
         {
-            qWarning() << "CCriteria::matchCriteria() : la condition et le type ne correspondent pas";
+            qWarning() << "CCriterion::matchCriterion() : la condition et le type ne correspondent pas";
             return false;
         }
 
@@ -298,7 +298,7 @@ bool CCriteria::matchCriteria(CSong * song) const
 
 /**
  * Retourne la liste des morceaux qui vérifient le critère.
- * Cette implémentation parcourt la liste \a from et utilise la méthode matchCriteria
+ * Cette implémentation parcourt la liste \a from et utilise la méthode matchCriterion
  * pour tester si le morceau vérifie le critère, sauf si la condition est la présence
  * ou non du morceau dans une liste, auquel cas on détermine l'intersection de \a from
  * avec les morceaux de la liste de lecture.
@@ -309,11 +309,11 @@ bool CCriteria::matchCriteria(CSong * song) const
  *         éléments de \a with.
  */
 
-QList<CSong *> CCriteria::getSongs(const QList<CSong *>& from, const QList<CSong *>& with) const
+QList<CSong *> CCriterion::getSongs(const QList<CSong *>& from, const QList<CSong *>& with) const
 {
     QList<CSong *> songList = with;
 
-    if (m_type == ICriteria::TypePlayList)
+    if (m_type == ICriterion::TypePlayList)
     {
         IPlayList * playList = m_application->getPlayListFromId(m_value1.toInt());
 
@@ -323,7 +323,7 @@ QList<CSong *> CCriteria::getSongs(const QList<CSong *>& from, const QList<CSong
             return songList;
         }
 
-        if (m_condition == ICriteria::CondIs)
+        if (m_condition == ICriterion::CondIs)
         {
             for (QList<CSong *>::const_iterator it = from.begin(); it != from.end(); ++it)
             {
@@ -333,7 +333,7 @@ QList<CSong *> CCriteria::getSongs(const QList<CSong *>& from, const QList<CSong
                 }
             }
         }
-        else if (m_condition == ICriteria::CondIsNot)
+        else if (m_condition == ICriterion::CondIsNot)
         {
             for (QList<CSong *>::const_iterator it = from.begin(); it != from.end(); ++it)
             {
@@ -352,7 +352,7 @@ QList<CSong *> CCriteria::getSongs(const QList<CSong *>& from, const QList<CSong
     {
         for (QList<CSong *>::const_iterator it = from.begin(); it != from.end(); ++it)
         {
-            if (matchCriteria(*it) && !songList.contains(*it))
+            if (matchCriterion(*it) && !songList.contains(*it))
             {
                 songList.append(*it);
             }
@@ -363,13 +363,13 @@ QList<CSong *> CCriteria::getSongs(const QList<CSong *>& from, const QList<CSong
 }
 
 
-ICriteria::TUpdateConditions CCriteria::getUpdateConditions() const
+ICriterion::TUpdateConditions CCriterion::getUpdateConditions() const
 {
     switch (m_type)
     {
         case TypeUnion:
         case TypeIntersection:
-            qWarning() << "CCriteria::getWidget() : un critère simple ne peut pas avoir le type TypeUnion ou TypeIntersection";
+            qWarning() << "CCriterion::getWidget() : un critère simple ne peut pas avoir le type TypeUnion ou TypeIntersection";
 
         default:
         case TypeInvalid:
@@ -404,18 +404,18 @@ ICriteria::TUpdateConditions CCriteria::getUpdateConditions() const
 }
 
 
-#include "CWidgetCriteria.hpp" // Si on l'inclut avant, l'intellisense bug complètement...
+#include "CWidgetCriterion.hpp" // Si on l'inclut avant, l'intellisense bug complètement...
 
 
-IWidgetCriteria * CCriteria::getWidget() const
+IWidgetCriterion * CCriterion::getWidget() const
 {
-    CWidgetCriteria * widget = new CWidgetCriteria(m_application, NULL);
+    CWidgetCriterion * widget = new CWidgetCriterion(m_application, nullptr);
 
     switch (m_type)
     {
         case TypeUnion:
         case TypeIntersection:
-            qWarning() << "CCriteria::getWidget() : un critère simple ne peut pas avoir le type TypeUnion ou TypeIntersection";
+            qWarning() << "CCriterion::getWidget() : un critère simple ne peut pas avoir le type TypeUnion ou TypeIntersection";
 
         default:
         case TypeInvalid:
@@ -456,11 +456,11 @@ IWidgetCriteria * CCriteria::getWidget() const
             case CondIsNot: widget->m_uiWidget->listConditionBoolean->setCurrentIndex(1); break;
         }
 
-        if (m_type == ICriteria::TypeLanguage)
+        if (m_type == ICriterion::TypeLanguage)
         {
             widget->m_uiWidget->listLanguage->setCurrentIndex(getLanguageForISO2Code(m_value1.toString()));
         }
-        else if (m_type == ICriteria::TypePlayList)
+        else if (m_type == ICriterion::TypePlayList)
         {
             for (int row = 0; row < widget->m_uiWidget->listPlayList->count(); ++row)
             {
@@ -471,13 +471,13 @@ IWidgetCriteria * CCriteria::getWidget() const
                 }
             }
         }
-        else if (m_type == ICriteria::TypeFormat)
+        else if (m_type == ICriterion::TypeFormat)
         {
             widget->m_uiWidget->listFormat->setCurrentIndex(m_value1.toInt() - 1);
         }
         else
         {
-            qWarning() << "CCriteria::getWidget() : type de critère non géré";
+            qWarning() << "CCriterion::getWidget() : type de critère non géré";
         }
     }
     else if ((m_type >> 8) == TypeMaskString)

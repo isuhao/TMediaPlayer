@@ -19,8 +19,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CDialogEditDynamicList.hpp"
 #include "../CDynamicList.hpp"
-#include "../CWidgetMultiCriterion.hpp"
-#include "../CApplication.hpp"
+#include "../CWidgetMultiCriteria.hpp"
+#include "../CMainWindow.hpp"
 #include <QStandardItemModel>
 #include <QMessageBox>
 #include <QPushButton>
@@ -29,18 +29,18 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 /**
  * Constructeur de la boite de dialogue d'édition des listes de lecture dynamiques.
  *
- * \param playList    Pointeur sur la liste à modifier, ou NULL pour une nouvelle liste.
+ * \param playList    Pointeur sur la liste à modifier, ou nullptr pour une nouvelle liste.
  * \param application Pointeur sur l'application.
  * \param folder      Dossier contenant la liste de lecture.
  */
 
-CDialogEditDynamicList::CDialogEditDynamicList(CDynamicList * playList, CApplication * application, CFolder * folder) :
-    QDialog           (application),
-    m_uiWidget        (new Ui::DialogEditDynamicPlayList()),
-    m_widgetCriterion (NULL),
-    m_playList        (playList),
-    m_application     (application),
-    m_folder          (folder)
+CDialogEditDynamicList::CDialogEditDynamicList(CDynamicList * playList, CMainWindow * application, CFolder * folder) :
+QDialog          (application),
+m_uiWidget       (new Ui::DialogEditDynamicPlayList()),
+m_widgetCriteria (nullptr),
+m_playList       (playList),
+m_application    (application),
+m_folder         (folder)
 {
     Q_CHECK_PTR(application);
 
@@ -49,25 +49,25 @@ CDialogEditDynamicList::CDialogEditDynamicList(CDynamicList * playList, CApplica
 
     if (m_playList)
     {
-        m_widgetCriterion = m_playList->getWidget();
+        m_widgetCriteria = m_playList->getWidget();
 
-        if (m_widgetCriterion)
+        if (m_widgetCriteria)
         {
-            m_uiWidget->verticalLayout->insertWidget(1, m_widgetCriterion);
-            m_widgetCriterion->setParent(this);
+            m_uiWidget->verticalLayout->insertWidget(1, m_widgetCriteria);
+            m_widgetCriteria->setParent(this);
         }
         else
         {
-            m_widgetCriterion = new CWidgetMultiCriterion(m_application, this);
-            m_uiWidget->verticalLayout->insertWidget(1, m_widgetCriterion);
+            m_widgetCriteria = new CWidgetMultiCriteria(m_application, this);
+            m_uiWidget->verticalLayout->insertWidget(1, m_widgetCriteria);
         }
     }
     else
     {
         m_playList = new CDynamicList(m_application);
 
-        m_widgetCriterion = new CWidgetMultiCriterion(m_application, this);
-        m_uiWidget->verticalLayout->insertWidget(1, m_widgetCriterion);
+        m_widgetCriteria = new CWidgetMultiCriteria(m_application, this);
+        m_uiWidget->verticalLayout->insertWidget(1, m_widgetCriteria);
     }
 
     m_uiWidget->editName->setText(m_playList->getName());
@@ -124,7 +124,7 @@ void CDialogEditDynamicList::save()
 
     m_playList->setName(name);
     m_playList->setFolder(m_folder);
-    m_playList->setCriteria(m_widgetCriterion->getCriteria());
+    m_playList->setCriterion(m_widgetCriteria->getCriterion());
     m_playList->setAutoUpdate(m_uiWidget->editUpdate->isChecked());
     m_playList->setOnlyChecked(m_uiWidget->editOnlyChecked->isChecked());
 

@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "ICriteria.hpp"
-#include "CApplication.hpp"
+#include "ICriterion.hpp"
+#include "CMainWindow.hpp"
 #include "CDynamicList.hpp"
 #include <QMessageBox>
 #include <QSqlQuery>
@@ -34,17 +34,17 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * \param parent      Pointeur sur l'objet parent, qui sera chargé de détruire le critère.
  */
 
-ICriteria::ICriteria(CApplication * application, QObject * parent) :
-    QObject       (parent),
-    m_type        (TypeInvalid),
-    m_condition   (CondInvalid),
-    m_value1      (),
-    m_value2      (),
-    m_application (application),
-    m_id          (-1),
-    m_position    (1),
-    m_parent      (NULL),
-    m_playList    (NULL)
+ICriterion::ICriterion(CMainWindow * application, QObject * parent) :
+QObject       (parent),
+m_type        (TypeInvalid),
+m_condition   (CondInvalid),
+m_value1      (),
+m_value2      (),
+m_application (application),
+m_id          (-1),
+m_position    (1),
+m_parent      (nullptr),
+m_playList    (nullptr)
 {
     Q_CHECK_PTR(application);
 }
@@ -54,7 +54,7 @@ ICriteria::ICriteria(CApplication * application, QObject * parent) :
  * Détruit le critère.
  */
 
-ICriteria::~ICriteria()
+ICriterion::~ICriterion()
 {
 
 }
@@ -62,7 +62,7 @@ ICriteria::~ICriteria()
 
 /**
  * Retourne la liste des morceaux qui vérifient le critère.
- * Cette implémentation de base parcourt la liste \a from et utilise la méthode matchCriteria
+ * Cette implémentation de base parcourt la liste \a from et utilise la méthode matchCriterion
  * pour tester si le morceau vérifie le critère.
  *
  * \param from        Liste de morceaux à analyser.
@@ -72,13 +72,13 @@ ICriteria::~ICriteria()
  *         éléments de \a with.
  */
 
-QList<CSong *> ICriteria::getSongs(const QList<CSong *>& from, const QList<CSong *>& with, bool onlyChecked) const
+QList<CSong *> ICriterion::getSongs(const QList<CSong *>& from, const QList<CSong *>& with, bool onlyChecked) const
 {
     QList<CSong *> songList = with;
 
     for (QList<CSong *>::const_iterator it = from.begin(); it != from.end(); ++it)
     {
-        if (matchCriteria(*it) && !songList.contains(*it))
+        if (matchCriterion(*it) && !songList.contains(*it))
         {
             if (onlyChecked)
             {
@@ -102,7 +102,7 @@ QList<CSong *> ICriteria::getSongs(const QList<CSong *>& from, const QList<CSong
  * \param playList Pointeur sur la nouvelle liste dynamique.
  */
 
-void ICriteria::setPlayList(CDynamicList * playList)
+void ICriterion::setPlayList(CDynamicList * playList)
 {
     Q_CHECK_PTR(playList);
     m_playList = playList;
@@ -115,7 +115,7 @@ void ICriteria::setPlayList(CDynamicList * playList)
  * \param application Pointeur sur l'application.
  */
 
-void ICriteria::insertIntoDatabase(CApplication * application)
+void ICriterion::insertIntoDatabase(CMainWindow * application)
 {
     Q_CHECK_PTR(application);
 

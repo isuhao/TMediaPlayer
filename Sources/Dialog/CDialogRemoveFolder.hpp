@@ -23,7 +23,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QDialog>
 #include "ui_DialogRemoveFolder.h"
 
-class CApplication;
+class CMainWindow;
 class CFolder;
 
 
@@ -37,7 +37,7 @@ class CDialogRemoveFolder : public QDialog
 
 public:
 
-    CDialogRemoveFolder(CApplication * application, CFolder * folder);
+    CDialogRemoveFolder(CMainWindow * application, CFolder * folder);
     virtual ~CDialogRemoveFolder();
 
     inline bool isResursive() const;
@@ -49,7 +49,7 @@ protected slots:
 private:
 
     Ui::DialogRemoveFolder * m_uiWidget;
-    CApplication * m_application; ///< Pointeur sur la classe principale de l'application.
+    CMainWindow * m_application; ///< Pointeur sur la classe principale de l'application.
     CFolder * m_folder;           ///< Pointeur sur le dossier à supprimer.
     bool m_recursive;             ///< Indique si le contenu du dossier doit être supprimé récursivement.
 };

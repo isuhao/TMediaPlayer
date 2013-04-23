@@ -18,7 +18,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CMusicBrainzLookup.hpp"
-#include "../CApplication.hpp"
+#include "../CMainWindow.hpp"
 #include "../CCDRomDrive.hpp"
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -31,12 +31,12 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 const QString CMusicBrainzLookup::m_lookupUrl = "http://musicbrainz.org/ws/2/discid/%1?inc=artist-credits+recordings";
 
 
-CMusicBrainzLookup::CMusicBrainzLookup(CCDRomDrive * cdRomDrive, CApplication * application) :
+CMusicBrainzLookup::CMusicBrainzLookup(CCDRomDrive * cdRomDrive, CMainWindow * application) :
 QObject          (application),
 m_application    (application),
 m_cdRomDrive     (cdRomDrive),
 m_musicBrainzId  (cdRomDrive->getMusicBrainzDiscId()),
-m_networkManager (NULL)
+m_networkManager (nullptr)
 {
     Q_CHECK_PTR(application);
     Q_CHECK_PTR(cdRomDrive);

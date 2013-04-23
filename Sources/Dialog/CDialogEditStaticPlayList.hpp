@@ -24,8 +24,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "ui_DialogEditStaticPlayList.h"
 
 
-class CStaticPlayList;
-class CApplication;
+class CStaticList;
+class CMainWindow;
 class CFolder;
 class CSong;
 
@@ -40,7 +40,7 @@ class CDialogEditStaticPlayList : public QDialog
 
 public:
 
-    CDialogEditStaticPlayList(CStaticPlayList * playList, CApplication * application, CFolder * folder, const QList<CSong *>& songs = QList<CSong *>());
+    CDialogEditStaticPlayList(CStaticList * playList, CMainWindow * application, CFolder * folder, const QList<CSong *>& songs = QList<CSong *>());
     virtual ~CDialogEditStaticPlayList();
 
 protected slots:
@@ -50,8 +50,8 @@ protected slots:
 private:
     
     Ui::DialogEditStaticPlayList * m_uiWidget;
-    CStaticPlayList * m_playList; ///< Pointeur sur la liste de lecture.
-    CApplication * m_application; ///< Pointeur sur l'application.
+    CStaticList * m_playList; ///< Pointeur sur la liste de lecture.
+    CMainWindow * m_application; ///< Pointeur sur l'application.
     CFolder * m_folder;           ///< Pointeur sur le dossier contenant la liste de lecture.
     QList<CSong *> m_songs;       ///< Liste de morceaux à ajouter à la liste.
 };

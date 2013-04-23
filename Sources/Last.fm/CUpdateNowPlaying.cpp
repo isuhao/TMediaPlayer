@@ -19,7 +19,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CUpdateNowPlaying.hpp"
 #include "../CSong.hpp"
-#include "../CApplication.hpp"
+#include "../CMainWindow.hpp"
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -28,7 +28,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QtDebug>
 
 
-CUpdateNowPlaying::CUpdateNowPlaying(CApplication * application, const QByteArray& sessionKey, CSong * song) :
+CUpdateNowPlaying::CUpdateNowPlaying(CMainWindow * application, const QByteArray& sessionKey, CSong * song) :
 ILastFmService (application, sessionKey),
 m_song         (song)
 {

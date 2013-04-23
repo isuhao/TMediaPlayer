@@ -21,12 +21,12 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #define FILE_C_DIALOG_EDIT_SONG
 
 #include <QDialog>
-#include "CSongTableModel.hpp"
+#include "CMediaTableModel.hpp"
 #include "ui_DialogEditSong.h"
 
 
-class CSongTable;
-class CApplication;
+class CMediaTableView;
+class CMainWindow;
 class CRatingEditor;
 class QCloseEvent;
 
@@ -41,12 +41,12 @@ class CDialogEditSong : public QDialog
 
 public:
 
-    CDialogEditSong(CSongTableItem * songItem, CSongTable * songTable, CApplication * application);
+    CDialogEditSong(CMediaTableItem * songItem, CMediaTableView * songTable, CMainWindow * application);
     virtual ~CDialogEditSong();
 
-    inline CSongTableItem * getSongItem() const;
-    inline CSongTable * getSongTable() const;
-    void setSongItem(CSongTableItem * songItem, CSongTable * songTable);
+    inline CMediaTableItem * getSongItem() const;
+    inline CMediaTableView * getSongTable() const;
+    void setSongItem(CMediaTableItem * songItem, CMediaTableView * songTable);
 
 signals:
 
@@ -71,19 +71,19 @@ private:
     
     Ui::DialogEditSong * m_uiWidget;
     CRatingEditor * m_ratingEditor;
-    CSongTable * m_songTable;
-    CSongTableItem * m_songItem;
-    CApplication * m_application;
+    CMediaTableView * m_songTable;
+    CMediaTableItem * m_songItem;
+    CMainWindow * m_application;
 };
 
 
-inline CSongTableItem * CDialogEditSong::getSongItem() const
+inline CMediaTableItem * CDialogEditSong::getSongItem() const
 {
     return m_songItem;
 }
 
 
-inline CSongTable * CDialogEditSong::getSongTable() const
+inline CMediaTableView * CDialogEditSong::getSongTable() const
 {
     return m_songTable;
 }

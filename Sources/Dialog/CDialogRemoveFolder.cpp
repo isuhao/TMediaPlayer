@@ -18,7 +18,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CDialogRemoveFolder.hpp"
-#include "../CApplication.hpp"
+#include "../CMainWindow.hpp"
 #include "../CFolder.hpp"
 #include <QPushButton>
 
@@ -32,7 +32,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * \param folder      Pointeur sur le dossier à supprimer.
  */
 
-CDialogRemoveFolder::CDialogRemoveFolder(CApplication * application, CFolder * folder) :
+CDialogRemoveFolder::CDialogRemoveFolder(CMainWindow * application, CFolder * folder) :
     QDialog       (application, Qt::MSWindowsFixedSizeDialogHint | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowCloseButtonHint),
     m_uiWidget    (new Ui::DialogRemoveFolder()),
     m_application (application),

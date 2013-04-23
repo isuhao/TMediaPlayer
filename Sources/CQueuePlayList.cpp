@@ -18,9 +18,9 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CQueuePlayList.hpp"
-#include "CApplication.hpp"
+#include "CMainWindow.hpp"
 #include "IPlayList.hpp"
-#include "CStaticPlayList.hpp"
+#include "CStaticList.hpp"
 #include "CDynamicList.hpp"
 #include "CLibrary.hpp"
 #include "CDialogEditSong.hpp"
@@ -31,8 +31,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QPainter>
 
 
-CQueuePlayList::CQueuePlayList(CApplication * application) :
-CSongTable   (application)
+CQueuePlayList::CQueuePlayList(CMainWindow * application) :
+CMediaTableView (application)
 {
     m_model->setCanDrop(true);
 
@@ -70,7 +70,7 @@ void CQueuePlayList::addSongs(const QList<CSong *>& songs, int position)
 
     while (it.hasPrevious())
     {
-        CSongTable::addSongToTable(it.previous(), position);
+        CMediaTableView::addSongToTable(it.previous(), position);
     }
 }
 
@@ -188,7 +188,7 @@ void CQueuePlayList::openCustomMenuProject(const QPoint& point)
                     {
                         m_actionGoToSongTable[*it]->setIcon(QPixmap(":/icons/dynamic_list"));
                     }
-                    else if (qobject_cast<CStaticPlayList *>(*it))
+                    else if (qobject_cast<CStaticList *>(*it))
                     {
                         m_actionGoToSongTable[*it]->setIcon(QPixmap(":/icons/playlist"));
                     }
@@ -210,7 +210,7 @@ void CQueuePlayList::openCustomMenuProject(const QPoint& point)
         {
             for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
             {
-                CStaticPlayList * staticList = qobject_cast<CStaticPlayList *>(*it);
+                CStaticList * staticList = qobject_cast<CStaticList *>(*it);
                 if (staticList)
                 {
                     m_actionAddToPlayList[staticList] = menuAddToPlayList->addAction(QPixmap(":/icons/playlist"), (*it)->getName());
@@ -234,7 +234,7 @@ void CQueuePlayList::openCustomMenuProject(const QPoint& point)
  * \param songItemList Liste des morceaux à enlever.
  */
 
-void CQueuePlayList::removeSongs(const QList<CSongTableItem *>& songItemList)
+void CQueuePlayList::removeSongs(const QList<CMediaTableItem *>& songItemList)
 {
     if (songItemList.isEmpty())
     {
@@ -248,7 +248,7 @@ void CQueuePlayList::removeSongs(const QList<CSongTableItem *>& songItemList)
 
     QList<CSong *> songList;
 
-    for (QList<CSongTableItem *>::const_iterator it = songItemList.begin(); it != songItemList.end(); ++it)
+    for (QList<CMediaTableItem *>::const_iterator it = songItemList.begin(); it != songItemList.end(); ++it)
     {
         int row = m_model->getRowForSongItem(*it);
 
@@ -282,32 +282,32 @@ void CQueuePlayList::removeSelectedSongs()
         return;
     
     // Si on est en train de lire un morceau de la liste, il faut mettre à jour les informations sur le morceau courant
-    CSongTableItem * currentItem = m_model->getCurrentSongItem();
-    CSong * currentSong = (currentItem ? currentItem->getSong() : NULL);
+    CMediaTableItem * currentItem = m_model->getCurrentSongItem();
+    CSong * currentSong = (currentItem ? currentItem->getSong() : nullptr);
 
     CDialogEditSong * dialogEditSong = m_application->getDialogEditSong();
-    CSong * currentSongInDialogEditSong = NULL;
+    CSong * currentSongInDialogEditSong = nullptr;
 
     if (dialogEditSong)
     {
         if (dialogEditSong->getSongTable() == this)
             currentSongInDialogEditSong = dialogEditSong->getSongItem()->getSong();
         else
-            dialogEditSong = NULL;
+            dialogEditSong = nullptr;
     }
 
-    QList<CSongTableItem *> songItemList;
+    QList<CMediaTableItem *> songItemList;
 
     // On parcourt la liste des morceaux sélectionnés
     for (QModelIndexList::const_iterator it = indexList.begin(); it != indexList.end(); ++it)
     {
-        CSongTableItem * songItem = m_model->getSongItem(*it);
+        CMediaTableItem * songItem = m_model->getSongItem(*it);
 
         // Morceau en cours de lecture
         if (m_application->getCurrentSongItem() == songItem)
         {
-            currentItem = NULL;
-            currentSong = NULL;
+            currentItem = nullptr;
+            currentSong = nullptr;
         }
 
         songItemList.append(songItem);
@@ -320,7 +320,7 @@ void CQueuePlayList::removeSelectedSongs()
     // On change le morceau courant affiché dans la liste
     if (currentSong)
     {
-        CSongTableItem * currentItemAfter = getFirstSongItem(currentSong);
+        CMediaTableItem * currentItemAfter = getFirstSongItem(currentSong);
         m_model->setCurrentSong(currentItemAfter);
         //m_application->m_currentSongItem = currentItemAfter;
         m_application->setCurrentSongItem(currentItemAfter, this);
@@ -328,7 +328,7 @@ void CQueuePlayList::removeSelectedSongs()
 
     if (dialogEditSong)
     {
-        CSongTableItem * songItem = getFirstSongItem(currentSongInDialogEditSong);
+        CMediaTableItem * songItem = getFirstSongItem(currentSongInDialogEditSong);
 
         if (songItem)
             dialogEditSong->setSongItem(songItem, this);
@@ -356,7 +356,7 @@ void CQueuePlayList::keyPressEvent(QKeyEvent * event)
         return;
     }
 
-    return CSongTable::keyPressEvent(event);
+    return CMediaTableView::keyPressEvent(event);
 }
 
 
@@ -369,7 +369,7 @@ void CQueuePlayList::keyPressEvent(QKeyEvent * event)
 
 void CQueuePlayList::dragMoveEvent(QDragMoveEvent * event)
 {
-    CSongTable::dragMoveEvent(event);
+    CMediaTableView::dragMoveEvent(event);
 
     if (event->source() != this)
     {
@@ -395,7 +395,7 @@ void CQueuePlayList::dropEvent(QDropEvent * event)
 {
     event->ignore();
 
-    CSongTable::dropEvent(event);
+    CMediaTableView::dropEvent(event);
 
     if (event->isAccepted())
     {
@@ -451,7 +451,7 @@ void CQueuePlayList::dropEvent(QDropEvent * event)
 
 void CQueuePlayList::paintEvent(QPaintEvent * event)
 {
-    CSongTable::paintEvent(event);
+    CMediaTableView::paintEvent(event);
 
     if (state() == QAbstractItemView::DraggingState
 #ifndef QT_NO_CURSOR

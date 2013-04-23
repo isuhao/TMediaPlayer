@@ -27,19 +27,19 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 class CFolder;
 
 
-class CStaticPlayList : public IPlayList
+class CStaticList : public IPlayList
 {
     Q_OBJECT
 
     friend class CDialogEditStaticPlayList;
-    friend class CApplication;
+    friend class CMainWindow;
     friend class CFolder;
-    friend class CListModel;
+    friend class CLibraryModel;
 
 public:
 
-    explicit CStaticPlayList(CApplication * application, const QString& name = QString());
-    virtual ~CStaticPlayList();
+    explicit CStaticList(CMainWindow * application, const QString& name = QString());
+    virtual ~CStaticList();
 
     virtual bool isModified() const;
 
@@ -48,17 +48,17 @@ public slots:
     void addSong(CSong * song, int pos = -1);
     void addSongs(const QList<CSong *>& songs, bool confirm = true);
     void removeSong(CSong * song, bool confirm = true);
-    void removeSong(CSongTableItem * songItem, bool confirm = true);
+    void removeSong(CMediaTableItem * songItem, bool confirm = true);
     void removeSongs(const QList<CSong *>& songs, bool confirm = true);
-    void removeSongs(const QList<CSongTableItem *>& songItemList, bool confirm = true);
+    void removeSongs(const QList<CMediaTableItem *>& songItemList, bool confirm = true);
     void removeSelectedSongs();
     void removeDuplicateSongs();
 
 signals:
 
-    void songAdded(CSong * song);   ///< Signal émis lorsqu'une chanson est ajoutée à la liste.     \todo Remplacer CSong par CSongTableItem ?
-    void songRemoved(CSong * song); ///< Signal émis lorsqu'une chanson est enlevée de la liste.    \todo Remplacer CSong par CSongTableItem ?
-    void songMoved(CSong * song);   ///< Signal émis lorsqu'une chanson est déplacée dans la liste. \todo Remplacer CSong par CSongTableItem ?
+    void songAdded(CSong * song);   ///< Signal émis lorsqu'une chanson est ajoutée à la liste.     \todo Remplacer CSong par CMediaTableItem ?
+    void songRemoved(CSong * song); ///< Signal émis lorsqu'une chanson est enlevée de la liste.    \todo Remplacer CSong par CMediaTableItem ?
+    void songMoved(CSong * song);   ///< Signal émis lorsqu'une chanson est déplacée dans la liste. \todo Remplacer CSong par CMediaTableItem ?
 
 protected slots:
 

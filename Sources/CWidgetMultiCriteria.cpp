@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "CWidgetMultiCriterion.hpp"
-#include "CWidgetCriteria.hpp"
-#include "CMultiCriterion.hpp"
+#include "CWidgetMultiCriteria.hpp"
+#include "CWidgetCriterion.hpp"
+#include "CMultiCriteria.hpp"
 #include "Dialog/CDialogEditDynamicList.hpp"
 #include <QPushButton>
 
@@ -34,17 +34,17 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * \param parent      Widget parent.
  */
 
-CWidgetMultiCriterion::CWidgetMultiCriterion(CApplication * application, QWidget * parent) :
-    IWidgetCriteria (application, parent),
-    m_uiWidget      (new Ui::WidgetMultiCriterion())
+CWidgetMultiCriteria::CWidgetMultiCriteria(CMainWindow * application, QWidget * parent) :
+    IWidgetCriterion (application, parent),
+    m_uiWidget      (new Ui::WidgetMultiCriteria())
 {
-    m_type = ICriteria::TypeUnion;
+    m_type = ICriterion::TypeUnion;
     m_uiWidget->setupUi(this);
 
-    addCriteria();
+    addCriterion();
 
-    connect(m_uiWidget->btnAddCriteria, SIGNAL(clicked()), this, SLOT(addCriteria()));
-    connect(m_uiWidget->btnAddMultiCriterion, SIGNAL(clicked()), this, SLOT(addMultiCriterion()));
+    connect(m_uiWidget->btnAddCriterion, SIGNAL(clicked()), this, SLOT(addCriterion()));
+    connect(m_uiWidget->btnAddMultiCriteria, SIGNAL(clicked()), this, SLOT(addMultiCriteria()));
 }
 
 
@@ -52,7 +52,7 @@ CWidgetMultiCriterion::CWidgetMultiCriterion(CApplication * application, QWidget
  * Détruit le widget.
  */
 
-CWidgetMultiCriterion::~CWidgetMultiCriterion()
+CWidgetMultiCriteria::~CWidgetMultiCriteria()
 {
     delete m_uiWidget;
 }
@@ -64,21 +64,21 @@ CWidgetMultiCriterion::~CWidgetMultiCriterion()
  * \return Pointeur sur le critère.
  */
 
-ICriteria * CWidgetMultiCriterion::getCriteria()
+ICriterion * CWidgetMultiCriteria::getCriterion()
 {
-    CMultiCriterion * criteria = new CMultiCriterion(m_application, this);
-    criteria->setMultiCriterionType(CMultiCriterion::getMultiCriterionTypeFromInteger(m_uiWidget->listUnion->currentIndex()));
+    CMultiCriteria * criteria = new CMultiCriteria(m_application, this);
+    criteria->setMultiCriteriaType(CMultiCriteria::getMultiCriteriaTypeFromInteger(m_uiWidget->listUnion->currentIndex()));
 
-    for (QList<IWidgetCriteria *>::const_iterator child = m_children.begin(); child != m_children.end(); ++child)
+    for (QList<IWidgetCriterion *>::const_iterator child = m_children.begin(); child != m_children.end(); ++child)
     {
-        criteria->addChild((*child)->getCriteria());
+        criteria->addChild((*child)->getCriterion());
     }
 
     return criteria;
 }
 
 
-void CWidgetMultiCriterion::setMultiCriterionType(int type)
+void CWidgetMultiCriteria::setMultiCriteriaType(int type)
 {
     m_uiWidget->listUnion->setCurrentIndex(type - 1);
 }
@@ -88,9 +88,9 @@ void CWidgetMultiCriterion::setMultiCriterionType(int type)
  * Ajoute un sous-critère.
  */
 
-void CWidgetMultiCriterion::addCriteria()
+void CWidgetMultiCriteria::addCriterion()
 {
-    addCriteria(new CWidgetCriteria(m_application, this));
+    addCriterion(new CWidgetCriterion(m_application, this));
 }
 
 
@@ -98,9 +98,9 @@ void CWidgetMultiCriterion::addCriteria()
  * Ajoute un sous-critère de type multi-critères.
  */
 
-void CWidgetMultiCriterion::addMultiCriterion()
+void CWidgetMultiCriteria::addMultiCriteria()
 {
-    addCriteria(new CWidgetMultiCriterion(m_application, this));
+    addCriterion(new CWidgetMultiCriteria(m_application, this));
 }
 
 
@@ -110,7 +110,7 @@ void CWidgetMultiCriterion::addMultiCriterion()
  * \param row Numéro de la ligne à enlever.
  */
 
-void CWidgetMultiCriterion::removeCriteria(int row)
+void CWidgetMultiCriteria::removeCriterion(int row)
 {
     Q_ASSERT(row >= 0 && row < m_uiWidget->layoutChildren->rowCount());
 
@@ -123,7 +123,7 @@ void CWidgetMultiCriterion::removeCriteria(int row)
     // Suppression du widget
     QLayoutItem * itemWidget = m_uiWidget->layoutChildren->itemAtPosition(row, 0);
     if (!itemWidget) return;
-    IWidgetCriteria * child = qobject_cast<IWidgetCriteria *>(itemWidget->widget());
+    IWidgetCriterion * child = qobject_cast<IWidgetCriterion *>(itemWidget->widget());
     if (!child) return;
 
     m_uiWidget->layoutChildren->removeItem(itemWidget);
@@ -157,13 +157,13 @@ void CWidgetMultiCriterion::removeCriteria(int row)
  * Le numéro de la ligne est déterminée à partir du widget ayant envoyé le signal.
  */
 
-void CWidgetMultiCriterion::removeCriteriaFromButton()
+void CWidgetMultiCriteria::removeCriterionFromButton()
 {
     QPushButton * btnRemove = qobject_cast<QPushButton *>(sender());
 
     if (btnRemove && m_btnRemove.contains(btnRemove))
     {
-        removeCriteria(m_btnRemove.value(btnRemove));
+        removeCriterion(m_btnRemove.value(btnRemove));
     }
 }
 
@@ -174,7 +174,7 @@ void CWidgetMultiCriterion::removeCriteriaFromButton()
  * \param criteriaWidget Widget du sous-critère à ajouter.
  */
 
-void CWidgetMultiCriterion::addCriteria(IWidgetCriteria * criteriaWidget)
+void CWidgetMultiCriteria::addCriterion(IWidgetCriterion * criteriaWidget)
 {
     Q_CHECK_PTR(criteriaWidget);
 
@@ -190,7 +190,7 @@ void CWidgetMultiCriterion::addCriteria(IWidgetCriteria * criteriaWidget)
     m_uiWidget->layoutChildren->addWidget(btnRemove, row, 1, Qt::AlignTop);
 
     m_btnRemove[btnRemove] = row;
-    connect(btnRemove, SIGNAL(clicked()), this, SLOT(removeCriteriaFromButton()));
+    connect(btnRemove, SIGNAL(clicked()), this, SLOT(removeCriterionFromButton()));
 
     CDialogEditDynamicList * dialogList = qobject_cast<CDialogEditDynamicList *>(window());
 

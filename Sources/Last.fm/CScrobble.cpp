@@ -19,7 +19,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CScrobble.hpp"
 #include "../CSong.hpp"
-#include "../CApplication.hpp"
+#include "../CMainWindow.hpp"
 
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
@@ -41,7 +41,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * \param song        Pointeur sur le morceau écouté.
  */
 
-CScrobble::CScrobble(CApplication * application, const QByteArray& sessionKey, CSong * song) :
+CScrobble::CScrobble(CMainWindow * application, const QByteArray& sessionKey, CSong * song) :
 ILastFmService (application, sessionKey)
 {
     Q_CHECK_PTR(song);
@@ -68,7 +68,7 @@ ILastFmService (application, sessionKey)
  * \param song        Informations sur le scrobble.
  */
 
-CScrobble::CScrobble(CApplication * application, const QByteArray& sessionKey, const TScrobbleInfos& song) :
+CScrobble::CScrobble(CMainWindow * application, const QByteArray& sessionKey, const TScrobbleInfos& song) :
 ILastFmService (application, sessionKey),
 m_song         (song)
 {

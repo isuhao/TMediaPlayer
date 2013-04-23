@@ -19,7 +19,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CFolder.hpp"
 #include "IPlayList.hpp"
-#include "CApplication.hpp"
+#include "CMainWindow.hpp"
 #include <QSqlQuery>
 #include <QSqlError>
 
@@ -33,16 +33,16 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * \param name        Nom du dossier.
  */
 
-CFolder::CFolder(CApplication * application, const QString& name) :
-    QObject          (application),
-    m_application    (application),
-    m_id             (-1),
-    m_name           (name),
-    m_open           (false),
-    m_folder         (NULL),
-    //m_position       (1),
-    m_isModified     (false),
-    m_folderChanging (false)
+CFolder::CFolder(CMainWindow * application, const QString& name) :
+QObject          (application),
+m_application    (application),
+m_id             (-1),
+m_name           (name),
+m_open           (false),
+m_folder         (nullptr),
+//m_position       (1),
+m_isModified     (false),
+m_folderChanging (false)
 {
     Q_CHECK_PTR(application);
 }
@@ -288,7 +288,7 @@ void CFolder::removePlayList(IPlayList * playList)
     if (m_playLists0.contains(playList))
     {
         removePlayListItem(playList);
-        playList->setFolder(NULL);
+        playList->setFolder(nullptr);
 
         // Mise à jour des positions des listes
         for (int pos = 0; pos < m_items.size(); ++pos)
@@ -396,7 +396,7 @@ void CFolder::removeFolder(CFolder * folder)
     if (m_folders0.contains(folder))
     {
         removeFolderItem(folder);
-        folder->setFolder(NULL);
+        folder->setFolder(nullptr);
 
         // Mise à jour des positions des éléments
         for (int pos = 0; pos < m_items.size(); ++pos)
@@ -608,7 +608,7 @@ void CFolder::addPlayListItem(IPlayList * playList, int position)
     {
         m_application->logError("position inconnue", __FUNCTION__, __FILE__, __LINE__);
         position = m_items.size();
-        m_items.append(NULL);
+        m_items.append(nullptr);
     }
     
     m_playLists0.append(playList);
@@ -628,7 +628,7 @@ void CFolder::addFolderItem(CFolder * folder, int position)
     {
         m_application->logError("position inconnue", __FUNCTION__, __FILE__, __LINE__);
         position = m_items.size();
-        m_items.append(NULL);
+        m_items.append(nullptr);
     }
     
     m_folders0.append(folder);

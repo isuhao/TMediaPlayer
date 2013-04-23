@@ -18,7 +18,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CDialogEditFolder.hpp"
-#include "../CApplication.hpp"
+#include "../CMainWindow.hpp"
 #include "../CFolder.hpp"
 #include <QMessageBox>
 #include <QPushButton>
@@ -27,17 +27,17 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 /**
  * Constructeur de la boite de dialogue.
  *
- * \param folder       Pointeur sur le dossier à modifier, ou NULL pour créer un dossier.
+ * \param folder       Pointeur sur le dossier à modifier, ou nullptr pour créer un dossier.
  * \param application  Pointeur sur l'application.
  * \param folderParent Pointeur sur le dossier parent.
  */
 
-CDialogEditFolder::CDialogEditFolder(CFolder * folder, CApplication * application, CFolder * folderParent) :
-    QDialog        (application),
-    m_uiWidget     (new Ui::DialogEditFolder()),
-    m_folder       (folder),
-    m_application  (application),
-    m_folderParent (folderParent)
+CDialogEditFolder::CDialogEditFolder(CFolder * folder, CMainWindow * application, CFolder * folderParent) :
+QDialog        (application),
+m_uiWidget     (new Ui::DialogEditFolder()),
+m_folder       (folder),
+m_application  (application),
+m_folderParent (folderParent)
 {
     Q_CHECK_PTR(application);
     Q_CHECK_PTR(folderParent);

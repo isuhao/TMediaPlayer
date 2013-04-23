@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>WidgetMultiCriterion</class>
- <widget class="QWidget" name="WidgetMultiCriterion">
+ <class>WidgetMultiCriteria</class>
+ <widget class="QWidget" name="WidgetMultiCriteria">
   <property name="sizePolicy">
    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
     <horstretch>0</horstretch>
@@ -90,7 +90,7 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QToolButton" name="btnAddCriteria">
+         <widget class="QToolButton" name="btnAddCriterion">
           <property name="minimumSize">
            <size>
             <width>25</width>
@@ -106,7 +106,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QToolButton" name="btnAddMultiCriterion">
+         <widget class="QToolButton" name="btnAddMultiCriteria">
           <property name="minimumSize">
            <size>
             <width>25</width>

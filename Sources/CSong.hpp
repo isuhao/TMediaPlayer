@@ -37,7 +37,7 @@ namespace TagLib
     namespace Ogg   { class XiphComment; }
 }
 
-class CApplication;
+class CMainWindow;
 class CCDRomDrive;
 class QFile;
 
@@ -50,7 +50,7 @@ class CSong : public QObject
 {
     Q_OBJECT
 
-    friend class CApplication;
+    friend class CMainWindow;
     friend class CCDRomDrive;
     friend class CDialogEditSong;
     friend class CDialogEditSongs;
@@ -80,8 +80,8 @@ public:
     };
 
 
-    explicit CSong(CApplication * application);
-    CSong(const QString& fileName, CApplication * application);
+    explicit CSong(CMainWindow * application);
+    CSong(const QString& fileName, CMainWindow * application);
     virtual ~CSong();
 
     void loadFromDatabase();
@@ -147,10 +147,9 @@ public:
     inline QDateTime getLastPlay() const;
     inline QList<TSongPlay> getPlays() const;
 
-    static int getId(CApplication * application, const QString& fileName);
-    static CSong * loadFromFile(CApplication * application, const QString& fileName);
-    static QList<CSong *> loadAllSongsFromDatabase(CApplication * application);
-    static QString getFileSize(qlonglong fileSize);
+    static int getId(CMainWindow * application, const QString& fileName);
+    static CSong * loadFromFile(CMainWindow * application, const QString& fileName);
+    static QList<CSong *> loadAllSongsFromDatabase(CMainWindow * application);
 
 public slots:
 
@@ -351,7 +350,7 @@ private:
     static bool writeTags(TagLib::Ogg::XiphComment * tags, const TSongInfos& infos, QFile * logFile, const QString& fileName);
 
 
-    CApplication * m_application;   ///< Pointeur sur l'application.
+    CMainWindow * m_application;   ///< Pointeur sur l'application.
     FMOD::Sound * m_sound;          ///< Pointeur sur la structure de FMOD.
     FMOD::Channel * m_channel;      ///< Canal audio.
     CCDRomDrive * m_cdRomDrive;     ///< Pointeur sur le lecteur de CD-ROM d'où provient le morceau.
@@ -420,7 +419,7 @@ inline QStringList CSong::getFormatList()
 
 inline bool CSong::isInCDRomDrive() const
 {
-    return (m_cdRomDrive != NULL);
+    return (m_cdRomDrive != nullptr);
 }
 
 

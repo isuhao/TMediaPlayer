@@ -19,7 +19,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CDialogPreferences.hpp"
 #include "CDialogPreferencesFolder.hpp"
-#include "../CApplication.hpp"
+#include "../CMainWindow.hpp"
 #include "../CLibraryFolder.hpp"
 #include "../Language.hpp"
 #include <QSettings>
@@ -33,7 +33,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * \todo Gérer toutes les préferences.
  */
 
-CDialogPreferences::CDialogPreferences(CApplication * application, QSettings * settings) :
+CDialogPreferences::CDialogPreferences(CMainWindow * application, QSettings * settings) :
     QDialog       (application),
     m_uiWidget    (new Ui::DialogPreferences()),
     m_application (application),
@@ -230,7 +230,7 @@ void CDialogPreferences::onDriverChange(const QString& name)
 
 void CDialogPreferences::addFolder()
 {
-    CDialogPreferencesFolder * dialog = new CDialogPreferencesFolder(m_application, this, NULL);
+    CDialogPreferencesFolder * dialog = new CDialogPreferencesFolder(m_application, this, nullptr);
     dialog->show();
 }
 
