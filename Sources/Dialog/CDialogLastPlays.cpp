@@ -24,23 +24,23 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QSqlQuery>
 
 
-CDialogLastPlays::CDialogLastPlays(CMainWindow * application) :
-    QDialog       (application),
-    m_uiWidget    (new Ui::DialogLastPlays()),
-    m_application (application)
+CDialogLastPlays::CDialogLastPlays(CMainWindow * mainWindow) :
+QDialog      (mainWindow),
+m_uiWidget   (new Ui::DialogLastPlays()),
+m_mainWindow (mainWindow)
 {
-    Q_CHECK_PTR(application);
+    Q_CHECK_PTR(m_mainWindow);
 
     setAttribute(Qt::WA_DeleteOnClose);
     m_uiWidget->setupUi(this);
 
     m_uiWidget->table->setSortingEnabled(false);
     
-    QSqlQuery query(m_application->getDataBase());
+    QSqlQuery query(m_mainWindow->getDataBase());
 
     if (!query.exec("SELECT song_id, play_time_utc FROM play WHERE play_time_utc IS NOT NULL ORDER BY play_time_utc DESC"))
     {
-        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
     }
     else
     {
@@ -50,7 +50,7 @@ CDialogLastPlays::CDialogLastPlays(CMainWindow * application) :
             m_uiWidget->table->setRowCount(row + 1);
 
             const int songId = query.value(0).toInt();
-            const CSong * song = m_application->getSongFromId(songId);
+            const CSong * song = m_mainWindow->getSongFromId(songId);
 
             if (!song)
                 continue;

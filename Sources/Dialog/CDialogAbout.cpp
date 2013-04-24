@@ -19,21 +19,22 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CDialogAbout.hpp"
 #include "../CMainWindow.hpp"
+#include "../CMediaManager.hpp"
 #include <QPushButton>
 
 
 /**
  * Constructeur de la boite de dialogue.
  *
- * \param application Pointeur sur la classe principale de l'application.
+ * \param mainWindow Pointeur sur la fenêtre principale de l'application.
  */
 
-CDialogAbout::CDialogAbout(CMainWindow * application) :
-    QDialog       (application),
-    m_uiWidget    (new Ui::DialogAbout()),
-    m_application (application)
+CDialogAbout::CDialogAbout(CMainWindow * mainWindow) :
+QDialog      (mainWindow),
+m_uiWidget   (new Ui::DialogAbout()),
+m_mainWindow (mainWindow)
 {
-    Q_CHECK_PTR(application);
+    Q_CHECK_PTR(m_mainWindow);
 
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
@@ -41,8 +42,8 @@ CDialogAbout::CDialogAbout(CMainWindow * application) :
     m_uiWidget->setupUi(this);
 
     // Versions
-    const QString appVersion    = m_application->getAppVersion();
-    const QString appDate       = m_application->getAppDate();
+    const QString appVersion    = CMediaManager::getAppVersion();
+    const QString appDate       = CMediaManager::getAppDate();
     const QString FMODVersion   = "FMOD Ex 4.44.03";
     const QString FMODCopyright = "FMOD Ex SoundSystem Copyright © 2005-2012 Firelight Technologies Pty, Ltd.";
     const QString musicBrainz   = tr("MusicBrainzId computation:\n%1\n%2").arg("Copyright (C) 2000 Robert Kaye")

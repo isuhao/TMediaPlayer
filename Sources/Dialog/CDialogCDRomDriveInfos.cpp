@@ -26,17 +26,17 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 /**
  * Constructeur de la boite de dialogue.
  *
- * \param cdRomDrive  Pointeur sur le lecteur de CD-ROM.
- * \param application Pointeur sur la classe principale de l'application.
+ * \param cdRomDrive Pointeur sur le lecteur de CD-ROM.
+ * \param mainWindow Pointeur sur la fenêtre principale de l'application.
  */
 
-CDialogCDRomDriveInfos::CDialogCDRomDriveInfos(CCDRomDrive * cdRomDrive, CMainWindow * application) :
-    QDialog       (application),
-    m_uiWidget    (new Ui::DialogCDRomDriveInfos()),
-    m_application (application),
-    m_cdRomDrive  (cdRomDrive)
+CDialogCDRomDriveInfos::CDialogCDRomDriveInfos(CCDRomDrive * cdRomDrive, CMainWindow * mainWindow) :
+QDialog      (mainWindow),
+m_uiWidget   (new Ui::DialogCDRomDriveInfos()),
+m_mainWindow (mainWindow),
+m_cdRomDrive (cdRomDrive)
 {
-    Q_CHECK_PTR(application);
+    Q_CHECK_PTR(m_mainWindow);
     Q_CHECK_PTR(cdRomDrive);
 
     setAttribute(Qt::WA_DeleteOnClose);

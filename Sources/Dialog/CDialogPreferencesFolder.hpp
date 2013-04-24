@@ -45,7 +45,7 @@ protected slots:
 private:
 
     Ui::DialogPreferencesFolder * m_uiWidget; ///< Widget utilisé par la boite de dialogue.
-    CMainWindow * m_application;             ///< Pointeur sur l'application.
+    CMainWindow * m_mainWindow;             ///< Pointeur sur l'application.
     CLibraryFolder * m_folder;                ///< Pointeur sur le dossier à modifier.
     bool m_needDeleteFolder;
 };

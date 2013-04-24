@@ -19,6 +19,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CAuthentication.hpp"
 #include "../CMainWindow.hpp"
+#include "../CMediaManager.hpp"
+
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -39,7 +41,7 @@ m_numRequests  (0)
     QString url = QString("%1?%2").arg(m_lastFmUrl).arg(QString(content));
 
     // Log
-    QFile * logFile = m_application->getLogFile("lastFm");
+    QFile * logFile = m_mainWindow->getMediaManager()->getLogFile("lastFm");
     QTextStream stream(logFile);
     stream << "========================================\n";
     stream << "   Request 'Get Token'\n";
@@ -58,7 +60,7 @@ void CAuthentication::replyFinished(QNetworkReply * reply)
     QByteArray data = reply->readAll();
 
     // Log
-    QFile * logFile = m_application->getLogFile("lastFm");
+    QFile * logFile = m_mainWindow->getMediaManager()->getLogFile("lastFm");
     QTextStream stream(logFile);
     stream << "========================================\n";
     stream << "   Reply 'Get Token'\n";
@@ -69,7 +71,7 @@ void CAuthentication::replyFinished(QNetworkReply * reply)
 
     if (reply->error() != QNetworkReply::NoError)
     {
-        stream << "Erreur HTTP : " << reply->error() << "\n";
+        stream << tr("HTTP error: ") << reply->error() << "\n";
     }
 
     QDomDocument doc;
@@ -77,7 +79,7 @@ void CAuthentication::replyFinished(QNetworkReply * reply)
     QString error;
     if (!doc.setContent(data, &error))
     {
-        stream << "Document XML invalide (" << error << ")\n";
+        stream << tr("Document XML invalide (") << error << ")\n";
         return;
     }
 
@@ -85,13 +87,13 @@ void CAuthentication::replyFinished(QNetworkReply * reply)
 
     if (racine.tagName() != "lfm")
     {
-        stream << "Réponse XML incorrecte (élément 'lfm' attendu)\n";
+        stream << tr("Réponse XML incorrecte (élément 'lfm' attendu)\n");
         return;
     }
 
     if (racine.attribute("status", "failed") == "failed")
     {
-        stream << "La requête Last.fm a echouée\n";
+        stream << tr("La requête Last.fm a echouée\n");
         return;
     }
 
@@ -99,7 +101,7 @@ void CAuthentication::replyFinished(QNetworkReply * reply)
 
     if (racine.tagName() != "token")
     {
-        stream << "Réponse XML incorrecte (élément 'token' attendu)\n";
+        stream << tr("Réponse XML incorrecte (élément 'token' attendu)\n");
         return;
     }
     
@@ -139,7 +141,7 @@ void CAuthentication::getLastFmSession()
     QString url = QString("%1?%2").arg(m_lastFmUrl).arg(QString(content));
 
     // Log
-    QFile * logFile = m_application->getLogFile("lastFm");
+    QFile * logFile = m_mainWindow->getMediaManager()->getLogFile("lastFm");
     QTextStream stream(logFile);
     stream << "========================================\n";
     stream << "   Request 'Get Session key'\n";
@@ -168,7 +170,7 @@ void CAuthentication::replyLastFmFinished(QNetworkReply * reply)
     QByteArray data = reply->readAll();
 
     // Log
-    QFile * logFile = m_application->getLogFile("lastFm");
+    QFile * logFile = m_mainWindow->getMediaManager()->getLogFile("lastFm");
     QTextStream stream(logFile);
     stream << "========================================\n";
     stream << "   Reply 'Get Session key'\n";
@@ -179,7 +181,7 @@ void CAuthentication::replyLastFmFinished(QNetworkReply * reply)
 
     if (reply->error() != QNetworkReply::NoError)
     {
-        stream << "Erreur HTTP : " << reply->error() << "\n";
+        stream << tr("Erreur HTTP : ") << reply->error() << "\n";
     }
 
     QDomDocument doc;
@@ -187,7 +189,7 @@ void CAuthentication::replyLastFmFinished(QNetworkReply * reply)
     QString error;
     if (!doc.setContent(data, &error))
     {
-        stream << "Document XML invalide (" << error << ")\n";
+        stream << tr("Document XML invalide (") << error << ")\n";
         return;
     }
 
@@ -195,13 +197,13 @@ void CAuthentication::replyLastFmFinished(QNetworkReply * reply)
 
     if (racine.tagName() != "lfm")
     {
-        stream << "Réponse XML incorrecte (élément 'lfm' attendu)\n";
+        stream << tr("Réponse XML incorrecte (élément 'lfm' attendu)\n");
         return;
     }
 
     if (racine.attribute("status", "failed") == "failed")
     {
-        stream << "La requête Last.fm a echouée\n";
+        stream << tr("La requête Last.fm a echouée\n");
         return;
     }
     
@@ -209,7 +211,7 @@ void CAuthentication::replyLastFmFinished(QNetworkReply * reply)
 
     if (racine.tagName() != "session")
     {
-        stream << "Réponse XML incorrecte (élément 'session' attendu)\n";
+        stream << tr("Réponse XML incorrecte (élément 'session' attendu)\n");
         return;
     }
 
@@ -218,14 +220,14 @@ void CAuthentication::replyLastFmFinished(QNetworkReply * reply)
 
     if (racine.isNull())
     {
-        stream << "Réponse XML incorrecte (élément 'key' attendu)\n";
+        stream << tr("Réponse XML incorrecte (élément 'key' attendu)\n");
         return;
     }
 
     m_sessionKey = racine.text().toLatin1();
 
     // Enregistrement de la clé
-    m_application->getSettings()->setValue("LastFm/SessionKey", m_sessionKey);
+    m_mainWindow->getMediaManager()->getSettings()->setValue("LastFm/SessionKey", m_sessionKey);
 
     reply->deleteLater();
     deleteLater();

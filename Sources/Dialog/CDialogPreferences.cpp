@@ -33,13 +33,13 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * \todo Gérer toutes les préferences.
  */
 
-CDialogPreferences::CDialogPreferences(CMainWindow * application, QSettings * settings) :
-    QDialog       (application),
-    m_uiWidget    (new Ui::DialogPreferences()),
-    m_application (application),
-    m_settings    (settings)
+CDialogPreferences::CDialogPreferences(CMainWindow * mainWindow, QSettings * settings) :
+QDialog      (mainWindow),
+m_uiWidget   (new Ui::DialogPreferences()),
+m_mainWindow (mainWindow),
+m_settings   (settings)
 {
-    Q_CHECK_PTR(application);
+    Q_CHECK_PTR(m_mainWindow);
     Q_CHECK_PTR(settings);
 
     setAttribute(Qt::WA_DeleteOnClose);
@@ -121,7 +121,7 @@ CDialogPreferences::CDialogPreferences(CMainWindow * application, QSettings * se
     m_uiWidget->editLastFmPercentageBeforeScrobbling->setValue(m_settings->value("LastFm/PercentageBeforeScrobbling", 60).toInt());
 
     // Liste des répertoires surveillés
-    QList<CLibraryFolder *> folders = m_application->getLibraryFolders();
+    QList<CLibraryFolder *> folders = m_mainWindow->getLibraryFolders();
 
     for (QList<CLibraryFolder *>::const_iterator it = folders.begin(); it != folders.end(); ++it)
     {
@@ -141,7 +141,7 @@ CDialogPreferences::CDialogPreferences(CMainWindow * application, QSettings * se
     connect(btnOK, SIGNAL(clicked()), this, SLOT(save()));
     connect(btnCancel, SIGNAL(clicked()), this, SLOT(close()));
 
-    connect(m_uiWidget->btnLastFm, SIGNAL(clicked()), m_application, SLOT(connectToLastFm()));
+    connect(m_uiWidget->btnLastFm, SIGNAL(clicked()), m_mainWindow, SLOT(connectToLastFm()));
 }
 
 
@@ -163,10 +163,10 @@ CDialogPreferences::~CDialogPreferences()
 
 void CDialogPreferences::save()
 {
-    m_application->setRowHeight(m_uiWidget->editRowHeight->value());
-    m_application->showButtonStop(m_uiWidget->editShowButtonStop->isChecked());
+    m_mainWindow->setRowHeight(m_uiWidget->editRowHeight->value());
+    m_mainWindow->showButtonStop(m_uiWidget->editShowButtonStop->isChecked());
     m_settings->setValue("Preferences/EditSongAutoSave", m_uiWidget->editEditSongAutoSave->isChecked());
-    m_application->showRemainingTime(m_uiWidget->editShowRemainingTime->isChecked());
+    m_mainWindow->showRemainingTime(m_uiWidget->editShowRemainingTime->isChecked());
 
     m_settings->setValue("Preferences/Language", m_uiWidget->editLanguage->itemData(m_uiWidget->editLanguage->currentIndex()));
 
@@ -191,9 +191,9 @@ void CDialogPreferences::save()
     m_settings->setValue("Database/Password", m_uiWidget->editDBPassword->text());
 
     // Last.fm
-    m_application->enableScrobbling(m_uiWidget->groupUseLastFm->isChecked());
-    m_application->setDelayBeforeNotification(m_uiWidget->editLastFmDelayBeforeNotification->value() * 1000);
-    m_application->setPercentageBeforeScrobbling(m_uiWidget->editLastFmPercentageBeforeScrobbling->value());
+    m_mainWindow->enableScrobbling(m_uiWidget->groupUseLastFm->isChecked());
+    m_mainWindow->setDelayBeforeNotification(m_uiWidget->editLastFmDelayBeforeNotification->value() * 1000);
+    m_mainWindow->setPercentageBeforeScrobbling(m_uiWidget->editLastFmPercentageBeforeScrobbling->value());
 
     close();
 }
@@ -230,7 +230,7 @@ void CDialogPreferences::onDriverChange(const QString& name)
 
 void CDialogPreferences::addFolder()
 {
-    CDialogPreferencesFolder * dialog = new CDialogPreferencesFolder(m_application, this, nullptr);
+    CDialogPreferencesFolder * dialog = new CDialogPreferencesFolder(m_mainWindow, this, nullptr);
     dialog->show();
 }
 
@@ -243,12 +243,12 @@ void CDialogPreferences::editSelectedFolder()
         return;
 
     const int folderId = item->data(Qt::UserRole).toInt();
-    CLibraryFolder * folder = m_application->getLibraryFolder(folderId);
+    CLibraryFolder * folder = m_mainWindow->getLibraryFolder(folderId);
 
     if (!folder)
         return;
 
-    CDialogPreferencesFolder * dialog = new CDialogPreferencesFolder(m_application, this, folder);
+    CDialogPreferencesFolder * dialog = new CDialogPreferencesFolder(m_mainWindow, this, folder);
     dialog->show();
 }
 
@@ -267,7 +267,7 @@ void CDialogPreferences::removeSelectedFolder()
     const int folderId = item->data(Qt::UserRole).toInt();
 
     // Suppression du répertoire
-    m_application->removeLibraryFolder(m_application->getLibraryFolder(folderId));
+    m_mainWindow->removeLibraryFolder(m_mainWindow->getLibraryFolder(folderId));
 
     // Modification de la vue
     m_uiWidget->listFolders->removeItemWidget(item);

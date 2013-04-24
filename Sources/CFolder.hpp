@@ -126,7 +126,7 @@ private:
     void removePlayListItem(IPlayList * playList);
     void removeFolderItem(CFolder * folder);
 
-    CMainWindow * m_application;   ///< Pointeur sur l'application.
+    CMainWindow * m_mainWindow;   ///< Pointeur sur l'application.
     int m_id;                       ///< Identifiant du dossier en base de données.
     QString m_name;                 ///< Nom du dossier.
     bool m_open;                    ///< Indique si le dossier est ouvert ou fermé.

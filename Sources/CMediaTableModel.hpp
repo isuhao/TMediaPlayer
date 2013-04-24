@@ -750,7 +750,7 @@ private:
     }
 
 
-    CMainWindow * m_application;                  ///< Pointeur sur l'application.
+    CMainWindow * m_mainWindow;                  ///< Pointeur sur l'application.
     bool m_canDrop;                                ///< Indique si la vue peut recevoir des données (liste statique).
     int m_columnSort;                              ///< Numéro de la colonne triée.
     CMediaTableItem * m_currentSongItem;            ///< Pointeur sur le morceau courant.

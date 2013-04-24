@@ -29,7 +29,7 @@ class CQueuePlayList : public CMediaTableView
 
 public:
 
-    explicit CQueuePlayList(CMainWindow * application);
+    explicit CQueuePlayList(CMainWindow * mainWindow);
     virtual ~CQueuePlayList();
 
     virtual bool isModified() const;

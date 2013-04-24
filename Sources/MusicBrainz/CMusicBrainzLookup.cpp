@@ -19,7 +19,9 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CMusicBrainzLookup.hpp"
 #include "../CMainWindow.hpp"
+#include "../CMediaManager.hpp"
 #include "../CCDRomDrive.hpp"
+
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QByteArray>
@@ -33,7 +35,7 @@ const QString CMusicBrainzLookup::m_lookupUrl = "http://musicbrainz.org/ws/2/dis
 
 CMusicBrainzLookup::CMusicBrainzLookup(CCDRomDrive * cdRomDrive, CMainWindow * application) :
 QObject          (application),
-m_application    (application),
+m_mainWindow    (application),
 m_cdRomDrive     (cdRomDrive),
 m_musicBrainzId  (cdRomDrive->getMusicBrainzDiscId()),
 m_networkManager (nullptr)
@@ -46,7 +48,7 @@ m_networkManager (nullptr)
     connect(m_networkManager, SIGNAL(finished(QNetworkReply *)), this, SLOT(replyFinished(QNetworkReply *)));
 
     QNetworkRequest request(QUrl(m_lookupUrl.arg(cdRomDrive->getMusicBrainzDiscId())));
-    request.setRawHeader("User-Agent", QString("TMediaPlayer/%1").arg(m_application->getAppVersion()).toLatin1()); 
+    request.setRawHeader("User-Agent", QString("TMediaPlayer/%1").arg(CMediaManager::getAppVersion()).toLatin1()); 
     m_networkManager->get(request);
 }
 
@@ -68,7 +70,7 @@ void CMusicBrainzLookup::replyFinished(QNetworkReply * reply)
 
     if (!doc.setContent(data, &error))
     {
-        m_application->logError(tr("Invalid XML document (%1)").arg(error), __FUNCTION__, __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logError(tr("Invalid XML document (%1)").arg(error), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
@@ -76,7 +78,7 @@ void CMusicBrainzLookup::replyFinished(QNetworkReply * reply)
 
     if (node.tagName() != "metadata")
     {
-        m_application->logError(tr("Réponse XML incorrecte (élément 'metadata' attendu)"), __FUNCTION__, __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logError(tr("Réponse XML incorrecte (élément 'metadata' attendu)"), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
@@ -84,7 +86,7 @@ void CMusicBrainzLookup::replyFinished(QNetworkReply * reply)
 
     if (node.tagName() != "disc")
     {
-        m_application->logError(tr("Réponse XML incorrecte (élément 'disc' attendu)"), __FUNCTION__, __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logError(tr("Réponse XML incorrecte (élément 'disc' attendu)"), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
@@ -97,7 +99,7 @@ void CMusicBrainzLookup::replyFinished(QNetworkReply * reply)
 
         if (node.attribute("count", "1") != "1")
         {
-            m_application->logError(tr("MusicBrainz: invalid response (release-list count != 1)"), __FUNCTION__, __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logError(tr("MusicBrainz: invalid response (release-list count != 1)"), __FUNCTION__, __FILE__, __LINE__);
             return;
         }
 
@@ -105,7 +107,7 @@ void CMusicBrainzLookup::replyFinished(QNetworkReply * reply)
 
         if (node.tagName() != "release")
         {
-            m_application->logError(tr("Réponse XML incorrecte (élément 'release' attendu)"), __FUNCTION__, __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logError(tr("Réponse XML incorrecte (élément 'release' attendu)"), __FUNCTION__, __FILE__, __LINE__);
             return;
         }
 
@@ -151,7 +153,7 @@ void CMusicBrainzLookup::replyFinished(QNetworkReply * reply)
             {
                 if (nodeList.attribute("count", "1") != "1")
                 {
-                    m_application->logError(tr("MusicBrainz: invalid response (medium-list count != 1)"), __FUNCTION__, __FILE__, __LINE__);
+                    m_mainWindow->getMediaManager()->logError(tr("MusicBrainz: invalid response (medium-list count != 1)"), __FUNCTION__, __FILE__, __LINE__);
                     return;
                 }
 
@@ -159,7 +161,7 @@ void CMusicBrainzLookup::replyFinished(QNetworkReply * reply)
 
                 if (nodeList.tagName() != "medium")
                 {
-                    m_application->logError(tr("invalid XML response (expected element '%1')").arg("medium"), __FUNCTION__, __FILE__, __LINE__);
+                    m_mainWindow->getMediaManager()->logError(tr("invalid XML response (expected element '%1')").arg("medium"), __FUNCTION__, __FILE__, __LINE__);
                     return;
                 }
             
@@ -176,7 +178,7 @@ void CMusicBrainzLookup::replyFinished(QNetworkReply * reply)
                         {
                             if (nodeTrack.tagName() != "track")
                             {
-                                m_application->logError(tr("invalid XML response (expected element '%1')").arg("track"), __FUNCTION__, __FILE__, __LINE__);
+                                m_mainWindow->getMediaManager()->logError(tr("invalid XML response (expected element '%1')").arg("track"), __FUNCTION__, __FILE__, __LINE__);
                                 return;
                             }
 

@@ -20,6 +20,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "IPlayList.hpp"
 #include "CFolder.hpp"
 #include "CMainWindow.hpp"
+#include "CMediaManager.hpp"
+
 #include <QSqlQuery>
 #include <QSqlError>
 
@@ -124,7 +126,7 @@ bool IPlayList::updateDatabase()
     {
         if (m_idPlayList <= 0)
         {
-            m_application->logError(tr("invalid identifier (%1)").arg(m_idPlayList), __FUNCTION__, __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logError(tr("invalid identifier (%1)").arg(m_idPlayList), __FUNCTION__, __FILE__, __LINE__);
         }
         else
         {
@@ -139,11 +141,11 @@ bool IPlayList::updateDatabase()
             }
             else
             {
-                m_application->logError(tr("the playlist has no parent folder"), __FUNCTION__, __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logError(tr("the playlist has no parent folder"), __FUNCTION__, __FILE__, __LINE__);
                 return false;
             }
 
-            QSqlQuery query(m_application->getDataBase());
+            QSqlQuery query(m_mainWindow->getDataBase());
             query.prepare("UPDATE playlist SET playlist_name = ?, folder_id = ?, list_position = ? WHERE playlist_id = ?");
 
             query.bindValue(0, m_name);
@@ -153,7 +155,7 @@ bool IPlayList::updateDatabase()
 
             if (!query.exec())
             {
-                m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return false;
             }
 
@@ -173,18 +175,18 @@ void IPlayList::removeFromDatabase()
 {
     if (m_idPlayList <= 0)
     {
-        m_application->logError(tr("invalid identifier (%1)").arg(m_idPlayList), __FUNCTION__, __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logError(tr("invalid identifier (%1)").arg(m_idPlayList), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
     
     // Suppression de la liste
-    QSqlQuery query(m_application->getDataBase());
+    QSqlQuery query(m_mainWindow->getDataBase());
     query.prepare("DELETE FROM playlist WHERE playlist_id = ?");
     query.bindValue(0, m_idPlayList);
 
     if (!query.exec())
     {
-        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return;
     }
 

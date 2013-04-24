@@ -20,6 +20,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CDialogEditSong.hpp"
 #include "../CMediaTableView.hpp"
 #include "../CMainWindow.hpp"
+#include "../CMediaManager.hpp"
 #include "../CRatingEditor.hpp"
 #include "../Utils.hpp"
 
@@ -38,22 +39,22 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 /**
  * Construit la boite de dialogue pour modifier les informations d'un morceau.
  *
- * \param songItem    Morceau à modifier.
- * \param songTable   Liste contenant le morceau, pour pouvoir naviguer parmi les morceaux.
- * \param application Pointeur sur l'application.
+ * \param songItem   Morceau à modifier.
+ * \param songTable  Liste contenant le morceau, pour pouvoir naviguer parmi les morceaux.
+ * \param mainWindow Pointeur sur la fenêtre principale de l'application.
  */
 
-CDialogEditSong::CDialogEditSong(CMediaTableItem * songItem, CMediaTableView * songTable, CMainWindow * application) :
-QDialog        (application),
+CDialogEditSong::CDialogEditSong(CMediaTableItem * songItem, CMediaTableView * songTable, CMainWindow * mainWindow) :
+QDialog        (mainWindow),
 m_uiWidget     (new Ui::DialogEditSong()),
 m_ratingEditor (new CRatingEditor()),
 m_songTable    (songTable),
 m_songItem     (songItem),
-m_application  (application)
+m_mainWindow   (mainWindow)
 {
-    Q_CHECK_PTR(songItem);
-    Q_CHECK_PTR(songTable);
-    Q_CHECK_PTR(application);
+    Q_CHECK_PTR(m_songItem);
+    Q_CHECK_PTR(m_songTable);
+    Q_CHECK_PTR(m_mainWindow);
 
     setAttribute(Qt::WA_DeleteOnClose);
     m_uiWidget->setupUi(this);
@@ -67,7 +68,7 @@ m_application  (application)
 
 
     // Liste des genres
-    QStringList genres = application->getGenreList();
+    QStringList genres = m_mainWindow->getGenreList();
     m_uiWidget->editGenre->addItems(genres);
 
 
@@ -273,7 +274,7 @@ void CDialogEditSong::resetSummary()
         }
         else
         {
-            m_application->logError(QString("impossible de lire le fichier MP3 \"%1\"").arg(song->getFileName()), __FUNCTION__, __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logError(tr("impossible de lire le fichier MP3 \"%1\"").arg(song->getFileName()), __FUNCTION__, __FILE__, __LINE__);
             m_uiWidget->valueCover->setPixmap(QPixmap::fromImage(song->getCoverImage()));
         }
     }
@@ -293,7 +294,7 @@ void CDialogEditSong::resetSummary()
 
 void CDialogEditSong::previousSong()
 {
-    QSettings * settings = m_application->getSettings();
+    QSettings * settings = m_mainWindow->getMediaManager()->getSettings();
     if (settings->value("Preferences/EditSongAutoSave", false).toBool())
         applyChanges();
 
@@ -318,7 +319,7 @@ void CDialogEditSong::previousSong()
 
 void CDialogEditSong::nextSong()
 {
-    QSettings * settings = m_application->getSettings();
+    QSettings * settings = m_mainWindow->getMediaManager()->getSettings();
     if (settings->value("Preferences/EditSongAutoSave", false).toBool())
         applyChanges();
 

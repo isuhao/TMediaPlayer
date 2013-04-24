@@ -20,6 +20,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CMediaTableModel.hpp"
 #include "CMediaTableView.hpp"
 #include "CMainWindow.hpp"
+#include "CMediaManager.hpp"
 #include "CRating.hpp"
 #include "Utils.hpp"
 
@@ -33,19 +34,19 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 /**
  * Constructeur du modèle avec une liste de morceaux.
  *
- * \param application Pointeur sur la classe principale de l'application.
- * \param data        Liste de morceaux.
- * \param parent      Pointeur sur le widget parent.
+ * \param mainWindow Pointeur sur la fenêtre principale de l'application.
+ * \param data       Liste de morceaux.
+ * \param parent     Pointeur sur le widget parent.
  */
 
-CMediaTableModel::CMediaTableModel(CMainWindow * application, const QList<CSong *>& data, QWidget * parent) :
+CMediaTableModel::CMediaTableModel(CMainWindow * mainWindow, const QList<CSong *>& data, QWidget * parent) :
 QAbstractTableModel (parent),
-m_application       (application),
+m_mainWindow       (mainWindow),
 m_canDrop           (false),
 m_columnSort        (-1),
 m_currentSongItem   (nullptr)
 {
-    Q_CHECK_PTR(application);
+    Q_CHECK_PTR(m_mainWindow);
 
     int i = 0;
 
@@ -63,18 +64,18 @@ m_currentSongItem   (nullptr)
 /**
  * Constructeur du modèle sans liste de morceaux.
  *
- * \param application Pointeur sur la classe principale de l'application.
- * \param parent      Pointeur sur le widget parent.
+ * \param mainWindow Pointeur sur la fenêtre principale de l'application.
+ * \param parent     Pointeur sur le widget parent.
  */
 
-CMediaTableModel::CMediaTableModel(CMainWindow * application, QWidget * parent) :
+CMediaTableModel::CMediaTableModel(CMainWindow * mainWindow, QWidget * parent) :
 QAbstractTableModel (parent),
-m_application       (application),
+m_mainWindow       (mainWindow),
 m_canDrop           (false),
 m_columnSort        (-1),
 m_currentSongItem   (nullptr)
 {
-    Q_CHECK_PTR(application);
+    Q_CHECK_PTR(m_mainWindow);
 }
 
 
@@ -114,7 +115,7 @@ void CMediaTableModel::setSongs(const QList<CSong *>& data)
     }
 
     // Application du filtre de recherche
-    applyFilter(m_application->getFilter());
+    applyFilter(m_mainWindow->getFilter());
 
     initShuffle();
 
@@ -224,11 +225,11 @@ QVariant CMediaTableModel::data(const QModelIndex& index, int role) const
         {
             if (data.at(index.row()) == m_currentSongItem)
             {
-                if (m_application->isPlaying())
+                if (m_mainWindow->isPlaying())
                 {
                     return QPixmap(":/icons/song_playing");
                 }
-                else if (m_application->isPaused())
+                else if (m_mainWindow->isPaused())
                 {
                     return QPixmap(":/icons/song_paused");
                 }
@@ -954,7 +955,7 @@ void CMediaTableModel::insertRow(CSong * song, int pos)
 
     m_dataShuffle.append(songItem);
 
-    if (song->matchFilter(m_application->getFilter()))
+    if (song->matchFilter(m_mainWindow->getFilter()))
     {
         m_dataFiltered.append(songItem);
         m_dataShuffleFiltered.append(songItem);
@@ -1110,7 +1111,7 @@ CMediaTableItem * CMediaTableModel::getPreviousSong(CMediaTableItem * songItem, 
 
     if (songItem && !data.contains(songItem))
     {
-        m_application->logError(tr("the requested item is not in the table"), __FUNCTION__, __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logError(tr("the requested item is not in the table"), __FUNCTION__, __FILE__, __LINE__);
         songItem = nullptr;
     }
 
@@ -1120,14 +1121,14 @@ CMediaTableItem * CMediaTableModel::getPreviousSong(CMediaTableItem * songItem, 
         {
             if (data.size() != dataShuffle.size())
             {
-                m_application->logError(tr("the shuffle list is incorrect"), __FUNCTION__, __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logError(tr("the shuffle list is incorrect"), __FUNCTION__, __FILE__, __LINE__);
             }
 
             const int row = dataShuffle.indexOf(songItem);
 
             if (row < 0)
             {
-                m_application->logError(tr("the requested item is not in the shuffle list"), __FUNCTION__, __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logError(tr("the requested item is not in the shuffle list"), __FUNCTION__, __FILE__, __LINE__);
                 return nullptr;
             }
 
@@ -1167,7 +1168,7 @@ CMediaTableItem * CMediaTableModel::getNextSong(CMediaTableItem * songItem, bool
 
     if (songItem && !data.contains(songItem))
     {
-        m_application->logError(tr("the requested item is not in the table"), __FUNCTION__, __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logError(tr("the requested item is not in the table"), __FUNCTION__, __FILE__, __LINE__);
         songItem = nullptr;
     }
 
@@ -1177,14 +1178,14 @@ CMediaTableItem * CMediaTableModel::getNextSong(CMediaTableItem * songItem, bool
         {
             if (data.size() != dataShuffle.size())
             {
-                m_application->logError(tr("the shuffle list is incorrect"), __FUNCTION__, __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logError(tr("the shuffle list is incorrect"), __FUNCTION__, __FILE__, __LINE__);
             }
 
             const int row = dataShuffle.indexOf(songItem);
 
             if (row < 0)
             {
-                m_application->logError(tr("the requested item is not in the shuffle list"), __FUNCTION__, __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logError(tr("the requested item is not in the shuffle list"), __FUNCTION__, __FILE__, __LINE__);
                 return nullptr;
             }
 
@@ -1209,7 +1210,7 @@ CMediaTableItem * CMediaTableModel::getNextSong(CMediaTableItem * songItem, bool
         {
             if (data.size() != dataShuffle.size())
             {
-                m_application->logError(tr("the shuffle list is incorrect"), __FUNCTION__, __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logError(tr("the shuffle list is incorrect"), __FUNCTION__, __FILE__, __LINE__);
                 return nullptr;
             }
 
@@ -1307,7 +1308,7 @@ void CMediaTableModel::initShuffle(CMediaTableItem * firstSong)
     }
 
     // Modification de la liste filtrée
-    applyFilterForShuffleList(m_application->getFilter());
+    applyFilterForShuffleList(m_mainWindow->getFilter());
 }
 
 

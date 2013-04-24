@@ -20,6 +20,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CDialogEditMetadata.hpp"
 #include "../CSong.hpp"
 #include "../CMainWindow.hpp"
+#include "../CMediaManager.hpp"
+
 #include <QPushButton>
 #include <QStandardItemModel>
 #include <QMessageBox>
@@ -47,17 +49,17 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 /**
  * Construit la boite de dialogue.
  *
- * \param application Pointeur sur l'application.
- * \param song        Morceau dont on veut afficher les métadonnées.
+ * \param mainWindow Pointeur sur la fenêtre principale de l'application.
+ * \param song       Morceau dont on veut afficher les métadonnées.
  */
 
-CDialogEditMetadata::CDialogEditMetadata(CMainWindow * application, CSong * song) :
-    QDialog       (application),
-    m_uiWidget    (new Ui::DialogEditMetadata()),
-    m_application (application),
-    m_song        (song)
+CDialogEditMetadata::CDialogEditMetadata(CMainWindow * mainWindow, CSong * song) :
+QDialog       (mainWindow),
+m_uiWidget    (new Ui::DialogEditMetadata()),
+m_mainWindow (mainWindow),
+m_song        (song)
 {
-    Q_CHECK_PTR(application);
+    Q_CHECK_PTR(m_mainWindow);
     Q_CHECK_PTR(song);
 
     setAttribute(Qt::WA_DeleteOnClose);
@@ -186,8 +188,8 @@ void CDialogEditMetadata::reset()
     switch (m_song->getFormat())
     {
         default:
-            m_application->logError(tr("unknown format"), __FUNCTION__, __FILE__, __LINE__);
-            QMessageBox::warning(m_application, QString(), tr("Error while loading tags."), QMessageBox::Ok);
+            m_mainWindow->getMediaManager()->logError(tr("unknown format"), __FUNCTION__, __FILE__, __LINE__);
+            QMessageBox::warning(m_mainWindow, QString(), tr("Error while loading tags."), QMessageBox::Ok);
             close();
             return;
 
@@ -208,8 +210,8 @@ void CDialogEditMetadata::reset()
 
             if (!file.isValid())
             {
-                m_application->logError(tr("can't read the MP3 file \"%1\"").arg(m_song->getFileName()), __FUNCTION__, __FILE__, __LINE__);
-                QMessageBox::warning(m_application, QString(), tr("Error while loading tags."), QMessageBox::Ok);
+                m_mainWindow->getMediaManager()->logError(tr("can't read the MP3 file \"%1\"").arg(m_song->getFileName()), __FUNCTION__, __FILE__, __LINE__);
+                QMessageBox::warning(m_mainWindow, QString(), tr("Error while loading tags."), QMessageBox::Ok);
                 close();
                 return;
             }
@@ -241,8 +243,8 @@ void CDialogEditMetadata::reset()
 
             if (!file.isValid())
             {
-                m_application->logError(tr("can't read the Ogg file \"%1\"").arg(m_song->getFileName()), __FUNCTION__, __FILE__, __LINE__);
-                QMessageBox::warning(m_application, QString(), tr("Error while loading tags."), QMessageBox::Ok);
+                m_mainWindow->getMediaManager()->logError(tr("can't read the Ogg file \"%1\"").arg(m_song->getFileName()), __FUNCTION__, __FILE__, __LINE__);
+                QMessageBox::warning(m_mainWindow, QString(), tr("Error while loading tags."), QMessageBox::Ok);
                 close();
                 return;
             }
@@ -278,8 +280,8 @@ void CDialogEditMetadata::reset()
 
             if (!file.isValid())
             {
-                m_application->logError(tr("can't read the FLAC file \"%1\"").arg(m_song->getFileName()), __FUNCTION__, __FILE__, __LINE__);
-                QMessageBox::warning(m_application, QString(), tr("Error while loading tags."), QMessageBox::Ok);
+                m_mainWindow->getMediaManager()->logError(tr("can't read the FLAC file \"%1\"").arg(m_song->getFileName()), __FUNCTION__, __FILE__, __LINE__);
+                QMessageBox::warning(m_mainWindow, QString(), tr("Error while loading tags."), QMessageBox::Ok);
                 close();
                 return;
             }

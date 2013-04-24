@@ -18,27 +18,28 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CLyricWiki.hpp"
-#include "CMainWindow.hpp"
+#include "CMediaManager.hpp"
 #include "CSong.hpp"
+
+// Qt
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QDomDocument>
 #include <QUrl>
-
 #include <QWebFrame>
 #include <QWebElementCollection>
 
 #include <QtDebug>
 
 
-CLyricWiki::CLyricWiki(CMainWindow * application, CSong * song) :
-QObject       (application),
-m_application (application),
-m_song        (song)
+CLyricWiki::CLyricWiki(CMediaManager * mediaManager, CSong * song) :
+QObject        (mediaManager),
+m_mediaManager (mediaManager),
+m_song         (song)
 {
-    Q_CHECK_PTR(application);
-    Q_CHECK_PTR(song);
+    Q_CHECK_PTR(m_mediaManager);
+    Q_CHECK_PTR(m_song);
 
     QNetworkAccessManager * networkManager = new QNetworkAccessManager(this);
     connect(networkManager, SIGNAL(finished(QNetworkReply *)), this, SLOT(replyFinished(QNetworkReply *)));
@@ -62,7 +63,7 @@ void CLyricWiki::replyFinished(QNetworkReply * reply)
 
     if (reply->error() != QNetworkReply::NoError)
     {
-        m_application->logError(tr("HTTP error: %1").arg(reply->error()), __FUNCTION__, __FILE__, __LINE__);
+        m_mediaManager->logError(tr("HTTP error: %1").arg(reply->error()), __FUNCTION__, __FILE__, __LINE__);
     }
 
     QByteArray data = reply->readAll();
@@ -71,7 +72,7 @@ void CLyricWiki::replyFinished(QNetworkReply * reply)
 
     if (!doc.setContent(data, &error))
     {
-        m_application->logError(tr("invalid XML document (%1)").arg(error), __FUNCTION__, __FILE__, __LINE__);
+        m_mediaManager->logError(tr("invalid XML document (%1)").arg(error), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
@@ -79,7 +80,7 @@ void CLyricWiki::replyFinished(QNetworkReply * reply)
 
     if (racine.tagName() != "LyricsResult")
     {
-        m_application->logError(tr("invalid XML response (expected element '%1')").arg("LyricsResult"), __FUNCTION__, __FILE__, __LINE__);
+        m_mediaManager->logError(tr("invalid XML response (expected element '%1')").arg("LyricsResult"), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
     
@@ -87,7 +88,7 @@ void CLyricWiki::replyFinished(QNetworkReply * reply)
 
     if (elemURL.isNull())
     {
-        m_application->logError(tr("invalid XML response (expected element '%1')").arg("url"), __FUNCTION__, __FILE__, __LINE__);
+        m_mediaManager->logError(tr("invalid XML response (expected element '%1')").arg("url"), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
@@ -97,13 +98,13 @@ void CLyricWiki::replyFinished(QNetworkReply * reply)
 
     if (elemPageId.isNull())
     {
-        m_application->logError(tr("invalid XML response (expected element '%1')").arg("page_id"), __FUNCTION__, __FILE__, __LINE__);
+        m_mediaManager->logError(tr("invalid XML response (expected element '%1')").arg("page_id"), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
     if (elemPageId.text().toInt() <= 0)
     {
-        m_application->logError(tr("invalid XML response (invalid element '%1')").arg("page_id"), __FUNCTION__, __FILE__, __LINE__);
+        m_mediaManager->logError(tr("invalid XML response (invalid element '%1')").arg("page_id"), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
@@ -121,7 +122,7 @@ void CLyricWiki::replyFinished2(QNetworkReply * reply)
 
     if (reply->error() != QNetworkReply::NoError)
     {
-        m_application->logError(tr("HTTP error: %1").arg(reply->error()), __FUNCTION__, __FILE__, __LINE__);
+        m_mediaManager->logError(tr("HTTP error: %1").arg(reply->error()), __FUNCTION__, __FILE__, __LINE__);
     }
 
     QByteArray data = reply->readAll();

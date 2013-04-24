@@ -50,7 +50,7 @@ protected:
 
     static const QString m_lookupUrl; ///< URL pour effectuer les requêtes sur MusicBrainz.
 
-    CMainWindow * m_application; ///< Pointeur sur la classe principale de l'application.
+    CMainWindow * m_mainWindow; ///< Pointeur sur la classe principale de l'application.
     CCDRomDrive * m_cdRomDrive;   ///< Pointeur sur le lecteur de CD-ROM.
     QString m_musicBrainzId;      ///< Identifiant du disque pour MusicBrainz.
     QNetworkAccessManager * m_networkManager;

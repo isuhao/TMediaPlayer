@@ -20,6 +20,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CDialogEditStaticPlayList.hpp"
 #include "../CStaticList.hpp"
 #include "../CMainWindow.hpp"
+
 #include <QStandardItemModel>
 #include <QMessageBox>
 #include <QPushButton>
@@ -27,22 +28,22 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QtDebug>
 
 
-CDialogEditStaticPlayList::CDialogEditStaticPlayList(CStaticList * playList, CMainWindow * application, CFolder * folder, const QList<CSong *>& songs) :
-    QDialog       (application),
-    m_uiWidget    (new Ui::DialogEditStaticPlayList()),
-    m_playList    (playList),
-    m_application (application),
-    m_folder      (folder),
-    m_songs       (songs)
+CDialogEditStaticPlayList::CDialogEditStaticPlayList(CStaticList * playList, CMainWindow * mainWindow, CFolder * folder, const QList<CSong *>& songs) :
+QDialog      (mainWindow),
+m_uiWidget   (new Ui::DialogEditStaticPlayList()),
+m_playList   (playList),
+m_mainWindow (mainWindow),
+m_folder     (folder),
+m_songs      (songs)
 {
-    Q_CHECK_PTR(application);
+    Q_CHECK_PTR(m_mainWindow);
 
     setAttribute(Qt::WA_DeleteOnClose);
     m_uiWidget->setupUi(this);
 
     if (!m_playList)
     {
-        m_playList = new CStaticList(m_application);
+        m_playList = new CStaticList(m_mainWindow);
     }
 
     m_uiWidget->editName->setText(m_playList->getName());
@@ -91,7 +92,7 @@ void CDialogEditStaticPlayList::save()
         return;
     }
 
-    m_application->addPlayList(m_playList);
+    m_mainWindow->addPlayList(m_playList);
 
     // Ajout des morceaux à la liste
     m_playList->addSongs(m_songs, false);

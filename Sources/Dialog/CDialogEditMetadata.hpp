@@ -80,7 +80,7 @@ private:
     QStandardItemModel * m_modelID3v2Pictures;
     QStandardItemModel * m_modelAPE;
     QStandardItemModel * m_modelXiphComment;
-    CMainWindow * m_application; ///< Pointeur sur l'application.
+    CMainWindow * m_mainWindow; ///< Pointeur sur l'application.
     CSong * m_song;               ///< Pointeur sur le morceau.
 };
 

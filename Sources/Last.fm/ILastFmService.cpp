@@ -33,7 +33,7 @@ const QString ILastFmService::m_lastFmUrl = "http://ws.audioscrobbler.com/2.0/";
 
 ILastFmService::ILastFmService(CMainWindow * application, const QByteArray& sessionKey) :
     QObject       (application),
-    m_application (application),
+    m_mainWindow (application),
     m_sessionKey  (sessionKey)
 {
     Q_CHECK_PTR(application);

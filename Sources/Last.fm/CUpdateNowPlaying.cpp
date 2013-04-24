@@ -20,6 +20,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CUpdateNowPlaying.hpp"
 #include "../CSong.hpp"
 #include "../CMainWindow.hpp"
+#include "../CMediaManager.hpp"
+
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -73,7 +75,7 @@ m_song         (song)
     QByteArray content = getLastFmQuery(args);
 
     // Log
-    QFile * logFile = m_application->getLogFile("lastFm");
+    QFile * logFile = m_mainWindow->getMediaManager()->getLogFile("lastFm");
     QTextStream stream(logFile);
     stream.setFieldAlignment(QTextStream::AlignLeft);
 
@@ -101,7 +103,7 @@ void CUpdateNowPlaying::replyFinished(QNetworkReply * reply)
     Q_CHECK_PTR(reply);
 
     // Log
-    QFile * logFile = m_application->getLogFile("lastFm");
+    QFile * logFile = m_mainWindow->getMediaManager()->getLogFile("lastFm");
     QTextStream stream(logFile);
     stream.setFieldAlignment(QTextStream::AlignLeft);
 
@@ -114,7 +116,7 @@ void CUpdateNowPlaying::replyFinished(QNetworkReply * reply)
 
     if (reply->error() != QNetworkReply::NoError)
     {
-        stream << "Erreur HTTP : " << reply->error() << "\n";
+        stream << tr("HTTP error: ") << reply->error() << "\n";
     }
 
     reply->deleteLater();

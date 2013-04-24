@@ -19,12 +19,14 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CLibraryModel.hpp"
 #include "CMainWindow.hpp"
+#include "CMediaManager.hpp"
 #include "CFolder.hpp"
 #include "CStaticList.hpp"
 #include "CDynamicList.hpp"
 #include "CLibrary.hpp"
 #include "CCDRomDrive.hpp"
 #include "CQueuePlayList.hpp"
+
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QMimeData>
@@ -35,15 +37,15 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 /**
  * Constructeur du modèle.
  *
- * \param application Pointeur sur l'application.
+ * \param mainWindow Pointeur sur l'application.
  */
 
-CLibraryModel::CLibraryModel(CMainWindow * application) :
-QStandardItemModel (application),
-m_application      (application),
+CLibraryModel::CLibraryModel(CMainWindow * mainWindow) :
+QStandardItemModel (mainWindow),
+m_mainWindow       (mainWindow),
 m_rootFolder       (nullptr)
 {
-    Q_CHECK_PTR(application);
+    Q_CHECK_PTR(m_mainWindow);
 }
 
 
@@ -92,20 +94,20 @@ void CLibraryModel::loadFromDatabase()
     QList<IPlayList *> playLists;
     QMap<CFolder *, int> folderPositions;
 
-    QSqlQuery query(m_application->getDataBase());
+    QSqlQuery query(m_mainWindow->getDataBase());
 
     // Création des dossiers
     if (!query.exec("SELECT folder_id, folder_name, folder_parent, folder_position, folder_expanded "
                     "FROM folder "
                     "ORDER BY folder_position"))
     {
-        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
     }
     else
     {
         while (query.next())
         {
-            CFolder * folder = new CFolder(m_application, query.value(1).toString());
+            CFolder * folder = new CFolder(m_mainWindow, query.value(1).toString());
             folder->m_id     = query.value(0).toInt();
             folder->m_folder = reinterpret_cast<CFolder *>(query.value(2).toInt());
             folder->m_open   = query.value(4).toBool();
@@ -114,7 +116,7 @@ void CLibraryModel::loadFromDatabase()
 
             if (query.value(2).toInt() < 0)
             {
-                m_application->logError(tr("le dossier parent a un identifiant invalide"), __FUNCTION__, __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logError(tr("le dossier parent a un identifiant invalide"), __FUNCTION__, __FILE__, __LINE__);
                 folder->m_folder = 0;
             }
 
@@ -144,13 +146,13 @@ void CLibraryModel::loadFromDatabase()
                 }
                 else
                 {
-                    m_application->logError(tr("invalid identifier (%1)").arg(folderId), __FUNCTION__, __FILE__, __LINE__);
+                    m_mainWindow->getMediaManager()->logError(tr("invalid identifier (%1)").arg(folderId), __FUNCTION__, __FILE__, __LINE__);
                 }
             }
         }
         else
         {
-            m_application->logError(tr("le dossier contenant le dossier a un identifiant invalide"), __FUNCTION__, __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logError(tr("le dossier contenant le dossier a un identifiant invalide"), __FUNCTION__, __FILE__, __LINE__);
         }
     }
 
@@ -159,13 +161,13 @@ void CLibraryModel::loadFromDatabase()
     if (!query.exec("SELECT static_list_id, playlist_name, list_columns, playlist_id, folder_id, list_position "
                     "FROM static_list NATURAL JOIN playlist ORDER BY list_position"))
     {
-        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
     }
     else
     {
         while (query.next())
         {
-            CStaticList * playList = new CStaticList(m_application, query.value(1).toString());
+            CStaticList * playList = new CStaticList(m_mainWindow, query.value(1).toString());
             playList->m_id = query.value(0).toInt();
             playList->m_idPlayList = query.value(3).toInt();
             playList->initColumns(query.value(2).toString());
@@ -180,18 +182,18 @@ void CLibraryModel::loadFromDatabase()
             }
             else
             {
-                m_application->logError(tr("le dossier contenant la liste statique a un identifiant invalide"), __FUNCTION__, __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logError(tr("le dossier contenant la liste statique a un identifiant invalide"), __FUNCTION__, __FILE__, __LINE__);
             }
 
             // Liste des morceaux de la liste de lecture
-            QSqlQuery query2(m_application->getDataBase());
+            QSqlQuery query2(m_mainWindow->getDataBase());
             query2.prepare("SELECT song_id, song_position FROM static_list_song "
                            "WHERE static_list_id = ? ORDER BY song_position");
             query2.bindValue(0, playList->m_id);
 
             if (!query2.exec())
             {
-                m_application->showDatabaseError(query2.lastError().text(), query2.lastQuery(), __FILE__, __LINE__);
+                m_mainWindow->showDatabaseError(query2.lastError().text(), query2.lastQuery(), __FILE__, __LINE__);
                 delete playList;
                 continue;
             }
@@ -200,7 +202,7 @@ void CLibraryModel::loadFromDatabase()
 
             while (query2.next())
             {
-                CSong * song = m_application->getSongFromId(query2.value(0).toInt());
+                CSong * song = m_mainWindow->getSongFromId(query2.value(0).toInt());
 
                 if (song)
                 {
@@ -214,12 +216,12 @@ void CLibraryModel::loadFromDatabase()
             playLists.append(playList);
             playList->hide();
 
-            connect(playList, SIGNAL(songStarted(CMediaTableItem *)), m_application, SLOT(playSong(CMediaTableItem *)));
+            connect(playList, SIGNAL(songStarted(CMediaTableItem *)), m_mainWindow, SLOT(playSong(CMediaTableItem *)));
             connect(playList, SIGNAL(nameChanged(const QString&, const QString&)), this, SLOT(onPlayListRenamed(const QString&, const QString&)));
-            connect(playList, SIGNAL(rowCountChanged()), m_application, SLOT(updateListInformations()));
+            connect(playList, SIGNAL(rowCountChanged()), m_mainWindow, SLOT(updateListInformations()));
 
-            connect(playList, SIGNAL(songAdded(CSong *)), m_application, SLOT(updateListInformations()));
-            connect(playList, SIGNAL(songRemoved(CSong *)), m_application, SLOT(updateListInformations()));
+            connect(playList, SIGNAL(songAdded(CSong *)), m_mainWindow, SLOT(updateListInformations()));
+            connect(playList, SIGNAL(songRemoved(CSong *)), m_mainWindow, SLOT(updateListInformations()));
         }
     }
 
@@ -228,13 +230,13 @@ void CLibraryModel::loadFromDatabase()
     if (!query.exec("SELECT dynamic_list_id, playlist_name, list_columns, playlist_id, folder_id, list_position, auto_update, only_checked "
                     "FROM dynamic_list NATURAL JOIN playlist ORDER BY list_position"))
     {
-        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
     }
     else
     {
         while (query.next())
         {
-            CDynamicList * playList = new CDynamicList(m_application, query.value(1).toString());
+            CDynamicList * playList = new CDynamicList(m_mainWindow, query.value(1).toString());
             playList->m_id = query.value(0).toInt();
             playList->m_autoUpdate = query.value(6).toBool();
             playList->m_onlyChecked = query.value(7).toBool();
@@ -251,7 +253,7 @@ void CLibraryModel::loadFromDatabase()
             }
             else
             {
-                m_application->logError(tr("le dossier contenant la liste statique a un identifiant invalide"), __FUNCTION__, __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logError(tr("le dossier contenant la liste statique a un identifiant invalide"), __FUNCTION__, __FILE__, __LINE__);
             }
 
             playList->loadFromDatabase();
@@ -259,10 +261,10 @@ void CLibraryModel::loadFromDatabase()
             playLists.append(playList);
             playList->hide();
 
-            connect(playList, SIGNAL(songStarted(CMediaTableItem *)), m_application, SLOT(playSong(CMediaTableItem *)));
+            connect(playList, SIGNAL(songStarted(CMediaTableItem *)), m_mainWindow, SLOT(playSong(CMediaTableItem *)));
             connect(playList, SIGNAL(nameChanged(const QString&, const QString&)), this, SLOT(onPlayListRenamed(const QString&, const QString&)));
-            connect(playList, SIGNAL(rowCountChanged()), m_application, SLOT(updateListInformations()));
-            connect(playList, SIGNAL(listUpdated()), m_application, SLOT(updateListInformations()));
+            connect(playList, SIGNAL(rowCountChanged()), m_mainWindow, SLOT(updateListInformations()));
+            connect(playList, SIGNAL(listUpdated()), m_mainWindow, SLOT(updateListInformations()));
             connect(playList, SIGNAL(listUpdated()), this, SLOT(onPlayListChange()));
 
             playList->updateList();
@@ -299,20 +301,20 @@ void CLibraryModel::clear()
 
     // Ajout de la médiathèque au modèle
     QStandardItem * libraryItem = new QStandardItem(QPixmap(":/icons/library"), tr("Library"));
-    libraryItem->setData(QVariant::fromValue(qobject_cast<CMediaTableView *>(m_application->getLibrary())), Qt::UserRole + 1);
+    libraryItem->setData(QVariant::fromValue(qobject_cast<CMediaTableView *>(m_mainWindow->getLibrary())), Qt::UserRole + 1);
 
     appendRow(libraryItem);
-    m_songTableItems[libraryItem] = m_application->getLibrary();
+    m_songTableItems[libraryItem] = m_mainWindow->getLibrary();
 
     // Ajout de la file d'attente
     QStandardItem * queueItem = new QStandardItem(QPixmap(":/icons/queue"), tr("Queue"));
-    queueItem->setData(QVariant::fromValue(qobject_cast<CMediaTableView *>(m_application->getQueue())), Qt::UserRole + 1);
+    queueItem->setData(QVariant::fromValue(qobject_cast<CMediaTableView *>(m_mainWindow->getQueue())), Qt::UserRole + 1);
 
     appendRow(queueItem);
-    m_songTableItems[queueItem] = m_application->getQueue();
+    m_songTableItems[queueItem] = m_mainWindow->getQueue();
 
     // Ajout des lecteurs de CD-ROM
-    QList<CCDRomDrive *> drives = m_application->getCDRomDrives();
+    QList<CCDRomDrive *> drives = m_mainWindow->getCDRomDrives();
 
     for (QList<CCDRomDrive *>::const_iterator drive = drives.begin(); drive != drives.end(); ++drive)
     {
@@ -338,7 +340,7 @@ void CLibraryModel::clear()
 
 void CLibraryModel::updateCDRomDrives()
 {
-    QList<CCDRomDrive *> drives = m_application->getCDRomDrives();
+    QList<CCDRomDrive *> drives = m_mainWindow->getCDRomDrives();
 
     for (QList<CCDRomDrive *>::const_iterator drive = drives.begin(); drive != drives.end(); ++drive)
     {
@@ -495,12 +497,12 @@ void CLibraryModel::addFolder(CFolder * folder)
             }
             else
             {
-                m_application->logError(tr("l'élément n'est ni un dossier, ni une liste de lecture"), __FUNCTION__, __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logError(tr("l'élément n'est ni un dossier, ni une liste de lecture"), __FUNCTION__, __FILE__, __LINE__);
             }
         }
         else
         {
-            m_application->logError(tr("position incorrecte dans un dossier"), __FUNCTION__, __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logError(tr("position incorrecte dans un dossier"), __FUNCTION__, __FILE__, __LINE__);
             invalidPosition = true;
         }
     }
@@ -532,7 +534,7 @@ void CLibraryModel::addPlayList(IPlayList * playList)
     {
         playListItem->setIcon(QPixmap(":/icons/dynamic_list"));
 
-        connect(dynamicList, SIGNAL(listUpdated()), m_application, SLOT(updateListInformations()));
+        connect(dynamicList, SIGNAL(listUpdated()), m_mainWindow, SLOT(updateListInformations()));
     }
     else
     {
@@ -542,14 +544,14 @@ void CLibraryModel::addPlayList(IPlayList * playList)
         {
             playListItem->setIcon(QPixmap(":/icons/playlist"));
 
-            connect(staticList, SIGNAL(songAdded(CSong *)), m_application, SLOT(updateListInformations()));
-            connect(staticList, SIGNAL(songRemoved(CSong *)), m_application, SLOT(updateListInformations()));
+            connect(staticList, SIGNAL(songAdded(CSong *)), m_mainWindow, SLOT(updateListInformations()));
+            connect(staticList, SIGNAL(songRemoved(CSong *)), m_mainWindow, SLOT(updateListInformations()));
         }
     }
 
     connect(playList, SIGNAL(nameChanged(const QString&, const QString&)), this, SLOT(onPlayListRenamed(const QString&, const QString&)));
-    connect(playList, SIGNAL(songStarted(CMediaTableItem *)), m_application, SLOT(playSong(CMediaTableItem *)));
-    connect(playList, SIGNAL(rowCountChanged()), m_application, SLOT(updateListInformations()));
+    connect(playList, SIGNAL(songStarted(CMediaTableItem *)), m_mainWindow, SLOT(playSong(CMediaTableItem *)));
+    connect(playList, SIGNAL(rowCountChanged()), m_mainWindow, SLOT(updateListInformations()));
 
     QStandardItem * itemParent = m_folderItems.key(playList->m_folder);
 
@@ -591,7 +593,7 @@ void CLibraryModel::removeFolder(CFolder * folder, bool recursive)
 
             if (!itemFolder)
             {
-                m_application->logError(tr("invalid folder"), __FUNCTION__, __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logError(tr("invalid folder"), __FUNCTION__, __FILE__, __LINE__);
                 continue;
             }
 
@@ -612,7 +614,7 @@ void CLibraryModel::removeFolder(CFolder * folder, bool recursive)
 
             if (!itemPlayList)
             {
-                m_application->logError(tr("invalid playlist"), __FUNCTION__, __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logError(tr("invalid playlist"), __FUNCTION__, __FILE__, __LINE__);
                 continue;
             }
 
@@ -694,18 +696,18 @@ bool CLibraryModel::dropMimeData(const QMimeData * data, Qt::DropAction action, 
 
             if (!folderParent)
             {
-                m_application->logError(tr("invalid folter"), __FUNCTION__, __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logError(tr("invalid folter"), __FUNCTION__, __FILE__, __LINE__);
                 return false;
             }
         }
 
         if (playListId > 0)
         {
-            IPlayList * playList = m_application->getPlayListFromId(playListId);
+            IPlayList * playList = m_mainWindow->getPlayListFromId(playListId);
 
             if (!playList)
             {
-                m_application->logError(tr("invalid playlist"), __FUNCTION__, __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logError(tr("invalid playlist"), __FUNCTION__, __FILE__, __LINE__);
                 return false;
             }
 
@@ -740,11 +742,11 @@ bool CLibraryModel::dropMimeData(const QMimeData * data, Qt::DropAction action, 
         }
         else if (folderId > 0)
         {
-            CFolder * folder = m_application->getFolderFromId(folderId);
+            CFolder * folder = m_mainWindow->getFolderFromId(folderId);
 
             if (!folder)
             {
-                m_application->logError("dossier invalide", __FUNCTION__, __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logError("dossier invalide", __FUNCTION__, __FILE__, __LINE__);
                 return false;
             }
 
@@ -778,7 +780,7 @@ bool CLibraryModel::dropMimeData(const QMimeData * data, Qt::DropAction action, 
             return true;
         }
 
-        m_application->logError("l'élément n'est ni un dossier, ni une liste de lecture", __FUNCTION__, __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logError(tr("l'élément n'est ni un dossier, ni une liste de lecture"), __FUNCTION__, __FILE__, __LINE__);
         return false;
     }
     else if (data->hasFormat("application/x-ted-media-songs"))
@@ -817,7 +819,7 @@ bool CLibraryModel::dropMimeData(const QMimeData * data, Qt::DropAction action, 
         QByteArray encodedData = data->data("application/x-ted-media-songs");
         QList<CSong *> songs = decodeDataSongs(encodedData);
 
-        m_application->openDialogCreateStaticList(nullptr, songs);
+        m_mainWindow->openDialogCreateStaticList(nullptr, songs);
 
         return true;
     }
@@ -839,7 +841,7 @@ QList<CSong *> CLibraryModel::decodeDataSongs(const QByteArray& encodedData) con
     {
         int songId;
         stream >> songId;
-        songList << m_application->getSongFromId(songId);
+        songList << m_mainWindow->getSongFromId(songId);
     }
 
     return songList;
@@ -1011,5 +1013,5 @@ void CLibraryModel::onPlayListChange()
     IPlayList * playList = qobject_cast<IPlayList *>(sender());
 
     if (playList)
-        m_application->onPlayListChange(playList);
+        m_mainWindow->onPlayListChange(playList);
 }

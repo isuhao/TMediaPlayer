@@ -20,6 +20,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CScrobble.hpp"
 #include "../CSong.hpp"
 #include "../CMainWindow.hpp"
+#include "../CMediaManager.hpp"
 
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
@@ -120,7 +121,7 @@ void CScrobble::sendRequest()
     QByteArray content = getLastFmQuery(args);
 
     // Log
-    QFile * logFile = m_application->getLogFile("lastFm");
+    QFile * logFile = m_mainWindow->getMediaManager()->getLogFile("lastFm");
     QTextStream stream(logFile);
     stream.setFieldAlignment(QTextStream::AlignLeft);
 
@@ -148,11 +149,11 @@ void CScrobble::sendRequest()
 void CScrobble::logError()
 {
     QSqlDatabase dataBase = QSqlDatabase::addDatabase("QSQLITE", "lastfm");
-    dataBase.setDatabaseName(m_application->getApplicationPath() + "lastfm.sqlite");
+    dataBase.setDatabaseName(m_mainWindow->getMediaManager()->getApplicationPath() + "lastfm.sqlite");
 
     if (!dataBase.open())
     {
-        qWarning() << "Erreur d'ouverture de la base lastfm.sqlite\n";
+        qWarning() << tr("Erreur d'ouverture de la base lastfm.sqlite\n");
         return;
     }
 
@@ -171,7 +172,7 @@ void CScrobble::logError()
                             "trackNumber INTEGER"
                         ")"))
         {
-            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             dataBase.close();
             return;
         }
@@ -189,7 +190,7 @@ void CScrobble::logError()
 
     if (!query.exec())
     {
-        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         dataBase.close();
         return;
     }
@@ -213,7 +214,7 @@ void CScrobble::replyFinished(QNetworkReply * reply)
     QByteArray data = reply->readAll();
 
     // Log
-    QFile * logFile = m_application->getLogFile("lastFm");
+    QFile * logFile = m_mainWindow->getMediaManager()->getLogFile("lastFm");
     QTextStream stream(logFile);
     stream.setFieldAlignment(QTextStream::AlignLeft);
 
@@ -259,17 +260,17 @@ void CScrobble::replyFinished(QNetworkReply * reply)
     }
     else
     {
-        stream << tr("Document XML invalide (%1)\n").arg(error);
+        stream << tr("Invalid XML document (%1)").arg(error);
         status = false;
     }
 
     if (status)
     {
-        m_application->notifyInformation(tr("Song scrobbled to Last.fm (%1 by %2)").arg(m_song.title).arg(m_song.artist));
+        m_mainWindow->notifyInformation(tr("Song scrobbled to Last.fm (%1 by %2)").arg(m_song.title).arg(m_song.artist));
     }
     else
     {
-        m_application->notifyInformation(tr("Can't scrobble the song to Last.fm (%1 by %2)").arg(m_song.title).arg(m_song.artist));
+        m_mainWindow->notifyInformation(tr("Can't scrobble the song to Last.fm (%1 by %2)").arg(m_song.title).arg(m_song.artist));
     }
 
     reply->deleteLater();

@@ -73,7 +73,7 @@ private:
     CRatingEditor * m_ratingEditor;
     CMediaTableView * m_songTable;
     CMediaTableItem * m_songItem;
-    CMainWindow * m_application;
+    CMainWindow * m_mainWindow;
 };
 
 

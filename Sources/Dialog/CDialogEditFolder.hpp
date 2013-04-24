@@ -45,7 +45,7 @@ private:
     
     Ui::DialogEditFolder * m_uiWidget;
     CFolder * m_folder;
-    CMainWindow * m_application;
+    CMainWindow * m_mainWindow;
     CFolder * m_folderParent;
 };
 

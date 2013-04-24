@@ -49,7 +49,7 @@ protected slots:
 private:
 
     Ui::DialogPreferences * m_uiWidget; ///< Widget utilisé par la boite de dialogue.
-    CMainWindow * m_application;       ///< Pointeur sur l'application.
+    CMainWindow * m_mainWindow;       ///< Pointeur sur l'application.
     QSettings * m_settings;
 };
 

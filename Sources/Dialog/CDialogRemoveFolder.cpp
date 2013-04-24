@@ -28,18 +28,18 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 /**
  * Construit la boite de dialogue.
  *
- * \param application Pointeur sur l'application.
- * \param folder      Pointeur sur le dossier à supprimer.
+ * \param mainWindow Pointeur sur la fenêtre principale de l'application.
+ * \param folder     Pointeur sur le dossier à supprimer.
  */
 
-CDialogRemoveFolder::CDialogRemoveFolder(CMainWindow * application, CFolder * folder) :
-    QDialog       (application, Qt::MSWindowsFixedSizeDialogHint | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowCloseButtonHint),
-    m_uiWidget    (new Ui::DialogRemoveFolder()),
-    m_application (application),
-    m_folder      (folder),
-    m_recursive   (false)
+CDialogRemoveFolder::CDialogRemoveFolder(CMainWindow * mainWindow, CFolder * folder) :
+QDialog      (mainWindow, Qt::MSWindowsFixedSizeDialogHint | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowCloseButtonHint),
+m_uiWidget   (new Ui::DialogRemoveFolder()),
+m_mainWindow (mainWindow),
+m_folder     (folder),
+m_recursive  (false)
 {
-    Q_CHECK_PTR(application);
+    Q_CHECK_PTR(m_mainWindow);
     Q_CHECK_PTR(folder);
 
     //setAttribute(Qt::WA_DeleteOnClose);

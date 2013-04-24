@@ -31,26 +31,26 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 /**
  * Construit la boite de dialogue des préférences.
  *
- * \param application Pointeur sur la classe principale de l'application.
- * \param parent      Pointeur sur le widget parent.
- * \param folder      Pointeur sur le dossier à modifier.
+ * \param mainWindow Pointeur sur la fenêtre principale de l'application.
+ * \param parent     Pointeur sur le widget parent.
+ * \param folder     Pointeur sur le dossier à modifier.
  */
 
-CDialogPreferencesFolder::CDialogPreferencesFolder(CMainWindow * application, QWidget * parent, CLibraryFolder * folder) :
+CDialogPreferencesFolder::CDialogPreferencesFolder(CMainWindow * mainWindow, QWidget * parent, CLibraryFolder * folder) :
 QDialog            (parent),
 m_uiWidget         (new Ui::DialogPreferencesFolder()),
-m_application      (application),
+m_mainWindow       (mainWindow),
 m_folder           (folder),
 m_needDeleteFolder (false)
 {
-    Q_CHECK_PTR(application);
+    Q_CHECK_PTR(m_mainWindow);
 
     setAttribute(Qt::WA_DeleteOnClose);
     m_uiWidget->setupUi(this);
     
     if (!m_folder)
     {
-        m_folder = new CLibraryFolder(m_application);
+        m_folder = new CLibraryFolder(m_mainWindow);
         m_needDeleteFolder = true;
 
         connect(m_uiWidget->btnChooseFolder, SIGNAL(clicked()), this, SLOT(chooseFolder()));
@@ -133,7 +133,7 @@ void CDialogPreferencesFolder::save()
         return;
     }
 
-    CLibraryFolder * folder = m_application->getLibraryFolder(m_application->getLibraryFolderId(pathName));
+    CLibraryFolder * folder = m_mainWindow->getLibraryFolder(m_mainWindow->getLibraryFolderId(pathName));
 
     if (folder != m_folder)
     {
@@ -165,7 +165,7 @@ void CDialogPreferencesFolder::save()
     m_folder->compilationName = m_uiWidget->editOrgCompilation  ->text();
 
     // Mise à jour de la base de données
-    QSqlQuery query(m_application->getDataBase());
+    QSqlQuery query(m_mainWindow->getDataBase());
     const QString str = m_folder->convertFormatItemsToString();
 
     // Ajout du dossier
@@ -185,17 +185,17 @@ void CDialogPreferencesFolder::save()
 
         if (!query.exec())
         {
-            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return;
         }
 
-        if (m_application->getDataBase().driverName() == "QPSQL")
+        if (m_mainWindow->getDataBase().driverName() == "QPSQL")
         {
             query.prepare("SELECT currval('libpath_seq')");
 
             if (!query.exec())
             {
-                m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return;
             }
 
@@ -205,7 +205,7 @@ void CDialogPreferencesFolder::save()
             }
             else
             {
-                m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return;
             }
         }
@@ -214,7 +214,7 @@ void CDialogPreferencesFolder::save()
             m_folder->id = query.lastInsertId().toInt();
         }
 
-        m_application->addLibraryFolder(m_folder);
+        m_mainWindow->addLibraryFolder(m_folder);
         m_needDeleteFolder = false;
     }
     // Modification du dossier
@@ -235,7 +235,7 @@ void CDialogPreferencesFolder::save()
 
         if (!query.exec())
         {
-            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return;
         }
     }

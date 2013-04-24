@@ -56,7 +56,7 @@ public:
 
 private:
 
-    CMainWindow * m_application;
+    CMainWindow * m_mainWindow;
     CITunesLibrary * m_library;
     CITunesWizardPage1 * m_page1;
     CITunesWizardPage2 * m_page2;
@@ -141,7 +141,7 @@ public:
 private:
     
     CITunesLibrary * m_library;
-    CMainWindow * m_application;
+    CMainWindow * m_mainWindow;
 };
 
 
@@ -199,7 +199,7 @@ private:
     };
 
     bool m_isLoaded;                    ///< Indique si la médiathèque a été chargée.
-    CMainWindow * m_application;
+    CMainWindow * m_mainWindow;
     QString m_fileName;                 ///< Fichier contenant la médiathèque.
     QDomDocument m_document;            ///< Document XML.
     QMap<int, TSong> m_songs;           ///< Liste des morceaux de la médiathèque.

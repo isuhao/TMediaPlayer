@@ -43,7 +43,7 @@ public:
     static inline TMultiCriteriaType getMultiCriteriaTypeFromInteger(int type);
 
 
-    explicit CMultiCriteria(CMainWindow * application, QObject * parent = nullptr);
+    explicit CMultiCriteria(CMainWindow * mainWindow, QObject * parent = nullptr);
     virtual ~CMultiCriteria();
 
     TMultiCriteriaType getMultiCriteriaType() const;

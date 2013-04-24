@@ -33,12 +33,12 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  *
  * \todo Remplir la liste des types de critères dans le code (et la trier).
  *
- * \param application Pointeur sur la classe principale de l'application.
- * \param parent      Widget parent.
+ * \param mainWindow Pointeur sur la classe principale de l'application.
+ * \param parent     Widget parent.
  */
 
-CWidgetCriterion::CWidgetCriterion(CMainWindow * application, QWidget * parent) :
-IWidgetCriterion (application, parent),
+CWidgetCriterion::CWidgetCriterion(CMainWindow * mainWindow, QWidget * parent) :
+IWidgetCriterion (mainWindow, parent),
 m_uiWidget       (new Ui::WidgetCriterion())
 {
     m_uiWidget->setupUi(this);
@@ -49,7 +49,7 @@ m_uiWidget       (new Ui::WidgetCriterion())
     m_uiWidget->listLanguage->addItems(getLanguageList());
     m_uiWidget->listFormat->addItems(CSong::getFormatList());
 
-    QList<IPlayList *> playLists = m_application->getAllPlayLists();
+    QList<IPlayList *> playLists = m_mainWindow->getAllPlayLists();
 
     for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
     {
@@ -101,7 +101,7 @@ CWidgetCriterion::~CWidgetCriterion()
 
 ICriterion * CWidgetCriterion::getCriterion()
 {
-    CCriterion * criteria = new CCriterion(m_application, this);
+    CCriterion * criteria = new CCriterion(m_mainWindow, this);
     criteria->m_type      = m_type;
     criteria->m_condition = m_condition;
 

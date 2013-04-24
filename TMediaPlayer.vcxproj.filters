@@ -803,6 +803,12 @@
     <ClCompile Include="Sources\CMainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\CMediaManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\IMediaTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Sources\CSong.hpp">
@@ -1090,6 +1096,12 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="Sources\CMediaTableItem.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\IMediaTable.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\CMediaManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

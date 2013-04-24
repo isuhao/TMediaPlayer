@@ -27,12 +27,12 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QGridLayout>
 
 
-CWidgetLyrics::CWidgetLyrics(CMainWindow * application) :
-QWidget       (application),
-m_application (application),
-m_song        (nullptr)
+CWidgetLyrics::CWidgetLyrics(CMainWindow * mainWindow) :
+QWidget      (mainWindow),
+m_mainWindow (mainWindow),
+m_song       (nullptr)
 {
-    Q_CHECK_PTR(application);
+    Q_CHECK_PTR(m_mainWindow);
 
     m_textEdit = new QTextEdit();
 
@@ -84,7 +84,7 @@ void CWidgetLyrics::findLyrics()
 {
     if (m_song)
     {
-        CLyricWiki * query = new CLyricWiki(m_application, m_song);
+        CLyricWiki * query = new CLyricWiki(m_mainWindow->getMediaManager(), m_song);
         connect(query, SIGNAL(lyricsFound(const QString&)), this, SLOT(onLyricsFound(const QString&)));
     }
 }

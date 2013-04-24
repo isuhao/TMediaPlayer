@@ -33,17 +33,28 @@ public:
 
     inline int getPosition() const;
     inline CSong * getSong() const;
+    //inline IMediaTable * getMediaTable() const;
     inline bool isValid() const;
 
-private:
+    inline bool operator==(const CMediaTableItem& other) const;
+    inline bool operator!=(const CMediaTableItem& other) const;
 
-    inline CMediaTableItem(int position, CSong * song);
+private:
+    
+    inline CMediaTableItem(const CMediaTableItem& other);
+    inline CMediaTableItem(int position, CSong * song/*, IMediaTable * mediaTable*/);
+
+    inline CMediaTableItem& operator=(const CMediaTableItem& other);
 
     int m_position; ///< Position dans la liste.
     CSong * m_song; ///< Pointeur sur le morceau.
     //IMediaTable * m_mediaTable;
 };
 
+
+/**
+ * Constructeur par défaut.
+ */
 
 inline CMediaTableItem::CMediaTableItem() :
 m_position (-1),
@@ -53,9 +64,23 @@ m_song     (nullptr)
 }
 
 
-inline CMediaTableItem::CMediaTableItem(int position, CSong * song) :
-m_position (position),
-m_song     (song)
+/**
+ * Constructeur de copie.
+ */
+
+inline CMediaTableItem::CMediaTableItem(const CMediaTableItem& other) :
+m_position   (other.m_position),
+m_song       (other.m_song)/*,
+m_mediaTable (other.m_mediaTable)*/
+{
+
+}
+
+
+inline CMediaTableItem::CMediaTableItem(int position, CSong * song/*, IMediaTable * mediaTable*/) :
+m_position   (position),
+m_song       (song)/*,
+m_mediaTable (mediaTable)*/
 {
     Q_CHECK_PTR(song);
 }
@@ -72,10 +97,42 @@ inline CSong * CMediaTableItem::getSong() const
     return m_song;
 }
 
+/*
+inline IMediaTable * CMediaTableItem::getMediaTable() const
+{
+    return m_mediaTable;
+}
+*/
 
 inline bool CMediaTableItem::isValid() const
 {
     return (m_position >= 0 && m_song);
+}
+
+
+inline bool CMediaTableItem::operator==(const CMediaTableItem& other) const
+{
+    return (m_song == other.m_song /*&& m_mediaTable == other.m_mediaTable*/ && m_position == other.m_position);
+}
+
+
+inline bool CMediaTableItem::operator!=(const CMediaTableItem& other) const
+{
+    return !operator==(other);
+}
+
+
+/**
+ * Opérateur d'affectation.
+ */
+
+inline CMediaTableItem& CMediaTableItem::operator=(const CMediaTableItem& other)
+{
+    m_song = other.m_song;
+    /*m_mediaTable = other.m_mediaTable;*/
+    m_position = other.m_position;
+
+    return *this;
 }
 
 #endif // FILE_C_MEDIA_TABLE_ITEM_HPP_

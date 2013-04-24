@@ -51,7 +51,7 @@ private:
     
     Ui::DialogEditStaticPlayList * m_uiWidget;
     CStaticList * m_playList; ///< Pointeur sur la liste de lecture.
-    CMainWindow * m_application; ///< Pointeur sur l'application.
+    CMainWindow * m_mainWindow; ///< Pointeur sur l'application.
     CFolder * m_folder;           ///< Pointeur sur le dossier contenant la liste de lecture.
     QList<CSong *> m_songs;       ///< Liste de morceaux à ajouter à la liste.
 };

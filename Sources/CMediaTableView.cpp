@@ -21,6 +21,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CMediaTableModel.hpp"
 #include "CSong.hpp"
 #include "CMainWindow.hpp"
+#include "CMediaManager.hpp"
 #include "IPlayList.hpp"
 #include "CMediaTableHeader.hpp"
 #include "CStaticList.hpp"
@@ -47,12 +48,12 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 /**
  * Constructeur de la vue.
  *
- * \param application Pointeur sur l'application.
+ * \param mainWindow Pointeur sur la fenêtre principale de l'application.
  */
 
-CMediaTableView::CMediaTableView(CMainWindow * application) :
-QTableView        (application),
-m_application     (application),
+CMediaTableView::CMediaTableView(CMainWindow * mainWindow) :
+QTableView        (mainWindow),
+m_mainWindow     (mainWindow),
 m_model           (nullptr),
 m_idPlayList      (-1),
 m_columnSort      (ColArtist),
@@ -62,12 +63,12 @@ m_selectedItem    (nullptr),
 m_isModified      (false),
 m_isColumnMoving  (false)
 {
-    Q_CHECK_PTR(m_application);
+    Q_CHECK_PTR(m_mainWindow);
 
     setItemDelegate(new CRatingDelegate());
     setEditTriggers(QAbstractItemView::SelectedClicked);
 
-    m_model = new CMediaTableModel(m_application, this);
+    m_model = new CMediaTableModel(m_mainWindow, this);
     setModel(m_model);
 
     connect(m_model, SIGNAL(rowsInserted(const QModelIndex&, int, int)), this, SLOT(onRowCountChange(const QModelIndex&, int, int)));
@@ -112,7 +113,7 @@ m_isColumnMoving  (false)
     connect(m_model, SIGNAL(columnSorted(int, Qt::SortOrder)), this, SLOT(sortColumn(int, Qt::SortOrder)));
 
     verticalHeader()->hide();
-    verticalHeader()->setDefaultSectionSize(m_application->getRowHeight());
+    verticalHeader()->setDefaultSectionSize(m_mainWindow->getRowHeight());
 
     connect(selectionModel(), SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)), this, SLOT(onSelectionChange()));
 
@@ -382,7 +383,7 @@ void CMediaTableView::removeSongFromTable(CSong * song)
 {
     if (!song)
     {
-        m_application->logError(tr("invalid pointer"), __FUNCTION__, __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logError(tr("invalid pointer"), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
@@ -417,7 +418,7 @@ void CMediaTableView::removeSongFromTable(int row)
 
     if (row >= m_model->m_data.size())
     {
-        m_application->logError(tr("invalid argument"), __FUNCTION__, __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logError(tr("invalid argument"), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
@@ -777,7 +778,7 @@ void CMediaTableView::goToSongTable()
 
         if (songTable)
         {
-            m_application->selectSong(songTable, songTable->getFirstSongItem(m_selectedItem->getSong()));
+            m_mainWindow->selectSong(songTable, songTable->getFirstSongItem(m_selectedItem->getSong()));
         }
     }
 }
@@ -813,7 +814,7 @@ void CMediaTableView::addToPlayList()
 
             playList->addSongs(songList);
 
-            //m_application->selectSong(songTable, songTable->getFirstSongItem(m_selectedItem->getSong()));
+            //m_mainWindow->selectSong(songTable, songTable->getFirstSongItem(m_selectedItem->getSong()));
         }
     }
 }
@@ -835,7 +836,7 @@ void CMediaTableView::removeSongsFromLibrary()
     {
         CMediaTableItem * songItem = m_model->getSongItem(*it);
 
-        if (m_application->getCurrentSongItem() == songItem)
+        if (m_mainWindow->getCurrentSongItem() == songItem)
             needStop = true;
 
         if (!songList.contains(songItem->getSong()))
@@ -850,9 +851,9 @@ void CMediaTableView::removeSongsFromLibrary()
         return;
 
     if (needStop)
-        m_application->stop();
+        m_mainWindow->stop();
 
-    m_application->removeSongs(songList);
+    m_mainWindow->removeSongs(songList);
 
     selectionModel()->clearSelection();
 }
@@ -935,7 +936,7 @@ void CMediaTableView::onRowCountChange(const QModelIndex& parent, int start, int
 void CMediaTableView::onSelectionChange()
 {
     // On vérifie que cette table est actuellement affichée
-    if (m_application->getDisplayedSongTable() != this)
+    if (m_mainWindow->getDisplayedSongTable() != this)
         return;
 
     QList<CMediaTableItem *> songItems = getSelectedSongItems();
@@ -953,7 +954,7 @@ void CMediaTableView::onSelectionChange()
         durationMS += (*it)->getSong()->getDuration();
     }
 
-    m_application->setSelectionInformations(numSongs, durationMS);
+    m_mainWindow->setSelectionInformations(numSongs, durationMS);
 }
 
 
@@ -965,7 +966,7 @@ void CMediaTableView::addSongToQueueBegining()
     if (songs.isEmpty())
         return;
 
-    CQueuePlayList * queue = m_application->getQueue();
+    CQueuePlayList * queue = m_mainWindow->getQueue();
     queue->addSongs(songs, 0);
 }
 
@@ -978,7 +979,7 @@ void CMediaTableView::addSongToQueueEnd()
     if (songs.isEmpty())
         return;
 
-    CQueuePlayList * queue = m_application->getQueue();
+    CQueuePlayList * queue = m_mainWindow->getQueue();
     queue->addSongs(songs, -1);
 }
 
@@ -1017,7 +1018,7 @@ QString CMediaTableView::getColumnsInfos() const
 
     if (str.isEmpty())
     {
-        //m_application->getSettings()->value("Preferences/ColumnsDefault", "0:40;1:150;17:60;2+:150;3:150;6:50;9:60;12:50;13:120").toString();
+        //m_mainWindow->getSettings()->value("Preferences/ColumnsDefault", "0:40;1:150;17:60;2+:150;3:150;6:50;9:60;12:50;13:120").toString();
         str = "0:40;1:150;17:60;2+:150;3:150;6:50;9:60;12:50;13:120"; // Disposition par défaut
     }
 
@@ -1125,13 +1126,13 @@ bool CMediaTableView::updateDatabase()
     {
         if (m_idPlayList < 0)
         {
-            m_application->logError(tr("invalid identifier (%1)").arg(m_idPlayList), __FUNCTION__, __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logError(tr("invalid identifier (%1)").arg(m_idPlayList), __FUNCTION__, __FILE__, __LINE__);
             return false;
         }
 
         QString colInfos = getColumnsInfos();
 
-        QSqlQuery query(m_application->getDataBase());
+        QSqlQuery query(m_mainWindow->getDataBase());
 
         query.prepare("UPDATE playlist SET list_columns = ? WHERE playlist_id = ?");
         query.bindValue(0, colInfos);
@@ -1139,7 +1140,7 @@ bool CMediaTableView::updateDatabase()
 
         if (!query.exec())
         {
-            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
 
@@ -1230,25 +1231,25 @@ void CMediaTableView::keyPressEvent(QKeyEvent * event)
         event->accept();
 
         // Un morceau est en cours de lecture
-        if (!m_application->isStopped())
+        if (!m_mainWindow->isStopped())
         {
             // Le morceau sélectionné est en cours de lecture
-            if (getSelectedSongItem() == m_application->getCurrentSongItem())
+            if (getSelectedSongItem() == m_mainWindow->getCurrentSongItem())
             {
                 // La lecture n'est pas en pause, rien à faire
-                if (m_application->isPlaying())
+                if (m_mainWindow->isPlaying())
                     return;
             }
             else
             {
                 // Un autre morceau est en cours de lecture, on l'arrête
-                m_application->stop();
+                m_mainWindow->stop();
             }
 
         }
 
         // On démarre la lecture
-        m_application->play();
+        m_mainWindow->play();
         return;
     }
 
@@ -1257,7 +1258,7 @@ void CMediaTableView::keyPressEvent(QKeyEvent * event)
     if (event->key() == Qt::Key_Space)
     {
         event->accept();
-        m_application->togglePlay();
+        m_mainWindow->togglePlay();
         return;
     }
 
@@ -1339,7 +1340,7 @@ void CMediaTableView::selectSongItem(CMediaTableItem * songItem)
 
 void CMediaTableView::playSelectedSong()
 {
-    m_application->playSong(m_selectedItem);
+    m_mainWindow->playSong(m_selectedItem);
 }
 
 
@@ -1374,23 +1375,23 @@ void CMediaTableView::openCustomMenuProject(const QPoint& point)
             menu->addSeparator();
         }
 
-        menu->addAction(tr("Informations..."), m_application, SLOT(openDialogSongInfos()));
+        menu->addAction(tr("Informations..."), m_mainWindow, SLOT(openDialogSongInfos()));
 
         if (!severalSongs)
         {
-            menu->addAction(tr("Edit metadata..."), m_application, SLOT(openDialogEditMetadata()));
-            menu->addAction(tr("Show in explorer"), m_application, SLOT(openSongInExplorer()));
+            menu->addAction(tr("Edit metadata..."), m_mainWindow, SLOT(openDialogEditMetadata()));
+            menu->addAction(tr("Show in explorer"), m_mainWindow, SLOT(openSongInExplorer()));
 
             if (m_selectedItem->getSong()->getFileStatus() == false)
             {
-                menu->addAction(tr("Relocate"), m_application, SLOT(relocateSong()));
+                menu->addAction(tr("Relocate"), m_mainWindow, SLOT(relocateSong()));
             }
         }
 
         menu->addSeparator();
         menu->addAction(tr("Remove from library"), this, SLOT(removeSongsFromLibrary()));
 
-        //if (m_application->getSettings()->value("Folders/KeepOrganized", false).toBool())
+        //if (m_mainWindow->getSettings()->value("Folders/KeepOrganized", false).toBool())
         {
             if (severalSongs)
                 menu->addAction(tr("Rename files"), this, SLOT(moveSongs()));
@@ -1428,11 +1429,11 @@ void CMediaTableView::openCustomMenuProject(const QPoint& point)
             // Listes de lecture contenant le morceau
             //TODO: gérer les dossiers
             QMenu * menuPlayList = menu->addMenu(tr("Playlists"));
-            CMediaTableView * library = m_application->getLibrary();
+            CMediaTableView * library = m_mainWindow->getLibrary();
             m_actionGoToSongTable[library] = menuPlayList->addAction(QPixmap(":/icons/library"), tr("Library"));
             connect(m_actionGoToSongTable[library], SIGNAL(triggered()), this, SLOT(goToSongTable()));
 
-            QList<IPlayList *> playLists = m_application->getPlayListsWithSong(m_selectedItem->getSong());
+            QList<IPlayList *> playLists = m_mainWindow->getPlayListsWithSong(m_selectedItem->getSong());
 
             if (playLists.size() > 0)
             {
@@ -1458,7 +1459,7 @@ void CMediaTableView::openCustomMenuProject(const QPoint& point)
         // Ajouter à la liste de lecture
         //TODO: gérer les dossiers
         QMenu * menuAddToPlayList = menu->addMenu(tr("Add to playlist"));
-        QList<IPlayList *> playLists = m_application->getAllPlayLists();
+        QList<IPlayList *> playLists = m_mainWindow->getAllPlayLists();
 
         if (playLists.isEmpty())
         {

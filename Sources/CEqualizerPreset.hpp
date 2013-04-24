@@ -69,7 +69,7 @@ public:
 
 private:
 
-    CMainWindow * m_application;
+    CMainWindow * m_mainWindow;
     int m_id;           ///< Identifiant du préréglage en base de données.
     QString m_name;     ///< Nom du préréglage.
     double m_value[10]; ///< Valeurs de gain de l'égaliseur.

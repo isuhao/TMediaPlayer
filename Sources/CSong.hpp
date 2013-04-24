@@ -80,8 +80,8 @@ public:
     };
 
 
-    explicit CSong(CMainWindow * application);
-    CSong(const QString& fileName, CMainWindow * application);
+    explicit CSong(CMainWindow * mainWindow);
+    CSong(const QString& fileName, CMainWindow * mainWindow);
     virtual ~CSong();
 
     void loadFromDatabase();
@@ -350,7 +350,7 @@ private:
     static bool writeTags(TagLib::Ogg::XiphComment * tags, const TSongInfos& infos, QFile * logFile, const QString& fileName);
 
 
-    CMainWindow * m_application;   ///< Pointeur sur l'application.
+    CMainWindow * m_mainWindow;   ///< Pointeur sur l'application.
     FMOD::Sound * m_sound;          ///< Pointeur sur la structure de FMOD.
     FMOD::Channel * m_channel;      ///< Canal audio.
     CCDRomDrive * m_cdRomDrive;     ///< Pointeur sur le lecteur de CD-ROM d'où provient le morceau.

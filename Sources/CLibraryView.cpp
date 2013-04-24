@@ -23,6 +23,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CStaticList.hpp"
 #include "CDynamicList.hpp"
 #include "CMainWindow.hpp"
+#include "CMediaManager.hpp"
 #include "CQueuePlayList.hpp"
 #include "CFolder.hpp"
 #include "CCDRomDrive.hpp"
@@ -49,7 +50,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 CLibraryView::CLibraryView(CMainWindow * application) :
 QTreeView        (application),
-m_application    (application),
+m_mainWindow    (application),
 m_model          (nullptr),
 m_menuPlaylist   (nullptr),
 m_menuFolder     (nullptr),
@@ -62,7 +63,7 @@ m_menuDefault    (nullptr)
     setUniformRowHeights(true);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     
-    //m_model = new CLibraryModel(m_application);
+    //m_model = new CLibraryModel(m_mainWindow);
     //setModel(m_model);
 
     // Glisser-déposer
@@ -76,21 +77,21 @@ m_menuDefault    (nullptr)
 
     // Menus contextuels
     m_menuPlaylist = new QMenu(this);
-    m_menuPlaylist->addAction(tr("Edit..."), m_application, SLOT(editSelectedItem()));
-    m_menuPlaylist->addAction(tr("Remove"), m_application, SLOT(removeSelectedItem()));
+    m_menuPlaylist->addAction(tr("Edit..."), m_mainWindow, SLOT(editSelectedItem()));
+    m_menuPlaylist->addAction(tr("Remove"), m_mainWindow, SLOT(removeSelectedItem()));
 
     m_menuFolder = new QMenu(this);
-    m_menuFolder->addAction(tr("Edit..."), m_application, SLOT(editSelectedItem()));
-    m_menuFolder->addAction(tr("Remove"), m_application, SLOT(removeSelectedItem()));
+    m_menuFolder->addAction(tr("Edit..."), m_mainWindow, SLOT(editSelectedItem()));
+    m_menuFolder->addAction(tr("Remove"), m_mainWindow, SLOT(removeSelectedItem()));
     m_menuFolder->addSeparator();
     m_menuFolder->addAction(tr("New playlist..."), this, SLOT(createStaticList()));
     m_menuFolder->addAction(tr("New dynamic playlist..."), this, SLOT(createDynamicList()));
     m_menuFolder->addAction(tr("New folder..."), this, SLOT(createFolder()));
 
     m_menuDefault = new QMenu(this);
-    m_menuDefault->addAction(tr("New playlist..."), m_application, SLOT(openDialogCreateStaticList()));
-    m_menuDefault->addAction(tr("New dynamic playlist..."), m_application, SLOT(openDialogCreateDynamicList()));
-    m_menuDefault->addAction(tr("New folder..."), m_application, SLOT(openDialogCreateFolder()));
+    m_menuDefault->addAction(tr("New playlist..."), m_mainWindow, SLOT(openDialogCreateStaticList()));
+    m_menuDefault->addAction(tr("New dynamic playlist..."), m_mainWindow, SLOT(openDialogCreateDynamicList()));
+    m_menuDefault->addAction(tr("New folder..."), m_mainWindow, SLOT(openDialogCreateFolder()));
 
     m_menuCDRomDrive = new QMenu(this);
     m_menuCDRomDrive->addAction(tr("Eject"), this, SLOT(ejectCDRom()));
@@ -229,7 +230,7 @@ void CLibraryView::setModel(CLibraryModel * model)
     }
     
     // Affiche ou masque les lecteurs de CD-ROM
-    QList<CCDRomDrive *> drives = m_application->getCDRomDrives();
+    QList<CCDRomDrive *> drives = m_mainWindow->getCDRomDrives();
 
     for (QList<CCDRomDrive *>::const_iterator drive = drives.begin(); drive != drives.end(); ++drive)
     {
@@ -258,7 +259,7 @@ void CLibraryView::updateCDRomDrives()
     Q_CHECK_PTR(m_model);
     m_model->updateCDRomDrives();
     
-    QList<CCDRomDrive *> drives = m_application->getCDRomDrives();
+    QList<CCDRomDrive *> drives = m_mainWindow->getCDRomDrives();
 
     for (QList<CCDRomDrive *>::const_iterator drive = drives.begin(); drive != drives.end(); ++drive)
     {
@@ -291,7 +292,7 @@ void CLibraryView::keyPressEvent(QKeyEvent * event)
     if (event->key() == Qt::Key_Delete)
     {
         event->accept();
-        m_application->removeSelectedItem();
+        m_mainWindow->removeSelectedItem();
         return;
     }
 
@@ -374,7 +375,7 @@ void CLibraryView::dragMoveEvent(QDragMoveEvent * event)
 
             if (folderId > 0)
             {
-                CFolder * folderSelected = m_application->getFolderFromId(folderId);
+                CFolder * folderSelected = m_mainWindow->getFolderFromId(folderId);
 
                 CFolder * folder = m_model->data(index, Qt::UserRole + 2).value<CFolder *>();
 
@@ -479,7 +480,7 @@ void CLibraryView::openCustomMenuProject(const QPoint& point)
             }
             else
             {
-                m_application->logError(tr("the item isn't a playlist or a folder"), __FUNCTION__, __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logError(tr("the item isn't a playlist or a folder"), __FUNCTION__, __FILE__, __LINE__);
             }
         }
     }
@@ -509,7 +510,7 @@ void CLibraryView::onItemExpanded(const QModelIndex& index)
 void CLibraryView::createStaticList()
 {
     CFolder * folder = getSelectedFolder();
-    m_application->openDialogCreateStaticList(folder);
+    m_mainWindow->openDialogCreateStaticList(folder);
 }
 
 
@@ -520,7 +521,7 @@ void CLibraryView::createStaticList()
 void CLibraryView::createDynamicList()
 {
     CFolder * folder = getSelectedFolder();
-    m_application->openDialogCreateDynamicList(folder);
+    m_mainWindow->openDialogCreateDynamicList(folder);
 }
 
 
@@ -531,7 +532,7 @@ void CLibraryView::createDynamicList()
 void CLibraryView::createFolder()
 {
     CFolder * folder = getSelectedFolder();
-    m_application->openDialogCreateFolder(folder);
+    m_mainWindow->openDialogCreateFolder(folder);
 }
 
 
@@ -560,7 +561,7 @@ void CLibraryView::informationsAboutCDRomDrive()
 
     if (cdRomDrive)
     {
-        CDialogCDRomDriveInfos * dialog = new CDialogCDRomDriveInfos(cdRomDrive, m_application);
+        CDialogCDRomDriveInfos * dialog = new CDialogCDRomDriveInfos(cdRomDrive, m_mainWindow);
         dialog->show();
     }
 }

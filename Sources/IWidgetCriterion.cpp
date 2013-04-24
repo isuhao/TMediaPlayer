@@ -20,13 +20,13 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "IWidgetCriterion.hpp"
 
 
-IWidgetCriterion::IWidgetCriterion(CMainWindow * application, QWidget * parent) :
-    QWidget       (parent),
-    m_type        (ICriterion::TypeInvalid),
-    m_condition   (ICriterion::CondInvalid),
-    m_application (application)
+IWidgetCriterion::IWidgetCriterion(CMainWindow * mainWindow, QWidget * parent) :
+QWidget      (parent),
+m_type       (ICriterion::TypeInvalid),
+m_condition  (ICriterion::CondInvalid),
+m_mainWindow (mainWindow)
 {
-    Q_CHECK_PTR(application);
+    Q_CHECK_PTR(m_mainWindow);
 }
 
 

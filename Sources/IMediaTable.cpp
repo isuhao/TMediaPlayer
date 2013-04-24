@@ -17,29 +17,4 @@ You should have received a copy of the GNU General Public License
 along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef FILE_C_DIALOG_NOTIFICATIONS
-#define FILE_C_DIALOG_NOTIFICATIONS
-
-#include <QDialog>
-#include "ui_DialogNotifications.h"
-
-
-class CMainWindow;
-
-
-class CDialogNotifications : public QDialog
-{
-    Q_OBJECT
-
-public:
-
-    explicit CDialogNotifications(CMainWindow * application);
-    virtual ~CDialogNotifications();
-
-private:
-
-    Ui::DialogNotifications * m_uiWidget;
-    CMainWindow * m_mainWindow;
-};
-
-#endif // FILE_C_DIALOG_NOTIFICATIONS
+#include "IMediaTable.hpp"

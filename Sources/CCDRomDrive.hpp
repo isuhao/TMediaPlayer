@@ -45,7 +45,7 @@ class CCDRomDrive : public CMediaTableView
 
 public:
 
-    CCDRomDrive(const QString& driveName, CMainWindow * application, const QString& SCSIName = QString(), const QString& deviceName = QString());
+    CCDRomDrive(const QString& driveName, CMainWindow * mainWindow, const QString& SCSIName = QString(), const QString& deviceName = QString());
     virtual ~CCDRomDrive();
 
     inline QString getDriveName() const;

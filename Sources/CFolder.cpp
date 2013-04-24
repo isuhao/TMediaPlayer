@@ -20,6 +20,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CFolder.hpp"
 #include "IPlayList.hpp"
 #include "CMainWindow.hpp"
+#include "CMediaManager.hpp"
+
 #include <QSqlQuery>
 #include <QSqlError>
 
@@ -35,7 +37,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 CFolder::CFolder(CMainWindow * application, const QString& name) :
 QObject          (application),
-m_application    (application),
+m_mainWindow    (application),
 m_id             (-1),
 m_name           (name),
 m_open           (false),
@@ -162,7 +164,7 @@ int CFolder::getPosition(IPlayList * playList) const
         }
     }
 
-    m_application->logError("données incohérentes", __FUNCTION__, __FILE__, __LINE__);
+    m_mainWindow->getMediaManager()->logError(tr("données incohérentes"), __FUNCTION__, __FILE__, __LINE__);
     return -1;
 }
 
@@ -189,7 +191,7 @@ int CFolder::getPosition(CFolder * folder) const
         }
     }
 
-    m_application->logError("données incohérentes", __FUNCTION__, __FILE__, __LINE__);
+    m_mainWindow->getMediaManager()->logError(tr("données incohérentes"), __FUNCTION__, __FILE__, __LINE__);
     return -1;
 }
 
@@ -456,14 +458,14 @@ bool CFolder::updateDatabase()
         }
         else
         {
-            m_application->logError("le dossier n'a pas de parent", __FUNCTION__, __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logError("le dossier n'a pas de parent", __FUNCTION__, __FILE__, __LINE__);
         }
     }
 
     // Insertion
     if (m_id < 0)
     {
-        QSqlQuery query(m_application->getDataBase());
+        QSqlQuery query(m_mainWindow->getDataBase());
 
         // Insertion
         query.prepare("INSERT INTO folder (folder_name, folder_parent, folder_position, folder_expanded) VALUES (?, ?, ?, ?)");
@@ -475,17 +477,17 @@ bool CFolder::updateDatabase()
 
         if (!query.exec())
         {
-            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
 
-        if (m_application->getDataBase().driverName() == "QPSQL")
+        if (m_mainWindow->getDataBase().driverName() == "QPSQL")
         {
             query.prepare("SELECT currval('folder_seq')");
 
             if (!query.exec())
             {
-                m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return false;
             }
 
@@ -495,7 +497,7 @@ bool CFolder::updateDatabase()
             }
             else
             {
-                m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return false;
             }
         }
@@ -507,7 +509,7 @@ bool CFolder::updateDatabase()
     // Mise à jour
     else if (m_isModified)
     {
-        QSqlQuery query(m_application->getDataBase());
+        QSqlQuery query(m_mainWindow->getDataBase());
 
         query.prepare("UPDATE folder SET folder_name = ?, folder_parent = ?, folder_position = ?, folder_expanded = ? WHERE folder_id = ?");
 
@@ -519,7 +521,7 @@ bool CFolder::updateDatabase()
 
         if (!query.exec())
         {
-            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
     }
@@ -539,7 +541,7 @@ void CFolder::removeFromDatabase(bool recursive)
 {
     if (m_id <= 0)
     {
-        m_application->logError(tr("invalid identifier (%1)").arg(m_id), __FUNCTION__, __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logError(tr("invalid identifier (%1)").arg(m_id), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
@@ -559,13 +561,13 @@ void CFolder::removeFromDatabase(bool recursive)
     }
     
     // Suppression du dossier en base de données
-    QSqlQuery query(m_application->getDataBase());
+    QSqlQuery query(m_mainWindow->getDataBase());
     query.prepare("DELETE FROM folder WHERE folder_id = ?");
     query.bindValue(0, m_id);
 
     if (!query.exec())
     {
-        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return;
     }
 
@@ -606,7 +608,7 @@ void CFolder::addPlayListItem(IPlayList * playList, int position)
     }
     else if (position < 0)
     {
-        m_application->logError("position inconnue", __FUNCTION__, __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logError("position inconnue", __FUNCTION__, __FILE__, __LINE__);
         position = m_items.size();
         m_items.append(nullptr);
     }
@@ -626,7 +628,7 @@ void CFolder::addFolderItem(CFolder * folder, int position)
     }
     else if (position < 0)
     {
-        m_application->logError("position inconnue", __FUNCTION__, __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logError("position inconnue", __FUNCTION__, __FILE__, __LINE__);
         position = m_items.size();
         m_items.append(nullptr);
     }

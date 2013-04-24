@@ -55,7 +55,7 @@ protected:
     static const QByteArray m_secret;
     static const QString m_lastFmUrl;
 
-    CMainWindow * m_application;
+    CMainWindow * m_mainWindow;
     QByteArray m_sessionKey;
     QNetworkAccessManager * m_networkManager;
 };

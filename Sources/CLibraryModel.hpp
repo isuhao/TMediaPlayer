@@ -40,7 +40,7 @@ class CLibraryModel : public QStandardItemModel ///TODO: hériter de QAbstractIt
 
 public:
 
-    explicit CLibraryModel(CMainWindow * application);
+    explicit CLibraryModel(CMainWindow * mainWindow);
     virtual ~CLibraryModel();
 
     void loadFromDatabase();
@@ -82,10 +82,10 @@ private:
     CFolder * getFolderFromId(int id, const QList<CFolder *> folders) const;
     IPlayList * getPlayListFromId(int id, const QList<IPlayList *> playLists) const;
 
-    CMainWindow * m_application; ///< Pointeur sur l'application.
-    CFolder * m_rootFolder;       ///< Dossier principal.
-    QMap<QStandardItem *, CFolder *>     m_folderItems;    ///< Tableau des items associés aux dossiers.
-    QMap<QStandardItem *, CMediaTableView *>  m_songTableItems; ///< Tableau des items associés aux listes de lecture.
+    CMainWindow * m_mainWindow;    ///< Pointeur sur l'application.
+    CFolder * m_rootFolder;        ///< Dossier principal.
+    QMap<QStandardItem *, CFolder *> m_folderItems;    ///< Tableau des items associés aux dossiers.
+    QMap<QStandardItem *, CMediaTableView *> m_songTableItems; ///< Tableau des items associés aux listes de lecture.
     QMap<QStandardItem *, CCDRomDrive *> m_cdRomDrives;    ///< Tableau des items associés aux lecteurs de CD-ROM.
     QList<CFolder *> m_folders;         ///< Liste des dossiers.
     QList<IPlayList *> m_playLists;     ///< Liste des listes de lecture.

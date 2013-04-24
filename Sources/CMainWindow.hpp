@@ -22,12 +22,13 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CMediaTableModel.hpp"
 #include "CEqualizerPreset.hpp"
+
 #include <QMainWindow>
 #include <QList>
 #include <QSqlDatabase>
 #include <QMutexLocker>
 #include <QFile>
-#include <QTranslator>
+
 #include "ui_TMediaPlayer.h"
 #include "ui_WidgetControl.h"
 
@@ -37,7 +38,6 @@ class CMediaTableView;
 class CFolder;
 class CCDRomDrive;
 class CQueuePlayList;
-class IPlayList;
 class CLibraryView;
 class CDynamicList;
 class CStaticList;
@@ -45,16 +45,13 @@ class CLibrary;
 class CLibraryModel;
 class CLibraryFolder;
 class CWidgetLyrics;
+class CMediaManager;
 class CEqualizerPreset;
+class IPlayList;
+
 class QStandardItemModel;
-class QSettings;
 class QTextEdit;
 class QNetworkReply;
-
-namespace FMOD
-{
-    class System;
-}
 
 
 /**
@@ -71,10 +68,6 @@ class CMainWindow : public QMainWindow
     friend class CDialogEditFolder;
 
 public:
-
-    static QString getAppVersion();
-    static QString getAppDate();
-
 
     /// État de lecture.
     enum TState
@@ -99,7 +92,7 @@ public:
     };
 
 
-    CMainWindow();
+    explicit CMainWindow(CMediaManager * mediaManager);
     virtual ~CMainWindow();
 
     bool initWindow();
@@ -187,19 +180,9 @@ public:
     int getGenreId(const QString& name);
     QStringList getGenreList();
 
-    inline FMOD::System * getSoundSystem() const
-    {
-        return m_soundSystem;
-    }
-
     inline QSqlDatabase getDataBase() const
     {
         return m_dataBase;
-    }
-
-    inline QSettings * getSettings() const
-    {
-        return m_settings;
     }
 
     inline CQueuePlayList * getQueue() const
@@ -212,13 +195,11 @@ public:
         return m_cdRomDrives;
     }
 
-    inline QString getApplicationPath() const
+    inline CMediaManager * getMediaManager() const
     {
-        return m_applicationPath;
+        return m_mediaManager;
     }
 
-    QFile * getLogFile(const QString& logName);
-    void logError(const QString& message, const QString& function, const char * file, int line);
     void notifyInformation(const QString& message);
 
     void openDialogCreateStaticList(CFolder * folder, const QList<CSong *>& songs = QList<CSong *>());
@@ -332,8 +313,8 @@ protected:
     void addFolder(CFolder * folder);
     QStringList importFolder(const QString& pathName);
     void importSongs(const QStringList& fileList);
+    void initSoundSystem();
     void displaySongTable(CMediaTableView * songTable);
-    bool initSoundSystem();
     void loadDatabase();
     void startPlay();
     void setState(TState state);
@@ -346,30 +327,28 @@ protected:
 
 private:
 
-    Ui::TMediaPlayer * m_uiWidget;        ///< Widget représentant la fenêtre principale.
-    Ui::WidgetControl * m_uiControl;      ///< Widget représentant la barre de contrôle.
-    QTranslator m_translator;
-    QList<CCDRomDrive *> m_cdRomDrives;   ///< Liste des lecteurs de CD-ROM.
-    CQueuePlayList * m_queue;             ///< File d'attente.
-    FMOD::System * m_soundSystem;         ///< Système de son de FMOD.
-    CLibraryView * m_playListView;       ///< Vue pour afficher les listes de lecture.
-    CLibraryModel * m_listModel;             ///< Modèle contenant les listes de lecture.
-    CDialogEditSong * m_dialogEditSong;   ///< Pointeur sur la boite de dialogue pour modifier les informations d'un morceau.
-    QSqlDatabase m_dataBase;              ///< Base de données.
-    QSettings * m_settings;               ///< Paramètres de l'application.
-    QTimer * m_timer;                     ///< Timer pour mettre à jour l'affichage.
-    QLabel * m_listInfos;                 ///< Label pour afficher les informations sur la liste affichée.
-    CMediaTableItem * m_currentSongItem;   ///< Pointeur sur l'item en cours de lecture.
-    CMediaTableView * m_currentSongTable;      ///< Liste de morceaux contenant le morceau en cours de lecture.
-    CLibrary * m_library;                 ///< Librairie (liste de tous les morceaux).
-    CMediaTableView * m_displayedSongTable;    ///< Liste de morceaux affichée.
-    CWidgetLyrics * m_widgetLyrics;       ///< Widget pour visualiser et modifier les paroles des morceaux.
-    TState m_state;                       ///< État de lecture.
-    bool m_showRemainingTime;             ///< Indique si on doit afficher le temps restant ou la durée du morceau en cours de lecture.
-    TRepeatMode m_repeatMode;             ///< Mode de répétition.
-    bool m_isShuffle;                     ///< Indique si la lecture aléatoire est activée.
-    bool m_isMute;                        ///< Indique si le son est coupé.
-    int m_volume;                         ///< Volume sonore (entre 0 et 100).
+    CMediaManager * m_mediaManager;         ///< Pointeur sur le gestionnaire de médias.
+    Ui::TMediaPlayer * m_uiWidget;          ///< Widget représentant la fenêtre principale.
+    Ui::WidgetControl * m_uiControl;        ///< Widget représentant la barre de contrôle.
+    QList<CCDRomDrive *> m_cdRomDrives;     ///< Liste des lecteurs de CD-ROM.
+    CQueuePlayList * m_queue;               ///< File d'attente.
+    CLibraryView * m_playListView;          ///< Vue pour afficher les listes de lecture.
+    CLibraryModel * m_listModel;            ///< Modèle contenant les listes de lecture.
+    CDialogEditSong * m_dialogEditSong;     ///< Pointeur sur la boite de dialogue pour modifier les informations d'un morceau.
+    QSqlDatabase m_dataBase;                ///< Base de données.
+    QTimer * m_timer;                       ///< Timer pour mettre à jour l'affichage.
+    QLabel * m_listInfos;                   ///< Label pour afficher les informations sur la liste affichée.
+    CMediaTableItem * m_currentSongItem;    ///< Pointeur sur l'item en cours de lecture.
+    CMediaTableView * m_currentSongTable;   ///< Liste de morceaux contenant le morceau en cours de lecture.
+    CLibrary * m_library;                   ///< Librairie (liste de tous les morceaux).
+    CMediaTableView * m_displayedSongTable; ///< Liste de morceaux affichée.
+    CWidgetLyrics * m_widgetLyrics;         ///< Widget pour visualiser et modifier les paroles des morceaux.
+    TState m_state;                         ///< État de lecture.
+    bool m_showRemainingTime;               ///< Indique si on doit afficher le temps restant ou la durée du morceau en cours de lecture.
+    TRepeatMode m_repeatMode;               ///< Mode de répétition.
+    bool m_isShuffle;                       ///< Indique si la lecture aléatoire est activée.
+    bool m_isMute;                          ///< Indique si le son est coupé.
+    int m_volume;                           ///< Volume sonore (entre 0 et 100).
 
     // Égaliseur
     double m_equalizerGains[10];                  ///< Gains de l'égaliseur.
@@ -377,8 +356,6 @@ private:
     QList<CEqualizerPreset *> m_equalizerPresets; ///< Liste des préréglages d'égaliseur.
     CEqualizerPreset * m_currentEqualizerPreset;  ///< Préréglage de l'égaliseur actuel.
 
-    QMap<QString, QFile *> m_logList;         ///< Liste des fichiers de log ouverts.
-    QString m_applicationPath;                ///< Répertoire contenant l'application.
     QList<CLibraryFolder *> m_libraryFolders; ///< Liste des répertoires de la médiathèque.
 
     QList<TNotification> m_infosNotified;     ///< Liste des notifications.

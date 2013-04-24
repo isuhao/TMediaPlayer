@@ -26,7 +26,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QString>
 #include <QWebPage>
 
-class CMainWindow;
+class CMediaManager;
 class CSong;
 class QNetworkReply;
 class QWebFrame;
@@ -38,7 +38,7 @@ class CLyricWiki : public QObject
 
 public:
 
-    CLyricWiki(CMainWindow * application, CSong * song);
+    CLyricWiki(CMediaManager * mediaManager, CSong * song);
     virtual ~CLyricWiki();
 
     inline CSong * getSong() const
@@ -58,7 +58,7 @@ protected slots:
 
 protected:
     
-    CMainWindow * m_application;
+    CMediaManager * m_mediaManager;
     CSong * m_song;
     QWebPage page;
     QWebFrame * m_frame;

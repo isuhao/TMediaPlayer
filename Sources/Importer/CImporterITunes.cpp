@@ -19,6 +19,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CImporterITunes.hpp"
 #include "../CMainWindow.hpp"
+#include "../CMediaManager.hpp"
+
 #include <QFileDialog>
 #include <QStandardItem>
 #include <QStandardItemModel>
@@ -33,9 +35,9 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 
 CImporterITunes::CImporterITunes(CMainWindow * application) :
-    QWizard       (application),
-    m_application (application),
-    m_library     (new CITunesLibrary(application, this))
+QWizard       (application),
+m_mainWindow (application),
+m_library     (new CITunesLibrary(application, this))
 {
     Q_CHECK_PTR(application);
 
@@ -48,7 +50,7 @@ CImporterITunes::CImporterITunes(CMainWindow * application) :
     m_page1 = new CITunesWizardPage1(m_library, this);
     m_page2 = new CITunesWizardPage2(m_library, this);
     m_page3 = new CITunesWizardPage3(m_library, this);
-    m_page4 = new CITunesWizardPage4(m_application, m_library, this);
+    m_page4 = new CITunesWizardPage4(m_mainWindow, m_library, this);
 
     addPage(m_page1);
     addPage(m_page2);
@@ -86,8 +88,8 @@ bool CImporterITunes::needToImportSongs() const
 
 
 CITunesWizardPage1::CITunesWizardPage1(CITunesLibrary * library, QWidget * parent) :
-    QWizardPage (parent),
-    m_library   (library)
+QWizardPage (parent),
+m_library   (library)
 {
     Q_CHECK_PTR(library);
 
@@ -122,8 +124,8 @@ void CITunesWizardPage1::chooseFile()
 
 
 CITunesWizardPage2::CITunesWizardPage2(CITunesLibrary * library, QWidget * parent) :
-    QWizardPage (parent),
-    m_library   (library)
+QWizardPage (parent),
+m_library   (library)
 {
     Q_CHECK_PTR(library);
 
@@ -185,9 +187,9 @@ bool CITunesWizardPage2::needToImportSongs() const
 
 
 CITunesWizardPage3::CITunesWizardPage3(CITunesLibrary * library, QWidget * parent) :
-    QWizardPage (parent),
-    m_library   (library),
-    m_uiWidget  (new Ui::ImporterITunesPage3())
+QWizardPage (parent),
+m_library   (library),
+m_uiWidget  (new Ui::ImporterITunesPage3())
 {
     Q_CHECK_PTR(library);
 
@@ -214,9 +216,9 @@ CITunesWizardPage3::~CITunesWizardPage3()
 
 
 CITunesWizardPage4::CITunesWizardPage4(CMainWindow * application, CITunesLibrary * library, QWidget * parent) :
-    QWizardPage   (parent),
-    m_library     (library),
-    m_application (application)
+QWizardPage   (parent),
+m_library     (library),
+m_mainWindow (application)
 {
     Q_CHECK_PTR(library);
     Q_CHECK_PTR(application);
@@ -230,7 +232,7 @@ CITunesWizardPage4::CITunesWizardPage4(CMainWindow * application, CITunesLibrary
 /// \todo Implémentation.
 void CITunesWizardPage4::initializePage()
 {
-    QSqlQuery query(m_application->getDataBase());
+    QSqlQuery query(m_mainWindow->getDataBase());
     QMap<int, CSong *> songs;
 
     // Ajout des morceaux
@@ -240,7 +242,7 @@ void CITunesWizardPage4::initializePage()
 
         for (QMap<int, CITunesLibrary::TSong>::const_iterator it2 = songsToLoad.begin(); it2 != songsToLoad.end(); ++it2)
         {
-            songs[it2.key()] = m_application->getSongFromId(CSong::getId(m_application, it2->fileName));
+            songs[it2.key()] = m_mainWindow->getSongFromId(CSong::getId(m_mainWindow, it2->fileName));
 
             if (songs[it2.key()])
             {
@@ -256,7 +258,7 @@ void CITunesWizardPage4::initializePage()
 
                     if (!query.exec())
                     {
-                        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                         return;
                     }
                 }
@@ -276,7 +278,7 @@ void CITunesWizardPage4::initializePage()
 
                     if (!query.exec())
                     {
-                        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                         return;
                     }
                 }
@@ -292,7 +294,7 @@ void CITunesWizardPage4::initializePage()
 
                     if (!query.exec())
                     {
-                        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                         return;
                     }
                     
@@ -302,7 +304,7 @@ void CITunesWizardPage4::initializePage()
 
                     if (!query.exec())
                     {
-                        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                         return;
                     }
 
@@ -318,7 +320,7 @@ void CITunesWizardPage4::initializePage()
 
                         if (!query.exec())
                         {
-                            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                             return;
                         }
                     }
@@ -337,7 +339,7 @@ void CITunesWizardPage4::initializePage()
 
                     if (!query.exec())
                     {
-                        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                         return;
                     }
 
@@ -354,7 +356,7 @@ void CITunesWizardPage4::initializePage()
 
                         if (!query.exec())
                         {
-                            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                             return;
                         }
                     }
@@ -362,7 +364,7 @@ void CITunesWizardPage4::initializePage()
             }
             else
             {
-                songs[it2.key()] = m_application->addSong(it2->fileName);
+                songs[it2.key()] = m_mainWindow->addSong(it2->fileName);
 
                 query.prepare("UPDATE song SET song_enabled = ?, song_compilation = ?, song_rating = ?, song_play_count = ?, song_play_time = ? "
                               "WHERE song_id = ?");
@@ -376,7 +378,7 @@ void CITunesWizardPage4::initializePage()
 
                 if (!query.exec())
                 {
-                    m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                    m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                     return;
                 }
 
@@ -393,7 +395,7 @@ void CITunesWizardPage4::initializePage()
 
                     if (!query.exec())
                     {
-                        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                         return;
                     }
                 }
@@ -422,9 +424,9 @@ bool CITunesWizardPage1::validateCurrentPage()
 */
 
 CITunesLibrary::CITunesLibrary(CMainWindow * application, QObject * parent) :
-    QObject       (parent),
-    m_isLoaded    (false),
-    m_application (application)
+QObject       (parent),
+m_isLoaded    (false),
+m_mainWindow (application)
 {
     Q_CHECK_PTR(application);
 }
@@ -461,14 +463,14 @@ bool CITunesLibrary::loadFile(const QString& fileName)
 
     if (!file.open(QIODevice::ReadOnly))
     {
-        m_application->logError(tr("can't open the file \"%1\"").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logError(tr("can't open the file \"%1\"").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
         return false;
     }
 
     if (!m_document.setContent(&file))
     {
         file.close();
-        m_application->logError(tr("the file \"%1\" is not a valid XML file").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logError(tr("the file \"%1\" is not a valid XML file").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
         return false;
     }
 
@@ -478,7 +480,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
 
     if (node.tagName() != "plist")
     {
-        m_application->logError(tr("the file \"%1\" is not valid (%2)").arg(fileName).arg(tr("expected element \"%1\"").arg("plist")), __FUNCTION__, __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logError(tr("the file \"%1\" is not valid (%2)").arg(fileName).arg(tr("expected element \"%1\"").arg("plist")), __FUNCTION__, __FILE__, __LINE__);
         return false;
     }
 
@@ -486,7 +488,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
 
     if (node.tagName() != "dict")
     {
-        m_application->logError(tr("the file \"%1\" is not valid (%2)").arg(fileName).arg(tr("expected element \"%1\"").arg("dict")), __FUNCTION__, __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logError(tr("the file \"%1\" is not valid (%2)").arg(fileName).arg(tr("expected element \"%1\"").arg("dict")), __FUNCTION__, __FILE__, __LINE__);
         return false;
     }
 
@@ -496,7 +498,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
     {
         if (node.tagName() != "key")
         {
-            m_application->logError(tr("the file \"%1\" is not valid (%2)").arg(fileName).arg(tr("expected element \"%1\"").arg("key")), __FUNCTION__, __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logError(tr("the file \"%1\" is not valid (%2)").arg(fileName).arg(tr("expected element \"%1\"").arg("key")), __FUNCTION__, __FILE__, __LINE__);
             continue;
         }
         
@@ -507,7 +509,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
 
             if (node.tagName() != "dict")
             {
-                qWarning() << "CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'dict' attendu)";
+                qWarning() << tr("CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'dict' attendu)");
                 continue;
             }
             
@@ -516,7 +518,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
             {
                 if (nodeList.tagName() != "key")
                 {
-                    m_application->logError(tr("the file \"%1\" is not valid (%2)").arg(fileName).arg(tr("expected element \"%1\"").arg("key")), __FUNCTION__, __FILE__, __LINE__);
+                    m_mainWindow->getMediaManager()->logError(tr("the file \"%1\" is not valid (%2)").arg(fileName).arg(tr("expected element \"%1\"").arg("key")), __FUNCTION__, __FILE__, __LINE__);
                     continue;
                 }
 
@@ -524,7 +526,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
 
                 if (nodeList.tagName() != "dict")
                 {
-                    m_application->logError(tr("the file \"%1\" is not valid (%2)").arg(fileName).arg(tr("expected element \"%1\"").arg("dict")), __FUNCTION__, __FILE__, __LINE__);
+                    m_mainWindow->getMediaManager()->logError(tr("the file \"%1\" is not valid (%2)").arg(fileName).arg(tr("expected element \"%1\"").arg("dict")), __FUNCTION__, __FILE__, __LINE__);
                     continue;
                 }
 
@@ -535,7 +537,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
                 {
                     if (nodeListAttr.tagName() != "key")
                     {
-                        m_application->logError(tr("the file \"%1\" is not valid (%2)").arg(fileName).arg(tr("expected element \"%1\"").arg("key")), __FUNCTION__, __FILE__, __LINE__);
+                        m_mainWindow->getMediaManager()->logError(tr("the file \"%1\" is not valid (%2)").arg(fileName).arg(tr("expected element \"%1\"").arg("key")), __FUNCTION__, __FILE__, __LINE__);
                         continue;
                     }
 
@@ -743,7 +745,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
                         }
                         else
                         {
-                            m_application->logError(tr("incorrect file name in element \"Location\" (%1)").arg(song.fileName), __FUNCTION__, __FILE__, __LINE__);
+                            m_mainWindow->getMediaManager()->logError(tr("incorrect file name in element \"Location\" (%1)").arg(song.fileName), __FUNCTION__, __FILE__, __LINE__);
                         }
                     }
                     else if (nodeListAttr.text() == "File Folder Count")
@@ -867,7 +869,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
                     }
                     else
                     {
-                        m_application->logError(tr("unknown key \"%1\" for a song").arg(nodeListAttr.text()), __FUNCTION__, __FILE__, __LINE__);
+                        m_mainWindow->getMediaManager()->logError(tr("unknown key \"%1\" for a song").arg(nodeListAttr.text()), __FUNCTION__, __FILE__, __LINE__);
                     }
 
                     nodeListAttr = nodeListAttr.nextSibling().toElement();
@@ -959,7 +961,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
 
                             if (nodeListSong.text() != "Track ID")
                             {
-                                m_application->logError(tr("the file \"%1\" is not valid (%2)").arg(fileName).arg(tr("expected value \"%1\"").arg("Track ID")), __FUNCTION__, __FILE__, __LINE__);
+                                m_mainWindow->getMediaManager()->logError(tr("the file \"%1\" is not valid (%2)").arg(fileName).arg(tr("expected value \"%1\"").arg("Track ID")), __FUNCTION__, __FILE__, __LINE__);
                                 continue;
                             }
 
@@ -1044,7 +1046,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
 
                 if (folderIndex == -1)
                 {
-                    m_application->logError(tr("invalid folder for playlist"), __FUNCTION__, __FILE__, __LINE__);
+                    m_mainWindow->getMediaManager()->logError(tr("invalid folder for playlist"), __FUNCTION__, __FILE__, __LINE__);
                     m_dynamicLists.append(it.value());
                 }
                 else
@@ -1069,7 +1071,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
 
                 if (folderIndex == -1)
                 {
-                    m_application->logError(tr("invalid folder for playlist"), __FUNCTION__, __FILE__, __LINE__);
+                    m_mainWindow->getMediaManager()->logError(tr("invalid folder for playlist"), __FUNCTION__, __FILE__, __LINE__);
                     m_staticLists.append(it.value());
                 }
                 else
@@ -1127,7 +1129,7 @@ void CITunesLibrary::initModelWithLists(QStandardItemModel * model) const
         // Listes dynamiques
         for (QList<TDynamicList>::const_iterator it2 = it->dynamicLists.begin(); it2 != it->dynamicLists.end(); ++it2)
         {
-            QStandardItem * item = new QStandardItem(QPixmap(":/icons/dynamic_list"), it2->name);
+            item = new QStandardItem(QPixmap(":/icons/dynamic_list"), it2->name);
             item->setData(it2->id, Qt::UserRole + 1);
             item->setCheckable(true);
             item->setEnabled(false);
@@ -1137,7 +1139,7 @@ void CITunesLibrary::initModelWithLists(QStandardItemModel * model) const
         // Listes statiques
         for (QList<TStaticList>::const_iterator it2 = it->staticLists.begin(); it2 != it->staticLists.end(); ++it2)
         {
-            QStandardItem * item = new QStandardItem(QPixmap(":/icons/playlist"), tr("%1 (%n song(s))", "", it2->songs.size()).arg(it2->name));
+            item = new QStandardItem(QPixmap(":/icons/playlist"), tr("%1 (%n song(s))", "", it2->songs.size()).arg(it2->name));
             item->setData(it2->id, Qt::UserRole + 1);
             item->setCheckable(true);
             item->setEnabled(false);
@@ -1148,7 +1150,7 @@ void CITunesLibrary::initModelWithLists(QStandardItemModel * model) const
     // Listes dynamiques
     for (QList<TDynamicList>::const_iterator it = m_dynamicLists.begin(); it != m_dynamicLists.end(); ++it)
     {
-        QStandardItem * item = new QStandardItem(QPixmap(":/icons/dynamic_list"), it->name);
+        item = new QStandardItem(QPixmap(":/icons/dynamic_list"), it->name);
         item->setData(it->id, Qt::UserRole + 1);
         item->setCheckable(true);
         item->setEnabled(false);
@@ -1158,7 +1160,7 @@ void CITunesLibrary::initModelWithLists(QStandardItemModel * model) const
     // Listes statiques
     for (QList<TStaticList>::const_iterator it = m_staticLists.begin(); it != m_staticLists.end(); ++it)
     {
-        QStandardItem * item = new QStandardItem(QPixmap(":/icons/playlist"), tr("%1 (%n song(s))", "", it->songs.size()).arg(it->name));
+        item = new QStandardItem(QPixmap(":/icons/playlist"), tr("%1 (%n song(s))", "", it->songs.size()).arg(it->name));
         item->setData(it->id, Qt::UserRole + 1);
         item->setCheckable(true);
         item->setEnabled(false);
@@ -1171,7 +1173,7 @@ bool CITunesLibrary::testLoadingXMLElementError(const QString& element, const QS
 {
     if (element != expected)
     {
-        m_application->logError(tr("the file \"%1\" is not valid (%2)").arg("").arg(tr("expected element \"%1\"").arg(expected)), __FUNCTION__, __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logError(tr("the file \"%1\" is not valid (%2)").arg("").arg(tr("expected element \"%1\"").arg(expected)), __FUNCTION__, __FILE__, __LINE__);
         return true;
     }
 

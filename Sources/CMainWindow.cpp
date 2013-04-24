@@ -18,6 +18,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CMainWindow.hpp"
+#include "CMediaManager.hpp"
 #include "CSong.hpp"
 #include "CMediaTableModel.hpp"
 #include "CStaticList.hpp"
@@ -81,36 +82,22 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 const int timerPeriod = 250; ///< Intervalle entre chaque mise-à-jour des informations.
 
-const QString appVersion = "1.0.46";     ///< Numéro de version de l'application.
-const QString appDate    = "20/04/2013"; ///< Date de sortie de cette version.
-
-
-QString CMainWindow::getAppVersion()
-{
-    return appVersion;
-}
-
-
-QString CMainWindow::getAppDate()
-{
-    return appDate;
-}
-
 
 /**
  * Constructeur de la classe principale de l'application.
+ *
+ * \param mediaManager Pointeur sur le gestionnaire de médias.
  */
 
-CMainWindow::CMainWindow() :
+CMainWindow::CMainWindow(CMediaManager * mediaManager) :
 QMainWindow            (nullptr),
+m_mediaManager         (mediaManager),
 m_uiWidget             (new Ui::TMediaPlayer()),
 m_uiControl            (new Ui::WidgetControl()),
 m_queue                (nullptr),
-m_soundSystem          (nullptr),
 m_playListView         (nullptr),
 m_listModel            (nullptr),
 m_dialogEditSong       (nullptr),
-m_settings             (nullptr),
 m_timer                (nullptr),
 m_listInfos            (nullptr),
 m_currentSongItem      (nullptr),
@@ -133,40 +120,21 @@ m_lastFmTimeListened         (0),
 m_lastFmLastPosition         (0),
 m_lastFmState                (NoScrobble)
 {
+    Q_CHECK_PTR(m_mediaManager);
 
 #ifndef T_NO_SINGLE_APP
 	QLocalServer * server = new QLocalServer(this);
 	connect(server, SIGNAL(newConnection()), this, SLOT(activateThisWindow()));
-	server->listen("tmediaplayer-" + getAppVersion());
+	server->listen("tmediaplayer-" + CMediaManager::getAppVersion());
 #endif // T_NO_SINGLE_APP
 
     setDockNestingEnabled(true);
 
-    // Chargement des paramètres de l'application
-    m_settings = new QSettings(this);
-
-    // Internationnalisation
-    QString lang = m_settings->value("Preferences/Language", QLocale::system().name()).toString();
-
-    if (lang.isEmpty() || !m_translator.load(QString("Lang/TMediaPlayer_") + lang))
-        m_translator.load(QString("Lang/TMediaPlayer_") + QLocale::system().name());
-
-    qApp->installTranslator(&m_translator);
-
-#if QT_VERSION >= 0x050000
-    m_applicationPath = QStandardPaths::writableLocation(QStandardPaths::DataLocation) + QDir::separator();
-#else
-    m_applicationPath = QDesktopServices::storageLocation(QDesktopServices::DataLocation) + QDir::separator();
-#endif
-
-    // Création du répertoire si nécessaire
-    QDir(m_applicationPath).mkpath(".");
-
     // Last.fm
-    m_lastFmEnableScrobble = m_settings->value("LastFm/EnableScrobble", false).toBool();
-    m_delayBeforeNotification = m_settings->value("LastFm/DelayBeforeNotification", 5000).toInt();
-    m_percentageBeforeScrobbling = m_settings->value("LastFm/PercentageBeforeScrobbling", 60).toInt();
-    m_lastFmKey = m_settings->value("LastFm/SessionKey", "").toByteArray();
+    m_lastFmEnableScrobble = m_mediaManager->getSettings()->value("LastFm/EnableScrobble", false).toBool();
+    m_delayBeforeNotification = m_mediaManager->getSettings()->value("LastFm/DelayBeforeNotification", 5000).toInt();
+    m_percentageBeforeScrobbling = m_mediaManager->getSettings()->value("LastFm/PercentageBeforeScrobbling", 60).toInt();
+    m_lastFmKey = m_mediaManager->getSettings()->value("LastFm/SessionKey", "").toByteArray();
 
 
     // Initialisation de l'interface graphique
@@ -276,9 +244,9 @@ CMainWindow::~CMainWindow()
     }
 
     // Enregistrement des paramètres
-    m_settings->setValue("Preferences/Volume", m_volume);
-    m_settings->setValue("Preferences/Shuffle", m_isShuffle);
-    m_settings->setValue("Preferences/Repeat", m_repeatMode);
+    m_mediaManager->getSettings()->setValue("Preferences/Volume", m_volume);
+    m_mediaManager->getSettings()->setValue("Preferences/Shuffle", m_isShuffle);
+    m_mediaManager->getSettings()->setValue("Preferences/Repeat", m_repeatMode);
 
     //dumpObjectTree();
 
@@ -310,8 +278,6 @@ CMainWindow::~CMainWindow()
 
     m_dataBase.close();
 
-    m_soundSystem->release();
-
     delete m_uiWidget;
 }
 
@@ -326,7 +292,7 @@ bool CMainWindow::initWindow()
 
     if (init)
     {
-        logError(tr("the application has already been initialized"), __FUNCTION__, __FILE__, __LINE__);
+        m_mediaManager->logError(tr("the application has already been initialized"), __FUNCTION__, __FILE__, __LINE__);
         return true;
     }
 
@@ -335,11 +301,11 @@ bool CMainWindow::initWindow()
     if (m_lastFmEnableScrobble)
     {
         QSqlDatabase dataBase = QSqlDatabase::addDatabase("QSQLITE", "lastfm");
-        dataBase.setDatabaseName(m_applicationPath + "lastfm.sqlite");
+        dataBase.setDatabaseName(m_mediaManager->getApplicationPath() + "lastfm.sqlite");
 
         if (!dataBase.open())
         {
-            qWarning() << "Erreur d'ouverture de la base lastfm.sqlite\n";
+            m_mediaManager->logError(tr("Erreur d'ouverture de la base lastfm.sqlite"), __FUNCTION__, __FILE__, __LINE__);
         }
         else
         {
@@ -408,9 +374,9 @@ bool CMainWindow::initWindow()
     m_uiWidget->toolBar->addWidget(widgetControl);
     m_uiControl->sliderPosition->setStyle(new CSliderStyle);
 
-    m_uiControl->btnStop->setVisible(m_settings->value("Preferences/ShowButtonStop", true).toBool());
+    m_uiControl->btnStop->setVisible(m_mediaManager->getSettings()->value("Preferences/ShowButtonStop", true).toBool());
 
-    m_showRemainingTime = m_settings->value("Preferences/ShowRemainingTime", false).toBool();
+    m_showRemainingTime = m_mediaManager->getSettings()->value("Preferences/ShowRemainingTime", false).toBool();
 
     // Connexions des signaux et des slots
     connect(m_uiControl->songInfos, SIGNAL(clicked()), this, SLOT(selectCurrentSong()));
@@ -468,24 +434,19 @@ bool CMainWindow::initWindow()
     addDockWidget(Qt::RightDockWidgetArea, dockLyrics);
 
 
-    restoreGeometry(m_settings->value("Window/WindowGeometry").toByteArray());
-    restoreState(m_settings->value("Window/WindowState").toByteArray());
+    restoreGeometry(m_mediaManager->getSettings()->value("Window/WindowGeometry").toByteArray());
+    restoreState(m_mediaManager->getSettings()->value("Window/WindowState").toByteArray());
 
 
     // Initialisation de FMOD
-    if (!initSoundSystem())
-    {
-        QMessageBox::critical(this, QString(), tr("Failed to init sound system with FMOD."));
-        QCoreApplication::exit();
-        return false;
-    }
+    initSoundSystem();
 
 
     // Paramètres de lecture
-    setVolume(m_settings->value("Preferences/Volume", 50).toInt());
-    setShuffle(m_settings->value("Preferences/Shuffle", false).toBool());
+    setVolume(m_mediaManager->getSettings()->value("Preferences/Volume", 50).toInt());
+    setShuffle(m_mediaManager->getSettings()->value("Preferences/Shuffle", false).toBool());
 
-    int repeatModeNum = m_settings->value("Preferences/Repeat", 0).toInt();
+    int repeatModeNum = m_mediaManager->getSettings()->value("Preferences/Repeat", 0).toInt();
 
     switch (repeatModeNum)
     {
@@ -497,21 +458,21 @@ bool CMainWindow::initWindow()
 
 
     // Chargement de la base de données
-    QString dbType = m_settings->value("Database/Type", QString("QSQLITE")).toString();
-    m_settings->setValue("Database/Type", dbType);
+    QString dbType = m_mediaManager->getSettings()->value("Database/Type", QString("QSQLITE")).toString();
+    m_mediaManager->getSettings()->setValue("Database/Type", dbType);
     m_dataBase = QSqlDatabase::addDatabase(dbType, "library");
 
-    QString dbHostName = m_settings->value("Database/Host", QString("localhost")).toString();
-    int dbPort = m_settings->value("Database/Port", 0).toInt();
+    QString dbHostName = m_mediaManager->getSettings()->value("Database/Host", QString("localhost")).toString();
+    int dbPort = m_mediaManager->getSettings()->value("Database/Port", 0).toInt();
 
 #if QT_VERSION >= 0x050000
-    QString dbBaseName = m_settings->value("Database/Base", QStandardPaths::writableLocation(QStandardPaths::DataLocation) + QDir::separator() + "library.sqlite").toString();
+    QString dbBaseName = m_mediaManager->getSettings()->value("Database/Base", QStandardPaths::writableLocation(QStandardPaths::DataLocation) + QDir::separator() + "library.sqlite").toString();
 #else
-    QString dbBaseName = m_settings->value("Database/Base", QDesktopServices::storageLocation(QDesktopServices::DataLocation) + QDir::separator() + "library.sqlite").toString();
+    QString dbBaseName = m_mediaManager->getSettings()->value("Database/Base", QDesktopServices::storageLocation(QDesktopServices::DataLocation) + QDir::separator() + "library.sqlite").toString();
 #endif
 
-    QString dbUserName = m_settings->value("Database/UserName", QString("root")).toString();
-    QString dbPassword = m_settings->value("Database/Password", QString("")).toString();
+    QString dbUserName = m_mediaManager->getSettings()->value("Database/UserName", QString("root")).toString();
+    QString dbPassword = m_mediaManager->getSettings()->value("Database/Password", QString("")).toString();
 
     m_dataBase.setHostName(dbHostName);
     m_dataBase.setPort(dbPort);
@@ -519,11 +480,11 @@ bool CMainWindow::initWindow()
     m_dataBase.setUserName(dbUserName);
     m_dataBase.setPassword(dbPassword);
 
-    m_settings->setValue("Database/Host", dbHostName);
-    m_settings->setValue("Database/Port", dbPort);
-    m_settings->setValue("Database/Base", dbBaseName);
-    m_settings->setValue("Database/UserName", dbUserName);
-    m_settings->setValue("Database/Password", dbPassword);
+    m_mediaManager->getSettings()->setValue("Database/Host", dbHostName);
+    m_mediaManager->getSettings()->setValue("Database/Port", dbPort);
+    m_mediaManager->getSettings()->setValue("Database/Base", dbBaseName);
+    m_mediaManager->getSettings()->setValue("Database/UserName", dbUserName);
+    m_mediaManager->getSettings()->setValue("Database/Password", dbPassword);
 
     if (!m_dataBase.open())
     {
@@ -540,38 +501,38 @@ bool CMainWindow::initWindow()
 
     for (int i = 0; i < 10; ++i)
     {
-        m_equalizerGains[i] = qBound(0.05f, m_settings->value(QString("Equalizer/Gain_%1").arg(i), 1.0f).toFloat(), 3.0f);
+        m_equalizerGains[i] = qBound(0.05f, m_mediaManager->getSettings()->value(QString("Equalizer/Gain_%1").arg(i), 1.0f).toFloat(), 3.0f);
         FMOD_RESULT res;
 
-        res = m_soundSystem->createDSPByType(FMOD_DSP_TYPE_PARAMEQ, &m_dsp[i]);
+        res = m_mediaManager->getSoundSystem()->createDSPByType(FMOD_DSP_TYPE_PARAMEQ, &m_dsp[i]);
 
         if (res != FMOD_OK)
-            logError(tr("createDSPByType #%1").arg(i), __FUNCTION__, __FILE__, __LINE__);
+            m_mediaManager->logError(tr("createDSPByType #%1").arg(i), __FUNCTION__, __FILE__, __LINE__);
 
         res = m_dsp[i]->setParameter(FMOD_DSP_PARAMEQ_CENTER, eqFrequencies[i]);
 
         if (res != FMOD_OK)
-            logError(tr("dsp->setParameter(FMOD_DSP_PARAMEQ_CENTER) #%1").arg(i), __FUNCTION__, __FILE__, __LINE__);
+            m_mediaManager->logError(tr("dsp->setParameter(FMOD_DSP_PARAMEQ_CENTER) #%1").arg(i), __FUNCTION__, __FILE__, __LINE__);
 
         res = m_dsp[i]->setParameter(FMOD_DSP_PARAMEQ_BANDWIDTH, 1.0);
 
         if (res != FMOD_OK)
-            logError(tr("dsp->setParameter(FMOD_DSP_PARAMEQ_BANDWIDTH) #%1").arg(i), __FUNCTION__, __FILE__, __LINE__);
+            m_mediaManager->logError(tr("dsp->setParameter(FMOD_DSP_PARAMEQ_BANDWIDTH) #%1").arg(i), __FUNCTION__, __FILE__, __LINE__);
 
         res = m_dsp[i]->setParameter(FMOD_DSP_PARAMEQ_GAIN, m_equalizerGains[i]);
 
         if (res != FMOD_OK)
-            logError(tr("dsp->setParameter(FMOD_DSP_PARAMEQ_GAIN) #%1").arg(i), __FUNCTION__, __FILE__, __LINE__);
+            m_mediaManager->logError(tr("dsp->setParameter(FMOD_DSP_PARAMEQ_GAIN) #%1").arg(i), __FUNCTION__, __FILE__, __LINE__);
 
-        res = m_soundSystem->addDSP(m_dsp[i], nullptr);
+        res = m_mediaManager->getSoundSystem()->addDSP(m_dsp[i], nullptr);
 
         if (res != FMOD_OK)
-            logError(tr("addDSP #%1").arg(i), __FUNCTION__, __FILE__, __LINE__);
+            m_mediaManager->logError(tr("addDSP #%1").arg(i), __FUNCTION__, __FILE__, __LINE__);
     }
 
-    setEqualizerEnabled(m_settings->value("Equalizer/Enabled", false).toBool());
+    setEqualizerEnabled(m_mediaManager->getSettings()->value("Equalizer/Enabled", false).toBool());
 
-    QString presetName = m_settings->value(QString("Equalizer/PresetName"), QString()).toString();
+    QString presetName = m_mediaManager->getSettings()->value(QString("Equalizer/PresetName"), QString()).toString();
     CEqualizerPreset * preset = getEqualizerPresetFromName(presetName);
 
     if (preset)
@@ -619,7 +580,7 @@ void CMainWindow::showDatabaseError(const QString& msg, const QString& query, co
     QMessageBox::warning(this, tr("Database error"), tr("File: %1 (%2)\n\nQuery: %3\n\nError: %4").arg(fileName).arg(line).arg(query).arg(msg));
 #endif
 
-    logError(msg + "\n" + tr("Query: ") + query, QString(), fileName.toUtf8().data(), line);
+    m_mediaManager->logError(msg + "\n" + tr("Query: ") + query, "", fileName.toUtf8().data(), line);
 }
 
 
@@ -632,7 +593,7 @@ void CMainWindow::showDatabaseError(const QString& msg, const QString& query, co
 void CMainWindow::setRowHeight(int height)
 {
     height = qBound(15, height, 50);
-    m_settings->setValue("Preferences/RowHeight", height);
+    m_mediaManager->getSettings()->setValue("Preferences/RowHeight", height);
 
     // Mise à jour des vues
     m_library->verticalHeader()->setDefaultSectionSize(height);
@@ -654,7 +615,7 @@ void CMainWindow::setRowHeight(int height)
 
 int CMainWindow::getRowHeight() const
 {
-    return m_settings->value("Preferences/RowHeight", 19).toInt();
+    return m_mediaManager->getSettings()->value("Preferences/RowHeight", 19).toInt();
 }
 
 
@@ -666,14 +627,14 @@ int CMainWindow::getRowHeight() const
 
 void CMainWindow::showButtonStop(bool show)
 {
-    m_settings->setValue("Preferences/ShowButtonStop", show);
+    m_mediaManager->getSettings()->setValue("Preferences/ShowButtonStop", show);
     m_uiControl->btnStop->setVisible(show);
 }
 
 
 void CMainWindow::showRemainingTime(bool show)
 {
-    m_settings->setValue("Preferences/ShowRemainingTime", show);
+    m_mediaManager->getSettings()->setValue("Preferences/ShowRemainingTime", show);
     m_showRemainingTime = show;
 }
 
@@ -687,7 +648,7 @@ void CMainWindow::showRemainingTime(bool show)
 void CMainWindow::enableScrobbling(bool enable)
 {
     m_lastFmEnableScrobble = enable;
-    m_settings->setValue("LastFm/EnableScrobble", enable);
+    m_mediaManager->getSettings()->setValue("LastFm/EnableScrobble", enable);
 }
 
 
@@ -701,7 +662,7 @@ void CMainWindow::setDelayBeforeNotification(int delay)
 {
     delay = qBound(2000, delay, 20000);
     m_delayBeforeNotification = delay;
-    m_settings->setValue("LastFm/DelayBeforeNotification", delay);
+    m_mediaManager->getSettings()->setValue("LastFm/DelayBeforeNotification", delay);
 }
 
 
@@ -709,7 +670,7 @@ void CMainWindow::setPercentageBeforeScrobbling(int percentage)
 {
     percentage = qBound(50, percentage, 100);
     m_percentageBeforeScrobbling = percentage;
-    m_settings->setValue("LastFm/PercentageBeforeScrobbling", percentage);
+    m_mediaManager->getSettings()->setValue("LastFm/PercentageBeforeScrobbling", percentage);
 }
 
 
@@ -723,11 +684,11 @@ void CMainWindow::setPercentageBeforeScrobbling(int percentage)
 void CMainWindow::setEqualizerGain(CEqualizerPreset::TFrequency frequency, double gain)
 {
     m_equalizerGains[frequency] = qBound(0.05, gain, 3.0);
-    m_settings->setValue(QString("Equalizer/Gain_%1").arg(frequency), m_equalizerGains[frequency]);
+    m_mediaManager->getSettings()->setValue(QString("Equalizer/Gain_%1").arg(frequency), m_equalizerGains[frequency]);
     FMOD_RESULT res = m_dsp[frequency]->setParameter(FMOD_DSP_PARAMEQ_GAIN, m_equalizerGains[frequency]);
 
     if (res != FMOD_OK)
-        logError(tr("dsp->setParameter(FMOD_DSP_PARAMEQ_GAIN) #%1").arg(frequency), __FUNCTION__, __FILE__, __LINE__);
+        m_mediaManager->logError(tr("dsp->setParameter(FMOD_DSP_PARAMEQ_GAIN) #%1").arg(frequency), __FUNCTION__, __FILE__, __LINE__);
 }
 
 
@@ -774,14 +735,14 @@ void CMainWindow::setEqualizerEnabled(bool enabled)
 {
     FMOD_RESULT res;
 
-    m_settings->setValue(QString("Equalizer/Enabled"), enabled);
+    m_mediaManager->getSettings()->setValue(QString("Equalizer/Enabled"), enabled);
 
     for (int i = 0; i < 10; ++i)
     {
         res = m_dsp[i]->setParameter(FMOD_DSP_PARAMEQ_GAIN, (enabled ? m_equalizerGains[i] : 1.0));
 
         if (res != FMOD_OK)
-            logError(tr("dsp->setParameter(FMOD_DSP_PARAMEQ_GAIN) #%1").arg(i), __FUNCTION__, __FILE__, __LINE__);
+            m_mediaManager->logError(tr("dsp->setParameter(FMOD_DSP_PARAMEQ_GAIN) #%1").arg(i), __FUNCTION__, __FILE__, __LINE__);
     }
 }
 
@@ -794,7 +755,7 @@ void CMainWindow::setEqualizerEnabled(bool enabled)
 
 bool CMainWindow::isEqualizerEnabled() const
 {
-    return m_settings->value(QString("Equalizer/Enabled"), false).toBool();
+    return m_mediaManager->getSettings()->value(QString("Equalizer/Enabled"), false).toBool();
 }
 
 
@@ -818,7 +779,7 @@ void CMainWindow::deleteEqualizerPreset(CEqualizerPreset * preset)
     if (m_currentEqualizerPreset == preset)
     {
         m_currentEqualizerPreset = nullptr;
-        m_settings->setValue("Equalizer/PresetName", QString());
+        m_mediaManager->getSettings()->setValue("Equalizer/PresetName", QString());
     }
 
     preset->removeFromDataBase();
@@ -870,7 +831,7 @@ void CMainWindow::setCurrentEqualizerPreset(CEqualizerPreset * equalizer)
 {
     if (!equalizer)
     {
-        m_settings->setValue("Equalizer/PresetName", QString());
+        m_mediaManager->getSettings()->setValue("Equalizer/PresetName", QString());
         return;
     }
 
@@ -887,7 +848,7 @@ void CMainWindow::setCurrentEqualizerPreset(CEqualizerPreset * equalizer)
     setEqualizerGain(CEqualizerPreset::Frequency8K , equalizer->getValue(8));
     setEqualizerGain(CEqualizerPreset::Frequency16K, equalizer->getValue(9));
 
-    m_settings->setValue("Equalizer/PresetName", equalizer->getName());
+    m_mediaManager->getSettings()->setValue("Equalizer/PresetName", equalizer->getName());
 }
 
 
@@ -1431,67 +1392,6 @@ QStringList CMainWindow::getGenreList()
 
 
 /**
- * Retourne le pointeur sur un fichier de log.
- *
- * \param logName Nom du fichier de log.
- * \return Pointeur sur le fichier ouvert en écriture.
- */
-
-QFile * CMainWindow::getLogFile(const QString& logName)
-{
-    QString fileName = logName + QDateTime::currentDateTime().toString("-yyyy-MM-dd");
-
-    if (!m_logList.contains(fileName))
-    {
-        QString logFileName = m_applicationPath + fileName + ".log";
-        QFile * logFile = new QFile(logFileName, this);
-
-        if (!logFile->open(QIODevice::WriteOnly | QIODevice::Append))
-        {
-            logError(tr("can't open the log file \"%1\"").arg(logFileName), __FUNCTION__, __FILE__, __LINE__);
-            return nullptr;
-        }
-
-        m_logList[fileName] = logFile;
-    }
-
-    return m_logList.value(fileName);
-}
-
-
-/**
- * Gestion des messages d'erreur.
- *
- * \param message  Message d'erreur.
- * \param function Nom de la fonction où l'erreur est survenue.
- * \param file     Nom du fichier source contenant la fonction.
- * \param line     Ligne dans le fichier source.
- */
-
-void CMainWindow::logError(const QString& message, const QString& function, const char * file, int line)
-{
-    static QFile * logFile = nullptr;
-    static bool fileOpened = false;
-
-    // L'ouverture du fichier n'est tentée qu'une seule fois pour éviter des appels récursifs infinis entre getLogFile et logError.
-    if (!fileOpened || !logFile)
-    {
-        logFile = getLogFile("errors");
-        fileOpened = true;
-    }
-
-    QString txt = tr("%2 (%3 line %4): %1").arg(message).arg(function).arg(file).arg(line);
-
-    QTextStream stream(logFile);
-    stream << txt << "\n";
-
-#ifdef QT_DEBUG
-    qWarning() << txt;
-#endif
-}
-
-
-/**
  * Affiche un message dans la barre d'état.
  * Le message est affiché pendant 5 secondes.
  *
@@ -1536,7 +1436,7 @@ void CMainWindow::onFilterChange(const QString& filter)
 {
     if (!m_displayedSongTable)
     {
-        logError(tr("invalid pointer"), __FUNCTION__, __FILE__, __LINE__);
+        m_mediaManager->logError(tr("invalid pointer"), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
@@ -1557,7 +1457,7 @@ void CMainWindow::selectAll()
 {
     if (!m_displayedSongTable)
     {
-        logError(tr("invalid pointer"), __FUNCTION__, __FILE__, __LINE__);
+        m_mediaManager->logError(tr("invalid pointer"), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
@@ -1573,7 +1473,7 @@ void CMainWindow::selectNone()
 {
     if (!m_displayedSongTable)
     {
-        logError(tr("invalid pointer"), __FUNCTION__, __FILE__, __LINE__);
+        m_mediaManager->logError(tr("invalid pointer"), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
@@ -1889,7 +1789,7 @@ void CMainWindow::playSong(CMediaTableItem * songItem)
 {
     if (!songItem)
     {
-        logError(tr("invalid pointer"), __FUNCTION__, __FILE__, __LINE__);
+        m_mediaManager->logError(tr("invalid pointer"), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
@@ -2072,7 +1972,7 @@ void CMainWindow::setPosition(int position)
 {
     if (position < 0)
     {
-        logError(tr("invalid argument (%1)").arg(position), __FUNCTION__, __FILE__, __LINE__);
+        m_mediaManager->logError(tr("invalid argument (%1)").arg(position), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
@@ -2113,7 +2013,7 @@ void CMainWindow::setPosition(int position)
 
 void CMainWindow::openDialogPreferences()
 {
-    CDialogPreferences * dialog = new CDialogPreferences(this, m_settings);
+    CDialogPreferences * dialog = new CDialogPreferences(this, m_mediaManager->getSettings());
     dialog->show();
 }
 
@@ -2184,13 +2084,13 @@ void CMainWindow::openDialogEditMetadata()
 
 void CMainWindow::openDialogAddSongs()
 {
-    QStringList fileList = QFileDialog::getOpenFileNames(this, QString(), m_settings->value("Preferences/LastDirectory", QString()).toString(), tr("Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)"));
+    QStringList fileList = QFileDialog::getOpenFileNames(this, QString(), m_mediaManager->getSettings()->value("Preferences/LastDirectory", QString()).toString(), tr("Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)"));
 
     if (fileList.isEmpty())
         return;
 
     QFileInfo fileInfo(fileList.at(0));
-    m_settings->setValue("Preferences/LastDirectory", fileInfo.path());
+    m_mediaManager->getSettings()->setValue("Preferences/LastDirectory", fileInfo.path());
 
     importSongs(fileList);
 }
@@ -2202,12 +2102,12 @@ void CMainWindow::openDialogAddSongs()
 
 void CMainWindow::openDialogAddFolder()
 {
-    QString folder = QFileDialog::getExistingDirectory(this, QString(), m_settings->value("Preferences/LastDirectory", QString()).toString());
+    QString folder = QFileDialog::getExistingDirectory(this, QString(), m_mediaManager->getSettings()->value("Preferences/LastDirectory", QString()).toString());
 
     if (folder.isEmpty())
         return;
 
-    m_settings->setValue("Preferences/LastDirectory", folder);
+    m_mediaManager->getSettings()->setValue("Preferences/LastDirectory", folder);
 
     importSongs(importFolder(folder));
 }
@@ -2414,7 +2314,7 @@ void CMainWindow::relocateSong()
 
     if (songItemList.size() > 1)
     {
-        logError(tr("several songs selected"), __FUNCTION__, __FILE__, __LINE__);
+        m_mediaManager->logError(tr("several songs selected"), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
@@ -2552,11 +2452,11 @@ void CMainWindow::relocateSong()
 
         // Chargement du son
         //res = m_soundSystem->createStream(qPrintable(fileName), FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, nullptr, &sound);
-        res = m_soundSystem->createStream(reinterpret_cast<const char *>(fileName.utf16()), FMOD_UNICODE | FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, nullptr, &sound);
+        res = m_mediaManager->getSoundSystem()->createStream(reinterpret_cast<const char *>(fileName.utf16()), FMOD_UNICODE | FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, nullptr, &sound);
 
         if (res != FMOD_OK || !sound)
         {
-            logError(tr("error while loading the file \"%1\" with FMOD").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
+            m_mediaManager->logError(tr("error while loading the file \"%1\" with FMOD").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
             return;
         }
 
@@ -2565,7 +2465,7 @@ void CMainWindow::relocateSong()
 
         if (res != FMOD_OK)
         {
-            logError(tr("can't compute song duration for file \"%1\"").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
+            m_mediaManager->logError(tr("can't compute song duration for file \"%1\"").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
             song->m_properties.duration = 0;
         }
 
@@ -2574,14 +2474,14 @@ void CMainWindow::relocateSong()
 
         if (res != FMOD_OK)
         {
-            logError(tr("can't find song format for file \"%1\"").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
+            m_mediaManager->logError(tr("can't find song format for file \"%1\"").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
         }
         else
         {
             switch (type)
             {
                 default:
-                    logError(tr("unknown format"), __FUNCTION__, __FILE__, __LINE__);
+                    m_mediaManager->logError(tr("unknown format"), __FUNCTION__, __FILE__, __LINE__);
                     return;
 
                 case FMOD_SOUND_TYPE_MPEG:
@@ -2647,7 +2547,7 @@ void CMainWindow::addPlayList(IPlayList * playList)
     if (playList)
         m_listModel->addPlayList(playList);
     else
-        logError(tr("invalid pointer"), __FUNCTION__, __FILE__, __LINE__);
+        m_mediaManager->logError(tr("invalid pointer"), __FUNCTION__, __FILE__, __LINE__);
 }
 
 
@@ -2662,7 +2562,7 @@ void CMainWindow::addFolder(CFolder * folder)
     if (folder)
         m_listModel->addFolder(folder);
     else
-        logError(tr("invalid pointer"), __FUNCTION__, __FILE__, __LINE__);
+        m_mediaManager->logError(tr("invalid pointer"), __FUNCTION__, __FILE__, __LINE__);
 }
 
 
@@ -2711,7 +2611,7 @@ void CMainWindow::selectSong(CMediaTableView * songTable, CMediaTableItem * song
 {
     if (!songTable || !songItem)
     {
-        logError(tr("invalid pointer"), __FUNCTION__, __FILE__, __LINE__);
+        m_mediaManager->logError(tr("invalid pointer"), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
@@ -3152,92 +3052,24 @@ void CMainWindow::displaySongTable(CMediaTableView * songTable)
 
 /**
  * Initialise FMOD.
- *
- * \return Booléen indiquant le succès ou l'échec du chargement.
  */
 
-bool CMainWindow::initSoundSystem()
+void CMainWindow::initSoundSystem()
 {
-    bool ret = true;
-    FMOD_RESULT res;
-
-    res = FMOD::System_Create(&m_soundSystem);
-    if (res != FMOD_OK)
-        return false;
-
-    unsigned int version;
-    res = m_soundSystem->getVersion(&version);
-    if (res != FMOD_OK)
-        return false;
-
-    if (version < FMOD_VERSION)
+    if (!m_mediaManager->initSoundSystem())
     {
-        QMessageBox::critical(this, QString(), tr("This program requires FMOD %1 or superior.").arg(FMOD_VERSION));
-        return false;
+        QMessageBox::critical(this, QString(), tr("Failed to init sound system with FMOD."));
+        QCoreApplication::exit();
+        return;
     }
-
-    int numDrivers;
-    res = m_soundSystem->getNumDrivers(&numDrivers);
-    if (res != FMOD_OK)
-        return false;
-
-    if (numDrivers == 0)
-    {
-        res = m_soundSystem->setOutput(FMOD_OUTPUTTYPE_NOSOUND);
-        if (res != FMOD_OK)
-            return false;
-    }
-    else
-    {
-        FMOD_CAPS caps;
-        FMOD_SPEAKERMODE speakermode;
-        res = m_soundSystem->getDriverCaps(0, &caps, nullptr, &speakermode);
-        if (res != FMOD_OK)
-            return false;
-
-        // Set the user selected speaker mode
-        res = m_soundSystem->setSpeakerMode(speakermode);
-        if (res != FMOD_OK)
-            return false;
-
-        if (caps & FMOD_CAPS_HARDWARE_EMULATED)
-        {
-            res = m_soundSystem->setDSPBufferSize(1024, 10);
-            if (res != FMOD_OK)
-                return false;
-        }
-
-        char name[256] = "";
-        res = m_soundSystem->getDriverInfo(0, name, 256, 0);
-        if (res != FMOD_OK)
-            return false;
-
-        if (strstr(name, "SigmaTel"))
-        {
-            res = m_soundSystem->setSoftwareFormat(48000, FMOD_SOUND_FORMAT_PCMFLOAT, 0,0, FMOD_DSP_RESAMPLER_LINEAR);
-            if (res != FMOD_OK)
-                return false;
-        }
-    }
-
-    res = m_soundSystem->init(100, FMOD_INIT_NORMAL, 0);
-    if (res == FMOD_ERR_OUTPUT_CREATEBUFFER)
-    {
-        res = m_soundSystem->setSpeakerMode(FMOD_SPEAKERMODE_STEREO);
-        if (res != FMOD_OK)
-            return false;
-        res = m_soundSystem->init(2, FMOD_INIT_NORMAL, 0);
-    }
-
-    ret = (res == FMOD_OK);
 
     // Lecteurs de CD-ROM
     int numDrives;
-    res = m_soundSystem->getNumCDROMDrives(&numDrives);
+    FMOD_RESULT res = m_mediaManager->getSoundSystem()->getNumCDROMDrives(&numDrives);
 
     if (res != FMOD_OK)
     {
-        logError(tr("can't get number of CD-ROM drives"), __FUNCTION__, __FILE__, __LINE__);
+        m_mediaManager->logError(tr("can't get number of CD-ROM drives"), __FUNCTION__, __FILE__, __LINE__);
     }
     else
     {
@@ -3247,11 +3079,11 @@ bool CMainWindow::initSoundSystem()
             char SCSIName[128]   = "";
             char deviceName[128] = "";
 
-            res = m_soundSystem->getCDROMDriveName(drive, driveName, 128, SCSIName, 128, deviceName, 128);
+            res = m_mediaManager->getSoundSystem()->getCDROMDriveName(drive, driveName, 128, SCSIName, 128, deviceName, 128);
 
             if (res != FMOD_OK)
             {
-                logError(tr("can't get name of drive #%1").arg(drive), __FUNCTION__, __FILE__, __LINE__);
+                m_mediaManager->logError(tr("can't get name of drive #%1").arg(drive), __FUNCTION__, __FILE__, __LINE__);
             }
             else
             {
@@ -3268,8 +3100,6 @@ bool CMainWindow::initSoundSystem()
     // File d'attente
     m_queue = new CQueuePlayList(this);
     m_queue->hide();
-
-    return ret;
 }
 
 
@@ -4338,11 +4168,9 @@ void CMainWindow::closeEvent(QCloseEvent * event)
             return;
         }
     }
-
-    Q_CHECK_PTR(m_settings);
-
-    m_settings->setValue("Window/WindowGeometry", saveGeometry());
-    m_settings->setValue("Window/WindowState", saveState());
+    
+    m_mediaManager->getSettings()->setValue("Window/WindowGeometry", saveGeometry());
+    m_mediaManager->getSettings()->setValue("Window/WindowState", saveState());
 
     event->accept();
     QMainWindow::closeEvent(event);

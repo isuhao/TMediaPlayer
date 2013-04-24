@@ -28,18 +28,18 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * Constructeur de la boite de dialogue.
  *
  * \param folder       Pointeur sur le dossier à modifier, ou nullptr pour créer un dossier.
- * \param application  Pointeur sur l'application.
+ * \param mainWindow   Pointeur sur l'application.
  * \param folderParent Pointeur sur le dossier parent.
  */
 
-CDialogEditFolder::CDialogEditFolder(CFolder * folder, CMainWindow * application, CFolder * folderParent) :
-QDialog        (application),
+CDialogEditFolder::CDialogEditFolder(CFolder * folder, CMainWindow * mainWindow, CFolder * folderParent) :
+QDialog        (mainWindow),
 m_uiWidget     (new Ui::DialogEditFolder()),
 m_folder       (folder),
-m_application  (application),
+m_mainWindow   (mainWindow),
 m_folderParent (folderParent)
 {
-    Q_CHECK_PTR(application);
+    Q_CHECK_PTR(m_mainWindow);
     Q_CHECK_PTR(folderParent);
 
     setAttribute(Qt::WA_DeleteOnClose);
@@ -47,7 +47,7 @@ m_folderParent (folderParent)
 
     if (!m_folder)
     {
-        m_folder = new CFolder(m_application);
+        m_folder = new CFolder(m_mainWindow);
     }
 
     m_uiWidget->editName->setText(m_folder->getName());
@@ -90,7 +90,7 @@ void CDialogEditFolder::save()
         return;
     }
 
-    m_application->addFolder(m_folder);
+    m_mainWindow->addFolder(m_folder);
 
     close();
 }

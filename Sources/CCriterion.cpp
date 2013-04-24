@@ -20,6 +20,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CCriterion.hpp"
 #include "IPlayList.hpp"
 #include "CMainWindow.hpp"
+#include "CMediaManager.hpp"
 #include "CSong.hpp"
 
 #include <QtDebug>
@@ -28,12 +29,12 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 /**
  * Crée le critère.
  *
- * \param application Pointeur sur la classe principale de l'application.
- * \param parent      Pointeur sur l'objet parent.
+ * \param mainWindow Pointeur sur la fenêtre principale de l'application.
+ * \param parent     Pointeur sur l'objet parent.
  */
 
-CCriterion::CCriterion(CMainWindow * application, QObject * parent) :
-ICriterion (application, parent)
+CCriterion::CCriterion(CMainWindow * mainWindow, QObject * parent) :
+ICriterion (mainWindow, parent)
 {
 
 }
@@ -76,7 +77,7 @@ bool CCriterion::matchCriterion(CSong * song) const
             }
             else
             {
-                m_application->logError(tr("invalid condition"), __FUNCTION__, __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logError(tr("invalid condition"), __FUNCTION__, __FILE__, __LINE__);
                 return false;
             }
         }
@@ -94,7 +95,7 @@ bool CCriterion::matchCriterion(CSong * song) const
             }
             else
             {
-                m_application->logError(tr("invalid condition"), __FUNCTION__, __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logError(tr("invalid condition"), __FUNCTION__, __FILE__, __LINE__);
                 return false;
             }
         }
@@ -105,7 +106,7 @@ bool CCriterion::matchCriterion(CSong * song) const
         }
         else
         {
-            qWarning() << "CCriterion::matchCriterion() : le type de critère n'est pas géré";
+            qWarning() << tr("CCriterion::matchCriterion() : le type de critère n'est pas géré");
             return false;
         }
     }
@@ -116,7 +117,7 @@ bool CCriterion::matchCriterion(CSong * song) const
         switch (m_type)
         {
             default:
-                qWarning() << "CCriterion::matchCriterion() : le type de critère n'est pas géré";
+                qWarning() << tr("CCriterion::matchCriterion() : le type de critère n'est pas géré");
                 return false;
 
             case TypeTitle      : str = song->getTitle();       break;
@@ -132,14 +133,14 @@ bool CCriterion::matchCriterion(CSong * song) const
 
         if ((m_condition >> 8) != ICriterion::CondMaskString)
         {
-            qWarning() << "CCriterion::matchCriterion() : la condition et le type ne correspondent pas";
+            qWarning() << tr("CCriterion::matchCriterion() : la condition et le type ne correspondent pas");
             return false;
         }
 
         switch (m_condition)
         {
             default:
-                m_application->logError(tr("invalid condition"), __FUNCTION__, __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logError(tr("invalid condition"), __FUNCTION__, __FILE__, __LINE__);
                 return false;
 
             case CondStringEqual      : return (str.toLower() == m_value1.toString());
@@ -158,7 +159,7 @@ bool CCriterion::matchCriterion(CSong * song) const
         switch (m_type)
         {
             default:
-                qWarning() << "CCriterion::matchCriterion() : le type de critère n'est pas géré";
+                qWarning() << tr("CCriterion::matchCriterion() : le type de critère n'est pas géré");
                 return false;
 
             case TypeYear       : num = song->getYear();       break;
@@ -174,14 +175,14 @@ bool CCriterion::matchCriterion(CSong * song) const
 
         if ((m_condition >> 8) != ICriterion::CondMaskNumber)
         {
-            qWarning() << "CCriterion::matchCriterion() : la condition et le type ne correspondent pas";
+            qWarning() << tr("CCriterion::matchCriterion() : la condition et le type ne correspondent pas");
             return false;
         }
 
         switch (m_condition)
         {
             default:
-                m_application->logError(tr("invalid condition"), __FUNCTION__, __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logError(tr("invalid condition"), __FUNCTION__, __FILE__, __LINE__);
                 return false;
 
             case CondNumberEqual      : return (num == m_value1.toInt());
@@ -198,7 +199,7 @@ bool CCriterion::matchCriterion(CSong * song) const
         switch (m_type)
         {
             default:
-                qWarning() << "CCriterion::matchCriterion() : le type de critère n'est pas géré";
+                qWarning() << tr("CCriterion::matchCriterion() : le type de critère n'est pas géré");
                 return false;
 
             case TypeDuration: time = time.addMSecs(song->getDuration()); break;
@@ -206,14 +207,14 @@ bool CCriterion::matchCriterion(CSong * song) const
 
         if ((m_condition >> 8) != ICriterion::CondMaskTime)
         {
-            qWarning() << "CCriterion::matchCriterion() : la condition et le type ne correspondent pas";
+            qWarning() << tr("CCriterion::matchCriterion() : la condition et le type ne correspondent pas");
             return false;
         }
 
         switch (m_condition)
         {
             default:
-                m_application->logError(tr("invalid condition"), __FUNCTION__, __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logError(tr("invalid condition"), __FUNCTION__, __FILE__, __LINE__);
                 return false;
 
             case CondTimeIs         : return (time == m_value1.toTime());
@@ -230,7 +231,7 @@ bool CCriterion::matchCriterion(CSong * song) const
         switch (m_type)
         {
             default:
-                qWarning() << "CCriterion::matchCriterion() : le type de critère n'est pas géré";
+                qWarning() << tr("CCriterion::matchCriterion() : le type de critère n'est pas géré");
                 return false;
 
             case TypeLastPlayTime: date = song->getLastPlay(); break;
@@ -240,14 +241,14 @@ bool CCriterion::matchCriterion(CSong * song) const
 
         if ((m_condition >> 8) != ICriterion::CondMaskDate)
         {
-            qWarning() << "CCriterion::matchCriterion() : la condition et le type ne correspondent pas";
+            qWarning() << tr("CCriterion::matchCriterion() : la condition et le type ne correspondent pas");
             return false;
         }
 
         switch (m_condition)
         {
             default:
-                m_application->logError(tr("invalid condition"), __FUNCTION__, __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logError(tr("invalid condition"), __FUNCTION__, __FILE__, __LINE__);
                 return false;
 
             case CondDateIs       : return (date == m_value1.toDateTime());
@@ -315,11 +316,11 @@ QList<CSong *> CCriterion::getSongs(const QList<CSong *>& from, const QList<CSon
 
     if (m_type == ICriterion::TypePlayList)
     {
-        IPlayList * playList = m_application->getPlayListFromId(m_value1.toInt());
+        IPlayList * playList = m_mainWindow->getPlayListFromId(m_value1.toInt());
 
         if (!playList)
         {
-            m_application->logError(tr("invalid playlist"), __FUNCTION__, __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logError(tr("invalid playlist"), __FUNCTION__, __FILE__, __LINE__);
             return songList;
         }
 
@@ -345,7 +346,7 @@ QList<CSong *> CCriterion::getSongs(const QList<CSong *>& from, const QList<CSon
         }
         else
         {
-            m_application->logError(tr("invalid condition"), __FUNCTION__, __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logError(tr("invalid condition"), __FUNCTION__, __FILE__, __LINE__);
         }
     }
     else
@@ -369,7 +370,7 @@ ICriterion::TUpdateConditions CCriterion::getUpdateConditions() const
     {
         case TypeUnion:
         case TypeIntersection:
-            qWarning() << "CCriterion::getWidget() : un critère simple ne peut pas avoir le type TypeUnion ou TypeIntersection";
+            qWarning() << tr("CCriterion::getWidget() : un critère simple ne peut pas avoir le type TypeUnion ou TypeIntersection");
 
         default:
         case TypeInvalid:
@@ -409,13 +410,13 @@ ICriterion::TUpdateConditions CCriterion::getUpdateConditions() const
 
 IWidgetCriterion * CCriterion::getWidget() const
 {
-    CWidgetCriterion * widget = new CWidgetCriterion(m_application, nullptr);
+    CWidgetCriterion * widget = new CWidgetCriterion(m_mainWindow, nullptr);
 
     switch (m_type)
     {
         case TypeUnion:
         case TypeIntersection:
-            qWarning() << "CCriterion::getWidget() : un critère simple ne peut pas avoir le type TypeUnion ou TypeIntersection";
+            qWarning() << tr("CCriterion::getWidget() : un critère simple ne peut pas avoir le type TypeUnion ou TypeIntersection");
 
         default:
         case TypeInvalid:
@@ -477,7 +478,7 @@ IWidgetCriterion * CCriterion::getWidget() const
         }
         else
         {
-            qWarning() << "CCriterion::getWidget() : type de critère non géré";
+            qWarning() << tr("CCriterion::getWidget() : type de critère non géré");
         }
     }
     else if ((m_type >> 8) == TypeMaskString)

@@ -22,6 +22,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QLocalSocket>
 #include <ctime>
 
+#include "CMediaManager.hpp"
 #include "CMainWindow.hpp"
 
 
@@ -40,7 +41,7 @@ int main(int argc, char * argv[])
 
 #ifndef T_NO_SINGLE_APP
 	QLocalSocket socket;
-	socket.connectToServer("tmediaplayer-" + CMainWindow::getAppVersion());
+	socket.connectToServer("tmediaplayer-" + CMediaManager::getAppVersion());
 
 	if (socket.waitForConnected(250))
 	{
@@ -49,7 +50,9 @@ int main(int argc, char * argv[])
 	}
 #endif // T_NO_SINGLE_APP
 
-    CMainWindow window;
+    CMediaManager mediaManager;
+
+    CMainWindow window(&mediaManager);
 
     if (!window.initWindow())
     {

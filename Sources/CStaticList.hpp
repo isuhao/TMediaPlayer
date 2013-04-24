@@ -38,7 +38,7 @@ class CStaticList : public IPlayList
 
 public:
 
-    explicit CStaticList(CMainWindow * application, const QString& name = QString());
+    explicit CStaticList(CMainWindow * mainWindow, const QString& name = QString());
     virtual ~CStaticList();
 
     virtual bool isModified() const;

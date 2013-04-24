@@ -182,7 +182,7 @@ protected:
     int m_condition;   ///< Condition. (TCondition)
     QVariant m_value1; ///< Valeur 1.
     QVariant m_value2; ///< Valeur 2.
-    CMainWindow * m_application;
+    CMainWindow * m_mainWindow;
 
     virtual void setPlayList(CDynamicList * playList);
     virtual void insertIntoDatabase(CMainWindow * application);

@@ -89,8 +89,11 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
       <WarningLevel>Level3</WarningLevel>
-      <EnablePREfast>false</EnablePREfast>
+      <EnablePREfast>true</EnablePREfast>
       <FloatingPointModel>Strict</FloatingPointModel>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <TreatWarningAsError>
+      </TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -1140,6 +1143,7 @@
     <ClCompile Include="Sources\CLibraryFolder.cpp" />
     <ClCompile Include="Sources\CLibraryModel.cpp" />
     <ClCompile Include="Sources\CLyricWiki.cpp" />
+    <ClCompile Include="Sources\CMediaManager.cpp" />
     <ClCompile Include="Sources\CMultiCriteria.cpp" />
     <ClCompile Include="Sources\CQueuePlayList.cpp" />
     <ClCompile Include="Sources\CWidgetLyrics.cpp" />
@@ -1149,6 +1153,7 @@
     <ClCompile Include="Sources\Dialog\CDialogNotifications.cpp" />
     <ClCompile Include="Sources\Dialog\CDialogPreferencesFolder.cpp" />
     <ClCompile Include="Sources\Dialog\CDialogRemoveFolder.cpp" />
+    <ClCompile Include="Sources\IMediaTable.cpp" />
     <ClCompile Include="Sources\IPlayList.cpp" />
     <ClCompile Include="Sources\CLibraryView.cpp" />
     <ClCompile Include="Sources\CRating.cpp" />
@@ -1407,7 +1412,9 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DNDEBUG -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_SQL_LIB -DQT_NETWORK_LIB -DQT_XML_LIB -DQT_DLL -DQT_WEBKIT_LIB -DQT_WEBKITWIDGETS_LIB -DQT_CORE_LIB -DQT_GUI_LIB "-I." "-I.\Sources" "-I.\Sources\Dialog" "-I.\Sources\Importer" "-I.\Sources\Last.fm" "-ID:\Ressources\Libraries\taglib-1.7.2\include" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtXml" "-I$(QTDIR)\include\QtWebKit" "-I.\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\GeneratedFiles\$(PlatformName)\." "-I$(QTDIR)\include\QtWebkitWidgets" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui"</Command>
     </CustomBuild>
+    <ClInclude Include="Sources\CMediaManager.hpp" />
     <ClInclude Include="Sources\CMediaTableItem.hpp" />
+    <ClInclude Include="Sources\IMediaTable.hpp" />
     <ClInclude Include="Sources\Utils.hpp" />
     <CustomBuild Include="Sources\CLibraryFolder.hpp">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>

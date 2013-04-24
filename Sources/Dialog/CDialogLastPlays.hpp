@@ -39,7 +39,7 @@ public:
 private:
 
     Ui::DialogLastPlays * m_uiWidget;
-    CMainWindow * m_application;
+    CMainWindow * m_mainWindow;
 };
 
 #endif // FILE_C_DIALOG_LAST_PLAYS

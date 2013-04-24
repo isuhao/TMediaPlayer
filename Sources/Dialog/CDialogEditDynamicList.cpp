@@ -29,20 +29,20 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 /**
  * Constructeur de la boite de dialogue d'édition des listes de lecture dynamiques.
  *
- * \param playList    Pointeur sur la liste à modifier, ou nullptr pour une nouvelle liste.
- * \param application Pointeur sur l'application.
- * \param folder      Dossier contenant la liste de lecture.
+ * \param playList   Pointeur sur la liste à modifier, ou nullptr pour une nouvelle liste.
+ * \param mainWindow Pointeur sur la fenêtre principale de l'application.
+ * \param folder     Dossier contenant la liste de lecture.
  */
 
-CDialogEditDynamicList::CDialogEditDynamicList(CDynamicList * playList, CMainWindow * application, CFolder * folder) :
-QDialog          (application),
+CDialogEditDynamicList::CDialogEditDynamicList(CDynamicList * playList, CMainWindow * mainWindow, CFolder * folder) :
+QDialog          (mainWindow),
 m_uiWidget       (new Ui::DialogEditDynamicPlayList()),
 m_widgetCriteria (nullptr),
 m_playList       (playList),
-m_application    (application),
+m_mainWindow     (mainWindow),
 m_folder         (folder)
 {
-    Q_CHECK_PTR(application);
+    Q_CHECK_PTR(m_mainWindow);
 
     setAttribute(Qt::WA_DeleteOnClose);
     m_uiWidget->setupUi(this);
@@ -58,15 +58,15 @@ m_folder         (folder)
         }
         else
         {
-            m_widgetCriteria = new CWidgetMultiCriteria(m_application, this);
+            m_widgetCriteria = new CWidgetMultiCriteria(m_mainWindow, this);
             m_uiWidget->verticalLayout->insertWidget(1, m_widgetCriteria);
         }
     }
     else
     {
-        m_playList = new CDynamicList(m_application);
+        m_playList = new CDynamicList(m_mainWindow);
 
-        m_widgetCriteria = new CWidgetMultiCriteria(m_application, this);
+        m_widgetCriteria = new CWidgetMultiCriteria(m_mainWindow, this);
         m_uiWidget->verticalLayout->insertWidget(1, m_widgetCriteria);
     }
 
@@ -133,7 +133,7 @@ void CDialogEditDynamicList::save()
         return;
     }
 
-    m_application->addPlayList(m_playList);
+    m_mainWindow->addPlayList(m_playList);
     m_playList->updateList();
 
     close();

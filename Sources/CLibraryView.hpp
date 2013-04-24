@@ -70,7 +70,7 @@ protected slots:
 
 private:
     
-    CMainWindow * m_application; ///< Pointeur sur l'application.
+    CMainWindow * m_mainWindow; ///< Pointeur sur l'application.
     CLibraryModel * m_model;         ///< Modèle utilisé pour afficher les listes de lecture.
     QMenu * m_menuPlaylist;       ///< Menu contextuel pour les listes de lecture.
     QMenu * m_menuFolder;         ///< Menu contextuel pour les dossiers.

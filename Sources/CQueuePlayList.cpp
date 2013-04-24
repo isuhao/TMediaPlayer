@@ -31,8 +31,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QPainter>
 
 
-CQueuePlayList::CQueuePlayList(CMainWindow * application) :
-CMediaTableView (application)
+CQueuePlayList::CQueuePlayList(CMainWindow * mainWindow) :
+CMediaTableView (mainWindow)
 {
     m_model->setCanDrop(true);
 
@@ -119,16 +119,16 @@ void CQueuePlayList::openCustomMenuProject(const QPoint& point)
             menu->addSeparator();
         }
 
-        menu->addAction(tr("Informations..."), m_application, SLOT(openDialogSongInfos()));
+        menu->addAction(tr("Informations..."), m_mainWindow, SLOT(openDialogSongInfos()));
 
         if (!severalSongs)
         {
-            menu->addAction(tr("Edit metadata..."), m_application, SLOT(openDialogEditMetadata()));
-            menu->addAction(tr("Show in explorer"), m_application, SLOT(openSongInExplorer()));
+            menu->addAction(tr("Edit metadata..."), m_mainWindow, SLOT(openDialogEditMetadata()));
+            menu->addAction(tr("Show in explorer"), m_mainWindow, SLOT(openSongInExplorer()));
 
             if (m_selectedItem->getSong()->getFileStatus() == false)
             {
-                menu->addAction(tr("Relocate"), m_application, SLOT(relocateSong()));
+                menu->addAction(tr("Relocate"), m_mainWindow, SLOT(relocateSong()));
             }
         }
 
@@ -136,7 +136,7 @@ void CQueuePlayList::openCustomMenuProject(const QPoint& point)
         menu->addAction(tr("Remove from queue"), this, SLOT(removeSelectedSongs()));
         menu->addAction(tr("Remove from library"), this, SLOT(removeSongsFromLibrary()));
 
-        //if (m_application->getSettings()->value("Folders/KeepOrganized", false).toBool())
+        //if (m_mainWindow->getSettings()->value("Folders/KeepOrganized", false).toBool())
         {
             if (severalSongs)
                 menu->addAction(tr("Rename files"), this, SLOT(moveSongs()));
@@ -169,11 +169,11 @@ void CQueuePlayList::openCustomMenuProject(const QPoint& point)
             // Listes de lecture contenant le morceau
             //TODO: gérer les dossiers
             QMenu * menuPlayList = menu->addMenu(tr("Playlists"));
-            CLibrary * library = m_application->getLibrary();
+            CLibrary * library = m_mainWindow->getLibrary();
             m_actionGoToSongTable[library] = menuPlayList->addAction(QPixmap(":/icons/library"), tr("Library"));
             connect(m_actionGoToSongTable[library], SIGNAL(triggered()), this, SLOT(goToSongTable()));
 
-            QList<IPlayList *> playLists = m_application->getPlayListsWithSong(m_selectedItem->getSong());
+            QList<IPlayList *> playLists = m_mainWindow->getPlayListsWithSong(m_selectedItem->getSong());
 
             if (playLists.size() > 0)
             {
@@ -199,7 +199,7 @@ void CQueuePlayList::openCustomMenuProject(const QPoint& point)
         // Ajouter à la liste de lecture
         //TODO: gérer les dossiers
         QMenu * menuAddToPlayList = menu->addMenu(tr("Add to playlist"));
-        QList<IPlayList *> playLists = m_application->getAllPlayLists();
+        QList<IPlayList *> playLists = m_mainWindow->getAllPlayLists();
 
         if (playLists.isEmpty())
         {
@@ -241,9 +241,9 @@ void CQueuePlayList::removeSongs(const QList<CMediaTableItem *>& songItemList)
         return;
     }
 
-    if (songItemList.contains(m_application->getCurrentSongItem()))
+    if (songItemList.contains(m_mainWindow->getCurrentSongItem()))
     {
-        m_application->stop();
+        m_mainWindow->stop();
     }
 
     QList<CSong *> songList;
@@ -285,7 +285,7 @@ void CQueuePlayList::removeSelectedSongs()
     CMediaTableItem * currentItem = m_model->getCurrentSongItem();
     CSong * currentSong = (currentItem ? currentItem->getSong() : nullptr);
 
-    CDialogEditSong * dialogEditSong = m_application->getDialogEditSong();
+    CDialogEditSong * dialogEditSong = m_mainWindow->getDialogEditSong();
     CSong * currentSongInDialogEditSong = nullptr;
 
     if (dialogEditSong)
@@ -304,7 +304,7 @@ void CQueuePlayList::removeSelectedSongs()
         CMediaTableItem * songItem = m_model->getSongItem(*it);
 
         // Morceau en cours de lecture
-        if (m_application->getCurrentSongItem() == songItem)
+        if (m_mainWindow->getCurrentSongItem() == songItem)
         {
             currentItem = nullptr;
             currentSong = nullptr;
@@ -322,8 +322,8 @@ void CQueuePlayList::removeSelectedSongs()
     {
         CMediaTableItem * currentItemAfter = getFirstSongItem(currentSong);
         m_model->setCurrentSong(currentItemAfter);
-        //m_application->m_currentSongItem = currentItemAfter;
-        m_application->setCurrentSongItem(currentItemAfter, this);
+        //m_mainWindow->m_currentSongItem = currentItemAfter;
+        m_mainWindow->setCurrentSongItem(currentItemAfter, this);
     }
 
     if (dialogEditSong)

@@ -51,7 +51,7 @@ protected slots:
 
 private:
 
-    CMainWindow * m_application;
+    CMainWindow * m_mainWindow;
     CSong * m_song;
     QGridLayout * m_layout;
     QTextEdit * m_textEdit;

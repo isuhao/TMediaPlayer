@@ -22,12 +22,12 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QPushButton>
 
 
-CDialogNotifications::CDialogNotifications(CMainWindow * application) :
-    QDialog       (application),
-    m_uiWidget    (new Ui::DialogNotifications()),
-    m_application (application)
+CDialogNotifications::CDialogNotifications(CMainWindow * mainWindow) :
+QDialog      (mainWindow),
+m_uiWidget   (new Ui::DialogNotifications()),
+m_mainWindow (mainWindow)
 {
-    Q_CHECK_PTR(application);
+    Q_CHECK_PTR(m_mainWindow);
 
     setAttribute(Qt::WA_DeleteOnClose);
     m_uiWidget->setupUi(this);
@@ -35,7 +35,7 @@ CDialogNotifications::CDialogNotifications(CMainWindow * application) :
     m_uiWidget->table->setSortingEnabled(false);
 
     // Remplissage du tableau
-    QList<CMainWindow::TNotification> notifications = m_application->getNotifications();
+    QList<CMainWindow::TNotification> notifications = m_mainWindow->getNotifications();
     m_uiWidget->table->setRowCount(notifications.size());
 
     for (int row = 0; row < notifications.size(); ++row)

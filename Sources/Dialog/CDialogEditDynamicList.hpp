@@ -56,7 +56,7 @@ private:
     Ui::DialogEditDynamicPlayList * m_uiWidget;
     CWidgetMultiCriteria * m_widgetCriteria;
     CDynamicList * m_playList;
-    CMainWindow * m_application;
+    CMainWindow * m_mainWindow;
     CFolder * m_folder;
 };
 

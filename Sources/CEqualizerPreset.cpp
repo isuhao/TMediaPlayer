@@ -25,12 +25,12 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 
 /// Constructeur par défaut.
-CEqualizerPreset::CEqualizerPreset(CMainWindow * application) :
-QObject       (application),
-m_application (application),
-m_id          (-1)
+CEqualizerPreset::CEqualizerPreset(CMainWindow * mainWindow) :
+QObject      (mainWindow),
+m_mainWindow (mainWindow),
+m_id         (-1)
 {
-    Q_CHECK_PTR(application);
+    Q_CHECK_PTR(m_mainWindow);
 
     for (std::size_t f = 0; f < 10; ++f)
     {
@@ -75,7 +75,7 @@ void CEqualizerPreset::updateDataBase()
 {
     if (m_id < 0)
     {
-        QSqlQuery query(m_application->getDataBase());
+        QSqlQuery query(m_mainWindow->getDataBase());
 
         query.prepare("INSERT INTO equalizer("
                           "equalizer_name, "
@@ -105,17 +105,17 @@ void CEqualizerPreset::updateDataBase()
 
         if (!query.exec())
         {
-            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return;
         }
 
-        if (m_application->getDataBase().driverName() == "QPSQL")
+        if (m_mainWindow->getDataBase().driverName() == "QPSQL")
         {
             query.prepare("SELECT currval('equalizer_seq')");
 
             if (!query.exec())
             {
-                m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return;
             }
 
@@ -125,7 +125,7 @@ void CEqualizerPreset::updateDataBase()
             }
             else
             {
-                m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return;
             }
         }
@@ -136,7 +136,7 @@ void CEqualizerPreset::updateDataBase()
     }
     else if (m_id > 0)
     {
-        QSqlQuery query(m_application->getDataBase());
+        QSqlQuery query(m_mainWindow->getDataBase());
 
         query.prepare("UPDATE equalizer SET "
                         "equalizer_name = ?,"
@@ -167,7 +167,7 @@ void CEqualizerPreset::updateDataBase()
 
         if (!query.exec())
         {
-            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         }
     }
 }
@@ -178,27 +178,27 @@ void CEqualizerPreset::removeFromDataBase()
     if (m_id <= 0)
         return;
 
-    QSqlQuery query(m_application->getDataBase());
+    QSqlQuery query(m_mainWindow->getDataBase());
         
     query.prepare("DELETE FROM equalizer WHERE equalizer_id = ?");
     query.bindValue(0, m_id);
 
     if (!query.exec())
     {
-        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
     }
 
     m_id = 0;
 }
 
 
-QList<CEqualizerPreset *> CEqualizerPreset::loadFromDatabase(CMainWindow * application)
+QList<CEqualizerPreset *> CEqualizerPreset::loadFromDatabase(CMainWindow * mainWindow)
 {
-    Q_CHECK_PTR(application);
+    Q_CHECK_PTR(mainWindow);
 
     QList<CEqualizerPreset *> presets;
 
-    QSqlQuery query(application->getDataBase());
+    QSqlQuery query(mainWindow->getDataBase());
 
     if (!query.exec("SELECT "
                         "equalizer_id,"
@@ -215,13 +215,13 @@ QList<CEqualizerPreset *> CEqualizerPreset::loadFromDatabase(CMainWindow * appli
                         "equalizer_val9 "
                     "FROM equalizer ORDER BY equalizer_name"))
     {
-        application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return presets;
     }
 
     while (query.next())
     {
-        CEqualizerPreset * preset = new CEqualizerPreset(application);
+        CEqualizerPreset * preset = new CEqualizerPreset(mainWindow);
         preset->m_id   = query.value(0).toInt();
         preset->m_name = query.value(1).toString();
 

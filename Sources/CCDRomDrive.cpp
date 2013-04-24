@@ -19,6 +19,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CCDRomDrive.hpp"
 #include "CMainWindow.hpp"
+#include "CMediaManager.hpp"
 #include "CSong.hpp"
 #include "Utils.hpp"
 #include "MusicBrainz/sha1.h"
@@ -29,14 +30,14 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 /**
  * Constructeur du lecteur de CD-ROM.
  *
- * \param driveName   Nom du lecteur.
- * \param application Pointeur sur la classe principale de l'application.
- * \param SCSIName    Nom SCSI du lecteur.
- * \param deviceName  Nom du périphérique.
+ * \param driveName  Nom du lecteur.
+ * \param mainWindow Pointeur sur la fenêtre principale de l'application.
+ * \param SCSIName   Nom SCSI du lecteur.
+ * \param deviceName Nom du périphérique.
  */
 
-CCDRomDrive::CCDRomDrive(const QString& driveName, CMainWindow * application, const QString& SCSIName, const QString& deviceName) :
-CMediaTableView (application),
+CCDRomDrive::CCDRomDrive(const QString& driveName, CMainWindow * mainWindow, const QString& SCSIName, const QString& deviceName) :
+CMediaTableView (mainWindow),
 m_driveName     (driveName),
 m_SCSIName      (SCSIName),
 m_deviceName    (deviceName),
@@ -111,7 +112,7 @@ bool CCDRomDrive::hasCDInDrive()
     }
     else
     {
-        FMOD_RESULT res = m_application->getSoundSystem()->createStream(qPrintable(m_driveName), FMOD_OPENONLY, 0, &m_sound);
+        FMOD_RESULT res = m_mainWindow->getMediaManager()->getSoundSystem()->createStream(qPrintable(m_driveName), FMOD_OPENONLY, 0, &m_sound);
 
         // Pas de disque dans le lecteur
         if (res == FMOD_ERR_CDDA_NODISC)
@@ -121,7 +122,7 @@ bool CCDRomDrive::hasCDInDrive()
 
         if (res != FMOD_OK || !m_sound)
         {
-            m_application->logError(tr("the CD-ROM drive \"%1\" can't be opened with FMOD").arg(m_driveName), __FUNCTION__, __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logError(tr("the CD-ROM drive \"%1\" can't be opened with FMOD").arg(m_driveName), __FUNCTION__, __FILE__, __LINE__);
             m_sound = nullptr;
             return false;
         }
@@ -131,7 +132,7 @@ bool CCDRomDrive::hasCDInDrive()
 
         if (res != FMOD_OK || !m_sound)
         {
-            m_application->logError(tr("can't get number of track for CD-ROM drive \"%1\"").arg(m_driveName), __FUNCTION__, __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logError(tr("can't get number of track for CD-ROM drive \"%1\"").arg(m_driveName), __FUNCTION__, __FILE__, __LINE__);
             return false;
         }
 
@@ -233,7 +234,7 @@ bool CCDRomDrive::hasCDInDrive()
         }
 
         FMOD::Channel * channel = nullptr;
-        res = m_application->getSoundSystem()->playSound(FMOD_CHANNEL_FREE, m_sound, true, &channel);
+        res = m_mainWindow->getMediaManager()->getSoundSystem()->playSound(FMOD_CHANNEL_FREE, m_sound, true, &channel);
 
         // Création des morceaux
         if (res == FMOD_OK && channel)
@@ -252,18 +253,18 @@ bool CCDRomDrive::hasCDInDrive()
 
                 if (res != FMOD_OK)
                 {
-                    m_application->logError(tr("can't play track #%1 in CD-ROM drive \"%2\"").arg(track + 1).arg(m_driveName), __FUNCTION__, __FILE__, __LINE__);
+                    m_mainWindow->getMediaManager()->logError(tr("can't play track #%1 in CD-ROM drive \"%2\"").arg(track + 1).arg(m_driveName), __FUNCTION__, __FILE__, __LINE__);
                     continue;
                 }
 
-                CSong * song = new CSong(m_application);
+                CSong * song = new CSong(m_mainWindow);
 
                 // Recherche de la durée du morceau
                 res = m_sound->getLength(reinterpret_cast<unsigned int *>(&(song->m_properties.duration)), FMOD_TIMEUNIT_SENTENCE_MS);
 
                 if (res != FMOD_OK)
                 {
-                    m_application->logError(tr("can't compute song duration for track #%1 in CD-ROM drive \"%2\"").arg(track + 1).arg(m_driveName), __FUNCTION__, __FILE__, __LINE__);
+                    m_mainWindow->getMediaManager()->logError(tr("can't compute song duration for track #%1 in CD-ROM drive \"%2\"").arg(track + 1).arg(m_driveName), __FUNCTION__, __FILE__, __LINE__);
 
                     // Utilisation de la table de contenu
                     song->m_properties.duration = songDurations[track+1];
@@ -305,14 +306,14 @@ bool CCDRomDrive::hasCDInDrive()
 
                 if (res != FMOD_OK)
                 {
-                    m_application->logError(tr("can't find the format for track #%1 in CD-ROM drive \"%2\"").arg(track + 1).arg(m_driveName), __FUNCTION__, __FILE__, __LINE__);
+                    m_mainWindow->getMediaManager()->logError(tr("can't find the format for track #%1 in CD-ROM drive \"%2\"").arg(track + 1).arg(m_driveName), __FUNCTION__, __FILE__, __LINE__);
                 }
                 else
                 {
                     switch (type)
                     {
                         default:
-                            m_application->logError(tr("unknown format"), __FUNCTION__, __FILE__, __LINE__);
+                            m_mainWindow->getMediaManager()->logError(tr("unknown format"), __FUNCTION__, __FILE__, __LINE__);
                             break;
 
                         case FMOD_SOUND_TYPE_CDDA:
@@ -340,7 +341,7 @@ bool CCDRomDrive::hasCDInDrive()
             addSongsToTable(songs);
         }
 
-        CMusicBrainzLookup * lookup = new CMusicBrainzLookup(this, m_application);
+        CMusicBrainzLookup * lookup = new CMusicBrainzLookup(this, m_mainWindow);
     }
 
     return (m_sound != nullptr);
@@ -432,12 +433,12 @@ void CCDRomDrive::openCustomMenuProject(const QPoint& point)
             menu->addSeparator();
         }
 
-        menu->addAction(tr("Informations..."), m_application, SLOT(openDialogSongInfos()));
+        menu->addAction(tr("Informations..."), m_mainWindow, SLOT(openDialogSongInfos()));
         menu->addAction(tr("Import..."), this, SLOT(importSelectedSongs()))->setEnabled(false);
 
         if (!severalSongs)
         {
-            menu->addAction(tr("Show in explorer"), m_application, SLOT(openSongInExplorer()));
+            menu->addAction(tr("Show in explorer"), m_mainWindow, SLOT(openSongInExplorer()));
         }
 
         menu->addSeparator();

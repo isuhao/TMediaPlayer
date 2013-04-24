@@ -195,7 +195,7 @@ protected:
     virtual void keyPressEvent(QKeyEvent * event);
     virtual void mouseDoubleClickEvent(QMouseEvent * event);
 
-    CMainWindow * m_application;
+    CMainWindow * m_mainWindow;
     CMediaTableModel * m_model;    ///< Modèle utilisé pour afficher les morceaux.
     TColumn m_columns[ColNumber]; ///< Liste des colonnes.
     int m_idPlayList;             ///< Identifiant de la liste de lecture en base de données.

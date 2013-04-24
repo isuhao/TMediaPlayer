@@ -19,6 +19,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CDynamicList.hpp"
 #include "CMainWindow.hpp"
+#include "CMediaManager.hpp"
 #include "CMultiCriteria.hpp"
 #include "CWidgetMultiCriteria.hpp"
 #include "CCriterion.hpp"
@@ -35,12 +36,12 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 /**
  * Construit la liste de lecture dynamique.
  *
- * \param application Pointeur sur l'application.
- * \param name        Nom de la liste de lecture.
+ * \param mainWindow Pointeur sur la fenêtre principale de l'application.
+ * \param name       Nom de la liste de lecture.
  */
 
-CDynamicList::CDynamicList(CMainWindow * application, const QString& name) :
-IPlayList               (application, name),
+CDynamicList::CDynamicList(CMainWindow * mainWindow, const QString& name) :
+IPlayList               (mainWindow, name),
 m_id                    (-1),
 m_mainCriterion         (nullptr),
 m_isDynamicListModified (false),
@@ -48,7 +49,7 @@ m_autoUpdate            (true),
 m_onlyChecked           (false),
 m_numItems              (0)
 {
-    m_mainCriterion = new CMultiCriteria(m_application, this);
+    m_mainCriterion = new CMultiCriteria(m_mainWindow, this);
 }
 
 
@@ -100,7 +101,7 @@ void CDynamicList::updateList()
     CMediaTableItem * currentItem = m_model->getCurrentSongItem();
     CSong * currentSong = (currentItem ? currentItem->getSong() : nullptr);
 
-    CDialogEditSong * dialogEditSong = m_application->getDialogEditSong();
+    CDialogEditSong * dialogEditSong = m_mainWindow->getDialogEditSong();
     CSong * currentSongInDialogEditSong = nullptr;
 
     if (dialogEditSong)
@@ -111,7 +112,7 @@ void CDynamicList::updateList()
             dialogEditSong = nullptr;
     }
 
-    QList<CSong *> songs = m_mainCriterion->getSongs(m_application->getLibrary()->getSongs(), QList<CSong *>(), m_onlyChecked);
+    QList<CSong *> songs = m_mainCriterion->getSongs(m_mainWindow->getLibrary()->getSongs(), QList<CSong *>(), m_onlyChecked);
 
     //TODO: nombre d'éléments
     //1) Trier la liste selon le critère demandé
@@ -160,8 +161,8 @@ void CDynamicList::updateList()
     {
         CMediaTableItem * currentItemAfter = getFirstSongItem(currentSong);
         m_model->setCurrentSong(currentItemAfter);
-        //m_application->m_currentSongItem = currentItemAfter;
-        m_application->setCurrentSongItem(currentItemAfter, this);
+        //m_mainWindow->m_currentSongItem = currentItemAfter;
+        m_mainWindow->setCurrentSongItem(currentItemAfter, this);
     }
 
     if (dialogEditSong)
@@ -181,11 +182,11 @@ void CDynamicList::updateList()
 
 bool CDynamicList::updateDatabase()
 {
-    QSqlQuery query(m_application->getDataBase());
+    QSqlQuery query(m_mainWindow->getDataBase());
 
     if (!getFolder())
     {
-        m_application->logError(tr("the playlist is not in a folder"), __FUNCTION__, __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logError(tr("the playlist is not in a folder"), __FUNCTION__, __FILE__, __LINE__);
     }
 
     // Insertion
@@ -201,7 +202,7 @@ bool CDynamicList::updateDatabase()
 
         if (!query.exec())
         {
-            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
 
@@ -221,17 +222,17 @@ bool CDynamicList::updateDatabase()
 
         if (!query.exec())
         {
-            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
 
-        if (m_application->getDataBase().driverName() == "QPSQL")
+        if (m_mainWindow->getDataBase().driverName() == "QPSQL")
         {
             query.prepare("SELECT currval('playlist_playlist_id_seq')");
 
             if (!query.exec())
             {
-                m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return false;
             }
 
@@ -241,7 +242,7 @@ bool CDynamicList::updateDatabase()
             }
             else
             {
-                m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return false;
             }
         }
@@ -259,17 +260,17 @@ bool CDynamicList::updateDatabase()
 
         if (!query.exec())
         {
-            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
 
-        if (m_application->getDataBase().driverName() == "QPSQL")
+        if (m_mainWindow->getDataBase().driverName() == "QPSQL")
         {
             query.prepare("SELECT currval('dynamic_list_seq')");
 
             if (!query.exec())
             {
-                m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return false;
             }
 
@@ -279,7 +280,7 @@ bool CDynamicList::updateDatabase()
             }
             else
             {
-                m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return false;
             }
         }
@@ -289,7 +290,7 @@ bool CDynamicList::updateDatabase()
         }
 
         // Insertion des nouveaux critères
-        m_mainCriterion->insertIntoDatabase(m_application);
+        m_mainCriterion->insertIntoDatabase(m_mainWindow);
 
         query.prepare("UPDATE dynamic_list SET criteria_id = ? WHERE dynamic_list_id = ?");
 
@@ -298,7 +299,7 @@ bool CDynamicList::updateDatabase()
 
         if (!query.exec())
         {
-            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
     }
@@ -314,7 +315,7 @@ bool CDynamicList::updateDatabase()
 
         if (!query.exec())
         {
-            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
 
@@ -325,7 +326,7 @@ bool CDynamicList::updateDatabase()
 
         if (!query.exec())
         {
-            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
 
@@ -335,12 +336,12 @@ bool CDynamicList::updateDatabase()
 
         if (!query.exec())
         {
-            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
 
         // Insertion des nouveaux critères
-        m_mainCriterion->insertIntoDatabase(m_application);
+        m_mainCriterion->insertIntoDatabase(m_mainWindow);
 
         query.prepare("UPDATE dynamic_list SET criteria_id = ? WHERE dynamic_list_id = ?");
 
@@ -349,7 +350,7 @@ bool CDynamicList::updateDatabase()
 
         if (!query.exec())
         {
-            m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
     }
@@ -367,11 +368,11 @@ void CDynamicList::removeFromDatabase()
 {
     if (m_id <= 0)
     {
-        m_application->logError(tr("invalid identifier (%1)").arg(m_id), __FUNCTION__, __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logError(tr("invalid identifier (%1)").arg(m_id), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
-    QSqlQuery query(m_application->getDataBase());
+    QSqlQuery query(m_mainWindow->getDataBase());
 
     // Suppression des critères
     query.prepare("DELETE FROM criteria WHERE dynamic_list_id = ?");
@@ -379,7 +380,7 @@ void CDynamicList::removeFromDatabase()
 
     if (!query.exec())
     {
-        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return;
     }
 
@@ -389,7 +390,7 @@ void CDynamicList::removeFromDatabase()
 
     if (!query.exec())
     {
-        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return;
     }
 
@@ -408,14 +409,14 @@ void CDynamicList::loadFromDatabase()
 {
     if (m_id <= 0)
     {
-        m_application->logError(tr("invalid identifier (%1)").arg(m_id), __FUNCTION__, __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logError(tr("invalid identifier (%1)").arg(m_id), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
     delete m_mainCriterion;
     m_mainCriterion = nullptr;
 
-    QSqlQuery query(m_application->getDataBase());
+    QSqlQuery query(m_mainWindow->getDataBase());
 
     // Liste des critères
     query.prepare("SELECT criteria_id, criteria_parent, criteria_position, criteria_type, criteria_condition, criteria_value1, criteria_value2 "
@@ -424,7 +425,7 @@ void CDynamicList::loadFromDatabase()
 
     if (!query.exec())
     {
-        m_application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return;
     }
 
@@ -436,19 +437,19 @@ void CDynamicList::loadFromDatabase()
 
         if (query.value(3).toInt() == ICriterion::TypeUnion)
         {
-            CMultiCriteria * multiCriteria = new CMultiCriteria(m_application, this);
+            CMultiCriteria * multiCriteria = new CMultiCriteria(m_mainWindow, this);
             multiCriteria->setMultiCriteriaType(CMultiCriteria::Union);
             criteria = multiCriteria;
         }
         else if (query.value(3).toInt() == ICriterion::TypeIntersection)
         {
-            CMultiCriteria * multiCriteria = new CMultiCriteria(m_application, this);
+            CMultiCriteria * multiCriteria = new CMultiCriteria(m_mainWindow, this);
             multiCriteria->setMultiCriteriaType(CMultiCriteria::Intersection);
             criteria = multiCriteria;
         }
         else
         {
-            criteria = new CCriterion(m_application, this);
+            criteria = new CCriterion(m_mainWindow, this);
         }
 
         criteria->m_id        = query.value(0).toInt();
@@ -466,8 +467,8 @@ void CDynamicList::loadFromDatabase()
 
     if (criteriaList.isEmpty())
     {
-        m_application->logError(tr("dynamic list with no criteria"), __FUNCTION__, __FILE__, __LINE__);
-        m_mainCriterion = new CCriterion(m_application, this);
+        m_mainWindow->getMediaManager()->logError(tr("dynamic list with no criteria"), __FUNCTION__, __FILE__, __LINE__);
+        m_mainCriterion = new CCriterion(m_mainWindow, this);
         return;
     }
 
@@ -480,7 +481,7 @@ void CDynamicList::loadFromDatabase()
         {
             if (m_mainCriterion)
             {
-                m_application->logError(tr("dynamic list with several main criterion"), __FUNCTION__, __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logError(tr("dynamic list with several main criterion"), __FUNCTION__, __FILE__, __LINE__);
                 continue;
             }
 
@@ -512,22 +513,22 @@ void CDynamicList::loadFromDatabase()
         ICriterion::TUpdateConditions conditions = m_mainCriterion->getUpdateConditions();
 
         if (conditions.testFlag(ICriterion::UpdateOnSongAdded))
-            connect(m_application, SIGNAL(songsAdded()), this, SLOT(updateList()), Qt::UniqueConnection);
+            connect(m_mainWindow, SIGNAL(songsAdded()), this, SLOT(updateList()), Qt::UniqueConnection);
 
         if (conditions.testFlag(ICriterion::UpdateOnSongRemoved))
-            connect(m_application, SIGNAL(songRemoved(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
+            connect(m_mainWindow, SIGNAL(songRemoved(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
 
         if (conditions.testFlag(ICriterion::UpdateOnSongModified))
-            connect(m_application, SIGNAL(songModified(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
+            connect(m_mainWindow, SIGNAL(songModified(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
 
         if (conditions.testFlag(ICriterion::UpdateOnSongMoved))
-            connect(m_application, SIGNAL(songMoved(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
+            connect(m_mainWindow, SIGNAL(songMoved(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
 
         if (conditions.testFlag(ICriterion::UpdateOnSongPlayEnd))
-            connect(m_application, SIGNAL(songPlayEnd(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
+            connect(m_mainWindow, SIGNAL(songPlayEnd(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
 
         //if (conditions.testFlag(ICriterion::UpdateOnListModified))
-            //connect(m_application, SIGNAL(listModified(IPlayList *)), this, SLOT(updateList()), Qt::UniqueConnection);
+            //connect(m_mainWindow, SIGNAL(listModified(IPlayList *)), this, SLOT(updateList()), Qt::UniqueConnection);
     }
 }
 
@@ -552,32 +553,32 @@ void CDynamicList::setCriterion(ICriterion * criteria)
     // Conditions de mise à jour
     if (m_autoUpdate)
     {
-        disconnect(m_application, SIGNAL(songsAdded()             ), this, SLOT(updateList()));
-        disconnect(m_application, SIGNAL(songRemoved(CSong *)     ), this, SLOT(updateList()));
-        disconnect(m_application, SIGNAL(songModified(CSong *)    ), this, SLOT(updateList()));
-        disconnect(m_application, SIGNAL(songMoved(CSong *)       ), this, SLOT(updateList()));
-        disconnect(m_application, SIGNAL(songPlayEnd(CSong *)     ), this, SLOT(updateList()));
-        //disconnect(m_application, SIGNAL(listModified(IPlayList *)), this, SLOT(updateList()));
+        disconnect(m_mainWindow, SIGNAL(songsAdded()             ), this, SLOT(updateList()));
+        disconnect(m_mainWindow, SIGNAL(songRemoved(CSong *)     ), this, SLOT(updateList()));
+        disconnect(m_mainWindow, SIGNAL(songModified(CSong *)    ), this, SLOT(updateList()));
+        disconnect(m_mainWindow, SIGNAL(songMoved(CSong *)       ), this, SLOT(updateList()));
+        disconnect(m_mainWindow, SIGNAL(songPlayEnd(CSong *)     ), this, SLOT(updateList()));
+        //disconnect(m_mainWindow, SIGNAL(listModified(IPlayList *)), this, SLOT(updateList()));
 
         ICriterion::TUpdateConditions conditions = m_mainCriterion->getUpdateConditions();
 
         if (conditions.testFlag(ICriterion::UpdateOnSongAdded))
-            connect(m_application, SIGNAL(songsAdded()), this, SLOT(updateList()), Qt::UniqueConnection);
+            connect(m_mainWindow, SIGNAL(songsAdded()), this, SLOT(updateList()), Qt::UniqueConnection);
 
         if (conditions.testFlag(ICriterion::UpdateOnSongRemoved))
-            connect(m_application, SIGNAL(songRemoved(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
+            connect(m_mainWindow, SIGNAL(songRemoved(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
 
         if (conditions.testFlag(ICriterion::UpdateOnSongModified))
-            connect(m_application, SIGNAL(songModified(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
+            connect(m_mainWindow, SIGNAL(songModified(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
 
         if (conditions.testFlag(ICriterion::UpdateOnSongMoved))
-            connect(m_application, SIGNAL(songMoved(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
+            connect(m_mainWindow, SIGNAL(songMoved(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
 
         if (conditions.testFlag(ICriterion::UpdateOnSongPlayEnd))
-            connect(m_application, SIGNAL(songPlayEnd(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
+            connect(m_mainWindow, SIGNAL(songPlayEnd(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
 
         //if (conditions.testFlag(ICriterion::UpdateOnListModified))
-            //connect(m_application, SIGNAL(listModified(IPlayList *)), this, SLOT(updateList()), Qt::UniqueConnection);
+            //connect(m_mainWindow, SIGNAL(listModified(IPlayList *)), this, SLOT(updateList()), Qt::UniqueConnection);
     }
 
     emit listModified();

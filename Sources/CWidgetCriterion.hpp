@@ -36,7 +36,7 @@ class CWidgetCriterion : public IWidgetCriterion
 
 public:
 
-    explicit CWidgetCriterion(CMainWindow * application, QWidget * parent = nullptr);
+    explicit CWidgetCriterion(CMainWindow * mainWindow, QWidget * parent = nullptr);
     virtual ~CWidgetCriterion();
 
     virtual ICriterion * getCriterion();

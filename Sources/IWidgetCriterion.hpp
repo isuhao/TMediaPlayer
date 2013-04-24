@@ -43,7 +43,7 @@ protected:
 
     ICriterion::TType m_type;           ///< Type de critère.
     ICriterion::TCondition m_condition; ///< Condition de recherche.
-    CMainWindow * m_application;      ///< Pointeur sur l'application.
+    CMainWindow * m_mainWindow;      ///< Pointeur sur l'application.
 };
 
 #endif // FILE_I_WIDGET_CRITERIA
