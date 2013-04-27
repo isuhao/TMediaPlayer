@@ -257,7 +257,7 @@ bool CCDRomDrive::hasCDInDrive()
                     continue;
                 }
 
-                CSong * song = new CSong(m_mainWindow);
+                CSong * song = new CSong(m_mainWindow->getMediaManager());
 
                 // Recherche de la durée du morceau
                 res = m_sound->getLength(reinterpret_cast<unsigned int *>(&(song->m_properties.duration)), FMOD_TIMEUNIT_SENTENCE_MS);

@@ -104,7 +104,7 @@ public:
     bool needToImportSongs() const;
 
 private:
-    
+
     CITunesLibrary * m_library;
     QGridLayout * m_gridLayout;
     QTreeView * m_treeView;
@@ -122,7 +122,7 @@ public:
     virtual ~CITunesWizardPage3();
 
 private:
-    
+
     CITunesLibrary * m_library;
     Ui::ImporterITunesPage3 * m_uiWidget;
 };
@@ -139,7 +139,7 @@ public:
     virtual void initializePage();
 
 private:
-    
+
     CITunesLibrary * m_library;
     CMainWindow * m_mainWindow;
 };

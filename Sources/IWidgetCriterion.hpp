@@ -38,7 +38,7 @@ public:
     virtual ~IWidgetCriterion();
 
     virtual ICriterion * getCriterion() = 0;
-    
+
 protected:
 
     ICriterion::TType m_type;           ///< Type de critère.

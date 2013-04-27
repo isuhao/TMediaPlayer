@@ -37,7 +37,7 @@ m_numRequests  (0)
     args["method"]  = "auth.getToken";
     args["api_key"] = m_apiKey;
     QByteArray content = getLastFmQuery(args);
-    
+
     QString url = QString("%1?%2").arg(m_lastFmUrl).arg(QString(content));
 
     // Log
@@ -75,11 +75,11 @@ void CAuthentication::replyFinished(QNetworkReply * reply)
     }
 
     QDomDocument doc;
-    
+
     QString error;
     if (!doc.setContent(data, &error))
     {
-        stream << tr("Document XML invalide (") << error << ")\n";
+        stream << tr("invalid XML document (%1)").arg(error) << "\n";
         return;
     }
 
@@ -104,7 +104,7 @@ void CAuthentication::replyFinished(QNetworkReply * reply)
         stream << tr("Réponse XML incorrecte (élément 'token' attendu)\n");
         return;
     }
-    
+
     m_lastFmToken = racine.text().toLatin1();
 
     // Ouverture du navigateur
@@ -181,15 +181,15 @@ void CAuthentication::replyLastFmFinished(QNetworkReply * reply)
 
     if (reply->error() != QNetworkReply::NoError)
     {
-        stream << tr("Erreur HTTP : ") << reply->error() << "\n";
+        stream << tr("HTTP error: ") << reply->error() << "\n";
     }
 
     QDomDocument doc;
-    
+
     QString error;
     if (!doc.setContent(data, &error))
     {
-        stream << tr("Document XML invalide (") << error << ")\n";
+        stream << tr("invalid XML document (%1)").arg(error) << "\n";
         return;
     }
 
@@ -206,7 +206,7 @@ void CAuthentication::replyLastFmFinished(QNetworkReply * reply)
         stream << tr("La requête Last.fm a echouée\n");
         return;
     }
-    
+
     racine = racine.firstChildElement();
 
     if (racine.tagName() != "session")

@@ -37,7 +37,6 @@ namespace TagLib
     namespace Ogg   { class XiphComment; }
 }
 
-class CMainWindow;
 class CMediaManager;
 class CCDRomDrive;
 class QFile;
@@ -81,8 +80,8 @@ public:
     };
 
 
-    explicit CSong(CMainWindow * mainWindow);
-    CSong(const QString& fileName, CMainWindow * mainWindow);
+    explicit CSong(CMediaManager * mediaManager);
+    CSong(const QString& fileName, CMediaManager * mediaManager);
     virtual ~CSong();
 
     void loadFromDatabase();
@@ -149,8 +148,8 @@ public:
     inline QList<TSongPlay> getPlays() const;
 
     static int getId(CMediaManager * mediaManager, const QString& fileName);
-    static CSong * loadFromFile(CMainWindow * mainWindow, const QString& fileName);
-    static QList<CSong *> loadAllSongsFromDatabase(CMainWindow * mainWindow);
+    static CSong * loadFromFile(CMediaManager * mediaManager, const QString& fileName);
+    static QList<CSong *> loadAllSongsFromDatabase(CMediaManager * mediaManager);
 
 public slots:
 
@@ -351,7 +350,7 @@ private:
     static bool writeTags(TagLib::Ogg::XiphComment * tags, const TSongInfos& infos, QFile * logFile, const QString& fileName);
 
 
-    CMainWindow * m_mainWindow;   ///< Pointeur sur l'application.
+    CMediaManager * m_mediaManager; ///< Pointeur sur la classe principale de l'application.
     FMOD::Sound * m_sound;          ///< Pointeur sur la structure de FMOD.
     FMOD::Channel * m_channel;      ///< Canal audio.
     CCDRomDrive * m_cdRomDrive;     ///< Pointeur sur le lecteur de CD-ROM d'où provient le morceau.

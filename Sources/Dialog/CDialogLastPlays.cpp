@@ -37,7 +37,7 @@ m_mainWindow (mainWindow)
     m_uiWidget->setupUi(this);
 
     m_uiWidget->table->setSortingEnabled(false);
-    
+
     QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
 
     if (!query.exec("SELECT song_id, play_time_utc FROM play WHERE play_time_utc IS NOT NULL ORDER BY play_time_utc DESC"))
@@ -61,16 +61,16 @@ m_mainWindow (mainWindow)
             playTimeUTC.setTimeSpec(Qt::UTC);
 
             QTableWidgetItem * item;
-        
+
             item = new QTableWidgetItem(playTimeUTC.toLocalTime().toString("dd/MM/yyyy HH:mm:ss"));
             m_uiWidget->table->setItem(row, 0, item);
-        
+
             item = new QTableWidgetItem(song->getTitle());
             m_uiWidget->table->setItem(row, 1, item);
-        
+
             item = new QTableWidgetItem(song->getArtistName());
             m_uiWidget->table->setItem(row, 2, item);
-        
+
             item = new QTableWidgetItem(song->getAlbumTitle());
             m_uiWidget->table->setItem(row, 3, item);
         }
@@ -78,7 +78,7 @@ m_mainWindow (mainWindow)
 
     m_uiWidget->table->setSortingEnabled(true);
     m_uiWidget->table->sortByColumn(0, Qt::DescendingOrder);
-    
+
     // Connexions des signaux des boutons
     QPushButton * btnClose = m_uiWidget->buttonBox->addButton(tr("Close"), QDialogButtonBox::AcceptRole);
     connect(btnClose, SIGNAL(clicked()), this, SLOT(close()));

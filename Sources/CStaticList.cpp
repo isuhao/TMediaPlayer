@@ -41,7 +41,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 /**
  * Construit une liste de lecture statique.
  *
- * \param mainWindow Pointeur sur l'application.
+ * \param mainWindow Pointeur sur la fenêtre principale de l'application.
  * \param name       Nom de la liste de lecture.
  */
 
@@ -109,7 +109,7 @@ void CStaticList::addSong(CSong * song, int pos)
  * Si certains morceaux sont déjà présents dans la liste, une confirmation est demandée.
  *
  * \param songs Liste des morceaux à ajouter.
- * \param confirm Indique si on doit demander une confirmation 
+ * \param confirm Indique si on doit demander une confirmation
  */
 
 void CStaticList::addSongs(const QList<CSong *>& songs, bool confirm)
@@ -154,7 +154,7 @@ void CStaticList::addSongs(const QList<CSong *>& songs, bool confirm)
             }
         }
     }
-    
+
     QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
 
     // Position des morceaux dans la liste
@@ -196,7 +196,7 @@ void CStaticList::addSongs(const QList<CSong *>& songs, bool confirm)
     {
         return;
     }
-    
+
     query.prepare("INSERT INTO static_list_song (static_list_id, song_id, song_position) VALUES (?, ?, ?)");
     query.addBindValue(field1);
     query.addBindValue(field2);
@@ -218,7 +218,7 @@ void CStaticList::addSongs(const QList<CSong *>& songs, bool confirm)
         {
             continue;
         }
-        
+
         CMediaTableView::addSongToTable(*it, songPosition + songNum);
         emit songAdded(*it);
         ++songNum;
@@ -426,7 +426,7 @@ void CStaticList::removeSelectedSongs()
     // Aucun morceau à supprimer
     if (indexList.isEmpty())
         return;
-    
+
     // Si on est en train de lire un morceau de la liste, il faut mettre à jour les informations sur le morceau courant
     CMediaTableItem * currentItem = m_model->getCurrentSongItem();
     CSong * currentSong = (currentItem ? currentItem->getSong() : nullptr);

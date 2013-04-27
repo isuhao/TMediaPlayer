@@ -126,15 +126,15 @@ private:
     void removePlayListItem(IPlayList * playList);
     void removeFolderItem(CFolder * folder);
 
-    CMainWindow * m_mainWindow;   ///< Pointeur sur l'application.
-    int m_id;                       ///< Identifiant du dossier en base de données.
-    QString m_name;                 ///< Nom du dossier.
-    bool m_open;                    ///< Indique si le dossier est ouvert ou fermé.
-    CFolder * m_folder;             ///< Dossier parent.
-    //int m_position;                 ///< Position dans le dossier.
-    bool m_isModified;              ///< Indique si le dossier a été modifié.
-    bool m_folderChanging;          ///< Indique si le dossier parent est en train d'être changé.
-    //QModelIndex m_index;            ///< Index du dossier dans la vue.
+    CMainWindow * m_mainWindow;      ///< Pointeur sur la fenêtre principale de l'application.
+    int m_id;                        ///< Identifiant du dossier en base de données.
+    QString m_name;                  ///< Nom du dossier.
+    bool m_open;                     ///< Indique si le dossier est ouvert ou fermé.
+    CFolder * m_folder;              ///< Dossier parent.
+  //int m_position;                  ///< Position dans le dossier.
+    bool m_isModified;               ///< Indique si le dossier a été modifié.
+    bool m_folderChanging;           ///< Indique si le dossier parent est en train d'être changé.
+  //QModelIndex m_index;             ///< Index du dossier dans la vue.
     QList<IPlayList *> m_playLists0; ///< Liste des listes de lecture du dossier.
     QList<CFolder *> m_folders0;     ///< Liste des dossiers du dossier.
     QVector<TFolderItem *> m_items;  ///< Liste des éléments du dossier.

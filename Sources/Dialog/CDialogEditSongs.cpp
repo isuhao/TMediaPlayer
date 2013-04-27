@@ -1094,7 +1094,7 @@ m_songItemList      (songItemList)
     connect(m_uiWidget->chBPM, SIGNAL(clicked(bool)), this, SLOT(onBPMChecked(bool)));
 
     // Genre
-    QStringList genres = mainWindow->getGenreList();
+    QStringList genres = mainWindow->getMediaManager()->getGenreList();
     m_uiWidget->editGenre->addItems(genres);
     m_uiWidget->editGenre->lineEdit()->setText(songGenre);
     m_uiWidget->editGenre->setCurrentIndex(m_uiWidget->editGenre->findText(songGenre));

@@ -42,7 +42,7 @@ protected slots:
     void save();
 
 private:
-    
+
     Ui::DialogEditFolder * m_uiWidget;
     CFolder * m_folder;
     CMainWindow * m_mainWindow;

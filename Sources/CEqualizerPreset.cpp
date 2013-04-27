@@ -18,20 +18,25 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CEqualizerPreset.hpp"
-#include "CMainWindow.hpp"
 #include "CMediaManager.hpp"
 
+#include <QVariant>
 #include <QSqlQuery>
 #include <QSqlError>
 
 
-/// Constructeur par défaut.
-CEqualizerPreset::CEqualizerPreset(CMainWindow * mainWindow) :
-QObject      (mainWindow),
-m_mainWindow (mainWindow),
-m_id         (-1)
+/**
+ * Constructeur par défaut.
+ *
+ * \param mediaManager Pointeurs sur la classe principale de l'application.
+ */
+
+CEqualizerPreset::CEqualizerPreset(CMediaManager * mediaManager) :
+QObject        (mediaManager),
+m_mediaManager (mediaManager),
+m_id           (-1)
 {
-    Q_CHECK_PTR(m_mainWindow);
+    Q_CHECK_PTR(m_mediaManager);
 
     for (std::size_t f = 0; f < 10; ++f)
     {
@@ -58,16 +63,16 @@ void CEqualizerPreset::setValue(int frequency, double value)
 bool CEqualizerPreset::operator==(const CEqualizerPreset& other) const
 {
     return (m_id       == other.m_id       &&
-            m_name     == other.m_name     && 
-            m_value[0] == other.m_value[0] && 
-            m_value[1] == other.m_value[1] && 
-            m_value[2] == other.m_value[2] && 
-            m_value[3] == other.m_value[3] && 
-            m_value[4] == other.m_value[4] && 
-            m_value[5] == other.m_value[5] && 
-            m_value[6] == other.m_value[6] && 
-            m_value[7] == other.m_value[7] && 
-            m_value[8] == other.m_value[8] && 
+            m_name     == other.m_name     &&
+            m_value[0] == other.m_value[0] &&
+            m_value[1] == other.m_value[1] &&
+            m_value[2] == other.m_value[2] &&
+            m_value[3] == other.m_value[3] &&
+            m_value[4] == other.m_value[4] &&
+            m_value[5] == other.m_value[5] &&
+            m_value[6] == other.m_value[6] &&
+            m_value[7] == other.m_value[7] &&
+            m_value[8] == other.m_value[8] &&
             m_value[9] == other.m_value[9]);
 }
 
@@ -76,7 +81,7 @@ void CEqualizerPreset::updateDataBase()
 {
     if (m_id < 0)
     {
-        QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
+        QSqlQuery query(m_mediaManager->getDataBase());
 
         query.prepare("INSERT INTO equalizer("
                           "equalizer_name, "
@@ -106,17 +111,17 @@ void CEqualizerPreset::updateDataBase()
 
         if (!query.exec())
         {
-            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return;
         }
 
-        if (m_mainWindow->getMediaManager()->getDataBase().driverName() == "QPSQL")
+        if (m_mediaManager->getDataBase().driverName() == "QPSQL")
         {
             query.prepare("SELECT currval('equalizer_seq')");
 
             if (!query.exec())
             {
-                m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return;
             }
 
@@ -126,7 +131,7 @@ void CEqualizerPreset::updateDataBase()
             }
             else
             {
-                m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return;
             }
         }
@@ -137,7 +142,7 @@ void CEqualizerPreset::updateDataBase()
     }
     else if (m_id > 0)
     {
-        QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
+        QSqlQuery query(m_mediaManager->getDataBase());
 
         query.prepare("UPDATE equalizer SET "
                         "equalizer_name = ?,"
@@ -168,7 +173,7 @@ void CEqualizerPreset::updateDataBase()
 
         if (!query.exec())
         {
-            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         }
     }
 }
@@ -179,27 +184,27 @@ void CEqualizerPreset::removeFromDataBase()
     if (m_id <= 0)
         return;
 
-    QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
-        
+    QSqlQuery query(m_mediaManager->getDataBase());
+
     query.prepare("DELETE FROM equalizer WHERE equalizer_id = ?");
     query.bindValue(0, m_id);
 
     if (!query.exec())
     {
-        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
     }
 
     m_id = 0;
 }
 
 
-QList<CEqualizerPreset *> CEqualizerPreset::loadFromDatabase(CMainWindow * mainWindow)
+QList<CEqualizerPreset *> CEqualizerPreset::loadFromDatabase(CMediaManager * mediaManager)
 {
-    Q_CHECK_PTR(mainWindow);
+    Q_CHECK_PTR(mediaManager);
 
     QList<CEqualizerPreset *> presets;
 
-    QSqlQuery query(mainWindow->getMediaManager()->getDataBase());
+    QSqlQuery query(mediaManager->getDataBase());
 
     if (!query.exec("SELECT "
                         "equalizer_id,"
@@ -216,13 +221,13 @@ QList<CEqualizerPreset *> CEqualizerPreset::loadFromDatabase(CMainWindow * mainW
                         "equalizer_val9 "
                     "FROM equalizer ORDER BY equalizer_name"))
     {
-        mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return presets;
     }
 
     while (query.next())
     {
-        CEqualizerPreset * preset = new CEqualizerPreset(mainWindow);
+        CEqualizerPreset * preset = new CEqualizerPreset(mediaManager);
         preset->m_id   = query.value(0).toInt();
         preset->m_name = query.value(1).toString();
 

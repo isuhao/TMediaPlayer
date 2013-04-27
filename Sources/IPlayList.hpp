@@ -67,7 +67,7 @@ signals:
      */
 
     void nameChanged(const QString& oldName, const QString& newName);
-    
+
     /**
      * Signal émis lorsque le dossier contenant la liste change.
      * Utilisez la méthode sender() dans le slot pour connaitre la liste de lecture.

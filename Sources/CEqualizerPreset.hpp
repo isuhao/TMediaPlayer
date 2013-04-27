@@ -25,7 +25,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QList>
 
 
-class CMainWindow;
+class CMediaManager;
 
 
 /// Class contenant un préréglage d'égaliseur.
@@ -50,7 +50,7 @@ public:
         Frequency16K = 9  ///< 16 kHz.
     };
 
-    explicit CEqualizerPreset(CMainWindow * mainWindow);
+    explicit CEqualizerPreset(CMediaManager * mediaManager);
 
     inline int getId() const;
     inline QString getName() const;
@@ -65,14 +65,14 @@ public:
     void updateDataBase();
     void removeFromDataBase();
 
-    static QList<CEqualizerPreset *> loadFromDatabase(CMainWindow * mainWindow);
+    static QList<CEqualizerPreset *> loadFromDatabase(CMediaManager * mediaManager);
 
 private:
 
-    CMainWindow * m_mainWindow;
-    int m_id;           ///< Identifiant du préréglage en base de données.
-    QString m_name;     ///< Nom du préréglage.
-    double m_value[10]; ///< Valeurs de gain de l'égaliseur.
+    CMediaManager * m_mediaManager; ///< Pointeur sur la classe principale de l'application.
+    int m_id;                       ///< Identifiant du préréglage en base de données.
+    QString m_name;                 ///< Nom du préréglage.
+    double m_value[10];             ///< Valeurs de gain de l'égaliseur.
 };
 
 

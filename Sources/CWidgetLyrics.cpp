@@ -79,7 +79,7 @@ void CWidgetLyrics::setSong(CSong * song)
     }
 }
 
-    
+
 void CWidgetLyrics::findLyrics()
 {
     if (m_song)

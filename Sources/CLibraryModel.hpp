@@ -67,10 +67,10 @@ public:
     bool dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex& parent);
     QStringList mimeTypes() const;
     Qt::DropActions supportedDropActions() const;
-    
+
     QList<CSong *> decodeDataSongs(const QByteArray& encodedData) const;
     static bool decodeDataList(const QByteArray& encodedData, int * playList, int * folder);
-    
+
 private slots:
 
     void onPlayListRenamed(const QString& oldName, const QString& newName);
@@ -82,11 +82,11 @@ private:
     CFolder * getFolderFromId(int id, const QList<CFolder *> folders) const;
     IPlayList * getPlayListFromId(int id, const QList<IPlayList *> playLists) const;
 
-    CMainWindow * m_mainWindow;    ///< Pointeur sur l'application.
+    CMainWindow * m_mainWindow;    ///< Pointeur sur la fenêtre principale de l'application.
     CFolder * m_rootFolder;        ///< Dossier principal.
-    QMap<QStandardItem *, CFolder *> m_folderItems;    ///< Tableau des items associés aux dossiers.
+    QMap<QStandardItem *, CFolder *> m_folderItems;            ///< Tableau des items associés aux dossiers.
     QMap<QStandardItem *, CMediaTableView *> m_songTableItems; ///< Tableau des items associés aux listes de lecture.
-    QMap<QStandardItem *, CCDRomDrive *> m_cdRomDrives;    ///< Tableau des items associés aux lecteurs de CD-ROM.
+    QMap<QStandardItem *, CCDRomDrive *> m_cdRomDrives;        ///< Tableau des items associés aux lecteurs de CD-ROM.
     QList<CFolder *> m_folders;         ///< Liste des dossiers.
     QList<IPlayList *> m_playLists;     ///< Liste des listes de lecture.
 };

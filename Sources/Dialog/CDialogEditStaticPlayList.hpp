@@ -48,7 +48,7 @@ protected slots:
     void save();
 
 private:
-    
+
     Ui::DialogEditStaticPlayList * m_uiWidget;
     CStaticList * m_playList;     ///< Pointeur sur la liste de lecture.
     CMainWindow * m_mainWindow;   ///< Pointeur sur la fenêtre principale de l'application.

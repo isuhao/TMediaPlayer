@@ -178,7 +178,7 @@ void IPlayList::removeFromDatabase()
         m_mainWindow->getMediaManager()->logError(tr("invalid identifier (%1)").arg(m_idPlayList), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
-    
+
     // Suppression de la liste
     QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
     query.prepare("DELETE FROM playlist WHERE playlist_id = ?");

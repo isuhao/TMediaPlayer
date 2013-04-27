@@ -29,6 +29,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 
 class CLibraryFolder;
+class CSong;
 class QFile;
 class QSettings;
 
@@ -49,7 +50,7 @@ public:
 
     bool initSoundSystem();
     bool loadDatabase();
-    
+
 
     // Log
     QFile * getLogFile(const QString& logName);
@@ -78,6 +79,14 @@ public:
     void removeLibraryFolder(CLibraryFolder * folder);
 
 
+    int getArtistId(const QString& name, const QString& nameSort);
+    int getAlbumId(const QString& title, const QString& titleSort);
+    int getGenreId(const QString& name);
+    QStringList getGenreList();
+    
+    inline bool isMute() const;
+    inline int getVolume() const;
+
     inline QString getApplicationPath() const;
 
     inline QSqlDatabase getDataBase() const;
@@ -87,16 +96,24 @@ public:
     static QString getAppVersion();
     static QString getAppDate();
 
+public slots:
+
+    void setMute(bool mute);
+    void setVolume(int volume);
+
+    void onSongModified();
+
 signals:
 
     void informationNotified(const QString& message);
+    void songModified(CSong * song); ///< Signal émis lorsque les informations d'un morceau sont modifiées.
 
 private:
 
     void createDatabaseSQLite();
     void createDatabaseMySQL();
     void createDatabasePostgreSQL();
-    
+
     QString m_applicationPath;                ///< Répertoire contenant l'application.
     QSqlDatabase m_dataBase;                  ///< Base de données.
     QTranslator m_translator;                 ///< Objet utilisé pour la traduction de l'application.
@@ -105,6 +122,8 @@ private:
     QMap<QString, QFile *> m_logList;         ///< Liste des fichiers de log ouverts.
     QList<TNotification> m_infosNotified;     ///< Liste des notifications.
     QList<CLibraryFolder *> m_libraryFolders; ///< Liste des répertoires de la médiathèque.
+    bool m_isMute;                            ///< Indique si le son est coupé.
+    int m_volume;                             ///< Volume sonore (entre 0 et 100).
 };
 
 
@@ -117,6 +136,30 @@ inline QList<CMediaManager::TNotification> CMediaManager::getNotifications() con
 inline QList<CLibraryFolder *> CMediaManager::getLibraryFolders() const
 {
     return m_libraryFolders;
+}
+
+
+/**
+ * Indique si le son est coupé.
+ *
+ * \return Booléen.
+ */
+
+inline bool CMediaManager::isMute() const
+{
+    return m_isMute;
+}
+
+
+/**
+ * Donne le volume sonore.
+ *
+ * \return Volume sonore, entre 0 et 100.
+ */
+
+inline int CMediaManager::getVolume() const
+{
+    return m_volume;
 }
 
 

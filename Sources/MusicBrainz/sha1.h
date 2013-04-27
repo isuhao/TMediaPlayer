@@ -54,7 +54,7 @@ char * sha_version();
 
 #define SHA_VERSION 1
 
-#ifdef HAVE_CONFIG_H 
+#ifdef HAVE_CONFIG_H
 #include "config.h"
 
 

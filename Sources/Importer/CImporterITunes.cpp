@@ -65,7 +65,7 @@ m_library    (new CITunesLibrary(mainWindow, this))
     setButtonText(QWizard::CancelButton, tr("Cancel"));
 }
 
-    
+
 /**
  * Détruit la boite de dialogue.
  */
@@ -111,7 +111,7 @@ m_library   (library)
     connect(m_btnFileName, SIGNAL(clicked()), this, SLOT(chooseFile()));
 }
 
-    
+
 bool CITunesWizardPage1::isComplete() const
 {
     return (!m_editFileName->text().isEmpty() && QWizardPage::isComplete());
@@ -298,7 +298,7 @@ void CITunesWizardPage4::initializePage()
                         m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                         return;
                     }
-                    
+
                     // Ajout des lectures
                     query.prepare("DELETE FROM play WHERE song_id = ?");
                     query.bindValue(0, songs[it2.key()]->getId());
@@ -330,7 +330,7 @@ void CITunesWizardPage4::initializePage()
                 {
                     int songPlayCount = songs[it2.key()]->getNumPlays() + it2->playCount;
                     QDateTime songPlayTime = qMax(songs[it2.key()]->getLastPlay(), it2->lastPlayed);
-                    
+
                     query.prepare("UPDATE song SET song_play_count = ?, song_play_time = ? "
                                   "WHERE song_id = ?");
 
@@ -502,7 +502,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
             m_mainWindow->getMediaManager()->logError(tr("the file \"%1\" is not valid (%2)").arg(fileName).arg(tr("expected element \"%1\"").arg("key")), __FUNCTION__, __FILE__, __LINE__);
             continue;
         }
-        
+
         // Liste des morceaux
         if (node.text() == "Tracks")
         {
@@ -513,7 +513,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
                 qWarning() << tr("CITunesLibrary::loadFile() : le fichier n'est pas valide (élément 'dict' attendu)");
                 continue;
             }
-            
+
             // Parcours de la liste des morceaux
             for (QDomElement nodeList = node.firstChildElement(); !nodeList.isNull(); nodeList = nodeList.nextSibling().toElement())
             {
@@ -532,7 +532,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
                 }
 
                 TSong song;
-            
+
                 // Parcours de la liste des attributs du morceau
                 for (QDomElement nodeListAttr = nodeList.firstChildElement(); !nodeListAttr.isNull(); nodeListAttr = nodeListAttr.nextSibling().toElement())
                 {
@@ -886,7 +886,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
         else if (node.text() == "Playlists")
         {
             node = node.nextSibling().toElement();
-            
+
             if (testLoadingXMLElementError(node.tagName(), "array"))
                 continue;
 
@@ -894,7 +894,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
             QMap<QString, QString> staticListParents;
             QMap<QString, TDynamicList> dynamicLists;
             QMap<QString, TStaticList> staticLists;
-            
+
             // Parcours des listes de lecture
             for (QDomElement nodeList = node.firstChildElement(); !nodeList.isNull(); nodeList = nodeList.nextSibling().toElement())
             {
@@ -908,7 +908,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
                 QString playListID;
                 QString folderID;
                 QList<int> songs;
-                
+
                 // Parcours des attributs de la liste de lecture
                 for (QDomElement nodeListAttr = nodeList.firstChildElement(); !nodeListAttr.isNull(); nodeListAttr = nodeListAttr.nextSibling().toElement())
                 {
@@ -967,7 +967,7 @@ bool CITunesLibrary::loadFile(const QString& fileName)
                             }
 
                             nodeListSong = nodeListSong.nextSibling().toElement();
-                            
+
                             if (testLoadingXMLElementError(nodeListSong.tagName(), "integer"))
                                 continue;
 

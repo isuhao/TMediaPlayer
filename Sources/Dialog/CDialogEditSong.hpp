@@ -69,7 +69,7 @@ protected slots:
 private:
 
     void updateInfos();
-    
+
     Ui::DialogEditSong * m_uiWidget;
     CRatingEditor * m_ratingEditor;
     CMediaTableView * m_songTable;

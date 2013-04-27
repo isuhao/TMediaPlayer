@@ -519,7 +519,7 @@ void CDynamicList::loadFromDatabase()
             connect(m_mainWindow, SIGNAL(songRemoved(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
 
         if (conditions.testFlag(ICriterion::UpdateOnSongModified))
-            connect(m_mainWindow, SIGNAL(songModified(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
+            connect(m_mainWindow->getMediaManager(), SIGNAL(songModified(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
 
         if (conditions.testFlag(ICriterion::UpdateOnSongMoved))
             connect(m_mainWindow, SIGNAL(songMoved(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
@@ -555,7 +555,7 @@ void CDynamicList::setCriterion(ICriterion * criteria)
     {
         disconnect(m_mainWindow, SIGNAL(songsAdded()             ), this, SLOT(updateList()));
         disconnect(m_mainWindow, SIGNAL(songRemoved(CSong *)     ), this, SLOT(updateList()));
-        disconnect(m_mainWindow, SIGNAL(songModified(CSong *)    ), this, SLOT(updateList()));
+        disconnect(m_mainWindow->getMediaManager(), SIGNAL(songModified(CSong *)    ), this, SLOT(updateList()));
         disconnect(m_mainWindow, SIGNAL(songMoved(CSong *)       ), this, SLOT(updateList()));
         disconnect(m_mainWindow, SIGNAL(songPlayEnd(CSong *)     ), this, SLOT(updateList()));
       //disconnect(m_mainWindow, SIGNAL(listModified(IPlayList *)), this, SLOT(updateList()));
@@ -569,7 +569,7 @@ void CDynamicList::setCriterion(ICriterion * criteria)
             connect(m_mainWindow, SIGNAL(songRemoved(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
 
         if (conditions.testFlag(ICriterion::UpdateOnSongModified))
-            connect(m_mainWindow, SIGNAL(songModified(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
+            connect(m_mainWindow->getMediaManager(), SIGNAL(songModified(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
 
         if (conditions.testFlag(ICriterion::UpdateOnSongMoved))
             connect(m_mainWindow, SIGNAL(songMoved(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);

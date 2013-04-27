@@ -66,7 +66,7 @@ m_settings   (settings)
     }
 
     QString currentLanguage = m_settings->value("Preferences/Language", QString()).toString();
-    
+
     int langIndex = 0;
 
     if (!currentLanguage.isEmpty())
@@ -111,7 +111,7 @@ m_settings   (settings)
     m_uiWidget->editDBPort->setValue(m_settings->value("Database/Port", 0).toInt());
     m_uiWidget->editDBUserName->setText(m_settings->value("Database/UserName", QString("root")).toString());
     m_uiWidget->editDBPassword->setText(m_settings->value("Database/Password", QString("")).toString());
-    
+
 #if QT_VERSION >= 0x050000
     m_uiWidget->editDBDatabase->setText(m_settings->value("Database/Base", QStandardPaths::writableLocation(QStandardPaths::DataLocation) + QDir::separator() + "library.sqlite").toString());
 #else

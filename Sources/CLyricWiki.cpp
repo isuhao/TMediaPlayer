@@ -83,7 +83,7 @@ void CLyricWiki::replyFinished(QNetworkReply * reply)
         m_mediaManager->logError(tr("invalid XML response (expected element '%1')").arg("LyricsResult"), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
-    
+
     QDomElement elemURL = racine.firstChildElement("url");
 
     if (elemURL.isNull())

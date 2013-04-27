@@ -19,6 +19,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CMediaManager.hpp"
 #include "CLibraryFolder.hpp"
+#include "CSong.hpp"
 
 // Qt
 #include <QFile>
@@ -74,7 +75,9 @@ QString CMediaManager::getAppDate()
 CMediaManager::CMediaManager(QObject * parent) :
 QObject       (parent),
 m_settings    (nullptr),
-m_soundSystem (nullptr)
+m_soundSystem (nullptr),
+m_isMute      (false),
+m_volume      (50)
 {
 #if QT_VERSION >= 0x050000
     m_applicationPath = QStandardPaths::writableLocation(QStandardPaths::DataLocation) + QDir::separator();
@@ -104,6 +107,9 @@ m_soundSystem (nullptr)
 
 CMediaManager::~CMediaManager()
 {
+    // Enregistrement des paramètres
+    m_settings->setValue("Preferences/Volume", m_volume);
+
     for (QList<CLibraryFolder *>::const_iterator folder = m_libraryFolders.begin(); folder != m_libraryFolders.end(); ++folder)
     {
         delete *folder;
@@ -195,6 +201,9 @@ bool CMediaManager::initSoundSystem()
         res = m_soundSystem->init(2, FMOD_INIT_NORMAL, 0);
     }
 
+    // Paramètres de lecture
+    setVolume(m_settings->value("Preferences/Volume", 50).toInt());
+
     return (res == FMOD_OK);
 }
 
@@ -241,7 +250,7 @@ bool CMediaManager::loadDatabase()
         logError(tr("Failed to load database: %1.").arg(m_dataBase.lastError().text()), __FUNCTION__, __FILE__, __LINE__);
         return false;
     }
-    
+
     QSqlQuery query(m_dataBase);
 
     // Création des relations
@@ -284,7 +293,7 @@ bool CMediaManager::loadDatabase()
             logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         }
     }
-    
+
     // Liste des répertoires
     if (!query.exec("SELECT path_id, path_location, path_keep_organized, path_format, path_format_items FROM libpath"))
     {
@@ -451,6 +460,307 @@ void CMediaManager::removeLibraryFolder(CLibraryFolder * folder)
     }
 
     delete folder;
+}
+
+
+/**
+ * Récupère l'identifiant d'un artiste en base de données.
+ *
+ * \param name     Nom de l'artiste.
+ * \param nameSort Nom de l'artiste pour le tri.
+ * \return Identifiant de l'artiste, ou -1 en cas d'erreur.
+ */
+
+int CMediaManager::getArtistId(const QString& name, const QString& nameSort)
+{
+    Q_ASSERT(!name.isNull());
+    Q_ASSERT(!nameSort.isNull());
+
+    QSqlQuery query(m_dataBase);
+    query.prepare("SELECT artist_id FROM artist WHERE artist_name = ? AND artist_name_sort = ?");
+    query.bindValue(0, name);
+    query.bindValue(1, nameSort);
+
+    if (!query.exec())
+    {
+        logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        return -1;
+    }
+
+    if (query.next())
+    {
+        return query.value(0).toInt();
+    }
+
+    query.prepare("INSERT INTO artist (artist_name, artist_name_sort) VALUES (?, ?)");
+    query.bindValue(0, name);
+    query.bindValue(1, nameSort);
+
+    if (!query.exec())
+    {
+        logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        return -1;
+    }
+
+    if (m_dataBase.driverName() == "QPSQL")
+    {
+        query.prepare("SELECT currval('artist_seq')");
+
+        if (!query.exec())
+        {
+            logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            return -1;
+        }
+
+        if (query.next())
+        {
+            return query.value(0).toInt();
+        }
+        else
+        {
+            logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            return -1;
+        }
+    }
+    else
+    {
+        return query.lastInsertId().toInt();
+    }
+}
+
+
+/**
+ * Récupère l'identifiant d'un album en base de données.
+ *
+ * \param title     Titre de l'album.
+ * \param titleSort Titre de l'album pour le tri.
+ * \return Identifiant de l'album, ou -1 en cas d'erreur.
+ */
+
+int CMediaManager::getAlbumId(const QString& title, const QString& titleSort)
+{
+    Q_ASSERT(!title.isNull());
+    Q_ASSERT(!titleSort.isNull());
+
+    QSqlQuery query(m_dataBase);
+    query.prepare("SELECT album_id FROM album WHERE album_title = ? AND album_title_sort = ?");
+    query.bindValue(0, title);
+    query.bindValue(1, titleSort);
+
+    if (!query.exec())
+    {
+        logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        return -1;
+    }
+
+    if (query.next())
+    {
+        return query.value(0).toInt();
+    }
+
+    query.prepare("INSERT INTO album (album_title, album_title_sort) VALUES (?, ?)");
+    query.bindValue(0, title);
+    query.bindValue(1, titleSort);
+
+    if (!query.exec())
+    {
+        logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        return -1;
+    }
+
+    if (m_dataBase.driverName() == "QPSQL")
+    {
+        query.prepare("SELECT currval('album_seq')");
+
+        if (!query.exec())
+        {
+            logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            return -1;
+        }
+
+        if (query.next())
+        {
+            return query.value(0).toInt();
+        }
+        else
+        {
+            logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            return -1;
+        }
+    }
+    else
+    {
+        return query.lastInsertId().toInt();
+    }
+}
+
+
+/**
+ * Récupère l'identifiant d'un genre en base de données.
+ *
+ * \param name Nom du genre.
+ * \return Identifiant du genre, ou -1 en cas d'erreur.
+ */
+
+int CMediaManager::getGenreId(const QString& name)
+{
+    Q_ASSERT(!name.isNull());
+
+    QSqlQuery query(m_dataBase);
+    query.prepare("SELECT genre_id FROM genre WHERE genre_name = ?");
+    query.bindValue(0, name);
+
+    if (!query.exec())
+    {
+        logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        return -1;
+    }
+
+    if (query.next())
+    {
+        return query.value(0).toInt();
+    }
+
+    query.prepare("INSERT INTO genre (genre_name) VALUES (?)");
+    query.bindValue(0, name);
+
+    if (!query.exec())
+    {
+        logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        return -1;
+    }
+
+    if (m_dataBase.driverName() == "QPSQL")
+    {
+        query.prepare("SELECT currval('genre_seq')");
+
+        if (!query.exec())
+        {
+            logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            return -1;
+        }
+
+        if (query.next())
+        {
+            return query.value(0).toInt();
+        }
+        else
+        {
+            logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            return -1;
+        }
+    }
+    else
+    {
+        return query.lastInsertId().toInt();
+    }
+}
+
+
+/**
+ * Retourne la liste des genres classée par nom.
+ *
+ * \todo Compléter la liste des genres prédéfinis.
+ *
+ * \return Liste des genres, qui contient l'ensemble des genres utilisés
+ *         par les morceaux, en plus de certains genres prédéfinis.
+ */
+
+QStringList CMediaManager::getGenreList()
+{
+    QStringList genres;
+
+    // Genres prédéfinis
+    genres.append("Blues");
+    genres.append("Classical");
+    genres.append("Country");
+    genres.append("Funk");
+    genres.append("Hard Rock");
+    genres.append("Heavy Metal");
+    genres.append("Jazz");
+    genres.append("Punk");
+    genres.append("Rap");
+    genres.append("Reggae");
+    genres.append("Rock");
+
+    // Liste des genres utilisés
+    QSqlQuery query(m_dataBase);
+
+    if (query.exec("SELECT genre_name FROM genres"))
+    {
+        while (query.next())
+        {
+            genres.append(query.value(0).toString());
+        }
+    }
+    else
+    {
+        logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+    }
+
+    genres.removeDuplicates();
+    genres.sort();
+    return genres;
+}
+
+
+/**
+ * Active ou désactive le son.
+ *
+ * \param mute True pour couper le son, false pour le remettre.
+ */
+
+void CMediaManager::setMute(bool mute)
+{
+    if (mute != m_isMute)
+    {
+        m_isMute = mute;
+/*
+        if (m_currentSongItem)
+        {
+            m_currentSongItem->getSong()->setMute(m_isMute);
+        }
+*/
+    }
+}
+
+
+/**
+ * Modifie le volume.
+ *
+ * \param volume Volume du son (entre 0 et 100).
+ */
+
+void CMediaManager::setVolume(int volume)
+{
+    volume = qBound(0, volume, 100);
+
+    if (volume != m_volume)
+    {
+        m_volume = volume;
+/*
+        if (m_currentSongItem)
+        {
+            m_currentSongItem->getSong()->setVolume(volume);
+        }
+*/
+    }
+}
+
+
+/**
+ * Méthode appelée lorsqu'un morceau est modifié.
+ * Le signal songModified est émis.
+ */
+
+void CMediaManager::onSongModified()
+{
+    CSong * song = qobject_cast<CSong *>(sender());
+
+    if (song)
+    {
+        emit songModified(song);
+    }
 }
 
 

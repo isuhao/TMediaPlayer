@@ -57,7 +57,7 @@ protected slots:
     void onPageFinished();
 
 protected:
-    
+
     CMediaManager * m_mediaManager;
     CSong * m_song;
     QWebPage page;

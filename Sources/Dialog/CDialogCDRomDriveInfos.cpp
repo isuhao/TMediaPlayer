@@ -41,11 +41,11 @@ m_cdRomDrive (cdRomDrive)
 
     setAttribute(Qt::WA_DeleteOnClose);
     m_uiWidget->setupUi(this);
-    
+
     m_uiWidget->valueDriveName->setText(cdRomDrive->getDriveName());
     m_uiWidget->valueSCSIName->setText(cdRomDrive->getSCSIName());
     m_uiWidget->valueDeviceName->setText(cdRomDrive->getDeviceName());
-    
+
     m_uiWidget->valueDiscId->setText(QString::number(cdRomDrive->getDiscId(), 16));
     m_uiWidget->valueMusicBrainzId->setText(cdRomDrive->getMusicBrainzDiscId());
 

@@ -103,7 +103,7 @@ m_song        (song)
     m_modelXiphComment = new QStandardItemModel(this);
     m_uiWidget->tableXiphComment->setModel(m_modelXiphComment);
 
-    
+
     // Connexions des signaux des boutons
     QPushButton * btnSave = m_uiWidget->buttonBox->addButton(tr("Save"), QDialogButtonBox::AcceptRole);
     QPushButton * btnCancel = m_uiWidget->buttonBox->addButton(tr("Cancel"), QDialogButtonBox::RejectRole);
@@ -248,7 +248,7 @@ void CDialogEditMetadata::reset()
                 close();
                 return;
             }
-            
+
             //m_uiWidget->tabWidget->setTabEnabled(0, false);
             m_uiWidget->tabWidget->removeTab(0);
             //m_uiWidget->tabWidget->setTabEnabled(1, false);
@@ -285,7 +285,7 @@ void CDialogEditMetadata::reset()
                 close();
                 return;
             }
-            
+
             initTagID3v1(file.ID3v1Tag(false));
             initTagID3v2(file.ID3v2Tag(false));
             //m_uiWidget->tabWidget->setTabEnabled(2, false);

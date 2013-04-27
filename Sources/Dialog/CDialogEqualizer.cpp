@@ -344,7 +344,7 @@ void CDialogEqualizer::onPresetSave(const QString& name)
     }
     else
     {
-        preset = new CEqualizerPreset(m_mainWindow);
+        preset = new CEqualizerPreset(m_mainWindow->getMediaManager());
         preset->setName(presetName);
 
         m_mainWindow->addEqualizerPreset(preset);
@@ -374,7 +374,7 @@ void CDialogEqualizer::onPresetRename(const QString& name)
 
     if (!preset)
         return;
-    
+
     QString presetName = name.trimmed();
     preset->setName(presetName);
 
@@ -442,7 +442,7 @@ void CDialogEqualizer::deleteCurrentPreset()
 {
     if (m_uiWidget->listPreset->currentIndex() <= 2)
         return;
-    
+
     int presetId = m_uiWidget->listPreset->itemData(m_uiWidget->listPreset->currentIndex()).toInt();
     CEqualizerPreset * preset = m_mainWindow->getEqualizerPresetFromId(presetId);
 

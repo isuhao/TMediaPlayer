@@ -21,6 +21,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #define FILE_C_UTILS_HPP_
 
 #include <QString>
+#include <QStringList>
 
 
 class QMenu;
@@ -30,5 +31,6 @@ class QPoint;
 QPoint getCorrectMenuPosition(QMenu * menu, const QPoint& menuPosition);
 QString durationToString(qlonglong durationMS);
 QString getFileSize(qlonglong fileSize);
+QStringList listFilesInFolder(const QString& pathName);
 
 #endif // FILE_C_UTILS_HPP_

@@ -156,14 +156,7 @@ public:
     inline bool isStopped() const;
     inline TRepeatMode getRepeatMode() const;
     inline bool isShuffle() const;
-    inline bool isMute() const;
-    inline int getVolume() const;
     int getPosition() const;
-
-    int getArtistId(const QString& name, const QString& nameSort);
-    int getAlbumId(const QString& title, const QString& titleSort);
-    int getGenreId(const QString& name);
-    QStringList getGenreList();
 
     inline CQueuePlayList * getQueue() const
     {
@@ -239,7 +232,7 @@ public slots:
     void openSongInExplorer();
     void editSelectedItem();
     void removeSelectedItem();
-    void onSongModified();
+    //void onSongModified();
 
 #if QT_VERSION >= 0x050000
     void openDialogCreateStaticList_Slot(bool checked) { openDialogCreateStaticList(); }
@@ -252,7 +245,6 @@ signals:
     // Signaux sur les morceaux
     void songAdded(CSong * song);             ///< Signal émis lorsqu'un morceau est ajouté à la médiathèque.
     void songsAdded();                        ///< Signal émis lorsqu'un ou plusieurs morceaux sont ajoutés à la médiathèque.
-    void songModified(CSong * song);          ///< Signal émis lorsque les informations d'un morceau sont modifiées.
     void songRemoved(CSong * song);           ///< Signal émis lorsqu'un morceau est retiré de la médiathèque.
   //void songMoved(CSong * song);             ///< Signal émis lorsque le fichier d'un morceau est déplacé.
     void songPlayStart(CSong * song);         ///< Signal émis lorsque la lecture d'un morceau démarre.
@@ -291,7 +283,6 @@ protected:
 
     void addPlayList(IPlayList * playList);
     void addFolder(CFolder * folder);
-    QStringList importFolder(const QString& pathName);
     void importSongs(const QStringList& fileList);
     void initSoundSystem();
     void displaySongTable(CMediaTableView * songTable);
@@ -322,8 +313,6 @@ private:
     bool m_showRemainingTime;               ///< Indique si on doit afficher le temps restant ou la durée du morceau en cours de lecture.
     TRepeatMode m_repeatMode;               ///< Mode de répétition.
     bool m_isShuffle;                       ///< Indique si la lecture aléatoire est activée.
-    bool m_isMute;                          ///< Indique si le son est coupé.
-    int m_volume;                           ///< Volume sonore (entre 0 et 100).
 
     // Égaliseur
     double m_equalizerGains[10];                  ///< Gains de l'égaliseur.
@@ -473,30 +462,6 @@ inline CMainWindow::TRepeatMode CMainWindow::getRepeatMode() const
 bool CMainWindow::isShuffle() const
 {
     return m_isShuffle;
-}
-
-
-/**
- * Indique si le son est coupé.
- *
- * \return Booléen.
- */
-
-inline bool CMainWindow::isMute() const
-{
-    return m_isMute;
-}
-
-
-/**
- * Donne le volume sonore.
- *
- * \return Volume sonore, entre 0 et 100.
- */
-
-inline int CMainWindow::getVolume() const
-{
-    return m_volume;
 }
 
 #endif // FILE_C_MAIN_WINDOW_HPP_

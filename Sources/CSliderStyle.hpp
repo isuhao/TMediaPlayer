@@ -33,7 +33,7 @@ public:
             return Qt::LeftButton;
         else
             return QProxyStyle::styleHint(hint, option, widget, returnData);
-        
+
     }
 };
 

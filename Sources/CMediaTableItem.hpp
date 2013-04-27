@@ -40,7 +40,7 @@ public:
     inline bool operator!=(const CMediaTableItem& other) const;
 
 private:
-    
+
     inline CMediaTableItem(const CMediaTableItem& other);
     inline CMediaTableItem(int position, CSong * song/*, IMediaTable * mediaTable*/);
 

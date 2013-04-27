@@ -108,8 +108,6 @@ m_state                (Stopped),
 m_showRemainingTime    (false),
 m_repeatMode           (NoRepeat),
 m_isShuffle            (false),
-m_isMute               (false),
-m_volume               (50),
 
 // Last.fm
 m_lastFmEnableScrobble       (false),
@@ -122,9 +120,9 @@ m_lastFmState                (NoScrobble)
     Q_CHECK_PTR(m_mediaManager);
 
 #ifndef T_NO_SINGLE_APP
-	QLocalServer * server = new QLocalServer(this);
-	connect(server, SIGNAL(newConnection()), this, SLOT(activateThisWindow()));
-	server->listen("tmediaplayer-" + CMediaManager::getAppVersion());
+    QLocalServer * server = new QLocalServer(this);
+    connect(server, SIGNAL(newConnection()), this, SLOT(activateThisWindow()));
+    server->listen("tmediaplayer-" + CMediaManager::getAppVersion());
 #endif // T_NO_SINGLE_APP
 
     setDockNestingEnabled(true);
@@ -245,7 +243,6 @@ CMainWindow::~CMainWindow()
     }
 
     // Enregistrement des paramètres
-    m_mediaManager->getSettings()->setValue("Preferences/Volume", m_volume);
     m_mediaManager->getSettings()->setValue("Preferences/Shuffle", m_isShuffle);
     m_mediaManager->getSettings()->setValue("Preferences/Repeat", m_repeatMode);
 
@@ -432,10 +429,9 @@ bool CMainWindow::initWindow()
 
     // Initialisation de FMOD
     initSoundSystem();
-
-
+    
     // Paramètres de lecture
-    setVolume(m_mediaManager->getSettings()->value("Preferences/Volume", 50).toInt());
+    setVolume(m_mediaManager->getVolume());
     setShuffle(m_mediaManager->getSettings()->value("Preferences/Shuffle", false).toBool());
 
     int repeatModeNum = m_mediaManager->getSettings()->value("Preferences/Repeat", 0).toInt();
@@ -1052,247 +1048,6 @@ int CMainWindow::getPosition() const
 
 
 /**
- * Récupère l'identifiant d'un artiste en base de données.
- *
- * \param name     Nom de l'artiste.
- * \param nameSort Nom de l'artiste pour le tri.
- * \return Identifiant de l'artiste, ou -1 en cas d'erreur.
- */
-
-int CMainWindow::getArtistId(const QString& name, const QString& nameSort)
-{
-    Q_ASSERT(!name.isNull());
-    Q_ASSERT(!nameSort.isNull());
-
-    QSqlQuery query(m_mediaManager->getDataBase());
-    query.prepare("SELECT artist_id FROM artist WHERE artist_name = ? AND artist_name_sort = ?");
-    query.bindValue(0, name);
-    query.bindValue(1, nameSort);
-
-    if (!query.exec())
-    {
-        m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        return -1;
-    }
-
-    if (query.next())
-    {
-        return query.value(0).toInt();
-    }
-
-    query.prepare("INSERT INTO artist (artist_name, artist_name_sort) VALUES (?, ?)");
-    query.bindValue(0, name);
-    query.bindValue(1, nameSort);
-
-    if (!query.exec())
-    {
-        m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        return -1;
-    }
-
-    if (m_mediaManager->getDataBase().driverName() == "QPSQL")
-    {
-        query.prepare("SELECT currval('artist_seq')");
-
-        if (!query.exec())
-        {
-            m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-            return -1;
-        }
-
-        if (query.next())
-        {
-            return query.value(0).toInt();
-        }
-        else
-        {
-            m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-            return -1;
-        }
-    }
-    else
-    {
-        return query.lastInsertId().toInt();
-    }
-}
-
-
-/**
- * Récupère l'identifiant d'un album en base de données.
- *
- * \param title     Titre de l'album.
- * \param titleSort Titre de l'album pour le tri.
- * \return Identifiant de l'album, ou -1 en cas d'erreur.
- */
-
-int CMainWindow::getAlbumId(const QString& title, const QString& titleSort)
-{
-    Q_ASSERT(!title.isNull());
-    Q_ASSERT(!titleSort.isNull());
-
-    QSqlQuery query(m_mediaManager->getDataBase());
-    query.prepare("SELECT album_id FROM album WHERE album_title = ? AND album_title_sort = ?");
-    query.bindValue(0, title);
-    query.bindValue(1, titleSort);
-
-    if (!query.exec())
-    {
-        m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        return -1;
-    }
-
-    if (query.next())
-    {
-        return query.value(0).toInt();
-    }
-
-    query.prepare("INSERT INTO album (album_title, album_title_sort) VALUES (?, ?)");
-    query.bindValue(0, title);
-    query.bindValue(1, titleSort);
-
-    if (!query.exec())
-    {
-        m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        return -1;
-    }
-
-    if (m_mediaManager->getDataBase().driverName() == "QPSQL")
-    {
-        query.prepare("SELECT currval('album_seq')");
-
-        if (!query.exec())
-        {
-            m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-            return -1;
-        }
-
-        if (query.next())
-        {
-            return query.value(0).toInt();
-        }
-        else
-        {
-            m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-            return -1;
-        }
-    }
-    else
-    {
-        return query.lastInsertId().toInt();
-    }
-}
-
-
-/**
- * Récupère l'identifiant d'un genre en base de données.
- *
- * \param name Nom du genre.
- * \return Identifiant du genre, ou -1 en cas d'erreur.
- */
-
-int CMainWindow::getGenreId(const QString& name)
-{
-    Q_ASSERT(!name.isNull());
-
-    QSqlQuery query(m_mediaManager->getDataBase());
-    query.prepare("SELECT genre_id FROM genre WHERE genre_name = ?");
-    query.bindValue(0, name);
-
-    if (!query.exec())
-    {
-        m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        return -1;
-    }
-
-    if (query.next())
-    {
-        return query.value(0).toInt();
-    }
-
-    query.prepare("INSERT INTO genre (genre_name) VALUES (?)");
-    query.bindValue(0, name);
-
-    if (!query.exec())
-    {
-        m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        return -1;
-    }
-
-    if (m_mediaManager->getDataBase().driverName() == "QPSQL")
-    {
-        query.prepare("SELECT currval('genre_seq')");
-
-        if (!query.exec())
-        {
-            m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-            return -1;
-        }
-
-        if (query.next())
-        {
-            return query.value(0).toInt();
-        }
-        else
-        {
-            m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-            return -1;
-        }
-    }
-    else
-    {
-        return query.lastInsertId().toInt();
-    }
-}
-
-
-/**
- * Retourne la liste des genres classée par nom.
- *
- * \todo Compléter la liste des genres prédéfinis.
- *
- * \return Liste des genres, qui contient l'ensemble des genres utilisés
- *         par les morceaux, en plus de certains genres prédéfinis.
- */
-
-QStringList CMainWindow::getGenreList()
-{
-    QStringList genres;
-
-    // Genres prédéfinis
-    genres.append("Blues");
-    genres.append("Classical");
-    genres.append("Country");
-    genres.append("Funk");
-    genres.append("Hard Rock");
-    genres.append("Heavy Metal");
-    genres.append("Jazz");
-    genres.append("Punk");
-    genres.append("Rap");
-    genres.append("Reggae");
-    genres.append("Rock");
-
-    // Liste des genres utilisés
-    QSqlQuery query(m_mediaManager->getDataBase());
-
-    if (query.exec("SELECT genre_name FROM genres"))
-    {
-        while (query.next())
-        {
-            genres.append(query.value(0).toString());
-        }
-    }
-    else
-    {
-        m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-    }
-
-    genres.removeDuplicates();
-    genres.sort();
-    return genres;
-}
-
-
-/**
  * Affiche un message dans la barre d'état.
  * Le message est affiché pendant 5 secondes.
  *
@@ -1811,6 +1566,19 @@ void CMainWindow::setShuffle(bool shuffle)
 
 void CMainWindow::setMute(bool mute)
 {
+    m_mediaManager->setMute(mute);
+    bool isMute = m_mediaManager->isMute();
+
+    if (m_currentSongItem)
+    {
+        m_currentSongItem->getSong()->setMute(isMute);
+    }
+
+    m_uiWidget->actionMute->setChecked(isMute);
+
+    m_uiWidget->actionMute->setIcon(QPixmap(isMute ? ":/icons/muet" : ":/icons/volume"));
+    m_uiControl->btnMute->setIcon(QPixmap(isMute ? ":/icons/muet" : ":/icons/volume"));
+/*
     if (mute != m_isMute)
     {
         m_isMute = mute;
@@ -1825,6 +1593,7 @@ void CMainWindow::setMute(bool mute)
         m_uiWidget->actionMute->setIcon(QPixmap(m_isMute ? ":/icons/muet" : ":/icons/volume"));
         m_uiControl->btnMute->setIcon(QPixmap(m_isMute ? ":/icons/muet" : ":/icons/volume"));
     }
+*/
 }
 
 
@@ -1834,7 +1603,7 @@ void CMainWindow::setMute(bool mute)
 
 void CMainWindow::toggleMute()
 {
-    setMute(!m_isMute);
+    setMute(!m_mediaManager->isMute());
 }
 
 
@@ -1846,19 +1615,15 @@ void CMainWindow::toggleMute()
 
 void CMainWindow::setVolume(int volume)
 {
-    volume = qBound(0, volume, 100);
+    m_mediaManager->setVolume(volume);
+    volume = m_mediaManager->getVolume();
 
-    if (volume != m_volume)
+    if (m_currentSongItem)
     {
-        m_volume = volume;
-
-        if (m_currentSongItem)
-        {
-            m_currentSongItem->getSong()->setVolume(volume);
-        }
-
-        m_uiControl->sliderVolume->setValue(volume);
+        m_currentSongItem->getSong()->setVolume(volume);
     }
+
+    m_uiControl->sliderVolume->setValue(volume);
 }
 
 
@@ -2009,7 +1774,7 @@ void CMainWindow::openDialogAddFolder()
 
     m_mediaManager->getSettings()->setValue("Preferences/LastDirectory", folder);
 
-    importSongs(importFolder(folder));
+    importSongs(listFilesInFolder(folder));
 }
 
 
@@ -2036,7 +1801,7 @@ void CMainWindow::importSongs(const QStringList& fileList)
 
         QString fileName = *it;
         fileName.replace('\\', '/');
-        CSong * song = CSong::loadFromFile(this, fileName);
+        CSong * song = CSong::loadFromFile(m_mediaManager, fileName);
         if (song) songs.append(song);
         //addSong(*it);
 
@@ -2476,7 +2241,7 @@ void CMainWindow::addFolder(CFolder * folder)
 
 CSong * CMainWindow::addSong(const QString& fileName)
 {
-    CSong * song = CSong::loadFromFile(this, fileName);
+    CSong * song = CSong::loadFromFile(m_mediaManager, fileName);
 
     if (song)
     {
@@ -2521,11 +2286,11 @@ void CMainWindow::selectSong(CMediaTableView * songTable, CMediaTableItem * song
 }
 
 
-/**
+/*/*
  * Méthode appelée lorsqu'un morceau est modifié.
  * Le signal songModified est émis.
  */
-
+/*
 void CMainWindow::onSongModified()
 {
     CSong * song = qobject_cast<CSong *>(sender());
@@ -2535,37 +2300,7 @@ void CMainWindow::onSongModified()
         emit songModified(song);
     }
 }
-
-
-/**
- * Liste les morceaux contenus dans un répertoire.
- *
- * \param pathName Nom du répertoire à parcourir récursivement.
- * \return Liste des fichiers du répertoire.
- */
-
-QStringList CMainWindow::importFolder(const QString& pathName)
-{
-    QStringList fileList;
-    QDir dir(pathName);
-
-    QStringList dirList = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
-
-    for (QStringList::const_iterator it = dirList.begin(); it != dirList.end(); ++it)
-    {
-        fileList.append(importFolder(dir.absoluteFilePath(*it)));
-    }
-
-    QStringList fileDirList = dir.entryList(QDir::Files | QDir::Readable, QDir::Name);
-
-    for (QStringList::const_iterator it = fileDirList.begin(); it != fileDirList.end(); ++it)
-    {
-        fileList.append(dir.absoluteFilePath(*it).replace('\\', '/'));
-    }
-
-    return fileList;
-}
-
+*/
 
 /**
  * Affiche le morceau sélectionné dans l'explorateur de fichiers.
@@ -2686,9 +2421,9 @@ void CMainWindow::removeSelectedItem()
 
 void CMainWindow::activateThisWindow()
 {
-	setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
-	raise();
-	activateWindow();
+    setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+    raise();
+    activateWindow();
 }
 
 #endif // T_NO_SINGLE_APP
@@ -3031,11 +2766,11 @@ void CMainWindow::loadDatabase()
 
 
     // Préréglages d'égaliseur
-    m_equalizerPresets = CEqualizerPreset::loadFromDatabase(this);
+    m_equalizerPresets = CEqualizerPreset::loadFromDatabase(m_mediaManager);
 
 
     // Liste des morceaux
-    QList<CSong *> songList = CSong::loadAllSongsFromDatabase(this);
+    QList<CSong *> songList = CSong::loadAllSongsFromDatabase(m_mediaManager);
     m_library->addSongs(songList);
 
 
@@ -3169,7 +2904,7 @@ void CMainWindow::closeEvent(QCloseEvent * event)
             return;
         }
     }
-    
+
     m_mediaManager->getSettings()->setValue("Window/WindowGeometry", saveGeometry());
     m_mediaManager->getSettings()->setValue("Window/WindowState", saveState());
 

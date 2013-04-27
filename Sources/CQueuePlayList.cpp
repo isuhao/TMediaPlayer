@@ -141,7 +141,7 @@ void CQueuePlayList::removeSelectedSongs()
     // Aucun morceau à supprimer
     if (indexList.isEmpty())
         return;
-    
+
     // Si on est en train de lire un morceau de la liste, il faut mettre à jour les informations sur le morceau courant
     CMediaTableItem * currentItem = m_model->getCurrentSongItem();
     CSong * currentSong = (currentItem ? currentItem->getSong() : nullptr);

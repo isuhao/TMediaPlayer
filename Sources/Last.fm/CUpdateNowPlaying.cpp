@@ -46,7 +46,7 @@ m_song         (song)
         deleteLater();
         return;
     }
-    
+
     args["method"]   = "track.updateNowPlaying";
     args["artist"]   = artistName.toUtf8();
     args["track"]    = song->getTitle().toUtf8();

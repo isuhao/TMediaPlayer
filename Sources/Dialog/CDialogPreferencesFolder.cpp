@@ -48,7 +48,7 @@ m_needDeleteFolder (false)
 
     setAttribute(Qt::WA_DeleteOnClose);
     m_uiWidget->setupUi(this);
-    
+
     if (!m_folder)
     {
         m_folder = new CLibraryFolder(m_mainWindow);

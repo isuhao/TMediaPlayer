@@ -84,7 +84,7 @@ void CLibraryFolder::convertStringToFormatItems(const QString& formatItems)
 
         QString itemKey = itemSplit.at(0);
         QString itemVal = itemSplit.at(1);
-                
+
         if (itemKey == "TitleDefault")
             titleDefault = itemVal;
         else if (itemKey == "TitleEmpty")

@@ -39,7 +39,7 @@ public:
 
     ILastFmService(CMainWindow * mainWindow, const QByteArray& sessionKey);
     virtual ~ILastFmService();
-    
+
     QByteArray getLastFmQuery(const QMap<QByteArray, QByteArray>& args) const;
     QByteArray getLastFmSignature(const QMap<QByteArray, QByteArray>& args) const;
 
@@ -50,7 +50,7 @@ protected slots:
     virtual void replyFinished(QNetworkReply * reply) = 0;
 
 protected:
-    
+
     static const QByteArray m_apiKey;
     static const QByteArray m_secret;
     static const QString m_lastFmUrl;

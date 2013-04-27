@@ -33,7 +33,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  *
  * \todo Remplir la liste des types de critères dans le code (et la trier).
  *
- * \param mainWindow Pointeur sur la classe principale de l'application.
+ * \param mainWindow Pointeur sur la fenêtre principale de l'application.
  * \param parent     Widget parent.
  */
 
@@ -203,7 +203,7 @@ void CWidgetCriterion::changeType(int num)
         m_uiWidget->listConditionDate->hide();
         m_uiWidget->listConditionBoolean->hide();
         m_uiWidget->listConditionString->show();
-        
+
         m_uiWidget->listConditionString->setCurrentIndex(0);
         changeConditionString(0);
     }
@@ -230,7 +230,7 @@ void CWidgetCriterion::changeType(int num)
             m_uiWidget->editValue1Number->setSuffix(QString());
             m_uiWidget->editValue2Number->setSuffix(QString());
         }
-        
+
         m_uiWidget->listConditionNumber->setCurrentIndex(0);
         changeConditionNumber(0);
     }
@@ -241,7 +241,7 @@ void CWidgetCriterion::changeType(int num)
         m_uiWidget->listConditionDate->hide();
         m_uiWidget->listConditionBoolean->hide();
         m_uiWidget->listConditionTime->show();
-        
+
         m_uiWidget->listConditionTime->setCurrentIndex(0);
         changeConditionTime(0);
     }
@@ -255,7 +255,7 @@ void CWidgetCriterion::changeType(int num)
 
         m_uiWidget->editValue1Number->setSuffix(QString());
         m_uiWidget->editValue2Number->setSuffix(QString());
-        
+
         m_uiWidget->listConditionDate->setCurrentIndex(0);
         changeConditionDate(0);
     }

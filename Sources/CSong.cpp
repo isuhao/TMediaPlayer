@@ -18,7 +18,6 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CSong.hpp"
-#include "CMainWindow.hpp"
 #include "CMediaManager.hpp"
 #include "CLibraryFolder.hpp"
 #include "CCDRomDrive.hpp"
@@ -104,12 +103,12 @@ duration    (0)
  *
  * \todo Supprimer ou rendre privée ?
  *
- * \param mainWindow Pointeur sur la fenêtre principale de l'application.
+ * \param mediaManager Pointeur sur la classe principale de l'application.
  */
 
-CSong::CSong(CMainWindow * mainWindow) :
-QObject            (mainWindow),
-m_mainWindow       (mainWindow),
+CSong::CSong(CMediaManager * mediaManager) :
+QObject            (mediaManager),
+m_mediaManager     (mediaManager),
 m_sound            (nullptr),
 m_channel          (nullptr),
 m_cdRomDrive       (nullptr),
@@ -119,7 +118,7 @@ m_needWriteTags    (false),
 m_id               (-1),
 m_fileStatus       (true)
 {
-    Q_CHECK_PTR(m_mainWindow);
+    Q_CHECK_PTR(m_mediaManager);
 }
 
 
@@ -129,13 +128,13 @@ m_fileStatus       (true)
  * chargées depuis le base, sinon, les données sont lues depuis les métadonnées
  * du morceau.
  *
- * \param fileName   Nom du fichier contenant le son son à charger.
- * \param mainWindow Pointeur sur la fenêtre principale de l'application.
+ * \param fileName     Nom du fichier contenant le son son à charger.
+ * \param mediaManager Pointeur sur la classe principale de l'application.
  */
 
-CSong::CSong(const QString& fileName, CMainWindow * mainWindow) :
-QObject            (mainWindow),
-m_mainWindow       (mainWindow),
+CSong::CSong(const QString& fileName, CMediaManager * mediaManager) :
+QObject            (mediaManager),
+m_mediaManager     (mediaManager),
 m_sound            (nullptr),
 m_channel          (nullptr),
 m_cdRomDrive       (nullptr),
@@ -145,10 +144,10 @@ m_needWriteTags    (false),
 m_id               (-1),
 m_fileStatus       (true)
 {
-    Q_CHECK_PTR(m_mainWindow);
+    Q_CHECK_PTR(m_mediaManager);
 
     m_properties.fileName = fileName;
-    m_id = getId(m_mainWindow->getMediaManager(), fileName);
+    m_id = getId(m_mediaManager, fileName);
 
     if (m_id >= 0)
         loadFromDatabase();
@@ -195,7 +194,7 @@ void CSong::loadFromDatabase()
     if (m_id <= 0)
         return;
 
-    QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
+    QSqlQuery query(m_mediaManager->getDataBase());
 
     query.prepare("SELECT "
                       "song_filename,"
@@ -248,13 +247,13 @@ void CSong::loadFromDatabase()
 
     if (!query.exec())
     {
-        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return;
     }
 
     if (!query.next())
     {
-        m_mainWindow->getMediaManager()->logError(tr("invalid identifier (%1)").arg(m_id), __FUNCTION__, __FILE__, __LINE__);
+        m_mediaManager->logError(tr("invalid identifier (%1)").arg(m_id), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
@@ -320,7 +319,7 @@ void CSong::loadFromDatabase()
 
     if (!query.exec())
     {
-        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return;
     }
 
@@ -354,7 +353,7 @@ bool CSong::loadTags(bool readProperties)
     switch (m_properties.format)
     {
         default:
-            m_mainWindow->getMediaManager()->logError(tr("unknown format"), __FUNCTION__, __FILE__, __LINE__);
+            m_mediaManager->logError(tr("unknown format"), __FUNCTION__, __FILE__, __LINE__);
             return false;
 
         case CSong::FormatMP3:
@@ -375,7 +374,7 @@ bool CSong::loadTags(bool readProperties)
             if (!file.isValid())
             {
                 m_fileStatus = false;
-                m_mainWindow->getMediaManager()->logError(tr("can't read the MP3 file \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                m_mediaManager->logError(tr("can't read the MP3 file \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 return false;
             }
 
@@ -395,7 +394,7 @@ bool CSong::loadTags(bool readProperties)
                 }
                 else
                 {
-                    m_mainWindow->getMediaManager()->logError(tr("can't get properties of the file \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                    m_mediaManager->logError(tr("can't get properties of the file \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 }
             }
 
@@ -430,7 +429,7 @@ bool CSong::loadTags(bool readProperties)
             if (!file.isValid())
             {
                 m_fileStatus = false;
-                m_mainWindow->getMediaManager()->logError(tr("can't read the Ogg file \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                m_mediaManager->logError(tr("can't read the Ogg file \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 return false;
             }
 
@@ -448,7 +447,7 @@ bool CSong::loadTags(bool readProperties)
                 }
                 else
                 {
-                    m_mainWindow->getMediaManager()->logError(tr("can't get properties of the file \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                    m_mediaManager->logError(tr("can't get properties of the file \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 }
             }
 
@@ -481,7 +480,7 @@ bool CSong::loadTags(bool readProperties)
             if (!file.isValid())
             {
                 m_fileStatus = false;
-                m_mainWindow->getMediaManager()->logError(tr("can't read the FLAC file \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                m_mediaManager->logError(tr("can't read the FLAC file \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 return false;
             }
 
@@ -499,7 +498,7 @@ bool CSong::loadTags(bool readProperties)
                 }
                 else
                 {
-                    m_mainWindow->getMediaManager()->logError(tr("can't get properties of the file \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                    m_mediaManager->logError(tr("can't get properties of the file \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 }
             }
 
@@ -555,7 +554,7 @@ bool CSong::writeTags()
     switch (m_properties.format)
     {
         default:
-            m_mainWindow->getMediaManager()->logError(tr("unknown format"), __FUNCTION__, __FILE__, __LINE__);
+            m_mediaManager->logError(tr("unknown format"), __FUNCTION__, __FILE__, __LINE__);
             return false;
 
         case CSong::FormatMP3:
@@ -576,7 +575,7 @@ bool CSong::writeTags()
             if (!file.isValid())
             {
                 m_fileStatus = false;
-                m_mainWindow->getMediaManager()->logError(tr("the file \"%1\" can't be opened").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                m_mediaManager->logError(tr("the file \"%1\" can't be opened").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 m_needWriteTags = true;
                 return false;
             }
@@ -585,12 +584,12 @@ bool CSong::writeTags()
 
             if (file.readOnly())
             {
-                m_mainWindow->getMediaManager()->logError(tr("the file \"%1\" is open in read-only").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                m_mediaManager->logError(tr("the file \"%1\" is open in read-only").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 m_needWriteTags = true;
                 return false;
             }
 
-            QFile * logFile = m_mainWindow->getMediaManager()->getLogFile("metadata");
+            QFile * logFile = m_mediaManager->getLogFile("metadata");
 
             //writeTags(file.APETag(false), m_infos, logFile, m_fileName);
             writeTags(file.ID3v1Tag(true), m_infos, logFile, m_properties.fileName);
@@ -620,7 +619,7 @@ bool CSong::writeTags()
             if (!file.isValid())
             {
                 m_fileStatus = false;
-                m_mainWindow->getMediaManager()->logError(tr("can't read the Ogg file \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                m_mediaManager->logError(tr("can't read the Ogg file \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 m_needWriteTags = true;
                 return false;
             }
@@ -629,12 +628,12 @@ bool CSong::writeTags()
 
             if (file.readOnly())
             {
-                m_mainWindow->getMediaManager()->logError(tr("the file \"%1\" is open in read-only").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                m_mediaManager->logError(tr("the file \"%1\" is open in read-only").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 m_needWriteTags = true;
                 return false;
             }
 
-            writeTags(file.tag(), m_infos, m_mainWindow->getMediaManager()->getLogFile("metadata"), m_properties.fileName);
+            writeTags(file.tag(), m_infos, m_mediaManager->getLogFile("metadata"), m_properties.fileName);
 
             file.save();
             setFileSize(file.length());
@@ -660,7 +659,7 @@ bool CSong::writeTags()
             if (!file.isValid())
             {
                 m_fileStatus = false;
-                m_mainWindow->getMediaManager()->logError(tr("can't read the FLAC file \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                m_mediaManager->logError(tr("can't read the FLAC file \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 m_needWriteTags = true;
                 return false;
             }
@@ -669,12 +668,12 @@ bool CSong::writeTags()
 
             if (file.readOnly())
             {
-                m_mainWindow->getMediaManager()->logError(tr("the file \"%1\" is open in read-only").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                m_mediaManager->logError(tr("the file \"%1\" is open in read-only").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
                 m_needWriteTags = true;
                 return false;
             }
 
-            QFile * logFile = m_mainWindow->getMediaManager()->getLogFile("metadata");
+            QFile * logFile = m_mediaManager->getLogFile("metadata");
 
             writeTags(file.ID3v1Tag(false), m_infos, logFile, m_properties.fileName);
             writeTags(file.ID3v2Tag(false), m_infos, logFile, m_properties.fileName);
@@ -712,7 +711,7 @@ bool CSong::moveFile()
     const unsigned int maxFolderLength = 50;
 
     // Recherche du répertoire de la médiathèque
-    CLibraryFolder * libraryFolder = m_mainWindow->getMediaManager()->getLibraryFolder(m_mainWindow->getMediaManager()->getLibraryFolderId(m_properties.fileName));
+    CLibraryFolder * libraryFolder = m_mediaManager->getLibraryFolder(m_mediaManager->getLibraryFolderId(m_properties.fileName));
 
     // Le fichier n'est pas dans un répertoire de la médiathèque
     if (libraryFolder == nullptr)
@@ -877,19 +876,19 @@ bool CSong::moveFile()
 
     if (!file.rename(pathName))
     {
-        m_mainWindow->getMediaManager()->logError(tr("can't rename the file \"%1\" to \"%2\"").arg(m_properties.fileName).arg(pathName), __FUNCTION__, __FILE__, __LINE__);
+        m_mediaManager->logError(tr("can't rename the file \"%1\" to \"%2\"").arg(m_properties.fileName).arg(pathName), __FUNCTION__, __FILE__, __LINE__);
         return false;
     }
 
     // Mise-à-jour de la base de données
-    QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
+    QSqlQuery query(m_mediaManager->getDataBase());
     query.prepare("UPDATE song SET song_filename = ? WHERE song_id = ?");
     query.bindValue(0, pathName);
     query.bindValue(1, m_id);
 
     if (!query.exec())
     {
-        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return false;
     }
 
@@ -1067,16 +1066,16 @@ int CSong::getId(CMediaManager * mediaManager, const QString& fileName)
  * Crée un morceau à partir d'un fichier.
  * Si le fichier est déjà présent en base de données, la méthode retourne nullptr.
  *
- * \param mainWindow Pointeur sur la fenêtre principale de l'application.
- * \param fileName   Fichier à lire.
+ * \param mediaManager Pointeur sur la classe principale de l'application.
+ * \param fileName     Fichier à lire.
  * \return Pointeur sur le son crée, ou nullptr en cas d'erreur.
  */
 
-CSong * CSong::loadFromFile(CMainWindow * mainWindow, const QString& fileName)
+CSong * CSong::loadFromFile(CMediaManager * mediaManager, const QString& fileName)
 {
-    if (getId(mainWindow->getMediaManager(), fileName) >= 0)
+    if (getId(mediaManager, fileName) >= 0)
     {
-        mainWindow->getMediaManager()->logError(tr("the file \"%1\" is already in library").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
+        mediaManager->logError(tr("the file \"%1\" is already in library").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
         return nullptr;
     }
 
@@ -1084,17 +1083,17 @@ CSong * CSong::loadFromFile(CMainWindow * mainWindow, const QString& fileName)
     FMOD::Sound * sound;
 
     // Chargement du son
-    //res = mainWindow->getMediaManager()->getSoundSystem()->createStream(qPrintable(fileName), FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, nullptr, &sound);
-    res = mainWindow->getMediaManager()->getSoundSystem()->createStream(reinterpret_cast<const char *>(fileName.utf16()), FMOD_UNICODE | FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, nullptr, &sound);
+    //res = mediaManager->getSoundSystem()->createStream(qPrintable(fileName), FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, nullptr, &sound);
+    res = mediaManager->getSoundSystem()->createStream(reinterpret_cast<const char *>(fileName.utf16()), FMOD_UNICODE | FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, nullptr, &sound);
 
     if (res != FMOD_OK || !sound)
     {
-        mainWindow->getMediaManager()->logError(tr("the file \"%1\" can't be opened with FMOD").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
+        mediaManager->logError(tr("the file \"%1\" can't be opened with FMOD").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
         return nullptr;
     }
 
     // Création du morceau
-    CSong * song = new CSong(mainWindow);
+    CSong * song = new CSong(mediaManager);
 
     song->m_isModified = true;
     //song->m_sound = sound;
@@ -1105,7 +1104,7 @@ CSong * CSong::loadFromFile(CMainWindow * mainWindow, const QString& fileName)
 
     if (res != FMOD_OK)
     {
-        mainWindow->getMediaManager()->logError(tr("can't compute song duration for file \"%1\"").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
+        mediaManager->logError(tr("can't compute song duration for file \"%1\"").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
         song->m_properties.duration = 0;
     }
 
@@ -1115,14 +1114,14 @@ CSong * CSong::loadFromFile(CMainWindow * mainWindow, const QString& fileName)
 
     if (res != FMOD_OK)
     {
-        mainWindow->getMediaManager()->logError(tr("can't find the format for the file \"%1\"").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
+        mediaManager->logError(tr("can't find the format for the file \"%1\"").arg(fileName), __FUNCTION__, __FILE__, __LINE__);
     }
     else
     {
         switch (type)
         {
             default:
-                mainWindow->getMediaManager()->logError(tr("unknown format"), __FUNCTION__, __FILE__, __LINE__);
+                mediaManager->logError(tr("unknown format"), __FUNCTION__, __FILE__, __LINE__);
                 delete song;
                 return nullptr;
 
@@ -1151,7 +1150,7 @@ CSong * CSong::loadFromFile(CMainWindow * mainWindow, const QString& fileName)
 
     song->updateDatabase();
 
-    connect(song, SIGNAL(songModified()), mainWindow, SLOT(onSongModified()));
+    connect(song, SIGNAL(songModified()), mediaManager, SLOT(onSongModified()));
 
     return song;
 }
@@ -1160,17 +1159,18 @@ CSong * CSong::loadFromFile(CMainWindow * mainWindow, const QString& fileName)
 /**
  * Charge tous les morceaux depuis la base de données.
  *
+ * \param mediaManager Pointeur sur la classe principale de l'application.
  * \return Liste des morceaux.
  */
 
-QList<CSong *> CSong::loadAllSongsFromDatabase(CMainWindow * mainWindow)
+QList<CSong *> CSong::loadAllSongsFromDatabase(CMediaManager * mediaManager)
 {
     QList<CSong *> songList;
 
-    QSqlQuery query(mainWindow->getMediaManager()->getDataBase());
+    QSqlQuery query(mediaManager->getDataBase());
 
     // Remarque : on peut éventuellement différer le chargement des lectures de chaque morceau
-    QSqlQuery query2(mainWindow->getMediaManager()->getDataBase());
+    QSqlQuery query2(mediaManager->getDataBase());
     query2.prepare("SELECT play_time, play_time_utc FROM play WHERE song_id = ? ORDER BY play_time_utc ASC");
 
     // Liste des morceaux
@@ -1222,13 +1222,13 @@ QList<CSong *> CSong::loadAllSongsFromDatabase(CMainWindow * mainWindow)
                     " NATURAL JOIN genre"
                     " LEFT JOIN artist AS album_artist ON album_artist.artist_id = album_artist_id"))
     {
-        mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return songList;
     }
 
     while (query.next())
     {
-        CSong * song = new CSong(mainWindow);
+        CSong * song = new CSong(mediaManager);
 
         int numValue = 0;
 
@@ -1288,7 +1288,7 @@ QList<CSong *> CSong::loadAllSongsFromDatabase(CMainWindow * mainWindow)
 
         if (!query2.exec())
         {
-            mainWindow->getMediaManager()->logDatabaseError(query2.lastError().text(), query2.lastQuery(), __FILE__, __LINE__);
+            mediaManager->logDatabaseError(query2.lastError().text(), query2.lastQuery(), __FILE__, __LINE__);
         }
         else
         {
@@ -1309,7 +1309,7 @@ QList<CSong *> CSong::loadAllSongsFromDatabase(CMainWindow * mainWindow)
         song->m_properties = song->m_propertiesDB;
         song->m_infos = song->m_infosDB;
 
-        connect(song, SIGNAL(songModified()), mainWindow, SLOT(onSongModified()));
+        connect(song, SIGNAL(songModified()), mediaManager, SLOT(onSongModified()));
         songList.append(song);
     }
 
@@ -1798,7 +1798,7 @@ void CSong::startPlay()
     updateDatabase();
 
     FMOD_RESULT res;
-    res = m_mainWindow->getMediaManager()->getSoundSystem()->playSound(FMOD_CHANNEL_FREE, m_sound, true, &m_channel);
+    res = m_mediaManager->getSoundSystem()->playSound(FMOD_CHANNEL_FREE, m_sound, true, &m_channel);
 
     // Lecture depuis un CD-ROM
     if (m_cdRomDrive)
@@ -1806,15 +1806,15 @@ void CSong::startPlay()
         res = m_channel->setPosition(m_cdRomTrackNumber, FMOD_TIMEUNIT_SENTENCE_SUBSOUND);
 
         if (res != FMOD_OK)
-            m_mainWindow->getMediaManager()->logError(tr("can't play track #%1 in CD-ROM drive \"%2\"").arg(m_cdRomTrackNumber + 1).arg(m_cdRomDrive->getDriveName()), __FUNCTION__, __FILE__, __LINE__);
+            m_mediaManager->logError(tr("can't play track #%1 in CD-ROM drive \"%2\"").arg(m_cdRomTrackNumber + 1).arg(m_cdRomDrive->getDriveName()), __FUNCTION__, __FILE__, __LINE__);
     }
 
     if (res == FMOD_OK && m_channel)
     {
-        res = m_channel->setMute(m_mainWindow->isMute()); // <= isMute => CMediaManager
+        res = m_channel->setMute(m_mediaManager->isMute());
         Q_ASSERT(res == FMOD_OK);
 
-        res = m_channel->setVolume(static_cast<float>(m_mainWindow->getVolume()) / 100.0f); // <= getVolume => CMediaManager
+        res = m_channel->setVolume(static_cast<float>(m_mediaManager->getVolume()) / 100.0f);
         Q_ASSERT(res == FMOD_OK);
 
         res = m_channel->setPaused(false);
@@ -1893,8 +1893,8 @@ bool CSong::loadSound()
     FMOD_RESULT res;
 
     // Chargement du son
-    //res = m_mainWindow->getMediaManager()->getSoundSystem()->createStream(qPrintable(m_properties.fileName), FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, nullptr, &m_sound);
-    res = m_mainWindow->getMediaManager()->getSoundSystem()->createStream(reinterpret_cast<const char *>(m_properties.fileName.utf16()), FMOD_UNICODE | FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, nullptr, &m_sound);
+    //res = m_mediaManager->getSoundSystem()->createStream(qPrintable(m_properties.fileName), FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, nullptr, &m_sound);
+    res = m_mediaManager->getSoundSystem()->createStream(reinterpret_cast<const char *>(m_properties.fileName.utf16()), FMOD_UNICODE | FMOD_LOOP_OFF | FMOD_HARDWARE | FMOD_2D, nullptr, &m_sound);
 
     if (res == FMOD_OK && m_sound)
     {
@@ -1907,10 +1907,10 @@ bool CSong::loadSound()
             // Mise à jour de la durée du morceau
             if (m_properties.duration != static_cast<int>(length))
             {
-                m_mainWindow->getMediaManager()->logError(tr("duration of song \"%1\" has to be updated"), __FUNCTION__, __FILE__, __LINE__);
+                m_mediaManager->logError(tr("duration of song \"%1\" has to be updated"), __FUNCTION__, __FILE__, __LINE__);
                 m_properties.duration = length;
 
-                QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
+                QSqlQuery query(m_mediaManager->getDataBase());
 
                 query.prepare("UPDATE song SET song_duration = ? WHERE song_id = ?");
 
@@ -1919,7 +1919,7 @@ bool CSong::loadSound()
 
                 if (!query.exec())
                 {
-                    m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                    m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 }
             }
 
@@ -1936,7 +1936,7 @@ bool CSong::loadSound()
         m_fileStatus = false;
     }
 
-    m_mainWindow->getMediaManager()->logError(tr("the file \"%1\" can't be opened with FMOD").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+    m_mediaManager->logError(tr("the file \"%1\" can't be opened with FMOD").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
 
     m_sound = nullptr;
     m_channel = nullptr;
@@ -1972,7 +1972,7 @@ void CSong::play()
 
             if (res != FMOD_OK)
             {
-                m_mainWindow->getMediaManager()->logError(tr("can't play track #%1 in CD-ROM drive \"%2\"").arg(m_cdRomTrackNumber + 1).arg(m_cdRomDrive->getDriveName()), __FUNCTION__, __FILE__, __LINE__);
+                m_mediaManager->logError(tr("can't play track #%1 in CD-ROM drive \"%2\"").arg(m_cdRomTrackNumber + 1).arg(m_cdRomDrive->getDriveName()), __FUNCTION__, __FILE__, __LINE__);
             }
 */
     startPlay();
@@ -2046,15 +2046,15 @@ void CSong::updateDatabase()
 
         m_modification = QDateTime::currentDateTime();
 
-        QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
+        QSqlQuery query(m_mediaManager->getDataBase());
 
-        int artistId = m_mainWindow->getArtistId(m_infos.artistName, m_infos.artistNameSort); // => CMediaManager
+        int artistId = m_mediaManager->getArtistId(m_infos.artistName, m_infos.artistNameSort);
         if (artistId < 0) artistId = 0;
-        int albumId = m_mainWindow->getAlbumId(m_infos.albumTitle, m_infos.albumTitleSort); // => CMediaManager
+        int albumId = m_mediaManager->getAlbumId(m_infos.albumTitle, m_infos.albumTitleSort);
         if (albumId < 0) albumId = 0;
-        int albumArtistId = m_mainWindow->getArtistId(m_infos.albumArtist, m_infos.albumArtistSort); // => CMediaManager
+        int albumArtistId = m_mediaManager->getArtistId(m_infos.albumArtist, m_infos.albumArtistSort);
         if (albumArtistId < 0) albumArtistId = 0;
-        int genreId = m_mainWindow->getGenreId(m_infos.genre); // => CMediaManager
+        int genreId = m_mediaManager->getGenreId(m_infos.genre);
         if (genreId < 0) genreId = 0;
 
         // Insertion
@@ -2150,20 +2150,20 @@ void CSong::updateDatabase()
 
             if (!query.exec())
             {
-                m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return;
             }
 
             m_propertiesDB = m_properties;
             m_infosDB = m_infos;
 
-            if (m_mainWindow->getMediaManager()->getDataBase().driverName() == "QPSQL")
+            if (m_mediaManager->getDataBase().driverName() == "QPSQL")
             {
                 query.prepare("SELECT currval('song_song_id_seq')");
 
                 if (!query.exec())
                 {
-                    m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                    m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                     return;
                 }
 
@@ -2173,7 +2173,7 @@ void CSong::updateDatabase()
                 }
                 else
                 {
-                    m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                    m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                     return;
                 }
             }
@@ -2264,7 +2264,7 @@ void CSong::updateDatabase()
 
             if (!query.exec())
             {
-                m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return;
             }
 
@@ -2287,7 +2287,7 @@ void CSong::updateFileInfos()
     if (m_id <= 0)
         return;
 
-    QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
+    QSqlQuery query(m_mediaManager->getDataBase());
     query.prepare("UPDATE song SET song_filename = ?, song_filesize = ? WHERE song_id = ?");
     query.bindValue(0, m_properties.fileName);
     query.bindValue(1, m_properties.fileSize);
@@ -2295,7 +2295,7 @@ void CSong::updateFileInfos()
 
     if (!query.exec())
     {
-        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return;
     }
 }
@@ -2358,7 +2358,7 @@ void CSong::emitPlayEnd()
 
     if (m_id > 0)
     {
-        QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
+        QSqlQuery query(m_mediaManager->getDataBase());
 
         query.prepare("UPDATE song SET "
                           "song_play_count    = song_play_count + 1,"
@@ -2372,7 +2372,7 @@ void CSong::emitPlayEnd()
 
         if (!query.exec())
         {
-            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         }
 
         query.prepare("INSERT INTO play (song_id, play_time, play_time_utc) VALUES (?, ?, ?)");
@@ -2382,7 +2382,7 @@ void CSong::emitPlayEnd()
 
         if (!query.exec())
         {
-            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         }
     }
 
@@ -2403,7 +2403,7 @@ bool CSong::loadTags(TagLib::ID3v1::Tag * tags)
         return false;
 
     // Log
-    QFile * logFile = m_mainWindow->getMediaManager()->getLogFile("metadata");
+    QFile * logFile = m_mediaManager->getLogFile("metadata");
     QTextStream stream(logFile);
     stream << "========================================\n";
     stream << "   " << tr("Loading ID3v1 tags") << '\n';
@@ -2461,7 +2461,7 @@ bool CSong::loadTags(TagLib::ID3v2::Tag * tags)
         return false;
 
     // Log
-    QFile * logFile = m_mainWindow->getMediaManager()->getLogFile("metadata");
+    QFile * logFile = m_mediaManager->getLogFile("metadata");
     QTextStream stream(logFile);
     stream << "========================================\n";
     stream << "   " << tr("Loading ID3v2 tags") << '\n';
@@ -2895,7 +2895,7 @@ bool CSong::loadTags(TagLib::APE::Tag * tags)
     const TagLib::APE::ItemListMap tagMap = tags->itemListMap();
 
     // Log
-    QFile * logFile = m_mainWindow->getMediaManager()->getLogFile("metadata");
+    QFile * logFile = m_mediaManager->getLogFile("metadata");
     QTextStream stream(logFile);
     stream << "========================================\n";
     stream << "   " << tr("Loading APE tags") << '\n';
@@ -3071,7 +3071,7 @@ bool CSong::loadTags(TagLib::Ogg::XiphComment * tags)
     const TagLib::Ogg::FieldListMap tagMap = tags->fieldListMap();
 
     // Log
-    QFile * logFile = m_mainWindow->getMediaManager()->getLogFile("metadata");
+    QFile * logFile = m_mediaManager->getLogFile("metadata");
     QTextStream stream(logFile);
     stream << "========================================\n";
     stream << "   " << tr("Loading XiphComment tags") << '\n';

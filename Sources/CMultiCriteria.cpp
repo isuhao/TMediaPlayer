@@ -120,7 +120,7 @@ bool CMultiCriteria::matchCriterion(CSong * song) const
                 return false;
             }
         }
-        
+
         return true;
     }
 
@@ -133,7 +133,7 @@ bool CMultiCriteria::matchCriterion(CSong * song) const
  * La liste est sans doublons, et ne contient que des éléments provenant de \a from.
  *+++
  */
- 
+
 QList<CSong *> CMultiCriteria::getSongs(const QList<CSong *>& from, const QList<CSong *>& with) const
 {
     if (m_children.isEmpty())

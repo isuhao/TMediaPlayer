@@ -326,7 +326,7 @@ void CFolder::addFolder(CFolder * folder, int position)
     if (m_folders0.contains(folder))
     {
         Q_ASSERT(folder->m_folder == this);
-        
+
         if (position < 0)
             position = m_items.size() - 1;
 
@@ -559,7 +559,7 @@ void CFolder::removeFromDatabase(bool recursive)
             (*it)->removeFromDatabase();
         }
     }
-    
+
     // Suppression du dossier en base de données
     QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
     query.prepare("DELETE FROM folder WHERE folder_id = ?");
@@ -612,12 +612,12 @@ void CFolder::addPlayListItem(IPlayList * playList, int position)
         position = m_items.size();
         m_items.append(nullptr);
     }
-    
+
     m_playLists0.append(playList);
     m_items[position] = new TFolderItem(position, playList);
 }
 
-    
+
 void CFolder::addFolderItem(CFolder * folder, int position)
 {
     Q_CHECK_PTR(folder);
@@ -632,7 +632,7 @@ void CFolder::addFolderItem(CFolder * folder, int position)
         position = m_items.size();
         m_items.append(nullptr);
     }
-    
+
     m_folders0.append(folder);
     m_items[position] = new TFolderItem(position, folder);
 }

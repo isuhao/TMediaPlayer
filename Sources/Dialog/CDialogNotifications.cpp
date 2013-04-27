@@ -42,17 +42,17 @@ m_mainWindow (mainWindow)
     for (int row = 0; row < notifications.size(); ++row)
     {
         QTableWidgetItem * item;
-        
+
         item = new QTableWidgetItem(notifications.at(row).date.toString("dd/MM/yyyy HH:mm:ss"));
         m_uiWidget->table->setItem(row, 0, item);
-        
+
         item = new QTableWidgetItem(notifications.at(row).message);
         m_uiWidget->table->setItem(row, 1, item);
     }
 
     m_uiWidget->table->setSortingEnabled(true);
     m_uiWidget->table->sortByColumn(0, Qt::DescendingOrder);
-    
+
     // Connexions des signaux des boutons
     QPushButton * btnClose = m_uiWidget->buttonBox->addButton(tr("Close"), QDialogButtonBox::AcceptRole);
     connect(btnClose, SIGNAL(clicked()), this, SLOT(close()));

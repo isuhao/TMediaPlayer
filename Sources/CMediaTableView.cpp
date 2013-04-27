@@ -1353,7 +1353,7 @@ void CMediaTableView::contextMenuEvent(QContextMenuEvent * event)
         {
             m_menu.addAction(tr("Remove from playlist"), this, SLOT(removeSelectedSongs()));
         }
-            
+
         if (canEditSongs())
         {
             m_menu.addAction(tr("Remove from library"), this, SLOT(removeSongsFromLibrary()));
@@ -1452,7 +1452,7 @@ void CMediaTableView::contextMenuEvent(QContextMenuEvent * event)
             m_menu.addSeparator();
             m_menu.addAction(tr("Remove duplicates"), this, SLOT(removeDuplicateSongs()));
         }
-        
+
         m_menu.move(getCorrectMenuPosition(&m_menu, event->globalPos()));
         m_menu.show();
     }

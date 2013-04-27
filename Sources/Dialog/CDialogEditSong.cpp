@@ -68,7 +68,7 @@ m_mainWindow   (mainWindow)
 
 
     // Liste des genres
-    QStringList genres = m_mainWindow->getGenreList();
+    QStringList genres = m_mainWindow->getMediaManager()->getGenreList();
     m_uiWidget->editGenre->addItems(genres);
 
 
@@ -179,7 +179,7 @@ void CDialogEditSong::applyChanges()
     song->setLyrics(m_uiWidget->editLyrics->toPlainText());
     song->setLanguage(getLanguageFromInteger(m_uiWidget->editLanguage->currentIndex()));
     song->setLyricist(m_uiWidget->editLyricist->text());
-    
+
     song->setEnabled(m_uiWidget->editEnabled->isChecked());
     song->setSkipShuffle(m_uiWidget->editSkipShuffle->isChecked());
     song->setCompilation(m_uiWidget->editCompilation->isChecked());
@@ -389,12 +389,12 @@ void CDialogEditSong::updateInfos()
     m_uiWidget->editArtist->setText(songArtist);
     m_uiWidget->editArtist_2->setText(songArtist);
     m_uiWidget->editArtistSort->setText(song->getArtistNameSort());
-    
+
     QString songAlbum = song->getAlbumTitle();
     m_uiWidget->editAlbum->setText(songAlbum);
     m_uiWidget->editAlbum_2->setText(songAlbum);
     m_uiWidget->editAlbumSort->setText(song->getAlbumTitleSort());
-    
+
     QString songAlbumArtist = song->getAlbumArtist();
     m_uiWidget->editAlbumArtist->setText(songAlbumArtist);
     m_uiWidget->editAlbumArtist_2->setText(songAlbumArtist);
@@ -403,7 +403,7 @@ void CDialogEditSong::updateInfos()
     m_uiWidget->editGrouping->setText(song->getGrouping());
     const int bpm = song->getBPM();
     m_uiWidget->editBPM->setText(bpm > 0 ? QString::number(bpm) : QString());
-    
+
     QString songComposer = song->getComposer();
     m_uiWidget->editComposer->setText(songComposer);
     m_uiWidget->editComposer_2->setText(songComposer);

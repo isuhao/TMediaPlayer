@@ -37,7 +37,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 /**
  * Constructeur du modèle.
  *
- * \param mainWindow Pointeur sur l'application.
+ * \param mainWindow Pointeur sur la fenêtre principale de l'application.
  */
 
 CLibraryModel::CLibraryModel(CMainWindow * mainWindow) :
@@ -345,7 +345,7 @@ void CLibraryModel::updateCDRomDrives()
     for (QList<CCDRomDrive *>::const_iterator drive = drives.begin(); drive != drives.end(); ++drive)
     {
         QStandardItem * cdDriveItem = m_cdRomDrives.key(*drive);
-        
+
         if (!cdDriveItem)
             continue;
 
@@ -788,7 +788,7 @@ bool CLibraryModel::dropMimeData(const QMimeData * data, Qt::DropAction action, 
         if (parent.isValid())
         {
             CMediaTableView * songTable = this->data(parent, Qt::UserRole + 1).value<CMediaTableView *>();
-            
+
             if (songTable)
             {
                 CStaticList * playList = qobject_cast<CStaticList *>(songTable);
@@ -798,7 +798,7 @@ bool CLibraryModel::dropMimeData(const QMimeData * data, Qt::DropAction action, 
                 {
                     QByteArray encodedData = data->data("application/x-ted-media-songs");
                     QList<CSong *> songList = decodeDataSongs(encodedData);
-                 
+
                     playList->addSongs(songList);
                     return true;
                 }
@@ -806,7 +806,7 @@ bool CLibraryModel::dropMimeData(const QMimeData * data, Qt::DropAction action, 
                 {
                     QByteArray encodedData = data->data("application/x-ted-media-songs");
                     QList<CSong *> songList = decodeDataSongs(encodedData);
-                 
+
                     queue->addSongs(songList);
                     return true;
                 }

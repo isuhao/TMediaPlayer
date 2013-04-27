@@ -32,10 +32,10 @@ class CLibrary : public CMediaTableView
 public:
 
     explicit CLibrary(CMainWindow * mainWindow);
-    
+
     void deleteSongs();
     inline QMap<int, CSong *> getSongsMap() const;
-    
+
 public slots:
 
     virtual void addSong(CSong * song, int pos = -1);

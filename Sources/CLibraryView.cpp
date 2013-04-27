@@ -62,7 +62,7 @@ m_menuDefault    (nullptr)
     header()->setVisible(false);
     setUniformRowHeights(true);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
-    
+
     //m_model = new CLibraryModel(m_mainWindow);
     //setModel(m_model);
 
@@ -204,7 +204,7 @@ QModelIndex CLibraryView::getFolderModelIndex(CFolder * folder) const
 {
     if (!folder)
         return QModelIndex();
-    
+
     return m_model->getModelIndex(folder);
 }
 
@@ -228,7 +228,7 @@ void CLibraryView::setModel(CLibraryModel * model)
     {
         setExpanded(m_model->getModelIndex(*it), (*it)->isOpen());
     }
-    
+
     // Affiche ou masque les lecteurs de CD-ROM
     QList<CCDRomDrive *> drives = m_mainWindow->getCDRomDrives();
 
@@ -258,7 +258,7 @@ void CLibraryView::updateCDRomDrives()
 {
     Q_CHECK_PTR(m_model);
     m_model->updateCDRomDrives();
-    
+
     QList<CCDRomDrive *> drives = m_mainWindow->getCDRomDrives();
 
     for (QList<CCDRomDrive *>::const_iterator drive = drives.begin(); drive != drives.end(); ++drive)

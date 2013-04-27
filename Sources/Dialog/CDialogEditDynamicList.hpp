@@ -52,7 +52,7 @@ protected slots:
     void save();
 
 private:
-    
+
     Ui::DialogEditDynamicPlayList * m_uiWidget;
     CWidgetMultiCriteria * m_widgetCriteria;
     CDynamicList * m_playList;

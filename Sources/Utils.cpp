@@ -3,10 +3,10 @@
 
 #include <QMenu>
 #include <QPoint>
-#include <QPoint>
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QTime>
+#include <QDir>
 
 
 /**
@@ -29,7 +29,7 @@ QPoint getCorrectMenuPosition(QMenu * menu, const QPoint& menuPosition)
 
     const QRect screen = desktopWidget->screenGeometry(menu);
     const QSize size = menu->sizeHint();
-    
+
     // Correction en hauteur
     const int screenHeight = screen.height();
     const int menuHeight = size.height();
@@ -123,4 +123,34 @@ QString getFileSize(qlonglong fileSize)
     {
         return QObject::tr("%n byte(s)", "", fileSize);
     }
+}
+
+
+/**
+ * Liste les morceaux contenus dans un répertoire.
+ *
+ * \param pathName Nom du répertoire à parcourir récursivement.
+ * \return Liste des fichiers du répertoire.
+ */
+
+QStringList listFilesInFolder(const QString& pathName)
+{
+    QStringList fileList;
+    QDir dir(pathName);
+
+    QStringList dirList = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
+
+    for (QStringList::const_iterator it = dirList.begin(); it != dirList.end(); ++it)
+    {
+        fileList.append(listFilesInFolder(dir.absoluteFilePath(*it)));
+    }
+
+    QStringList fileDirList = dir.entryList(QDir::Files | QDir::Readable, QDir::Name);
+
+    for (QStringList::const_iterator it = fileDirList.begin(); it != fileDirList.end(); ++it)
+    {
+        fileList.append(dir.absoluteFilePath(*it).replace('\\', '/'));
+    }
+
+    return fileList;
 }

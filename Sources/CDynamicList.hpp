@@ -63,7 +63,7 @@ signals:
     void listUpdated();  ///< Signal émis lorsque la liste a été mise à jour.
 
 protected:
-    
+
     virtual bool updateDatabase();
     virtual void removeFromDatabase();
     void loadFromDatabase();
@@ -72,7 +72,7 @@ protected:
     void setOnlyChecked(bool onlyChecked = true);
 
 private:
-    
+
     int m_id;                     ///< Identifiant de la liste en base de données.
     ICriterion * m_mainCriterion; ///< Critère parent de la liste.
     bool m_isDynamicListModified; ///< Indique si la liste a été modifiée.

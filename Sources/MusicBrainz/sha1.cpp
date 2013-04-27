@@ -17,16 +17,16 @@ You should have received a copy of the GNU General Public License
 along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 /* (PD) 2001 The Bitzi Corporation
-    * Please see file COPYING or http://bitzi.com/publicdomain 
+    * Please see file COPYING or http://bitzi.com/publicdomain
     * for more info.
     *
-    * NIST Secure Hash Algorithm 
-    * heavily modified by Uwe Hollerbach <uh@alumni.caltech edu> 
-    * from Peter C. Gutmann's implementation as found in 
-    * Applied Cryptography by Bruce Schneier 
-    * Further modifications to include the "UNRAVEL" stuff, below 
+    * NIST Secure Hash Algorithm
+    * heavily modified by Uwe Hollerbach <uh@alumni.caltech edu>
+    * from Peter C. Gutmann's implementation as found in
+    * Applied Cryptography by Bruce Schneier
+    * Further modifications to include the "UNRAVEL" stuff, below
     *
-    * This code is in the public domain 
+    * This code is in the public domain
     *
     * $Id: sha1.c 7777 2006-06-01 17:37:15Z matt $
     */

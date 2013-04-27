@@ -44,7 +44,7 @@ m_recursive  (false)
 
     //setAttribute(Qt::WA_DeleteOnClose);
     m_uiWidget->setupUi(this);
-    
+
     // Connexions des signaux des boutons
     QPushButton * btnYes = m_uiWidget->buttonBox->addButton(tr("Yes"), QDialogButtonBox::YesRole);
     QPushButton * btnNo = m_uiWidget->buttonBox->addButton(tr("No"), QDialogButtonBox::NoRole);

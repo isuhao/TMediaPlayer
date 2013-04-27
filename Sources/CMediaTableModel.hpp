@@ -343,7 +343,7 @@ private:
     {
         return cmpSongPathNameAsc(song2, song1);
     }
-    
+
     static inline bool cmpSongFileNameAsc(CMediaTableItem * song1, CMediaTableItem * song2)
     {
         const QString pathName1 = song1->getSong()->getFileName();
@@ -681,7 +681,7 @@ private:
     {
         const QString artist1 = song1->getSong()->getArtistNameSort();
         const QString artist2 = song2->getSong()->getArtistNameSort();
-        
+
         int cmp = QString::compare(artist1, artist2, Qt::CaseInsensitive);
 
         if (cmp == 0)
@@ -750,9 +750,9 @@ private:
     }
 
 
-    CMainWindow * m_mainWindow;                  ///< Pointeur sur l'application.
-    bool m_canDrop;                                ///< Indique si la vue peut recevoir des données (liste statique).
-    int m_columnSort;                              ///< Numéro de la colonne triée.
+    CMainWindow * m_mainWindow;                     ///< Pointeur sur la fenêtre principale de l'application.
+    bool m_canDrop;                                 ///< Indique si la vue peut recevoir des données (liste statique).
+    int m_columnSort;                               ///< Numéro de la colonne triée.
     CMediaTableItem * m_currentSongItem;            ///< Pointeur sur le morceau courant.
     QList<CMediaTableItem *> m_data;                ///< Liste des morceaux.
     QList<CMediaTableItem *> m_dataShuffle;         ///< Liste des morceaux aléatoires.

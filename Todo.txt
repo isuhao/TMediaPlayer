@@ -18,7 +18,7 @@
 --------------------------------------------------
 
 - Déplacer la gestion de la base de données dans des bibliothèques externes.
-- Déplacer la gestion de la fenêtre principale dans une classe à part.
+- Déplacer la gestion de la fenêtre principale dans une classe à part. [EN COURS]
 
 - Boite de dialogue Edit Songs : Si un champ possède plusieurs valeurs différentes, les afficher dans une combo-box. [EN COURS]
 

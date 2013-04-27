@@ -48,7 +48,7 @@ m_networkManager (nullptr)
     connect(m_networkManager, SIGNAL(finished(QNetworkReply *)), this, SLOT(replyFinished(QNetworkReply *)));
 
     QNetworkRequest request(QUrl(m_lookupUrl.arg(cdRomDrive->getMusicBrainzDiscId())));
-    request.setRawHeader("User-Agent", QString("TMediaPlayer/%1").arg(CMediaManager::getAppVersion()).toLatin1()); 
+    request.setRawHeader("User-Agent", QString("TMediaPlayer/%1").arg(CMediaManager::getAppVersion()).toLatin1());
     m_networkManager->get(request);
 }
 
@@ -129,7 +129,7 @@ void CMusicBrainzLookup::replyFinished(QNetworkReply * reply)
         };
 
         TTrackInfos trackInfos[100];
-            
+
         // Parcours de la liste des informations de l'enregistrement
         for (QDomElement nodeList = node.firstChildElement(); !nodeList.isNull(); nodeList = nodeList.nextSibling().toElement())
         {
@@ -164,7 +164,7 @@ void CMusicBrainzLookup::replyFinished(QNetworkReply * reply)
                     m_mainWindow->getMediaManager()->logError(tr("invalid XML response (expected element '%1')").arg("medium"), __FUNCTION__, __FILE__, __LINE__);
                     return;
                 }
-            
+
                 // Parcours de la liste des informations du média
                 for (QDomElement nodeMedium = nodeList.firstChildElement(); !nodeMedium.isNull(); nodeMedium = nodeMedium.nextSibling().toElement())
                 {
@@ -172,7 +172,7 @@ void CMusicBrainzLookup::replyFinished(QNetworkReply * reply)
                     {
                         int trackCount = nodeMedium.attribute("count", "0").toInt();   //TODO: voir comment utiliser cette variable.
                         int trackOffset = nodeMedium.attribute("offset", "0").toInt(); //TODO: voir comment utiliser cette variable.
-            
+
                         // Parcours de la liste des pistes
                         for (QDomElement nodeTrack = nodeMedium.firstChildElement(); !nodeTrack.isNull(); nodeTrack = nodeTrack.nextSibling().toElement())
                         {
@@ -183,7 +183,7 @@ void CMusicBrainzLookup::replyFinished(QNetworkReply * reply)
                             }
 
                             int trackNumber = 0;
-            
+
                             // Parcours de la liste des informations de la piste
                             for (QDomElement nodeTrackInfos = nodeTrack.firstChildElement(); !nodeTrackInfos.isNull(); nodeTrackInfos = nodeTrackInfos.nextSibling().toElement())
                             {
@@ -264,7 +264,7 @@ QString CMusicBrainzLookup::getArtistName(const QDomElement& node) const
         return QString();
 
     QString artist;
-            
+
     // Parcours de la liste des éléments enfants
     for (QDomElement nodeName = node.firstChildElement(); !nodeName.isNull(); nodeName = nodeName.nextSibling().toElement())
     {
