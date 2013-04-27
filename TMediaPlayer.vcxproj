@@ -89,7 +89,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
       <WarningLevel>Level3</WarningLevel>
-      <EnablePREfast>true</EnablePREfast>
+      <EnablePREfast>false</EnablePREfast>
       <FloatingPointModel>Strict</FloatingPointModel>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <TreatWarningAsError>
@@ -317,6 +317,11 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Win32\Debug\moc_CMainWindow.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Win32\Debug\moc_CMediaManager.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -556,6 +561,11 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Win32\Release\moc_CMediaManager.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="GeneratedFiles\Win32\Release\moc_CMediaTableHeader.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -791,6 +801,11 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\x64\Debug\moc_CMediaManager.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="GeneratedFiles\x64\Debug\moc_CMediaTableHeader.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -1022,6 +1037,11 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\x64\Release\moc_CMainWindow.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\x64\Release\moc_CMediaManager.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -1412,7 +1432,24 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DNDEBUG -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_SQL_LIB -DQT_NETWORK_LIB -DQT_XML_LIB -DQT_DLL -DQT_WEBKIT_LIB -DQT_WEBKITWIDGETS_LIB -DQT_CORE_LIB -DQT_GUI_LIB "-I." "-I.\Sources" "-I.\Sources\Dialog" "-I.\Sources\Importer" "-I.\Sources\Last.fm" "-ID:\Ressources\Libraries\taglib-1.7.2\include" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtXml" "-I$(QTDIR)\include\QtWebKit" "-I.\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\GeneratedFiles\$(PlatformName)\." "-I$(QTDIR)\include\QtWebkitWidgets" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui"</Command>
     </CustomBuild>
-    <ClInclude Include="Sources\CMediaManager.hpp" />
+    <CustomBuild Include="Sources\CMediaManager.hpp">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing CMediaManager.hpp...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -D_DEBUG -DQT_DEBUG -DQT_LARGEFILE_SUPPORT -DQT_SQL_LIB -DQT_NETWORK_LIB -DQT_XML_LIB -DQT_DLL -DQT_WEBKIT_LIB -DQT_WEBKITWIDGETS_LIB -DQT_CORE_LIB -DQT_GUI_LIB "-I." "-I.\Sources" "-I.\Sources\Dialog" "-I.\Sources\Importer" "-I.\Sources\Last.fm" "-ID:\Ressources\Libraries\taglib-1.7.2\include" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtXml" "-I$(QTDIR)\include\QtWebKit" "-I$(QTDIR)\include\QtWebkitWidgets" "-I.\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\GeneratedFiles\$(PlatformName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing CMediaManager.hpp...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -D_DEBUG -DQT_DEBUG -DQT_LARGEFILE_SUPPORT -DQT_SQL_LIB -DQT_NETWORK_LIB -DQT_XML_LIB -DQT_DLL -DQT_WEBKIT_LIB -DQT_WEBKITWIDGETS_LIB -DQT_CORE_LIB -DQT_GUI_LIB "-I." "-I.\Sources" "-I.\Sources\Dialog" "-I.\Sources\Importer" "-I.\Sources\Last.fm" "-ID:\Ressources\Libraries\taglib-1.7.2\include" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtXml" "-I$(QTDIR)\include\QtWebKit" "-I.\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\GeneratedFiles\$(PlatformName)\." "-I$(QTDIR)\include\QtWebkitWidgets" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing CMediaManager.hpp...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DNDEBUG -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_SQL_LIB -DQT_NETWORK_LIB -DQT_XML_LIB -DQT_DLL -DQT_WEBKIT_LIB -DQT_WEBKITWIDGETS_LIB -DQT_CORE_LIB -DQT_GUI_LIB "-I." "-I.\Sources" "-I.\Sources\Dialog" "-I.\Sources\Importer" "-I.\Sources\Last.fm" "-ID:\Ressources\Libraries\taglib-1.7.2\include" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtXml" "-I$(QTDIR)\include\QtWebKit" "-I.\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\GeneratedFiles\$(PlatformName)\." "-I$(QTDIR)\include\QtWebkitWidgets" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Moc%27ing CMediaManager.hpp...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DNDEBUG -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_SQL_LIB -DQT_NETWORK_LIB -DQT_XML_LIB -DQT_DLL -DQT_WEBKIT_LIB -DQT_WEBKITWIDGETS_LIB -DQT_CORE_LIB -DQT_GUI_LIB "-I." "-I.\Sources" "-I.\Sources\Dialog" "-I.\Sources\Importer" "-I.\Sources\Last.fm" "-ID:\Ressources\Libraries\taglib-1.7.2\include" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtXml" "-I$(QTDIR)\include\QtWebKit" "-I.\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\GeneratedFiles\$(PlatformName)\." "-I$(QTDIR)\include\QtWebkitWidgets" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui"</Command>
+    </CustomBuild>
     <ClInclude Include="Sources\CMediaTableItem.hpp" />
     <ClInclude Include="Sources\IMediaTable.hpp" />
     <ClInclude Include="Sources\Utils.hpp" />

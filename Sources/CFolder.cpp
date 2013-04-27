@@ -31,22 +31,22 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 /**
  * Constructeur du dossier.
  *
- * \param application Pointeur sur l'application.
- * \param name        Nom du dossier.
+ * \param mainWindow Pointeur sur la fenêtre principale de l'application.
+ * \param name       Nom du dossier.
  */
 
-CFolder::CFolder(CMainWindow * application, const QString& name) :
-QObject          (application),
-m_mainWindow    (application),
+CFolder::CFolder(CMainWindow * mainWindow, const QString& name) :
+QObject          (mainWindow),
+m_mainWindow     (mainWindow),
 m_id             (-1),
 m_name           (name),
 m_open           (false),
 m_folder         (nullptr),
-//m_position       (1),
+//m_position     (1),
 m_isModified     (false),
 m_folderChanging (false)
 {
-    Q_CHECK_PTR(application);
+    Q_CHECK_PTR(m_mainWindow);
 }
 
 
@@ -465,7 +465,7 @@ bool CFolder::updateDatabase()
     // Insertion
     if (m_id < 0)
     {
-        QSqlQuery query(m_mainWindow->getDataBase());
+        QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
 
         // Insertion
         query.prepare("INSERT INTO folder (folder_name, folder_parent, folder_position, folder_expanded) VALUES (?, ?, ?, ?)");
@@ -477,17 +477,17 @@ bool CFolder::updateDatabase()
 
         if (!query.exec())
         {
-            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
 
-        if (m_mainWindow->getDataBase().driverName() == "QPSQL")
+        if (m_mainWindow->getMediaManager()->getDataBase().driverName() == "QPSQL")
         {
             query.prepare("SELECT currval('folder_seq')");
 
             if (!query.exec())
             {
-                m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return false;
             }
 
@@ -497,7 +497,7 @@ bool CFolder::updateDatabase()
             }
             else
             {
-                m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return false;
             }
         }
@@ -509,7 +509,7 @@ bool CFolder::updateDatabase()
     // Mise à jour
     else if (m_isModified)
     {
-        QSqlQuery query(m_mainWindow->getDataBase());
+        QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
 
         query.prepare("UPDATE folder SET folder_name = ?, folder_parent = ?, folder_position = ?, folder_expanded = ? WHERE folder_id = ?");
 
@@ -521,7 +521,7 @@ bool CFolder::updateDatabase()
 
         if (!query.exec())
         {
-            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
     }
@@ -561,13 +561,13 @@ void CFolder::removeFromDatabase(bool recursive)
     }
     
     // Suppression du dossier en base de données
-    QSqlQuery query(m_mainWindow->getDataBase());
+    QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
     query.prepare("DELETE FROM folder WHERE folder_id = ?");
     query.bindValue(0, m_id);
 
     if (!query.exec())
     {
-        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return;
     }
 

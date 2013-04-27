@@ -37,7 +37,7 @@ class CWidgetLyrics : public QWidget
 
 public:
 
-    explicit CWidgetLyrics(CMainWindow * application);
+    explicit CWidgetLyrics(CMainWindow * mainWindow);
 
     void setSong(CSong * song);
 

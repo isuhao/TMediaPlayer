@@ -19,7 +19,11 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CDialogEditSongs.hpp"
 #include "../CMainWindow.hpp"
+#include "../CMediaManager.hpp"
 #include "../CSpecialSpinBox.hpp"
+#include "../CMediaTableItem.hpp"
+#include "../CSong.hpp"
+#include "../Language.hpp"
 #include "../Utils.hpp"
 #include <QStandardItemModel>
 #include <QPushButton>
@@ -29,18 +33,18 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * Construit la boite de dialogue pour modifier les informations de plusieurs morceaux.
  *
  * \param songItemList Liste des morceaux à modifier.
- * \param application  Pointeur sur l'application.
+ * \param mainWindow   Pointeur sur la fenêtre principale de l'application.
  */
 
-CDialogEditSongs::CDialogEditSongs(QList<CMediaTableItem *>& songItemList, CMainWindow * application) :
-QDialog             (application),
+CDialogEditSongs::CDialogEditSongs(QList<CMediaTableItem *>& songItemList, CMainWindow * mainWindow) :
+QDialog             (mainWindow),
 m_uiWidget          (new Ui::DialogEditSongs()),
 m_editRating        (nullptr),
 m_differentComments (false),
 m_differentLyrics   (false),
 m_songItemList      (songItemList)
 {
-    Q_CHECK_PTR(application);
+    Q_CHECK_PTR(mainWindow);
     Q_ASSERT(songItemList.size() > 1);
 
     setAttribute(Qt::WA_DeleteOnClose);
@@ -293,12 +297,12 @@ m_songItemList      (songItemList)
 
         if (first)
         {
-            songSubTitle        = song->getSubTitle();
-            songGrouping        = song->getGrouping();
-            songComments        = song->getComments();
-            songGenre           = song->getGenre();
-            songLyrics          = song->getLyrics();
-            songLyricist        = song->getLyricist();
+            songSubTitle    = song->getSubTitle();
+            songGrouping    = song->getGrouping();
+            songComments    = song->getComments();
+            songGenre       = song->getGenre();
+            songLyrics      = song->getLyrics();
+            songLyricist    = song->getLyricist();
 
             songYear        = song->getYear();
             songTrackNumber = song->getTrackNumber();
@@ -318,12 +322,12 @@ m_songItemList      (songItemList)
         }
         else
         {
-            if (songSubTitleSim        && song->getSubTitle()        != songSubTitle       ) { songSubTitleSim        = false; songSubTitle       .clear(); }
-            if (songGroupingSim        && song->getGrouping()        != songGrouping       ) { songGroupingSim        = false; songGrouping       .clear(); }
-            if (songCommentsSim        && song->getComments()        != songComments       ) { songCommentsSim        = false; songComments       .clear(); }
-            if (songGenreSim           && song->getGenre()           != songGenre          ) { songGenreSim           = false; songGenre          .clear(); }
-            if (songLyricsSim          && song->getLyrics()          != songLyrics         ) { songLyricsSim          = false; songLyrics         .clear(); }
-            if (songLyricistSim        && song->getLyricist()        != songLyricist       ) { songLyricistSim        = false; songLyricist       .clear(); }
+            if (songSubTitleSim    && song->getSubTitle()    != songSubTitle    ) { songSubTitleSim    = false; songSubTitle.clear(); }
+            if (songGroupingSim    && song->getGrouping()    != songGrouping    ) { songGroupingSim    = false; songGrouping.clear(); }
+            if (songCommentsSim    && song->getComments()    != songComments    ) { songCommentsSim    = false; songComments.clear(); }
+            if (songGenreSim       && song->getGenre()       != songGenre       ) { songGenreSim       = false; songGenre   .clear(); }
+            if (songLyricsSim      && song->getLyrics()      != songLyrics      ) { songLyricsSim      = false; songLyrics  .clear(); }
+            if (songLyricistSim    && song->getLyricist()    != songLyricist    ) { songLyricistSim    = false; songLyricist.clear(); }
 
             if (songYearSim        && song->getYear()        != songYear        ) { songYearSim        = false; songYear        = 0; }
             if (songTrackNumberSim && song->getTrackNumber() != songTrackNumber ) { songTrackNumberSim = false; songTrackNumber = 0; }
@@ -1090,7 +1094,7 @@ m_songItemList      (songItemList)
     connect(m_uiWidget->chBPM, SIGNAL(clicked(bool)), this, SLOT(onBPMChecked(bool)));
 
     // Genre
-    QStringList genres = application->getGenreList();
+    QStringList genres = mainWindow->getGenreList();
     m_uiWidget->editGenre->addItems(genres);
     m_uiWidget->editGenre->lineEdit()->setText(songGenre);
     m_uiWidget->editGenre->setCurrentIndex(m_uiWidget->editGenre->findText(songGenre));

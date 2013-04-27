@@ -61,7 +61,7 @@ public:
         inline TFolderItem(int pposition, CFolder * pfolder) : position(pposition), playList(nullptr), folder(pfolder) { }
     };
 
-    explicit CFolder(CMainWindow * application, const QString& name = QString());
+    explicit CFolder(CMainWindow * mainWindow, const QString& name = QString());
     virtual ~CFolder();
 
     inline int getId() const;

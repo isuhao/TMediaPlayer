@@ -62,7 +62,7 @@ public:
 protected:
 
     virtual void setPlayList(CDynamicList * playList);
-    virtual void insertIntoDatabase(CMainWindow * application);
+    virtual void insertIntoDatabase();
 
 private:
 

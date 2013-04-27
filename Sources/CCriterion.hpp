@@ -33,7 +33,7 @@ class CCriterion : public ICriterion
 
 public:
 
-    explicit CCriterion(CMainWindow * application, QObject * parent = nullptr);
+    explicit CCriterion(CMainWindow * mainWindow, QObject * parent = nullptr);
     virtual ~CCriterion();
 
     virtual bool matchCriterion(CSong * song) const;

@@ -25,6 +25,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QList>
 #include <QTableView>
 #include <QMap>
+#include <QMenu>
 
 #include "CMediaTableModel.hpp"
 
@@ -32,9 +33,15 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 class CSong;
 class CMainWindow;
 class CStaticList;
+class CMediaTableModel;
+class CMediaTableItem;
 class QMenu;
 class QAction;
 
+
+/**
+ * Vue sous forme de tableau utilisée pour afficher une liste de morceaux.
+ */
 
 class CMediaTableView : public QTableView
 {
@@ -120,7 +127,7 @@ public:
     };
 
 
-    explicit CMediaTableView(CMainWindow * application);
+    explicit CMediaTableView(CMainWindow * mediaWindow);
     virtual ~CMediaTableView();
 
     QList<CSong *> getSongs() const;
@@ -148,18 +155,22 @@ public slots:
     void selectSongItem(CMediaTableItem * songItem);
     void playSelectedSong();
 
+    virtual void removeDuplicateSongs()
+    {
+        return;
+    }
+
 signals:
 
     void songSelected(CMediaTableItem *); ///< Signal émis quand un morceau est sélectionné.
     void songStarted(CMediaTableItem *);  ///< Signal émis quand un morceau est lancé (double-clic).
-    void columnChanged();                ///< Signal émis lorsque les colonnes sont modifiées.
-    void rowCountChanged();              ///< Signal émis lorsque le nombre de morceaux de la liste change.
+    void columnChanged();                 ///< Signal émis lorsque les colonnes sont modifiées.
+    void rowCountChanged();               ///< Signal émis lorsque le nombre de morceaux de la liste change.
 
 protected slots:
 
     virtual void columnMoved(int logicalIndex, int oldVisualIndex, int newVisualIndex);
     virtual void columnResized(int logicalIndex, int oldSize, int newSize);
-    virtual void openCustomMenuProject(const QPoint& point);
     void showColumn(int column, bool show = true);
     void onSortAboutToChange();
     void sortColumn(int column, Qt::SortOrder order);
@@ -194,9 +205,10 @@ protected:
 
     virtual void keyPressEvent(QKeyEvent * event);
     virtual void mouseDoubleClickEvent(QMouseEvent * event);
+    virtual void contextMenuEvent(QContextMenuEvent * event);
 
     CMainWindow * m_mainWindow;
-    CMediaTableModel * m_model;    ///< Modèle utilisé pour afficher les morceaux.
+    CMediaTableModel * m_model;   ///< Modèle utilisé pour afficher les morceaux.
     TColumn m_columns[ColNumber]; ///< Liste des colonnes.
     int m_idPlayList;             ///< Identifiant de la liste de lecture en base de données.
     int m_columnSort;             ///< Numéro de la colonne triée.
@@ -208,10 +220,31 @@ protected:
 
 private:
 
-    bool m_isModified;            ///< Indique si les informations de la liste ont été modifiées.
-    bool m_isColumnMoving;        ///< Indique si les colonnes sont en cours de positionnement.
+    virtual bool canImportSongs() const
+    {
+        return false;
+    }
+
+    virtual bool canEditSongs() const
+    {
+        return true;
+    }
+
+    virtual bool canEditPlayList() const
+    {
+        return false;
+    }
+
+    virtual bool canMoveToPlayList() const
+    {
+        return true;
+    }
+
+    bool m_isModified;                        ///< Indique si les informations de la liste ont été modifiées.
+    bool m_isColumnMoving;                    ///< Indique si les colonnes sont en cours de positionnement.
     QList<CMediaTableItem *> m_selectedItems; ///< Morceaux sélectionnés avant le tri.
     CMediaTableItem * m_currentItem;          ///< Morceau actif avant le tri.
+    QMenu m_menu;                             ///< Menu contextuel.
 };
 
 Q_DECLARE_METATYPE(CMediaTableView *)

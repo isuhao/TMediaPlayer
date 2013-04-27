@@ -30,8 +30,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QtDebug>
 
 
-CUpdateNowPlaying::CUpdateNowPlaying(CMainWindow * application, const QByteArray& sessionKey, CSong * song) :
-ILastFmService (application, sessionKey),
+CUpdateNowPlaying::CUpdateNowPlaying(CMainWindow * mainWindow, const QByteArray& sessionKey, CSong * song) :
+ILastFmService (mainWindow, sessionKey),
 m_song         (song)
 {
     Q_CHECK_PTR(song);

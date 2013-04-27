@@ -19,6 +19,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CDialogLastPlays.hpp"
 #include "../CMainWindow.hpp"
+#include "../CMediaManager.hpp"
+#include "../CSong.hpp"
 #include <QPushButton>
 #include <QSqlError>
 #include <QSqlQuery>
@@ -36,11 +38,11 @@ m_mainWindow (mainWindow)
 
     m_uiWidget->table->setSortingEnabled(false);
     
-    QSqlQuery query(m_mainWindow->getDataBase());
+    QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
 
     if (!query.exec("SELECT song_id, play_time_utc FROM play WHERE play_time_utc IS NOT NULL ORDER BY play_time_utc DESC"))
     {
-        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
     }
     else
     {

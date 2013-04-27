@@ -31,7 +31,7 @@ class CLibrary : public CMediaTableView
 
 public:
 
-    explicit CLibrary(CMainWindow * application);
+    explicit CLibrary(CMainWindow * mainWindow);
     
     void deleteSongs();
     inline QMap<int, CSong *> getSongsMap() const;

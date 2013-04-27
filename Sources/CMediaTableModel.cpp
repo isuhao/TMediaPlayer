@@ -41,7 +41,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 CMediaTableModel::CMediaTableModel(CMainWindow * mainWindow, const QList<CSong *>& data, QWidget * parent) :
 QAbstractTableModel (parent),
-m_mainWindow       (mainWindow),
+m_mainWindow        (mainWindow),
 m_canDrop           (false),
 m_columnSort        (-1),
 m_currentSongItem   (nullptr)
@@ -70,7 +70,7 @@ m_currentSongItem   (nullptr)
 
 CMediaTableModel::CMediaTableModel(CMainWindow * mainWindow, QWidget * parent) :
 QAbstractTableModel (parent),
-m_mainWindow       (mainWindow),
+m_mainWindow        (mainWindow),
 m_canDrop           (false),
 m_columnSort        (-1),
 m_currentSongItem   (nullptr)

@@ -182,7 +182,7 @@ void CDynamicList::updateList()
 
 bool CDynamicList::updateDatabase()
 {
-    QSqlQuery query(m_mainWindow->getDataBase());
+    QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
 
     if (!getFolder())
     {
@@ -202,7 +202,7 @@ bool CDynamicList::updateDatabase()
 
         if (!query.exec())
         {
-            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
 
@@ -222,17 +222,17 @@ bool CDynamicList::updateDatabase()
 
         if (!query.exec())
         {
-            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
 
-        if (m_mainWindow->getDataBase().driverName() == "QPSQL")
+        if (m_mainWindow->getMediaManager()->getDataBase().driverName() == "QPSQL")
         {
             query.prepare("SELECT currval('playlist_playlist_id_seq')");
 
             if (!query.exec())
             {
-                m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return false;
             }
 
@@ -242,7 +242,7 @@ bool CDynamicList::updateDatabase()
             }
             else
             {
-                m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return false;
             }
         }
@@ -260,17 +260,17 @@ bool CDynamicList::updateDatabase()
 
         if (!query.exec())
         {
-            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
 
-        if (m_mainWindow->getDataBase().driverName() == "QPSQL")
+        if (m_mainWindow->getMediaManager()->getDataBase().driverName() == "QPSQL")
         {
             query.prepare("SELECT currval('dynamic_list_seq')");
 
             if (!query.exec())
             {
-                m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return false;
             }
 
@@ -280,7 +280,7 @@ bool CDynamicList::updateDatabase()
             }
             else
             {
-                m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return false;
             }
         }
@@ -290,7 +290,7 @@ bool CDynamicList::updateDatabase()
         }
 
         // Insertion des nouveaux critères
-        m_mainCriterion->insertIntoDatabase(m_mainWindow);
+        m_mainCriterion->insertIntoDatabase();
 
         query.prepare("UPDATE dynamic_list SET criteria_id = ? WHERE dynamic_list_id = ?");
 
@@ -299,7 +299,7 @@ bool CDynamicList::updateDatabase()
 
         if (!query.exec())
         {
-            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
     }
@@ -315,7 +315,7 @@ bool CDynamicList::updateDatabase()
 
         if (!query.exec())
         {
-            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
 
@@ -326,7 +326,7 @@ bool CDynamicList::updateDatabase()
 
         if (!query.exec())
         {
-            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
 
@@ -336,12 +336,12 @@ bool CDynamicList::updateDatabase()
 
         if (!query.exec())
         {
-            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
 
         // Insertion des nouveaux critères
-        m_mainCriterion->insertIntoDatabase(m_mainWindow);
+        m_mainCriterion->insertIntoDatabase();
 
         query.prepare("UPDATE dynamic_list SET criteria_id = ? WHERE dynamic_list_id = ?");
 
@@ -350,7 +350,7 @@ bool CDynamicList::updateDatabase()
 
         if (!query.exec())
         {
-            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
     }
@@ -372,7 +372,7 @@ void CDynamicList::removeFromDatabase()
         return;
     }
 
-    QSqlQuery query(m_mainWindow->getDataBase());
+    QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
 
     // Suppression des critères
     query.prepare("DELETE FROM criteria WHERE dynamic_list_id = ?");
@@ -380,7 +380,7 @@ void CDynamicList::removeFromDatabase()
 
     if (!query.exec())
     {
-        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return;
     }
 
@@ -390,7 +390,7 @@ void CDynamicList::removeFromDatabase()
 
     if (!query.exec())
     {
-        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return;
     }
 
@@ -416,7 +416,7 @@ void CDynamicList::loadFromDatabase()
     delete m_mainCriterion;
     m_mainCriterion = nullptr;
 
-    QSqlQuery query(m_mainWindow->getDataBase());
+    QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
 
     // Liste des critères
     query.prepare("SELECT criteria_id, criteria_parent, criteria_position, criteria_type, criteria_condition, criteria_value1, criteria_value2 "
@@ -425,7 +425,7 @@ void CDynamicList::loadFromDatabase()
 
     if (!query.exec())
     {
-        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return;
     }
 
@@ -558,7 +558,7 @@ void CDynamicList::setCriterion(ICriterion * criteria)
         disconnect(m_mainWindow, SIGNAL(songModified(CSong *)    ), this, SLOT(updateList()));
         disconnect(m_mainWindow, SIGNAL(songMoved(CSong *)       ), this, SLOT(updateList()));
         disconnect(m_mainWindow, SIGNAL(songPlayEnd(CSong *)     ), this, SLOT(updateList()));
-        //disconnect(m_mainWindow, SIGNAL(listModified(IPlayList *)), this, SLOT(updateList()));
+      //disconnect(m_mainWindow, SIGNAL(listModified(IPlayList *)), this, SLOT(updateList()));
 
         ICriterion::TUpdateConditions conditions = m_mainCriterion->getUpdateConditions();
 

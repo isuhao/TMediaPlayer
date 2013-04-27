@@ -33,7 +33,7 @@ class CDialogNotifications : public QDialog
 
 public:
 
-    explicit CDialogNotifications(CMainWindow * application);
+    explicit CDialogNotifications(CMainWindow * mainWindow);
     virtual ~CDialogNotifications();
 
 private:

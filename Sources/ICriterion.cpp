@@ -32,23 +32,23 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 /**
  * Crée le critère.
  *
- * \param application Pointeur sur la classe principale de l'application.
- * \param parent      Pointeur sur l'objet parent, qui sera chargé de détruire le critère.
+ * \param mainWindow Pointeur sur la fenêtre principale de l'application.
+ * \param parent     Pointeur sur l'objet parent, qui sera chargé de détruire le critère.
  */
 
-ICriterion::ICriterion(CMainWindow * application, QObject * parent) :
-QObject       (parent),
-m_type        (TypeInvalid),
-m_condition   (CondInvalid),
-m_value1      (),
-m_value2      (),
-m_mainWindow (application),
-m_id          (-1),
-m_position    (1),
-m_parent      (nullptr),
-m_playList    (nullptr)
+ICriterion::ICriterion(CMainWindow * mainWindow, QObject * parent) :
+QObject      (parent),
+m_type       (TypeInvalid),
+m_condition  (CondInvalid),
+m_value1     (),
+m_value2     (),
+m_mainWindow (mainWindow),
+m_id         (-1),
+m_position   (1),
+m_parent     (nullptr),
+m_playList   (nullptr)
 {
-    Q_CHECK_PTR(application);
+    Q_CHECK_PTR(m_mainWindow);
 }
 
 
@@ -113,29 +113,25 @@ void ICriterion::setPlayList(CDynamicList * playList)
 
 /**
  * Ajoute le critère en base de données.
- *
- * \param application Pointeur sur l'application.
  */
 
-void ICriterion::insertIntoDatabase(CMainWindow * application)
+void ICriterion::insertIntoDatabase()
 {
-    Q_CHECK_PTR(application);
-
     if (m_id != -1)
     {
-        application->getMediaManager()->logError(tr("the criteria is already in database"), __FUNCTION__, __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logError(tr("the criteria is already in database"), __FUNCTION__, __FILE__, __LINE__);
         //return;
     }
 
     if (!m_playList)
     {
-        application->getMediaManager()->logError(tr("the criteria has no associated playlist"), __FUNCTION__, __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logError(tr("the criteria has no associated playlist"), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
     if (m_playList->getId() <= 0)
     {
-        application->getMediaManager()->logError(tr("the playlist associated to the criteria has an invalid identifier"), __FUNCTION__, __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logError(tr("the playlist associated to the criteria has an invalid identifier"), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
@@ -146,12 +142,12 @@ void ICriterion::insertIntoDatabase(CMainWindow * application)
 
         if (parentId <= 0)
         {
-            application->getMediaManager()->logError(tr("the criteria has a parent, but with an invalid identifier"), __FUNCTION__, __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logError(tr("the criteria has a parent, but with an invalid identifier"), __FUNCTION__, __FILE__, __LINE__);
             parentId = 0;
         }
     }
 
-    QSqlQuery query(application->getDataBase());
+    QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
 
     // Position du critère
     query.prepare("SELECT MAX(criteria_position) FROM criteria WHERE criteria_parent = ? AND dynamic_list_id = ?");
@@ -160,7 +156,7 @@ void ICriterion::insertIntoDatabase(CMainWindow * application)
 
     if (!query.exec())
     {
-        application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return;
     }
 
@@ -184,17 +180,17 @@ void ICriterion::insertIntoDatabase(CMainWindow * application)
 
     if (!query.exec())
     {
-        application->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return;
     }
 
-    if (m_mainWindow->getDataBase().driverName() == "QPSQL")
+    if (m_mainWindow->getMediaManager()->getDataBase().driverName() == "QPSQL")
     {
         query.prepare("SELECT currval('criteria_seq')");
 
         if (!query.exec())
         {
-            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return;
         }
 
@@ -204,7 +200,7 @@ void ICriterion::insertIntoDatabase(CMainWindow * application)
         }
         else
         {
-            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return;
         }
     }

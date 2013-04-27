@@ -34,7 +34,7 @@ class CDialogEditFolder : public QDialog
 
 public:
 
-    CDialogEditFolder(CFolder * folder, CMainWindow * application, CFolder * folderParent = nullptr);
+    CDialogEditFolder(CFolder * folder, CMainWindow * mainWindow, CFolder * folderParent = nullptr);
     virtual ~CDialogEditFolder();
 
 protected slots:

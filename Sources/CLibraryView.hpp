@@ -40,7 +40,7 @@ class CLibraryView : public QTreeView
 
 public:
 
-    explicit CLibraryView(CMainWindow * application);
+    explicit CLibraryView(CMainWindow * mainWindow);
 
     CMediaTableView * getSongTable(const QModelIndex& index) const;
     CFolder * getFolder(const QModelIndex& index) const;

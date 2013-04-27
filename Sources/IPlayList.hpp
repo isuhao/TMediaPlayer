@@ -43,7 +43,7 @@ class IPlayList : public CMediaTableView
 
 public:
 
-    explicit IPlayList(CMainWindow * application, const QString& name = QString());
+    explicit IPlayList(CMainWindow * mainWindow, const QString& name = QString());
     virtual ~IPlayList() = 0;
 
     inline QString getName() const;

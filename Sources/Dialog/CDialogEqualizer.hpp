@@ -39,7 +39,7 @@ class CDialogEqualizer : public QDialog
 
 public:
 
-    explicit CDialogEqualizer(CMainWindow * application);
+    explicit CDialogEqualizer(CMainWindow * mainWindow);
     virtual ~CDialogEqualizer();
 
 public slots:
@@ -74,7 +74,7 @@ protected slots:
 private:
 
     Ui::DialogEqualizer * m_uiWidget; ///< Pointeur sur le widget de la boite de dialogue.
-    CMainWindow * m_mainWindow;     ///< Pointeur sur la classe principale de l'application.
+    CMainWindow * m_mainWindow;       ///< Pointeur sur la fenêtre principale de l'application.
 };
 
 #endif // FILE_C_DIALOG_EQUALIZER

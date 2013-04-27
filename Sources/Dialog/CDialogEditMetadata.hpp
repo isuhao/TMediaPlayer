@@ -48,7 +48,7 @@ class CDialogEditMetadata : public QDialog
 
 public:
 
-    CDialogEditMetadata(CMainWindow * application, CSong * song);
+    CDialogEditMetadata(CMainWindow * mainWindow, CSong * song);
     virtual ~CDialogEditMetadata();
 
 protected slots:
@@ -80,8 +80,8 @@ private:
     QStandardItemModel * m_modelID3v2Pictures;
     QStandardItemModel * m_modelAPE;
     QStandardItemModel * m_modelXiphComment;
-    CMainWindow * m_mainWindow; ///< Pointeur sur l'application.
-    CSong * m_song;               ///< Pointeur sur le morceau.
+    CMainWindow * m_mainWindow; ///< Pointeur sur la fenêtre principale de l'application.
+    CSong * m_song;             ///< Pointeur sur le morceau.
 };
 
 #endif // FILE_C_DIALOG_EDIT_METADATA

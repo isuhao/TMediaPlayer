@@ -36,7 +36,6 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QHeaderView>
 #include <QSqlQuery>
 #include <QSqlError>
-#include <QMenu>
 #include <QPainter>
 #include <QMessageBox>
 #include <QSettings>
@@ -53,7 +52,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 CMediaTableView::CMediaTableView(CMainWindow * mainWindow) :
 QTableView        (mainWindow),
-m_mainWindow     (mainWindow),
+m_mainWindow      (mainWindow),
 m_model           (nullptr),
 m_idPlayList      (-1),
 m_columnSort      (ColArtist),
@@ -61,7 +60,9 @@ m_sortOrder       (Qt::AscendingOrder),
 m_automaticSort   (true),
 m_selectedItem    (nullptr),
 m_isModified      (false),
-m_isColumnMoving  (false)
+m_isColumnMoving  (false),
+m_currentItem     (nullptr),
+m_menu            (this)
 {
     Q_CHECK_PTR(m_mainWindow);
 
@@ -74,9 +75,6 @@ m_isColumnMoving  (false)
     connect(m_model, SIGNAL(rowsInserted(const QModelIndex&, int, int)), this, SLOT(onRowCountChange(const QModelIndex&, int, int)));
     connect(m_model, SIGNAL(rowsRemoved(const QModelIndex&, int, int)), this, SLOT(onRowCountChange(const QModelIndex&, int, int)));
     connect(m_model, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), this, SLOT(sort()));
-
-    setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(openCustomMenuProject(const QPoint&)));
 
     QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     sizePolicy.setHorizontalStretch(1);
@@ -1132,7 +1130,7 @@ bool CMediaTableView::updateDatabase()
 
         QString colInfos = getColumnsInfos();
 
-        QSqlQuery query(m_mainWindow->getDataBase());
+        QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
 
         query.prepare("UPDATE playlist SET list_columns = ? WHERE playlist_id = ?");
         query.bindValue(0, colInfos);
@@ -1140,7 +1138,7 @@ bool CMediaTableView::updateDatabase()
 
         if (!query.exec())
         {
-            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
 
@@ -1301,6 +1299,166 @@ void CMediaTableView::mouseDoubleClickEvent(QMouseEvent * event)
 }
 
 
+void CMediaTableView::contextMenuEvent(QContextMenuEvent * event)
+{
+    Q_CHECK_PTR(event);
+
+    QModelIndex index = indexAt(event->pos());
+    m_selectedItem = nullptr;
+
+    if (index.isValid())
+    {
+        bool severalSongs = (selectionModel()->selectedRows().size() > 1);
+
+        if (!severalSongs)
+        {
+            m_selectedItem = m_model->getSongItem(index);
+        }
+
+        m_menu.clear();
+
+        if (!severalSongs)
+        {
+            QAction * actionPlay = m_menu.addAction(tr("Play"), this, SLOT(playSelectedSong()));
+            m_menu.setDefaultAction(actionPlay);
+            m_menu.addSeparator();
+        }
+
+        m_menu.addAction(tr("Informations..."), m_mainWindow, SLOT(openDialogSongInfos()));
+
+        if (canImportSongs())
+        {
+            m_menu.addAction(tr("Import..."), this, SLOT(importSelectedSongs()))->setEnabled(false);
+            //m_menu.addAction(tr("Import..."), this, SLOT(importSelectedSongs()));
+        }
+
+        if (!severalSongs)
+        {
+            if (canEditSongs())
+            {
+                m_menu.addAction(tr("Edit metadata..."), m_mainWindow, SLOT(openDialogEditMetadata()));
+            }
+
+            m_menu.addAction(tr("Show in explorer"), m_mainWindow, SLOT(openSongInExplorer()));
+
+            if (canEditSongs() && m_selectedItem->getSong()->getFileStatus() == false)
+            {
+                m_menu.addAction(tr("Relocate"), m_mainWindow, SLOT(relocateSong()));
+            }
+        }
+
+        m_menu.addSeparator();
+
+        if (canEditPlayList())
+        {
+            m_menu.addAction(tr("Remove from playlist"), this, SLOT(removeSelectedSongs()));
+        }
+            
+        if (canEditSongs())
+        {
+            m_menu.addAction(tr("Remove from library"), this, SLOT(removeSongsFromLibrary()));
+
+            if (severalSongs)
+                m_menu.addAction(tr("Rename files"), this, SLOT(moveSongs()));
+            else
+                m_menu.addAction(tr("Rename file"), this, SLOT(moveSongs()));
+        }
+
+        if (!severalSongs)
+        {
+            QAction * actionCheck = m_menu.addAction(tr("Check song"), this, SLOT(checkSelection()));
+            QAction * actionUncheck = m_menu.addAction(tr("Uncheck song"), this, SLOT(uncheckSelection()));
+
+            bool songIsChecked = m_selectedItem->getSong()->isEnabled();
+
+            if (songIsChecked)
+                actionCheck->setEnabled(false);
+            else
+                actionUncheck->setEnabled(false);
+        }
+        else
+        {
+            m_menu.addAction(tr("Check selection"), this, SLOT(checkSelection()));
+            m_menu.addAction(tr("Uncheck selection"), this, SLOT(uncheckSelection()));
+        }
+
+        if (canMoveToPlayList())
+        {
+            m_menu.addSeparator();
+
+            if (!severalSongs)
+            {
+                // File d'attente
+                QMenu * menuQueue = m_menu.addMenu(tr("Queue"));
+                menuQueue->addAction(tr("Add at the beginning"), this, SLOT(addSongToQueueBegining()));
+                menuQueue->addAction(tr("Add at the end"), this, SLOT(addSongToQueueEnd()));
+
+                // Listes de lecture contenant le morceau
+                //TODO: gérer les dossiers
+                QMenu * menuPlayList = m_menu.addMenu(tr("Playlists"));
+                CMediaTableView * library = m_mainWindow->getLibrary();
+                m_actionGoToSongTable[library] = menuPlayList->addAction(QPixmap(":/icons/library"), tr("Library"));
+                connect(m_actionGoToSongTable[library], SIGNAL(triggered()), this, SLOT(goToSongTable()));
+
+                QList<IPlayList *> playLists = m_mainWindow->getPlayListsWithSong(m_selectedItem->getSong());
+
+                if (playLists.size() > 0)
+                {
+                    menuPlayList->addSeparator();
+
+                    for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
+                    {
+                        m_actionGoToSongTable[*it] = menuPlayList->addAction((*it)->getName());
+                        connect(m_actionGoToSongTable[*it], SIGNAL(triggered()), this, SLOT(goToSongTable()));
+
+                        if (qobject_cast<CDynamicList *>(*it))
+                        {
+                            m_actionGoToSongTable[*it]->setIcon(QPixmap(":/icons/dynamic_list"));
+                        }
+                        else if (qobject_cast<CStaticList *>(*it))
+                        {
+                            m_actionGoToSongTable[*it]->setIcon(QPixmap(":/icons/playlist"));
+                        }
+                    }
+                }
+            }
+
+            // Ajouter à la liste de lecture
+            //TODO: gérer les dossiers
+            QMenu * menuAddToPlayList = m_menu.addMenu(tr("Add to playlist"));
+            QList<IPlayList *> playLists = m_mainWindow->getAllPlayLists();
+
+            if (playLists.isEmpty())
+            {
+                QAction * actionNoPlayList = menuAddToPlayList->addAction(tr("There are no playlist"));
+                actionNoPlayList->setEnabled(false);
+            }
+            else
+            {
+                for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
+                {
+                    CStaticList * staticList = qobject_cast<CStaticList *>(*it);
+                    if (staticList)
+                    {
+                        m_actionAddToPlayList[staticList] = menuAddToPlayList->addAction(QPixmap(":/icons/playlist"), (*it)->getName());
+                        connect(m_actionAddToPlayList[staticList], SIGNAL(triggered()), this, SLOT(addToPlayList()));
+                    }
+                }
+            }
+        }
+
+        if (canEditPlayList())
+        {
+            m_menu.addSeparator();
+            m_menu.addAction(tr("Remove duplicates"), this, SLOT(removeDuplicateSongs()));
+        }
+        
+        m_menu.move(getCorrectMenuPosition(&m_menu, event->globalPos()));
+        m_menu.show();
+    }
+}
+
+
 /**
  * Indique si la liste de morceaux a été modifiée.
  *
@@ -1341,145 +1499,4 @@ void CMediaTableView::selectSongItem(CMediaTableItem * songItem)
 void CMediaTableView::playSelectedSong()
 {
     m_mainWindow->playSong(m_selectedItem);
-}
-
-
-/**
- * Affiche le menu contextuel.
- *
- * \param point Position du clic.
- */
-
-void CMediaTableView::openCustomMenuProject(const QPoint& point)
-{
-    QModelIndex index = indexAt(point);
-    m_selectedItem = nullptr;
-
-    if (index.isValid())
-    {
-        bool severalSongs = (selectionModel()->selectedRows().size() > 1);
-
-        if (!severalSongs)
-        {
-            m_selectedItem = m_model->getSongItem(index);
-        }
-
-        // Menu contextuel
-        QMenu * menu = new QMenu(this);
-        menu->setAttribute(Qt::WA_DeleteOnClose);
-
-        if (!severalSongs)
-        {
-            QAction * actionPlay = menu->addAction(tr("Play"), this, SLOT(playSelectedSong()));
-            menu->setDefaultAction(actionPlay);
-            menu->addSeparator();
-        }
-
-        menu->addAction(tr("Informations..."), m_mainWindow, SLOT(openDialogSongInfos()));
-
-        if (!severalSongs)
-        {
-            menu->addAction(tr("Edit metadata..."), m_mainWindow, SLOT(openDialogEditMetadata()));
-            menu->addAction(tr("Show in explorer"), m_mainWindow, SLOT(openSongInExplorer()));
-
-            if (m_selectedItem->getSong()->getFileStatus() == false)
-            {
-                menu->addAction(tr("Relocate"), m_mainWindow, SLOT(relocateSong()));
-            }
-        }
-
-        menu->addSeparator();
-        menu->addAction(tr("Remove from library"), this, SLOT(removeSongsFromLibrary()));
-
-        //if (m_mainWindow->getSettings()->value("Folders/KeepOrganized", false).toBool())
-        {
-            if (severalSongs)
-                menu->addAction(tr("Rename files"), this, SLOT(moveSongs()));
-            else
-                menu->addAction(tr("Rename file"), this, SLOT(moveSongs()));
-        }
-
-        if (!severalSongs)
-        {
-            QAction * actionCheck = menu->addAction(tr("Check song"), this, SLOT(checkSelection()));
-            QAction * actionUncheck = menu->addAction(tr("Uncheck song"), this, SLOT(uncheckSelection()));
-
-            bool songIsChecked = m_selectedItem->getSong()->isEnabled();
-
-            if (songIsChecked)
-                actionCheck->setEnabled(false);
-            else
-                actionUncheck->setEnabled(false);
-        }
-        else
-        {
-            menu->addAction(tr("Check selection"), this, SLOT(checkSelection()));
-            menu->addAction(tr("Uncheck selection"), this, SLOT(uncheckSelection()));
-        }
-
-        menu->addSeparator();
-
-        if (!severalSongs)
-        {
-            // File d'attente
-            QMenu * menuQueue = menu->addMenu(tr("Queue"));
-            menuQueue->addAction(tr("Add at the beginning"), this, SLOT(addSongToQueueBegining()));
-            menuQueue->addAction(tr("Add at the end"), this, SLOT(addSongToQueueEnd()));
-
-            // Listes de lecture contenant le morceau
-            //TODO: gérer les dossiers
-            QMenu * menuPlayList = menu->addMenu(tr("Playlists"));
-            CMediaTableView * library = m_mainWindow->getLibrary();
-            m_actionGoToSongTable[library] = menuPlayList->addAction(QPixmap(":/icons/library"), tr("Library"));
-            connect(m_actionGoToSongTable[library], SIGNAL(triggered()), this, SLOT(goToSongTable()));
-
-            QList<IPlayList *> playLists = m_mainWindow->getPlayListsWithSong(m_selectedItem->getSong());
-
-            if (playLists.size() > 0)
-            {
-                menuPlayList->addSeparator();
-
-                for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
-                {
-                    m_actionGoToSongTable[*it] = menuPlayList->addAction((*it)->getName());
-                    connect(m_actionGoToSongTable[*it], SIGNAL(triggered()), this, SLOT(goToSongTable()));
-
-                    if (qobject_cast<CDynamicList *>(*it))
-                    {
-                        m_actionGoToSongTable[*it]->setIcon(QPixmap(":/icons/dynamic_list"));
-                    }
-                    else if (qobject_cast<CStaticList *>(*it))
-                    {
-                        m_actionGoToSongTable[*it]->setIcon(QPixmap(":/icons/playlist"));
-                    }
-                }
-            }
-        }
-
-        // Ajouter à la liste de lecture
-        //TODO: gérer les dossiers
-        QMenu * menuAddToPlayList = menu->addMenu(tr("Add to playlist"));
-        QList<IPlayList *> playLists = m_mainWindow->getAllPlayLists();
-
-        if (playLists.isEmpty())
-        {
-            QAction * actionNoPlayList = menuAddToPlayList->addAction(tr("There are no playlist"));
-            actionNoPlayList->setEnabled(false);
-        }
-        else
-        {
-            for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
-            {
-                CStaticList * staticList = qobject_cast<CStaticList *>(*it);
-                if (staticList)
-                {
-                    m_actionAddToPlayList[staticList] = menuAddToPlayList->addAction(QPixmap(":/icons/playlist"), (*it)->getName());
-                    connect(m_actionAddToPlayList[staticList], SIGNAL(triggered()), this, SLOT(addToPlayList()));
-                }
-            }
-        }
-        
-        menu->move(getCorrectMenuPosition(menu, mapToGlobal(point)));
-        menu->show();
-    }
 }

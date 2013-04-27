@@ -48,7 +48,7 @@ class CImporterITunes : public QWizard
 
 public:
 
-    explicit CImporterITunes(CMainWindow * application);
+    explicit CImporterITunes(CMainWindow * mainWindow);
     virtual ~CImporterITunes();
 
     QStringList getSelectedItems() const;
@@ -134,7 +134,7 @@ class CITunesWizardPage4 : public QWizardPage
 
 public:
 
-    CITunesWizardPage4(CMainWindow * application, CITunesLibrary * library, QWidget * parent = nullptr);
+    CITunesWizardPage4(CMainWindow * mainWindow, CITunesLibrary * library, QWidget * parent = nullptr);
 
     virtual void initializePage();
 
@@ -164,7 +164,7 @@ public:
         inline TSong() : id(0), playCount(0), rating(0), enabled(true), compilation(false) { }
     };
 
-    explicit CITunesLibrary(CMainWindow * application, QObject * parent = nullptr);
+    explicit CITunesLibrary(CMainWindow * mainWindow, QObject * parent = nullptr);
     virtual ~CITunesLibrary();
 
     bool loadFile(const QString& fileName);

@@ -39,7 +39,6 @@ public:
 protected slots:
 
     virtual bool updateDatabase();
-    virtual void openCustomMenuProject(const QPoint& point);
     void removeSelectedSongs();
     void removeSongs(const QList<CMediaTableItem *>& songItemList);
 
@@ -51,6 +50,11 @@ protected:
     virtual void paintEvent(QPaintEvent * event);
 
 private:
+
+    virtual bool canEditPlayList() const
+    {
+        return true;
+    }
 
     QRect m_dropIndicatorRect;
 };

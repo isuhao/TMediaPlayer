@@ -42,7 +42,7 @@ class CDynamicList : public IPlayList
 
 public:
 
-    explicit CDynamicList(CMainWindow * application, const QString& name = QString());
+    explicit CDynamicList(CMainWindow * mainWindow, const QString& name = QString());
     virtual ~CDynamicList();
 
     virtual bool isModified() const;
@@ -56,10 +56,6 @@ public:
 public slots:
 
     void updateList();
-
-protected slots:
-
-    //virtual void openCustomMenuProject(const QPoint& point);
 
 signals:
 
@@ -78,7 +74,7 @@ protected:
 private:
     
     int m_id;                     ///< Identifiant de la liste en base de données.
-    ICriterion * m_mainCriterion;   ///< Critère parent de la liste.
+    ICriterion * m_mainCriterion; ///< Critère parent de la liste.
     bool m_isDynamicListModified; ///< Indique si la liste a été modifiée.
     bool m_autoUpdate;            ///< Indique si la liste doit être mise à jour automatiquement.
     bool m_onlyChecked;           ///< Indique si on doit utiliser uniquement les morceaux cochés.

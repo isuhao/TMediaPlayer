@@ -31,12 +31,12 @@ const QByteArray ILastFmService::m_secret = "b2ed8ec840ec1995003bb99fb02ace44";
 const QString ILastFmService::m_lastFmUrl = "http://ws.audioscrobbler.com/2.0/";
 
 
-ILastFmService::ILastFmService(CMainWindow * application, const QByteArray& sessionKey) :
-    QObject       (application),
-    m_mainWindow (application),
-    m_sessionKey  (sessionKey)
+ILastFmService::ILastFmService(CMainWindow * mainWindow, const QByteArray& sessionKey) :
+QObject      (mainWindow),
+m_mainWindow (mainWindow),
+m_sessionKey (sessionKey)
 {
-    Q_CHECK_PTR(application);
+    Q_CHECK_PTR(m_mainWindow);
 
     m_networkManager = new QNetworkAccessManager(this);
     connect(m_networkManager, SIGNAL(finished(QNetworkReply *)), this, SLOT(replyFinished(QNetworkReply *)));

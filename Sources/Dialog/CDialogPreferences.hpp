@@ -35,7 +35,7 @@ class CDialogPreferences : public QDialog
 
 public:
 
-    CDialogPreferences(CMainWindow * application, QSettings * settings);
+    CDialogPreferences(CMainWindow * mainWindow, QSettings * settings);
     virtual ~CDialogPreferences();
 
 protected slots:
@@ -49,7 +49,7 @@ protected slots:
 private:
 
     Ui::DialogPreferences * m_uiWidget; ///< Widget utilisé par la boite de dialogue.
-    CMainWindow * m_mainWindow;       ///< Pointeur sur l'application.
+    CMainWindow * m_mainWindow;         ///< Pointeur sur la fenêtre principale l'application.
     QSettings * m_settings;
 };
 

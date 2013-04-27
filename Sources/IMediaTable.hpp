@@ -24,6 +24,9 @@ class IMediaTable
 {
 public:
 
+    IMediaTable();
+    ~IMediaTable();
+
     //...
 };
 

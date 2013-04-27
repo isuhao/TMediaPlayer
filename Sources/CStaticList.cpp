@@ -155,7 +155,7 @@ void CStaticList::addSongs(const QList<CSong *>& songs, bool confirm)
         }
     }
     
-    QSqlQuery query(m_mainWindow->getDataBase());
+    QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
 
     // Position des morceaux dans la liste
     query.prepare("SELECT MAX(song_position) FROM static_list_song WHERE static_list_id = ?");
@@ -163,7 +163,7 @@ void CStaticList::addSongs(const QList<CSong *>& songs, bool confirm)
 
     if (!query.exec() || !query.next())
     {
-        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return;
     }
 
@@ -204,7 +204,7 @@ void CStaticList::addSongs(const QList<CSong *>& songs, bool confirm)
 
     if (!query.execBatch())
     {
-        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return;
     }
 
@@ -300,13 +300,13 @@ void CStaticList::removeSong(CMediaTableItem * songItem, bool confirm)
 
     removeAllSongsFromTable();
 
-    QSqlQuery query(m_mainWindow->getDataBase());
+    QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
     query.prepare("DELETE FROM static_list_song WHERE static_list_id = ?");
     query.bindValue(0, m_id);
 
     if (!query.exec())
     {
-        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
     }
 
     addSongs(songs, false);
@@ -398,13 +398,13 @@ void CStaticList::removeSongs(const QList<CMediaTableItem *>& songItemList, bool
 
     removeAllSongsFromTable();
 
-    QSqlQuery query(m_mainWindow->getDataBase());
+    QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
     query.prepare("DELETE FROM static_list_song WHERE static_list_id = ?");
     query.bindValue(0, m_id);
 
     if (!query.exec())
     {
-        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
     }
 
     addSongs(songs, false);
@@ -516,13 +516,13 @@ void CStaticList::removeDuplicateSongs()
     removeAllSongsFromTable();
     //addSongsToTable(songsNew);
 
-    QSqlQuery query(m_mainWindow->getDataBase());
+    QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
     query.prepare("DELETE FROM static_list_song WHERE static_list_id = ?");
     query.bindValue(0, m_id);
 
     if (!query.exec())
     {
-        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
     }
 
     addSongs(songsNew, false);
@@ -546,7 +546,7 @@ bool CStaticList::updateDatabase()
     {
         int folderId = (getFolder() ? getFolder()->getId() : 0);
 
-        QSqlQuery query(m_mainWindow->getDataBase());
+        QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
 
         // Position dans le dossier
         int position = getFolder()->getPosition(this);
@@ -556,7 +556,7 @@ bool CStaticList::updateDatabase()
 
         if (!query.exec())
         {
-            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
 
@@ -575,17 +575,17 @@ bool CStaticList::updateDatabase()
 
         if (!query.exec())
         {
-            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
 
-        if (m_mainWindow->getDataBase().driverName() == "QPSQL")
+        if (m_mainWindow->getMediaManager()->getDataBase().driverName() == "QPSQL")
         {
             query.prepare("SELECT currval('playlist_playlist_id_seq')");
 
             if (!query.exec())
             {
-                m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return false;
             }
 
@@ -595,7 +595,7 @@ bool CStaticList::updateDatabase()
             }
             else
             {
-                m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return false;
             }
         }
@@ -609,17 +609,17 @@ bool CStaticList::updateDatabase()
 
         if (!query.exec())
         {
-            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
 
-        if (m_mainWindow->getDataBase().driverName() == "QPSQL")
+        if (m_mainWindow->getMediaManager()->getDataBase().driverName() == "QPSQL")
         {
             query.prepare("SELECT currval('static_list_seq')");
 
             if (!query.exec())
             {
-                m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return false;
             }
 
@@ -629,7 +629,7 @@ bool CStaticList::updateDatabase()
             }
             else
             {
-                m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return false;
             }
         }
@@ -650,7 +650,7 @@ bool CStaticList::updateDatabase()
 
         if (!query.exec())
         {
-            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return false;
         }
 */
@@ -673,7 +673,7 @@ void CStaticList::removeFromDatabase()
     }
     else
     {
-        QSqlQuery query(m_mainWindow->getDataBase());
+        QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
 
         // Suppression des morceaux
         query.prepare("DELETE FROM static_list_song WHERE static_list_id = ?");
@@ -681,7 +681,7 @@ void CStaticList::removeFromDatabase()
 
         if (!query.exec())
         {
-            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return;
         }
 
@@ -691,7 +691,7 @@ void CStaticList::removeFromDatabase()
 
         if (!query.exec())
         {
-            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return;
         }
 
@@ -700,150 +700,6 @@ void CStaticList::removeFromDatabase()
     }
 
     IPlayList::removeFromDatabase();
-}
-
-
-/**
- * Affiche le menu contextuel.
- *
- * \param point Position du clic.
- */
-
-void CStaticList::openCustomMenuProject(const QPoint& point)
-{
-    QModelIndex index = indexAt(point);
-
-    if (index.isValid())
-    {
-        bool severalSongs = (selectionModel()->selectedRows().size() > 1);
-
-        if (!severalSongs)
-        {
-            m_selectedItem = m_model->getSongItem(index);
-        }
-
-        // Menu contextuel
-        QMenu * menu = new QMenu(this);
-        menu->setAttribute(Qt::WA_DeleteOnClose);
-        
-        if (!severalSongs)
-        {
-            QAction * actionPlay = menu->addAction(tr("Play"), this, SLOT(playSelectedSong()));
-            menu->setDefaultAction(actionPlay);
-            menu->addSeparator();
-        }
-
-        menu->addAction(tr("Informations..."), m_mainWindow, SLOT(openDialogSongInfos()));
-
-        if (!severalSongs)
-        {
-            menu->addAction(tr("Edit metadata..."), m_mainWindow, SLOT(openDialogEditMetadata()));
-            menu->addAction(tr("Show in explorer"), m_mainWindow, SLOT(openSongInExplorer()));
-
-            if (m_selectedItem->getSong()->getFileStatus() == false)
-            {
-                menu->addAction(tr("Relocate"), m_mainWindow, SLOT(relocateSong()));
-            }
-        }
-
-        menu->addSeparator();
-        menu->addAction(tr("Remove from playlist"), this, SLOT(removeSelectedSongs()));
-        menu->addAction(tr("Remove from library"), this, SLOT(removeSongsFromLibrary()));
-
-        //if (m_mainWindow->getSettings()->value("Folders/KeepOrganized", false).toBool())
-        {
-            if (severalSongs)
-                menu->addAction(tr("Rename files"), this, SLOT(moveSongs()));
-            else
-                menu->addAction(tr("Rename file"), this, SLOT(moveSongs()));
-        }
-
-        if (!severalSongs)
-        {
-            QAction * actionCheck = menu->addAction(tr("Check song"), this, SLOT(checkSelection()));
-            QAction * actionUncheck = menu->addAction(tr("Uncheck song"), this, SLOT(uncheckSelection()));
-
-            bool songIsChecked = m_selectedItem->getSong()->isEnabled();
-
-            if (songIsChecked)
-                actionCheck->setEnabled(false);
-            else
-                actionUncheck->setEnabled(false);
-        }
-        else
-        {
-            menu->addAction(tr("Check selection"), this, SLOT(checkSelection()));
-            menu->addAction(tr("Uncheck selection"), this, SLOT(uncheckSelection()));
-        }
-
-        menu->addSeparator();
-
-        if (!severalSongs)
-        {
-            // File d'attente
-            QMenu * menuQueue = menu->addMenu(tr("Queue"));
-            menuQueue->addAction(tr("Add at the beginning"), this, SLOT(addSongToQueueBegining()));
-            menuQueue->addAction(tr("Add at the end"), this, SLOT(addSongToQueueEnd()));
-
-            // Listes de lecture contenant le morceau
-            //TODO: gérer les dossiers
-            QMenu * menuPlayList = menu->addMenu(tr("Playlists"));
-            CLibrary * library = m_mainWindow->getLibrary();
-            m_actionGoToSongTable[library] = menuPlayList->addAction(QPixmap(":/icons/library"), tr("Library"));
-            connect(m_actionGoToSongTable[library], SIGNAL(triggered()), this, SLOT(goToSongTable()));
-
-            QList<IPlayList *> playLists = m_mainWindow->getPlayListsWithSong(m_selectedItem->getSong());
-
-            if (playLists.size() > 0)
-            {
-                menuPlayList->addSeparator();
-
-                for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
-                {
-                    m_actionGoToSongTable[*it] = menuPlayList->addAction((*it)->getName());
-                    connect(m_actionGoToSongTable[*it], SIGNAL(triggered()), this, SLOT(goToSongTable()));
-
-                    if (qobject_cast<CDynamicList *>(*it))
-                    {
-                        m_actionGoToSongTable[*it]->setIcon(QPixmap(":/icons/dynamic_list"));
-                    }
-                    else if (qobject_cast<CStaticList *>(*it))
-                    {
-                        m_actionGoToSongTable[*it]->setIcon(QPixmap(":/icons/playlist"));
-                    }
-                }
-            }
-        }
-
-        // Ajouter à la liste de lecture
-        //TODO: gérer les dossiers
-        QMenu * menuAddToPlayList = menu->addMenu(tr("Add to playlist"));
-        QList<IPlayList *> playLists = m_mainWindow->getAllPlayLists();
-
-        if (playLists.isEmpty())
-        {
-            QAction * actionNoPlayList = menuAddToPlayList->addAction(tr("There are no playlist"));
-            actionNoPlayList->setEnabled(false);
-        }
-        else
-        {
-            for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
-            {
-                CStaticList * staticList = qobject_cast<CStaticList *>(*it);
-                if (staticList)
-                {
-                    m_actionAddToPlayList[staticList] = menuAddToPlayList->addAction(QPixmap(":/icons/playlist"), (*it)->getName());
-                    connect(m_actionAddToPlayList[staticList], SIGNAL(triggered()), this, SLOT(addToPlayList()));
-                }
-            }
-        }
-
-        menu->addSeparator();
-        menu->addAction(tr("Remove duplicates"), this, SLOT(removeDuplicateSongs()));
-
-        menu->move(getCorrectMenuPosition(menu, mapToGlobal(point)));
-        menu->show();
-    }
 }
 
 
@@ -952,13 +808,13 @@ void CStaticList::dropEvent(QDropEvent * event)
 
         removeAllSongsFromTable();
 
-        QSqlQuery query(m_mainWindow->getDataBase());
+        QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
         query.prepare("DELETE FROM static_list_song WHERE static_list_id = ?");
         query.bindValue(0, m_id);
 
         if (!query.exec())
         {
-            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         }
 
         addSongs(songs, false);

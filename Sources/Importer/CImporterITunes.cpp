@@ -20,6 +20,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CImporterITunes.hpp"
 #include "../CMainWindow.hpp"
 #include "../CMediaManager.hpp"
+#include "../CSong.hpp"
 
 #include <QFileDialog>
 #include <QStandardItem>
@@ -34,12 +35,12 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QtDebug>
 
 
-CImporterITunes::CImporterITunes(CMainWindow * application) :
-QWizard       (application),
-m_mainWindow (application),
-m_library     (new CITunesLibrary(application, this))
+CImporterITunes::CImporterITunes(CMainWindow * mainWindow) :
+QWizard      (mainWindow),
+m_mainWindow (mainWindow),
+m_library    (new CITunesLibrary(mainWindow, this))
 {
-    Q_CHECK_PTR(application);
+    Q_CHECK_PTR(m_mainWindow);
 
     setAttribute(Qt::WA_DeleteOnClose);
     resize(400, 300);
@@ -215,13 +216,13 @@ CITunesWizardPage3::~CITunesWizardPage3()
 }
 
 
-CITunesWizardPage4::CITunesWizardPage4(CMainWindow * application, CITunesLibrary * library, QWidget * parent) :
-QWizardPage   (parent),
-m_library     (library),
-m_mainWindow (application)
+CITunesWizardPage4::CITunesWizardPage4(CMainWindow * mainWindow, CITunesLibrary * library, QWidget * parent) :
+QWizardPage  (parent),
+m_library    (library),
+m_mainWindow (mainWindow)
 {
     Q_CHECK_PTR(library);
-    Q_CHECK_PTR(application);
+    Q_CHECK_PTR(m_mainWindow);
 
     setTitle(tr("Import done"));
     setSubTitle(tr("All selected items have been imported into the library."));
@@ -232,7 +233,7 @@ m_mainWindow (application)
 /// \todo Implémentation.
 void CITunesWizardPage4::initializePage()
 {
-    QSqlQuery query(m_mainWindow->getDataBase());
+    QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
     QMap<int, CSong *> songs;
 
     // Ajout des morceaux
@@ -242,7 +243,7 @@ void CITunesWizardPage4::initializePage()
 
         for (QMap<int, CITunesLibrary::TSong>::const_iterator it2 = songsToLoad.begin(); it2 != songsToLoad.end(); ++it2)
         {
-            songs[it2.key()] = m_mainWindow->getSongFromId(CSong::getId(m_mainWindow, it2->fileName));
+            songs[it2.key()] = m_mainWindow->getSongFromId(CSong::getId(m_mainWindow->getMediaManager(), it2->fileName));
 
             if (songs[it2.key()])
             {
@@ -258,7 +259,7 @@ void CITunesWizardPage4::initializePage()
 
                     if (!query.exec())
                     {
-                        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                         return;
                     }
                 }
@@ -278,7 +279,7 @@ void CITunesWizardPage4::initializePage()
 
                     if (!query.exec())
                     {
-                        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                         return;
                     }
                 }
@@ -294,7 +295,7 @@ void CITunesWizardPage4::initializePage()
 
                     if (!query.exec())
                     {
-                        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                         return;
                     }
                     
@@ -304,7 +305,7 @@ void CITunesWizardPage4::initializePage()
 
                     if (!query.exec())
                     {
-                        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                         return;
                     }
 
@@ -320,7 +321,7 @@ void CITunesWizardPage4::initializePage()
 
                         if (!query.exec())
                         {
-                            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                             return;
                         }
                     }
@@ -339,7 +340,7 @@ void CITunesWizardPage4::initializePage()
 
                     if (!query.exec())
                     {
-                        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                         return;
                     }
 
@@ -356,7 +357,7 @@ void CITunesWizardPage4::initializePage()
 
                         if (!query.exec())
                         {
-                            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                             return;
                         }
                     }
@@ -378,7 +379,7 @@ void CITunesWizardPage4::initializePage()
 
                 if (!query.exec())
                 {
-                    m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                    m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                     return;
                 }
 
@@ -395,7 +396,7 @@ void CITunesWizardPage4::initializePage()
 
                     if (!query.exec())
                     {
-                        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                         return;
                     }
                 }
@@ -423,12 +424,12 @@ bool CITunesWizardPage1::validateCurrentPage()
 }
 */
 
-CITunesLibrary::CITunesLibrary(CMainWindow * application, QObject * parent) :
-QObject       (parent),
-m_isLoaded    (false),
-m_mainWindow (application)
+CITunesLibrary::CITunesLibrary(CMainWindow * mainWindow, QObject * parent) :
+QObject      (parent),
+m_isLoaded   (false),
+m_mainWindow (mainWindow)
 {
-    Q_CHECK_PTR(application);
+    Q_CHECK_PTR(m_mainWindow);
 }
 
 

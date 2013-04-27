@@ -43,8 +43,8 @@ class CMediaTableModel : public QAbstractTableModel
 
 public:
 
-    explicit CMediaTableModel(CMainWindow * application, const QList<CSong *>& data = QList<CSong *>(), QWidget * parent = nullptr);
-    CMediaTableModel(CMainWindow * application, QWidget * parent);
+    explicit CMediaTableModel(CMainWindow * mainWindow, const QList<CSong *>& data = QList<CSong *>(), QWidget * parent = nullptr);
+    CMediaTableModel(CMainWindow * mainWindow, QWidget * parent);
 
     void setCanDrop(bool canDrop);
 

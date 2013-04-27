@@ -34,7 +34,7 @@ class IWidgetCriterion : public QWidget
 
 public:
 
-    explicit IWidgetCriterion(CMainWindow * application, QWidget * parent = nullptr);
+    explicit IWidgetCriterion(CMainWindow * mainWindow, QWidget * parent = nullptr);
     virtual ~IWidgetCriterion();
 
     virtual ICriterion * getCriterion() = 0;
@@ -43,7 +43,7 @@ protected:
 
     ICriterion::TType m_type;           ///< Type de critère.
     ICriterion::TCondition m_condition; ///< Condition de recherche.
-    CMainWindow * m_mainWindow;      ///< Pointeur sur l'application.
+    CMainWindow * m_mainWindow;         ///< Pointeur sur la fenêtre principale de l'application.
 };
 
 #endif // FILE_I_WIDGET_CRITERIA

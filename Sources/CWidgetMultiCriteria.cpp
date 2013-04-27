@@ -30,13 +30,13 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * Construit le widget.
  * Un sous-critère simple est ajouté.
  *
- * \param application Pointeur sur la classe principale de l'application.
- * \param parent      Widget parent.
+ * \param mainWindow Pointeur sur la fenêtre principale de l'application.
+ * \param parent     Widget parent.
  */
 
-CWidgetMultiCriteria::CWidgetMultiCriteria(CMainWindow * application, QWidget * parent) :
-    IWidgetCriterion (application, parent),
-    m_uiWidget      (new Ui::WidgetMultiCriteria())
+CWidgetMultiCriteria::CWidgetMultiCriteria(CMainWindow * mainWindow, QWidget * parent) :
+IWidgetCriterion (mainWindow, parent),
+m_uiWidget       (new Ui::WidgetMultiCriteria())
 {
     m_type = ICriterion::TypeUnion;
     m_uiWidget->setupUi(this);

@@ -38,6 +38,7 @@ namespace TagLib
 }
 
 class CMainWindow;
+class CMediaManager;
 class CCDRomDrive;
 class QFile;
 
@@ -147,9 +148,9 @@ public:
     inline QDateTime getLastPlay() const;
     inline QList<TSongPlay> getPlays() const;
 
-    static int getId(CMainWindow * application, const QString& fileName);
-    static CSong * loadFromFile(CMainWindow * application, const QString& fileName);
-    static QList<CSong *> loadAllSongsFromDatabase(CMainWindow * application);
+    static int getId(CMediaManager * mediaManager, const QString& fileName);
+    static CSong * loadFromFile(CMainWindow * mainWindow, const QString& fileName);
+    static QList<CSong *> loadAllSongsFromDatabase(CMainWindow * mainWindow);
 
 public slots:
 

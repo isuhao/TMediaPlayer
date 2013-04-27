@@ -52,7 +52,7 @@ public slots:
     void removeSongs(const QList<CSong *>& songs, bool confirm = true);
     void removeSongs(const QList<CMediaTableItem *>& songItemList, bool confirm = true);
     void removeSelectedSongs();
-    void removeDuplicateSongs();
+    virtual void removeDuplicateSongs();
 
 signals:
 
@@ -64,7 +64,6 @@ protected slots:
 
     virtual bool updateDatabase();
     virtual void removeFromDatabase();
-    virtual void openCustomMenuProject(const QPoint& point);
 
 protected:
 
@@ -74,6 +73,11 @@ protected:
     virtual void paintEvent(QPaintEvent * event);
 
 private:
+
+    virtual bool canEditPlayList() const
+    {
+        return true;
+    }
 
     int m_id;                    ///< Identifiant de la liste en base de données.
     bool m_isStaticListModified; ///< Indique si la liste a été modifiée.

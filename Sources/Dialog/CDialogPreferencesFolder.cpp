@@ -19,6 +19,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CDialogPreferencesFolder.hpp"
 #include "../CMainWindow.hpp"
+#include "../CMediaManager.hpp"
 #include "../CLibraryFolder.hpp"
 
 #include <QPushButton>
@@ -133,7 +134,7 @@ void CDialogPreferencesFolder::save()
         return;
     }
 
-    CLibraryFolder * folder = m_mainWindow->getLibraryFolder(m_mainWindow->getLibraryFolderId(pathName));
+    CLibraryFolder * folder = m_mainWindow->getMediaManager()->getLibraryFolder(m_mainWindow->getMediaManager()->getLibraryFolderId(pathName));
 
     if (folder != m_folder)
     {
@@ -165,7 +166,7 @@ void CDialogPreferencesFolder::save()
     m_folder->compilationName = m_uiWidget->editOrgCompilation  ->text();
 
     // Mise à jour de la base de données
-    QSqlQuery query(m_mainWindow->getDataBase());
+    QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
     const QString str = m_folder->convertFormatItemsToString();
 
     // Ajout du dossier
@@ -185,17 +186,17 @@ void CDialogPreferencesFolder::save()
 
         if (!query.exec())
         {
-            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return;
         }
 
-        if (m_mainWindow->getDataBase().driverName() == "QPSQL")
+        if (m_mainWindow->getMediaManager()->getDataBase().driverName() == "QPSQL")
         {
             query.prepare("SELECT currval('libpath_seq')");
 
             if (!query.exec())
             {
-                m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return;
             }
 
@@ -205,7 +206,7 @@ void CDialogPreferencesFolder::save()
             }
             else
             {
-                m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return;
             }
         }
@@ -214,7 +215,7 @@ void CDialogPreferencesFolder::save()
             m_folder->id = query.lastInsertId().toInt();
         }
 
-        m_mainWindow->addLibraryFolder(m_folder);
+        m_mainWindow->getMediaManager()->addLibraryFolder(m_folder);
         m_needDeleteFolder = false;
     }
     // Modification du dossier
@@ -235,7 +236,7 @@ void CDialogPreferencesFolder::save()
 
         if (!query.exec())
         {
-            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return;
         }
     }

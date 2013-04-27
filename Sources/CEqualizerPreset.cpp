@@ -19,6 +19,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CEqualizerPreset.hpp"
 #include "CMainWindow.hpp"
+#include "CMediaManager.hpp"
 
 #include <QSqlQuery>
 #include <QSqlError>
@@ -75,7 +76,7 @@ void CEqualizerPreset::updateDataBase()
 {
     if (m_id < 0)
     {
-        QSqlQuery query(m_mainWindow->getDataBase());
+        QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
 
         query.prepare("INSERT INTO equalizer("
                           "equalizer_name, "
@@ -105,17 +106,17 @@ void CEqualizerPreset::updateDataBase()
 
         if (!query.exec())
         {
-            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return;
         }
 
-        if (m_mainWindow->getDataBase().driverName() == "QPSQL")
+        if (m_mainWindow->getMediaManager()->getDataBase().driverName() == "QPSQL")
         {
             query.prepare("SELECT currval('equalizer_seq')");
 
             if (!query.exec())
             {
-                m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return;
             }
 
@@ -125,7 +126,7 @@ void CEqualizerPreset::updateDataBase()
             }
             else
             {
-                m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return;
             }
         }
@@ -136,7 +137,7 @@ void CEqualizerPreset::updateDataBase()
     }
     else if (m_id > 0)
     {
-        QSqlQuery query(m_mainWindow->getDataBase());
+        QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
 
         query.prepare("UPDATE equalizer SET "
                         "equalizer_name = ?,"
@@ -167,7 +168,7 @@ void CEqualizerPreset::updateDataBase()
 
         if (!query.exec())
         {
-            m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         }
     }
 }
@@ -178,14 +179,14 @@ void CEqualizerPreset::removeFromDataBase()
     if (m_id <= 0)
         return;
 
-    QSqlQuery query(m_mainWindow->getDataBase());
+    QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
         
     query.prepare("DELETE FROM equalizer WHERE equalizer_id = ?");
     query.bindValue(0, m_id);
 
     if (!query.exec())
     {
-        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
     }
 
     m_id = 0;
@@ -198,7 +199,7 @@ QList<CEqualizerPreset *> CEqualizerPreset::loadFromDatabase(CMainWindow * mainW
 
     QList<CEqualizerPreset *> presets;
 
-    QSqlQuery query(mainWindow->getDataBase());
+    QSqlQuery query(mainWindow->getMediaManager()->getDataBase());
 
     if (!query.exec("SELECT "
                         "equalizer_id,"
@@ -215,7 +216,7 @@ QList<CEqualizerPreset *> CEqualizerPreset::loadFromDatabase(CMainWindow * mainW
                         "equalizer_val9 "
                     "FROM equalizer ORDER BY equalizer_name"))
     {
-        mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return presets;
     }
 

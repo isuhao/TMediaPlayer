@@ -37,7 +37,7 @@ class CMusicBrainzLookup : public QObject
 
 public:
 
-    CMusicBrainzLookup(CCDRomDrive * cdRomDrive, CMainWindow * application);
+    CMusicBrainzLookup(CCDRomDrive * cdRomDrive, CMainWindow * mainWindow);
     virtual ~CMusicBrainzLookup();
 
 protected slots:

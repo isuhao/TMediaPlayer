@@ -20,12 +20,11 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #ifndef FILE_C_MAIN_WINDOW_HPP_
 #define FILE_C_MAIN_WINDOW_HPP_
 
-#include "CMediaTableModel.hpp"
+//#include "CMediaTableModel.hpp"
 #include "CEqualizerPreset.hpp"
 
 #include <QMainWindow>
 #include <QList>
-#include <QSqlDatabase>
 #include <QMutexLocker>
 #include <QFile>
 
@@ -35,6 +34,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 class CSong;
 class CMediaTableView;
+class CMediaTableItem;
 class CFolder;
 class CCDRomDrive;
 class CQueuePlayList;
@@ -43,7 +43,7 @@ class CDynamicList;
 class CStaticList;
 class CLibrary;
 class CLibraryModel;
-class CLibraryFolder;
+class CDialogEditSong;
 class CWidgetLyrics;
 class CMediaManager;
 class CEqualizerPreset;
@@ -52,6 +52,11 @@ class IPlayList;
 class QStandardItemModel;
 class QTextEdit;
 class QNetworkReply;
+
+namespace FMOD
+{
+    class DSP;
+}
 
 
 /**
@@ -96,7 +101,7 @@ public:
     virtual ~CMainWindow();
 
     bool initWindow();
-    void showDatabaseError(const QString& msg, const QString& query, const QString& fileName, int line);
+    //void showDatabaseError(const QString& msg, const QString& query, const QString& fileName, int line);
 
 
     // Préférences
@@ -112,18 +117,6 @@ public:
     void setPercentageBeforeScrobbling(int percentage);
 
 
-    // Notifications
-    struct TNotification
-    {
-        QString message; ///< Texte de la notification.
-        QDateTime date;  ///< Date de l'envoi.
-
-        TNotification(const QString& m, const QDateTime& d) : message(m), date(d) { }
-    };
-
-    inline QList<TNotification> getNotifications() const;
-
-
     // Égaliseur
     void setEqualizerGain(CEqualizerPreset::TFrequency frequency, double gain);
     double getEqualizerGain(CEqualizerPreset::TFrequency frequency) const;
@@ -136,14 +129,6 @@ public:
     CEqualizerPreset * getEqualizerPresetFromName(const QString& name) const;
     inline CEqualizerPreset * getCurrentEqualizerPreset() const;
     void setCurrentEqualizerPreset(CEqualizerPreset * equalizer);
-
-
-    // Dossiers de la médiathèque
-    inline QList<CLibraryFolder *> getLibraryFolders() const;
-    CLibraryFolder * getLibraryFolder(int folderId) const;
-    int getLibraryFolderId(const QString& fileName) const;
-    void addLibraryFolder(CLibraryFolder * folder);
-    void removeLibraryFolder(CLibraryFolder * folder);
 
 
     // Filtre de recherche
@@ -180,11 +165,6 @@ public:
     int getGenreId(const QString& name);
     QStringList getGenreList();
 
-    inline QSqlDatabase getDataBase() const
-    {
-        return m_dataBase;
-    }
-
     inline CQueuePlayList * getQueue() const
     {
         return m_queue;
@@ -200,11 +180,11 @@ public:
         return m_mediaManager;
     }
 
-    void notifyInformation(const QString& message);
-
     void openDialogCreateStaticList(CFolder * folder, const QList<CSong *>& songs = QList<CSong *>());
 
 public slots:
+
+    void notifyInformation2(const QString& message);
 
     void selectAll();
     void selectNone();
@@ -319,10 +299,6 @@ protected:
     void startPlay();
     void setState(TState state);
 
-    void createDatabaseSQLite();
-    void createDatabaseMySQL();
-    void createDatabasePostgreSQL();
-
     virtual void closeEvent(QCloseEvent * event);
 
 private:
@@ -335,7 +311,6 @@ private:
     CLibraryView * m_playListView;          ///< Vue pour afficher les listes de lecture.
     CLibraryModel * m_listModel;            ///< Modèle contenant les listes de lecture.
     CDialogEditSong * m_dialogEditSong;     ///< Pointeur sur la boite de dialogue pour modifier les informations d'un morceau.
-    QSqlDatabase m_dataBase;                ///< Base de données.
     QTimer * m_timer;                       ///< Timer pour mettre à jour l'affichage.
     QLabel * m_listInfos;                   ///< Label pour afficher les informations sur la liste affichée.
     CMediaTableItem * m_currentSongItem;    ///< Pointeur sur l'item en cours de lecture.
@@ -356,10 +331,6 @@ private:
     QList<CEqualizerPreset *> m_equalizerPresets; ///< Liste des préréglages d'égaliseur.
     CEqualizerPreset * m_currentEqualizerPreset;  ///< Préréglage de l'égaliseur actuel.
 
-    QList<CLibraryFolder *> m_libraryFolders; ///< Liste des répertoires de la médiathèque.
-
-    QList<TNotification> m_infosNotified;     ///< Liste des notifications.
-
     // États de Last.fm
     enum TLastFmState
     {
@@ -377,12 +348,6 @@ private:
     int m_lastFmLastPosition;
     TLastFmState m_lastFmState;           ///< État actuel de Last.fm.
 };
-
-
-QList<CMainWindow::TNotification> CMainWindow::getNotifications() const
-{
-    return m_infosNotified;
-}
 
 
 inline QList<CEqualizerPreset *> CMainWindow::getEqualizerPresets() const
@@ -532,12 +497,6 @@ inline bool CMainWindow::isMute() const
 inline int CMainWindow::getVolume() const
 {
     return m_volume;
-}
-
-
-inline QList<CLibraryFolder *> CMainWindow::getLibraryFolders() const
-{
-    return m_libraryFolders;
 }
 
 #endif // FILE_C_MAIN_WINDOW_HPP_

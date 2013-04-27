@@ -20,14 +20,13 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CMainWindow.hpp"
 #include "CMediaManager.hpp"
 #include "CSong.hpp"
-#include "CMediaTableModel.hpp"
+//#include "CMediaTableModel.hpp"
 #include "CStaticList.hpp"
 #include "CDynamicList.hpp"
 #include "CFolder.hpp"
 #include "CLibraryView.hpp"
 #include "CLibraryModel.hpp"
 #include "CLyricWiki.hpp"
-#include "CLibraryFolder.hpp"
 #include "Dialog/CDialogEditDynamicList.hpp"
 #include "Dialog/CDialogEditFolder.hpp"
 #include "Dialog/CDialogEditMetadata.hpp"
@@ -140,6 +139,8 @@ m_lastFmState                (NoScrobble)
     // Initialisation de l'interface graphique
     m_uiWidget->setupUi(this);
     m_uiWidget->actionTogglePlay->setShortcut(Qt::Key_Space);
+
+    connect(m_mediaManager, SIGNAL(informationNotified(const QString&)), this, SLOT(notifyInformation2(const QString&)));
 
     // Barre d'état
     QTime duration(0, 0);
@@ -261,13 +262,6 @@ CMainWindow::~CMainWindow()
 
     m_cdRomDrives.clear();
 
-    for (QList<CLibraryFolder *>::const_iterator folder = m_libraryFolders.begin(); folder != m_libraryFolders.end(); ++folder)
-    {
-        delete *folder;
-    }
-
-    m_libraryFolders.clear();
-
     // Destruction de la médiathèque
     if (m_library)
     {
@@ -275,8 +269,6 @@ CMainWindow::~CMainWindow()
         m_library->deleteSongs();
         delete m_library;
     }
-
-    m_dataBase.close();
 
     delete m_uiWidget;
 }
@@ -324,13 +316,13 @@ bool CMainWindow::initWindow()
                                     "trackNumber INTEGER"
                                 ")"))
                 {
-                    showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                    m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 }
             }
 
             if (!query.exec("SELECT time, title, artist, album, albumArtist, duration, trackNumber FROM scrobbles ORDER BY time"))
             {
-                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             }
             else
             {
@@ -355,7 +347,7 @@ bool CMainWindow::initWindow()
 
                     if (!query2.exec())
                     {
-                        showDatabaseError(query2.lastError().text(), query2.lastQuery(), __FILE__, __LINE__);
+                        m_mediaManager->logDatabaseError(query2.lastError().text(), query2.lastQuery(), __FILE__, __LINE__);
                     }
 
                     // Tentative de scrobble
@@ -457,38 +449,9 @@ bool CMainWindow::initWindow()
     }
 
 
-    // Chargement de la base de données
-    QString dbType = m_mediaManager->getSettings()->value("Database/Type", QString("QSQLITE")).toString();
-    m_mediaManager->getSettings()->setValue("Database/Type", dbType);
-    m_dataBase = QSqlDatabase::addDatabase(dbType, "library");
-
-    QString dbHostName = m_mediaManager->getSettings()->value("Database/Host", QString("localhost")).toString();
-    int dbPort = m_mediaManager->getSettings()->value("Database/Port", 0).toInt();
-
-#if QT_VERSION >= 0x050000
-    QString dbBaseName = m_mediaManager->getSettings()->value("Database/Base", QStandardPaths::writableLocation(QStandardPaths::DataLocation) + QDir::separator() + "library.sqlite").toString();
-#else
-    QString dbBaseName = m_mediaManager->getSettings()->value("Database/Base", QDesktopServices::storageLocation(QDesktopServices::DataLocation) + QDir::separator() + "library.sqlite").toString();
-#endif
-
-    QString dbUserName = m_mediaManager->getSettings()->value("Database/UserName", QString("root")).toString();
-    QString dbPassword = m_mediaManager->getSettings()->value("Database/Password", QString("")).toString();
-
-    m_dataBase.setHostName(dbHostName);
-    m_dataBase.setPort(dbPort);
-    m_dataBase.setDatabaseName(dbBaseName);
-    m_dataBase.setUserName(dbUserName);
-    m_dataBase.setPassword(dbPassword);
-
-    m_mediaManager->getSettings()->setValue("Database/Host", dbHostName);
-    m_mediaManager->getSettings()->setValue("Database/Port", dbPort);
-    m_mediaManager->getSettings()->setValue("Database/Base", dbBaseName);
-    m_mediaManager->getSettings()->setValue("Database/UserName", dbUserName);
-    m_mediaManager->getSettings()->setValue("Database/Password", dbPassword);
-
-    if (!m_dataBase.open())
+    if (!m_mediaManager->loadDatabase())
     {
-        QMessageBox::critical(this, QString(), tr("Failed to load database: %1.").arg(m_dataBase.lastError().text()));
+        QMessageBox::critical(this, QString(), tr("Failed to load database."));
         QCoreApplication::exit();
         return false;
     }
@@ -564,7 +527,7 @@ bool CMainWindow::initWindow()
 }
 
 
-/**
+/*/*
  * Affiche une erreur de base de données.
  *
  * \param msg      Message d'erreur.
@@ -572,7 +535,7 @@ bool CMainWindow::initWindow()
  * \param fileName Fichier source à l'origine de l'erreur.
  * \param line     Ligne du fichier à l'origine de l'erreur.
  */
-
+/*
 void CMainWindow::showDatabaseError(const QString& msg, const QString& query, const QString& fileName, int line)
 {
 
@@ -582,7 +545,7 @@ void CMainWindow::showDatabaseError(const QString& msg, const QString& query, co
 
     m_mediaManager->logError(msg + "\n" + tr("Query: ") + query, "", fileName.toUtf8().data(), line);
 }
-
+*/
 
 /**
  * Modifie la hauteur des lignes des tableaux.
@@ -910,68 +873,6 @@ CSong * CMainWindow::getSongFromId(int id) const
 }
 
 
-CLibraryFolder * CMainWindow::getLibraryFolder(int folderId) const
-{
-    for (QList<CLibraryFolder *>::const_iterator it = m_libraryFolders.begin(); it != m_libraryFolders.end(); ++it)
-    {
-        if ((*it)->id == folderId)
-            return *it;
-    }
-
-    return nullptr;
-}
-
-
-int CMainWindow::getLibraryFolderId(const QString& fileName) const
-{
-    for (QList<CLibraryFolder *>::const_iterator it = m_libraryFolders.begin(); it != m_libraryFolders.end(); ++it)
-    {
-        if (fileName.startsWith((*it)->pathName))
-            return (*it)->id;
-    }
-
-    return -1;
-}
-
-
-void CMainWindow::addLibraryFolder(CLibraryFolder * folder)
-{
-    if (!folder || m_libraryFolders.contains(folder))
-        return;
-
-    m_libraryFolders.append(folder);
-}
-
-
-/**
- * Supprime un répertoire de la médiathèque.
- *
- * \param folder Pointeur sur le répertoire à supprimer.
- */
-
-void CMainWindow::removeLibraryFolder(CLibraryFolder * folder)
-{
-    if (!folder)
-        return;
-
-    m_libraryFolders.removeAll(folder);
-
-    if (folder->id > 0)
-    {
-        QSqlQuery query(getDataBase());
-        query.prepare("DELETE FROM libpath WHERE path_id = ?");
-        query.bindValue(0, folder->id);
-
-        if (!query.exec())
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    delete folder;
-}
-
-
 /**
  * Retourne le dossier correspondant à un identifiant.
  *
@@ -1071,10 +972,10 @@ void CMainWindow::removeSongs(const QList<CSong *> songs)
     }
 
     // Mise à jour de la base
-    QSqlQuery query1(m_dataBase);
+    QSqlQuery query1(m_mediaManager->getDataBase());
     query1.prepare("DELETE FROM song WHERE song_id = ?");
 
-    QSqlQuery query2(m_dataBase);
+    QSqlQuery query2(m_mediaManager->getDataBase());
     query2.prepare("DELETE FROM play WHERE song_id = ?");
 
     for (QList<CSong *>::const_iterator it = songs.begin(); it != songs.end(); ++it)
@@ -1088,13 +989,13 @@ void CMainWindow::removeSongs(const QList<CSong *> songs)
 
             if (!query1.exec())
             {
-                showDatabaseError(query1.lastError().text(), query1.lastQuery(), __FILE__, __LINE__);
+                m_mediaManager->logDatabaseError(query1.lastError().text(), query1.lastQuery(), __FILE__, __LINE__);
                 continue;
             }
 
             if (!query2.exec())
             {
-                showDatabaseError(query2.lastError().text(), query2.lastQuery(), __FILE__, __LINE__);
+                m_mediaManager->logDatabaseError(query2.lastError().text(), query2.lastQuery(), __FILE__, __LINE__);
                 continue;
             }
         }
@@ -1163,14 +1064,14 @@ int CMainWindow::getArtistId(const QString& name, const QString& nameSort)
     Q_ASSERT(!name.isNull());
     Q_ASSERT(!nameSort.isNull());
 
-    QSqlQuery query(m_dataBase);
+    QSqlQuery query(m_mediaManager->getDataBase());
     query.prepare("SELECT artist_id FROM artist WHERE artist_name = ? AND artist_name_sort = ?");
     query.bindValue(0, name);
     query.bindValue(1, nameSort);
 
     if (!query.exec())
     {
-        showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return -1;
     }
 
@@ -1185,17 +1086,17 @@ int CMainWindow::getArtistId(const QString& name, const QString& nameSort)
 
     if (!query.exec())
     {
-        showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return -1;
     }
 
-    if (m_dataBase.driverName() == "QPSQL")
+    if (m_mediaManager->getDataBase().driverName() == "QPSQL")
     {
         query.prepare("SELECT currval('artist_seq')");
 
         if (!query.exec())
         {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return -1;
         }
 
@@ -1205,7 +1106,7 @@ int CMainWindow::getArtistId(const QString& name, const QString& nameSort)
         }
         else
         {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return -1;
         }
     }
@@ -1229,14 +1130,14 @@ int CMainWindow::getAlbumId(const QString& title, const QString& titleSort)
     Q_ASSERT(!title.isNull());
     Q_ASSERT(!titleSort.isNull());
 
-    QSqlQuery query(m_dataBase);
+    QSqlQuery query(m_mediaManager->getDataBase());
     query.prepare("SELECT album_id FROM album WHERE album_title = ? AND album_title_sort = ?");
     query.bindValue(0, title);
     query.bindValue(1, titleSort);
 
     if (!query.exec())
     {
-        showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return -1;
     }
 
@@ -1251,17 +1152,17 @@ int CMainWindow::getAlbumId(const QString& title, const QString& titleSort)
 
     if (!query.exec())
     {
-        showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return -1;
     }
 
-    if (m_dataBase.driverName() == "QPSQL")
+    if (m_mediaManager->getDataBase().driverName() == "QPSQL")
     {
         query.prepare("SELECT currval('album_seq')");
 
         if (!query.exec())
         {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return -1;
         }
 
@@ -1271,7 +1172,7 @@ int CMainWindow::getAlbumId(const QString& title, const QString& titleSort)
         }
         else
         {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return -1;
         }
     }
@@ -1293,13 +1194,13 @@ int CMainWindow::getGenreId(const QString& name)
 {
     Q_ASSERT(!name.isNull());
 
-    QSqlQuery query(m_dataBase);
+    QSqlQuery query(m_mediaManager->getDataBase());
     query.prepare("SELECT genre_id FROM genre WHERE genre_name = ?");
     query.bindValue(0, name);
 
     if (!query.exec())
     {
-        showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return -1;
     }
 
@@ -1313,17 +1214,17 @@ int CMainWindow::getGenreId(const QString& name)
 
     if (!query.exec())
     {
-        showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return -1;
     }
 
-    if (m_dataBase.driverName() == "QPSQL")
+    if (m_mediaManager->getDataBase().driverName() == "QPSQL")
     {
         query.prepare("SELECT currval('genre_seq')");
 
         if (!query.exec())
         {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return -1;
         }
 
@@ -1333,7 +1234,7 @@ int CMainWindow::getGenreId(const QString& name)
         }
         else
         {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             return -1;
         }
     }
@@ -1371,7 +1272,7 @@ QStringList CMainWindow::getGenreList()
     genres.append("Rock");
 
     // Liste des genres utilisés
-    QSqlQuery query(m_dataBase);
+    QSqlQuery query(m_mediaManager->getDataBase());
 
     if (query.exec("SELECT genre_name FROM genres"))
     {
@@ -1382,7 +1283,7 @@ QStringList CMainWindow::getGenreList()
     }
     else
     {
-        showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
     }
 
     genres.removeDuplicates();
@@ -1398,10 +1299,9 @@ QStringList CMainWindow::getGenreList()
  * \param message Message à afficher.
  */
 
-void CMainWindow::notifyInformation(const QString& message)
+void CMainWindow::notifyInformation2(const QString& message)
 {
     statusBar()->showMessage(message, 5000);
-    m_infosNotified << TNotification(message, QDateTime::currentDateTime());
 }
 
 
@@ -2156,7 +2056,7 @@ void CMainWindow::importSongs(const QStringList& fileList)
     m_library->addSongs(songs);
     emit songsAdded();
 
-    notifyInformation(tr("%n song(s) added to the library.", "", songs.size()));
+    m_mediaManager->notifyInformation(tr("%n song(s) added to the library.", "", songs.size()));
     updateListInformations();
 }
 
@@ -2334,7 +2234,7 @@ void CMainWindow::relocateSong()
         if (fileName.isEmpty())
             return;
 
-        const int newSongId = CSong::getId(this, fileName);
+        const int newSongId = CSong::getId(m_mediaManager, fileName);
         CSong * newSong = getSongFromId(newSongId);
         const int oldSongId = song->getId();
 
@@ -2354,7 +2254,7 @@ void CMainWindow::relocateSong()
             //TODO...
             //A priori ça ne risque pas, mais on ne sait jamais
 
-            QSqlQuery query(m_dataBase);
+            QSqlQuery query(m_mediaManager->getDataBase());
 
             // Remplacement du morceau dans les listes statiques
             query.prepare("UPDATE static_list_song SET song_id = ? WHERE song_id = ?");
@@ -2363,7 +2263,7 @@ void CMainWindow::relocateSong()
 
             if (!query.exec())
             {
-                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             }
 
             QList<IPlayList *> playLists = getAllPlayLists();
@@ -2383,7 +2283,7 @@ void CMainWindow::relocateSong()
 
             if (!query.exec())
             {
-                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             }
 
             // Rechargement des lectures (pour ne pas avoir à trier manuellement les dates)
@@ -2392,7 +2292,7 @@ void CMainWindow::relocateSong()
 
             if (!query.exec())
             {
-                showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             }
             else
             {
@@ -2432,7 +2332,7 @@ void CMainWindow::relocateSong()
 
                 if (!query.exec())
                 {
-                    showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                    m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 }
             }
 
@@ -3111,72 +3011,7 @@ void CMainWindow::initSoundSystem()
 
 void CMainWindow::loadDatabase()
 {
-    QSqlQuery query(m_dataBase);
-
-    // Création des relations
-    if (m_dataBase.driverName() == "QSQLITE")
-    {
-        createDatabaseSQLite();
-    }
-    else if (m_dataBase.driverName() == "QMYSQL")
-    {
-        createDatabaseMySQL();
-    }
-    else if (m_dataBase.driverName() == "QPSQL")
-    {
-        createDatabasePostgreSQL();
-    }
-
-    // Création des vues
-    QStringList tables = m_dataBase.tables(QSql::Views);
-
-    if (!tables.contains("albums"))
-    {
-        if (!query.exec("CREATE VIEW albums AS SELECT DISTINCT(album_title) FROM album NATURAL JOIN song WHERE song_id IS NOT NULL"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("artists"))
-    {
-        if (!query.exec("CREATE VIEW artists AS SELECT DISTINCT(artist_name) FROM artist NATURAL JOIN song WHERE song_id IS NOT NULL"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("genres"))
-    {
-        if (!query.exec("CREATE VIEW genres AS SELECT DISTINCT(genre_name) FROM genre NATURAL JOIN song WHERE song_id IS NOT NULL"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-
-    // Liste des répertoires
-    if (!query.exec("SELECT path_id, path_location, path_keep_organized, path_format, path_format_items FROM libpath"))
-    {
-        showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-    }
-    else
-    {
-        while (query.next())
-        {
-            CLibraryFolder * libraryFolder = new CLibraryFolder(this);
-
-            libraryFolder->id            = query.value(0).toInt();
-            libraryFolder->pathName      = query.value(1).toString();
-            libraryFolder->keepOrganized = query.value(2).toBool();
-            libraryFolder->format        = query.value(3).toString();
-
-            libraryFolder->convertStringToFormatItems(query.value(4).toString());
-
-            m_libraryFolders.append(libraryFolder);
-        }
-    }
-
+    QSqlQuery query(m_mediaManager->getDataBase());
 
     // Création de la médiathèque
     m_library = new CLibrary(this);
@@ -3186,7 +3021,7 @@ void CMainWindow::loadDatabase()
 
     if (!query.exec("SELECT list_columns FROM playlist WHERE playlist_id = 0"))
     {
-        showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
     }
     else if (query.next())
     {
@@ -3305,840 +3140,6 @@ void CMainWindow::setState(TState state)
             m_uiWidget->actionTogglePlay->setText(tr("Play"));
             m_uiWidget->actionTogglePlay->setIcon(QPixmap(":/icons/play"));
             break;
-    }
-}
-
-
-/**
- * Crée la structure de la base de données pour SQLite.
- */
-
-void CMainWindow::createDatabaseSQLite()
-{
-    QSqlQuery query(m_dataBase);
-    QStringList tables = m_dataBase.tables(QSql::Tables);
-
-    if (!tables.contains("folder"))
-    {
-        if (!query.exec("CREATE TABLE folder ("
-                            "folder_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                            "folder_name VARCHAR(512) NOT NULL,"
-                            "folder_parent INTEGER NOT NULL,"
-                            "folder_position INTEGER NOT NULL,"
-                            "folder_expanded INTEGER NOT NULL"
-                            //",UNIQUE (folder_parent, folder_position)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-
-        if (!query.exec("INSERT INTO folder VALUES (0, '', 0, 1, 1)"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("playlist"))
-    {
-        if (!query.exec("CREATE TABLE playlist ("
-                            "playlist_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                            "playlist_name VARCHAR(512) NOT NULL,"
-                            "folder_id INTEGER NOT NULL,"
-                            "list_position INTEGER NOT NULL,"
-                            "list_columns VARCHAR(512) NOT NULL"
-                            //",UNIQUE (folder_id, list_position)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-
-        if (!query.exec("INSERT INTO playlist (playlist_id, playlist_name, folder_id, list_position, list_columns) "
-                        "VALUES (0, 'Library', 0, -1, '0:40;1:150;17:60;2+:150;3:150;6:50;9:60;12:50;13:120')"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("dynamic_list"))
-    {
-        if (!query.exec("CREATE TABLE dynamic_list ("
-                            "dynamic_list_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                            "criteria_id INTEGER NOT NULL,"
-                            "playlist_id INTEGER NOT NULL,"
-                            "auto_update INTEGER NOT NULL,"
-                            "only_checked INTEGER NOT NULL,"
-                            "UNIQUE (playlist_id)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("criteria"))
-    {
-        if (!query.exec("CREATE TABLE criteria ("
-                            "criteria_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                            "dynamic_list_id INTEGER NOT NULL,"
-                            "criteria_parent INTEGER NOT NULL,"
-                            "criteria_position INTEGER NOT NULL,"
-                            "criteria_type INTEGER NOT NULL,"
-                            "criteria_condition INTEGER NOT NULL,"
-                            "criteria_value1 VARCHAR(512),"
-                            "criteria_value2 VARCHAR(512),"
-                            "UNIQUE (dynamic_list_id, criteria_parent, criteria_position)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("static_list"))
-    {
-        if (!query.exec("CREATE TABLE static_list ("
-                            "static_list_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                            "playlist_id INTEGER NOT NULL,"
-                            "UNIQUE (playlist_id)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("static_list_song"))
-    {
-        if (!query.exec("CREATE TABLE static_list_song ("
-                            "static_list_id INTEGER NOT NULL,"
-                            "song_id INTEGER NOT NULL,"
-                            "song_position INTEGER NOT NULL,"
-                            "UNIQUE (static_list_id, song_position)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("song"))
-    {
-        if (!query.exec("CREATE TABLE song ("
-                            "song_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                            "song_filename VARCHAR(512) NOT NULL UNIQUE,"
-                            "song_filesize INTEGER NOT NULL,"
-                            "song_bitrate INTEGER NOT NULL,"
-                            "song_sample_rate INTEGER NOT NULL,"
-                            "song_format INTEGER NOT NULL,"
-                            "song_channels INTEGER NOT NULL,"
-                            "song_duration INTEGER NOT NULL,"
-                            "song_creation DATETIME NOT NULL,"
-                            "song_modification DATETIME NOT NULL,"
-                            "song_enabled INTEGER NOT NULL,"
-                            "song_title VARCHAR(512) NOT NULL,"
-                            "song_title_sort VARCHAR(512) NOT NULL,"
-                            "song_subtitle VARCHAR(512) NOT NULL,"
-                            "song_grouping VARCHAR(512) NOT NULL,"
-                            "artist_id INTEGER NOT NULL,"
-                            "album_id INTEGER NOT NULL,"
-                            "album_artist_id INTEGER NOT NULL,"
-                            "song_composer VARCHAR(512) NOT NULL,"
-                            "song_composer_sort VARCHAR(512) NOT NULL,"
-                            "song_year INTEGER NOT NULL,"
-                            "song_track_number INTEGER NOT NULL,"
-                            "song_track_count INTEGER NOT NULL,"
-                            "song_disc_number INTEGER NOT NULL,"
-                            "song_disc_count INTEGER NOT NULL,"
-                            "genre_id INTEGER NOT NULL,"
-                            "song_rating INTEGER NOT NULL,"
-                            "song_comments TEXT NOT NULL,"
-                            "song_bpm INTEGER NOT NULL,"
-                            "song_lyrics TEXT NOT NULL,"
-                            "song_language VARCHAR(2) NOT NULL,"
-                            "song_lyricist VARCHAR(512) NOT NULL,"
-                            "song_compilation INTEGER NOT NULL,"
-                            "song_skip_shuffle INTEGER NOT NULL,"
-                            "song_play_count INTEGER NOT NULL,"
-                            "song_play_time TIMESTAMP,"
-                            "song_play_time_utc TIMESTAMP,"
-                            "song_track_gain FLOAT,"
-                            "song_track_peak FLOAT,"
-                            "song_album_gain FLOAT,"
-                            "song_album_peak FLOAT"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("album"))
-    {
-        if (!query.exec("CREATE TABLE album ("
-                            "album_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                            "album_title VARCHAR(512) NOT NULL,"
-                            "album_title_sort VARCHAR(512),"
-                            "UNIQUE (album_title, album_title_sort)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-
-        if (!query.exec("INSERT INTO album (album_id, album_title, album_title_sort) VALUES (0, '', '')"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("artist"))
-    {
-        if (!query.exec("CREATE TABLE artist ("
-                            "artist_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                            "artist_name VARCHAR(512) NOT NULL,"
-                            "artist_name_sort VARCHAR(512),"
-                            "UNIQUE (artist_name, artist_name_sort)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-
-        if (!query.exec("INSERT INTO artist (artist_id, artist_name, artist_name_sort) VALUES (0, '', '')"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("genre"))
-    {
-        if (!query.exec("CREATE TABLE genre ("
-                            "genre_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                            "genre_name VARCHAR(512) NOT NULL UNIQUE"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-
-        if (!query.exec("INSERT INTO genre (genre_id, genre_name) VALUES (0, '')"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("play"))
-    {
-        if (!query.exec("CREATE TABLE play ("
-                            "play_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                            "song_id INTEGER NOT NULL,"
-                            "play_time TIMESTAMP,"
-                            "play_time_utc TIMESTAMP"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("libpath"))
-    {
-        if (!query.exec("CREATE TABLE libpath ("
-                            "path_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                            "path_location VARCHAR(512) NOT NULL UNIQUE,"
-                            "path_keep_organized INTEGER NOT NULL,"
-                            "path_format VARCHAR(512) NOT NULL,"
-                            "path_format_items TEXT"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("equalizer"))
-    {
-        if (!query.exec("CREATE TABLE equalizer ("
-                            "equalizer_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                            "equalizer_name VARCHAR(512) NOT NULL UNIQUE,"
-                            "equalizer_val0 FLOAT NOT NULL DEFAULT 1.0,"
-                            "equalizer_val1 FLOAT NOT NULL DEFAULT 1.0,"
-                            "equalizer_val2 FLOAT NOT NULL DEFAULT 1.0,"
-                            "equalizer_val3 FLOAT NOT NULL DEFAULT 1.0,"
-                            "equalizer_val4 FLOAT NOT NULL DEFAULT 1.0,"
-                            "equalizer_val5 FLOAT NOT NULL DEFAULT 1.0,"
-                            "equalizer_val6 FLOAT NOT NULL DEFAULT 1.0,"
-                            "equalizer_val7 FLOAT NOT NULL DEFAULT 1.0,"
-                            "equalizer_val8 FLOAT NOT NULL DEFAULT 1.0,"
-                            "equalizer_val9 FLOAT NOT NULL DEFAULT 1.0"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-}
-
-
-/**
- * Crée la structure de la base de données pour MySQL.
- */
-
-void CMainWindow::createDatabaseMySQL()
-{
-    QSqlQuery query(m_dataBase);
-    QStringList tables = m_dataBase.tables(QSql::Tables);
-
-    if (!tables.contains("folder"))
-    {
-        if (!query.exec("CREATE TABLE folder ("
-                            "folder_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
-                            "folder_name VARCHAR(512) NOT NULL,"
-                            "folder_parent INTEGER NOT NULL,"
-                            "folder_position INTEGER NOT NULL,"
-                            "folder_expanded INTEGER NOT NULL"
-                            //",UNIQUE (folder_parent, folder_position)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-
-        if (!query.exec("INSERT INTO folder VALUES (0, '', 0, 1, 1)"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("playlist"))
-    {
-        if (!query.exec("CREATE TABLE playlist ("
-                            "playlist_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
-                            "playlist_name VARCHAR(512) NOT NULL,"
-                            "folder_id INTEGER NOT NULL,"
-                            "list_position INTEGER NOT NULL,"
-                            "list_columns VARCHAR(512) NOT NULL"
-                            //",UNIQUE (folder_id, list_position)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-
-        if (!query.exec("INSERT INTO playlist (playlist_id, playlist_name, folder_id, list_position, list_columns) "
-                        "VALUES (0, 'Library', 0, -1, '0:40;1:150;17:60;2+:150;3:150;6:50;9:60;12:50;13:120')"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("dynamic_list"))
-    {
-        if (!query.exec("CREATE TABLE dynamic_list ("
-                            "dynamic_list_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
-                            "criteria_id INTEGER NOT NULL,"
-                            "playlist_id INTEGER NOT NULL,"
-                            "auto_update INTEGER NOT NULL,"
-                            "only_checked INTEGER NOT NULL,"
-                            "UNIQUE (playlist_id)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("criteria"))
-    {
-        if (!query.exec("CREATE TABLE criteria ("
-                            "criteria_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
-                            "dynamic_list_id INTEGER NOT NULL,"
-                            "criteria_parent INTEGER NOT NULL,"
-                            "criteria_position INTEGER NOT NULL,"
-                            "criteria_type INTEGER NOT NULL,"
-                            "criteria_condition INTEGER NOT NULL,"
-                            "criteria_value1 VARCHAR(512),"
-                            "criteria_value2 VARCHAR(512),"
-                            "UNIQUE (dynamic_list_id, criteria_parent, criteria_position)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("static_list"))
-    {
-        if (!query.exec("CREATE TABLE static_list ("
-                            "static_list_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
-                            "playlist_id INTEGER NOT NULL,"
-                            "UNIQUE (playlist_id)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("static_list_song"))
-    {
-        if (!query.exec("CREATE TABLE static_list_song ("
-                            "static_list_id INTEGER NOT NULL,"
-                            "song_id INTEGER NOT NULL,"
-                            "song_position INTEGER NOT NULL,"
-                            "UNIQUE (static_list_id, song_position)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("song"))
-    {
-        if (!query.exec("CREATE TABLE song ("
-                            "song_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
-                            "song_filename VARCHAR(512) NOT NULL UNIQUE,"
-                            "song_filesize INTEGER NOT NULL,"
-                            "song_bitrate INTEGER NOT NULL,"
-                            "song_sample_rate INTEGER NOT NULL,"
-                            "song_format INTEGER NOT NULL,"
-                            "song_channels INTEGER NOT NULL,"
-                            "song_duration INTEGER NOT NULL,"
-                            "song_creation DATETIME NOT NULL,"
-                            "song_modification DATETIME NOT NULL,"
-                            "song_enabled INTEGER NOT NULL,"
-                            "song_title VARCHAR(512) NOT NULL,"
-                            "song_title_sort VARCHAR(512) NOT NULL,"
-                            "song_subtitle VARCHAR(512) NOT NULL,"
-                            "song_grouping VARCHAR(512) NOT NULL,"
-                            "artist_id INTEGER NOT NULL,"
-                            "album_id INTEGER NOT NULL,"
-                            "album_artist_id INTEGER NOT NULL,"
-                            "song_composer VARCHAR(512) NOT NULL,"
-                            "song_composer_sort VARCHAR(512) NOT NULL,"
-                            "song_year INTEGER NOT NULL,"
-                            "song_track_number INTEGER NOT NULL,"
-                            "song_track_count INTEGER NOT NULL,"
-                            "song_disc_number INTEGER NOT NULL,"
-                            "song_disc_count INTEGER NOT NULL,"
-                            "genre_id INTEGER NOT NULL,"
-                            "song_rating INTEGER NOT NULL,"
-                            "song_comments TEXT NOT NULL,"
-                            "song_bpm INTEGER NOT NULL,"
-                            "song_lyrics TEXT NOT NULL,"
-                            "song_language VARCHAR(2) NOT NULL,"
-                            "song_lyricist VARCHAR(512) NOT NULL,"
-                            "song_compilation INTEGER NOT NULL,"
-                            "song_skip_shuffle INTEGER NOT NULL,"
-                            "song_play_count INTEGER NOT NULL,"
-                            "song_play_time TIMESTAMP,"
-                            "song_play_time_utc TIMESTAMP,"
-                            "song_track_gain FLOAT,"
-                            "song_track_peak FLOAT,"
-                            "song_album_gain FLOAT,"
-                            "song_album_peak FLOAT"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("album"))
-    {
-        if (!query.exec("CREATE TABLE album ("
-                            "album_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
-                            "album_title VARCHAR(512) NOT NULL,"
-                            "album_title_sort VARCHAR(512),"
-                            "UNIQUE (album_title, album_title_sort)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-
-        if (!query.exec("INSERT INTO album (album_id, album_title, album_title_sort) VALUES (0, '', '')"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("artist"))
-    {
-        if (!query.exec("CREATE TABLE artist ("
-                            "artist_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
-                            "artist_name VARCHAR(512) NOT NULL,"
-                            "artist_name_sort VARCHAR(512),"
-                            "UNIQUE (artist_name, artist_name_sort)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-
-        if (!query.exec("INSERT INTO artist (artist_id, artist_name, artist_name_sort) VALUES (0, '', '')"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("genre"))
-    {
-        if (!query.exec("CREATE TABLE genre ("
-                            "genre_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
-                            "genre_name VARCHAR(512) NOT NULL UNIQUE"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-
-        if (!query.exec("INSERT INTO genre (genre_id, genre_name) VALUES (0, '')"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("play"))
-    {
-        if (!query.exec("CREATE TABLE play ("
-                            "play_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
-                            "song_id INTEGER NOT NULL,"
-                            "play_time TIMESTAMP,"
-                            "play_time_utc TIMESTAMP"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("libpath"))
-    {
-        if (!query.exec("CREATE TABLE libpath ("
-                            "path_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
-                            "path_location VARCHAR(512) NOT NULL UNIQUE,"
-                            "path_keep_organized INTEGER NOT NULL,"
-                            "path_format VARCHAR(512) NOT NULL,"
-                            "path_format_items TEXT"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("equalizer"))
-    {
-        if (!query.exec("CREATE TABLE equalizer ("
-                            "equalizer_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,"
-                            "equalizer_name VARCHAR(512) NOT NULL UNIQUE,"
-                            "equalizer_val0 FLOAT NOT NULL DEFAULT 1.0,"
-                            "equalizer_val1 FLOAT NOT NULL DEFAULT 1.0,"
-                            "equalizer_val2 FLOAT NOT NULL DEFAULT 1.0,"
-                            "equalizer_val3 FLOAT NOT NULL DEFAULT 1.0,"
-                            "equalizer_val4 FLOAT NOT NULL DEFAULT 1.0,"
-                            "equalizer_val5 FLOAT NOT NULL DEFAULT 1.0,"
-                            "equalizer_val6 FLOAT NOT NULL DEFAULT 1.0,"
-                            "equalizer_val7 FLOAT NOT NULL DEFAULT 1.0,"
-                            "equalizer_val8 FLOAT NOT NULL DEFAULT 1.0,"
-                            "equalizer_val9 FLOAT NOT NULL DEFAULT 1.0"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-}
-
-
-/**
- * Crée la structure de la base de données pour PostgreSQL.
- */
-
-void CMainWindow::createDatabasePostgreSQL()
-{
-    QSqlQuery query(m_dataBase);
-    QStringList tables = m_dataBase.tables(QSql::Tables);
-
-    if (!tables.contains("folder"))
-    {
-        if (!query.exec("CREATE TABLE folder ("
-                            "folder_id SERIAL PRIMARY KEY,"
-                            "folder_name VARCHAR(512) NOT NULL,"
-                            "folder_parent INTEGER NOT NULL,"
-                            "folder_position INTEGER NOT NULL,"
-                            "folder_expanded INTEGER NOT NULL"
-                            //",UNIQUE (folder_parent, folder_position)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-
-        // Renommage de la séquence
-        if (!query.exec("ALTER TABLE folder_folder_id_seq RENAME TO folder_seq"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-
-        if (!query.exec("INSERT INTO folder VALUES (0, '', 0, 1, 1)"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("playlist"))
-    {
-        if (!query.exec("CREATE TABLE playlist ("
-                            "playlist_id SERIAL PRIMARY KEY,"
-                            "playlist_name VARCHAR(512) NOT NULL,"
-                            "folder_id INTEGER NOT NULL,"
-                            "list_position INTEGER NOT NULL,"
-                            "list_columns VARCHAR(512) NOT NULL"
-                            //",UNIQUE (folder_id, list_position)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-
-        if (!query.exec("INSERT INTO playlist (playlist_id, playlist_name, folder_id, list_position, list_columns)"
-                        "VALUES (0, 'Library', 0, -1, '0:40;1:150;17:60;2+:150;3:150;6:50;9:60;12:50;13:120')"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("dynamic_list"))
-    {
-        if (!query.exec("CREATE TABLE dynamic_list ("
-                            "dynamic_list_id SERIAL PRIMARY KEY,"
-                            "criteria_id INTEGER NOT NULL,"
-                            "playlist_id INTEGER NOT NULL,"
-                            "auto_update INTEGER NOT NULL,"
-                            "only_checked INTEGER NOT NULL,"
-                            "UNIQUE (playlist_id)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-
-        // Renommage de la séquence
-        if (!query.exec("ALTER TABLE dynamic_list_dynamic_list_id_seq RENAME TO dynamic_list_seq"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("criteria"))
-    {
-        if (!query.exec("CREATE TABLE criteria ("
-                            "criteria_id SERIAL PRIMARY KEY,"
-                            "dynamic_list_id INTEGER NOT NULL,"
-                            "criteria_parent INTEGER NOT NULL,"
-                            "criteria_position INTEGER NOT NULL,"
-                            "criteria_type INTEGER NOT NULL,"
-                            "criteria_condition INTEGER NOT NULL,"
-                            "criteria_value1 VARCHAR(512),"
-                            "criteria_value2 VARCHAR(512),"
-                            "UNIQUE (dynamic_list_id, criteria_parent, criteria_position)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-
-        // Renommage de la séquence
-        if (!query.exec("ALTER TABLE criteria_criteria_id_seq RENAME TO criteria_seq"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("static_list"))
-    {
-        if (!query.exec("CREATE TABLE static_list ("
-                            "static_list_id SERIAL PRIMARY KEY,"
-                            "playlist_id INTEGER NOT NULL,"
-                            "UNIQUE (playlist_id)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-
-        // Renommage de la séquence
-        if (!query.exec("ALTER TABLE static_list_static_list_id_seq RENAME TO static_list_seq"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("static_list_song"))
-    {
-        if (!query.exec("CREATE TABLE static_list_song ("
-                            "static_list_id INTEGER NOT NULL,"
-                            "song_id INTEGER NOT NULL,"
-                            "song_position INTEGER NOT NULL,"
-                            "UNIQUE (static_list_id, song_position)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("song"))
-    {
-        if (!query.exec("CREATE TABLE song ("
-                            "song_id SERIAL PRIMARY KEY,"
-                            "song_filename VARCHAR(512) NOT NULL UNIQUE,"
-                            "song_filesize INTEGER NOT NULL,"
-                            "song_bitrate INTEGER NOT NULL,"
-                            "song_sample_rate INTEGER NOT NULL,"
-                            "song_format INTEGER NOT NULL,"
-                            "song_channels INTEGER NOT NULL,"
-                            "song_duration INTEGER NOT NULL,"
-                            "song_creation TIMESTAMP NOT NULL,"
-                            "song_modification TIMESTAMP NOT NULL,"
-                            "song_enabled INTEGER NOT NULL,"
-                            "song_title VARCHAR(512) NOT NULL,"
-                            "song_title_sort VARCHAR(512) NOT NULL,"
-                            "song_subtitle VARCHAR(512) NOT NULL,"
-                            "song_grouping VARCHAR(512) NOT NULL,"
-                            "artist_id INTEGER NOT NULL,"
-                            "album_id INTEGER NOT NULL,"
-                            "album_artist_id INTEGER NOT NULL,"
-                            "song_composer VARCHAR(512) NOT NULL,"
-                            "song_composer_sort VARCHAR(512) NOT NULL,"
-                            "song_year INTEGER NOT NULL,"
-                            "song_track_number INTEGER NOT NULL,"
-                            "song_track_count INTEGER NOT NULL,"
-                            "song_disc_number INTEGER NOT NULL,"
-                            "song_disc_count INTEGER NOT NULL,"
-                            "genre_id INTEGER NOT NULL,"
-                            "song_rating INTEGER NOT NULL,"
-                            "song_comments TEXT NOT NULL,"
-                            "song_bpm INTEGER NOT NULL,"
-                            "song_lyrics TEXT NOT NULL,"
-                            "song_language CHAR(2) NOT NULL,"
-                            "song_lyricist VARCHAR(512) NOT NULL,"
-                            "song_compilation INTEGER NOT NULL,"
-                            "song_skip_shuffle INTEGER NOT NULL,"
-                            "song_play_count INTEGER NOT NULL,"
-                            "song_play_time TIMESTAMP,"
-                            "song_play_time_utc TIMESTAMP,"
-                            "song_track_gain FLOAT NOT NULL,"
-                            "song_track_peak FLOAT NOT NULL,"
-                            "song_album_gain FLOAT NOT NULL,"
-                            "song_album_peak FLOAT NOT NULL"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("album"))
-    {
-        if (!query.exec("CREATE TABLE album ("
-                            "album_id SERIAL PRIMARY KEY,"
-                            "album_title VARCHAR(512) NOT NULL,"
-                            "album_title_sort VARCHAR(512),"
-                            "UNIQUE (album_title, album_title_sort)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-
-        // Renommage de la séquence
-        if (!query.exec("ALTER TABLE album_album_id_seq RENAME TO album_seq"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-
-        if (!query.exec("INSERT INTO album (album_id, album_title, album_title_sort) VALUES (0, '', '')"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("artist"))
-    {
-        if (!query.exec("CREATE TABLE artist ("
-                            "artist_id SERIAL PRIMARY KEY,"
-                            "artist_name character varying(512) NOT NULL,"
-                            "artist_name_sort character varying(512),"
-                            "UNIQUE (artist_name, artist_name_sort)"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-
-        // Renommage de la séquence
-        if (!query.exec("ALTER TABLE artist_artist_id_seq RENAME TO artist_seq"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-
-        if (!query.exec("INSERT INTO artist (artist_id, artist_name, artist_name_sort) VALUES (0, '', '')"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("genre"))
-    {
-        if (!query.exec("CREATE TABLE genre ("
-                            "genre_id SERIAL PRIMARY KEY,"
-                            "genre_name VARCHAR(512) NOT NULL UNIQUE"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-
-        // Renommage de la séquence
-        if (!query.exec("ALTER TABLE genre_genre_id_seq RENAME TO genre_seq"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-
-        if (!query.exec("INSERT INTO genre (genre_id, genre_name) VALUES (0, '')"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("play"))
-    {
-        if (!query.exec("CREATE TABLE play ("
-                            "play_id SERIAL PRIMARY KEY,"
-                            "song_id INTEGER NOT NULL,"
-                            "play_time TIMESTAMP,"
-                            "play_time_utc TIMESTAMP"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("libpath"))
-    {
-        if (!query.exec("CREATE TABLE libpath ("
-                            "path_id SERIAL PRIMARY KEY,"
-                            "path_location VARCHAR(512) NOT NULL UNIQUE,"
-                            "path_keep_organized INTEGER NOT NULL,"
-                            "path_format VARCHAR(512) NOT NULL,"
-                            "path_format_items TEXT"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-
-        // Renommage de la séquence
-        if (!query.exec("ALTER TABLE libpath_path_id_seq RENAME TO libpath_seq"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-    }
-
-    if (!tables.contains("equalizer"))
-    {
-        if (!query.exec("CREATE TABLE equalizer ("
-                            "equalizer_id SERIAL PRIMARY KEY,"
-                            "equalizer_name character varying(512) NOT NULL,"
-                            "equalizer_val0 double precision NOT NULL DEFAULT 1.0,"
-                            "equalizer_val1 double precision NOT NULL DEFAULT 1.0,"
-                            "equalizer_val2 double precision NOT NULL DEFAULT 1.0,"
-                            "equalizer_val3 double precision NOT NULL DEFAULT 1.0,"
-                            "equalizer_val4 double precision NOT NULL DEFAULT 1.0,"
-                            "equalizer_val5 double precision NOT NULL DEFAULT 1.0,"
-                            "equalizer_val6 double precision NOT NULL DEFAULT 1.0,"
-                            "equalizer_val7 double precision NOT NULL DEFAULT 1.0,"
-                            "equalizer_val8 double precision NOT NULL DEFAULT 1.0,"
-                            "equalizer_val9 double precision NOT NULL DEFAULT 1.0"
-                        ")"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
-
-        // Renommage de la séquence
-        if (!query.exec("ALTER TABLE equalizer_equalizer_id_seq RENAME TO equalizer_seq"))
-        {
-            showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-        }
     }
 }
 

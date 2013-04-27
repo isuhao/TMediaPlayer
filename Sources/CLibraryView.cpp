@@ -45,19 +45,19 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * \todo Ajouter une entrée dans le menu contextuel pour ouvrir une liste dans une nouvelle fenêtre.
  * \todo Ajouter une entrée dans le menu contextuel pour exporter une liste.
  *
- * \param application Pointeur sur l'application.
+ * \param mainWindow Pointeur sur la fenêtre principale de l'application.
  */
 
-CLibraryView::CLibraryView(CMainWindow * application) :
-QTreeView        (application),
-m_mainWindow    (application),
+CLibraryView::CLibraryView(CMainWindow * mainWindow) :
+QTreeView        (mainWindow),
+m_mainWindow     (mainWindow),
 m_model          (nullptr),
 m_menuPlaylist   (nullptr),
 m_menuFolder     (nullptr),
 m_menuCDRomDrive (nullptr),
 m_menuDefault    (nullptr)
 {
-    Q_CHECK_PTR(application);
+    Q_CHECK_PTR(m_mainWindow);
 
     header()->setVisible(false);
     setUniformRowHeights(true);

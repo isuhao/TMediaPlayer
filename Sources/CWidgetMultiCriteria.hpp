@@ -43,7 +43,7 @@ class CWidgetMultiCriteria : public IWidgetCriterion
 
 public:
 
-    explicit CWidgetMultiCriteria(CMainWindow * application, QWidget * parent = nullptr);
+    explicit CWidgetMultiCriteria(CMainWindow * mainWindow, QWidget * parent = nullptr);
     virtual ~CWidgetMultiCriteria();
 
     virtual ICriterion * getCriterion();

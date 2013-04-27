@@ -50,7 +50,7 @@ public:
         Frequency16K = 9  ///< 16 kHz.
     };
 
-    explicit CEqualizerPreset(CMainWindow * application);
+    explicit CEqualizerPreset(CMainWindow * mainWindow);
 
     inline int getId() const;
     inline QString getName() const;
@@ -65,7 +65,7 @@ public:
     void updateDataBase();
     void removeFromDataBase();
 
-    static QList<CEqualizerPreset *> loadFromDatabase(CMainWindow * application);
+    static QList<CEqualizerPreset *> loadFromDatabase(CMainWindow * mainWindow);
 
 private:
 

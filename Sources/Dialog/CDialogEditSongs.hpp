@@ -21,12 +21,15 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #define FILE_C_DIALOG_EDIT_SONGS
 
 #include <QDialog>
-#include "CMediaTableModel.hpp"
+#include <QDateTime>
+//#include "CMediaTableModel.hpp"
 #include "ui_DialogEditSongs.h"
 
 
+class CSong;
 class CMainWindow;
 class CSpecialSpinBox;
+class CMediaTableItem;
 
 
 /**
@@ -39,7 +42,7 @@ class CDialogEditSongs : public QDialog
 
 public:
 
-    explicit CDialogEditSongs(QList<CMediaTableItem *>& songItemList, CMainWindow * application);
+    explicit CDialogEditSongs(QList<CMediaTableItem *>& songItemList, CMainWindow * mainWindow);
     virtual ~CDialogEditSongs();
 
 protected slots:

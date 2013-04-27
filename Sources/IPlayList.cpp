@@ -26,10 +26,10 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QSqlError>
 
 
-IPlayList::IPlayList(CMainWindow * application, const QString& name) :
-CMediaTableView           (application),
+IPlayList::IPlayList(CMainWindow * mainWindow, const QString& name) :
+CMediaTableView      (mainWindow),
 m_name               (name),
-//m_position           (1),
+//m_position         (1),
 m_folder             (nullptr),
 m_isPlayListModified (false),
 m_folderChanging     (false)
@@ -145,7 +145,7 @@ bool IPlayList::updateDatabase()
                 return false;
             }
 
-            QSqlQuery query(m_mainWindow->getDataBase());
+            QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
             query.prepare("UPDATE playlist SET playlist_name = ?, folder_id = ?, list_position = ? WHERE playlist_id = ?");
 
             query.bindValue(0, m_name);
@@ -155,7 +155,7 @@ bool IPlayList::updateDatabase()
 
             if (!query.exec())
             {
-                m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
                 return false;
             }
 
@@ -180,13 +180,13 @@ void IPlayList::removeFromDatabase()
     }
     
     // Suppression de la liste
-    QSqlQuery query(m_mainWindow->getDataBase());
+    QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
     query.prepare("DELETE FROM playlist WHERE playlist_id = ?");
     query.bindValue(0, m_idPlayList);
 
     if (!query.exec())
     {
-        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         return;
     }
 

@@ -19,6 +19,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CDialogNotifications.hpp"
 #include "../CMainWindow.hpp"
+#include "../CMediaManager.hpp"
 #include <QPushButton>
 
 
@@ -35,7 +36,7 @@ m_mainWindow (mainWindow)
     m_uiWidget->table->setSortingEnabled(false);
 
     // Remplissage du tableau
-    QList<CMainWindow::TNotification> notifications = m_mainWindow->getNotifications();
+    QList<CMediaManager::TNotification> notifications = m_mainWindow->getMediaManager()->getNotifications();
     m_uiWidget->table->setRowCount(notifications.size());
 
     for (int row = 0; row < notifications.size(); ++row)

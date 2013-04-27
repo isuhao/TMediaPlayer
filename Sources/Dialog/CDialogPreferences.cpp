@@ -20,8 +20,10 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CDialogPreferences.hpp"
 #include "CDialogPreferencesFolder.hpp"
 #include "../CMainWindow.hpp"
+#include "../CMediaManager.hpp"
 #include "../CLibraryFolder.hpp"
 #include "../Language.hpp"
+
 #include <QSettings>
 #include <QDesktopServices>
 #include <QDir>
@@ -121,7 +123,7 @@ m_settings   (settings)
     m_uiWidget->editLastFmPercentageBeforeScrobbling->setValue(m_settings->value("LastFm/PercentageBeforeScrobbling", 60).toInt());
 
     // Liste des répertoires surveillés
-    QList<CLibraryFolder *> folders = m_mainWindow->getLibraryFolders();
+    QList<CLibraryFolder *> folders = m_mainWindow->getMediaManager()->getLibraryFolders();
 
     for (QList<CLibraryFolder *>::const_iterator it = folders.begin(); it != folders.end(); ++it)
     {
@@ -243,7 +245,7 @@ void CDialogPreferences::editSelectedFolder()
         return;
 
     const int folderId = item->data(Qt::UserRole).toInt();
-    CLibraryFolder * folder = m_mainWindow->getLibraryFolder(folderId);
+    CLibraryFolder * folder = m_mainWindow->getMediaManager()->getLibraryFolder(folderId);
 
     if (!folder)
         return;
@@ -267,7 +269,7 @@ void CDialogPreferences::removeSelectedFolder()
     const int folderId = item->data(Qt::UserRole).toInt();
 
     // Suppression du répertoire
-    m_mainWindow->removeLibraryFolder(m_mainWindow->getLibraryFolder(folderId));
+    m_mainWindow->getMediaManager()->removeLibraryFolder(m_mainWindow->getMediaManager()->getLibraryFolder(folderId));
 
     // Modification de la vue
     m_uiWidget->listFolders->removeItemWidget(item);

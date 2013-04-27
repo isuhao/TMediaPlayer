@@ -160,7 +160,7 @@ public:
     Q_DECLARE_FLAGS(TUpdateConditions, TUpdateCondition)
 
 
-    explicit ICriterion(CMainWindow * application, QObject * parent = nullptr);
+    explicit ICriterion(CMainWindow * mainWindow, QObject * parent = nullptr);
     virtual ~ICriterion();
 
     inline int getId() const;
@@ -185,7 +185,7 @@ protected:
     CMainWindow * m_mainWindow;
 
     virtual void setPlayList(CDynamicList * playList);
-    virtual void insertIntoDatabase(CMainWindow * application);
+    virtual void insertIntoDatabase();
 
 private:
 

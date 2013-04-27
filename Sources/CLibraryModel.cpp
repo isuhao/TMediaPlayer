@@ -94,14 +94,14 @@ void CLibraryModel::loadFromDatabase()
     QList<IPlayList *> playLists;
     QMap<CFolder *, int> folderPositions;
 
-    QSqlQuery query(m_mainWindow->getDataBase());
+    QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
 
     // Création des dossiers
     if (!query.exec("SELECT folder_id, folder_name, folder_parent, folder_position, folder_expanded "
                     "FROM folder "
                     "ORDER BY folder_position"))
     {
-        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
     }
     else
     {
@@ -161,7 +161,7 @@ void CLibraryModel::loadFromDatabase()
     if (!query.exec("SELECT static_list_id, playlist_name, list_columns, playlist_id, folder_id, list_position "
                     "FROM static_list NATURAL JOIN playlist ORDER BY list_position"))
     {
-        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
     }
     else
     {
@@ -186,14 +186,14 @@ void CLibraryModel::loadFromDatabase()
             }
 
             // Liste des morceaux de la liste de lecture
-            QSqlQuery query2(m_mainWindow->getDataBase());
+            QSqlQuery query2(m_mainWindow->getMediaManager()->getDataBase());
             query2.prepare("SELECT song_id, song_position FROM static_list_song "
                            "WHERE static_list_id = ? ORDER BY song_position");
             query2.bindValue(0, playList->m_id);
 
             if (!query2.exec())
             {
-                m_mainWindow->showDatabaseError(query2.lastError().text(), query2.lastQuery(), __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logDatabaseError(query2.lastError().text(), query2.lastQuery(), __FILE__, __LINE__);
                 delete playList;
                 continue;
             }
@@ -230,7 +230,7 @@ void CLibraryModel::loadFromDatabase()
     if (!query.exec("SELECT dynamic_list_id, playlist_name, list_columns, playlist_id, folder_id, list_position, auto_update, only_checked "
                     "FROM dynamic_list NATURAL JOIN playlist ORDER BY list_position"))
     {
-        m_mainWindow->showDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
     }
     else
     {

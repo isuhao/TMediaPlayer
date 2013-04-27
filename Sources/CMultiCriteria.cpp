@@ -29,6 +29,9 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * Construit le sous-critère d'une liste dynamique.
+ *
+ * \param mainWindow Pointeur sur la fenêtre principale de l'application.
+ * \param parent     Pointeur sur l'objet parent.
  */
 
 CMultiCriteria::CMultiCriteria(CMainWindow * mainWindow, QObject * parent) :
@@ -194,16 +197,14 @@ void CMultiCriteria::setPlayList(CDynamicList * playList)
 }
 
 
-void CMultiCriteria::insertIntoDatabase(CMainWindow * mainWindow)
+void CMultiCriteria::insertIntoDatabase()
 {
-    Q_CHECK_PTR(mainWindow);
-
     // Insertion du critère
-    ICriterion::insertIntoDatabase(mainWindow);
+    ICriterion::insertIntoDatabase();
 
     for (QList<ICriterion *>::const_iterator it = m_children.begin(); it != m_children.end(); ++it)
     {
-        (*it)->insertIntoDatabase(mainWindow);
+        (*it)->insertIntoDatabase();
     }
 }
 

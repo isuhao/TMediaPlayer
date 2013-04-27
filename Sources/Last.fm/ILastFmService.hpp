@@ -37,7 +37,7 @@ class ILastFmService : public QObject
 
 public:
 
-    ILastFmService(CMainWindow * application, const QByteArray& sessionKey);
+    ILastFmService(CMainWindow * mainWindow, const QByteArray& sessionKey);
     virtual ~ILastFmService();
     
     QByteArray getLastFmQuery(const QMap<QByteArray, QByteArray>& args) const;

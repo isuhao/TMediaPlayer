@@ -28,8 +28,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QtXml>
 
 
-CAuthentication::CAuthentication(CMainWindow * application) :
-ILastFmService (application, ""),
+CAuthentication::CAuthentication(CMainWindow * mainWindow) :
+ILastFmService (mainWindow, ""),
 m_timerLastFm  (nullptr),
 m_numRequests  (0)
 {

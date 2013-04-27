@@ -37,13 +37,13 @@ class CDialogAbout : public QDialog
 
 public:
 
-    explicit CDialogAbout(CMainWindow * application);
+    explicit CDialogAbout(CMainWindow * mainWindow);
     virtual ~CDialogAbout();
 
 private:
 
     Ui::DialogAbout * m_uiWidget; ///< Pointeur sur le widget de la boite de dialogue.
-    CMainWindow * m_mainWindow; ///< Pointeur sur la classe principale de l'application.
+    CMainWindow * m_mainWindow;  ///< Pointeur sur la classe principale de l'application.
 };
 
 #endif // FILE_C_DIALOG_ABOUT

@@ -65,9 +65,23 @@ public slots:
 protected slots:
 
     virtual bool updateDatabase();
-    virtual void openCustomMenuProject(const QPoint& point);
 
 private:
+
+    virtual bool canImportSongs() const
+    {
+        return true;
+    }
+
+    virtual bool canEditSongs() const
+    {
+        return false;
+    }
+
+    virtual bool canMoveToPlayList() const
+    {
+        return false;
+    }
 
     QString m_driveName;     ///< Nom du lecteur.
     QString m_SCSIName;
