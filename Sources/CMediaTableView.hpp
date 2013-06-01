@@ -153,6 +153,7 @@ public:
 public slots:
 
     void selectSongItem(CMediaTableItem * songItem);
+    void changeCurrentSongList();
     void playSelectedSong();
 
     virtual void removeDuplicateSongs()

@@ -20,13 +20,11 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #ifndef FILE_C_MAIN_WINDOW_HPP_
 #define FILE_C_MAIN_WINDOW_HPP_
 
-//#include "CMediaTableModel.hpp"
-#include "CEqualizerPreset.hpp"
-
 #include <QMainWindow>
 #include <QList>
 #include <QMutexLocker>
 #include <QFile>
+#include <QTimer>
 
 #include "ui_TMediaPlayer.h"
 #include "ui_WidgetControl.h"
@@ -52,11 +50,6 @@ class IPlayList;
 class QStandardItemModel;
 class QTextEdit;
 class QNetworkReply;
-
-namespace FMOD
-{
-    class DSP;
-}
 
 
 /**
@@ -117,20 +110,6 @@ public:
     void setPercentageBeforeScrobbling(int percentage);
 
 
-    // Égaliseur
-    void setEqualizerGain(CEqualizerPreset::TFrequency frequency, double gain);
-    double getEqualizerGain(CEqualizerPreset::TFrequency frequency) const;
-    void resetEqualizer();
-    bool isEqualizerEnabled() const;
-    inline QList<CEqualizerPreset *> getEqualizerPresets() const;
-    void addEqualizerPreset(CEqualizerPreset * preset);
-    void deleteEqualizerPreset(CEqualizerPreset * preset);
-    CEqualizerPreset * getEqualizerPresetFromId(int id) const;
-    CEqualizerPreset * getEqualizerPresetFromName(const QString& name) const;
-    inline CEqualizerPreset * getCurrentEqualizerPreset() const;
-    void setCurrentEqualizerPreset(CEqualizerPreset * equalizer);
-
-
     // Filtre de recherche
     QString getFilter() const;
 
@@ -187,6 +166,7 @@ public slots:
     void togglePlay();
     void previousSong();
     void nextSong();
+    void changeCurrentSongList(CMediaTableItem * songItem, CMediaTableView * playList);
     void playSong(CMediaTableItem * songItem);
 
 #if (QT_VERSION < 0x050000) || __cplusplus < 201103L
@@ -206,7 +186,6 @@ public slots:
     void toggleMute();
     void setVolume(int volume);
     void setPosition(int position);
-    void setEqualizerEnabled(bool enabled = true);
 
     void openDialogPreferences();
     void openDialogNotifications();
@@ -273,6 +252,7 @@ protected slots:
     void updateListInformations();
     void updatePosition();
     void updateTimer();
+    void updateCDRomDrives();
     void selectPlayListFromTreeView(const QModelIndex& index);
     void connectToLastFm();
     void onDialogEditSongClosed();
@@ -302,7 +282,8 @@ private:
     CLibraryView * m_playListView;          ///< Vue pour afficher les listes de lecture.
     CLibraryModel * m_listModel;            ///< Modèle contenant les listes de lecture.
     CDialogEditSong * m_dialogEditSong;     ///< Pointeur sur la boite de dialogue pour modifier les informations d'un morceau.
-    QTimer * m_timer;                       ///< Timer pour mettre à jour l'affichage.
+    QTimer m_timer;                         ///< Timer pour mettre à jour l'affichage.
+    QTimer m_timerCDRomDrives;              ///< Timer pour mettre à jour les lecteurs de CD-Rom.
     QLabel * m_listInfos;                   ///< Label pour afficher les informations sur la liste affichée.
     CMediaTableItem * m_currentSongItem;    ///< Pointeur sur l'item en cours de lecture.
     CMediaTableView * m_currentSongTable;   ///< Liste de morceaux contenant le morceau en cours de lecture.
@@ -313,12 +294,6 @@ private:
     bool m_showRemainingTime;               ///< Indique si on doit afficher le temps restant ou la durée du morceau en cours de lecture.
     TRepeatMode m_repeatMode;               ///< Mode de répétition.
     bool m_isShuffle;                       ///< Indique si la lecture aléatoire est activée.
-
-    // Égaliseur
-    double m_equalizerGains[10];                  ///< Gains de l'égaliseur.
-    FMOD::DSP * m_dsp[10];                        ///< Gains de l'égaliseur pour FMOD.
-    QList<CEqualizerPreset *> m_equalizerPresets; ///< Liste des préréglages d'égaliseur.
-    CEqualizerPreset * m_currentEqualizerPreset;  ///< Préréglage de l'égaliseur actuel.
 
     // États de Last.fm
     enum TLastFmState
@@ -337,18 +312,6 @@ private:
     int m_lastFmLastPosition;
     TLastFmState m_lastFmState;           ///< État actuel de Last.fm.
 };
-
-
-inline QList<CEqualizerPreset *> CMainWindow::getEqualizerPresets() const
-{
-    return m_equalizerPresets;
-}
-
-
-inline CEqualizerPreset * CMainWindow::getCurrentEqualizerPreset() const
-{
-    return m_currentEqualizerPreset;
-}
 
 
 /**

@@ -24,8 +24,10 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QString>
 #include <QDateTime>
 #include <QMap>
+#include <QList>
 #include <QTranslator>
 #include <QSqlDatabase>
+#include "CEqualizerPreset.hpp"
 
 
 class CLibraryFolder;
@@ -36,6 +38,7 @@ class QSettings;
 namespace FMOD
 {
     class System;
+    class DSP;
 }
 
 
@@ -79,6 +82,20 @@ public:
     void removeLibraryFolder(CLibraryFolder * folder);
 
 
+    // Égaliseur
+    void setEqualizerGain(CEqualizerPreset::TFrequency frequency, double gain);
+    double getEqualizerGain(CEqualizerPreset::TFrequency frequency) const;
+    void resetEqualizer();
+    bool isEqualizerEnabled() const;
+    inline QList<CEqualizerPreset *> getEqualizerPresets() const;
+    void addEqualizerPreset(CEqualizerPreset * preset);
+    void deleteEqualizerPreset(CEqualizerPreset * preset);
+    CEqualizerPreset * getEqualizerPresetFromId(int id) const;
+    CEqualizerPreset * getEqualizerPresetFromName(const QString& name) const;
+    inline CEqualizerPreset * getCurrentEqualizerPreset() const;
+    void setCurrentEqualizerPreset(CEqualizerPreset * equalizer);
+
+
     int getArtistId(const QString& name, const QString& nameSort);
     int getAlbumId(const QString& title, const QString& titleSort);
     int getGenreId(const QString& name);
@@ -100,6 +117,7 @@ public slots:
 
     void setMute(bool mute);
     void setVolume(int volume);
+    void setEqualizerEnabled(bool enabled = true);
 
     void onSongModified();
 
@@ -124,6 +142,12 @@ private:
     QList<CLibraryFolder *> m_libraryFolders; ///< Liste des répertoires de la médiathèque.
     bool m_isMute;                            ///< Indique si le son est coupé.
     int m_volume;                             ///< Volume sonore (entre 0 et 100).
+
+    // Égaliseur
+    double m_equalizerGains[10];                  ///< Gains de l'égaliseur.
+    FMOD::DSP * m_dsp[10];                        ///< Gains de l'égaliseur pour FMOD.
+    QList<CEqualizerPreset *> m_equalizerPresets; ///< Liste des préréglages d'égaliseur.
+    CEqualizerPreset * m_currentEqualizerPreset;  ///< Préréglage de l'égaliseur actuel.
 };
 
 
@@ -136,6 +160,18 @@ inline QList<CMediaManager::TNotification> CMediaManager::getNotifications() con
 inline QList<CLibraryFolder *> CMediaManager::getLibraryFolders() const
 {
     return m_libraryFolders;
+}
+
+
+inline QList<CEqualizerPreset *> CMediaManager::getEqualizerPresets() const
+{
+    return m_equalizerPresets;
+}
+
+
+inline CEqualizerPreset * CMediaManager::getCurrentEqualizerPreset() const
+{
+    return m_currentEqualizerPreset;
 }
 
 

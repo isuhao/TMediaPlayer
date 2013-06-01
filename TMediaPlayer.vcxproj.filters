@@ -821,6 +821,21 @@
     <ClCompile Include="GeneratedFiles\x64\Release\moc_CMediaManager.cpp">
       <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\CWidgetLineEditMultiple.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Win32\Debug\moc_CWidgetLineEditMultiple.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\x64\Debug\moc_CWidgetLineEditMultiple.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Win32\Release\moc_CWidgetLineEditMultiple.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\x64\Release\moc_CWidgetLineEditMultiple.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Sources\CSong.hpp">
@@ -1028,6 +1043,9 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="Sources\CMediaManager.hpp">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Sources\CWidgetLineEditMultiple.hpp">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

@@ -3,6 +3,9 @@
   Importance élevée
 --------------------------------------------------
 
+- Refactoring : CMediaTableView -> IMediaTable, CLibraryModel -> CMediaManager
+- Utiliser le widget lineEditMultiple.
+
 - Revoir le dock "Listes de lecture".
 
 - Bug : si on modifie une liste dynamique en cours de lecture, ben y'a un blem...

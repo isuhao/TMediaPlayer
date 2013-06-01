@@ -284,8 +284,6 @@ void CLibraryModel::loadFromDatabase()
 /**
  * Efface les données du modèle.
  * Les éléments permanents sont recrées (médiathèque, file d'attente, lecteurs de CD-ROM).
- *
- * \todo Implémenter la file d'attente.
  */
 
 void CLibraryModel::clear()
@@ -366,8 +364,10 @@ void CLibraryModel::updateCDRomDrives()
 /**
  * Retourne le dossier correspondant à un identifiant.
  *
+ * \todo Déplacer dans le classe CMediaManager.
+ *
  * \param id Identifiant du dossier.
- * \return Pointeur sur le dossier, ou NULL si \a id n'est pas valide.
+ * \return Pointeur sur le dossier, ou nullptr si \a id n'est pas valide.
  */
 
 CFolder * CLibraryModel::getFolderFromId(int id) const
@@ -379,8 +379,10 @@ CFolder * CLibraryModel::getFolderFromId(int id) const
 /**
  * Retourne la liste de lecture correspondant à un identifiant.
  *
+ * \todo Déplacer dans le classe CMediaManager.
+ *
  * \param id Identifiant de la liste.
- * \return Pointeur sur la liste de lecture, ou NULL si \a id n'est pas valide.
+ * \return Pointeur sur la liste de lecture, ou nullptr si \a id n'est pas valide.
  */
 
 IPlayList * CLibraryModel::getPlayListFromId(int id) const
@@ -746,7 +748,7 @@ bool CLibraryModel::dropMimeData(const QMimeData * data, Qt::DropAction action, 
 
             if (!folder)
             {
-                m_mainWindow->getMediaManager()->logError("dossier invalide", __FUNCTION__, __FILE__, __LINE__);
+                m_mainWindow->getMediaManager()->logError(tr("invalid folder"), __FUNCTION__, __FILE__, __LINE__);
                 return false;
             }
 

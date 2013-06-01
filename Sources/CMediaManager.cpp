@@ -38,8 +38,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QtDebug>
 
 
-const QString appVersion = "1.0.46";     ///< Numéro de version de l'application.
-const QString appDate    = "20/04/2013"; ///< Date de sortie de cette version.
+const QString appVersion = "1.0.47";     ///< Numéro de version de l'application.
+const QString appDate    = "01/06/2013"; ///< Date de sortie de cette version.
 
 
 /**
@@ -316,6 +316,64 @@ bool CMediaManager::loadDatabase()
         }
     }
 
+    // Préréglages d'égaliseur
+    m_equalizerPresets = CEqualizerPreset::loadFromDatabase(this);
+
+    // Égaliseur
+    const float eqFrequencies[10] = {32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000};
+
+    for (int i = 0; i < 10; ++i)
+    {
+        m_equalizerGains[i] = qBound(0.05f, m_settings->value(QString("Equalizer/Gain_%1").arg(i), 1.0f).toFloat(), 3.0f);
+        FMOD_RESULT res;
+
+        res = m_soundSystem->createDSPByType(FMOD_DSP_TYPE_PARAMEQ, &m_dsp[i]);
+
+        if (res != FMOD_OK)
+            logError(tr("createDSPByType #%1").arg(i), __FUNCTION__, __FILE__, __LINE__);
+
+        res = m_dsp[i]->setParameter(FMOD_DSP_PARAMEQ_CENTER, eqFrequencies[i]);
+
+        if (res != FMOD_OK)
+            logError(tr("dsp->setParameter(FMOD_DSP_PARAMEQ_CENTER) #%1").arg(i), __FUNCTION__, __FILE__, __LINE__);
+
+        res = m_dsp[i]->setParameter(FMOD_DSP_PARAMEQ_BANDWIDTH, 1.0);
+
+        if (res != FMOD_OK)
+            logError(tr("dsp->setParameter(FMOD_DSP_PARAMEQ_BANDWIDTH) #%1").arg(i), __FUNCTION__, __FILE__, __LINE__);
+
+        res = m_dsp[i]->setParameter(FMOD_DSP_PARAMEQ_GAIN, m_equalizerGains[i]);
+
+        if (res != FMOD_OK)
+            logError(tr("dsp->setParameter(FMOD_DSP_PARAMEQ_GAIN) #%1").arg(i), __FUNCTION__, __FILE__, __LINE__);
+
+        res = m_soundSystem->addDSP(m_dsp[i], nullptr);
+
+        if (res != FMOD_OK)
+            logError(tr("addDSP #%1").arg(i), __FUNCTION__, __FILE__, __LINE__);
+    }
+
+    setEqualizerEnabled(m_settings->value("Equalizer/Enabled", false).toBool());
+
+    QString presetName = m_settings->value(QString("Equalizer/PresetName"), QString()).toString();
+    CEqualizerPreset * preset = getEqualizerPresetFromName(presetName);
+
+    if (preset)
+    {
+        bool currentEqualizerPresetDefined = true;
+
+        for (int f = 0; f < 10; ++f)
+        {
+            if (std::abs(preset->getValue(f) - m_equalizerGains[f]) < std::numeric_limits<double>::epsilon())
+                currentEqualizerPresetDefined = false;
+        }
+
+        if (currentEqualizerPresetDefined)
+        {
+            m_currentEqualizerPreset = preset;
+        }
+    }
+
     return true;
 }
 
@@ -460,6 +518,184 @@ void CMediaManager::removeLibraryFolder(CLibraryFolder * folder)
     }
 
     delete folder;
+}
+
+
+/**
+ * Modifie le gain de l'égaliseur pour une bande de fréquence.
+ *
+ * \param frequency Bande de fréquence.
+ * \param gain      Valeur du gain (entre 0.05 et 3).
+ */
+
+void CMediaManager::setEqualizerGain(CEqualizerPreset::TFrequency frequency, double gain)
+{
+    m_equalizerGains[frequency] = qBound(0.05, gain, 3.0);
+    m_settings->setValue(QString("Equalizer/Gain_%1").arg(frequency), m_equalizerGains[frequency]);
+    FMOD_RESULT res = m_dsp[frequency]->setParameter(FMOD_DSP_PARAMEQ_GAIN, m_equalizerGains[frequency]);
+
+    if (res != FMOD_OK)
+        logError(tr("dsp->setParameter(FMOD_DSP_PARAMEQ_GAIN) #%1").arg(frequency), __FUNCTION__, __FILE__, __LINE__);
+}
+
+
+/**
+ * Récupère le gain de l'égaliseur pour une bande de fréquence.
+ *
+ * \param frequency Bande de fréquence.
+ * \return Valeur du gain (entre 0.05 et 3).
+ */
+
+double CMediaManager::getEqualizerGain(CEqualizerPreset::TFrequency frequency) const
+{
+    return m_equalizerGains[frequency];
+}
+
+
+/**
+ * Réinitialise les gains de l'égaliseur.
+ * Tous les gains sont définis à 1.
+ */
+
+void CMediaManager::resetEqualizer()
+{
+    setEqualizerGain(CEqualizerPreset::Frequency32 , 1.0f);
+    setEqualizerGain(CEqualizerPreset::Frequency64 , 1.0f);
+    setEqualizerGain(CEqualizerPreset::Frequency125, 1.0f);
+    setEqualizerGain(CEqualizerPreset::Frequency250, 1.0f);
+    setEqualizerGain(CEqualizerPreset::Frequency500, 1.0f);
+    setEqualizerGain(CEqualizerPreset::Frequency1K , 1.0f);
+    setEqualizerGain(CEqualizerPreset::Frequency2K , 1.0f);
+    setEqualizerGain(CEqualizerPreset::Frequency4K , 1.0f);
+    setEqualizerGain(CEqualizerPreset::Frequency8K , 1.0f);
+    setEqualizerGain(CEqualizerPreset::Frequency16K, 1.0f);
+}
+
+
+/**
+ * Active ou désactive l'égaliseur.
+ *
+ * \param enabled Booléen.
+ */
+
+void CMediaManager::setEqualizerEnabled(bool enabled)
+{
+    FMOD_RESULT res;
+
+    m_settings->setValue(QString("Equalizer/Enabled"), enabled);
+
+    for (int i = 0; i < 10; ++i)
+    {
+        res = m_dsp[i]->setParameter(FMOD_DSP_PARAMEQ_GAIN, (enabled ? m_equalizerGains[i] : 1.0));
+
+        if (res != FMOD_OK)
+            logError(tr("dsp->setParameter(FMOD_DSP_PARAMEQ_GAIN) #%1").arg(i), __FUNCTION__, __FILE__, __LINE__);
+    }
+}
+
+
+/**
+ * Indique si l'égaliseur est activé.
+ *
+ * \return Booléen.
+ */
+
+bool CMediaManager::isEqualizerEnabled() const
+{
+    return m_settings->value(QString("Equalizer/Enabled"), false).toBool();
+}
+
+
+void CMediaManager::addEqualizerPreset(CEqualizerPreset * preset)
+{
+    if (!preset)
+        return;
+
+    if (m_equalizerPresets.contains(preset))
+        return;
+
+    m_equalizerPresets.append(preset);
+}
+
+
+void CMediaManager::deleteEqualizerPreset(CEqualizerPreset * preset)
+{
+    if (!preset)
+        return;
+
+    if (m_currentEqualizerPreset == preset)
+    {
+        m_currentEqualizerPreset = nullptr;
+        m_settings->setValue("Equalizer/PresetName", QString());
+    }
+
+    preset->removeFromDataBase();
+    delete preset;
+
+    m_equalizerPresets.removeOne(preset);
+}
+
+
+/**
+ * Retourne le préréglage d'égaliseur correspondant à un identifiant.
+ *
+ * \param id Identifiant du préréglage.
+ * \return Pointeur sur le préréglage, ou nullptr.
+ */
+
+CEqualizerPreset * CMediaManager::getEqualizerPresetFromId(int id) const
+{
+    for (QList<CEqualizerPreset *>::const_iterator it = m_equalizerPresets.begin(); it != m_equalizerPresets.end(); ++it)
+    {
+        if ((*it)->getId() == id)
+            return *it;
+    }
+
+    return nullptr;
+}
+
+
+/**
+ * Retourne le préréglage d'égaliseur correspondant à un nom.
+ *
+ * \param name Nom du préréglage.
+ * \return Pointeur sur le préréglage, ou nullptr.
+ */
+
+CEqualizerPreset * CMediaManager::getEqualizerPresetFromName(const QString& name) const
+{
+    for (QList<CEqualizerPreset *>::const_iterator it = m_equalizerPresets.begin(); it != m_equalizerPresets.end(); ++it)
+    {
+        if ((*it)->getName() == name)
+            return *it;
+    }
+
+    return nullptr;
+}
+
+
+void CMediaManager::setCurrentEqualizerPreset(CEqualizerPreset * equalizer)
+{
+    if (!equalizer)
+    {
+        m_settings->setValue("Equalizer/PresetName", QString());
+        return;
+    }
+
+    m_currentEqualizerPreset = equalizer;
+
+    setEqualizerGain(CEqualizerPreset::Frequency32 , equalizer->getValue(0));
+    setEqualizerGain(CEqualizerPreset::Frequency64 , equalizer->getValue(1));
+    setEqualizerGain(CEqualizerPreset::Frequency125, equalizer->getValue(2));
+    setEqualizerGain(CEqualizerPreset::Frequency250, equalizer->getValue(3));
+    setEqualizerGain(CEqualizerPreset::Frequency500, equalizer->getValue(4));
+    setEqualizerGain(CEqualizerPreset::Frequency1K , equalizer->getValue(5));
+    setEqualizerGain(CEqualizerPreset::Frequency2K , equalizer->getValue(6));
+    setEqualizerGain(CEqualizerPreset::Frequency4K , equalizer->getValue(7));
+    setEqualizerGain(CEqualizerPreset::Frequency8K , equalizer->getValue(8));
+    setEqualizerGain(CEqualizerPreset::Frequency16K, equalizer->getValue(9));
+
+    m_settings->setValue("Equalizer/PresetName", equalizer->getName());
 }
 
 

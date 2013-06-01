@@ -106,7 +106,7 @@ m_menuDefault    (nullptr)
  * Retourne la liste de morceaux correspondant à un index.
  *
  * \param index Index de la liste.
- * \return Liste de morceaux, ou NULL.
+ * \return Liste de morceaux, ou nullptr.
  */
 
 CMediaTableView * CLibraryView::getSongTable(const QModelIndex& index) const
@@ -119,7 +119,7 @@ CMediaTableView * CLibraryView::getSongTable(const QModelIndex& index) const
  * Retourne le dossier correspondant à un index.
  *
  * \param index Index du dossier.
- * \return Dossier, ou NULL.
+ * \return Dossier, ou nullptr.
  */
 
 CFolder * CLibraryView::getFolder(const QModelIndex& index) const
@@ -131,7 +131,7 @@ CFolder * CLibraryView::getFolder(const QModelIndex& index) const
 /**
  * Retourne la liste de morceaux actuellement sélectionnée.
  *
- * \return Liste de morceaux sélectionnée, ou NULL.
+ * \return Liste de morceaux sélectionnée, ou nullptr.
  */
 
 CMediaTableView * CLibraryView::getSelectedSongTable() const
@@ -144,7 +144,7 @@ CMediaTableView * CLibraryView::getSelectedSongTable() const
 /**
  * Retourne le dossier actuellement sélectionné.
  *
- * \return Dossier sélectionné, ou NULL.
+ * \return Dossier sélectionné, ou nullptr.
  */
 
 CFolder * CLibraryView::getSelectedFolder() const
@@ -157,7 +157,7 @@ CFolder * CLibraryView::getSelectedFolder() const
 /**
  * Retourne le lecteur de CD-ROM actuellement sélectionné.
  *
- * \return Lecteur de CD-ROM sélectionné, ou NULL.
+ * \return Lecteur de CD-ROM sélectionné, ou nullptr.
  */
 
 CCDRomDrive * CLibraryView::getSelectedCDRomDrive() const

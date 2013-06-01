@@ -51,6 +51,8 @@ m_currentSongItem   (nullptr)
     int i = 0;
 
     // Remplissage de la liste des morceaux
+    m_data.reserve(data.size());
+
     for (QList<CSong *>::const_iterator it = data.begin(); it != data.end(); ++it)
     {
         m_data.append(new CMediaTableItem(++i, *it));
@@ -108,6 +110,9 @@ void CMediaTableModel::setSongs(const QList<CSong *>& data)
     m_dataFiltered.clear();
 
     int i = 0;
+    
+    // Remplissage de la liste des morceaux
+    m_data.reserve(data.size());
 
     for (QList<CSong *>::const_iterator it = data.begin(); it != data.end(); ++it)
     {
@@ -158,7 +163,9 @@ bool CMediaTableModel::hasSong(CSong * song) const
     for (QList<CMediaTableItem *>::const_iterator it = m_data.begin(); it != m_data.end(); ++it)
     {
         if ((*it)->getSong() == song)
+        {
             return true;
+        }
     }
 
     return false;
@@ -174,8 +181,10 @@ bool CMediaTableModel::hasSong(CSong * song) const
 
 int CMediaTableModel::rowCount(const QModelIndex& parent) const
 {
-    if(parent.isValid())
+    if (parent.isValid())
+    {
         return 0;
+    }
 
     return m_dataFiltered.size();
 }
@@ -208,7 +217,9 @@ int CMediaTableModel::columnCount(const QModelIndex& parent) const
 QVariant CMediaTableModel::data(const QModelIndex& index, int role) const
 {
     if (index.row() >= rowCount(index.parent()))
+    {
         return QVariant::Invalid;
+    }
 
     // Police de caractère
     if (role == Qt::FontRole)
@@ -974,7 +985,9 @@ void CMediaTableModel::insertRow(CSong * song, int pos)
 void CMediaTableModel::removeRow(int row)
 {
     if (row < 0 || row >= m_data.size())
+    {
         return;
+    }
 
     emit layoutAboutToBeChanged();
 
@@ -999,7 +1012,9 @@ void CMediaTableModel::removeRow(int row)
 void CMediaTableModel::removeSongs(const QList<CSong *>& songs)
 {
     if (songs.isEmpty())
+    {
         return;
+    }
 
     emit layoutAboutToBeChanged();
 
@@ -1088,8 +1103,10 @@ CMediaTableItem * CMediaTableModel::getSongItem(int row) const
 
 int CMediaTableModel::getRowForSongItem(CMediaTableItem * songItem) const
 {
-    if (!songItem)
+    if (songItem == nullptr)
+    {
         return -1;
+    }
 
     QList<CMediaTableItem *> data = m_dataFiltered;
     return data.indexOf(songItem);

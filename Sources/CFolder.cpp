@@ -91,7 +91,7 @@ void CFolder::setName(const QString& name)
 /**
  * Modifie le dossier contenant le dossier.
  *
- * \param folder Pointeur sur le dossier qui contiendra le dossier, ou NULL si le
+ * \param folder Pointeur sur le dossier qui contiendra le dossier, ou nullptr si le
  *               dossier n'est pas dans un dossier.
  */
 
@@ -458,7 +458,7 @@ bool CFolder::updateDatabase()
         }
         else
         {
-            m_mainWindow->getMediaManager()->logError("le dossier n'a pas de parent", __FUNCTION__, __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logError(tr("le dossier n'a pas de parent"), __FUNCTION__, __FILE__, __LINE__);
         }
     }
 
@@ -608,7 +608,7 @@ void CFolder::addPlayListItem(IPlayList * playList, int position)
     }
     else if (position < 0)
     {
-        m_mainWindow->getMediaManager()->logError("position inconnue", __FUNCTION__, __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logError(tr("position inconnue"), __FUNCTION__, __FILE__, __LINE__);
         position = m_items.size();
         m_items.append(nullptr);
     }
@@ -628,7 +628,7 @@ void CFolder::addFolderItem(CFolder * folder, int position)
     }
     else if (position < 0)
     {
-        m_mainWindow->getMediaManager()->logError("position inconnue", __FUNCTION__, __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logError(tr("position inconnue"), __FUNCTION__, __FILE__, __LINE__);
         position = m_items.size();
         m_items.append(nullptr);
     }

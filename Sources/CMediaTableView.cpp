@@ -1319,7 +1319,32 @@ void CMediaTableView::contextMenuEvent(QContextMenuEvent * event)
 
         if (!severalSongs)
         {
-            QAction * actionPlay = m_menu.addAction(tr("Play"), this, SLOT(playSelectedSong()));
+            QAction * actionPlay;
+
+            CMediaTableItem * currentSong = m_mainWindow->getCurrentSongItem();
+            
+            // Le morceau est en cours de lecture
+            if (currentSong && currentSong == m_selectedItem)
+            {
+                if (m_mainWindow->isPaused())
+                {
+                    actionPlay = m_menu.addAction(tr("Play"), m_mainWindow, SLOT(play()));
+                }
+                else
+                {
+                    actionPlay = m_menu.addAction(tr("Pause"), m_mainWindow, SLOT(pause()));
+                }
+            }
+            // Le morceau est en cours de lecture dans une autre liste
+            else if (currentSong && currentSong->getSong() == m_selectedItem->getSong())
+            {
+                actionPlay = m_menu.addAction(tr("Play in this playlist"), this, SLOT(changeCurrentSongList()));
+            }
+            else
+            {
+                actionPlay = m_menu.addAction(tr("Play"), this, SLOT(playSelectedSong()));
+            }
+
             m_menu.setDefaultAction(actionPlay);
             m_menu.addSeparator();
         }
@@ -1493,6 +1518,12 @@ void CMediaTableView::selectSongItem(CMediaTableItem * songItem)
         setCurrentIndex(index);
         scrollTo(index/*, QAbstractItemView::PositionAtTop*/);
     }
+}
+
+
+void CMediaTableView::changeCurrentSongList()
+{
+    m_mainWindow->changeCurrentSongList(m_selectedItem, this);
 }
 
 

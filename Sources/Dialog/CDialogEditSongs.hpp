@@ -22,7 +22,6 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include <QDialog>
 #include <QDateTime>
-//#include "CMediaTableModel.hpp"
 #include "ui_DialogEditSongs.h"
 
 
@@ -30,6 +29,7 @@ class CSong;
 class CMainWindow;
 class CSpecialSpinBox;
 class CMediaTableItem;
+class CWidgetLineEditMultiple;
 
 
 /**
@@ -129,36 +129,21 @@ private:
     QList<CMediaTableItem *> m_songItemList;
 
     // Widgets
-    QLineEdit * m_editTitleLE;
-    QLineEdit * m_editTitleLE_2;
-    QComboBox * m_editTitleCB;
-    QComboBox * m_editTitleCB_2;
-    QLineEdit * m_editTitleSortLE;
-    QComboBox * m_editTitleSortCB;
-    QLineEdit * m_editArtistLE;
-    QLineEdit * m_editArtistLE_2;
-    QComboBox * m_editArtistCB;
-    QComboBox * m_editArtistCB_2;
-    QLineEdit * m_editArtistSortLE;
-    QComboBox * m_editArtistSortCB;
-    QLineEdit * m_editAlbumLE;
-    QLineEdit * m_editAlbumLE_2;
-    QComboBox * m_editAlbumCB;
-    QComboBox * m_editAlbumCB_2;
-    QLineEdit * m_editAlbumSortLE;
-    QComboBox * m_editAlbumSortCB;
-    QLineEdit * m_editAlbumArtistLE;
-    QLineEdit * m_editAlbumArtistLE_2;
-    QComboBox * m_editAlbumArtistCB;
-    QComboBox * m_editAlbumArtistCB_2;
-    QLineEdit * m_editAlbumArtistSortLE;
-    QComboBox * m_editAlbumArtistSortCB;
-    QLineEdit * m_editComposerLE;
-    QLineEdit * m_editComposerLE_2;
-    QComboBox * m_editComposerCB;
-    QComboBox * m_editComposerCB_2;
-    QLineEdit * m_editComposerSortLE;
-    QComboBox * m_editComposerSortCB;
+    CWidgetLineEditMultiple * m_editTitle;
+    CWidgetLineEditMultiple * m_editTitle2;
+    CWidgetLineEditMultiple * m_editTitleSort;
+    CWidgetLineEditMultiple * m_editArtist;
+    CWidgetLineEditMultiple * m_editArtist2;
+    CWidgetLineEditMultiple * m_editArtistSort;
+    CWidgetLineEditMultiple * m_editAlbum;
+    CWidgetLineEditMultiple * m_editAlbum2;
+    CWidgetLineEditMultiple * m_editAlbumSort;
+    CWidgetLineEditMultiple * m_editAlbumArtist;
+    CWidgetLineEditMultiple * m_editAlbumArtist2;
+    CWidgetLineEditMultiple * m_editAlbumArtistSort;
+    CWidgetLineEditMultiple * m_editComposer;
+    CWidgetLineEditMultiple * m_editComposer2;
+    CWidgetLineEditMultiple * m_editComposerSort;
 };
 
 #endif // FILE_C_DIALOG_EDIT_SONGS
