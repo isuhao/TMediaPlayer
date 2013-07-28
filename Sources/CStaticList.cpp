@@ -130,7 +130,7 @@ void CStaticList::addSongs(const QList<CSong *>& songs, bool confirm)
         // Recherche des doublons
         bool hasDuplicate = false;
 
-        for (QList<CSong *>::const_iterator it = songs.begin(); it != songs.end(); ++it)
+        for (QList<CSong *>::ConstIterator it = songs.begin(); it != songs.end(); ++it)
         {
             if (hasSong(*it))
             {
@@ -176,7 +176,7 @@ void CStaticList::addSongs(const QList<CSong *>& songs, bool confirm)
 
     int numSongsAdded = 0;
 
-    for (QList<CSong *>::const_iterator it = songs.begin(); it != songs.end(); ++it)
+    for (QList<CSong *>::ConstIterator it = songs.begin(); it != songs.end(); ++it)
     {
         Q_CHECK_PTR(*it);
 
@@ -212,7 +212,7 @@ void CStaticList::addSongs(const QList<CSong *>& songs, bool confirm)
     int songNum = 0;
     m_automaticSort = false;
 
-    for (QList<CSong *>::const_iterator it = songs.begin(); it != songs.end(); ++it)
+    for (QList<CSong *>::ConstIterator it = songs.begin(); it != songs.end(); ++it)
     {
         if (hasSong(*it) && skipDuplicate)
         {
@@ -373,7 +373,7 @@ void CStaticList::removeSongs(const QList<CMediaTableItem *>& songItemList, bool
 
     QList<CSong *> songList;
 
-    for (QList<CMediaTableItem *>::const_iterator it = songItemList.begin(); it != songItemList.end(); ++it)
+    for (QList<CMediaTableItem *>::ConstIterator it = songItemList.begin(); it != songItemList.end(); ++it)
     {
         int row = m_model->getRowForSongItem(*it);
 
@@ -389,7 +389,7 @@ void CStaticList::removeSongs(const QList<CMediaTableItem *>& songItemList, bool
     }
 
     // Émission des signaux
-    for (QList<CSong *>::const_iterator it = songList.begin(); it != songList.end(); ++it)
+    for (QList<CSong *>::ConstIterator it = songList.begin(); it != songList.end(); ++it)
     {
         emit songRemoved(*it);
     }
@@ -445,7 +445,7 @@ void CStaticList::removeSelectedSongs()
     QList<CMediaTableItem *> songItemList;
 
     // On parcourt la liste des morceaux sélectionnés
-    for (QModelIndexList::const_iterator it = indexList.begin(); it != indexList.end(); ++it)
+    for (QModelIndexList::ConstIterator it = indexList.begin(); it != indexList.end(); ++it)
     {
         CMediaTableItem * songItem = m_model->getSongItem(*it);
 
@@ -495,7 +495,7 @@ void CStaticList::removeDuplicateSongs()
     QList<CSong *> songs = getSongs();
     QList<CSong *> songsNew;
 
-    for (QList<CSong *>::const_iterator it = songs.begin(); it != songs.end(); ++it)
+    for (QList<CSong *>::ConstIterator it = songs.begin(); it != songs.end(); ++it)
     {
         if (songsNew.contains(*it))
         {

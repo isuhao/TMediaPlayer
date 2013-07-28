@@ -109,7 +109,7 @@ void CQueuePlayList::removeSongs(const QList<CMediaTableItem *>& songItemList)
 
     QList<CSong *> songList;
 
-    for (QList<CMediaTableItem *>::const_iterator it = songItemList.begin(); it != songItemList.end(); ++it)
+    for (QList<CMediaTableItem *>::ConstIterator it = songItemList.begin(); it != songItemList.end(); ++it)
     {
         int row = m_model->getRowForSongItem(*it);
 
@@ -160,7 +160,7 @@ void CQueuePlayList::removeSelectedSongs()
     QList<CMediaTableItem *> songItemList;
 
     // On parcourt la liste des morceaux sélectionnés
-    for (QModelIndexList::const_iterator it = indexList.begin(); it != indexList.end(); ++it)
+    for (QModelIndexList::ConstIterator it = indexList.begin(); it != indexList.end(); ++it)
     {
         CMediaTableItem * songItem = m_model->getSongItem(*it);
 

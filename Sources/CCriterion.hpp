@@ -37,7 +37,7 @@ public:
     virtual ~CCriterion();
 
     virtual bool matchCriterion(CSong * song) const;
-    virtual QList<CSong *> getSongs(const QList<CSong *>& from, const QList<CSong *>& with = QList<CSong *>()) const;
+    virtual QList<CSong *> getSongs(const QList<CSong *>& from, const QList<CSong *>& with = QList<CSong *>(), bool onlyChecked = false) const;
     virtual TUpdateConditions getUpdateConditions() const;
     virtual IWidgetCriterion * getWidget() const;
 };

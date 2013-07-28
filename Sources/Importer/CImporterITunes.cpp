@@ -241,7 +241,7 @@ void CITunesWizardPage4::initializePage()
     {
         QMap<int, CITunesLibrary::TSong> songsToLoad = m_library->getSongs();
 
-        for (QMap<int, CITunesLibrary::TSong>::const_iterator it2 = songsToLoad.begin(); it2 != songsToLoad.end(); ++it2)
+        for (QMap<int, CITunesLibrary::TSong>::ConstIterator it2 = songsToLoad.begin(); it2 != songsToLoad.end(); ++it2)
         {
             songs[it2.key()] = m_mainWindow->getSongFromId(CSong::getId(m_mainWindow->getMediaManager(), it2->fileName));
 
@@ -410,7 +410,7 @@ void CITunesWizardPage4::initializePage()
     // Ajout des listes de lecture et des dossiers
     QStringList list = qobject_cast<CImporterITunes *>(wizard())->getSelectedItems();
 
-    for (QStringList::const_iterator it = list.begin(); it != list.end(); ++it)
+    for (QStringList::ConstIterator it = list.begin(); it != list.end(); ++it)
     {
         //...
     }
@@ -1031,12 +1031,12 @@ bool CITunesLibrary::loadFile(const QString& fileName)
                 }
             }
 
-            for (QMap<QString, TDynamicList>::const_iterator it = dynamicLists.begin(); it != dynamicLists.end(); ++it)
+            for (QMap<QString, TDynamicList>::ConstIterator it = dynamicLists.begin(); it != dynamicLists.end(); ++it)
             {
                 int folderIndex = -1, index = 0;
                 QString parentID = dynamicListParents.value(it.key());
 
-                for (QList<TFolder>::const_iterator it2 = m_folders.begin(); it2 != m_folders.end(); ++it2, ++index)
+                for (QList<TFolder>::ConstIterator it2 = m_folders.begin(); it2 != m_folders.end(); ++it2, ++index)
                 {
                     if (it2->id == parentID)
                     {
@@ -1056,12 +1056,12 @@ bool CITunesLibrary::loadFile(const QString& fileName)
                 }
             }
 
-            for (QMap<QString, TStaticList>::const_iterator it = staticLists.begin(); it != staticLists.end(); ++it)
+            for (QMap<QString, TStaticList>::ConstIterator it = staticLists.begin(); it != staticLists.end(); ++it)
             {
                 int folderIndex = -1, index = 0;
                 QString parentID = staticListParents.value(it.key());
 
-                for (QList<TFolder>::const_iterator it2 = m_folders.begin(); it2 != m_folders.end(); ++it2, ++index)
+                for (QList<TFolder>::ConstIterator it2 = m_folders.begin(); it2 != m_folders.end(); ++it2, ++index)
                 {
                     if (it2->id == parentID)
                     {
@@ -1119,7 +1119,7 @@ void CITunesLibrary::initModelWithLists(QStandardItemModel * model) const
     model->appendRow(item);
 
     // Dossiers
-    for (QList<TFolder>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
+    for (QList<TFolder>::ConstIterator it = m_folders.begin(); it != m_folders.end(); ++it)
     {
         QStandardItem * itemFolder = new QStandardItem(QPixmap(":/icons/folder_close"), it->name);
         itemFolder->setData(it->id, Qt::UserRole + 1);
@@ -1128,7 +1128,7 @@ void CITunesLibrary::initModelWithLists(QStandardItemModel * model) const
         model->appendRow(itemFolder);
 
         // Listes dynamiques
-        for (QList<TDynamicList>::const_iterator it2 = it->dynamicLists.begin(); it2 != it->dynamicLists.end(); ++it2)
+        for (QList<TDynamicList>::ConstIterator it2 = it->dynamicLists.begin(); it2 != it->dynamicLists.end(); ++it2)
         {
             item = new QStandardItem(QPixmap(":/icons/dynamic_list"), it2->name);
             item->setData(it2->id, Qt::UserRole + 1);
@@ -1138,7 +1138,7 @@ void CITunesLibrary::initModelWithLists(QStandardItemModel * model) const
         }
 
         // Listes statiques
-        for (QList<TStaticList>::const_iterator it2 = it->staticLists.begin(); it2 != it->staticLists.end(); ++it2)
+        for (QList<TStaticList>::ConstIterator it2 = it->staticLists.begin(); it2 != it->staticLists.end(); ++it2)
         {
             item = new QStandardItem(QPixmap(":/icons/playlist"), tr("%1 (%n song(s))", "", it2->songs.size()).arg(it2->name));
             item->setData(it2->id, Qt::UserRole + 1);
@@ -1149,7 +1149,7 @@ void CITunesLibrary::initModelWithLists(QStandardItemModel * model) const
     }
 
     // Listes dynamiques
-    for (QList<TDynamicList>::const_iterator it = m_dynamicLists.begin(); it != m_dynamicLists.end(); ++it)
+    for (QList<TDynamicList>::ConstIterator it = m_dynamicLists.begin(); it != m_dynamicLists.end(); ++it)
     {
         item = new QStandardItem(QPixmap(":/icons/dynamic_list"), it->name);
         item->setData(it->id, Qt::UserRole + 1);
@@ -1159,7 +1159,7 @@ void CITunesLibrary::initModelWithLists(QStandardItemModel * model) const
     }
 
     // Listes statiques
-    for (QList<TStaticList>::const_iterator it = m_staticLists.begin(); it != m_staticLists.end(); ++it)
+    for (QList<TStaticList>::ConstIterator it = m_staticLists.begin(); it != m_staticLists.end(); ++it)
     {
         item = new QStandardItem(QPixmap(":/icons/playlist"), tr("%1 (%n song(s))", "", it->songs.size()).arg(it->name));
         item->setData(it->id, Qt::UserRole + 1);

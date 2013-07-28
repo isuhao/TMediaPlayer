@@ -38,8 +38,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QtDebug>
 
 
-const QString appVersion = "1.0.47";     ///< Numéro de version de l'application.
-const QString appDate    = "01/06/2013"; ///< Date de sortie de cette version.
+const QString appVersion = "1.0.48";     ///< Numéro de version de l'application.
+const QString appDate    = "28/07/2013"; ///< Date de sortie de cette version.
 
 
 /**
@@ -110,7 +110,7 @@ CMediaManager::~CMediaManager()
     // Enregistrement des paramètres
     m_settings->setValue("Preferences/Volume", m_volume);
 
-    for (QList<CLibraryFolder *>::const_iterator folder = m_libraryFolders.begin(); folder != m_libraryFolders.end(); ++folder)
+    for (QList<CLibraryFolder *>::ConstIterator folder = m_libraryFolders.begin(); folder != m_libraryFolders.end(); ++folder)
     {
         delete *folder;
     }
@@ -461,7 +461,7 @@ void CMediaManager::notifyInformation(const QString& message)
 
 CLibraryFolder * CMediaManager::getLibraryFolder(int folderId) const
 {
-    for (QList<CLibraryFolder *>::const_iterator it = m_libraryFolders.begin(); it != m_libraryFolders.end(); ++it)
+    for (QList<CLibraryFolder *>::ConstIterator it = m_libraryFolders.begin(); it != m_libraryFolders.end(); ++it)
     {
         if ((*it)->id == folderId)
             return *it;
@@ -473,7 +473,7 @@ CLibraryFolder * CMediaManager::getLibraryFolder(int folderId) const
 
 int CMediaManager::getLibraryFolderId(const QString& fileName) const
 {
-    for (QList<CLibraryFolder *>::const_iterator it = m_libraryFolders.begin(); it != m_libraryFolders.end(); ++it)
+    for (QList<CLibraryFolder *>::ConstIterator it = m_libraryFolders.begin(); it != m_libraryFolders.end(); ++it)
     {
         if (fileName.startsWith((*it)->pathName))
             return (*it)->id;
@@ -645,7 +645,7 @@ void CMediaManager::deleteEqualizerPreset(CEqualizerPreset * preset)
 
 CEqualizerPreset * CMediaManager::getEqualizerPresetFromId(int id) const
 {
-    for (QList<CEqualizerPreset *>::const_iterator it = m_equalizerPresets.begin(); it != m_equalizerPresets.end(); ++it)
+    for (QList<CEqualizerPreset *>::ConstIterator it = m_equalizerPresets.begin(); it != m_equalizerPresets.end(); ++it)
     {
         if ((*it)->getId() == id)
             return *it;
@@ -664,7 +664,7 @@ CEqualizerPreset * CMediaManager::getEqualizerPresetFromId(int id) const
 
 CEqualizerPreset * CMediaManager::getEqualizerPresetFromName(const QString& name) const
 {
-    for (QList<CEqualizerPreset *>::const_iterator it = m_equalizerPresets.begin(); it != m_equalizerPresets.end(); ++it)
+    for (QList<CEqualizerPreset *>::ConstIterator it = m_equalizerPresets.begin(); it != m_equalizerPresets.end(); ++it)
     {
         if ((*it)->getName() == name)
             return *it;

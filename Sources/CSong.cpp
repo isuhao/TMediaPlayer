@@ -801,7 +801,7 @@ bool CSong::moveFile()
     QStringList pathNameFolders = pathName.split('/', QString::SkipEmptyParts);
     pathName.clear();
 
-    for (QStringList::iterator it = pathNameFolders.begin(); it != pathNameFolders.end(); ++it)
+    for (QStringList::Iterator it = pathNameFolders.begin(); it != pathNameFolders.end(); ++it)
     {
         *it = it->trimmed();
 

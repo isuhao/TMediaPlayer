@@ -183,7 +183,7 @@ void CDialogEqualizer::resetPresetList()
 
     int index = 3;
 
-    for (QList<CEqualizerPreset *>::const_iterator it = equalizers.begin(); it != equalizers.end(); ++it, ++index)
+    for (QList<CEqualizerPreset *>::ConstIterator it = equalizers.begin(); it != equalizers.end(); ++it, ++index)
     {
         m_uiWidget->listPreset->addItem((*it)->getName(), (*it)->getId());
 

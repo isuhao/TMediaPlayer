@@ -57,25 +57,25 @@ m_rootFolder       (nullptr)
 CLibraryModel::~CLibraryModel()
 {
     // Met-à-jour tous les dossiers
-    for (QList<CFolder *>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
+    for (QList<CFolder *>::ConstIterator it = m_folders.begin(); it != m_folders.end(); ++it)
     {
         (*it)->updateDatabase();
     }
 
     // Met-à-jour toutes les listes de lecture
-    for (QList<IPlayList *>::const_iterator it = m_playLists.begin(); it != m_playLists.end(); ++it)
+    for (QList<IPlayList *>::ConstIterator it = m_playLists.begin(); it != m_playLists.end(); ++it)
     {
         (*it)->updateDatabase();
     }
 
     // Supprime toutes les listes de lecture
-    for (QList<IPlayList *>::const_iterator it = m_playLists.begin(); it != m_playLists.end(); ++it)
+    for (QList<IPlayList *>::ConstIterator it = m_playLists.begin(); it != m_playLists.end(); ++it)
     {
         delete *it;
     }
 
     // Supprime tous les dossiers
-    for (QList<CFolder *>::const_iterator it = m_folders.begin(); it != m_folders.end(); ++it)
+    for (QList<CFolder *>::ConstIterator it = m_folders.begin(); it != m_folders.end(); ++it)
     {
         delete *it;
     }
@@ -130,7 +130,7 @@ void CLibraryModel::loadFromDatabase()
     }
 
     // On déplace les dossiers dans l'arborescence
-    for (QList<CFolder *>::const_iterator it = folders.begin(); it != folders.end(); ++it)
+    for (QList<CFolder *>::ConstIterator it = folders.begin(); it != folders.end(); ++it)
     {
         long folderId = reinterpret_cast<long>((*it)->m_folder);
         if (folderId >= 0)
@@ -267,17 +267,26 @@ void CLibraryModel::loadFromDatabase()
             connect(playList, SIGNAL(listUpdated()), m_mainWindow, SLOT(updateListInformations()));
             connect(playList, SIGNAL(listUpdated()), this, SLOT(onPlayListChange()));
 
-            playList->updateList();
+            //playList->updateList();
         }
     }
 
     // On corrige les éventuelles erreurs de position dans les dossiers
-    for (QList<CFolder *>::const_iterator it = folders.begin(); it != folders.end(); ++it)
+    for (QList<CFolder *>::ConstIterator it = folders.begin(); it != folders.end(); ++it)
     {
         (*it)->fixPositions();
     }
 
     addFolder(m_rootFolder);
+
+    // Mise à jour des listes dynamiques
+    for (QList<IPlayList *>::ConstIterator it = m_playLists.begin(); it != m_playLists.end(); ++it)
+    {
+        CDynamicList * playList = qobject_cast<CDynamicList *>(*it);
+
+        if (playList)
+            playList->updateList();
+    }
 }
 
 
@@ -314,7 +323,7 @@ void CLibraryModel::clear()
     // Ajout des lecteurs de CD-ROM
     QList<CCDRomDrive *> drives = m_mainWindow->getCDRomDrives();
 
-    for (QList<CCDRomDrive *>::const_iterator drive = drives.begin(); drive != drives.end(); ++drive)
+    for (QList<CCDRomDrive *>::ConstIterator drive = drives.begin(); drive != drives.end(); ++drive)
     {
         QStandardItem * cdDriveItem = new QStandardItem(QPixmap(":/icons/cd"), (*drive)->getDriveName());
         cdDriveItem->setData(QVariant::fromValue(qobject_cast<CMediaTableView *>(*drive)), Qt::UserRole + 1);
@@ -340,7 +349,7 @@ void CLibraryModel::updateCDRomDrives()
 {
     QList<CCDRomDrive *> drives = m_mainWindow->getCDRomDrives();
 
-    for (QList<CCDRomDrive *>::const_iterator drive = drives.begin(); drive != drives.end(); ++drive)
+    for (QList<CCDRomDrive *>::ConstIterator drive = drives.begin(); drive != drives.end(); ++drive)
     {
         QStandardItem * cdDriveItem = m_cdRomDrives.key(*drive);
 
@@ -479,7 +488,7 @@ void CLibraryModel::addFolder(CFolder * folder)
     bool invalidPosition = false;
     QVector<CFolder::TFolderItem *> items = folder->getItems();
 
-    for (QVector<CFolder::TFolderItem *>::const_iterator it = items.begin(); it != items.end(); ++it)
+    for (QVector<CFolder::TFolderItem *>::ConstIterator it = items.begin(); it != items.end(); ++it)
     {
         if (*it)
         {
@@ -588,7 +597,7 @@ void CLibraryModel::removeFolder(CFolder * folder, bool recursive)
 
         QList<CFolder *> folders = folder->getFolders();
 
-        for (QList<CFolder *>::const_iterator it = folders.begin(); it != folders.end(); ++it)
+        for (QList<CFolder *>::ConstIterator it = folders.begin(); it != folders.end(); ++it)
         {
             parentFolder->addFolder(*it);
             QStandardItem * itemFolder = m_folderItems.key(*it);
@@ -609,7 +618,7 @@ void CLibraryModel::removeFolder(CFolder * folder, bool recursive)
 
         QList<IPlayList *> playLists = folder->getPlayLists();
 
-        for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
+        for (QList<IPlayList *>::ConstIterator it = playLists.begin(); it != playLists.end(); ++it)
         {
             parentFolder->addPlayList(*it);
             QStandardItem * itemPlayList = m_songTableItems.key(*it);
@@ -953,7 +962,7 @@ CFolder * CLibraryModel::getFolderFromId(int id, const QList<CFolder *> folders)
     if (id < 0)
         return nullptr;
 
-    for (QList<CFolder *>::const_iterator it = folders.begin(); it != folders.end(); ++it)
+    for (QList<CFolder *>::ConstIterator it = folders.begin(); it != folders.end(); ++it)
     {
         if ((*it)->getId() == id)
             return (*it);
@@ -968,7 +977,7 @@ IPlayList * CLibraryModel::getPlayListFromId(int id, const QList<IPlayList *> pl
     if (id <= 0)
         return nullptr;
 
-    for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
+    for (QList<IPlayList *>::ConstIterator it = playLists.begin(); it != playLists.end(); ++it)
     {
         if ((*it)->getIdPlayList() == id)
             return (*it);

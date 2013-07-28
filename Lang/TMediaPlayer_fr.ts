@@ -153,7 +153,7 @@
         <location filename="../Sources/CCriterion.cpp" line="185"/>
         <location filename="../Sources/CCriterion.cpp" line="217"/>
         <location filename="../Sources/CCriterion.cpp" line="251"/>
-        <location filename="../Sources/CCriterion.cpp" line="349"/>
+        <location filename="../Sources/CCriterion.cpp" line="366"/>
         <source>invalid condition</source>
         <translation>condition invalide</translation>
     </message>
@@ -175,18 +175,18 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CCriterion.cpp" line="323"/>
+        <location filename="../Sources/CCriterion.cpp" line="324"/>
         <source>invalid playlist</source>
         <translation>liste de lecture invalide</translation>
     </message>
     <message>
-        <location filename="../Sources/CCriterion.cpp" line="373"/>
-        <location filename="../Sources/CCriterion.cpp" line="419"/>
+        <location filename="../Sources/CCriterion.cpp" line="404"/>
+        <location filename="../Sources/CCriterion.cpp" line="450"/>
         <source>CCriterion::getWidget() : un critÃ¨re simple ne peut pas avoir le type TypeUnion ou TypeIntersection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CCriterion.cpp" line="481"/>
+        <location filename="../Sources/CCriterion.cpp" line="512"/>
         <source>CCriterion::getWidget() : type de critÃ¨re non gÃ©rÃ©</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1100,40 +1100,40 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CLibraryModel.cpp" line="301"/>
+        <location filename="../Sources/CLibraryModel.cpp" line="310"/>
         <source>Library</source>
         <translation>Médiathèque</translation>
     </message>
     <message>
-        <location filename="../Sources/CLibraryModel.cpp" line="308"/>
+        <location filename="../Sources/CLibraryModel.cpp" line="317"/>
         <source>Queue</source>
         <translation>File d&apos;attente</translation>
     </message>
     <message>
-        <location filename="../Sources/CLibraryModel.cpp" line="502"/>
-        <location filename="../Sources/CLibraryModel.cpp" line="785"/>
+        <location filename="../Sources/CLibraryModel.cpp" line="511"/>
+        <location filename="../Sources/CLibraryModel.cpp" line="794"/>
         <source>l&apos;Ã©lÃ©ment n&apos;est ni un dossier, ni une liste de lecture</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CLibraryModel.cpp" line="507"/>
+        <location filename="../Sources/CLibraryModel.cpp" line="516"/>
         <source>position incorrecte dans un dossier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CLibraryModel.cpp" line="598"/>
-        <location filename="../Sources/CLibraryModel.cpp" line="751"/>
+        <location filename="../Sources/CLibraryModel.cpp" line="607"/>
+        <location filename="../Sources/CLibraryModel.cpp" line="760"/>
         <source>invalid folder</source>
         <translation>dossier invalide</translation>
     </message>
     <message>
-        <location filename="../Sources/CLibraryModel.cpp" line="619"/>
-        <location filename="../Sources/CLibraryModel.cpp" line="712"/>
+        <location filename="../Sources/CLibraryModel.cpp" line="628"/>
+        <location filename="../Sources/CLibraryModel.cpp" line="721"/>
         <source>invalid playlist</source>
         <translation>liste de lecture invalide</translation>
     </message>
     <message>
-        <location filename="../Sources/CLibraryModel.cpp" line="701"/>
+        <location filename="../Sources/CLibraryModel.cpp" line="710"/>
         <source>invalid folter</source>
         <translation>dossier invalide</translation>
     </message>

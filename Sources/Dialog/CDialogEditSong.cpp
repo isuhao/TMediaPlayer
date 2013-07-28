@@ -495,7 +495,7 @@ void CDialogEditSong::updateInfos()
     model->setHorizontalHeaderLabels(QStringList() << tr("Local time") << tr("UTC"));
     m_uiWidget->listPlays->setModel(model);
 
-    for (QList<CSong::TSongPlay>::const_iterator it = song->m_plays.begin(); it != song->m_plays.end(); ++it)
+    for (QList<CSong::TSongPlay>::ConstIterator it = song->m_plays.begin(); it != song->m_plays.end(); ++it)
     {
         QList<QStandardItem *> itemList;
         itemList << new QStandardItem(it->time.toString(tr("dd/MM/yyyy HH:mm:ss")));

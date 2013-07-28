@@ -136,7 +136,7 @@ private:
     bool m_folderChanging;           ///< Indique si le dossier parent est en train d'être changé.
   //QModelIndex m_index;             ///< Index du dossier dans la vue.
     QList<IPlayList *> m_playLists0; ///< Liste des listes de lecture du dossier.
-    QList<CFolder *> m_folders0;     ///< Liste des dossiers du dossier.
+    QList<CFolder *> m_folders;      ///< Liste des dossiers du dossier.
     QVector<TFolderItem *> m_items;  ///< Liste des éléments du dossier.
 };
 
@@ -211,7 +211,7 @@ inline QList<IPlayList *> CFolder::getPlayLists() const
 
 inline QList<CFolder *> CFolder::getFolders() const
 {
-    return m_folders0;
+    return m_folders;
 }
 
 
@@ -241,7 +241,7 @@ inline int CFolder::getNumPlayLists() const
 
 inline int CFolder::getNumFolders() const
 {
-    return m_folders0.size();
+    return m_folders.size();
 }
 
 #endif // FILE_C_LIST_FOLDER

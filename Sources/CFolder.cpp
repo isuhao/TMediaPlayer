@@ -57,7 +57,7 @@ m_folderChanging (false)
 CFolder::~CFolder()
 {
 /*
-    for (QList<IPlayList *>::const_iterator playList = m_playLists.begin(); playList != m_playLists.end(); ++playList)
+    for (QList<IPlayList *>::ConstIterator playList = m_playLists.begin(); playList != m_playLists.end(); ++playList)
     {
         (*playList)->updateDatabase();
         delete playList;
@@ -178,7 +178,7 @@ int CFolder::getPosition(IPlayList * playList) const
 
 int CFolder::getPosition(CFolder * folder) const
 {
-    if (!m_folders0.contains(folder))
+    if (!m_folders.contains(folder))
     {
         return -1;
     }
@@ -323,7 +323,7 @@ void CFolder::addFolder(CFolder * folder, int position)
     position = qBound(-1, position, m_items.size() - 1);
 
     // Déplacement
-    if (m_folders0.contains(folder))
+    if (m_folders.contains(folder))
     {
         Q_ASSERT(folder->m_folder == this);
 
@@ -367,7 +367,7 @@ void CFolder::addFolder(CFolder * folder, int position)
         if (position < 0)
             position = m_items.size();
 
-        m_folders0.append(folder);
+        m_folders.append(folder);
         m_items.insert(position, new TFolderItem(-42, folder));
         folder->m_folder = this;
 
@@ -395,7 +395,7 @@ void CFolder::removeFolder(CFolder * folder)
 {
     Q_CHECK_PTR(folder);
 
-    if (m_folders0.contains(folder))
+    if (m_folders.contains(folder))
     {
         removeFolderItem(folder);
         folder->setFolder(nullptr);
@@ -548,13 +548,13 @@ void CFolder::removeFromDatabase(bool recursive)
     if (recursive)
     {
         // Suppression récursive des dossiers
-        for (QList<CFolder *>::const_iterator it = m_folders0.begin(); it != m_folders0.end(); ++it)
+        for (QList<CFolder *>::ConstIterator it = m_folders.begin(); it != m_folders.end(); ++it)
         {
             (*it)->removeFromDatabase(true);
         }
 
         // Suppression des listes de lecture
-        for (QList<IPlayList *>::const_iterator it = m_playLists0.begin(); it != m_playLists0.end(); ++it)
+        for (QList<IPlayList *>::ConstIterator it = m_playLists0.begin(); it != m_playLists0.end(); ++it)
         {
             (*it)->removeFromDatabase();
         }
@@ -578,7 +578,7 @@ void CFolder::removeFromDatabase(bool recursive)
 
 void CFolder::fixPositions()
 {
-    for (QVector<TFolderItem *>::iterator it = m_items.begin(); it != m_items.end(); )
+    for (QVector<TFolderItem *>::Iterator it = m_items.begin(); it != m_items.end(); )
     {
         if (*it)
             ++it;
@@ -633,7 +633,7 @@ void CFolder::addFolderItem(CFolder * folder, int position)
         m_items.append(nullptr);
     }
 
-    m_folders0.append(folder);
+    m_folders.append(folder);
     m_items[position] = new TFolderItem(position, folder);
 }
 
@@ -644,7 +644,7 @@ void CFolder::removePlayListItem(IPlayList * playList)
 
     m_playLists0.removeAll(playList);
 
-    for (QVector<TFolderItem *>::iterator it = m_items.begin(); it != m_items.end(); )
+    for (QVector<TFolderItem *>::Iterator it = m_items.begin(); it != m_items.end(); )
     {
         if (*it && (*it)->playList == playList)
         {
@@ -662,9 +662,9 @@ void CFolder::removeFolderItem(CFolder * folder)
 {
     Q_CHECK_PTR(folder);
 
-    m_folders0.removeAll(folder);
+    m_folders.removeAll(folder);
 
-    for (QVector<TFolderItem *>::iterator it = m_items.begin(); it != m_items.end(); )
+    for (QVector<TFolderItem *>::Iterator it = m_items.begin(); it != m_items.end(); )
     {
         if (*it && (*it)->folder == folder)
         {

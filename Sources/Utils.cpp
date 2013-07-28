@@ -140,14 +140,14 @@ QStringList listFilesInFolder(const QString& pathName)
 
     QStringList dirList = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
 
-    for (QStringList::const_iterator it = dirList.begin(); it != dirList.end(); ++it)
+    for (QStringList::ConstIterator it = dirList.begin(); it != dirList.end(); ++it)
     {
         fileList.append(listFilesInFolder(dir.absoluteFilePath(*it)));
     }
 
     QStringList fileDirList = dir.entryList(QDir::Files | QDir::Readable, QDir::Name);
 
-    for (QStringList::const_iterator it = fileDirList.begin(); it != fileDirList.end(); ++it)
+    for (QStringList::ConstIterator it = fileDirList.begin(); it != fileDirList.end(); ++it)
     {
         fileList.append(dir.absoluteFilePath(*it).replace('\\', '/'));
     }

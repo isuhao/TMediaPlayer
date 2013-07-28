@@ -53,7 +53,7 @@ QByteArray ILastFmService::getLastFmQuery(const QMap<QByteArray, QByteArray>& ar
 {
     QByteArray content;
 
-    for (QMap<QByteArray, QByteArray>::const_iterator it = args.begin(); it != args.end(); ++it)
+    for (QMap<QByteArray, QByteArray>::ConstIterator it = args.begin(); it != args.end(); ++it)
     {
         if (it != args.begin())
         {
@@ -82,7 +82,7 @@ QByteArray ILastFmService::getLastFmSignature(const QMap<QByteArray, QByteArray>
 {
     QCryptographicHash crypto(QCryptographicHash::Md5);
 
-    for (QMap<QByteArray, QByteArray>::const_iterator it = args.begin(); it != args.end(); ++it)
+    for (QMap<QByteArray, QByteArray>::ConstIterator it = args.begin(); it != args.end(); ++it)
     {
         crypto.addData(it.key());
         crypto.addData(it.value());

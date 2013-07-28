@@ -103,7 +103,7 @@ bool CMultiCriteria::matchCriterion(CSong * song) const
 
     if (m_type == TypeUnion)
     {
-        for (QList<ICriterion *>::const_iterator it = m_children.begin(); it != m_children.end(); ++it)
+        for (QList<ICriterion *>::ConstIterator it = m_children.begin(); it != m_children.end(); ++it)
         {
             if ((*it)->matchCriterion(song))
             {
@@ -113,7 +113,7 @@ bool CMultiCriteria::matchCriterion(CSong * song) const
     }
     else if (m_type == TypeIntersection)
     {
-        for (QList<ICriterion *>::const_iterator it = m_children.begin(); it != m_children.end(); ++it)
+        for (QList<ICriterion *>::ConstIterator it = m_children.begin(); it != m_children.end(); ++it)
         {
             if (!(*it)->matchCriterion(song))
             {
@@ -129,12 +129,16 @@ bool CMultiCriteria::matchCriterion(CSong * song) const
 
 
 /**
- *+++
- * La liste est sans doublons, et ne contient que des éléments provenant de \a from.
- *+++
+ * Retourne la liste des morceaux qui vérifient le critère.
+ *
+ * \param from        Liste de morceaux à analyser.
+ * \param with        Liste de morceaux à ajouter dans la liste.
+ * \param onlyChecked Indique si on doit prendre uniquement les morceaux cochés.
+ * \return Liste de morceaux qui vérifient le critère, sans doublons, avec tous les
+ *         éléments de \a with.
  */
 
-QList<CSong *> CMultiCriteria::getSongs(const QList<CSong *>& from, const QList<CSong *>& with) const
+QList<CSong *> CMultiCriteria::getSongs(const QList<CSong *>& from, const QList<CSong *>& with, bool onlyChecked) const
 {
     if (m_children.isEmpty())
     {
@@ -147,18 +151,18 @@ QList<CSong *> CMultiCriteria::getSongs(const QList<CSong *>& from, const QList<
     {
         songList = with;
 
-        for (QList<ICriterion *>::const_iterator it = m_children.begin(); it != m_children.end(); ++it)
+        for (QList<ICriterion *>::ConstIterator it = m_children.begin(); it != m_children.end(); ++it)
         {
-            songList = (*it)->getSongs(from, songList);
+            songList = (*it)->getSongs(from, songList, onlyChecked);
         }
     }
     else if (m_type == TypeIntersection)
     {
         songList = from;
 
-        for (QList<ICriterion *>::const_iterator it = m_children.begin(); it != m_children.end(); ++it)
+        for (QList<ICriterion *>::ConstIterator it = m_children.begin(); it != m_children.end(); ++it)
         {
-            songList = (*it)->getSongs(songList, with);
+            songList = (*it)->getSongs(songList, with, onlyChecked);
         }
     }
 
@@ -175,7 +179,7 @@ ICriterion::TUpdateConditions CMultiCriteria::getUpdateConditions() const
 
     TUpdateConditions ret;
 
-    for (QList<ICriterion *>::const_iterator it = m_children.begin(); it != m_children.end(); ++it)
+    for (QList<ICriterion *>::ConstIterator it = m_children.begin(); it != m_children.end(); ++it)
     {
         ret |= (*it)->getUpdateConditions();
     }
@@ -188,7 +192,7 @@ void CMultiCriteria::setPlayList(CDynamicList * playList)
 {
     Q_CHECK_PTR(playList);
 
-    for (QList<ICriterion *>::const_iterator it = m_children.begin(); it != m_children.end(); ++it)
+    for (QList<ICriterion *>::ConstIterator it = m_children.begin(); it != m_children.end(); ++it)
     {
         (*it)->setPlayList(playList);
     }
@@ -202,7 +206,7 @@ void CMultiCriteria::insertIntoDatabase()
     // Insertion du critère
     ICriterion::insertIntoDatabase();
 
-    for (QList<ICriterion *>::const_iterator it = m_children.begin(); it != m_children.end(); ++it)
+    for (QList<ICriterion *>::ConstIterator it = m_children.begin(); it != m_children.end(); ++it)
     {
         (*it)->insertIntoDatabase();
     }
@@ -214,7 +218,7 @@ IWidgetCriterion * CMultiCriteria::getWidget() const
     CWidgetMultiCriteria * widget = new CWidgetMultiCriteria(m_mainWindow, nullptr);
     widget->setMultiCriteriaType(m_type);
 
-    for (QList<ICriterion *>::const_iterator it = m_children.begin(); it != m_children.end(); ++it)
+    for (QList<ICriterion *>::ConstIterator it = m_children.begin(); it != m_children.end(); ++it)
     {
         widget->addCriterion((*it)->getWidget());
     }

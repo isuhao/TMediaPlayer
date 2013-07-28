@@ -59,7 +59,7 @@ m_settings   (settings)
 
     m_uiWidget->editLanguage->addItem(tr("System language"));
 
-    for (QStringList::const_iterator langFile = langFiles.begin(); langFile != langFiles.end(); ++langFile)
+    for (QStringList::ConstIterator langFile = langFiles.begin(); langFile != langFiles.end(); ++langFile)
     {
         const QString langISO2 = langFile->mid(13, 2);
         m_uiWidget->editLanguage->addItem(getLanguageName(getLanguageForISO2Code(langISO2)), langISO2);
@@ -125,7 +125,7 @@ m_settings   (settings)
     // Liste des répertoires surveillés
     QList<CLibraryFolder *> folders = m_mainWindow->getMediaManager()->getLibraryFolders();
 
-    for (QList<CLibraryFolder *>::const_iterator it = folders.begin(); it != folders.end(); ++it)
+    for (QList<CLibraryFolder *>::ConstIterator it = folders.begin(); it != folders.end(); ++it)
     {
         QListWidgetItem * item = new QListWidgetItem((*it)->pathName);
         item->setData(Qt::UserRole, (*it)->id);

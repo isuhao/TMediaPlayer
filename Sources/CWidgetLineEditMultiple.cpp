@@ -63,7 +63,7 @@ void CWidgetLineEditMultiple::setContent(const QStringList& values, const QStrin
 		m_comboBox->clear();
 	}
 
-	for (QStringList::const_iterator it = values.begin(); it != values.end(); ++it)
+	for (QStringList::ConstIterator it = values.begin(); it != values.end(); ++it)
 	{
 		m_comboBox->addItem(*it);
 	}

@@ -35,7 +35,7 @@ void CLibrary::deleteSongs()
 {
     QList<CSong *> songs = m_model->getSongs();
 
-    for (QList<CSong *>::const_iterator it = songs.begin(); it != songs.end(); ++it)
+    for (QList<CSong *>::ConstIterator it = songs.begin(); it != songs.end(); ++it)
     {
         delete *it;
     }
@@ -68,7 +68,7 @@ void CLibrary::addSongs(const QList<CSong *>& songs)
 {
     addSongsToTable(songs);
 
-    for (QList<CSong *>::const_iterator song = songs.begin(); song != songs.end(); ++song)
+    for (QList<CSong *>::ConstIterator song = songs.begin(); song != songs.end(); ++song)
     {
         Q_CHECK_PTR(*song);
         m_songs[(*song)->getId()] = *song;

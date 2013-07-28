@@ -144,7 +144,7 @@ m_songItemList      (songItemList)
     bool first = true;
 
     // On parcourt la liste des morceaux sélectionnés pour trouver les informations à afficher
-    for (QList<CMediaTableItem *>::const_iterator it = m_songItemList.begin(); it != m_songItemList.end(); ++it)
+    for (QList<CMediaTableItem *>::ConstIterator it = m_songItemList.begin(); it != m_songItemList.end(); ++it)
     {
         Q_CHECK_PTR(*it);
         CSong * song = (*it)->getSong();
@@ -226,7 +226,7 @@ m_songItemList      (songItemList)
         // Lectures
         QList<CSong::TSongPlay> songPlays = song->getPlays();
 
-        for (QList<CSong::TSongPlay>::const_iterator play = songPlays.begin(); play != songPlays.end(); ++play)
+        for (QList<CSong::TSongPlay>::ConstIterator play = songPlays.begin(); play != songPlays.end(); ++play)
         {
             TPlay p;
             p.song    = song;
@@ -408,7 +408,7 @@ m_songItemList      (songItemList)
         CSong::TFormat m = CSong::FormatUnknown;
         int valMax = 0;
 
-        for (QMap<CSong::TFormat, int>::iterator it = formats.begin(); it != formats.end(); ++it)
+        for (QMap<CSong::TFormat, int>::Iterator it = formats.begin(); it != formats.end(); ++it)
         {
             if (it.value() > valMax)
             {
@@ -459,7 +459,7 @@ m_songItemList      (songItemList)
     model->setHorizontalHeaderLabels(QStringList() << tr("Song") << tr("Local time") << tr("UTC"));
     m_uiWidget->listPlays->setModel(model);
 
-    for (QList<TPlay>::const_iterator it = plays.begin(); it != plays.end(); ++it)
+    for (QList<TPlay>::ConstIterator it = plays.begin(); it != plays.end(); ++it)
     {
         QList<QStandardItem *> itemList;
 
@@ -496,7 +496,7 @@ m_songItemList      (songItemList)
     // Titre
     m_editTitle = new CWidgetLineEditMultiple();
     m_editTitle->setContent(songTitle_V2.uniqueKeys(), notSimText);
-    m_uiWidget->layoutInfos->addWidget(m_editTitle, 1, 1, 1, 1);
+    m_uiWidget->layoutInfosTitle->addWidget(m_editTitle, 1, 1, 1, 1);
     connect(m_editTitle, SIGNAL(textChanged(const QString&)), this, SLOT(onTitleChange(const QString&)));
 
     m_editTitle2 = new CWidgetLineEditMultiple();
@@ -523,7 +523,7 @@ m_songItemList      (songItemList)
         m_editTitleCB_2->setInsertPolicy(QComboBox::NoInsert);
         m_uiWidget->layoutSorting->addWidget(m_editTitleCB_2, 1, 1, 1, 1);
 
-        for (QMap<QString, int>::const_iterator it = songTitle_V2.begin(); it != songTitle_V2.end(); ++it)
+        for (QMap<QString, int>::ConstIterator it = songTitle_V2.begin(); it != songTitle_V2.end(); ++it)
         {
             m_editTitleCB->addItem(it.key());
             m_editTitleCB_2->addItem(it.key());
@@ -582,7 +582,7 @@ m_songItemList      (songItemList)
         m_editTitleSortCB->setInsertPolicy(QComboBox::NoInsert);
         m_uiWidget->layoutSorting->addWidget(m_editTitleSortCB, 1, 3, 1, 1);
 
-        for (QMap<QString, int>::const_iterator it = songTitleSort_V2.begin(); it != songTitleSort_V2.end(); ++it)
+        for (QMap<QString, int>::ConstIterator it = songTitleSort_V2.begin(); it != songTitleSort_V2.end(); ++it)
         {
             m_editTitleSortCB->addItem(it.key());
         }
@@ -640,7 +640,7 @@ m_songItemList      (songItemList)
         m_editArtistCB_2->setInsertPolicy(QComboBox::NoInsert);
         m_uiWidget->layoutSorting->addWidget(m_editArtistCB_2, 3, 1, 1, 1);
 
-        for (QMap<QString, int>::const_iterator it = songArtist_V2.begin(); it != songArtist_V2.end(); ++it)
+        for (QMap<QString, int>::ConstIterator it = songArtist_V2.begin(); it != songArtist_V2.end(); ++it)
         {
             m_editArtistCB->addItem(it.key());
             m_editArtistCB_2->addItem(it.key());
@@ -699,7 +699,7 @@ m_songItemList      (songItemList)
         m_editArtistSortCB->setInsertPolicy(QComboBox::NoInsert);
         m_uiWidget->layoutSorting->addWidget(m_editArtistSortCB, 3, 3, 1, 1);
 
-        for (QMap<QString, int>::const_iterator it = songArtistSort_V2.begin(); it != songArtistSort_V2.end(); ++it)
+        for (QMap<QString, int>::ConstIterator it = songArtistSort_V2.begin(); it != songArtistSort_V2.end(); ++it)
         {
             m_editArtistSortCB->addItem(it.key());
         }
@@ -757,7 +757,7 @@ m_songItemList      (songItemList)
         m_editAlbumCB_2->setInsertPolicy(QComboBox::NoInsert);
         m_uiWidget->layoutSorting->addWidget(m_editAlbumCB_2, 5, 1, 1, 1);
 
-        for (QMap<QString, int>::const_iterator it = songAlbum_V2.begin(); it != songAlbum_V2.end(); ++it)
+        for (QMap<QString, int>::ConstIterator it = songAlbum_V2.begin(); it != songAlbum_V2.end(); ++it)
         {
             m_editAlbumCB->addItem(it.key());
             m_editAlbumCB_2->addItem(it.key());
@@ -816,7 +816,7 @@ m_songItemList      (songItemList)
         m_editAlbumSortCB->setInsertPolicy(QComboBox::NoInsert);
         m_uiWidget->layoutSorting->addWidget(m_editAlbumSortCB, 5, 3, 1, 1);
 
-        for (QMap<QString, int>::const_iterator it = songAlbumSort_V2.begin(); it != songAlbumSort_V2.end(); ++it)
+        for (QMap<QString, int>::ConstIterator it = songAlbumSort_V2.begin(); it != songAlbumSort_V2.end(); ++it)
         {
             m_editAlbumSortCB->addItem(it.key());
         }
@@ -874,7 +874,7 @@ m_songItemList      (songItemList)
         m_editAlbumArtistCB_2->setInsertPolicy(QComboBox::NoInsert);
         m_uiWidget->layoutSorting->addWidget(m_editAlbumArtistCB_2, 7, 1, 1, 1);
 
-        for (QMap<QString, int>::const_iterator it = songAlbumArtist_V2.begin(); it != songAlbumArtist_V2.end(); ++it)
+        for (QMap<QString, int>::ConstIterator it = songAlbumArtist_V2.begin(); it != songAlbumArtist_V2.end(); ++it)
         {
             m_editAlbumArtistCB->addItem(it.key());
             m_editAlbumArtistCB_2->addItem(it.key());
@@ -933,7 +933,7 @@ m_songItemList      (songItemList)
         m_editAlbumArtistSortCB->setInsertPolicy(QComboBox::NoInsert);
         m_uiWidget->layoutSorting->addWidget(m_editAlbumArtistSortCB, 7, 3, 1, 1);
 
-        for (QMap<QString, int>::const_iterator it = songAlbumArtistSort_V2.begin(); it != songAlbumArtistSort_V2.end(); ++it)
+        for (QMap<QString, int>::ConstIterator it = songAlbumArtistSort_V2.begin(); it != songAlbumArtistSort_V2.end(); ++it)
         {
             m_editAlbumArtistSortCB->addItem(it.key());
         }
@@ -991,7 +991,7 @@ m_songItemList      (songItemList)
         m_editComposerCB_2->setInsertPolicy(QComboBox::NoInsert);
         m_uiWidget->layoutSorting->addWidget(m_editComposerCB_2, 9, 1, 1, 1);
 
-        for (QMap<QString, int>::const_iterator it = songComposer_V2.begin(); it != songComposer_V2.end(); ++it)
+        for (QMap<QString, int>::ConstIterator it = songComposer_V2.begin(); it != songComposer_V2.end(); ++it)
         {
             m_editComposerCB->addItem(it.key());
             m_editComposerCB_2->addItem(it.key());
@@ -1050,7 +1050,7 @@ m_songItemList      (songItemList)
         m_editComposerSortCB->setInsertPolicy(QComboBox::NoInsert);
         m_uiWidget->layoutSorting->addWidget(m_editComposerSortCB, 9, 3, 1, 1);
 
-        for (QMap<QString, int>::const_iterator it = songComposerSort_V2.begin(); it != songComposerSort_V2.end(); ++it)
+        for (QMap<QString, int>::ConstIterator it = songComposerSort_V2.begin(); it != songComposerSort_V2.end(); ++it)
         {
             m_editComposerSortCB->addItem(it.key());
         }
@@ -1316,7 +1316,7 @@ CDialogEditSongs::~CDialogEditSongs()
 void CDialogEditSongs::apply()
 {
     // Modification de chaque morceau
-    for (QList<CMediaTableItem *>::const_iterator it = m_songItemList.begin(); it != m_songItemList.end(); ++it)
+    for (QList<CMediaTableItem *>::ConstIterator it = m_songItemList.begin(); it != m_songItemList.end(); ++it)
     {
         CSong * song = (*it)->getSong();
 

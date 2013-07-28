@@ -125,7 +125,7 @@ void CDynamicList::updateList()
     const QModelIndexList indexList = selectionModel()->selectedRows();
     QList<CSong *> selectedSongs;
 
-    for (QModelIndexList::const_iterator index = indexList.begin(); index != indexList.end(); ++index)
+    for (QModelIndexList::ConstIterator index = indexList.begin(); index != indexList.end(); ++index)
     {
         CSong * song = getSongItemForRow(index->row())->getSong();
 
@@ -144,7 +144,7 @@ void CDynamicList::updateList()
     // Sélection des morceaux précédemment sélectionnés
     selectionModel()->clearSelection();
 
-    for (QList<CSong *>::const_iterator song = selectedSongs.begin(); song != selectedSongs.end(); ++song)
+    for (QList<CSong *>::ConstIterator song = selectedSongs.begin(); song != selectedSongs.end(); ++song)
     {
         CMediaTableItem * songItem = getFirstSongItem(*song);
 
@@ -473,7 +473,7 @@ void CDynamicList::loadFromDatabase()
     }
 
     // Imbrication des critères
-    for (QMap<int, ICriterion *>::const_iterator it = criteriaList.begin(); it != criteriaList.end(); ++it)
+    for (QMap<int, ICriterion *>::ConstIterator it = criteriaList.begin(); it != criteriaList.end(); ++it)
     {
         long parentId = reinterpret_cast<long>(it.value()->m_parent);
 

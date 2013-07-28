@@ -304,13 +304,14 @@ bool CCriterion::matchCriterion(CSong * song) const
  * ou non du morceau dans une liste, auquel cas on détermine l'intersection de \a from
  * avec les morceaux de la liste de lecture.
  *
- * \param from Liste de morceaux à analyser.
- * \param with Liste de morceaux à ajouter dans la liste.
+ * \param from        Liste de morceaux à analyser.
+ * \param with        Liste de morceaux à ajouter dans la liste.
+ * \param onlyChecked Indique si on doit prendre uniquement les morceaux cochés.
  * \return Liste de morceaux qui vérifient le critère, sans doublons, avec tous les
  *         éléments de \a with.
  */
 
-QList<CSong *> CCriterion::getSongs(const QList<CSong *>& from, const QList<CSong *>& with) const
+QList<CSong *> CCriterion::getSongs(const QList<CSong *>& from, const QList<CSong *>& with, bool onlyChecked) const
 {
     QList<CSong *> songList = with;
 
@@ -326,21 +327,37 @@ QList<CSong *> CCriterion::getSongs(const QList<CSong *>& from, const QList<CSon
 
         if (m_condition == ICriterion::CondIs)
         {
-            for (QList<CSong *>::const_iterator it = from.begin(); it != from.end(); ++it)
+            for (QList<CSong *>::ConstIterator it = from.begin(); it != from.end(); ++it)
             {
                 if (playList->hasSong(*it) && !songList.contains(*it))
                 {
-                    songList.append(*it);
+                    if (onlyChecked)
+                    {
+                        if ((*it)->isEnabled())
+                            songList.append(*it);
+                    }
+                    else
+                    {
+                        songList.append(*it);
+                    }
                 }
             }
         }
         else if (m_condition == ICriterion::CondIsNot)
         {
-            for (QList<CSong *>::const_iterator it = from.begin(); it != from.end(); ++it)
+            for (QList<CSong *>::ConstIterator it = from.begin(); it != from.end(); ++it)
             {
                 if (!playList->hasSong(*it) && !songList.contains(*it))
                 {
-                    songList.append(*it);
+                    if (onlyChecked)
+                    {
+                        if ((*it)->isEnabled())
+                            songList.append(*it);
+                    }
+                    else
+                    {
+                        songList.append(*it);
+                    }
                 }
             }
         }
@@ -351,11 +368,19 @@ QList<CSong *> CCriterion::getSongs(const QList<CSong *>& from, const QList<CSon
     }
     else
     {
-        for (QList<CSong *>::const_iterator it = from.begin(); it != from.end(); ++it)
+        for (QList<CSong *>::ConstIterator it = from.begin(); it != from.end(); ++it)
         {
             if (matchCriterion(*it) && !songList.contains(*it))
             {
-                songList.append(*it);
+                if (onlyChecked)
+                {
+                    if ((*it)->isEnabled())
+                        songList.append(*it);
+                }
+                else
+                {
+                    songList.append(*it);
+                }
             }
         }
     }
@@ -363,6 +388,12 @@ QList<CSong *> CCriterion::getSongs(const QList<CSong *>& from, const QList<CSon
     return songList;
 }
 
+
+/**
+ * Retourne les conditions de mise-à-jour de la liste de lecture.
+ *
+ * \return Conditions de mise-à-jour.
+ */
 
 ICriterion::TUpdateConditions CCriterion::getUpdateConditions() const
 {

@@ -51,7 +51,7 @@ m_uiWidget       (new Ui::WidgetCriterion())
 
     QList<IPlayList *> playLists = m_mainWindow->getAllPlayLists();
 
-    for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
+    for (QList<IPlayList *>::ConstIterator it = playLists.begin(); it != playLists.end(); ++it)
     {
         if (qobject_cast<CStaticList *>(*it))
         {

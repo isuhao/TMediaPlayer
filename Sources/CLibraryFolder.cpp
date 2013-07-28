@@ -75,7 +75,7 @@ void CLibraryFolder::convertStringToFormatItems(const QString& formatItems)
 {
     QStringList items = formatItems.split('|');
 
-    for (QStringList::const_iterator item = items.begin(); item != items.end(); ++item)
+    for (QStringList::ConstIterator item = items.begin(); item != items.end(); ++item)
     {
         QStringList itemSplit = item->split(':');
 

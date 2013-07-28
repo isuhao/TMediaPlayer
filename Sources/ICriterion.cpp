@@ -78,7 +78,7 @@ QList<CSong *> ICriterion::getSongs(const QList<CSong *>& from, const QList<CSon
 {
     QList<CSong *> songList = with;
 
-    for (QList<CSong *>::const_iterator it = from.begin(); it != from.end(); ++it)
+    for (QList<CSong *>::ConstIterator it = from.begin(); it != from.end(); ++it)
     {
         if (matchCriterion(*it) && !songList.contains(*it))
         {

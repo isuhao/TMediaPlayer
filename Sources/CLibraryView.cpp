@@ -224,7 +224,7 @@ void CLibraryView::setModel(CLibraryModel * model)
     // Ouverture des dossiers
     QList<CFolder *> folders = m_model->getFolders();
 
-    for (QList<CFolder *>::const_iterator it = folders.begin(); it != folders.end(); ++it)
+    for (QList<CFolder *>::ConstIterator it = folders.begin(); it != folders.end(); ++it)
     {
         setExpanded(m_model->getModelIndex(*it), (*it)->isOpen());
     }
@@ -232,7 +232,7 @@ void CLibraryView::setModel(CLibraryModel * model)
     // Affiche ou masque les lecteurs de CD-ROM
     QList<CCDRomDrive *> drives = m_mainWindow->getCDRomDrives();
 
-    for (QList<CCDRomDrive *>::const_iterator drive = drives.begin(); drive != drives.end(); ++drive)
+    for (QList<CCDRomDrive *>::ConstIterator drive = drives.begin(); drive != drives.end(); ++drive)
     {
         QModelIndex index = m_model->getModelIndex(*drive);
 
@@ -261,7 +261,7 @@ void CLibraryView::updateCDRomDrives()
 
     QList<CCDRomDrive *> drives = m_mainWindow->getCDRomDrives();
 
-    for (QList<CCDRomDrive *>::const_iterator drive = drives.begin(); drive != drives.end(); ++drive)
+    for (QList<CCDRomDrive *>::ConstIterator drive = drives.begin(); drive != drives.end(); ++drive)
     {
         QModelIndex index = m_model->getModelIndex(*drive);
 

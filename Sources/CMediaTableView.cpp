@@ -153,7 +153,7 @@ CMediaTableItem * CMediaTableView::getFirstSongItem(CSong * song) const
     if (!song)
         return nullptr;
 
-    for (QList<CMediaTableItem *>::const_iterator it = m_model->m_data.begin(); it != m_model->m_data.end(); ++it)
+    for (QList<CMediaTableItem *>::ConstIterator it = m_model->m_data.begin(); it != m_model->m_data.end(); ++it)
     {
         if ((*it)->getSong() == song)
         {
@@ -199,7 +199,7 @@ CMediaTableItem * CMediaTableView::getSelectedSongItem() const
     int row = -1;
     QModelIndexList indexList = selectionModel()->selectedIndexes();
 
-    for (QModelIndexList::const_iterator it = indexList.begin(); it != indexList.end(); ++it)
+    for (QModelIndexList::ConstIterator it = indexList.begin(); it != indexList.end(); ++it)
     {
         if (row == -1 || it->row() < row)
         {
@@ -223,7 +223,7 @@ QList<CMediaTableItem *> CMediaTableView::getSelectedSongItems() const
     QList<CMediaTableItem *> songItemList;
     QModelIndexList indexList = selectionModel()->selectedRows();
 
-    for (QModelIndexList::const_iterator it = indexList.begin(); it != indexList.end(); ++it)
+    for (QModelIndexList::ConstIterator it = indexList.begin(); it != indexList.end(); ++it)
     {
         CMediaTableItem * songItem = m_model->getSongItem(*it);
         if (songItem)
@@ -245,7 +245,7 @@ QList<CSong *> CMediaTableView::getSelectedSongs() const
     QList<CSong *> songs;
     QModelIndexList indexList = selectionModel()->selectedRows();
 
-    for (QModelIndexList::const_iterator it = indexList.begin(); it != indexList.end(); ++it)
+    for (QModelIndexList::ConstIterator it = indexList.begin(); it != indexList.end(); ++it)
     {
         songs.append(m_model->m_data.at(it->row())->getSong());
     }
@@ -305,7 +305,7 @@ qlonglong CMediaTableView::getTotalDuration() const
 {
     qlonglong duration = 0;
 
-    for (QList<CMediaTableItem *>::const_iterator songItem = m_model->m_data.begin(); songItem != m_model->m_data.end(); ++songItem)
+    for (QList<CMediaTableItem *>::ConstIterator songItem = m_model->m_data.begin(); songItem != m_model->m_data.end(); ++songItem)
     {
         duration += (*songItem)->getSong()->getDuration();
     }
@@ -357,7 +357,7 @@ void CMediaTableView::addSongToTable(CSong * song, int pos)
 
 void CMediaTableView::addSongsToTable(const QList<CSong *>& songs)
 {
-    for (QList<CSong *>::const_iterator song = songs.begin(); song != songs.end(); ++song)
+    for (QList<CSong *>::ConstIterator song = songs.begin(); song != songs.end(); ++song)
     {
         Q_CHECK_PTR(*song);
         m_model->insertRow(*song);
@@ -387,7 +387,7 @@ void CMediaTableView::removeSongFromTable(CSong * song)
 
     int row = 0;
 
-    for (QList<CMediaTableItem *>::const_iterator it = m_model->m_data.begin(); it != m_model->m_data.end(); ++it, ++row)
+    for (QList<CMediaTableItem *>::ConstIterator it = m_model->m_data.begin(); it != m_model->m_data.end(); ++it, ++row)
     {
         if ((*it)->getSong() == song)
         {
@@ -498,7 +498,7 @@ void CMediaTableView::initColumns(const QString& str)
 
         QStringList columnList = str.split(';', QString::SkipEmptyParts);
 
-        for (QStringList::const_iterator columnInfos = columnList.begin(); columnInfos != columnList.end(); ++columnInfos)
+        for (QStringList::ConstIterator columnInfos = columnList.begin(); columnInfos != columnList.end(); ++columnInfos)
         {
             QStringList columnInfosPart = columnInfos->split(':');
 
@@ -749,7 +749,7 @@ void CMediaTableView::sortColumn(int column, Qt::SortOrder order)
         // Mise-à-jour de la sélection
         selectionModel()->clearSelection();
 
-        for (QList<CMediaTableItem *>::const_iterator songItem = m_selectedItems.begin(); songItem != m_selectedItems.end(); ++songItem)
+        for (QList<CMediaTableItem *>::ConstIterator songItem = m_selectedItems.begin(); songItem != m_selectedItems.end(); ++songItem)
         {
             selectionModel()->select(m_model->index(m_model->getRowForSongItem(*songItem), 0), QItemSelectionModel::Select | QItemSelectionModel::Rows);
         }
@@ -800,7 +800,7 @@ void CMediaTableView::addToPlayList()
 
             QList<CSong *> songList;
 
-            for (QModelIndexList::const_iterator index = indexList.begin(); index != indexList.end(); ++index)
+            for (QModelIndexList::ConstIterator index = indexList.begin(); index != indexList.end(); ++index)
             {
                 CMediaTableItem * songItem = m_model->getSongItem(*index);
 
@@ -830,7 +830,7 @@ void CMediaTableView::removeSongsFromLibrary()
     QList<CSong *> songList;
     bool needStop = false;
 
-    for (QModelIndexList::const_iterator it = indexList.begin(); it != indexList.end(); ++it)
+    for (QModelIndexList::ConstIterator it = indexList.begin(); it != indexList.end(); ++it)
     {
         CMediaTableItem * songItem = m_model->getSongItem(*it);
 
@@ -864,7 +864,7 @@ void CMediaTableView::moveSongs()
 
     QList<CSong *> songList;
 
-    for (QModelIndexList::const_iterator it = indexList.begin(); it != indexList.end(); ++it)
+    for (QModelIndexList::ConstIterator it = indexList.begin(); it != indexList.end(); ++it)
     {
         CMediaTableItem * songItem = m_model->getSongItem(*it);
         CSong * song = songItem->getSong();
@@ -876,7 +876,7 @@ void CMediaTableView::moveSongs()
     if (songList.isEmpty())
         return;
 
-    for (QList<CSong *>::const_iterator it = songList.begin(); it != songList.end(); ++it)
+    for (QList<CSong *>::ConstIterator it = songList.begin(); it != songList.end(); ++it)
     {
         (*it)->moveFile();
     }
@@ -895,7 +895,7 @@ void CMediaTableView::checkSelection()
     if (indexList.isEmpty())
         return;
 
-    for (QModelIndexList::const_iterator it = indexList.begin(); it != indexList.end(); ++it)
+    for (QModelIndexList::ConstIterator it = indexList.begin(); it != indexList.end(); ++it)
     {
         m_model->m_data.at(it->row())->getSong()->setEnabled(true);
     }
@@ -914,7 +914,7 @@ void CMediaTableView::uncheckSelection()
     if (indexList.isEmpty())
         return;
 
-    for (QModelIndexList::const_iterator it = indexList.begin(); it != indexList.end(); ++it)
+    for (QModelIndexList::ConstIterator it = indexList.begin(); it != indexList.end(); ++it)
     {
         m_model->m_data.at(it->row())->getSong()->setEnabled(false);
     }
@@ -947,7 +947,7 @@ void CMediaTableView::onSelectionChange()
     // Durée totale sélectionnée
     qlonglong durationMS = 0;
 
-    for (QList<CMediaTableItem *>::const_iterator it = songItems.begin(); it != songItems.end(); ++it)
+    for (QList<CMediaTableItem *>::ConstIterator it = songItems.begin(); it != songItems.end(); ++it)
     {
         durationMS += (*it)->getSong()->getDuration();
     }
@@ -1431,7 +1431,7 @@ void CMediaTableView::contextMenuEvent(QContextMenuEvent * event)
                 {
                     menuPlayList->addSeparator();
 
-                    for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
+                    for (QList<IPlayList *>::ConstIterator it = playLists.begin(); it != playLists.end(); ++it)
                     {
                         m_actionGoToSongTable[*it] = menuPlayList->addAction((*it)->getName());
                         connect(m_actionGoToSongTable[*it], SIGNAL(triggered()), this, SLOT(goToSongTable()));
@@ -1460,7 +1460,7 @@ void CMediaTableView::contextMenuEvent(QContextMenuEvent * event)
             }
             else
             {
-                for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
+                for (QList<IPlayList *>::ConstIterator it = playLists.begin(); it != playLists.end(); ++it)
                 {
                     CStaticList * staticList = qobject_cast<CStaticList *>(*it);
                     if (staticList)

@@ -7,7 +7,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{636B2DBF-C6E8-448D-A78E-7894B72281E3}
 AppName=TMediaPlayer
-AppVersion=1.0.47
+AppVersion=1.0.48
 AppPublisher=Ted
 DefaultDirName={pf}\TMediaPlayer
 DefaultGroupName=TMediaPlayer
@@ -37,6 +37,7 @@ Source: "..\Bin\Win32\Release\QtNetwork4.dll"; DestDir: "{app}"; Flags: ignoreve
 Source: "..\Bin\Win32\Release\QtSql4.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\Bin\Win32\Release\QtWebKit4.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\Bin\Win32\Release\QtXml4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Bin\Win32\Release\plugins\*.dll"; DestDir: "{app}\plugins"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\Lang\*.qm"; DestDir: "{app}\Lang"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 

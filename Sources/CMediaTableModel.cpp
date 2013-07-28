@@ -53,7 +53,7 @@ m_currentSongItem   (nullptr)
     // Remplissage de la liste des morceaux
     m_data.reserve(data.size());
 
-    for (QList<CSong *>::const_iterator it = data.begin(); it != data.end(); ++it)
+    for (QList<CSong *>::ConstIterator it = data.begin(); it != data.end(); ++it)
     {
         m_data.append(new CMediaTableItem(++i, *it));
     }
@@ -114,7 +114,7 @@ void CMediaTableModel::setSongs(const QList<CSong *>& data)
     // Remplissage de la liste des morceaux
     m_data.reserve(data.size());
 
-    for (QList<CSong *>::const_iterator it = data.begin(); it != data.end(); ++it)
+    for (QList<CSong *>::ConstIterator it = data.begin(); it != data.end(); ++it)
     {
         m_data.append(new CMediaTableItem(++i, *it));
     }
@@ -142,7 +142,7 @@ QList<CSong *> CMediaTableModel::getSongs() const
     QList<CSong *> songList;
     songList.reserve(m_data.size());
 
-    for (QList<CMediaTableItem *>::const_iterator it = dataCopy.begin(); it != dataCopy.end(); ++it)
+    for (QList<CMediaTableItem *>::ConstIterator it = dataCopy.begin(); it != dataCopy.end(); ++it)
     {
         songList.append((*it)->getSong());
     }
@@ -160,7 +160,7 @@ QList<CSong *> CMediaTableModel::getSongs() const
 
 bool CMediaTableModel::hasSong(CSong * song) const
 {
-    for (QList<CMediaTableItem *>::const_iterator it = m_data.begin(); it != m_data.end(); ++it)
+    for (QList<CMediaTableItem *>::ConstIterator it = m_data.begin(); it != m_data.end(); ++it)
     {
         if ((*it)->getSong() == song)
         {
@@ -790,7 +790,7 @@ QMimeData * CMediaTableModel::mimeData(const QModelIndexList& indexes) const
     QStringList fileList;
     QList<int> rows;
 
-    for (QModelIndexList::const_iterator it = indexes.begin(); it != indexes.end(); ++it)
+    for (QModelIndexList::ConstIterator it = indexes.begin(); it != indexes.end(); ++it)
     {
         if (it->isValid() && !rows.contains(it->row()))
         {
@@ -815,7 +815,7 @@ QMimeData * CMediaTableModel::mimeData(const QModelIndexList& indexes) const
     QDataStream streamRows(&rowListData, QIODevice::WriteOnly);
     streamRows << rows.size();
 
-    for (QList<int>::const_iterator it = rows.begin(); it != rows.end(); ++it)
+    for (QList<int>::ConstIterator it = rows.begin(); it != rows.end(); ++it)
     {
         streamSongs << m_dataFiltered[*it]->getSong()->getId();
         streamRows << *it;
@@ -823,7 +823,7 @@ QMimeData * CMediaTableModel::mimeData(const QModelIndexList& indexes) const
 
     QString fileListString;
 
-    for (QStringList::const_iterator it = fileList.begin(); it != fileList.end(); ++it)
+    for (QStringList::ConstIterator it = fileList.begin(); it != fileList.end(); ++it)
     {
         fileListString.append(QUrl::fromLocalFile(*it).toString());
         fileListString.append("\r\n");
@@ -897,10 +897,10 @@ void CMediaTableModel::moveRows(const QList<int>& rows, int rowDest)
     QList<CMediaTableItem *> dataCopy = m_data;
     qSort(dataCopy.begin(), dataCopy.end(), cmpSongPositionAsc);
 
-    QList<int>::const_iterator it2 = rows.begin() - 1;
+    QList<int>::ConstIterator it2 = rows.begin() - 1;
     int numMoved = 0;
 
-    for (QList<int>::const_iterator it = rows.begin(); it != rows.end(); ++it)
+    for (QList<int>::ConstIterator it = rows.begin(); it != rows.end(); ++it)
     {
         if (*it < rowDest)
         {
@@ -958,7 +958,7 @@ void CMediaTableModel::insertRow(CSong * song, int pos)
         // Réorganisation des éléments
         int itemPos = 1;
 
-        for (QList<CMediaTableItem *>::const_iterator it = m_data.begin() /*+ pos*/; it != m_data.end(); ++it, ++itemPos)
+        for (QList<CMediaTableItem *>::ConstIterator it = m_data.begin() /*+ pos*/; it != m_data.end(); ++it, ++itemPos)
         {
             (*it)->m_position = itemPos;
         }
@@ -1020,7 +1020,7 @@ void CMediaTableModel::removeSongs(const QList<CSong *>& songs)
 
     QList<CMediaTableItem *> dataCopy = m_data;
 
-    for (QList<CMediaTableItem *>::const_iterator it = dataCopy.begin(); it != dataCopy.end(); ++it)
+    for (QList<CMediaTableItem *>::ConstIterator it = dataCopy.begin(); it != dataCopy.end(); ++it)
     {
         if (songs.contains((*it)->getSong()))
         {
@@ -1047,7 +1047,7 @@ void CMediaTableModel::clear()
     emit layoutAboutToBeChanged();
 
     // Suppression des morceaux
-    for (QList<CMediaTableItem *>::const_iterator songItem = m_data.begin(); songItem != m_data.end(); ++songItem)
+    for (QList<CMediaTableItem *>::ConstIterator songItem = m_data.begin(); songItem != m_data.end(); ++songItem)
     {
         delete *songItem;
     }
@@ -1266,7 +1266,7 @@ CMediaTableItem * CMediaTableModel::getLastSong(bool shuffle) const
     if (!shuffle)
         return data.last();
 
-    for (QList<CMediaTableItem *>::const_iterator it = dataShuffle.end(); it != dataShuffle.begin(); --it)
+    for (QList<CMediaTableItem *>::ConstIterator it = dataShuffle.end(); it != dataShuffle.begin(); --it)
     {
         if (!(*it)->getSong()->isSkipShuffle())
         {
@@ -1339,7 +1339,7 @@ void CMediaTableModel::initShuffle(CMediaTableItem * firstSong)
 void CMediaTableModel::replaceSong(CSong * oldSong, CSong * newSong)
 {
     // On n'a pas besoin de parcourir les autres listes, car les pointeurs sont partagés entre ces listes
-    for (QList<CMediaTableItem *>::const_iterator item = m_data.begin(); item != m_data.end(); ++item)
+    for (QList<CMediaTableItem *>::ConstIterator item = m_data.begin(); item != m_data.end(); ++item)
     {
         if ((*item)->m_song == oldSong)
             (*item)->m_song = newSong;
@@ -1367,7 +1367,7 @@ void CMediaTableModel::applyFilter(const QString& filter)
     m_dataFiltered.clear();
 
     // Liste normale
-    for (QList<CMediaTableItem *>::const_iterator item = m_data.begin(); item != m_data.end(); ++item)
+    for (QList<CMediaTableItem *>::ConstIterator item = m_data.begin(); item != m_data.end(); ++item)
     {
         if ((*item)->m_song->matchFilter(filter))
         {
@@ -1397,7 +1397,7 @@ void CMediaTableModel::applyFilterForShuffleList(const QString& filter)
 
     m_dataShuffleFiltered.clear();
 
-    for (QList<CMediaTableItem *>::const_iterator item = m_dataShuffle.begin(); item != m_dataShuffle.end(); ++item)
+    for (QList<CMediaTableItem *>::ConstIterator item = m_dataShuffle.begin(); item != m_dataShuffle.end(); ++item)
     {
         if ((*item)->m_song->matchFilter(filter))
         {

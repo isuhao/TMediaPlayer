@@ -253,7 +253,7 @@ CMainWindow::~CMainWindow()
     delete m_queue;
 
     // Destruction des lecteurs de CD-ROM
-    for (QList<CCDRomDrive *>::const_iterator drive = m_cdRomDrives.begin(); drive != m_cdRomDrives.end(); ++drive)
+    for (QList<CCDRomDrive *>::ConstIterator drive = m_cdRomDrives.begin(); drive != m_cdRomDrives.end(); ++drive)
     {
         delete *drive;
     }
@@ -503,7 +503,7 @@ void CMainWindow::setRowHeight(int height)
 
     const QList<IPlayList *> playLists = getAllPlayLists();
 
-    for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
+    for (QList<IPlayList *>::ConstIterator it = playLists.begin(); it != playLists.end(); ++it)
     {
         (*it)->verticalHeader()->setDefaultSectionSize(height);
     }
@@ -675,7 +675,7 @@ QList<IPlayList *> CMainWindow::getPlayListsWithSong(CSong * song) const
     const QList<IPlayList *> playLists = m_listModel->getPlayLists();
     QList<IPlayList *> playListsRet;
 
-    for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
+    for (QList<IPlayList *>::ConstIterator it = playLists.begin(); it != playLists.end(); ++it)
     {
         if ((*it)->hasSong(song))
             playListsRet.append(*it);
@@ -709,7 +709,7 @@ void CMainWindow::removeSongs(const QList<CSong *> songs)
     m_library->removeSongsFromTable(songs);
 
 /*
-    for (QList<CSong *>::const_iterator it = songs.begin(); it != songs.end(); ++it)
+    for (QList<CSong *>::ConstIterator it = songs.begin(); it != songs.end(); ++it)
     {
         Q_CHECK_PTR(*it);
         emit songRemoved(*it);
@@ -718,7 +718,7 @@ void CMainWindow::removeSongs(const QList<CSong *> songs)
     // Suppression des morceaux de chaque liste statique et mise à jour des listes dynamiques
     const QList<IPlayList *> playLists = getAllPlayLists();
 
-    for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
+    for (QList<IPlayList *>::ConstIterator it = playLists.begin(); it != playLists.end(); ++it)
     {
         CStaticList * playList = qobject_cast<CStaticList *>(*it);
         CDynamicList * dynamicList = qobject_cast<CDynamicList *>(*it);
@@ -740,7 +740,7 @@ void CMainWindow::removeSongs(const QList<CSong *> songs)
     QSqlQuery query2(m_mediaManager->getDataBase());
     query2.prepare("DELETE FROM play WHERE song_id = ?");
 
-    for (QList<CSong *>::const_iterator it = songs.begin(); it != songs.end(); ++it)
+    for (QList<CSong *>::ConstIterator it = songs.begin(); it != songs.end(); ++it)
     {
         int songId = (*it)->getId();
 
@@ -1588,7 +1588,7 @@ void CMainWindow::importSongs(const QStringList& fileList)
     QProgressDialog progress(tr("Loading files..."), tr("Abort"), 0, fileList.size(), this);
     int i = 0;
 
-    for (QStringList::const_iterator it = fileList.begin(); it != fileList.end(); ++it)
+    for (QStringList::ConstIterator it = fileList.begin(); it != fileList.end(); ++it)
     {
         progress.setValue(i++);
 
@@ -1605,7 +1605,7 @@ void CMainWindow::importSongs(const QStringList& fileList)
     }
 /*
     // Ajout des morceaux à la médiathèque
-    for (QList<CSong *>::const_iterator it = songs.begin(); it != songs.end(); ++it)
+    for (QList<CSong *>::ConstIterator it = songs.begin(); it != songs.end(); ++it)
     {
         m_library->addSong(*it);
         emit songAdded(*it);
@@ -1826,7 +1826,7 @@ void CMainWindow::relocateSong()
 
             QList<IPlayList *> playLists = getAllPlayLists();
 
-            for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
+            for (QList<IPlayList *>::ConstIterator it = playLists.begin(); it != playLists.end(); ++it)
             {
                 if (qobject_cast<CStaticList *>(*it))
                 {
@@ -2257,7 +2257,7 @@ void CMainWindow::onPlayEnd()
         // On retrie les listes de lecture
         QList<IPlayList *> playLists = getAllPlayLists();
 
-        for (QList<IPlayList *>::const_iterator it = playLists.begin(); it != playLists.end(); ++it)
+        for (QList<IPlayList *>::ConstIterator it = playLists.begin(); it != playLists.end(); ++it)
         {
             int col = (*it)->getColumnSorted();
             if (col == CMediaTableView::ColPlayCount || col == CMediaTableView::ColLastPlayTime)
