@@ -4,12 +4,13 @@
 --------------------------------------------------
 
 - Refactoring : CMediaTableView -> IMediaTable, CLibraryModel -> CMediaManager
-- Utiliser le widget lineEditMultiple.
 
 - Revoir le dock "Listes de lecture".
 
 - Bug : si on modifie une liste dynamique en cours de lecture, ben y'a un blem...
 - Bug : si une liste ne contient que des morceaux introuvables et que la répétition de liste est activée, la lecture entraine une boucle infinie.
+- Bug : si on sélectionne le paramètre "Afficher la durée du morceau à la place du temps restant" pendant qu'un morceau est en cours de lecture, la durée n'est pas mise à jour. [OK]
+- Bug : boite de dialogue Dernières lectures : le classement par date se fait alphabétiquement.
 
 - Problème graphique : si on modifie les informations d'un morceau, il faut mettre à jour la vue courante.
 - Problème graphique : lorsqu'on sélectionne une liste de lecture, il faut donner le focus à la vue.
@@ -19,6 +20,11 @@
 --------------------------------------------------
   Importance moyenne
 --------------------------------------------------
+
+- Boite de dialogue "Dernières lectures" :
+  - Mettre à jour en temps réel.
+  - Pouvoir modifier le nombre de morceaux affichés.
+  - Redimensionnement automatique des colonnes.
 
 - Déplacer la gestion de la base de données dans des bibliothèques externes.
 - Déplacer la gestion de la fenêtre principale dans une classe à part. [EN COURS]

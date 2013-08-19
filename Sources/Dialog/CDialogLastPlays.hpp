@@ -27,6 +27,10 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 class CMainWindow;
 
 
+/**
+ * Boite de dialogue affichant la liste des dernières lectures.
+ */
+
 class CDialogLastPlays : public QDialog
 {
     Q_OBJECT
@@ -35,6 +39,14 @@ public:
 
     explicit CDialogLastPlays(CMainWindow * mainWindow);
     virtual ~CDialogLastPlays();
+    
+signals:
+
+    void closed();
+
+protected:
+
+    void closeEvent(QCloseEvent * event);
 
 private:
 

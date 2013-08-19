@@ -26,6 +26,12 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QSqlQuery>
 
 
+/**
+ * Constructeur de la boite de dialogue.
+ *
+ * \param mainWindow Pointeur sur la fenêtre principale de l'application.
+ */
+
 CDialogLastPlays::CDialogLastPlays(CMainWindow * mainWindow) :
 QDialog      (mainWindow),
 m_uiWidget   (new Ui::DialogLastPlays()),
@@ -85,7 +91,18 @@ m_mainWindow (mainWindow)
 }
 
 
+/**
+ * Détruit la boite de dialogue.
+ */
+
 CDialogLastPlays::~CDialogLastPlays()
 {
     delete m_uiWidget;
 }
+
+
+void CDialogLastPlays::closeEvent(QCloseEvent * event)
+{
+    emit closed();
+}
+

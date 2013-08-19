@@ -46,6 +46,8 @@ class CWidgetLyrics;
 class CMediaManager;
 class CEqualizerPreset;
 class IPlayList;
+class CDialogNotifications;
+class CDialogLastPlays;
 
 class QStandardItemModel;
 class QTextEdit;
@@ -272,6 +274,11 @@ protected:
 
     virtual void closeEvent(QCloseEvent * event);
 
+private slots:
+
+    void onDialogNotificationsClosed();
+    void onDialogLastPlaysClosed();
+
 private:
 
     CMediaManager * m_mediaManager;         ///< Pointeur sur le gestionnaire de médias.
@@ -294,6 +301,9 @@ private:
     bool m_showRemainingTime;               ///< Indique si on doit afficher le temps restant ou la durée du morceau en cours de lecture.
     TRepeatMode m_repeatMode;               ///< Mode de répétition.
     bool m_isShuffle;                       ///< Indique si la lecture aléatoire est activée.
+
+    CDialogNotifications * m_dialogNotifications; ///< Pointeur sur la boite de dialogue de notifications.
+    CDialogLastPlays * m_dialogLastPlays;         ///< Pointeur sur la boite de dialogue des dernières lectures.
 
     // États de Last.fm
     enum TLastFmState

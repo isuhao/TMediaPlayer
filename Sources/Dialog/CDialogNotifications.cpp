@@ -23,6 +23,12 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QPushButton>
 
 
+/**
+ * Constructeur de la boite de dialogue.
+ *
+ * \param mainWindow Pointeur sur la fenêtre principale de l'application.
+ */
+
 CDialogNotifications::CDialogNotifications(CMainWindow * mainWindow) :
 QDialog      (mainWindow),
 m_uiWidget   (new Ui::DialogNotifications()),
@@ -59,7 +65,17 @@ m_mainWindow (mainWindow)
 }
 
 
+/**
+ * Détruit la boite de dialogue.
+ */
+
 CDialogNotifications::~CDialogNotifications()
 {
     delete m_uiWidget;
+}
+
+
+void CDialogNotifications::closeEvent(QCloseEvent * event)
+{
+    emit closed();
 }

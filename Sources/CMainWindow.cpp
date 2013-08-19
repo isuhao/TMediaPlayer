@@ -109,6 +109,9 @@ m_showRemainingTime    (false),
 m_repeatMode           (NoRepeat),
 m_isShuffle            (false),
 
+m_dialogNotifications  (nullptr),
+m_dialogLastPlays      (nullptr),
+
 // Last.fm
 m_lastFmEnableScrobble       (false),
 m_delayBeforeNotification    (5000),
@@ -539,6 +542,14 @@ void CMainWindow::showRemainingTime(bool show)
 {
     m_mediaManager->getSettings()->setValue("Preferences/ShowRemainingTime", show);
     m_showRemainingTime = show;
+    
+    if (!m_showRemainingTime && m_currentSongItem != nullptr)
+    {
+        int duration = m_currentSongItem->getSong()->getDuration();
+        QTime durationTime(0, 0);
+        durationTime = durationTime.addMSecs(duration);
+        m_uiControl->lblTime->setText(durationTime.toString("m:ss"));
+    }
 }
 
 
@@ -1482,8 +1493,21 @@ void CMainWindow::openDialogPreferences()
 
 void CMainWindow::openDialogNotifications()
 {
-    CDialogNotifications * dialog = new CDialogNotifications(this);
-    dialog->show();
+    if (m_dialogNotifications != nullptr)
+    {
+        m_dialogNotifications->setFocus();
+        return;
+    }
+
+    m_dialogNotifications = new CDialogNotifications(this);
+    connect(m_dialogNotifications, SIGNAL(closed()), this, SLOT(onDialogNotificationsClosed()));
+    m_dialogNotifications->show();
+}
+
+
+void CMainWindow::onDialogNotificationsClosed()
+{
+    m_dialogNotifications = nullptr;
 }
 
 
@@ -1493,8 +1517,21 @@ void CMainWindow::openDialogNotifications()
 
 void CMainWindow::openDialogLastPlays()
 {
-    CDialogLastPlays * dialog = new CDialogLastPlays(this);
-    dialog->show();
+    if (m_dialogLastPlays != nullptr)
+    {
+        m_dialogLastPlays->setFocus();
+        return;
+    }
+
+    m_dialogLastPlays = new CDialogLastPlays(this);
+    connect(m_dialogLastPlays, SIGNAL(closed()), this, SLOT(onDialogLastPlaysClosed()));
+    m_dialogLastPlays->show();
+}
+
+
+void CMainWindow::onDialogLastPlaysClosed()
+{
+    m_dialogLastPlays = nullptr;
 }
 
 
