@@ -922,7 +922,7 @@ m_songItemList      (songItemList)
     m_editAlbumArtistSort = new CWidgetLineEditMultiple();
     m_editAlbumArtistSort->setContent(songAlbumArtistSort_V2.uniqueKeys(), notSimText);
     m_uiWidget->layoutSorting->addWidget(m_editAlbumArtistSort, 7, 3, 1, 1);
-    connect(m_editAlbumArtistSort, SIGNAL(textChanged(const QString&)), this, SLOT(onComposerSortChange(const QString&)));
+    connect(m_editAlbumArtistSort, SIGNAL(textChanged(const QString&)), this, SLOT(onAlbumArtistSortChange(const QString&)));
 /*
     if (songAlbumArtistSort_V2.size() > 1)
     {
