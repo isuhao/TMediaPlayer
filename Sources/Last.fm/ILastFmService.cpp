@@ -114,6 +114,14 @@ QByteArray ILastFmService::encodeString(const QByteArray& str)
         else if (str[i] == '=')
         {
             res.append("%3D");
+        }/*
+        else if (str[i] == '/')
+        {
+            res.append("%2F");
+        }*/
+        else if (str[i] == '+')
+        {
+            res.append("%2B");
         }
         else
         {
