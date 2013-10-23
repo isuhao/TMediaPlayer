@@ -26,8 +26,10 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "../CSong.hpp"
 #include "../Language.hpp"
 #include "../Utils.hpp"
+
 #include <QStandardItemModel>
 #include <QPushButton>
+#include <QProgressDialog>
 
 
 /**
@@ -118,12 +120,12 @@ m_songItemList      (songItemList)
     QMap<QString, int> songAlbumArtistSort_V2;
     QMap<QString, int> songComposer_V2;
     QMap<QString, int> songComposerSort_V2;
-    QString songSubTitle;        bool songSubTitleSim        = true;
-    QString songGrouping;        bool songGroupingSim        = true;
-    QString songComments;        bool songCommentsSim        = true;
-    QString songGenre;           bool songGenreSim           = true;
-    QString songLyrics;          bool songLyricsSim          = true;
-    QString songLyricist;        bool songLyricistSim        = true;
+    QString songSubTitle; bool songSubTitleSim = true;
+    QString songGrouping; bool songGroupingSim = true;
+    QString songComments; bool songCommentsSim = true;
+    QString songGenre;    bool songGenreSim    = true;
+    QString songLyrics;   bool songLyricsSim   = true;
+    QString songLyricist; bool songLyricistSim = true;
 
     int songYear        = 0; bool songYearSim        = true;
     int songTrackNumber = 0; bool songTrackNumberSim = true;
@@ -1315,94 +1317,160 @@ CDialogEditSongs::~CDialogEditSongs()
 
 void CDialogEditSongs::apply()
 {
+    QProgressDialog progress(tr("Apply changes..."), tr("Abort"), 0, m_songItemList.size(), this);
+    progress.setMinimumDuration(2000);
+    int i = 0;
+
     // Modification de chaque morceau
     for (QList<CMediaTableItem *>::ConstIterator it = m_songItemList.begin(); it != m_songItemList.end(); ++it)
     {
+        progress.setValue(i++);
         CSong * song = (*it)->getSong();
 
         if (m_uiWidget->chTitle->isChecked())
+        {
             song->setTitle(m_editTitle->text());
+        }
 
         if (m_uiWidget->chSubTitle->isChecked())
+        {
             song->setSubTitle(m_uiWidget->editSubTitle->text());
+        }
 
         if (m_uiWidget->chGrouping->isChecked())
+        {
             song->setGrouping(m_uiWidget->editGrouping->text());
+        }
 
         if (m_uiWidget->chArtist->isChecked())
+        {
             song->setArtistName(m_editArtist->text());
+        }
 
         if (m_uiWidget->chAlbum->isChecked())
+        {
             song->setAlbumTitle(m_editAlbum->text());
+        }
 
         if (m_uiWidget->chAlbumArtist->isChecked())
+        {
             song->setAlbumArtist(m_editAlbumArtist->text());
+        }
 
         if (m_uiWidget->chComposer->isChecked())
+        {
             song->setComposer(m_editComposer->text());
+        }
 
         if (m_uiWidget->chTitleSort->isChecked())
+        {
             song->setTitleSort(m_editTitleSort->text());
+        }
 
         if (m_uiWidget->chArtistSort->isChecked())
+        {
             song->setArtistNameSort(m_editArtistSort->text());
+        }
 
         if (m_uiWidget->chAlbumSort->isChecked())
+        {
             song->setAlbumTitleSort(m_editAlbumSort->text());
+        }
 
         if (m_uiWidget->chAlbumArtistSort->isChecked())
+        {
             song->setAlbumArtistSort(m_editAlbumArtistSort->text());
+        }
 
         if (m_uiWidget->chComposerSort->isChecked())
+        {
             song->setComposerSort(m_editComposerSort->text());
+        }
 
         if (m_uiWidget->chBPM->isChecked())
+        {
             song->setBPM(m_uiWidget->editBPM->text().toInt());
+        }
 
         if (m_uiWidget->chYear->isChecked())
+        {
             song->setYear(m_uiWidget->editYear->text().toInt());
+        }
 
         if (m_uiWidget->chTrackNumber->isChecked())
+        {
             song->setTrackNumber(m_uiWidget->editTrackNumber->text().toInt());
+        }
 
         if (m_uiWidget->chTrackCount->isChecked())
+        {
             song->setTrackCount(m_uiWidget->editTrackCount->text().toInt());
+        }
 
         if (m_uiWidget->chDiscNumber->isChecked())
+        {
             song->setDiscNumber(m_uiWidget->editDiscNumber->text().toInt());
+        }
 
         if (m_uiWidget->chDiscCount->isChecked())
+        {
             song->setDiscCount(m_uiWidget->editDiscCount->text().toInt());
+        }
 
         if (m_uiWidget->chComments->isChecked())
+        {
             song->setComments(m_uiWidget->editComments->toPlainText());
+        }
 
         if (m_uiWidget->chGenre->isChecked())
+        {
             song->setGenre(m_uiWidget->editGenre->currentText());
+        }
 
         if (m_uiWidget->chRating->isChecked())
+        {
             song->setRating(m_editRating->value());
+        }
 
         if (m_uiWidget->chLyrics->isChecked())
+        {
             song->setLyrics(m_uiWidget->editLyrics->toPlainText());
+        }
 
         if (m_uiWidget->chLanguage->isChecked())
+        {
             song->setLanguage(getLanguageFromInteger(m_uiWidget->editLanguage->currentIndex()));
+        }
 
         if (m_uiWidget->chLyricist->isChecked())
+        {
             song->setLyricist(m_uiWidget->editLyricist->text());
+        }
 
         if (m_uiWidget->editEnabled->checkState() != Qt::PartiallyChecked)
+        {
             song->setEnabled(m_uiWidget->editEnabled->isChecked());
+        }
 
         if (m_uiWidget->editSkipShuffle->checkState() != Qt::PartiallyChecked)
+        {
             song->setSkipShuffle(m_uiWidget->editSkipShuffle->isChecked());
+        }
 
         if (m_uiWidget->editCompilation->checkState() != Qt::PartiallyChecked)
+        {
             song->setCompilation(m_uiWidget->editCompilation->isChecked());
+        }
 
         song->writeTags();
+        qApp->processEvents();
         song->updateDatabase();
+        qApp->processEvents();
+
+        if (progress.wasCanceled())
+        {
+            break;
+        }
     }
 }
 
@@ -1428,10 +1496,14 @@ void CDialogEditSongs::onTitleChange(const QString& title)
 
     // Synchronisation pour les combo-box
     if (m_editTitle->text() != title)
+    {
         m_editTitle->setText(title);
+    }
 
     if (m_editTitle2->text() != title)
+    {
         m_editTitle2->setText(title);
+    }
 }
 
 
@@ -1794,6 +1866,12 @@ void CDialogEditSongs::onLyricistChecked(bool checked)
 }
 
 
+/**
+ * Méthode appellée quand on coche la case de modification de la langue.
+ *
+ * \param checked True si la case est cochée, false sinon.
+ */
+
 void CDialogEditSongs::onLanguageChecked(bool checked)
 {
     if (m_uiWidget->editLanguage->currentIndex() == -1)
@@ -1802,6 +1880,13 @@ void CDialogEditSongs::onLanguageChecked(bool checked)
     }
 }
 
+
+/**
+ * Méthode appellée quand le focus sur le widget change.
+ *
+ * \param old Ancien widget ayant le focus.
+ * \param now Nouveau widget ayant le focus.
+ */
 
 void CDialogEditSongs::onFocusChange(QWidget * old, QWidget * now)
 {
