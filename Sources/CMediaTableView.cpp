@@ -38,6 +38,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QSqlError>
 #include <QPainter>
 #include <QMessageBox>
+#include <QProgressDialog>
 #include <QSettings>
 #include <QDrag>
 
@@ -760,11 +761,19 @@ void CMediaTableView::sortColumn(int column, Qt::SortOrder order)
 }
 
 
+/**
+ * Tri la liste des morceaux selon la colonne et l'ordre choisis par l'utilisateur.
+ */
+
 void CMediaTableView::sort()
 {
     m_model->sort(m_columnSort, m_sortOrder);
 }
 
+
+/**
+ * Affiche le morceau sélectionné dans une des listes de lecture qui le contient.
+ */
 
 void CMediaTableView::goToSongTable()
 {
@@ -781,6 +790,10 @@ void CMediaTableView::goToSongTable()
     }
 }
 
+
+/**
+ * Ajoute les morceaux sélectionnés à une liste de lecture.
+ */
 
 void CMediaTableView::addToPlayList()
 {
@@ -857,6 +870,10 @@ void CMediaTableView::removeSongsFromLibrary()
 }
 
 
+/**
+ * Renomme automatiquement les fichiers des morceaux sélectionnés.
+ */
+
 void CMediaTableView::moveSongs()
 {
     // Liste des morceaux sélectionnés
@@ -869,16 +886,75 @@ void CMediaTableView::moveSongs()
         CMediaTableItem * songItem = m_model->getSongItem(*it);
         CSong * song = songItem->getSong();
 
+        // Un même morceau peut se trouver plusieurs fois dans une liste statique
         if (!songList.contains(song))
+        {
             songList.append(song);
+        }
     }
 
     if (songList.isEmpty())
+    {
         return;
+    }
 
     for (QList<CSong *>::ConstIterator it = songList.begin(); it != songList.end(); ++it)
     {
         (*it)->moveFile();
+    }
+}
+
+
+/**
+ * Analyse les métadonnées des morceaux sélectionnés.
+ */
+
+void CMediaTableView::analyzeSongs()
+{
+    // Liste des morceaux sélectionnés
+    QModelIndexList indexList = selectionModel()->selectedRows();
+
+    QList<CSong *> songList;
+
+    for (QModelIndexList::ConstIterator it = indexList.begin(); it != indexList.end(); ++it)
+    {
+        CMediaTableItem * songItem = m_model->getSongItem(*it);
+        CSong * song = songItem->getSong();
+        
+        // Un même morceau peut se trouver plusieurs fois dans une liste statique
+        if (!songList.contains(song))
+        {
+            songList.append(song);
+        }
+    }
+
+    if (songList.isEmpty())
+    {
+        return;
+    }
+
+    // Boite de dialogue
+    QProgressDialog progress(tr("Analysis files..."), tr("Abort"), 0, songList.size(), this);
+    progress.setMinimumDuration(2000);
+    int i = 0;
+
+    for (QList<CSong *>::ConstIterator it = songList.begin(); it != songList.end(); ++it)
+    {
+        progress.setValue(i++);
+
+        (*it)->loadTags();
+        qApp->processEvents();
+
+        (*it)->updateDatabase();
+        qApp->processEvents();
+
+        (*it)->writeTags();
+        qApp->processEvents();
+
+        if (progress.wasCanceled())
+        {
+            break;
+        }
     }
 }
 
@@ -1308,7 +1384,8 @@ void CMediaTableView::contextMenuEvent(QContextMenuEvent * event)
 
     if (index.isValid())
     {
-        bool severalSongs = (selectionModel()->selectedRows().size() > 1);
+        int numSelectedSongs = selectionModel()->selectedRows().size();
+        bool severalSongs = (numSelectedSongs > 1);
 
         if (!severalSongs)
         {
@@ -1382,11 +1459,21 @@ void CMediaTableView::contextMenuEvent(QContextMenuEvent * event)
         if (canEditSongs())
         {
             m_menu.addAction(tr("Remove from library"), this, SLOT(removeSongsFromLibrary()));
+            m_menu.addAction(tr("Rename file(s) automatically", "", numSelectedSongs), this, SLOT(moveSongs()));
+            m_menu.addAction(tr("Analyze file(s)", "", numSelectedSongs), this, SLOT(analyzeSongs()));
 
+/*
             if (severalSongs)
-                m_menu.addAction(tr("Rename files"), this, SLOT(moveSongs()));
+            {
+                m_menu.addAction(tr("Rename file(s) automatically", "", numSelectedSongs), this, SLOT(moveSongs()));
+                m_menu.addAction(tr("Analyze files"), this, SLOT(analyzeSongs()));
+            }
             else
-                m_menu.addAction(tr("Rename file"), this, SLOT(moveSongs()));
+            {
+                m_menu.addAction(tr("Rename file automatically"), this, SLOT(moveSongs()));
+                m_menu.addAction(tr("Analyze file"), this, SLOT(analyzeSongs()));
+            }
+*/
         }
 
         if (!severalSongs)
@@ -1397,9 +1484,13 @@ void CMediaTableView::contextMenuEvent(QContextMenuEvent * event)
             bool songIsChecked = m_selectedItem->getSong()->isEnabled();
 
             if (songIsChecked)
+            {
                 actionCheck->setEnabled(false);
+            }
             else
+            {
                 actionUncheck->setEnabled(false);
+            }
         }
         else
         {
@@ -1526,6 +1617,10 @@ void CMediaTableView::changeCurrentSongList()
     m_mainWindow->changeCurrentSongList(m_selectedItem, this);
 }
 
+
+/**
+ * Slot utilisé pour lancer la lecture du morceau sélectionné.
+ */
 
 void CMediaTableView::playSelectedSong()
 {

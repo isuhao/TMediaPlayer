@@ -180,6 +180,7 @@ protected slots:
     void addToPlayList();
     void removeSongsFromLibrary();
     void moveSongs();
+    void analyzeSongs();
     void checkSelection();
     void uncheckSelection();
     void onRowCountChange(const QModelIndex& parent, int start, int end);

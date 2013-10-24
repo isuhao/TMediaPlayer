@@ -1464,6 +1464,7 @@ void CDialogEditSongs::apply()
 
         song->writeTags();
         qApp->processEvents();
+
         song->updateDatabase();
         qApp->processEvents();
 
