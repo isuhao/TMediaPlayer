@@ -50,6 +50,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "Last.fm/CAuthentication.hpp"
 #include "Last.fm/CUpdateNowPlaying.hpp"
 #include "Last.fm/CScrobble.hpp"
+#include "Last.fm/CGetRecentTracks.hpp"
 
 // Qt
 #include <QStandardItemModel>
@@ -464,6 +465,8 @@ bool CMainWindow::initWindow()
 
     updateSongDescription(nullptr);
     setState(Stopped);
+
+    //new CGetRecentTracks(this, m_lastFmKey);
 
     init = true;
     return true;

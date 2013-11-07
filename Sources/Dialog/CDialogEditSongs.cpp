@@ -799,8 +799,8 @@ m_songItemList      (songItemList)
     connect(m_editAlbumLE, SIGNAL(textEdited(const QString&)), m_editAlbumLE_2, SLOT(setText(const QString&)));
     connect(m_editAlbumLE_2, SIGNAL(textEdited(const QString&)), m_editAlbumLE, SLOT(setText(const QString&)));
 */
-    connect(m_uiWidget->chArtist, SIGNAL(clicked(bool)), this, SLOT(onAlbumChecked(bool)));
-    connect(m_uiWidget->chArtist_2, SIGNAL(clicked(bool)), this, SLOT(onAlbumChecked(bool)));
+    connect(m_uiWidget->chAlbum, SIGNAL(clicked(bool)), this, SLOT(onAlbumChecked(bool)));
+    connect(m_uiWidget->chAlbum_2, SIGNAL(clicked(bool)), this, SLOT(onAlbumChecked(bool)));
 
 
     // Album pour le tri
@@ -1318,6 +1318,7 @@ CDialogEditSongs::~CDialogEditSongs()
 void CDialogEditSongs::apply()
 {
     QProgressDialog progress(tr("Apply changes..."), tr("Abort"), 0, m_songItemList.size(), this);
+    progress.setModal(true);
     progress.setMinimumDuration(2000);
     int i = 0;
 

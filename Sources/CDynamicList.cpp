@@ -97,6 +97,8 @@ CWidgetMultiCriteria * CDynamicList::getWidget() const
 
 void CDynamicList::updateList()
 {
+    qDebug() << "CDynamicList::updateList " << m_name;
+
     // Si on est en train de lire un morceau de la liste, il faut mettre à jour les informations sur le morceau courant
     CMediaTableItem * currentItem = m_model->getCurrentSongItem();
     CSong * currentSong = (currentItem ? currentItem->getSong() : nullptr);

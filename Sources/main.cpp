@@ -26,8 +26,20 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CMainWindow.hpp"
 
 
+void myMessageOutput(QtMsgType type, const char * msg)
+{
+    const char symbols[] = { 'I', 'E', '!', 'X' };
+    QString output = QString("%3 [%1] %2\r\n").arg(symbols[type]).arg(msg).arg(QDateTime::currentDateTimeUtc().toString("dd/MM/yyyy hh:mm:ss"));
+
+    QFile file("TMediaPlayer.log");
+    file.open(QIODevice::WriteOnly | QIODevice::Append);
+    file.write(output.toAscii());
+}
+
+
 int main(int argc, char * argv[])
 {
+    qInstallMsgHandler(myMessageOutput);
     srand(time(nullptr));
 
     QApplication app(argc, argv);

@@ -587,12 +587,6 @@
     <ClCompile Include="GeneratedFiles\x64\Release\moc_CDialogRemoveFolder.cpp">
       <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Win32\qrc_TMediaPlayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\x64\qrc_TMediaPlayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\CQueuePlayList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -836,6 +830,24 @@
     <ClCompile Include="GeneratedFiles\x64\Release\moc_CWidgetLineEditMultiple.cpp">
       <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Win32\Debug\moc_CGetRecentTracks.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\x64\Debug\moc_CGetRecentTracks.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Win32\Release\moc_CGetRecentTracks.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\x64\Release\moc_CGetRecentTracks.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Last.fm\CGetRecentTracks.cpp">
+      <Filter>Source Files\Last.fm</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\qrc_TMediaPlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Sources\CSong.hpp">
@@ -1047,6 +1059,9 @@
     </CustomBuild>
     <CustomBuild Include="Sources\CWidgetLineEditMultiple.hpp">
       <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Sources\Last.fm\CGetRecentTracks.hpp">
+      <Filter>Header Files\Last.fm</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

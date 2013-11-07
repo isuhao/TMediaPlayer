@@ -3584,7 +3584,10 @@ bool CSong::writeTags(TagLib::ID3v2::Tag * tags, const TSongInfos& infos, QFile 
     }
 
     // Compositeur pour le tri
-    stream << tr("No tag for \"%1\"").arg(tr("Sort composer")) << '\n';
+    if (!infos.composerSort.isEmpty())
+    {
+        stream << tr("No tag for \"%1\"").arg(tr("Sort composer")) << '\n';
+    }
 
     // Année
     tags->removeFrames("TDRC");
@@ -3730,7 +3733,10 @@ bool CSong::writeTags(TagLib::APE::Tag * tags, const TSongInfos& infos, QFile * 
     tags->addValue("SUBTITLE", TagLib::String(infos.subTitle.toUtf8().constData(), TagLib::String::UTF8));
 
     // Regroupement
-    stream << tr("No tag for \"%1\"").arg(tr("Grouping")) << '\n';
+    if (!infos.grouping.isEmpty())
+    {
+        stream << tr("No tag for \"%1\"").arg(tr("Grouping")) << '\n';
+    }
 
     // Artiste
     tags->addValue("ARTIST", TagLib::String(infos.artistName.toUtf8().constData(), TagLib::String::UTF8));
@@ -3739,25 +3745,43 @@ bool CSong::writeTags(TagLib::APE::Tag * tags, const TSongInfos& infos, QFile * 
     tags->addValue("ALBUM", TagLib::String(infos.albumTitle.toUtf8().constData(), TagLib::String::UTF8));
 
     // Artiste de l'album
-    stream << tr("No tag for \"%1\"").arg(tr("Album artist")) << '\n';
+    if (!infos.albumArtist.isEmpty())
+    {
+        stream << tr("No tag for \"%1\"").arg(tr("Album artist")) << '\n';
+    }
 
     // Compositeur
     tags->addValue("COMPOSER", TagLib::String(infos.composer.toUtf8().constData(), TagLib::String::UTF8));
 
     // Titre pour le tri
-    stream << tr("No tag for \"%1\"").arg(tr("Sort title")) << '\n';
+    if (!infos.titleSort.isEmpty())
+    {
+        stream << tr("No tag for \"%1\"").arg(tr("Sort title")) << '\n';
+    }
 
     // Artiste pour le tri
-    stream << tr("No tag for \"%1\"").arg(tr("Sort artist")) << '\n';
+    if (!infos.artistNameSort.isEmpty())
+    {
+        stream << tr("No tag for \"%1\"").arg(tr("Sort artist")) << '\n';
+    }
 
     // Album pour le tri
-    stream << tr("No tag for \"%1\"").arg(tr("Sort album")) << '\n';
+    if (!infos.albumTitleSort.isEmpty())
+    {
+        stream << tr("No tag for \"%1\"").arg(tr("Sort album")) << '\n';
+    }
 
     // Artiste de l'album pour le tri
-    stream << tr("No tag for \"%1\"").arg(tr("Sort album artist")) << '\n';
+    if (!infos.albumArtistSort.isEmpty())
+    {
+        stream << tr("No tag for \"%1\"").arg(tr("Sort album artist")) << '\n';
+    }
 
     // Compositeur pour le tri
-    stream << tr("No tag for \"%1\"").arg(tr("Sort composer")) << '\n';
+    if (!infos.composerSort.isEmpty())
+    {
+        stream << tr("No tag for \"%1\"").arg(tr("Sort composer")) << '\n';
+    }
 
     // Année
     if (infos.year > 0)
@@ -3806,16 +3830,25 @@ bool CSong::writeTags(TagLib::APE::Tag * tags, const TSongInfos& infos, QFile * 
     tags->addValue("COMMENT", TagLib::String(infos.comments.toUtf8().constData(), TagLib::String::UTF8));
 
     // BPM
-    stream << tr("No tag for \"%1\"").arg(tr("Beats per minute")) << '\n';
+    if (infos.bpm != 0)
+    {
+        stream << tr("No tag for \"%1\"").arg(tr("Beats per minute")) << '\n';
+    }
 
     // Paroles
-    stream << tr("No tag for \"%1\"").arg(tr("Lyrics")) << '\n';
+    if (!infos.lyrics.isEmpty())
+    {
+        stream << tr("No tag for \"%1\"").arg(tr("Lyrics")) << '\n';
+    }
 
     // Langue
     tags->addValue("LANGUAGE", getISO3CodeForLanguage(infos.language).toUtf8().constData());
 
     // Parolier
-    stream << tr("No tag for \"%1\"").arg(tr("Lyricist")) << '\n';
+    if (!infos.lyricist.isEmpty())
+    {
+        stream << tr("No tag for \"%1\"").arg(tr("Lyricist")) << '\n';
+    }
 
     return true;
 }

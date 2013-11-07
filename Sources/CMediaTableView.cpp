@@ -935,6 +935,7 @@ void CMediaTableView::analyzeSongs()
 
     // Boite de dialogue
     QProgressDialog progress(tr("Analysis files..."), tr("Abort"), 0, songList.size(), this);
+    progress.setModal(true);
     progress.setMinimumDuration(2000);
     int i = 0;
 
