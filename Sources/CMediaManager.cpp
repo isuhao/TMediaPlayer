@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2012-2013 Teddy Michel
+Copyright (C) 2012-2014 Teddy Michel
 
 This file is part of TMediaPlayer.
 
@@ -38,8 +38,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QtDebug>
 
 
-const QString appVersion = "1.0.53";     ///< Numéro de version de l'application.
-const QString appDate    = "07/11/2013"; ///< Date de sortie de cette version.
+const QString appVersion = "1.0.54";     ///< Numéro de version de l'application.
+const QString appDate    = "16/01/2014"; ///< Date de sortie de cette version.
 
 
 /**
