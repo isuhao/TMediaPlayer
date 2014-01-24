@@ -50,7 +50,7 @@ QString CLibraryFolder::convertFormatItemsToString() const
 {
     QString str;
 
-    // Remarque : on utiliser deux caractères spéciaux interdits (: et |) comme séparateurs.
+    // Remarque : on utiliser deux caractÃ¨res spÃ©ciaux interdits (: et |) comme sÃ©parateurs.
     str += QString("TitleDefault"   ) + QChar(':') + titleDefault    + QChar('|');
     str += QString("TitleEmpty"     ) + QChar(':') + titleEmpty      + QChar('|');
     str += QString("ArtistDefault"  ) + QChar(':') + artistDefault   + QChar('|');

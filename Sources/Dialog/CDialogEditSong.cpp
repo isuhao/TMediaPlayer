@@ -121,9 +121,15 @@ CDialogEditSong::~CDialogEditSong()
 }
 
 
+/**
+ * Modifie le morceau ou la liste de lecture en cours d'édition.
+ *
+ * \param songItem  Pointeur sur le nouveau morceau dans la liste.
+ * \param songTable Pointeur sur la liste de morceaux.
+ */
+
 void CDialogEditSong::setSongItem(CMediaTableItem * songItem, CMediaTableView * songTable)
 {
-    Q_CHECK_PTR(songItem);
     Q_CHECK_PTR(songTable);
 
     m_songItem = songItem;
@@ -294,11 +300,15 @@ void CDialogEditSong::resetSummary()
 
 void CDialogEditSong::previousSong()
 {
-    QSettings * settings = m_mainWindow->getMediaManager()->getSettings();
-    if (settings->value("Preferences/EditSongAutoSave", false).toBool())
-        applyChanges();
-
+    // Morceau précédent
     CMediaTableItem * songItem = m_songTable->getPreviousSong(m_songItem, false);
+    
+    QSettings * settings = m_mainWindow->getMediaManager()->getSettings();
+
+    if (settings->value("Preferences/EditSongAutoSave", false).toBool())
+    {
+        applyChanges();
+    }
 
     if (songItem)
     {
@@ -319,11 +329,15 @@ void CDialogEditSong::previousSong()
 
 void CDialogEditSong::nextSong()
 {
-    QSettings * settings = m_mainWindow->getMediaManager()->getSettings();
-    if (settings->value("Preferences/EditSongAutoSave", false).toBool())
-        applyChanges();
-
+    // Morceau suivant
     CMediaTableItem * songItem = m_songTable->getNextSong(m_songItem, false);
+
+    QSettings * settings = m_mainWindow->getMediaManager()->getSettings();
+
+    if (settings->value("Preferences/EditSongAutoSave", false).toBool())
+    {
+        applyChanges();
+    }
 
     if (songItem)
     {

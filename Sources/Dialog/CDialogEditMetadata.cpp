@@ -216,12 +216,16 @@ void CDialogEditMetadata::reset()
                 return;
             }
 
+            m_uiWidget->tabWidget->setTabEnabled(0, true);
+            m_uiWidget->tabWidget->setTabEnabled(1, true);
+            m_uiWidget->tabWidget->setTabEnabled(2, true);
+            m_uiWidget->tabWidget->setTabEnabled(3, false);
+            //m_uiWidget->tabWidget->removeTab(3);
+
             initTagID3v1(file.ID3v1Tag(true));
             initTagID3v2(file.ID3v2Tag(true));
             initTagAPE(file.APETag(false));
             initTagXiphComment(nullptr);
-            //m_uiWidget->tabWidget->setTabEnabled(3, false);
-            m_uiWidget->tabWidget->removeTab(3);
 
             break;
         }
@@ -249,12 +253,14 @@ void CDialogEditMetadata::reset()
                 return;
             }
 
-            //m_uiWidget->tabWidget->setTabEnabled(0, false);
-            m_uiWidget->tabWidget->removeTab(0);
-            //m_uiWidget->tabWidget->setTabEnabled(1, false);
-            m_uiWidget->tabWidget->removeTab(1);
-            //m_uiWidget->tabWidget->setTabEnabled(2, false);
-            m_uiWidget->tabWidget->removeTab(2);
+            m_uiWidget->tabWidget->setTabEnabled(0, false);
+            m_uiWidget->tabWidget->setTabEnabled(1, false);
+            m_uiWidget->tabWidget->setTabEnabled(2, false);
+            m_uiWidget->tabWidget->setTabEnabled(3, true);
+            //m_uiWidget->tabWidget->removeTab(0);
+            //m_uiWidget->tabWidget->removeTab(1);
+            //m_uiWidget->tabWidget->removeTab(2);
+
             initTagID3v1(nullptr);
             initTagID3v2(nullptr);
             initTagAPE(nullptr);
@@ -286,10 +292,14 @@ void CDialogEditMetadata::reset()
                 return;
             }
 
+            m_uiWidget->tabWidget->setTabEnabled(0, true);
+            m_uiWidget->tabWidget->setTabEnabled(1, true);
+            m_uiWidget->tabWidget->setTabEnabled(2, false);
+            m_uiWidget->tabWidget->setTabEnabled(3, true);
+            //m_uiWidget->tabWidget->removeTab(2);
+
             initTagID3v1(file.ID3v1Tag(false));
             initTagID3v2(file.ID3v2Tag(false));
-            //m_uiWidget->tabWidget->setTabEnabled(2, false);
-            m_uiWidget->tabWidget->removeTab(2);
             initTagAPE(nullptr);
             initTagXiphComment(file.xiphComment(true));
 
@@ -324,7 +334,6 @@ void CDialogEditMetadata::enableTagID3v1(bool enable)
 void CDialogEditMetadata::enableTagID3v2(bool enable)
 {
     m_uiWidget->enableID3v2->setChecked(enable);
-
     m_uiWidget->tabID3v2Type->setEnabled(enable);
 }
 
@@ -336,7 +345,6 @@ void CDialogEditMetadata::enableTagID3v2(bool enable)
 void CDialogEditMetadata::enableTagAPE(bool enable)
 {
     m_uiWidget->enableAPE->setChecked(enable);
-
     m_uiWidget->tableAPE->setEnabled(enable);
 }
 
@@ -348,7 +356,6 @@ void CDialogEditMetadata::enableTagAPE(bool enable)
 void CDialogEditMetadata::enableTagXiphComment(bool enable)
 {
     m_uiWidget->enableXiphComment->setChecked(enable);
-
     m_uiWidget->tableXiphComment->setEnabled(enable);
 }
 
@@ -364,7 +371,9 @@ void CDialogEditMetadata::initTagID3v1(TagLib::ID3v1::Tag * tags)
     enableTagID3v1(tags);
 
     if (!tags)
+    {
         return;
+    }
 
     m_uiWidget->editID3v1Title->setText(QString::fromUtf8(tags->title().toCString(true)));
     m_uiWidget->editID3v1Artist->setText(QString::fromUtf8(tags->artist().toCString(true)));
@@ -389,7 +398,9 @@ void CDialogEditMetadata::initTagID3v2(TagLib::ID3v2::Tag * tags)
     enableTagID3v2(tags);
 
     if (!tags)
+    {
         return;
+    }
 
     TagLib::ID3v2::FrameListMap tagMap = tags->frameListMap();
 
@@ -535,7 +546,9 @@ void CDialogEditMetadata::initTagAPE(TagLib::APE::Tag * tags)
     enableTagAPE(tags);
 
     if (!tags)
+    {
         return;
+    }
 
     TagLib::APE::ItemListMap tagMap = tags->itemListMap();
 
@@ -584,7 +597,9 @@ void CDialogEditMetadata::initTagXiphComment(TagLib::Ogg::XiphComment * tags)
     enableTagXiphComment(tags);
 
     if (!tags)
+    {
         return;
+    }
 
     TagLib::Ogg::FieldListMap tagMap = tags->fieldListMap();
 

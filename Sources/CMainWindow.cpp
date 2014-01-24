@@ -397,7 +397,6 @@ bool CMainWindow::initWindow()
     connect(m_uiControl->btnClearFilter, SIGNAL(clicked()), this, SLOT(clearFilter()));
 
     // Sliders
-    //connect(m_uiControl->sliderVolume, SIGNAL(sliderMoved(int)), this, SLOT(setVolume(int)));
     connect(m_uiControl->sliderVolume, SIGNAL(valueChanged(int)), this, SLOT(setVolume(int)));
     connect(m_uiControl->sliderPosition, SIGNAL(sliderReleased()), this, SLOT(updatePosition()));
 

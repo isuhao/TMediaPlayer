@@ -342,8 +342,8 @@
     <message>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="192"/>
         <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="214"/>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="247"/>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="284"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="251"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="290"/>
         <source>Error while loading tags.</source>
         <translation>Error while loading tags.</translation>
     </message>
@@ -353,117 +353,117 @@
         <translation>can&apos;t read the MP3 file &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="246"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="250"/>
         <source>can&apos;t read the Ogg file &quot;%1&quot;</source>
         <translation>can&apos;t read the Ogg file &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="283"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="289"/>
         <source>can&apos;t read the FLAC file &quot;%1&quot;</source>
         <translation>can&apos;t read the FLAC file &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="500"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="511"/>
         <source>Other</source>
         <translation>Other</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="501"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="512"/>
         <source>FileIcon</source>
         <translation>FileIcon</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="502"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="513"/>
         <source>OtherFileIcon</source>
         <translation>Other file icon</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="503"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="514"/>
         <source>FrontCover</source>
         <translation>Front cover</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="504"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="515"/>
         <source>BackCover</source>
         <translation>Back cover</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="505"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="516"/>
         <source>LeafletPage</source>
         <translation>Leaflet page</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="506"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="517"/>
         <source>Media</source>
         <translation>Media</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="507"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="518"/>
         <source>LeadArtist</source>
         <translation>Lead artist</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="508"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="519"/>
         <source>Artist</source>
         <translation>Artist</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="509"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="520"/>
         <source>Conductor</source>
         <translation>Conductor</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="510"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="521"/>
         <source>Band</source>
         <translation>Band</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="511"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="522"/>
         <source>Composer</source>
         <translation>Composer</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="512"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="523"/>
         <source>Lyricist</source>
         <translation>Lyricist</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="513"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="524"/>
         <source>RecordingLocation</source>
         <translation>Recording location</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="514"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="525"/>
         <source>DuringRecording</source>
         <translation>During recording</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="515"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="526"/>
         <source>DuringPerformance</source>
         <translation>During performance</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="516"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="527"/>
         <source>MovieScreenCapture</source>
         <translation>Movie screen capture</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="517"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="528"/>
         <source>ColouredFish</source>
         <translation>Coloured fish</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="518"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="529"/>
         <source>Illustration</source>
         <translation>Illustration</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="519"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="530"/>
         <source>BandLogo</source>
         <translation>Band logo</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="520"/>
+        <location filename="../Sources/Dialog/CDialogEditMetadata.cpp" line="531"/>
         <source>PublisherLogo</source>
         <translation>Publisher logo</translation>
     </message>
@@ -486,50 +486,50 @@
         <translation>Apply</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="206"/>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="208"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="212"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="214"/>
         <source>Song infos</source>
         <translation>Song infos</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="226"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="232"/>
         <source>%1 kbit/s</source>
         <translation>%1 kbit/s</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="229"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="235"/>
         <source>%1 Hz</source>
         <translation>%1 Hz</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="234"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="240"/>
         <source>never</source>
         <translation>never</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="277"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="283"/>
         <source>impossible de lire le fichier MP3 &quot;%1&quot;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="468"/>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="480"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="482"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="494"/>
         <source>%1 dB</source>
         <translation>%1 dB</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="495"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="509"/>
         <source>Local time</source>
         <translation>Local time</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="495"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="509"/>
         <source>UTC</source>
         <translation>UTC</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="501"/>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="502"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="515"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="516"/>
         <source>dd/MM/yyyy HH:mm:ss</source>
         <translation>dd/MM/yyyy HH:mm:ss</translation>
     </message>
@@ -1279,7 +1279,7 @@
     <name>CMainWindow</name>
     <message numerus="yes">
         <location filename="../Sources/CMainWindow.cpp" line="149"/>
-        <location filename="../Sources/CMainWindow.cpp" line="2386"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2385"/>
         <source>%n song(s), %1</source>
         <translation>
             <numerusform>%n song, %1</numerusform>
@@ -1297,22 +1297,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="411"/>
+        <location filename="../Sources/CMainWindow.cpp" line="410"/>
         <source>Playlists</source>
         <translation>Playlists</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="424"/>
+        <location filename="../Sources/CMainWindow.cpp" line="423"/>
         <source>Lyrics</source>
         <translation>Lyrics</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="456"/>
+        <location filename="../Sources/CMainWindow.cpp" line="455"/>
         <source>Failed to load database.</source>
         <translation>Failed to load database.</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="2528"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2527"/>
         <source>Failed to init sound system with FMOD.</source>
         <translation>Failed to init sound system with FMOD.</translation>
     </message>
@@ -1341,8 +1341,8 @@ Error: %4</translation>
         <translation type="obsolete">Query: </translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CMainWindow.cpp" line="798"/>
-        <location filename="../Sources/CMainWindow.cpp" line="802"/>
+        <location filename="../Sources/CMainWindow.cpp" line="797"/>
+        <location filename="../Sources/CMainWindow.cpp" line="801"/>
         <source>%n selected song(s), %1</source>
         <translation>
             <numerusform>%n selected song, %1</numerusform>
@@ -1354,32 +1354,32 @@ Error: %4</translation>
         <translation type="obsolete">%2 (%3 line %4): %1</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="1816"/>
+        <location filename="../Sources/CMainWindow.cpp" line="1815"/>
         <source>several songs selected</source>
         <translation>several songs selected</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="1958"/>
+        <location filename="../Sources/CMainWindow.cpp" line="1957"/>
         <source>error while loading the file &quot;%1&quot; with FMOD</source>
         <translation>error while loading the file &quot;%1&quot; with FMOD</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="1967"/>
+        <location filename="../Sources/CMainWindow.cpp" line="1966"/>
         <source>can&apos;t compute song duration for file &quot;%1&quot;</source>
         <translation>can&apos;t compute song duration for file &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="1976"/>
+        <location filename="../Sources/CMainWindow.cpp" line="1975"/>
         <source>can&apos;t find song format for file &quot;%1&quot;</source>
         <translation>can&apos;t find song format for file &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="1983"/>
+        <location filename="../Sources/CMainWindow.cpp" line="1982"/>
         <source>unknown format</source>
         <translation>unknown format</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="2723"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2722"/>
         <source>A song is being played. Are you sure you want to quit the application?</source>
         <translation>A song is being played. Are you sure you want to quit the application?</translation>
     </message>
@@ -1388,39 +1388,39 @@ Error: %4</translation>
         <translation type="obsolete">can&apos;t open the log file &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="875"/>
-        <location filename="../Sources/CMainWindow.cpp" line="896"/>
-        <location filename="../Sources/CMainWindow.cpp" line="912"/>
-        <location filename="../Sources/CMainWindow.cpp" line="1255"/>
-        <location filename="../Sources/CMainWindow.cpp" line="2049"/>
-        <location filename="../Sources/CMainWindow.cpp" line="2064"/>
-        <location filename="../Sources/CMainWindow.cpp" line="2113"/>
+        <location filename="../Sources/CMainWindow.cpp" line="874"/>
+        <location filename="../Sources/CMainWindow.cpp" line="895"/>
+        <location filename="../Sources/CMainWindow.cpp" line="911"/>
+        <location filename="../Sources/CMainWindow.cpp" line="1254"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2048"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2063"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2112"/>
         <source>invalid pointer</source>
         <translation>invalid pointer</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="1448"/>
+        <location filename="../Sources/CMainWindow.cpp" line="1447"/>
         <source>invalid argument (%1)</source>
         <translation>invalid argument (%1)</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="1586"/>
-        <location filename="../Sources/CMainWindow.cpp" line="1831"/>
+        <location filename="../Sources/CMainWindow.cpp" line="1585"/>
+        <location filename="../Sources/CMainWindow.cpp" line="1830"/>
         <source>Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)</source>
         <translation>Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="1629"/>
+        <location filename="../Sources/CMainWindow.cpp" line="1628"/>
         <source>Loading files...</source>
         <translation>Loading files...</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="1629"/>
+        <location filename="../Sources/CMainWindow.cpp" line="1628"/>
         <source>Abort</source>
         <translation>Abort</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CMainWindow.cpp" line="1658"/>
+        <location filename="../Sources/CMainWindow.cpp" line="1657"/>
         <source>%n song(s) added to the library.</source>
         <translation>
             <numerusform>%n song added to the library.</numerusform>
@@ -1428,31 +1428,31 @@ Error: %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="1843"/>
+        <location filename="../Sources/CMainWindow.cpp" line="1842"/>
         <source>This file is already in the library. Do you want to merge the two songs?</source>
         <translation>This file is already in the library. Do you want to merge the two songs?</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="2216"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2215"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Are you sure you want to delete this playlist?</translation>
+    </message>
+    <message>
+        <location filename="../Sources/CMainWindow.cpp" line="1843"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2216"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2723"/>
+        <source>Yes</source>
+        <translation>Yes</translation>
     </message>
     <message>
         <location filename="../Sources/CMainWindow.cpp" line="1844"/>
         <location filename="../Sources/CMainWindow.cpp" line="2217"/>
         <location filename="../Sources/CMainWindow.cpp" line="2724"/>
-        <source>Yes</source>
-        <translation>Yes</translation>
-    </message>
-    <message>
-        <location filename="../Sources/CMainWindow.cpp" line="1845"/>
-        <location filename="../Sources/CMainWindow.cpp" line="2218"/>
-        <location filename="../Sources/CMainWindow.cpp" line="2725"/>
         <source>No</source>
         <translation>No</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CMainWindow.cpp" line="798"/>
+        <location filename="../Sources/CMainWindow.cpp" line="797"/>
         <source>%n day(s) %1</source>
         <translation>
             <numerusform>%n day %1</numerusform>
@@ -1464,23 +1464,23 @@ Error: %4</translation>
         <translation type="obsolete">This program requires FMOD %1 or superior.</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="2539"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2538"/>
         <source>can&apos;t get number of CD-ROM drives</source>
         <translation>can&apos;t get number of CD-ROM drives</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="2553"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2552"/>
         <source>can&apos;t get name of drive #%1</source>
         <translation>can&apos;t get name of drive #%1</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="2685"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2684"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="2694"/>
-        <location filename="../Sources/CMainWindow.cpp" line="2703"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2693"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2702"/>
         <source>Play</source>
         <translation>Play</translation>
     </message>
