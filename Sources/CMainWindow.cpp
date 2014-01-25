@@ -2732,6 +2732,16 @@ void CMainWindow::closeEvent(QCloseEvent * event)
         }
     }
 
+    if (m_dialogNotifications != nullptr)
+    {
+        m_dialogNotifications->close();
+    }
+
+    if (m_dialogLastPlays != nullptr)
+    {
+        m_dialogLastPlays->close();
+    }
+
     m_mediaManager->getSettings()->setValue("Window/WindowGeometry", saveGeometry());
     m_mediaManager->getSettings()->setValue("Window/WindowState", saveState());
 

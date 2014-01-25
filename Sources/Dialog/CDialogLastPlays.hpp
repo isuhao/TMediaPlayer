@@ -25,6 +25,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 
 class CMainWindow;
+class QStandardItemModel;
 
 
 /**
@@ -44,6 +45,11 @@ signals:
 
     void closed();
 
+protected slots:
+
+    void changeMaxPlays(int maxPlays);
+    void resetList();
+
 protected:
 
     void closeEvent(QCloseEvent * event);
@@ -52,6 +58,7 @@ private:
 
     Ui::DialogLastPlays * m_uiWidget;
     CMainWindow * m_mainWindow;
+    QStandardItemModel * m_model;
 };
 
 #endif // FILE_C_DIALOG_LAST_PLAYS

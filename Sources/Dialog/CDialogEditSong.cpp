@@ -157,6 +157,11 @@ void CDialogEditSong::closeEvent(QCloseEvent * event)
 
 void CDialogEditSong::applyChanges()
 {
+    if (m_songItem == nullptr)
+    {
+        return;
+    }
+
     CSong * song = m_songItem->getSong();
 
     song->setTitle(m_uiWidget->editTitle->text());
@@ -203,6 +208,11 @@ void CDialogEditSong::applyChanges()
 
 void CDialogEditSong::resetSummary()
 {
+    if (m_songItem == nullptr)
+    {
+        return;
+    }
+
     CSong * song = m_songItem->getSong();
 
     const QString songTitle = song->getTitle();
@@ -302,12 +312,19 @@ void CDialogEditSong::previousSong()
 {
     // Morceau précédent
     CMediaTableItem * songItem = m_songTable->getPreviousSong(m_songItem, false);
-    
+
     QSettings * settings = m_mainWindow->getMediaManager()->getSettings();
+    Q_CHECK_PTR(settings);
 
     if (settings->value("Preferences/EditSongAutoSave", false).toBool())
     {
         applyChanges();
+
+        // La liste a changé et le morceau courant ne s'y trouve plus
+        if (m_songItem == nullptr && songItem != nullptr)
+        {
+            songItem = m_songTable->getFirstSongItem(songItem->getSong());
+        }
     }
 
     if (songItem)
@@ -316,8 +333,9 @@ void CDialogEditSong::previousSong()
         updateInfos();
 
         songItem = m_songTable->getPreviousSong(m_songItem, false);
-        m_uiWidget->btnPrevious->setEnabled(songItem);
-        m_uiWidget->btnNext->setEnabled(true);
+        m_uiWidget->btnPrevious->setEnabled(songItem != nullptr);
+        songItem = m_songTable->getNextSong(m_songItem, false);
+        m_uiWidget->btnNext->setEnabled(songItem != nullptr);
     }
 }
 
@@ -333,10 +351,17 @@ void CDialogEditSong::nextSong()
     CMediaTableItem * songItem = m_songTable->getNextSong(m_songItem, false);
 
     QSettings * settings = m_mainWindow->getMediaManager()->getSettings();
+    Q_CHECK_PTR(settings);
 
     if (settings->value("Preferences/EditSongAutoSave", false).toBool())
     {
         applyChanges();
+
+        // La liste a changé et le morceau courant ne s'y trouve plus
+        if (m_songItem == nullptr && songItem != nullptr)
+        {
+            songItem = m_songTable->getFirstSongItem(songItem->getSong());
+        }
     }
 
     if (songItem)
@@ -344,9 +369,10 @@ void CDialogEditSong::nextSong()
         m_songItem = songItem;
         updateInfos();
 
+        songItem = m_songTable->getPreviousSong(m_songItem, false);
+        m_uiWidget->btnPrevious->setEnabled(songItem != nullptr);
         songItem = m_songTable->getNextSong(m_songItem, false);
-        m_uiWidget->btnPrevious->setEnabled(true);
-        m_uiWidget->btnNext->setEnabled(songItem);
+        m_uiWidget->btnNext->setEnabled(songItem != nullptr);
     }
 }
 
@@ -379,6 +405,11 @@ void CDialogEditSong::save()
 
 void CDialogEditSong::updateInfos()
 {
+    if (m_songItem == nullptr)
+    {
+        return;
+    }
+
     CSong * song = m_songItem->getSong();
 
     // Rechargement des métadonnées

@@ -486,50 +486,50 @@
         <translation>Apply</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="212"/>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="214"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="222"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="224"/>
         <source>Song infos</source>
         <translation>Song infos</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="232"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="242"/>
         <source>%1 kbit/s</source>
         <translation>%1 kbit/s</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="235"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="245"/>
         <source>%1 Hz</source>
         <translation>%1 Hz</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="240"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="250"/>
         <source>never</source>
         <translation>never</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="283"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="293"/>
         <source>impossible de lire le fichier MP3 &quot;%1&quot;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="482"/>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="494"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="513"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="525"/>
         <source>%1 dB</source>
         <translation>%1 dB</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="509"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="540"/>
         <source>Local time</source>
         <translation>Local time</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="509"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="540"/>
         <source>UTC</source>
         <translation>UTC</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="515"/>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="516"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="546"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="547"/>
         <source>dd/MM/yyyy HH:mm:ss</source>
         <translation>dd/MM/yyyy HH:mm:ss</translation>
     </message>
@@ -718,7 +718,27 @@
 <context>
     <name>CDialogLastPlays</name>
     <message>
-        <location filename="../Sources/Dialog/CDialogLastPlays.cpp" line="89"/>
+        <location filename="../Sources/Dialog/CDialogLastPlays.cpp" line="53"/>
+        <source>Time</source>
+        <translation>Time</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogLastPlays.cpp" line="53"/>
+        <source>Title</source>
+        <translation>Title</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogLastPlays.cpp" line="53"/>
+        <source>Artist</source>
+        <translation>Artist</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogLastPlays.cpp" line="53"/>
+        <source>Album</source>
+        <translation>Album</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogLastPlays.cpp" line="49"/>
         <source>Close</source>
         <translation>Close</translation>
     </message>
@@ -892,28 +912,28 @@
         <location filename="../Sources/Last.fm/CGetRecentTracks.cpp" line="72"/>
         <location filename="../Sources/Last.fm/CGetRecentTracks.cpp" line="106"/>
         <source>Date:</source>
-        <translation type="unfinished">Date:</translation>
+        <translation>Date:</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CGetRecentTracks.cpp" line="73"/>
         <source>URL:</source>
-        <translation type="unfinished">URL:</translation>
+        <translation>URL:</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CGetRecentTracks.cpp" line="74"/>
         <location filename="../Sources/Last.fm/CGetRecentTracks.cpp" line="108"/>
         <source>Content:</source>
-        <translation type="unfinished">Content:</translation>
+        <translation>Content:</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CGetRecentTracks.cpp" line="107"/>
         <source>Code:</source>
-        <translation type="unfinished">Code:</translation>
+        <translation>Code:</translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CGetRecentTracks.cpp" line="112"/>
         <source>HTTP error: </source>
-        <translation type="unfinished">HTTP error: </translation>
+        <translation>HTTP error: </translation>
     </message>
     <message>
         <location filename="../Sources/Last.fm/CGetRecentTracks.cpp" line="137"/>
@@ -936,7 +956,7 @@
     <message>
         <location filename="../Sources/Last.fm/CGetRecentTracks.cpp" line="201"/>
         <source>Invalid XML document (%1)</source>
-        <translation type="unfinished">Invalid XML document (%1)</translation>
+        <translation>Invalid XML document (%1)</translation>
     </message>
 </context>
 <context>
@@ -1894,7 +1914,7 @@ The files will not be deleted.</translation>
     <message numerus="yes">
         <location filename="../Sources/CMediaTableView.cpp" line="1463"/>
         <source>Rename file(s) automatically</source>
-        <translation>
+        <translation type="unfinished">
             <numerusform>Rename file automatically</numerusform>
             <numerusform>Rename files automatically</numerusform>
         </translation>
@@ -1902,7 +1922,7 @@ The files will not be deleted.</translation>
     <message numerus="yes">
         <location filename="../Sources/CMediaTableView.cpp" line="1464"/>
         <source>Analyze file(s)</source>
-        <translation>
+        <translation type="unfinished">
             <numerusform>Analyze file</numerusform>
             <numerusform>Analyze files</numerusform>
         </translation>
@@ -3759,24 +3779,25 @@ Would you like to add them?</translation>
         <translation>Last plays</translation>
     </message>
     <message>
-        <location filename="../Form/DialogLastPlays.ui" line="42"/>
+        <location filename="../Form/DialogLastPlays.ui" line="72"/>
+        <source>Plays:</source>
+        <translation>Plays:</translation>
+    </message>
+    <message>
         <source>Time</source>
-        <translation>Time</translation>
+        <translation type="obsolete">Time</translation>
     </message>
     <message>
-        <location filename="../Form/DialogLastPlays.ui" line="47"/>
         <source>Title</source>
-        <translation>Title</translation>
+        <translation type="obsolete">Title</translation>
     </message>
     <message>
-        <location filename="../Form/DialogLastPlays.ui" line="52"/>
         <source>Artist</source>
-        <translation>Artist</translation>
+        <translation type="obsolete">Artist</translation>
     </message>
     <message>
-        <location filename="../Form/DialogLastPlays.ui" line="57"/>
         <source>Album</source>
-        <translation>Album</translation>
+        <translation type="obsolete">Album</translation>
     </message>
 </context>
 <context>

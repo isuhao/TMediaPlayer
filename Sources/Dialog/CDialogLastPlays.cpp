@@ -22,6 +22,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "../CMediaManager.hpp"
 #include "../CSong.hpp"
 #include <QPushButton>
+#include <QStandardItemModel>
+#include <QSortFilterProxyModel>
 #include <QSqlError>
 #include <QSqlQuery>
 
@@ -35,59 +37,33 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 CDialogLastPlays::CDialogLastPlays(CMainWindow * mainWindow) :
 QDialog      (mainWindow),
 m_uiWidget   (new Ui::DialogLastPlays()),
-m_mainWindow (mainWindow)
+m_mainWindow (mainWindow),
+m_model      (nullptr)
 {
     Q_CHECK_PTR(m_mainWindow);
 
     setAttribute(Qt::WA_DeleteOnClose);
     m_uiWidget->setupUi(this);
 
-    m_uiWidget->table->setSortingEnabled(false);
-
-    QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
-
-    if (!query.exec("SELECT song_id, play_time_utc FROM play WHERE play_time_utc IS NOT NULL ORDER BY play_time_utc DESC"))
-    {
-        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-    }
-    else
-    {
-        // Remplissage du tableau
-        for (int row = 0; row < 100 && query.next(); ++row)
-        {
-            m_uiWidget->table->setRowCount(row + 1);
-
-            const int songId = query.value(0).toInt();
-            const CSong * song = m_mainWindow->getSongFromId(songId);
-
-            if (!song)
-                continue;
-
-            QDateTime playTimeUTC = query.value(1).toDateTime();
-            playTimeUTC.setTimeSpec(Qt::UTC);
-
-            QTableWidgetItem * item;
-
-            item = new QTableWidgetItem(playTimeUTC.toLocalTime().toString("dd/MM/yyyy HH:mm:ss"));
-            m_uiWidget->table->setItem(row, 0, item);
-
-            item = new QTableWidgetItem(song->getTitle());
-            m_uiWidget->table->setItem(row, 1, item);
-
-            item = new QTableWidgetItem(song->getArtistName());
-            m_uiWidget->table->setItem(row, 2, item);
-
-            item = new QTableWidgetItem(song->getAlbumTitle());
-            m_uiWidget->table->setItem(row, 3, item);
-        }
-    }
-
-    m_uiWidget->table->setSortingEnabled(true);
-    m_uiWidget->table->sortByColumn(0, Qt::DescendingOrder);
-
     // Connexions des signaux des boutons
     QPushButton * btnClose = m_uiWidget->buttonBox->addButton(tr("Close"), QDialogButtonBox::AcceptRole);
     connect(btnClose, SIGNAL(clicked()), this, SLOT(close()));
+
+    m_model = new QStandardItemModel(this);
+    m_model->setHorizontalHeaderLabels(QStringList() << tr("Time") << tr("Title") << tr("Artist") << tr("Album"));
+
+    QSortFilterProxyModel * proxyModel = new QSortFilterProxyModel(this);
+    proxyModel->setSourceModel(m_model);
+    proxyModel->setSortRole(Qt::UserRole + 2);
+    proxyModel->setDynamicSortFilter(true);
+    m_uiWidget->table->setModel(proxyModel);
+    m_uiWidget->table->sortByColumn(0, Qt::DescendingOrder);
+
+    resetList();
+    m_uiWidget->table->resizeColumnsToContents();
+
+    connect(m_uiWidget->editMaxPlays, SIGNAL(valueChanged(int)), this, SLOT(changeMaxPlays(int)));
+    connect(m_mainWindow, SIGNAL(songPlayEnd(CSong *)), this, SLOT(resetList()));
 }
 
 
@@ -98,6 +74,78 @@ m_mainWindow (mainWindow)
 CDialogLastPlays::~CDialogLastPlays()
 {
     delete m_uiWidget;
+}
+
+
+void CDialogLastPlays::changeMaxPlays(int maxPlays)
+{
+    m_uiWidget->editMaxPlays->setValue(maxPlays);
+    resetList();
+}
+
+
+void CDialogLastPlays::resetList()
+{
+    int colWidth0 = m_uiWidget->table->columnWidth(0);
+    int colWidth1 = m_uiWidget->table->columnWidth(1);
+    int colWidth2 = m_uiWidget->table->columnWidth(2);
+    int colWidth3 = m_uiWidget->table->columnWidth(3);
+
+    m_model->removeRows(0, m_model->rowCount());
+
+    QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
+
+    if (!query.exec("SELECT song_id, play_time_utc, play_id FROM play WHERE play_time_utc IS NOT NULL ORDER BY play_time_utc DESC"))
+    {
+        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+    }
+    else
+    {
+        // Remplissage du tableau
+        for (int row = 0; row < m_uiWidget->editMaxPlays->value() && query.next(); ++row)
+        {
+            const int songId = query.value(0).toInt();
+            const int playId = query.value(2).toInt();
+            const CSong * song = m_mainWindow->getSongFromId(songId);
+
+            if (song == nullptr)
+            {
+                continue;
+            }
+
+            QDateTime playTimeUTC = query.value(1).toDateTime();
+            playTimeUTC.setTimeSpec(Qt::UTC);
+
+            QList<QStandardItem *> itemList;
+
+            QStandardItem * itemTime = new QStandardItem(playTimeUTC.toLocalTime().toString("dd/MM/yyyy HH:mm:ss"));
+            QStandardItem * itemTitle = new QStandardItem(song->getTitle());
+            QStandardItem * itemArtist = new QStandardItem(song->getArtistName());
+            QStandardItem * itemAlbum = new QStandardItem(song->getAlbumTitle());
+
+            itemTime->setData(playId, Qt::UserRole + 1);
+            itemTitle->setData(playId, Qt::UserRole + 1);
+            itemArtist->setData(playId, Qt::UserRole + 1);
+            itemAlbum->setData(playId, Qt::UserRole + 1);
+
+            itemTime->setData(playTimeUTC, Qt::UserRole + 2);
+            itemTitle->setData(song->getTitleSort(false), Qt::UserRole + 2);
+            itemArtist->setData(song->getArtistNameSort(false), Qt::UserRole + 2);
+            itemAlbum->setData(song->getAlbumTitleSort(false), Qt::UserRole + 2);
+
+            itemList.append(itemTime);
+            itemList.append(itemTitle);
+            itemList.append(itemArtist);
+            itemList.append(itemAlbum);
+
+            m_model->appendRow(itemList);
+        }
+    }
+
+    m_uiWidget->table->setColumnWidth(0, colWidth0 > 20 ? colWidth0 : 20);
+    m_uiWidget->table->setColumnWidth(1, colWidth1 > 20 ? colWidth1 : 20);
+    m_uiWidget->table->setColumnWidth(2, colWidth2 > 20 ? colWidth2 : 20);
+    m_uiWidget->table->setColumnWidth(3, colWidth3 > 20 ? colWidth3 : 20);
 }
 
 
