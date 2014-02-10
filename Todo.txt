@@ -20,11 +20,6 @@
   Importance moyenne
 --------------------------------------------------
 
-- Boite de dialogue "Dernières lectures" :
-  - Mettre à jour en temps réel.
-  - Pouvoir modifier le nombre de morceaux affichés.
-  - Redimensionnement automatique des colonnes.
-
 - Déplacer la gestion de la base de données dans des bibliothèques externes.
 - Déplacer la gestion de la fenêtre principale dans une classe à part. [EN COURS]
 

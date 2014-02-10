@@ -549,4 +549,22 @@ void CDialogEditSong::updateInfos()
     }
 
     m_uiWidget->listPlays->resizeColumnsToContents();
+
+    qlonglong totalDuration = song->m_plays.size() * song->getDuration();
+    QTime durationTime(0, 0);
+    durationTime = durationTime.addMSecs(totalDuration % 86400000);
+
+    if (totalDuration > 86400000)
+    {
+        int numDays = static_cast<int>(totalDuration / 86400000);
+        m_uiWidget->lblTotalDuration->setText(tr("Total duration: %1").arg(tr("%n day(s) %1", "", numDays).arg(durationTime.toString())));
+    }
+    else if (totalDuration > 3600000)
+    {
+        m_uiWidget->lblTotalDuration->setText(tr("Total duration: %1").arg(durationTime.toString()));
+    }
+    else
+    {
+        m_uiWidget->lblTotalDuration->setText(tr("Total duration: %1").arg(durationTime.toString("m:ss")));
+    }
 }

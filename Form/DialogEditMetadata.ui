@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>DialogEditMetadata</class>
  <widget class="QDialog" name="DialogEditMetadata">
+  <property name="windowModality">
+   <enum>Qt::WindowModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -18,6 +21,9 @@
   </property>
   <property name="windowTitle">
    <string>Metadata</string>
+  </property>
+  <property name="modal">
+   <bool>true</bool>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -371,6 +377,15 @@
        </item>
        <item>
         <widget class="QTableView" name="tableAPE">
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+         <property name="selectionMode">
+          <enum>QAbstractItemView::SingleSelection</enum>
+         </property>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectRows</enum>
+         </property>
          <attribute name="horizontalHeaderMinimumSectionSize">
           <number>100</number>
          </attribute>
@@ -394,16 +409,25 @@
       <attribute name="title">
        <string>Xiph Comment</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_8">
-       <item>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="0" column="0" colspan="2">
         <widget class="QCheckBox" name="enableXiphComment">
          <property name="text">
           <string>Enable XiphComment tags.</string>
          </property>
         </widget>
        </item>
-       <item>
+       <item row="1" column="0">
         <widget class="QTableView" name="tableXiphComment">
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+         <property name="selectionMode">
+          <enum>QAbstractItemView::SingleSelection</enum>
+         </property>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectRows</enum>
+         </property>
          <attribute name="horizontalHeaderMinimumSectionSize">
           <number>100</number>
          </attribute>
@@ -420,6 +444,60 @@
           <number>20</number>
          </attribute>
         </widget>
+       </item>
+       <item row="1" column="1">
+        <layout class="QVBoxLayout" name="verticalLayout_8">
+         <item>
+          <widget class="QPushButton" name="buttonXiphAdd">
+           <property name="text">
+            <string>Add tag...</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="spacerXiph1">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>10</width>
+             <height>10</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="buttonXiphEdit">
+           <property name="text">
+            <string>Edit tag...</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="buttonXiphRemove">
+           <property name="text">
+            <string>Remove tag...</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="spacerXiph2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
        </item>
       </layout>
      </widget>

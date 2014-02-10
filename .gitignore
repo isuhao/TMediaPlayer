@@ -4,6 +4,9 @@ TMediaPlayer.suo
 TMediaPlayer.vcxproj.user
 TMediaPlayer.opensdf
 
+*.log
+
 Bin/
 GeneratedFiles/
+Ressources/
 Temp/

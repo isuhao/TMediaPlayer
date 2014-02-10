@@ -848,6 +848,21 @@
     <ClCompile Include="GeneratedFiles\qrc_TMediaPlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Win32\Debug\moc_CDialogEditXiphComment.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\x64\Debug\moc_CDialogEditXiphComment.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Win32\Release\moc_CDialogEditXiphComment.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\x64\Release\moc_CDialogEditXiphComment.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Dialog\CDialogEditXiphComment.cpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Sources\CSong.hpp">
@@ -1063,6 +1078,12 @@
     <CustomBuild Include="Sources\Last.fm\CGetRecentTracks.hpp">
       <Filter>Header Files\Last.fm</Filter>
     </CustomBuild>
+    <CustomBuild Include="Form\DialogEditMetadataXiph.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Sources\Dialog\CDialogEditXiphComment.hpp">
+      <Filter>Header Files\Dialog</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\CRating.hpp">
@@ -1148,6 +1169,9 @@
     </ClInclude>
     <ClInclude Include="Sources\IMediaTable.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_DialogEditMetadataXiph.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

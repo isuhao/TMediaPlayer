@@ -57,6 +57,11 @@ protected slots:
     void save();
     void reset();
 
+    void addXiphTag();
+    void editSelectedXiphTag();
+    void removeSelectedXiphTag();
+    void selectedXiphChanged(const QModelIndex& current, const QModelIndex& previous);
+
     void enableTagID3v1(bool enable);
     void enableTagID3v2(bool enable);
     void enableTagAPE(bool enable);

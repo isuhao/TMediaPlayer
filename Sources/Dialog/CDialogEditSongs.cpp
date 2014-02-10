@@ -457,12 +457,15 @@ m_songItemList      (songItemList)
 
 
     // Lectures
+    qlonglong totalDuration = 0;
     QStandardItemModel * model = new QStandardItemModel(this);
     model->setHorizontalHeaderLabels(QStringList() << tr("Song") << tr("Local time") << tr("UTC"));
     m_uiWidget->listPlays->setModel(model);
 
     for (QList<TPlay>::ConstIterator it = plays.begin(); it != plays.end(); ++it)
     {
+        totalDuration += it->song->getDuration();
+
         QList<QStandardItem *> itemList;
 
         const QString songTitle = it->song->getTitle();
@@ -490,6 +493,24 @@ m_songItemList      (songItemList)
     }
 
     m_uiWidget->listPlays->resizeColumnsToContents();
+
+    QTime durationTime(0, 0);
+    durationTime = durationTime.addMSecs(totalDuration % 86400000);
+
+    if (totalDuration > 86400000)
+    {
+        int numDays = static_cast<int>(totalDuration / 86400000);
+        m_uiWidget->lblTotalDuration->setText(tr("Total duration: %1").arg(tr("%n day(s) %1", "", numDays).arg(durationTime.toString())));
+    }
+    else if (totalDuration > 3600000)
+    {
+        m_uiWidget->lblTotalDuration->setText(tr("Total duration: %1").arg(durationTime.toString()));
+    }
+    else
+    {
+        m_uiWidget->lblTotalDuration->setText(tr("Total duration: %1").arg(durationTime.toString("m:ss")));
+    }
+
 
 
     const QString notSimText = tr("Different values");

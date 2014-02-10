@@ -251,6 +251,11 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Win32\Debug\moc_CDialogEditXiphComment.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="GeneratedFiles\Win32\Debug\moc_CDialogEqualizer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -497,6 +502,11 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Win32\Release\moc_CDialogEditStaticPlayList.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Win32\Release\moc_CDialogEditXiphComment.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -751,6 +761,11 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\x64\Debug\moc_CDialogEditXiphComment.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="GeneratedFiles\x64\Debug\moc_CDialogEqualizer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -1001,6 +1016,11 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\x64\Release\moc_CDialogEditXiphComment.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="GeneratedFiles\x64\Release\moc_CDialogEqualizer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -1214,6 +1234,7 @@
     <ClCompile Include="Sources\CWidgetLyrics.cpp" />
     <ClCompile Include="Sources\Dialog\CDialogAbout.cpp" />
     <ClCompile Include="Sources\Dialog\CDialogCDRomDriveInfos.cpp" />
+    <ClCompile Include="Sources\Dialog\CDialogEditXiphComment.cpp" />
     <ClCompile Include="Sources\Dialog\CDialogLastPlays.cpp" />
     <ClCompile Include="Sources\Dialog\CDialogNotifications.cpp" />
     <ClCompile Include="Sources\Dialog\CDialogPreferencesFolder.cpp" />
@@ -1427,6 +1448,7 @@
     <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_DialogEditDynamicPlayList.h" />
     <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_DialogEditFolder.h" />
     <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_DialogEditMetadata.h" />
+    <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_DialogEditMetadataXiph.h" />
     <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_DialogEditSong.h" />
     <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_DialogEditSongs.h" />
     <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_DialogEditStaticPlayList.h" />
@@ -1512,6 +1534,24 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DNDEBUG -DQT_NO_DEBUG -DQT_SQL_LIB -DQT_NETWORK_LIB -DQT_XML_LIB -DQT_DLL -DQT_WEBKIT_LIB -DQT_WEBKITWIDGETS_LIB -DQT_CORE_LIB -DQT_GUI_LIB  "-I." "-I.\Sources" "-I.\Sources\Dialog" "-I.\Sources\Importer" "-I.\Sources\Last.fm" "-ID:\Ressources\Libraries\taglib-1.7.2\include" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtXml" "-I$(QTDIR)\include\QtWebKit" "-I.\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\GeneratedFiles\$(PlatformName)\." "-I$(QTDIR)\include\QtWebkitWidgets" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui"</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Moc%27ing CWidgetLineEditMultiple.hpp...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DNDEBUG -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_SQL_LIB -DQT_NETWORK_LIB -DQT_XML_LIB -DQT_DLL -DQT_WEBKIT_LIB -DQT_WEBKITWIDGETS_LIB -DQT_CORE_LIB -DQT_GUI_LIB "-I." "-I.\Sources" "-I.\Sources\Dialog" "-I.\Sources\Importer" "-I.\Sources\Last.fm" "-ID:\Ressources\Libraries\taglib-1.7.2\include" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtXml" "-I$(QTDIR)\include\QtWebKit" "-I.\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\GeneratedFiles\$(PlatformName)\." "-I$(QTDIR)\include\QtWebkitWidgets" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui"</Command>
+    </CustomBuild>
+    <CustomBuild Include="Sources\Dialog\CDialogEditXiphComment.hpp">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing CDialogEditXiphComment.hpp...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -D_DEBUG -DQT_DEBUG -DQT_SQL_LIB -DQT_NETWORK_LIB -DQT_XML_LIB -DQT_DLL -DQT_WEBKIT_LIB -DQT_WEBKITWIDGETS_LIB -DQT_CORE_LIB -DQT_GUI_LIB "-I." "-I.\Sources" "-I.\Sources\Dialog" "-I.\Sources\Importer" "-I.\Sources\Last.fm" "-ID:\Ressources\Libraries\taglib-1.7.2\include" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtXml" "-I$(QTDIR)\include\QtWebKit" "-I$(QTDIR)\include\QtWebkitWidgets" "-I.\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\GeneratedFiles\$(PlatformName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing CDialogEditXiphComment.hpp...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -D_DEBUG -DQT_DEBUG -DQT_LARGEFILE_SUPPORT -DQT_SQL_LIB -DQT_NETWORK_LIB -DQT_XML_LIB -DQT_DLL -DQT_WEBKIT_LIB -DQT_WEBKITWIDGETS_LIB -DQT_CORE_LIB -DQT_GUI_LIB "-I." "-I.\Sources" "-I.\Sources\Dialog" "-I.\Sources\Importer" "-I.\Sources\Last.fm" "-ID:\Ressources\Libraries\taglib-1.7.2\include" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtXml" "-I$(QTDIR)\include\QtWebKit" "-I.\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\GeneratedFiles\$(PlatformName)\." "-I$(QTDIR)\include\QtWebkitWidgets" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing CDialogEditXiphComment.hpp...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DNDEBUG -DQT_NO_DEBUG -DQT_SQL_LIB -DQT_NETWORK_LIB -DQT_XML_LIB -DQT_DLL -DQT_WEBKIT_LIB -DQT_WEBKITWIDGETS_LIB -DQT_CORE_LIB -DQT_GUI_LIB "-I." "-I.\Sources" "-I.\Sources\Dialog" "-I.\Sources\Importer" "-I.\Sources\Last.fm" "-ID:\Ressources\Libraries\taglib-1.7.2\include" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtXml" "-I$(QTDIR)\include\QtWebKit" "-I.\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\GeneratedFiles\$(PlatformName)\." "-I$(QTDIR)\include\QtWebkitWidgets" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Moc%27ing CDialogEditXiphComment.hpp...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DNDEBUG -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_SQL_LIB -DQT_NETWORK_LIB -DQT_XML_LIB -DQT_DLL -DQT_WEBKIT_LIB -DQT_WEBKITWIDGETS_LIB -DQT_CORE_LIB -DQT_GUI_LIB "-I." "-I.\Sources" "-I.\Sources\Dialog" "-I.\Sources\Importer" "-I.\Sources\Last.fm" "-ID:\Ressources\Libraries\taglib-1.7.2\include" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtXml" "-I$(QTDIR)\include\QtWebKit" "-I.\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\GeneratedFiles\$(PlatformName)\." "-I$(QTDIR)\include\QtWebkitWidgets" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui"</Command>
     </CustomBuild>
@@ -2351,6 +2391,7 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Uic%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(PlatformName)\ui_%(Filename).h;%(Outputs)</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\$(PlatformName)\ui_%(Filename).h" "%(FullPath)"</Command>
+      <SubType>Designer</SubType>
     </CustomBuild>
     <CustomBuild Include="Form\DialogEditSongs.ui">
       <FileType>Document</FileType>
@@ -2598,6 +2639,26 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Uic%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(PlatformName)\ui_%(Filename).h;%(Outputs)</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\$(PlatformName)\ui_%(Filename).h" "%(FullPath)"</Command>
+    </CustomBuild>
+    <CustomBuild Include="Form\DialogEditMetadataXiph.ui">
+      <FileType>Document</FileType>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(PlatformName)\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\$(PlatformName)\ui_%(Filename).h" "%(FullPath)"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\$(PlatformName)\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\$(PlatformName)\ui_%(Filename).h" "%(FullPath)"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(PlatformName)\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\$(PlatformName)\ui_%(Filename).h" "%(FullPath)"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(PlatformName)\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\$(PlatformName)\ui_%(Filename).h" "%(FullPath)"</Command>
+      <SubType>Designer</SubType>
     </CustomBuild>
     <None Include="Lang\TMediaPlayer_en.ts" />
     <None Include="Lang\TMediaPlayer_fr.ts" />

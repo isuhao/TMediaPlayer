@@ -18,6 +18,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CDialogEditMetadata.hpp"
+#include "CDialogEditXiphComment.hpp"
 #include "../CSong.hpp"
 #include "../CMainWindow.hpp"
 #include "../CMediaManager.hpp"
@@ -54,10 +55,10 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  */
 
 CDialogEditMetadata::CDialogEditMetadata(CMainWindow * mainWindow, CSong * song) :
-QDialog       (mainWindow),
-m_uiWidget    (new Ui::DialogEditMetadata()),
+QDialog      (mainWindow),
+m_uiWidget   (new Ui::DialogEditMetadata()),
 m_mainWindow (mainWindow),
-m_song        (song)
+m_song       (song)
 {
     Q_CHECK_PTR(m_mainWindow);
     Q_CHECK_PTR(song);
@@ -124,6 +125,39 @@ m_song        (song)
     connect(m_uiWidget->enableAPE, SIGNAL(clicked(bool)), this, SLOT(enableTagAPE(bool)));
     connect(m_uiWidget->enableXiphComment, SIGNAL(clicked(bool)), this, SLOT(enableTagXiphComment(bool)));
 
+
+    // Boutons d'édition
+    connect(m_uiWidget->buttonXiphAdd, SIGNAL(clicked()), this, SLOT(addXiphTag()));
+    connect(m_uiWidget->buttonXiphEdit, SIGNAL(clicked()), this, SLOT(editSelectedXiphTag()));
+    connect(m_uiWidget->buttonXiphRemove, SIGNAL(clicked()), this, SLOT(removeSelectedXiphTag()));
+
+    connect(m_uiWidget->tableXiphComment->selectionModel(), SIGNAL(currentChanged(QModelIndex, QModelIndex)), this, SLOT(selectedXiphChanged(QModelIndex, QModelIndex)));
+
+
+    // Suppression des onglets selon le format du morceau
+    switch (m_song->getFormat())
+    {
+        default:
+            m_mainWindow->getMediaManager()->logError(tr("unknown format"), __FUNCTION__, __FILE__, __LINE__);
+            QMessageBox::warning(m_mainWindow, QString(), tr("Error while loading tags."), QMessageBox::Ok);
+            close();
+            return;
+
+        case CSong::FormatMP3:
+            m_uiWidget->tabWidget->removeTab(3);
+            break;
+
+        case CSong::FormatOGG:
+            m_uiWidget->tabWidget->removeTab(0);
+            m_uiWidget->tabWidget->removeTab(1);
+            m_uiWidget->tabWidget->removeTab(2);
+            break;
+
+        case CSong::FormatFLAC:
+            m_uiWidget->tabWidget->removeTab(2);
+            break;
+    }
+
     reset();
 }
 
@@ -167,6 +201,9 @@ void CDialogEditMetadata::save()
 
 void CDialogEditMetadata::reset()
 {
+    m_uiWidget->buttonXiphEdit->setEnabled(false);
+    m_uiWidget->buttonXiphRemove->setEnabled(false);
+
     // Titres des colonnes
     m_modelID3v2Text->clear();
     m_modelID3v2Text->setHorizontalHeaderLabels(QStringList() << tr("Key") << tr("Value"));
@@ -216,12 +253,6 @@ void CDialogEditMetadata::reset()
                 return;
             }
 
-            m_uiWidget->tabWidget->setTabEnabled(0, true);
-            m_uiWidget->tabWidget->setTabEnabled(1, true);
-            m_uiWidget->tabWidget->setTabEnabled(2, true);
-            m_uiWidget->tabWidget->setTabEnabled(3, false);
-            //m_uiWidget->tabWidget->removeTab(3);
-
             initTagID3v1(file.ID3v1Tag(true));
             initTagID3v2(file.ID3v2Tag(true));
             initTagAPE(file.APETag(false));
@@ -252,14 +283,6 @@ void CDialogEditMetadata::reset()
                 close();
                 return;
             }
-
-            m_uiWidget->tabWidget->setTabEnabled(0, false);
-            m_uiWidget->tabWidget->setTabEnabled(1, false);
-            m_uiWidget->tabWidget->setTabEnabled(2, false);
-            m_uiWidget->tabWidget->setTabEnabled(3, true);
-            //m_uiWidget->tabWidget->removeTab(0);
-            //m_uiWidget->tabWidget->removeTab(1);
-            //m_uiWidget->tabWidget->removeTab(2);
 
             initTagID3v1(nullptr);
             initTagID3v2(nullptr);
@@ -292,12 +315,6 @@ void CDialogEditMetadata::reset()
                 return;
             }
 
-            m_uiWidget->tabWidget->setTabEnabled(0, true);
-            m_uiWidget->tabWidget->setTabEnabled(1, true);
-            m_uiWidget->tabWidget->setTabEnabled(2, false);
-            m_uiWidget->tabWidget->setTabEnabled(3, true);
-            //m_uiWidget->tabWidget->removeTab(2);
-
             initTagID3v1(file.ID3v1Tag(false));
             initTagID3v2(file.ID3v2Tag(false));
             initTagAPE(nullptr);
@@ -311,6 +328,8 @@ void CDialogEditMetadata::reset()
 
 /**
  * Active ou désactive les tags ID3 v1.
+ *
+ * \param enable True si on veut activer les tags ID3 v1, false sinon.
  */
 
 void CDialogEditMetadata::enableTagID3v1(bool enable)
@@ -329,6 +348,8 @@ void CDialogEditMetadata::enableTagID3v1(bool enable)
 
 /**
  * Active ou désactive les tags ID3 v2.
+ *
+ * \param enable True si on veut activer les tags ID3 v2, false sinon.
  */
 
 void CDialogEditMetadata::enableTagID3v2(bool enable)
@@ -340,6 +361,8 @@ void CDialogEditMetadata::enableTagID3v2(bool enable)
 
 /**
  * Active ou désactive les tags APE.
+ *
+ * \param enable True si on veut activer les tags APE, false sinon.
  */
 
 void CDialogEditMetadata::enableTagAPE(bool enable)
@@ -351,6 +374,8 @@ void CDialogEditMetadata::enableTagAPE(bool enable)
 
 /**
  * Active ou désactive les tags XiphComment.
+ *
+ * \param enable True si on veut activer les tags XiphComment, false sinon.
  */
 
 void CDialogEditMetadata::enableTagXiphComment(bool enable)
@@ -370,7 +395,7 @@ void CDialogEditMetadata::initTagID3v1(TagLib::ID3v1::Tag * tags)
 {
     enableTagID3v1(tags);
 
-    if (!tags)
+    if (tags == nullptr)
     {
         return;
     }
@@ -397,7 +422,7 @@ void CDialogEditMetadata::initTagID3v2(TagLib::ID3v2::Tag * tags)
 {
     enableTagID3v2(tags);
 
-    if (!tags)
+    if (tags == nullptr)
     {
         return;
     }
@@ -545,7 +570,7 @@ void CDialogEditMetadata::initTagAPE(TagLib::APE::Tag * tags)
 {
     enableTagAPE(tags);
 
-    if (!tags)
+    if (tags == nullptr)
     {
         return;
     }
@@ -596,7 +621,7 @@ void CDialogEditMetadata::initTagXiphComment(TagLib::Ogg::XiphComment * tags)
 {
     enableTagXiphComment(tags);
 
-    if (!tags)
+    if (tags == nullptr)
     {
         return;
     }
@@ -609,18 +634,139 @@ void CDialogEditMetadata::initTagXiphComment(TagLib::Ogg::XiphComment * tags)
 
         for (TagLib::StringList::ConstIterator it2 = it->second.begin(); it2 != it->second.end(); ++it2)
         {
-            QString tagValue = QString::fromUtf8(it2->toCString(true)).replace('\r', ' ').replace('\n', ' ');
+            QString tagValue = QString::fromUtf8(it2->toCString(true));
 
-            QList<QStandardItem *> itemList;
-
-            itemList.append(new QStandardItem(tagKey));
+            QStandardItem * itemValue = new QStandardItem();
+            itemValue->setData(tagValue, Qt::UserRole + 1);
 
             if (tagValue.size() > 100)
-                itemList.append(new QStandardItem(tagValue.left(100-6) + " [...]"));
+            {
+                itemValue->setText(tagValue.replace('\r', ' ').replace('\n', ' ').left(100-6) + " [...]");
+            }
             else
-                itemList.append(new QStandardItem(tagValue));
+            {
+                itemValue->setText(tagValue.replace('\r', ' ').replace('\n', ' '));
+            }
 
+            QList<QStandardItem *> itemList;
+            itemList.append(new QStandardItem(tagKey));
+            itemList.append(itemValue);
             m_modelXiphComment->appendRow(itemList);
         }
+    }
+}
+
+
+void CDialogEditMetadata::addXiphTag()
+{
+    CDialogEditXiphComment dialog(m_mainWindow);
+    
+    if (dialog.exec() == QDialog::Rejected)
+    {
+        return;
+    }
+
+    QString tag = dialog.getTag();
+    QString value = dialog.getValue();
+
+    // Modification du modèle
+    QStandardItem * itemValue = new QStandardItem();
+    itemValue->setData(value, Qt::UserRole + 1);
+
+    if (value.size() > 100)
+    {
+        itemValue->setText(value.left(100-6) + " [...]");
+    }
+    else
+    {
+        itemValue->setText(value);
+    }
+    
+    QList<QStandardItem *> itemList;
+    itemList.append(new QStandardItem(tag));
+    itemList.append(itemValue);
+    m_modelXiphComment->appendRow(itemList);
+}
+
+
+void CDialogEditMetadata::editSelectedXiphTag()
+{
+    QModelIndexList selectedRows = m_uiWidget->tableXiphComment->selectionModel()->selectedRows();
+
+    if (selectedRows.isEmpty())
+    {
+        return;
+    }
+
+    QStandardItem * itemTag = m_modelXiphComment->item(selectedRows.at(0).row(), 0);
+    QStandardItem * itemValue = m_modelXiphComment->item(selectedRows.at(0).row(), 1);
+
+    if (itemTag == nullptr || itemValue == nullptr)
+    {
+        return;
+    }
+
+    CDialogEditXiphComment dialog(m_mainWindow, itemTag->text(), itemValue->data(Qt::UserRole + 1).toString());
+    
+    if (dialog.exec() == QDialog::Rejected)
+    {
+        return;
+    }
+
+    // Modification du modèle
+    itemTag->setText(dialog.getTag());
+    QString value = dialog.getValue();
+    itemValue->setData(value, Qt::UserRole + 1);
+
+    if (value.size() > 100)
+    {
+        itemValue->setText(value.left(100-6) + " [...]");
+    }
+    else
+    {
+        itemValue->setText(value);
+    }
+}
+
+
+void CDialogEditMetadata::removeSelectedXiphTag()
+{
+    QModelIndexList selectedRows = m_uiWidget->tableXiphComment->selectionModel()->selectedIndexes();
+
+    if (selectedRows.isEmpty())
+    {
+        return;
+    }
+
+    // Confirmation
+    QMessageBox dialog(QMessageBox::Question, QString(), tr("Are you sure you want to remove this tag?"), QMessageBox::NoButton, this);
+    QPushButton * buttonYes = dialog.addButton(tr("Yes"), QMessageBox::YesRole);
+    QPushButton * buttonNo = dialog.addButton(tr("No"), QMessageBox::NoRole);
+
+    dialog.exec();
+
+    if (dialog.clickedButton() == buttonNo)
+    {
+        return;
+    }
+
+    // Suppression du tag
+    m_modelXiphComment->removeRow(selectedRows.at(0).row());
+}
+
+
+void CDialogEditMetadata::selectedXiphChanged(const QModelIndex& current, const QModelIndex& previous)
+{
+    Q_UNUSED(previous);
+
+    if (current.isValid())
+    {
+        m_uiWidget->buttonXiphEdit->setEnabled(false);
+        m_uiWidget->buttonXiphRemove->setEnabled(false);
+    }
+    else
+    {
+        m_uiWidget->buttonXiphEdit->setEnabled(true);
+        m_uiWidget->buttonXiphRemove->setEnabled(true);
     }
 }
