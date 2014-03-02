@@ -22,6 +22,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "../CMainWindow.hpp"
 #include "../CMediaManager.hpp"
 #include "../CRatingEditor.hpp"
+#include "../Language.hpp"
 #include "../Utils.hpp"
 
 // Qt
@@ -59,12 +60,16 @@ m_mainWindow   (mainWindow)
     setAttribute(Qt::WA_DeleteOnClose);
     m_uiWidget->setupUi(this);
 
+    // Suppression de l'onglet "Illustrations"
+    m_uiWidget->tabWidget->removeTab(5);
+
     m_ratingEditor->setDelegate(false);
     m_uiWidget->layoutInfos->addWidget(m_ratingEditor, 16, 1, 1, 3);
 
 
     // Liste des langues
-    m_uiWidget->editLanguage->addItems(getLanguageList());
+    //m_uiWidget->editLanguage->addItems(getLanguageList());
+    fillComboBoxLanguage(m_uiWidget->editLanguage);
 
 
     // Liste des genres
@@ -188,7 +193,8 @@ void CDialogEditSong::applyChanges()
     song->setGenre(m_uiWidget->editGenre->currentText());
     song->setRating(m_ratingEditor->getRatingValue());
     song->setLyrics(m_uiWidget->editLyrics->toPlainText());
-    song->setLanguage(getLanguageFromInteger(m_uiWidget->editLanguage->currentIndex()));
+    //song->setLanguage(getLanguageFromInteger(m_uiWidget->editLanguage->currentIndex()));
+    song->setLanguage((TLanguage) m_uiWidget->editLanguage->itemData(m_uiWidget->editLanguage->currentIndex()).toInt());
     song->setLyricist(m_uiWidget->editLyricist->text());
 
     song->setEnabled(m_uiWidget->editEnabled->isChecked());
@@ -497,7 +503,8 @@ void CDialogEditSong::updateInfos()
 
     // Paroles
     m_uiWidget->editLyrics->setText(song->getLyrics());
-    m_uiWidget->editLanguage->setCurrentIndex(song->getLanguage());
+    //m_uiWidget->editLanguage->setCurrentIndex(song->getLanguage());
+    m_uiWidget->editLanguage->setCurrentIndex(m_uiWidget->editLanguage->findData(song->getLanguage()));
     m_uiWidget->editLyricist->setText(song->getLyricist());
 
 

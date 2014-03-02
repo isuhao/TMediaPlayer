@@ -488,77 +488,77 @@
 <context>
     <name>CDialogEditSong</name>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="93"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="98"/>
         <source>Save</source>
         <translation>Save</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="94"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="99"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="95"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="100"/>
         <source>Apply</source>
         <translation>Apply</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="222"/>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="224"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="228"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="230"/>
         <source>Song infos</source>
         <translation>Song infos</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="242"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="248"/>
         <source>%1 kbit/s</source>
         <translation>%1 kbit/s</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="245"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="251"/>
         <source>%1 Hz</source>
         <translation>%1 Hz</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="250"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="256"/>
         <source>never</source>
         <translation>never</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="293"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="299"/>
         <source>impossible de lire le fichier MP3 &quot;%1&quot;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="513"/>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="525"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="520"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="532"/>
         <source>%1 dB</source>
         <translation>%1 dB</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="540"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="547"/>
         <source>Local time</source>
         <translation>Local time</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="540"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="547"/>
         <source>UTC</source>
         <translation>UTC</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="546"/>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="547"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="553"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="554"/>
         <source>dd/MM/yyyy HH:mm:ss</source>
         <translation>dd/MM/yyyy HH:mm:ss</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="560"/>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="564"/>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="568"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="567"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="571"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="575"/>
         <source>Total duration: %1</source>
         <translation>Total duration: %1</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="560"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="567"/>
         <source>%n day(s) %1</source>
         <translation>
             <numerusform>%n day %1</numerusform>
@@ -569,35 +569,35 @@
 <context>
     <name>CDialogEditSongs</name>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="366"/>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="381"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="367"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="382"/>
         <source>between %1 and %2 (total: %3)</source>
         <translation>between %1 and %2 (total: %3)</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="462"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="463"/>
         <source>Song</source>
         <translation>Song</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="462"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="463"/>
         <source>Local time</source>
         <translation>Local time</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="462"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="463"/>
         <source>UTC</source>
         <translation>UTC</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="490"/>
         <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="491"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="492"/>
         <source>dd/MM/yyyy HH:mm:ss</source>
         <translation>dd/MM/yyyy HH:mm:ss</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="361"/>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="376"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="362"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="377"/>
         <source>%1 (total: %2)</source>
         <translation>%1 (total: %2)</translation>
     </message>
@@ -607,46 +607,46 @@
         <translation>Informations (%1 songs)</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="386"/>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="389"/>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="447"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="387"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="390"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="448"/>
         <source>%1 - %2</source>
         <translation>%1 - %2</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="396"/>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="400"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="397"/>
         <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="401"/>
         <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="402"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="403"/>
         <source>%1 kbit/s</source>
         <translation>%1 kbit/s</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="400"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="401"/>
         <source>%1 - %2 (average: %3)</source>
         <translation>%1 - %2 (average: %3)</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="443"/>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="447"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="444"/>
         <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="448"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="449"/>
         <source>%1 Hz</source>
         <translation>%1 Hz</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="452"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="453"/>
         <source>never</source>
         <translation>never</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="503"/>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="507"/>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="511"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="504"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="508"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="512"/>
         <source>Total duration: %1</source>
         <translation>Total duration: %1</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="503"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="504"/>
         <source>%n day(s) %1</source>
         <translation>
             <numerusform>%n day %1</numerusform>
@@ -654,34 +654,34 @@
         </translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="516"/>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="1927"/>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="1945"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="517"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="1932"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="1950"/>
         <source>Different values</source>
         <translation>Different values</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="1315"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="1317"/>
         <source>Save</source>
         <translation>Save</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="1316"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="1318"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="1317"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="1319"/>
         <source>Apply</source>
         <translation>Apply</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="1341"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="1343"/>
         <source>Apply changes...</source>
         <translation>Apply changes...</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="1341"/>
+        <location filename="../Sources/Dialog/CDialogEditSongs.cpp" line="1343"/>
         <source>Abort</source>
         <translation>Abort</translation>
     </message>
@@ -957,6 +957,10 @@
     <name>CFolder</name>
     <message>
         <location filename="../Sources/CFolder.cpp" line="167"/>
+        <source>inconsistent data</source>
+        <translation>inconsistent data</translation>
+    </message>
+    <message>
         <location filename="../Sources/CFolder.cpp" line="194"/>
         <source>donnÃ©es incohÃ©rentes</source>
         <translation type="unfinished"></translation>
@@ -3508,17 +3512,17 @@ Would you like to add them?</translation>
         <translation>Language:</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1328"/>
+        <location filename="../Form/DialogEditSong.ui" line="1332"/>
         <source>Author:</source>
         <translation>Author:</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1345"/>
+        <location filename="../Form/DialogEditSong.ui" line="1349"/>
         <source>Covers</source>
         <translation>Covers</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1362"/>
+        <location filename="../Form/DialogEditSong.ui" line="1366"/>
         <source>Plays</source>
         <translation>Plays</translation>
     </message>
@@ -3742,12 +3746,12 @@ Would you like to add them?</translation>
         <translation>Language:</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="1225"/>
+        <location filename="../Form/DialogEditSongs.ui" line="1229"/>
         <source>Author:</source>
         <translation>Lyricist:</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="1239"/>
+        <location filename="../Form/DialogEditSongs.ui" line="1243"/>
         <source>Plays</source>
         <translation>Plays</translation>
     </message>
@@ -4356,58 +4360,73 @@ Would you like to add them?</translation>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../Sources/Language.hpp" line="83"/>
+        <location filename="../Sources/Language.hpp" line="90"/>
         <source>Unknown</source>
         <comment>Unknown language</comment>
         <translation>Unknown</translation>
     </message>
     <message>
-        <location filename="../Sources/Language.hpp" line="84"/>
+        <location filename="../Sources/Language.hpp" line="91"/>
+        <source>Instrumental</source>
+        <translation>Instrumental</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Language.hpp" line="92"/>
+        <source>Multiple languages</source>
+        <translation>Multiple languages</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Language.hpp" line="93"/>
+        <source>Fictive language</source>
+        <translation>Fictive language</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Language.hpp" line="94"/>
         <source>English</source>
         <translation>English</translation>
     </message>
     <message>
-        <location filename="../Sources/Language.hpp" line="85"/>
+        <location filename="../Sources/Language.hpp" line="95"/>
         <source>French</source>
         <translation>French</translation>
     </message>
     <message>
-        <location filename="../Sources/Language.hpp" line="86"/>
+        <location filename="../Sources/Language.hpp" line="96"/>
         <source>German</source>
         <translation>German</translation>
     </message>
     <message>
-        <location filename="../Sources/Language.hpp" line="87"/>
+        <location filename="../Sources/Language.hpp" line="97"/>
         <source>Italian</source>
         <translation>Italian</translation>
     </message>
     <message>
-        <location filename="../Sources/Language.hpp" line="88"/>
+        <location filename="../Sources/Language.hpp" line="98"/>
         <source>Russian</source>
         <translation>Russian</translation>
     </message>
     <message>
-        <location filename="../Sources/Language.hpp" line="89"/>
+        <location filename="../Sources/Language.hpp" line="99"/>
         <source>Spanish</source>
         <translation>Spanish</translation>
     </message>
     <message>
-        <location filename="../Sources/Language.hpp" line="90"/>
+        <location filename="../Sources/Language.hpp" line="100"/>
         <source>Chinese</source>
         <translation>Chinese</translation>
     </message>
     <message>
-        <location filename="../Sources/Language.hpp" line="91"/>
+        <location filename="../Sources/Language.hpp" line="101"/>
         <source>Hindi</source>
         <translation>Hindi</translation>
     </message>
     <message>
-        <location filename="../Sources/Language.hpp" line="92"/>
+        <location filename="../Sources/Language.hpp" line="102"/>
         <source>Portuguese</source>
         <translation>Portuguese</translation>
     </message>
     <message>
-        <location filename="../Sources/Language.hpp" line="93"/>
+        <location filename="../Sources/Language.hpp" line="103"/>
         <source>Arabic</source>
         <translation>Arabic</translation>
     </message>

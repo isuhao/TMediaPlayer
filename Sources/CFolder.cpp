@@ -164,7 +164,7 @@ int CFolder::getPosition(IPlayList * playList) const
         }
     }
 
-    m_mainWindow->getMediaManager()->logError(tr("données incohérentes"), __FUNCTION__, __FILE__, __LINE__);
+    m_mainWindow->getMediaManager()->logError(tr("inconsistent data"), __FUNCTION__, __FILE__, __LINE__);
     return -1;
 }
 

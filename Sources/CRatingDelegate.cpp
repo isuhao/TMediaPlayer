@@ -26,20 +26,28 @@ void CRatingDelegate::paint(QPainter * painter, const QStyleOptionViewItem& opti
 {
     Q_CHECK_PTR(painter);
 
+    painter->save();
+
     if (index.data().canConvert<CRating>())
     {
         CRating starRating = qvariant_cast<CRating>(index.data());
 
         if (option.state & QStyle::State_Selected)
-            painter->fillRect(option.rect, option.palette.highlight());
+        {
+            if (option.state & QStyle::State_Active)
+                painter->fillRect(option.rect, option.palette.highlight());
+            else
+                painter->fillRect(option.rect, option.palette.brush(QPalette::Inactive, QPalette::Highlight));
+        }
 
-        starRating.paint(painter, option.rect, option.palette,
-        CRating::ReadOnly);
+        starRating.paint(painter, option.rect, option.palette, CRating::ReadOnly);
     }
     else
     {
         QStyledItemDelegate::paint(painter, option, index);
     }
+
+    painter->restore();
 }
 
 

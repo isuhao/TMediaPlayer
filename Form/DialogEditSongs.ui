@@ -1197,7 +1197,11 @@
         </widget>
        </item>
        <item row="1" column="2">
-        <widget class="QComboBox" name="editLanguage"/>
+        <widget class="QComboBox" name="editLanguage">
+         <property name="maxVisibleItems">
+          <number>20</number>
+         </property>
+        </widget>
        </item>
        <item row="2" column="0">
         <widget class="QCheckBox" name="chLyricist">
@@ -1246,6 +1250,9 @@
          </property>
          <property name="selectionBehavior">
           <enum>QAbstractItemView::SelectRows</enum>
+         </property>
+         <property name="horizontalScrollMode">
+          <enum>QAbstractItemView::ScrollPerPixel</enum>
          </property>
          <attribute name="horizontalHeaderDefaultSectionSize">
           <number>200</number>

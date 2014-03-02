@@ -76,7 +76,8 @@ m_songItemList      (songItemList)
 
 
     // Liste des langues
-    m_uiWidget->editLanguage->addItems(getLanguageList());
+    //m_uiWidget->editLanguage->addItems(getLanguageList());
+    fillComboBoxLanguage(m_uiWidget->editLanguage);
 
 
     // Résumé
@@ -1256,7 +1257,8 @@ m_songItemList      (songItemList)
     // Langue
     if (songLanguageSim)
     {
-        m_uiWidget->editLanguage->setCurrentIndex(songLanguage);
+        //m_uiWidget->editLanguage->setCurrentIndex(songLanguage);
+        m_uiWidget->editLanguage->setCurrentIndex(m_uiWidget->editLanguage->findData(songLanguage));
     }
     else
     {
@@ -1342,6 +1344,9 @@ void CDialogEditSongs::apply()
     progress.setModal(true);
     progress.setMinimumDuration(2000);
     int i = 0;
+
+    //TLanguage lang = getLanguageFromInteger(m_uiWidget->editLanguage->currentIndex());
+    TLanguage lang = (TLanguage) m_uiWidget->editLanguage->itemData(m_uiWidget->editLanguage->currentIndex()).toInt();
 
     // Modification de chaque morceau
     for (QList<CMediaTableItem *>::ConstIterator it = m_songItemList.begin(); it != m_songItemList.end(); ++it)
@@ -1461,7 +1466,7 @@ void CDialogEditSongs::apply()
 
         if (m_uiWidget->chLanguage->isChecked())
         {
-            song->setLanguage(getLanguageFromInteger(m_uiWidget->editLanguage->currentIndex()));
+            song->setLanguage(lang);
         }
 
         if (m_uiWidget->chLyricist->isChecked())

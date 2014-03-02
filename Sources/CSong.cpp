@@ -3960,6 +3960,8 @@ bool CSong::writeTags(TagLib::Ogg::XiphComment * tags, const TSongInfos& infos, 
         tags->removeField("TRACKNUMBER");
 
     // Nombre de pistes
+    tags->removeField("TOTALTRACKS");
+
     if (infos.trackCount > 0)
         tags->addField("TRACKTOTAL", TagLib::String::number(infos.trackCount));
     else
@@ -3972,6 +3974,8 @@ bool CSong::writeTags(TagLib::Ogg::XiphComment * tags, const TSongInfos& infos, 
         tags->removeField("DISCNUMBER");
 
     // Nombre de disques
+    tags->removeField("TOTALDISCS");
+
     if (infos.discCount > 0)
         tags->addField("DISCTOTAL", TagLib::String::number(infos.discCount));
     else
@@ -3990,6 +3994,8 @@ bool CSong::writeTags(TagLib::Ogg::XiphComment * tags, const TSongInfos& infos, 
         tags->addField("COMMENT", TagLib::String(infos.comments.toUtf8().constData(), TagLib::String::UTF8));
 
     // BPM
+    tags->removeField("BPM");
+
     if (infos.bpm > 0)
         tags->addField("TEMPO", TagLib::String::number(infos.bpm));
     else
