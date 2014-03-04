@@ -2566,6 +2566,7 @@ void CMainWindow::initSoundSystem()
     // File d'attente
     m_queue = new CQueuePlayList(this);
     m_queue->hide();
+    connect(m_queue, SIGNAL(songStarted(CMediaTableItem *)), this, SLOT(playSong(CMediaTableItem *)));
 }
 
 

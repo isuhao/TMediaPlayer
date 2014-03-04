@@ -928,6 +928,10 @@ void CMediaTableModel::moveRows(const QList<int>& rows, int rowDest)
     emit layoutAboutToBeChanged();
     m_data = dataCopy;
     emit layoutChanged();
+/*
+    emit rowsAboutToBeMoved(QModelIndex(), int sourceStart, int sourceEnd, QModelIndex(), int destinationRow);
+    emit rowsMoved(QModelIndex(), int start, int end, QModelIndex(), int row);
+*/
 }
 
 

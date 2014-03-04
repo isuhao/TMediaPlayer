@@ -1633,7 +1633,10 @@ void CSong::setGenre(const QString& genre)
 
 void CSong::setRating(int rating)
 {
-    Q_ASSERT(rating >= 0 && rating <= 5);
+    if (rating < 0 || rating > 5)
+    {
+        return;
+    }
 
     if (m_infos.rating != rating)
     {
@@ -1667,7 +1670,10 @@ void CSong::setComments(const QString& comments)
 
 void CSong::setBPM(int bpm)
 {
-    Q_ASSERT(bpm >= 0);
+    if (bpm < 0)
+    {
+        return;
+    }
 
     if (m_infos.bpm != bpm)
     {

@@ -38,8 +38,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QtDebug>
 
 
-const QString appVersion = "1.0.58";     ///< Numéro de version de l'application.
-const QString appDate    = "02/03/2014"; ///< Date de sortie de cette version.
+const QString appVersion = "1.0.59";     ///< Numéro de version de l'application.
+const QString appDate    = "04/03/2014"; ///< Date de sortie de cette version.
 
 
 /**

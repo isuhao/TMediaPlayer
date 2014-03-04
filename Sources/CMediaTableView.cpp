@@ -920,7 +920,7 @@ void CMediaTableView::analyzeSongs()
     {
         CMediaTableItem * songItem = m_model->getSongItem(*it);
         CSong * song = songItem->getSong();
-        
+
         // Un même morceau peut se trouver plusieurs fois dans une liste statique
         if (!songList.contains(song))
         {
@@ -970,7 +970,9 @@ void CMediaTableView::checkSelection()
     QModelIndexList indexList = selectionModel()->selectedRows();
 
     if (indexList.isEmpty())
+    {
         return;
+    }
 
     for (QModelIndexList::ConstIterator it = indexList.begin(); it != indexList.end(); ++it)
     {
@@ -989,12 +991,69 @@ void CMediaTableView::uncheckSelection()
     QModelIndexList indexList = selectionModel()->selectedRows();
 
     if (indexList.isEmpty())
+    {
         return;
+    }
 
     for (QModelIndexList::ConstIterator it = indexList.begin(); it != indexList.end(); ++it)
     {
         m_model->m_data.at(it->row())->getSong()->setEnabled(false);
     }
+}
+
+
+void CMediaTableView::changeCurrentSongRating(int rating)
+{
+    // Liste des morceaux sélectionnés
+    QModelIndexList indexList = selectionModel()->selectedRows();
+
+    if (indexList.size() != 1)
+    {
+        return;
+    }
+
+    CSong * song = m_model->m_data.at(indexList.at(0).row())->getSong();
+
+    if (song != nullptr)
+    {
+        song->setRating(rating);
+    }
+}
+
+
+void CMediaTableView::changeCurrentSongRatingTo0()
+{
+    changeCurrentSongRating(0);
+}
+
+
+void CMediaTableView::changeCurrentSongRatingTo1()
+{
+    changeCurrentSongRating(1);
+}
+
+
+void CMediaTableView::changeCurrentSongRatingTo2()
+{
+    changeCurrentSongRating(2);
+}
+
+
+void CMediaTableView::changeCurrentSongRatingTo3()
+{
+    changeCurrentSongRating(3);
+}
+
+
+void CMediaTableView::changeCurrentSongRatingTo4()
+{
+    changeCurrentSongRating(4);
+}
+
+
+void CMediaTableView::changeCurrentSongRatingTo5()
+{
+    changeCurrentSongRating(5);
 }
 
 
@@ -1400,7 +1459,7 @@ void CMediaTableView::contextMenuEvent(QContextMenuEvent * event)
             QAction * actionPlay;
 
             CMediaTableItem * currentSong = m_mainWindow->getCurrentSongItem();
-            
+
             // Le morceau est en cours de lecture
             if (currentSong && currentSong == m_selectedItem)
             {
@@ -1428,6 +1487,43 @@ void CMediaTableView::contextMenuEvent(QContextMenuEvent * event)
         }
 
         m_menu.addAction(tr("Informations..."), m_mainWindow, SLOT(openDialogSongInfos()));
+
+        if (!severalSongs && canEditSongs())
+        {
+            // Note du morceau
+            QMenu * menuRating = m_menu.addMenu(tr("Rating"));
+
+            QAction * actionRating0 = menuRating->addAction(QString::fromUtf8("☆☆☆☆☆"), this, SLOT(changeCurrentSongRatingTo0()));
+            QAction * actionRating1 = menuRating->addAction(QString::fromUtf8("★☆☆☆☆"), this, SLOT(changeCurrentSongRatingTo1()));
+            QAction * actionRating2 = menuRating->addAction(QString::fromUtf8("★★☆☆☆"), this, SLOT(changeCurrentSongRatingTo2()));
+            QAction * actionRating3 = menuRating->addAction(QString::fromUtf8("★★★☆☆"), this, SLOT(changeCurrentSongRatingTo3()));
+            QAction * actionRating4 = menuRating->addAction(QString::fromUtf8("★★★★☆"), this, SLOT(changeCurrentSongRatingTo4()));
+            QAction * actionRating5 = menuRating->addAction(QString::fromUtf8("★★★★★"), this, SLOT(changeCurrentSongRatingTo5()));
+
+            actionRating0->setCheckable(true);
+            actionRating1->setCheckable(true);
+            actionRating2->setCheckable(true);
+            actionRating3->setCheckable(true);
+            actionRating4->setCheckable(true);
+            actionRating5->setCheckable(true);
+
+            QActionGroup * group = new QActionGroup(menuRating);
+            group->addAction(actionRating0);
+            group->addAction(actionRating1);
+            group->addAction(actionRating2);
+            group->addAction(actionRating3);
+            group->addAction(actionRating4);
+            group->addAction(actionRating5);
+
+            int rating = m_selectedItem->getSong()->getRating();
+
+                 if (rating == 0) actionRating0->setChecked(true);
+            else if (rating == 1) actionRating1->setChecked(true);
+            else if (rating == 2) actionRating2->setChecked(true);
+            else if (rating == 3) actionRating3->setChecked(true);
+            else if (rating == 4) actionRating4->setChecked(true);
+            else if (rating == 5) actionRating5->setChecked(true);
+        }
 
         if (canImportSongs())
         {

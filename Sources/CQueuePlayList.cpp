@@ -63,14 +63,32 @@ bool CQueuePlayList::isModified() const
 }
 
 
+/**
+ * Ajoute plusieurs morceaux.
+ *
+ * \param songs    Liste de morceaux à ajouter.
+ * \param position Position dans la liste.
+ */
+
 void CQueuePlayList::addSongs(const QList<CSong *>& songs, int position)
 {
     QListIterator<CSong *> it(songs);
-    it.toBack();
 
-    while (it.hasPrevious())
+    if (position < 0)
     {
-        CMediaTableView::addSongToTable(it.previous(), position);
+        while (it.hasNext())
+        {
+            CMediaTableView::addSongToTable(it.next(), position);
+        }
+    }
+    else
+    {
+        it.toBack();
+
+        while (it.hasPrevious())
+        {
+            CMediaTableView::addSongToTable(it.previous(), position);
+        }
     }
 }
 
@@ -301,6 +319,8 @@ void CQueuePlayList::dropEvent(QDropEvent * event)
         m_model->moveRows(rowList, row);
 
         QList<CSong *> songs = getSongs();
+        removeAllSongsFromTable();
+        addSongs(songs, false);
 
         // Modification de la sélection
         QItemSelection selection;

@@ -15,8 +15,6 @@
 - Problème graphique : si on modifie le filtre de recherche, les lignes restent sélectionnées et ne correspondent plus aux morceaux sélectionnés.
 - Problème graphique : le nombre de morceaux dans la liste ne tient pas compte si un filtre de recherche est appliqué.
 
-- Menu contextuel d'un morceau : pouvoir changer directement la note.
-
 - Fichier FLAC : problème avec les tags ID3v2 qui ne sont pas modifiés. (Bug avec TagLib ?)
 
 --------------------------------------------------
@@ -25,8 +23,6 @@
 
 - Déplacer la gestion de la base de données dans des bibliothèques externes.
 - Déplacer la gestion de la fenêtre principale dans une classe à part. [EN COURS]
-
-- Boite de dialogue Edit Songs : Si un champ possède plusieurs valeurs différentes, les afficher dans une combo-box. [EN COURS]
 
 - Améliorer la gestion du glisser-déposer dans la vue des listes de lecture.
   - Pouvoir désactiver le positionnement des listes et dossiers.
@@ -54,9 +50,7 @@
 - Boite de dialogue Edit Song(s) :
   - Gérer l'option "Ajustement du volume" (calculer le volume "moyen", et amplifier ou atténuer le volume selon le morceau : Replay Gain).
 
-- File d'attente.
-  - Ajouter un item dans la vue "Listes de lecture".
-  - Ajouter des entrées dans les menus contextuels pour ajouter un morceau en file d'attente.
+- File d'attente :
   - Pouvoir arrêter la lecture / Fermer l'application à la fin d'un morceau.
 
 --------------------------------------------------

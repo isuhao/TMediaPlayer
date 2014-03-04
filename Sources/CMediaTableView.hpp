@@ -188,8 +188,16 @@ protected slots:
     void addSongToQueueBegining();
     void addSongToQueueEnd();
 
+    void changeCurrentSongRatingTo0();
+    void changeCurrentSongRatingTo1();
+    void changeCurrentSongRatingTo2();
+    void changeCurrentSongRatingTo3();
+    void changeCurrentSongRatingTo4();
+    void changeCurrentSongRatingTo5();
+
 protected:
 
+    void changeCurrentSongRating(int rating);
     void addSongToTable(CSong * song, int pos = -1);
     void addSongsToTable(const QList<CSong *>& songs);
     void removeSongFromTable(CSong * song);
