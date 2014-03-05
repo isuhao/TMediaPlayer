@@ -89,7 +89,7 @@ public:
     bool writeTags();
     bool moveFile();
     QImage getCoverImage() const;
-    bool matchFilter(const QString& filter) const;
+    bool matchFilter(const QString& filter, bool split = true) const;
     //void computeReplayGain();
     void updateDatabase();
     inline bool isInCDRomDrive() const;

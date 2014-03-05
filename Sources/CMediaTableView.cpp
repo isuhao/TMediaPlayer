@@ -1493,6 +1493,7 @@ void CMediaTableView::contextMenuEvent(QContextMenuEvent * event)
             // Note du morceau
             QMenu * menuRating = m_menu.addMenu(tr("Rating"));
 
+            // TODO: utiliser des pixmaps à la place de texte
             QAction * actionRating0 = menuRating->addAction(QString::fromUtf8("☆☆☆☆☆"), this, SLOT(changeCurrentSongRatingTo0()));
             QAction * actionRating1 = menuRating->addAction(QString::fromUtf8("★☆☆☆☆"), this, SLOT(changeCurrentSongRatingTo1()));
             QAction * actionRating2 = menuRating->addAction(QString::fromUtf8("★★☆☆☆"), this, SLOT(changeCurrentSongRatingTo2()));
