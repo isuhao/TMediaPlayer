@@ -55,7 +55,7 @@ public:
 
 public slots:
 
-    void updateList();
+    void tryUpdateList();
 
 signals:
 
@@ -63,7 +63,8 @@ signals:
     void listUpdated();  ///< Signal émis lorsque la liste a été mise à jour.
 
 protected:
-
+    
+    void updateList();
     virtual bool updateDatabase();
     virtual void removeFromDatabase();
     void loadFromDatabase();
@@ -74,6 +75,7 @@ protected:
 private:
 
     int m_id;                     ///< Identifiant de la liste en base de données.
+    bool m_needUpdate;            ///< Indique si une mise-à-jour doit être effectuée.
     ICriterion * m_mainCriterion; ///< Critère parent de la liste.
     bool m_isDynamicListModified; ///< Indique si la liste a été modifiée.
     bool m_autoUpdate;            ///< Indique si la liste doit être mise à jour automatiquement.

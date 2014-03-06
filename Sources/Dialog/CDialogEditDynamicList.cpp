@@ -134,7 +134,7 @@ void CDialogEditDynamicList::save()
     }
 
     m_mainWindow->addPlayList(m_playList);
-    m_playList->updateList();
+    m_playList->tryUpdateList();
 
     close();
 }

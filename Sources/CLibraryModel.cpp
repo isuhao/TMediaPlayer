@@ -267,7 +267,7 @@ void CLibraryModel::loadFromDatabase()
             connect(playList, SIGNAL(listUpdated()), m_mainWindow, SLOT(updateListInformations()));
             connect(playList, SIGNAL(listUpdated()), this, SLOT(onPlayListChange()));
 
-            //playList->updateList();
+            //playList->tryUpdateList();
         }
     }
 
@@ -285,7 +285,9 @@ void CLibraryModel::loadFromDatabase()
         CDynamicList * playList = qobject_cast<CDynamicList *>(*it);
 
         if (playList)
-            playList->updateList();
+        {
+            playList->tryUpdateList();
+        }
     }
 }
 

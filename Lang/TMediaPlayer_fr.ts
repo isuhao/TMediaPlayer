@@ -932,23 +932,23 @@
 <context>
     <name>CDynamicList</name>
     <message>
-        <location filename="../Sources/CDynamicList.cpp" line="191"/>
+        <location filename="../Sources/CDynamicList.cpp" line="246"/>
         <source>the playlist is not in a folder</source>
         <translation>la liste de lecture n&apos;est pas dans un dossier</translation>
     </message>
     <message>
-        <location filename="../Sources/CDynamicList.cpp" line="373"/>
-        <location filename="../Sources/CDynamicList.cpp" line="414"/>
+        <location filename="../Sources/CDynamicList.cpp" line="428"/>
+        <location filename="../Sources/CDynamicList.cpp" line="469"/>
         <source>invalid identifier (%1)</source>
         <translation>identifiant invalide (%1)</translation>
     </message>
     <message>
-        <location filename="../Sources/CDynamicList.cpp" line="472"/>
+        <location filename="../Sources/CDynamicList.cpp" line="527"/>
         <source>dynamic list with no criteria</source>
         <translation>liste dynamique sans critères</translation>
     </message>
     <message>
-        <location filename="../Sources/CDynamicList.cpp" line="486"/>
+        <location filename="../Sources/CDynamicList.cpp" line="541"/>
         <source>dynamic list with several main criterion</source>
         <translation>liste dynamique avec plusieurs critères principaux</translation>
     </message>
@@ -1259,40 +1259,40 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CLibraryModel.cpp" line="310"/>
+        <location filename="../Sources/CLibraryModel.cpp" line="312"/>
         <source>Library</source>
         <translation>Médiathèque</translation>
     </message>
     <message>
-        <location filename="../Sources/CLibraryModel.cpp" line="317"/>
+        <location filename="../Sources/CLibraryModel.cpp" line="319"/>
         <source>Queue</source>
         <translation>File d&apos;attente</translation>
     </message>
     <message>
-        <location filename="../Sources/CLibraryModel.cpp" line="511"/>
-        <location filename="../Sources/CLibraryModel.cpp" line="794"/>
+        <location filename="../Sources/CLibraryModel.cpp" line="513"/>
+        <location filename="../Sources/CLibraryModel.cpp" line="796"/>
         <source>l&apos;Ã©lÃ©ment n&apos;est ni un dossier, ni une liste de lecture</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CLibraryModel.cpp" line="516"/>
+        <location filename="../Sources/CLibraryModel.cpp" line="518"/>
         <source>position incorrecte dans un dossier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CLibraryModel.cpp" line="607"/>
-        <location filename="../Sources/CLibraryModel.cpp" line="760"/>
+        <location filename="../Sources/CLibraryModel.cpp" line="609"/>
+        <location filename="../Sources/CLibraryModel.cpp" line="762"/>
         <source>invalid folder</source>
         <translation>dossier invalide</translation>
     </message>
     <message>
-        <location filename="../Sources/CLibraryModel.cpp" line="628"/>
-        <location filename="../Sources/CLibraryModel.cpp" line="721"/>
+        <location filename="../Sources/CLibraryModel.cpp" line="630"/>
+        <location filename="../Sources/CLibraryModel.cpp" line="723"/>
         <source>invalid playlist</source>
         <translation>liste de lecture invalide</translation>
     </message>
     <message>
-        <location filename="../Sources/CLibraryModel.cpp" line="710"/>
+        <location filename="../Sources/CLibraryModel.cpp" line="712"/>
         <source>invalid folter</source>
         <translation>dossier invalide</translation>
     </message>
@@ -1374,13 +1374,13 @@
 <context>
     <name>CMainWindow</name>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="2527"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2556"/>
         <source>Failed to init sound system with FMOD.</source>
         <translation>Le chargement du système de son avec FMOD a échoué.</translation>
     </message>
     <message numerus="yes">
         <location filename="../Sources/CMainWindow.cpp" line="149"/>
-        <location filename="../Sources/CMainWindow.cpp" line="2385"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2401"/>
         <source>%n song(s), %1</source>
         <translation>
             <numerusform>%n morceau, %1</numerusform>
@@ -1436,12 +1436,12 @@ Erreur : %4</translation>
         <translation type="obsolete">%2 (%3 ligne %4) : %1</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="1447"/>
+        <location filename="../Sources/CMainWindow.cpp" line="1444"/>
         <source>invalid argument (%1)</source>
         <translation>argument invalide (%1)</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CMainWindow.cpp" line="1657"/>
+        <location filename="../Sources/CMainWindow.cpp" line="1654"/>
         <source>%n song(s) added to the library.</source>
         <translation>
             <numerusform>%n morceau ajouté à la médiathèque.</numerusform>
@@ -1449,12 +1449,12 @@ Erreur : %4</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="1842"/>
+        <location filename="../Sources/CMainWindow.cpp" line="1839"/>
         <source>This file is already in the library. Do you want to merge the two songs?</source>
         <translation>Le fichier sélectionné est déjà dans la médiathèque. Voulez-vous fusionner les deux morceaux&amp;nbsp;?</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="2723"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2759"/>
         <source>A song is being played. Are you sure you want to quit the application?</source>
         <translation>Un morceau est en cours de lecture. Êtes-vous sûr de vouloir quitter l&apos;application ?</translation>
     </message>
@@ -1472,28 +1472,28 @@ Erreur : %4</translation>
         <translation>Erreur lors du chargement de la base de données.</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="2538"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2567"/>
         <source>can&apos;t get number of CD-ROM drives</source>
         <translation>impossible de déterminer le nombre de lecteurs de CD-ROM</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="2552"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2581"/>
         <source>can&apos;t get name of drive #%1</source>
         <translation>impossible de trouver le nom du lecteur #%1</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="2685"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2721"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="2694"/>
-        <location filename="../Sources/CMainWindow.cpp" line="2703"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2730"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2739"/>
         <source>Play</source>
         <translation>Lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="1628"/>
+        <location filename="../Sources/CMainWindow.cpp" line="1625"/>
         <source>Loading files...</source>
         <translation>Chargement des fichiers...</translation>
     </message>
@@ -1514,65 +1514,65 @@ Erreur : %4</translation>
         <location filename="../Sources/CMainWindow.cpp" line="874"/>
         <location filename="../Sources/CMainWindow.cpp" line="895"/>
         <location filename="../Sources/CMainWindow.cpp" line="911"/>
-        <location filename="../Sources/CMainWindow.cpp" line="1254"/>
-        <location filename="../Sources/CMainWindow.cpp" line="2048"/>
-        <location filename="../Sources/CMainWindow.cpp" line="2063"/>
-        <location filename="../Sources/CMainWindow.cpp" line="2112"/>
+        <location filename="../Sources/CMainWindow.cpp" line="1251"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2045"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2060"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2109"/>
         <source>invalid pointer</source>
         <translation>pointeur invalide</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="1815"/>
+        <location filename="../Sources/CMainWindow.cpp" line="1812"/>
         <source>several songs selected</source>
         <translation>plusieurs morceaux sélectionnés</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="1957"/>
+        <location filename="../Sources/CMainWindow.cpp" line="1954"/>
         <source>error while loading the file &quot;%1&quot; with FMOD</source>
         <translation>erreur lors du chargement du fichier &quot;%1&quot; avec FMOD</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="1966"/>
+        <location filename="../Sources/CMainWindow.cpp" line="1963"/>
         <source>can&apos;t compute song duration for file &quot;%1&quot;</source>
         <translation>impossible de calculer la durée du morceau &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="1975"/>
+        <location filename="../Sources/CMainWindow.cpp" line="1972"/>
         <source>can&apos;t find song format for file &quot;%1&quot;</source>
         <translation>impossible de déterminer le format du fichier &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="1982"/>
+        <location filename="../Sources/CMainWindow.cpp" line="1979"/>
         <source>unknown format</source>
         <translation>format inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="2215"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2212"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Êtes-vous sûr de vouloir supprimer cette liste de lecture&amp;nbsp;?</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="1843"/>
-        <location filename="../Sources/CMainWindow.cpp" line="2216"/>
-        <location filename="../Sources/CMainWindow.cpp" line="2724"/>
+        <location filename="../Sources/CMainWindow.cpp" line="1840"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2213"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2760"/>
         <source>Yes</source>
         <translation>Oui</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="1844"/>
-        <location filename="../Sources/CMainWindow.cpp" line="2217"/>
-        <location filename="../Sources/CMainWindow.cpp" line="2725"/>
+        <location filename="../Sources/CMainWindow.cpp" line="1841"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2214"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2761"/>
         <source>No</source>
         <translation>Non</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="1585"/>
-        <location filename="../Sources/CMainWindow.cpp" line="1830"/>
+        <location filename="../Sources/CMainWindow.cpp" line="1582"/>
+        <location filename="../Sources/CMainWindow.cpp" line="1827"/>
         <source>Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)</source>
         <translation>Fichiers multimédias (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;Tous les fichiers (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="1628"/>
+        <location filename="../Sources/CMainWindow.cpp" line="1625"/>
         <source>Abort</source>
         <translation>Interrompre</translation>
     </message>

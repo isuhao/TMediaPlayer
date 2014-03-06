@@ -434,7 +434,7 @@ bool CMainWindow::initWindow()
 
     // Initialisation de FMOD
     initSoundSystem();
-    
+
     // Paramètres de lecture
     setVolume(m_mediaManager->getVolume());
     setShuffle(m_mediaManager->getSettings()->value("Preferences/Shuffle", false).toBool());
@@ -545,7 +545,7 @@ void CMainWindow::showRemainingTime(bool show)
 {
     m_mediaManager->getSettings()->setValue("Preferences/ShowRemainingTime", show);
     m_showRemainingTime = show;
-    
+
     if (!m_showRemainingTime && m_currentSongItem != nullptr)
     {
         int duration = m_currentSongItem->getSong()->getDuration();
@@ -743,7 +743,7 @@ void CMainWindow::removeSongs(const QList<CSong *> songs)
         }
         else if (dynamicList)
         {
-            dynamicList->updateList();
+            dynamicList->tryUpdateList();
         }
     }
 
@@ -946,17 +946,14 @@ void CMainWindow::play()
 
         // Recherche du morceau sélectionné
         m_currentSongItem = m_currentSongTable->getSelectedSongItem();
-
-        if (m_currentSongItem)
+        
+        if (m_isShuffle)
         {
-            if (m_isShuffle)
-                m_currentSongTable->initShuffle(m_currentSongItem);
+            m_currentSongTable->initShuffle(m_currentSongItem);
         }
-        else
-        {
-            if (m_isShuffle)
-                m_currentSongTable->initShuffle();
 
+        if (m_currentSongItem == nullptr)
+        {
             // Lecture du premier morceau de la liste
             m_currentSongItem = m_currentSongTable->getNextSong(nullptr, m_isShuffle);
 
@@ -2219,7 +2216,9 @@ void CMainWindow::removeSelectedItem()
         dialog.exec();
 
         if (dialog.clickedButton() == buttonNo)
+        {
             return;
+        }
 
         if (playList == m_displayedSongTable)
         {
@@ -2243,7 +2242,9 @@ void CMainWindow::removeSelectedItem()
         CDialogRemoveFolder * dialog = new CDialogRemoveFolder(this, folder);
 
         if (dialog->exec() == QDialog::Rejected)
+        {
             return;
+        }
 
         m_listModel->removeFolder(folder, dialog->isResursive());
         delete dialog;
@@ -2269,47 +2270,62 @@ void CMainWindow::activateThisWindow()
 
 void CMainWindow::onPlayEnd()
 {
-    if (m_currentSongItem)
+    if (m_currentSongItem == nullptr)
     {
-        if (m_currentSongTable == m_queue)
-        {
-            m_queue->removeSongFromTable(m_currentSongItem->getPosition() - 1);
-        }
-
-        CSong * currentSong = m_currentSongItem->getSong();
-
-        updateSongDescription(nullptr);
-
-        CMediaTableItem * queueSong = m_queue->getSongItemForRow(0);
-
-        if (queueSong)
-        {
-            displaySongTable(m_queue);
-            playSong(queueSong);
-        }
-        else
-        {
-            nextSong();
-        }
-
-        emit songPlayEnd(currentSong);
-
-        // On retrie les listes de lecture
-        QList<IPlayList *> playLists = getAllPlayLists();
-
-        for (QList<IPlayList *>::ConstIterator it = playLists.begin(); it != playLists.end(); ++it)
-        {
-            int col = (*it)->getColumnSorted();
-            if (col == CMediaTableView::ColPlayCount || col == CMediaTableView::ColLastPlayTime)
-                (*it)->sort();
-        }
-
-        int col = m_library->getColumnSorted();
-        if (col == CMediaTableView::ColPlayCount || col == CMediaTableView::ColLastPlayTime)
-            m_library->sort();
-
-        //m_library->update(); // Why ???
+        return;
     }
+
+    qDebug() << "CMainWindow::onPlayEnd() " << m_currentSongItem->getSong()->getTitle() << " by " << m_currentSongItem->getSong()->getArtistName();
+    QTime timeProf;
+    timeProf.start();
+
+    if (m_currentSongTable == m_queue)
+    {
+        m_queue->removeSongFromTable(m_currentSongItem->getPosition() - 1);
+    }
+
+    CSong * currentSong = m_currentSongItem->getSong();
+
+    updateSongDescription(nullptr);
+
+    // Morceau dans la file d'attente
+    CMediaTableItem * queueSong = m_queue->getSongItemForRow(0);
+
+    if (queueSong)
+    {
+        displaySongTable(m_queue);
+        playSong(queueSong);
+    }
+    else
+    {
+        nextSong();
+    }
+
+    qDebug() << "  onPlayEnd 1: " << timeProf.elapsed();
+
+    emit songPlayEnd(currentSong);
+
+    qDebug() << "  onPlayEnd 2: " << timeProf.elapsed();
+
+    // On retrie les listes de lecture statiques
+    QList<IPlayList *> playLists = getAllPlayLists();
+
+    for (QList<IPlayList *>::ConstIterator it = playLists.begin(); it != playLists.end(); ++it)
+    {
+        int col = (*it)->getColumnSorted();
+        if (col == CMediaTableView::ColPlayCount || col == CMediaTableView::ColLastPlayTime)
+        {
+            (*it)->sort();
+        }
+    }
+
+    int col = m_library->getColumnSorted();
+    if (col == CMediaTableView::ColPlayCount || col == CMediaTableView::ColLastPlayTime)
+    {
+        m_library->sort();
+    }
+
+    qDebug() << "  onPlayEnd 3: " << timeProf.elapsed();
 }
 
 
@@ -2321,7 +2337,7 @@ void CMainWindow::onPlayEnd()
 
 void CMainWindow::updateSongDescription(CSong * song)
 {
-    if (song)
+    if (song != nullptr)
     {
         // Description du morceau
         QString artistName = song->getArtistName();
@@ -2457,7 +2473,9 @@ void CMainWindow::updateTimer()
                 int duration = m_currentSongItem->getSong()->getDuration() - position;
 
                 if (duration < 0)
+                {
                     duration = 0;
+                }
 
                 QTime remainingTime(0, 0);
                 remainingTime = remainingTime.addMSecs(duration);
@@ -2495,17 +2513,28 @@ void CMainWindow::selectPlayListFromTreeView(const QModelIndex& index)
 void CMainWindow::displaySongTable(CMediaTableView * songTable)
 {
     if (songTable == nullptr)
+    {
         return;
+    }
 
     if (songTable != m_displayedSongTable)
     {
         if (m_displayedSongTable)
+        {
             m_displayedSongTable->setParent(nullptr);
+        }
 
         m_playListView->selectionModel()->clearSelection();
         m_playListView->selectionModel()->setCurrentIndex(m_playListView->getSongTableModelIndex(songTable), QItemSelectionModel::Select | QItemSelectionModel::Rows);
 
         m_displayedSongTable = songTable;
+
+        CDynamicList * dynamicList = qobject_cast<CDynamicList *>(m_displayedSongTable);
+        if (dynamicList != nullptr && dynamicList->isAutoUpdate())
+        {
+            dynamicList->updateList();
+        }
+
         m_displayedSongTable->applyFilter(m_uiControl->editFilter->text());
         setCentralWidget(m_displayedSongTable);
         m_displayedSongTable->show();
@@ -2621,6 +2650,13 @@ void CMainWindow::startPlay()
 {
     Q_CHECK_PTR(m_currentSongItem);
     Q_CHECK_PTR(m_currentSongTable);
+
+    // Met à jour la liste dynamique
+    CDynamicList * dynamicList = qobject_cast<CDynamicList *>(m_currentSongTable);
+    if (dynamicList != nullptr && dynamicList->isAutoUpdate())
+    {
+        dynamicList->updateList();
+    }
 
     setState(Playing);
 

@@ -43,6 +43,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 CDynamicList::CDynamicList(CMainWindow * mainWindow, const QString& name) :
 IPlayList               (mainWindow, name),
 m_id                    (-1),
+m_needUpdate            (true),
 m_mainCriterion         (nullptr),
 m_isDynamicListModified (false),
 m_autoUpdate            (true),
@@ -89,7 +90,43 @@ CWidgetMultiCriteria * CDynamicList::getWidget() const
 
 
 /**
+ * Met à jour la liste des morceaux si nécessaire.
+ *
+ * \todo Ne pas mettre la liste à jour si ce n'est pas absolument nécessaire :
+ *       - La liste est actuellement affichée.
+ *       - La liste est en cours de lecture.
+ *       - Une liste dynamique qui fait appel à cette liste est affichée ou en cours de lecture...
+ *       Dans ce cas, positionner un flag à true, et tester ce flag lors d'un changement.
+ */
+
+void CDynamicList::tryUpdateList()
+{
+    // Une mise-à-jour a déjà été demandée
+    if (m_needUpdate)
+    {
+        return;
+    }
+
+    m_needUpdate = true;
+
+    if (m_mainWindow->getCurrentSongTable() == this ||
+        m_mainWindow->getDisplayedSongTable() == this)
+    {
+        updateList();
+    }
+    else
+    {
+        //TODO: vérifier que les listes dynamiques qui utilisent (directement ou indirectement) cette liste ne sont pas affichée ou lue
+        // Plus simplement : si la liste dynamique est utilisée par une autre, on met à jour
+        //...
+    }
+}
+
+
+/**
  * Met à jour la liste des morceaux.
+ * Cette fonction peut être relativement lente si les critères sont compliqués
+ * ou si la base contient de nombreux morceaux.
  *
  * \todo Pouvoir limiter le nombre de morceaux.
  * \todo Si la boite de dialogue "Informations sur un morceau" est affiché, il faut éventuellement la mettre-à-jour.
@@ -98,6 +135,15 @@ CWidgetMultiCriteria * CDynamicList::getWidget() const
 void CDynamicList::updateList()
 {
     qDebug() << "CDynamicList::updateList " << m_name;
+
+    if (!m_needUpdate)
+    {
+        qDebug() << "CDynamicList::updateList not needed";
+        return;
+    }
+
+    QTime timeProf;
+    timeProf.start();
 
     // Si on est en train de lire un morceau de la liste, il faut mettre à jour les informations sur le morceau courant
     CMediaTableItem * currentItem = m_model->getCurrentSongItem();
@@ -132,7 +178,9 @@ void CDynamicList::updateList()
         CSong * song = getSongItemForRow(index->row())->getSong();
 
         if (!selectedSongs.contains(song))
+        {
             selectedSongs.append(song);
+        }
     }
 
     CMediaTableItem * selectedSongItem = getSongItemForRow(selectionModel()->currentIndex().row());
@@ -151,11 +199,15 @@ void CDynamicList::updateList()
         CMediaTableItem * songItem = getFirstSongItem(*song);
 
         if (songItem)
+        {
             selectionModel()->select(m_model->index(m_model->getRowForSongItem(songItem), 0), QItemSelectionModel::Select | QItemSelectionModel::Rows);
+        }
     }
 
     if (selectedSong)
+    {
         selectionModel()->setCurrentIndex(m_model->index(m_model->getRowForSongItem(getFirstSongItem(selectedSong)), 0), QItemSelectionModel::Rows);
+    }
 
 
     // On change le morceau courant affiché dans la liste
@@ -171,8 +223,11 @@ void CDynamicList::updateList()
     {
         dialogEditSong->setSongItem(getFirstSongItem(currentSongInDialogEditSong), this);
     }
-
+    
+    m_needUpdate = false;
     emit listUpdated();
+
+    qDebug() << "  updateList end : " << timeProf.elapsed();
 }
 
 
@@ -493,7 +548,7 @@ void CDynamicList::loadFromDatabase()
         {
             if (!criteriaList.contains(parentId))
             {
-                qWarning() << "CDynamicList::loadFromDatabase() : l'identifiant du parent ne correspond a aucun critère de la liste";
+                qWarning() << "CDynamicList::loadFromDatabase() : l'identifiant du parent ne correspond à aucun critère de la liste";
                 continue;
             }
 
@@ -515,22 +570,22 @@ void CDynamicList::loadFromDatabase()
         ICriterion::TUpdateConditions conditions = m_mainCriterion->getUpdateConditions();
 
         if (conditions.testFlag(ICriterion::UpdateOnSongAdded))
-            connect(m_mainWindow, SIGNAL(songsAdded()), this, SLOT(updateList()), Qt::UniqueConnection);
+            connect(m_mainWindow, SIGNAL(songsAdded()), this, SLOT(tryUpdateList()), Qt::UniqueConnection);
 
         if (conditions.testFlag(ICriterion::UpdateOnSongRemoved))
-            connect(m_mainWindow, SIGNAL(songRemoved(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
+            connect(m_mainWindow, SIGNAL(songRemoved(CSong *)), this, SLOT(tryUpdateList()), Qt::UniqueConnection);
 
         if (conditions.testFlag(ICriterion::UpdateOnSongModified))
-            connect(m_mainWindow->getMediaManager(), SIGNAL(songModified(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
+            connect(m_mainWindow->getMediaManager(), SIGNAL(songModified(CSong *)), this, SLOT(tryUpdateList()), Qt::UniqueConnection);
 
         if (conditions.testFlag(ICriterion::UpdateOnSongMoved))
-            connect(m_mainWindow, SIGNAL(songMoved(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
+            connect(m_mainWindow, SIGNAL(songMoved(CSong *)), this, SLOT(tryUpdateList()), Qt::UniqueConnection);
 
         if (conditions.testFlag(ICriterion::UpdateOnSongPlayEnd))
-            connect(m_mainWindow, SIGNAL(songPlayEnd(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
+            connect(m_mainWindow, SIGNAL(songPlayEnd(CSong *)), this, SLOT(tryUpdateList()), Qt::UniqueConnection);
 
         //if (conditions.testFlag(ICriterion::UpdateOnListModified))
-            //connect(m_mainWindow, SIGNAL(listModified(IPlayList *)), this, SLOT(updateList()), Qt::UniqueConnection);
+            //connect(m_mainWindow, SIGNAL(listModified(IPlayList *)), this, SLOT(tryUpdateList()), Qt::UniqueConnection);
     }
 }
 
@@ -555,37 +610,43 @@ void CDynamicList::setCriterion(ICriterion * criteria)
     // Conditions de mise à jour
     if (m_autoUpdate)
     {
-        disconnect(m_mainWindow, SIGNAL(songsAdded()             ), this, SLOT(updateList()));
-        disconnect(m_mainWindow, SIGNAL(songRemoved(CSong *)     ), this, SLOT(updateList()));
-        disconnect(m_mainWindow->getMediaManager(), SIGNAL(songModified(CSong *)    ), this, SLOT(updateList()));
-        disconnect(m_mainWindow, SIGNAL(songMoved(CSong *)       ), this, SLOT(updateList()));
-        disconnect(m_mainWindow, SIGNAL(songPlayEnd(CSong *)     ), this, SLOT(updateList()));
-      //disconnect(m_mainWindow, SIGNAL(listModified(IPlayList *)), this, SLOT(updateList()));
+        disconnect(m_mainWindow, SIGNAL(songsAdded()             ), this, SLOT(tryUpdateList()));
+        disconnect(m_mainWindow, SIGNAL(songRemoved(CSong *)     ), this, SLOT(tryUpdateList()));
+        disconnect(m_mainWindow->getMediaManager(), SIGNAL(songModified(CSong *)), this, SLOT(tryUpdateList()));
+        disconnect(m_mainWindow, SIGNAL(songMoved(CSong *)       ), this, SLOT(tryUpdateList()));
+        disconnect(m_mainWindow, SIGNAL(songPlayEnd(CSong *)     ), this, SLOT(tryUpdateList()));
+      //disconnect(m_mainWindow, SIGNAL(listModified(IPlayList *)), this, SLOT(tryUpdateList()));
 
         ICriterion::TUpdateConditions conditions = m_mainCriterion->getUpdateConditions();
 
         if (conditions.testFlag(ICriterion::UpdateOnSongAdded))
-            connect(m_mainWindow, SIGNAL(songsAdded()), this, SLOT(updateList()), Qt::UniqueConnection);
+            connect(m_mainWindow, SIGNAL(songsAdded()), this, SLOT(tryUpdateList()), Qt::UniqueConnection);
 
         if (conditions.testFlag(ICriterion::UpdateOnSongRemoved))
-            connect(m_mainWindow, SIGNAL(songRemoved(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
+            connect(m_mainWindow, SIGNAL(songRemoved(CSong *)), this, SLOT(tryUpdateList()), Qt::UniqueConnection);
 
         if (conditions.testFlag(ICriterion::UpdateOnSongModified))
-            connect(m_mainWindow->getMediaManager(), SIGNAL(songModified(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
+            connect(m_mainWindow->getMediaManager(), SIGNAL(songModified(CSong *)), this, SLOT(tryUpdateList()), Qt::UniqueConnection);
 
         if (conditions.testFlag(ICriterion::UpdateOnSongMoved))
-            connect(m_mainWindow, SIGNAL(songMoved(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
+            connect(m_mainWindow, SIGNAL(songMoved(CSong *)), this, SLOT(tryUpdateList()), Qt::UniqueConnection);
 
         if (conditions.testFlag(ICriterion::UpdateOnSongPlayEnd))
-            connect(m_mainWindow, SIGNAL(songPlayEnd(CSong *)), this, SLOT(updateList()), Qt::UniqueConnection);
+            connect(m_mainWindow, SIGNAL(songPlayEnd(CSong *)), this, SLOT(tryUpdateList()), Qt::UniqueConnection);
 
         //if (conditions.testFlag(ICriterion::UpdateOnListModified))
-            //connect(m_mainWindow, SIGNAL(listModified(IPlayList *)), this, SLOT(updateList()), Qt::UniqueConnection);
+            //connect(m_mainWindow, SIGNAL(listModified(IPlayList *)), this, SLOT(tryUpdateList()), Qt::UniqueConnection);
     }
 
     emit listModified();
 }
 
+
+/**
+ * Modifie le paramètre de mise-à-jour automatique de la liste.
+ *
+ * \param autoUpdate True si la liste doit être mise à jour automatiquement, false sinon.
+ */
 
 void CDynamicList::setAutoUpdate(bool autoUpdate)
 {
@@ -596,7 +657,39 @@ void CDynamicList::setAutoUpdate(bool autoUpdate)
         emit listModified();
 
         if (m_autoUpdate)
-            updateList(); // est-ce nécessaire ?
+        {
+            // Conditions de mise à jour
+            ICriterion::TUpdateConditions conditions = m_mainCriterion->getUpdateConditions();
+
+            if (conditions.testFlag(ICriterion::UpdateOnSongAdded))
+                connect(m_mainWindow, SIGNAL(songsAdded()), this, SLOT(tryUpdateList()), Qt::UniqueConnection);
+
+            if (conditions.testFlag(ICriterion::UpdateOnSongRemoved))
+                connect(m_mainWindow, SIGNAL(songRemoved(CSong *)), this, SLOT(tryUpdateList()), Qt::UniqueConnection);
+
+            if (conditions.testFlag(ICriterion::UpdateOnSongModified))
+                connect(m_mainWindow->getMediaManager(), SIGNAL(songModified(CSong *)), this, SLOT(tryUpdateList()), Qt::UniqueConnection);
+
+            if (conditions.testFlag(ICriterion::UpdateOnSongMoved))
+                connect(m_mainWindow, SIGNAL(songMoved(CSong *)), this, SLOT(tryUpdateList()), Qt::UniqueConnection);
+
+            if (conditions.testFlag(ICriterion::UpdateOnSongPlayEnd))
+                connect(m_mainWindow, SIGNAL(songPlayEnd(CSong *)), this, SLOT(tryUpdateList()), Qt::UniqueConnection);
+
+            //if (conditions.testFlag(ICriterion::UpdateOnListModified))
+                //connect(m_mainWindow, SIGNAL(listModified(IPlayList *)), this, SLOT(tryUpdateList()), Qt::UniqueConnection);
+
+            updateList();
+        }
+        else
+        {
+            disconnect(m_mainWindow, SIGNAL(songsAdded()             ), this, SLOT(tryUpdateList()));
+            disconnect(m_mainWindow, SIGNAL(songRemoved(CSong *)     ), this, SLOT(tryUpdateList()));
+            disconnect(m_mainWindow->getMediaManager(), SIGNAL(songModified(CSong *)), this, SLOT(tryUpdateList()));
+            disconnect(m_mainWindow, SIGNAL(songMoved(CSong *)       ), this, SLOT(tryUpdateList()));
+            disconnect(m_mainWindow, SIGNAL(songPlayEnd(CSong *)     ), this, SLOT(tryUpdateList()));
+          //disconnect(m_mainWindow, SIGNAL(listModified(IPlayList *)), this, SLOT(tryUpdateList()));
+        }
     }
 }
 
@@ -610,6 +703,8 @@ void CDynamicList::setOnlyChecked(bool onlyChecked)
         emit listModified();
 
         if (m_autoUpdate)
-            updateList(); // est-ce nécessaire ?
+        {
+            tryUpdateList();
+        }
     }
 }
