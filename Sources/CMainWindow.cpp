@@ -876,6 +876,7 @@ void CMainWindow::onFilterChange(const QString& filter)
     }
 
     m_displayedSongTable->applyFilter(filter);
+    updateListInformations();
 
     if (filter.isEmpty())
         m_uiControl->btnClearFilter->setEnabled(false);
@@ -1358,6 +1359,12 @@ void CMainWindow::setShuffle(bool shuffle)
         m_isShuffle = shuffle;
         m_uiControl->btnShuffle->setIcon(QPixmap(m_isShuffle ? ":/icons/shuffle_on" : ":/icons/shuffle_off"));
         m_uiWidget->actionShuffle->setChecked(shuffle);
+
+        // Mélange de la liste en cours de lecture
+        if (m_isShuffle && m_currentSongItem != nullptr)
+        {
+            m_currentSongTable->initShuffle(m_currentSongItem);
+        }
     }
 }
 
@@ -1618,7 +1625,9 @@ void CMainWindow::openDialogAddFolder()
 void CMainWindow::importSongs(const QStringList& fileList)
 {
     if (fileList.isEmpty())
+    {
         return;
+    }
 
     QList<CSong *> songs;
 
@@ -1632,13 +1641,17 @@ void CMainWindow::importSongs(const QStringList& fileList)
         QString fileName = *it;
         fileName.replace('\\', '/');
         CSong * song = CSong::loadFromFile(m_mediaManager, fileName);
-        if (song) songs.append(song);
-        //addSong(*it);
+        if (song != nullptr)
+        {
+            songs.append(song);
+        }
 
         qApp->processEvents();
 
         if (progress.wasCanceled())
+        {
             break;
+        }
     }
 /*
     // Ajout des morceaux à la médiathèque
@@ -2275,10 +2288,6 @@ void CMainWindow::onPlayEnd()
         return;
     }
 
-    qDebug() << "CMainWindow::onPlayEnd() " << m_currentSongItem->getSong()->getTitle() << " by " << m_currentSongItem->getSong()->getArtistName();
-    QTime timeProf;
-    timeProf.start();
-
     if (m_currentSongTable == m_queue)
     {
         m_queue->removeSongFromTable(m_currentSongItem->getPosition() - 1);
@@ -2301,11 +2310,7 @@ void CMainWindow::onPlayEnd()
         nextSong();
     }
 
-    qDebug() << "  onPlayEnd 1: " << timeProf.elapsed();
-
     emit songPlayEnd(currentSong);
-
-    qDebug() << "  onPlayEnd 2: " << timeProf.elapsed();
 
     // On retrie les listes de lecture statiques
     QList<IPlayList *> playLists = getAllPlayLists();
@@ -2324,8 +2329,6 @@ void CMainWindow::onPlayEnd()
     {
         m_library->sort();
     }
-
-    qDebug() << "  onPlayEnd 3: " << timeProf.elapsed();
 }
 
 
@@ -2391,11 +2394,15 @@ void CMainWindow::updateListInformations()
     int numSongs = 0;
     qlonglong durationMS = 0;
 
-    if (m_displayedSongTable)
+    if (m_displayedSongTable == nullptr)
     {
-        durationMS = m_displayedSongTable->getTotalDuration();
+        m_mediaManager->logError(tr("invalid pointer"), __FUNCTION__, __FILE__, __LINE__);
+    }
+    else
+    {
+        durationMS = m_displayedSongTable->getTotalDuration(true);
         duration = duration.addMSecs(static_cast<int>(durationMS % 86400000));
-        numSongs = m_displayedSongTable->getNumSongs();
+        numSongs = m_displayedSongTable->getNumSongs(true);
     }
 
     m_listInfos->setText(tr("%n song(s), %1", "", numSongs).arg(durationToString(durationMS)));

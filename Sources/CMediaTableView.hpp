@@ -131,7 +131,7 @@ public:
     virtual ~CMediaTableView();
 
     QList<CSong *> getSongs() const;
-    inline int getNumSongs() const;
+    inline int getNumSongs(bool filtered) const;
     CMediaTableItem * getFirstSongItem(CSong * song) const;
     CMediaTableItem * getSongItemForRow(int row) const;
     int getRowForSongItem(CMediaTableItem * songItem) const;
@@ -141,7 +141,7 @@ public:
     CMediaTableItem * getPreviousSong(CMediaTableItem * songItem, bool shuffle) const;
     CMediaTableItem * getNextSong(CMediaTableItem * songItem, bool shuffle) const;
     CMediaTableItem * getLastSong(bool shuffle) const;
-    qlonglong getTotalDuration() const;
+    qlonglong getTotalDuration(bool filtered) const;
     void applyFilter(const QString& filter);
     inline bool hasSong(CSong * song) const;
     inline int getColumnSorted() const;
@@ -362,9 +362,9 @@ inline QString CMediaTableView::getColumnTypeName(CMediaTableView::TColumnType c
  * \return Nombre de morceaux.
  */
 
-inline int CMediaTableView::getNumSongs() const
+inline int CMediaTableView::getNumSongs(bool filtered) const
 {
-    return m_model->getNumSongs();
+    return m_model->getNumSongs(filtered);
 }
 
 

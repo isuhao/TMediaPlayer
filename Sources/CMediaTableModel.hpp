@@ -50,7 +50,7 @@ public:
 
     void setSongs(const QList<CSong *>& songs);
     QList<CSong *> getSongs() const;
-    inline int getNumSongs() const;
+    inline int getNumSongs(bool filtered) const;
     bool hasSong(CSong * song) const;
 
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
@@ -767,9 +767,9 @@ private:
  * \return Nombre de morceaux.
  */
 
-inline int CMediaTableModel::getNumSongs() const
+inline int CMediaTableModel::getNumSongs(bool filtered) const
 {
-    return m_data.size();
+    return (filtered ? m_dataFiltered.size() : m_data.size());
 }
 
 

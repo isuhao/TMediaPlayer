@@ -3,23 +3,24 @@
   Importance élevée
 --------------------------------------------------
 
-- Refactoring : CMediaTableView -> IMediaTable, CLibraryModel -> CMediaManager
-
-- Revoir le dock "Listes de lecture".
-
 - Bug : si on modifie une liste dynamique en cours de lecture, ben y'a un blem...
-- Bug : si une liste ne contient que des morceaux introuvables et que la répétition de liste est activée, la lecture entraine une boucle infinie.
+- Bug : si une liste ne contient que des morceaux introuvables (ou décochés, ou non lisible en lecture aléatoire) et que la répétition de liste est activée, la lecture entraine une boucle infinie.
 
 - Problème graphique : si on modifie les informations d'un morceau, il faut mettre à jour la vue courante.
 - Problème graphique : lorsqu'on sélectionne une liste de lecture, il faut donner le focus à la vue.
 - Problème graphique : si on modifie le filtre de recherche, les lignes restent sélectionnées et ne correspondent plus aux morceaux sélectionnés.
-- Problème graphique : le nombre de morceaux dans la liste ne tient pas compte si un filtre de recherche est appliqué.
 
-- Fichier FLAC : problème avec les tags ID3v2 qui ne sont pas modifiés. (Bug avec TagLib ?)
+- Pouvoir ouvrir un ou plusieurs fichiers depuis l'explorateur.
 
 --------------------------------------------------
   Importance moyenne
 --------------------------------------------------
+
+- Refactoring : CMediaTableView -> IMediaTable, CLibraryModel -> CMediaManager
+
+- Revoir le dock "Listes de lecture".
+
+- Fichier FLAC : problème avec les tags ID3v2 qui ne sont pas modifiés. (Bug avec TagLib ?)
 
 - Déplacer la gestion de la base de données dans des bibliothèques externes.
 - Déplacer la gestion de la fenêtre principale dans une classe à part. [EN COURS]
@@ -66,7 +67,6 @@
 - Installateur : pouvoir choisir la base de données à utiliser.
 
 - Recherche de paroles :
-  - Ajouter un bouton pour rechercher les paroles dans les fenêtre "Edit Song(s)".
   - Pouvoir ajouter facilement d'autres sites (plugins ?).
   - Dans le dock, afficher et pouvoir modifier la langue des paroles et le parolier.
 

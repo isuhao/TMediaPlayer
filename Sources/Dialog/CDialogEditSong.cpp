@@ -24,6 +24,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "../CRatingEditor.hpp"
 #include "../Language.hpp"
 #include "../Utils.hpp"
+#include "../CLyricWiki.hpp"
 
 // Qt
 #include <QStandardItemModel>
@@ -95,6 +96,8 @@ m_mainWindow   (mainWindow)
 
 
     // Connexions des signaux des boutons
+    connect(m_uiWidget->buttonFindLyrics, SIGNAL(clicked()), this, SLOT(findLyrics()));
+
     QPushButton * btnSave = m_uiWidget->buttonBox->addButton(tr("Save"), QDialogButtonBox::AcceptRole);
     QPushButton * btnCancel = m_uiWidget->buttonBox->addButton(tr("Cancel"), QDialogButtonBox::RejectRole);
     QPushButton * btnApply = m_uiWidget->buttonBox->addButton(tr("Apply"), QDialogButtonBox::ApplyRole);
@@ -306,6 +309,34 @@ void CDialogEditSong::resetSummary()
     }
 
     //TagLib::ID3v2::AttachedPictureFrame
+}
+
+
+void CDialogEditSong::findLyrics()
+{
+    if (m_songItem && m_songItem->getSong())
+    {
+        CLyricWiki * query = new CLyricWiki(m_mainWindow->getMediaManager(), m_songItem->getSong());
+        connect(query, SIGNAL(lyricsFound(const QString&)), this, SLOT(onLyricsFound(const QString&)));
+    }
+}
+
+
+void CDialogEditSong::onLyricsFound(const QString& lyrics)
+{
+    CLyricWiki * query = qobject_cast<CLyricWiki *>(sender());
+
+    if (query)
+    {
+        // On vérifie que le morceau n'a pas changé entre temps
+        if (query->getSong() == m_songItem->getSong())
+        {
+            m_songItem->getSong()->setLyrics(lyrics);
+            m_uiWidget->editLyrics->setText(lyrics);
+        }
+
+        query->deleteLater();
+    }
 }
 
 

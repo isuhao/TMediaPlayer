@@ -110,7 +110,7 @@ void CMediaTableModel::setSongs(const QList<CSong *>& data)
     m_dataFiltered.clear();
 
     int i = 0;
-    
+
     // Remplissage de la liste des morceaux
     m_data.reserve(data.size());
 
@@ -200,7 +200,9 @@ int CMediaTableModel::rowCount(const QModelIndex& parent) const
 int CMediaTableModel::columnCount(const QModelIndex& parent) const
 {
     if(parent.isValid())
+    {
         return 0;
+    }
 
     return CMediaTableView::ColNumber;
 }
@@ -257,13 +259,13 @@ QVariant CMediaTableModel::data(const QModelIndex& index, int role) const
                 //if (m_canDrop)
                 {
                     //return data.at(index.row())->getPosition();
-                    return index.row() + 1;
+                    return (index.row() + 1);
                 }
 
                 break;
             }
 
-          //case CMediaTableView::ColShufflePos : return m_dataShuffle.indexOf(m_data.at(index.row()));
+          //case CMediaTableView::ColShufflePos : return m_dataShuffleFiltered.indexOf(data.at(index.row()));
 
             case CMediaTableView::ColTitle      : return data.at(index.row())->getSong()->getTitle();
             case CMediaTableView::ColArtist     : return data.at(index.row())->getSong()->getArtistName();
@@ -1265,16 +1267,32 @@ CMediaTableItem * CMediaTableModel::getLastSong(bool shuffle) const
 
     // Aucun morceau dans le modèle
     if (data.isEmpty())
+    {
         return nullptr;
+    }
 
     if (!shuffle)
-        return data.last();
-
-    for (QList<CMediaTableItem *>::ConstIterator it = dataShuffle.end(); it != dataShuffle.begin(); --it)
     {
-        if (!(*it)->getSong()->isSkipShuffle())
+        return data.last();
+    }
+
+    // Aucun morceau dans le modèle
+    if (dataShuffle.isEmpty())
+    {
+        return nullptr;
+    }
+
+    QListIterator<CMediaTableItem *> it(dataShuffle);
+    it.toBack();
+
+    while (it.hasPrevious())
+    {
+        CMediaTableItem * item = it.previous();
+        Q_CHECK_PTR(item);
+
+        if (!item->getSong()->isSkipShuffle())
         {
-            return *it;
+            return item;
         }
     }
 
@@ -1284,6 +1302,7 @@ CMediaTableItem * CMediaTableModel::getLastSong(bool shuffle) const
 
 void CMediaTableModel::setCurrentSong(CMediaTableItem * songItem)
 {
+    emit layoutAboutToBeChanged();
     m_currentSongItem = songItem;
     emit layoutChanged();
 }
@@ -1304,21 +1323,20 @@ void CMediaTableModel::setCurrentSong(CMediaTableItem * songItem)
  *
  * Le fonctionnement de la lecture aléatoire est identique à celui de iTunes.
  *
- * \todo Gérer le filtre de recherche.
- *
  * \param firstSong Morceau à placer au début de la liste.
  */
 
 void CMediaTableModel::initShuffle(CMediaTableItem * firstSong)
 {
     m_dataShuffle = m_data;
-    const int numSongs = rowCount();
+    const int numSongs = m_data.size();
 
     if (numSongs > 1)
     {
-        for (int index = 0; index < numSongs; ++index)
+        // Fisher-Yates algorithm
+        for (int index = numSongs - 1; index > 0; --index)
         {
-            int newIndex = static_cast<int>((static_cast<double>(rand()) / static_cast<double>(RAND_MAX)) * (numSongs - index - 1) + index);
+            const int newIndex = static_cast<int>((static_cast<double>(rand()) / static_cast<double>(RAND_MAX)) * (index + 1));
             m_dataShuffle.swap(index, newIndex); // Permutation
         }
 
@@ -1346,7 +1364,9 @@ void CMediaTableModel::replaceSong(CSong * oldSong, CSong * newSong)
     for (QList<CMediaTableItem *>::ConstIterator item = m_data.begin(); item != m_data.end(); ++item)
     {
         if ((*item)->m_song == oldSong)
+        {
             (*item)->m_song = newSong;
+        }
     }
 }
 
@@ -1364,23 +1384,22 @@ void CMediaTableModel::applyFilter(const QString& filter)
     if (filter.isEmpty())
     {
         m_dataFiltered = m_data;
-        emit layoutChanged();
-        return;
     }
-
-    m_dataFiltered.clear();
-
-    // Liste normale
-    for (QList<CMediaTableItem *>::ConstIterator item = m_data.begin(); item != m_data.end(); ++item)
+    else
     {
-        if ((*item)->m_song->matchFilter(filter))
+        m_dataFiltered.clear();
+
+        // Liste normale
+        for (QList<CMediaTableItem *>::ConstIterator item = m_data.begin(); item != m_data.end(); ++item)
         {
-            m_dataFiltered.append(*item);
+            if ((*item)->m_song->matchFilter(filter))
+            {
+                m_dataFiltered.append(*item);
+            }
         }
     }
 
     applyFilterForShuffleList(filter);
-
     emit layoutChanged();
 }
 

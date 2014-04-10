@@ -248,7 +248,7 @@ QList<CSong *> CMediaTableView::getSelectedSongs() const
 
     for (QModelIndexList::ConstIterator it = indexList.begin(); it != indexList.end(); ++it)
     {
-        songs.append(m_model->m_data.at(it->row())->getSong());
+        songs.append(m_model->m_dataFiltered.at(it->row())->getSong());
     }
 
     return songs;
@@ -302,11 +302,13 @@ CMediaTableItem * CMediaTableView::getLastSong(bool shuffle) const
  * \return Durée totale en millisecondes.
  */
 
-qlonglong CMediaTableView::getTotalDuration() const
+qlonglong CMediaTableView::getTotalDuration(bool filtered) const
 {
     qlonglong duration = 0;
 
-    for (QList<CMediaTableItem *>::ConstIterator songItem = m_model->m_data.begin(); songItem != m_model->m_data.end(); ++songItem)
+    QList<CMediaTableItem *> data = (filtered ? m_model->m_dataFiltered : m_model->m_data);
+
+    for (QList<CMediaTableItem *>::ConstIterator songItem = data.begin(); songItem != data.end(); ++songItem)
     {
         duration += (*songItem)->getSong()->getDuration();
     }
@@ -976,7 +978,7 @@ void CMediaTableView::checkSelection()
 
     for (QModelIndexList::ConstIterator it = indexList.begin(); it != indexList.end(); ++it)
     {
-        m_model->m_data.at(it->row())->getSong()->setEnabled(true);
+        m_model->m_dataFiltered.at(it->row())->getSong()->setEnabled(true);
     }
 }
 
@@ -997,7 +999,7 @@ void CMediaTableView::uncheckSelection()
 
     for (QModelIndexList::ConstIterator it = indexList.begin(); it != indexList.end(); ++it)
     {
-        m_model->m_data.at(it->row())->getSong()->setEnabled(false);
+        m_model->m_dataFiltered.at(it->row())->getSong()->setEnabled(false);
     }
 }
 
@@ -1012,7 +1014,7 @@ void CMediaTableView::changeCurrentSongRating(int rating)
         return;
     }
 
-    CSong * song = m_model->m_data.at(indexList.at(0).row())->getSong();
+    CSong * song = m_model->m_dataFiltered.at(indexList.at(0).row())->getSong();
 
     if (song != nullptr)
     {
@@ -1071,14 +1073,18 @@ void CMediaTableView::onSelectionChange()
 {
     // On vérifie que cette table est actuellement affichée
     if (m_mainWindow->getDisplayedSongTable() != this)
+    {
         return;
+    }
 
     QList<CMediaTableItem *> songItems = getSelectedSongItems();
 
     const int numSongs = songItems.size();
 
     if (numSongs <= 0)
+    {
         return;
+    }
 
     // Durée totale sélectionnée
     qlonglong durationMS = 0;
@@ -1098,7 +1104,9 @@ void CMediaTableView::addSongToQueueBegining()
     QList<CSong *> songs = getSelectedSongs();
 
     if (songs.isEmpty())
+    {
         return;
+    }
 
     CQueuePlayList * queue = m_mainWindow->getQueue();
     queue->addSongs(songs, 0);
@@ -1111,7 +1119,9 @@ void CMediaTableView::addSongToQueueEnd()
     QList<CSong *> songs = getSelectedSongs();
 
     if (songs.isEmpty())
+    {
         return;
+    }
 
     CQueuePlayList * queue = m_mainWindow->getQueue();
     queue->addSongs(songs, -1);
@@ -1298,7 +1308,7 @@ void CMediaTableView::startDrag(Qt::DropActions supportedActions)
             rows.append(indexes.at(i).row());
         }
 
-        if (!(m_model->flags(indexes.at(i)) & Qt::ItemIsDragEnabled))
+        if (!(m_model->flags(indexes.at(i)) & Qt::ItemIsDragEnabled)) // utiliser m_dataFiltered ?
         {
             indexes.removeAt(i);
         }
@@ -1306,7 +1316,7 @@ void CMediaTableView::startDrag(Qt::DropActions supportedActions)
 
     if (indexes.count() > 0)
     {
-        QMimeData * data = m_model->mimeData(indexes);
+        QMimeData * data = m_model->mimeData(indexes); // utiliser m_dataFiltered ?
         if (!data) return;
 
         QPixmap pixmap(64, 32);

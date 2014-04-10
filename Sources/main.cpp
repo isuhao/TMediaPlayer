@@ -51,6 +51,8 @@ int main(int argc, char * argv[])
     QTextCodec * codec = QTextCodec::codecForName("UTF-8");
     QTextCodec::setCodecForLocale(codec);
 
+    //TODO: analyser les arguments pour récupérer la liste des morceaux à lire
+
 #ifndef T_NO_SINGLE_APP
 	QLocalSocket socket;
 	socket.connectToServer("tmediaplayer-" + CMediaManager::getAppVersion());
@@ -58,6 +60,7 @@ int main(int argc, char * argv[])
 	if (socket.waitForConnected(250))
 	{
 		// L'application est déjà lancée
+        //TODO: si il y a une liste de morceaux, on doit les transmettre à l'application lancée
 		return 0;
 	}
 #endif // T_NO_SINGLE_APP
@@ -72,6 +75,10 @@ int main(int argc, char * argv[])
     }
 
     window.show();
+
+    //TODO: parcourir la liste des morceaux à lire
+    //TODO: ajouter le morceau à la médiathèque si nécessaire
+    //TODO: lire le dernier morceau de la liste
 
     return app.exec();
 }
