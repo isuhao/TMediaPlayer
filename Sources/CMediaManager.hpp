@@ -103,6 +103,7 @@ public:
     
     inline bool isMute() const;
     inline int getVolume() const;
+    inline bool isShuffle() const;
 
     inline QString getApplicationPath() const;
 
@@ -117,6 +118,7 @@ public slots:
 
     void setMute(bool mute);
     void setVolume(int volume);
+    void setShuffle(bool shuffle);
     void setEqualizerEnabled(bool enabled = true);
 
     void onSongModified();
@@ -142,6 +144,7 @@ private:
     QList<CLibraryFolder *> m_libraryFolders; ///< Liste des répertoires de la médiathèque.
     bool m_isMute;                            ///< Indique si le son est coupé.
     int m_volume;                             ///< Volume sonore (entre 0 et 100).
+    bool m_isShuffle;                         ///< Indique si la lecture aléatoire est activée.
 
     // Égaliseur
     double m_equalizerGains[10];                  ///< Gains de l'égaliseur.
@@ -196,6 +199,18 @@ inline bool CMediaManager::isMute() const
 inline int CMediaManager::getVolume() const
 {
     return m_volume;
+}
+
+
+/**
+ * Indique si la lecture aléatoire est active.
+ *
+ * \return Booléen.
+ */
+
+inline bool CMediaManager::isShuffle() const
+{
+    return m_isShuffle;
 }
 
 

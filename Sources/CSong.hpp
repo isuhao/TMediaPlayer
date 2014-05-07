@@ -27,6 +27,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QVariant>
 #include <QStringList>
 #include <fmod/fmod.hpp>
+#include <limits>
 
 
 namespace TagLib

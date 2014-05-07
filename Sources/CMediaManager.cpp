@@ -20,6 +20,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CMediaManager.hpp"
 #include "CLibraryFolder.hpp"
 #include "CSong.hpp"
+#include "Last.fm/CScrobble.hpp"
 
 // Qt
 #include <QFile>
@@ -38,8 +39,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QtDebug>
 
 
-const QString appVersion = "1.0.62";     ///< Numéro de version de l'application.
-const QString appDate    = "10/04/2014"; ///< Date de sortie de cette version.
+const QString appVersion = "1.0.63";     ///< Numéro de version de l'application.
+const QString appDate    = "07/05/2014"; ///< Date de sortie de cette version.
 
 
 /**
@@ -77,7 +78,8 @@ QObject       (parent),
 m_settings    (nullptr),
 m_soundSystem (nullptr),
 m_isMute      (false),
-m_volume      (50)
+m_volume      (50),
+m_isShuffle   (false)
 {
 #if QT_VERSION >= 0x050000
     m_applicationPath = QStandardPaths::writableLocation(QStandardPaths::DataLocation) + QDir::separator();
@@ -95,9 +97,82 @@ m_volume      (50)
     QString lang = m_settings->value("Preferences/Language", QLocale::system().name()).toString();
 
     if (lang.isEmpty() || !m_translator.load(QString("Lang/TMediaPlayer_") + lang))
+    {
         m_translator.load(QString("Lang/TMediaPlayer_") + QLocale::system().name());
+    }
 
     qApp->installTranslator(&m_translator);
+
+
+    // Last.fm
+    if (m_settings->value("LastFm/EnableScrobble", false).toBool())
+    {
+        QSqlDatabase dataBase = QSqlDatabase::addDatabase("QSQLITE", "lastfm");
+        dataBase.setDatabaseName(getApplicationPath() + "lastfm.sqlite");
+
+        if (!dataBase.open())
+        {
+            logError(tr("Erreur d'ouverture de la base lastfm.sqlite"), __FUNCTION__, __FILE__, __LINE__);
+        }
+        else
+        {
+            QSqlQuery query(dataBase);
+            QStringList tables = dataBase.tables(QSql::Tables);
+
+            if (!tables.contains("scrobbles"))
+            {
+                if (!query.exec("CREATE TABLE scrobbles ("
+                                    "time TIMESTAMP NOT NULL,"
+                                    "title VARCHAR(512) NOT NULL,"
+                                    "artist VARCHAR(512) NOT NULL,"
+                                    "album VARCHAR(512),"
+                                    "albumArtist VARCHAR(512),"
+                                    "duration INTEGER,"
+                                    "trackNumber INTEGER"
+                                ")"))
+                {
+                    logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+                }
+            }
+
+            if (!query.exec("SELECT time, title, artist, album, albumArtist, duration, trackNumber FROM scrobbles ORDER BY time"))
+            {
+                logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            }
+            else
+            {
+                QSqlQuery queryDel(dataBase);
+                queryDel.prepare("DELETE FROM scrobbles WHERE time = ?");
+
+                // Liste des scrobbles
+                while (query.next())
+                {
+                    CScrobble::TScrobbleInfos scrobble;
+
+                    scrobble.timestamp   = query.value(0).toInt();
+                    scrobble.title       = query.value(1).toString();
+                    scrobble.artist      = query.value(2).toString();
+                    scrobble.album       = query.value(3).toString();
+                    scrobble.albumArtist = query.value(4).toString();
+                    scrobble.duration    = query.value(5).toInt();
+                    scrobble.trackNumber = query.value(6).toInt();
+
+                    // Suppression de l'enregistrement
+                    queryDel.bindValue(0, scrobble.timestamp);
+
+                    if (!queryDel.exec())
+                    {
+                        logDatabaseError(queryDel.lastError().text(), queryDel.lastQuery(), __FILE__, __LINE__);
+                    }
+
+                    // Tentative de scrobble
+                    /*CScrobble * queryScrobble =*/ new CScrobble(this, m_settings->value("LastFm/SessionKey", "").toByteArray(), scrobble);
+                }
+            }
+
+            dataBase.close();
+        }
+    }
 }
 
 
@@ -107,9 +182,6 @@ m_volume      (50)
 
 CMediaManager::~CMediaManager()
 {
-    // Enregistrement des paramètres
-    m_settings->setValue("Preferences/Volume", m_volume);
-
     for (QList<CLibraryFolder *>::ConstIterator folder = m_libraryFolders.begin(); folder != m_libraryFolders.end(); ++folder)
     {
         delete *folder;
@@ -130,7 +202,6 @@ CMediaManager::~CMediaManager()
 
 bool CMediaManager::initSoundSystem()
 {
-    bool ret = true;
     FMOD_RESULT res;
 
     res = FMOD::System_Create(&m_soundSystem);
@@ -364,8 +435,10 @@ bool CMediaManager::loadDatabase()
 
         for (int f = 0; f < 10; ++f)
         {
-            if (std::abs(preset->getValue(f) - m_equalizerGains[f]) < std::numeric_limits<double>::epsilon())
+            if (qAbs(preset->getValue(f) - m_equalizerGains[f]) < std::numeric_limits<double>::epsilon())
+            {
                 currentEqualizerPresetDefined = false;
+            }
         }
 
         if (currentEqualizerPresetDefined)
@@ -951,12 +1024,6 @@ void CMediaManager::setMute(bool mute)
     if (mute != m_isMute)
     {
         m_isMute = mute;
-/*
-        if (m_currentSongItem)
-        {
-            m_currentSongItem->getSong()->setMute(m_isMute);
-        }
-*/
     }
 }
 
@@ -974,12 +1041,27 @@ void CMediaManager::setVolume(int volume)
     if (volume != m_volume)
     {
         m_volume = volume;
-/*
-        if (m_currentSongItem)
-        {
-            m_currentSongItem->getSong()->setVolume(volume);
-        }
-*/
+
+        // Enregistrement des paramètres
+        m_settings->setValue("Preferences/Volume", m_volume);
+    }
+}
+
+
+/**
+ * Active ou désactive la lecture aléatoire.
+ *
+ * \param shuffle Indique si la lecture aléatoire doit être activée.
+ */
+
+void CMediaManager::setShuffle(bool shuffle)
+{
+    if (shuffle != m_isShuffle)
+    {
+        m_isShuffle = shuffle;
+
+        // Enregistrement des paramètres
+        m_settings->setValue("Preferences/Shuffle", m_isShuffle);
     }
 }
 

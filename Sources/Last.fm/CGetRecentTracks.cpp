@@ -19,9 +19,9 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CGetRecentTracks.hpp"
 #include "../CSong.hpp"
-#include "../CMainWindow.hpp"
 #include "../CMediaManager.hpp"
 
+#include <QFile>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -40,8 +40,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * \param sessionKey  Clé d'identification pour la session.
  */
 
-CGetRecentTracks::CGetRecentTracks(CMainWindow * mainWindow, const QByteArray& sessionKey) :
-ILastFmService (mainWindow, sessionKey)
+CGetRecentTracks::CGetRecentTracks(CMediaManager * mediaManager, const QByteArray& sessionKey) :
+ILastFmService (mediaManager, sessionKey)
 {
     getTracks(0);
 }
@@ -62,7 +62,7 @@ void CGetRecentTracks::getTracks(int page)
     QByteArray content = getLastFmQuery(args);
 
     // Log
-    QFile * logFile = m_mainWindow->getMediaManager()->getLogFile("lastFm");
+    QFile * logFile = m_mediaManager->getLogFile("lastFm");
     QTextStream stream(logFile);
     stream.setFieldAlignment(QTextStream::AlignLeft);
 
@@ -96,7 +96,7 @@ void CGetRecentTracks::replyFinished(QNetworkReply * reply)
     QByteArray data = reply->readAll();
 
     // Log
-    QFile * logFile = m_mainWindow->getMediaManager()->getLogFile("lastFm");
+    QFile * logFile = m_mediaManager->getLogFile("lastFm");
     QTextStream stream(logFile);
     stream.setFieldAlignment(QTextStream::AlignLeft);
 

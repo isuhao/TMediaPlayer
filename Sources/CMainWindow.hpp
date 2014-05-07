@@ -136,7 +136,6 @@ public:
     inline bool isPaused() const;
     inline bool isStopped() const;
     inline TRepeatMode getRepeatMode() const;
-    inline bool isShuffle() const;
     int getPosition() const;
 
     inline CQueuePlayList * getQueue() const
@@ -300,7 +299,6 @@ private:
     TState m_state;                         ///< État de lecture.
     bool m_showRemainingTime;               ///< Indique si on doit afficher le temps restant ou la durée du morceau en cours de lecture.
     TRepeatMode m_repeatMode;               ///< Mode de répétition.
-    bool m_isShuffle;                       ///< Indique si la lecture aléatoire est activée.
 
     CDialogNotifications * m_dialogNotifications; ///< Pointeur sur la boite de dialogue de notifications.
     CDialogLastPlays * m_dialogLastPlays;         ///< Pointeur sur la boite de dialogue des dernières lectures.
@@ -423,18 +421,6 @@ inline bool CMainWindow::isStopped() const
 inline CMainWindow::TRepeatMode CMainWindow::getRepeatMode() const
 {
     return m_repeatMode;
-}
-
-
-/**
- * Indique si la lecture aléatoire est active.
- *
- * \return Booléen.
- */
-
-bool CMainWindow::isShuffle() const
-{
-    return m_isShuffle;
 }
 
 #endif // FILE_C_MAIN_WINDOW_HPP_

@@ -18,7 +18,6 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CAuthentication.hpp"
-#include "../CMainWindow.hpp"
 #include "../CMediaManager.hpp"
 
 #include <QNetworkAccessManager>
@@ -28,8 +27,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QtXml>
 
 
-CAuthentication::CAuthentication(CMainWindow * mainWindow) :
-ILastFmService (mainWindow, ""),
+CAuthentication::CAuthentication(CMediaManager * mediaManager) :
+ILastFmService (mediaManager, ""),
 m_timerLastFm  (nullptr),
 m_numRequests  (0)
 {
@@ -41,7 +40,7 @@ m_numRequests  (0)
     QString url = QString("%1?%2").arg(m_lastFmUrl).arg(QString(content));
 
     // Log
-    QFile * logFile = m_mainWindow->getMediaManager()->getLogFile("lastFm");
+    QFile * logFile = m_mediaManager->getLogFile("lastFm");
     QTextStream stream(logFile);
     stream << "========================================\n";
     stream << "   Request 'Get Token'\n";
@@ -60,7 +59,7 @@ void CAuthentication::replyFinished(QNetworkReply * reply)
     QByteArray data = reply->readAll();
 
     // Log
-    QFile * logFile = m_mainWindow->getMediaManager()->getLogFile("lastFm");
+    QFile * logFile = m_mediaManager->getLogFile("lastFm");
     QTextStream stream(logFile);
     stream << "========================================\n";
     stream << "   Reply 'Get Token'\n";
@@ -141,7 +140,7 @@ void CAuthentication::getLastFmSession()
     QString url = QString("%1?%2").arg(m_lastFmUrl).arg(QString(content));
 
     // Log
-    QFile * logFile = m_mainWindow->getMediaManager()->getLogFile("lastFm");
+    QFile * logFile = m_mediaManager->getLogFile("lastFm");
     QTextStream stream(logFile);
     stream << "========================================\n";
     stream << "   Request 'Get Session key'\n";
@@ -170,7 +169,7 @@ void CAuthentication::replyLastFmFinished(QNetworkReply * reply)
     QByteArray data = reply->readAll();
 
     // Log
-    QFile * logFile = m_mainWindow->getMediaManager()->getLogFile("lastFm");
+    QFile * logFile = m_mediaManager->getLogFile("lastFm");
     QTextStream stream(logFile);
     stream << "========================================\n";
     stream << "   Reply 'Get Session key'\n";
@@ -227,7 +226,7 @@ void CAuthentication::replyLastFmFinished(QNetworkReply * reply)
     m_sessionKey = racine.text().toLatin1();
 
     // Enregistrement de la clé
-    m_mainWindow->getMediaManager()->getSettings()->setValue("LastFm/SessionKey", m_sessionKey);
+    m_mediaManager->getSettings()->setValue("LastFm/SessionKey", m_sessionKey);
 
     reply->deleteLater();
     deleteLater();

@@ -104,7 +104,7 @@ unsigned char * rfc822_binary(void * src, unsigned long srcl, unsigned long * le
 {
     unsigned char *ret, *d;
     unsigned char *s = (unsigned char *) src;
-    char *v = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._";
+    const char * v = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._";
     unsigned long i = ((srcl + 2) / 3) * 4;
     *len = i += 2 * ((i / 60) + 1);
     d = ret = (unsigned char *) malloc ((size_t) ++i);

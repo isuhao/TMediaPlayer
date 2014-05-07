@@ -58,6 +58,9 @@
   Importance faible
 --------------------------------------------------
 
+- Utiliser des effets sonores : écho, filtrage.
+- Transitions entre les morceaux.
+
 - Récupérer les informations de Last.fm (titre corrigé, artistes similaires, etc.).
 
 - Afficher le sous-titre à côté du titre (en petit, ou en gris).

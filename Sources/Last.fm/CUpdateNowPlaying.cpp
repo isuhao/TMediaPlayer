@@ -19,9 +19,9 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CUpdateNowPlaying.hpp"
 #include "../CSong.hpp"
-#include "../CMainWindow.hpp"
 #include "../CMediaManager.hpp"
 
+#include <QFile>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -30,8 +30,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QtDebug>
 
 
-CUpdateNowPlaying::CUpdateNowPlaying(CMainWindow * mainWindow, const QByteArray& sessionKey, CSong * song) :
-ILastFmService (mainWindow, sessionKey),
+CUpdateNowPlaying::CUpdateNowPlaying(CMediaManager * mediaManager, const QByteArray& sessionKey, CSong * song) :
+ILastFmService (mediaManager, sessionKey),
 m_song         (song)
 {
     Q_CHECK_PTR(song);
@@ -75,7 +75,7 @@ m_song         (song)
     QByteArray content = getLastFmQuery(args);
 
     // Log
-    QFile * logFile = m_mainWindow->getMediaManager()->getLogFile("lastFm");
+    QFile * logFile = m_mediaManager->getLogFile("lastFm");
     QTextStream stream(logFile);
     stream.setFieldAlignment(QTextStream::AlignLeft);
 
@@ -103,7 +103,7 @@ void CUpdateNowPlaying::replyFinished(QNetworkReply * reply)
     Q_CHECK_PTR(reply);
 
     // Log
-    QFile * logFile = m_mainWindow->getMediaManager()->getLogFile("lastFm");
+    QFile * logFile = m_mediaManager->getLogFile("lastFm");
     QTextStream stream(logFile);
     stream.setFieldAlignment(QTextStream::AlignLeft);
 

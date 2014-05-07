@@ -29,7 +29,7 @@ class CGetRecentTracks : public ILastFmService
 
 public:
 
-    CGetRecentTracks(CMainWindow * mainWindow, const QByteArray& sessionKey);
+    CGetRecentTracks(CMediaManager * mediaManager, const QByteArray& sessionKey);
 
 protected slots:
 

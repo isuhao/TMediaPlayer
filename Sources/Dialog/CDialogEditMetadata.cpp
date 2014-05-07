@@ -740,7 +740,7 @@ void CDialogEditMetadata::removeSelectedXiphTag()
 
     // Confirmation
     QMessageBox dialog(QMessageBox::Question, QString(), tr("Are you sure you want to remove this tag?"), QMessageBox::NoButton, this);
-    QPushButton * buttonYes = dialog.addButton(tr("Yes"), QMessageBox::YesRole);
+    /*QPushButton * buttonYes =*/ dialog.addButton(tr("Yes"), QMessageBox::YesRole);
     QPushButton * buttonNo = dialog.addButton(tr("No"), QMessageBox::NoRole);
 
     dialog.exec();

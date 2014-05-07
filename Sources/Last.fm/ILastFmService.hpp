@@ -26,7 +26,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QString>
 
 
-class CMainWindow;
+class CMediaManager;
 class QNetworkReply;
 class QNetworkAccessManager;
 
@@ -37,7 +37,7 @@ class ILastFmService : public QObject
 
 public:
 
-    ILastFmService(CMainWindow * mainWindow, const QByteArray& sessionKey);
+    ILastFmService(CMediaManager * mediaManager, const QByteArray& sessionKey);
     virtual ~ILastFmService();
 
     QByteArray getLastFmQuery(const QMap<QByteArray, QByteArray>& args) const;
@@ -55,7 +55,7 @@ protected:
     static const QByteArray m_secret;
     static const QString m_lastFmUrl;
 
-    CMainWindow * m_mainWindow;
+    CMediaManager * m_mediaManager;
     QByteArray m_sessionKey;
     QNetworkAccessManager * m_networkManager;
 };

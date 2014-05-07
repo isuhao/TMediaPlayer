@@ -21,6 +21,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "../CMainWindow.hpp"
 #include "../CMediaManager.hpp"
 #include <QPushButton>
+#include <taglib.h>
+#include <fmod/fmod.hpp>
 
 
 /**
@@ -44,14 +46,24 @@ m_mainWindow (mainWindow)
     // Versions
     const QString appVersion    = CMediaManager::getAppVersion();
     const QString appDate       = CMediaManager::getAppDate();
-    const QString FMODVersion   = "FMOD Ex 4.44.03";
-    const QString FMODCopyright = "FMOD Ex SoundSystem Copyright © 2005-2012 Firelight Technologies Pty, Ltd.";
+
+    QString fmodMajorVersion = QString::number((FMOD_VERSION & 0xFFFF0000) >> 16, 16);
+    QString fmodMinorVersion = QString::number((FMOD_VERSION & 0x0000FF00) >> 8, 16);
+    QString fmodPatchVersion = QString::number(FMOD_VERSION & 0x000000FF, 16);
+    const QString FMODVersion = QString("FMOD Ex %1.%2.%3").arg(fmodMajorVersion)
+                                                             .arg(fmodMinorVersion)
+                                                             .arg(fmodPatchVersion);
+
+    const QString FMODCopyright = QString::fromUtf8("FMOD Ex SoundSystem Copyright © 2005-2012 Firelight Technologies Pty, Ltd.");
     const QString musicBrainz   = tr("MusicBrainzId computation:\n%1\n%2").arg("Copyright (C) 2000 Robert Kaye")
                                                                           .arg("Copyright (C) 2007 Lukas Lalinsky");
-    const QString tagLibVersion = "TagLib 1.7.2 (license LGPL 2.1)";
+    const QString tagLibVersion = QString("TagLib %1.%2.%3 (license LGPL 2.1)").arg(TAGLIB_MAJOR_VERSION)
+                                                                               .arg(TAGLIB_MINOR_VERSION)
+                                                                               .arg(TAGLIB_PATCH_VERSION);
 
     m_uiWidget->textVersion->setText(QString("TMediaPlayer %1").arg(appVersion));
 
+    m_uiWidget->textInfos->setWordWrap(true);
     m_uiWidget->textInfos->setText(QString("TMediaPlayer %1 (%2)\n\n%3\n%4\n\n%5\n\n%6\n")
                                     .arg(appVersion)
                                     .arg(appDate)

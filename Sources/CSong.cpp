@@ -1900,10 +1900,9 @@ void CSong::setPosition(int position)
 
 void CSong::setVolume(int volume)
 {
-    Q_ASSERT(volume >= 0 && volume <= 100);
-
     if (m_sound && m_channel)
     {
+        volume = qBound(0, volume, 100);
         m_channel->setVolume(static_cast<float>(volume) / 100);
     }
 }
@@ -1932,7 +1931,9 @@ bool CSong::loadSound()
 {
     // Déjà initialisé
     if (m_sound && m_channel)
+    {
         return true;
+    }
 
     FMOD_RESULT res;
 

@@ -341,7 +341,7 @@ bool CCDRomDrive::hasCDInDrive()
             addSongsToTable(songs);
         }
 
-        CMusicBrainzLookup * lookup = new CMusicBrainzLookup(this, m_mainWindow);
+        /*CMusicBrainzLookup * lookup =*/ new CMusicBrainzLookup(this, m_mainWindow);
     }
 
     return (m_sound != nullptr);

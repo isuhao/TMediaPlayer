@@ -32,7 +32,7 @@ class CUpdateNowPlaying : public ILastFmService
 
 public:
 
-    CUpdateNowPlaying(CMainWindow * mainWindow, const QByteArray& sessionKey, CSong * song);
+    CUpdateNowPlaying(CMediaManager * mediaManager, const QByteArray& sessionKey, CSong * song);
 
 protected slots:
 

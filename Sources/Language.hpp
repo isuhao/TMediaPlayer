@@ -58,19 +58,19 @@ inline TLanguage getLanguageFromInteger(int language)
     {
         default:
         case  0: return LangUnknown;
-        case 11: return LangInstrumental;
-        case 12: return LangMultiple;
-        case 13: return LangFictive;
-        case  1: return LangEnglish;
-        case  2: return LangFrench;
-        case  3: return LangGerman;
-        case  4: return LangItalian;
-        case  5: return LangRussian;
-        case  6: return LangSpanish;
-        case  7: return LangChinese;
-        case  8: return LangHindi;
-        case  9: return LangPortuguese;
-        case 10: return LangArabic;
+        case  1: return LangInstrumental;
+        case  2: return LangMultiple;
+        case  3: return LangFictive;
+        case 10: return LangEnglish;
+        case 11: return LangFrench;
+        case 12: return LangGerman;
+        case 13: return LangItalian;
+        case 14: return LangRussian;
+        case 15: return LangSpanish;
+        case 16: return LangChinese;
+        case 17: return LangHindi;
+        case 18: return LangPortuguese;
+        case 19: return LangArabic;
     }
 }
 

@@ -942,6 +942,7 @@ QMimeData * CLibraryModel::mimeData(const QModelIndexList& indexes) const
     mimeData->setData("application/x-ted-media-list", data);
     return mimeData;
 #else
+    Q_UNUSED(indexes)
     return nullptr;
 #endif
 }

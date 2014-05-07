@@ -108,7 +108,6 @@ m_widgetLyrics         (nullptr),
 m_state                (Stopped),
 m_showRemainingTime    (false),
 m_repeatMode           (NoRepeat),
-m_isShuffle            (false),
 
 m_dialogNotifications  (nullptr),
 m_dialogLastPlays      (nullptr),
@@ -129,7 +128,7 @@ m_lastFmState                (NoScrobble)
     server->listen("tmediaplayer-" + CMediaManager::getAppVersion());
 #endif // T_NO_SINGLE_APP
 
-    setDockNestingEnabled(true);
+    connect(m_mediaManager, SIGNAL(informationNotified(const QString&)), this, SLOT(notifyInformation2(const QString&)));
 
     // Last.fm
     m_lastFmEnableScrobble = m_mediaManager->getSettings()->value("LastFm/EnableScrobble", false).toBool();
@@ -137,12 +136,70 @@ m_lastFmState                (NoScrobble)
     m_percentageBeforeScrobbling = m_mediaManager->getSettings()->value("LastFm/PercentageBeforeScrobbling", 60).toInt();
     m_lastFmKey = m_mediaManager->getSettings()->value("LastFm/SessionKey", "").toByteArray();
 
+    // Timers
+    connect(&m_timer, SIGNAL(timeout()), this, SLOT(updateTimer()));
+    connect(&m_timerCDRomDrives, SIGNAL(timeout()), this, SLOT(updateCDRomDrives()));
+}
+
+
+/**
+ * Libère les ressources utilisées par l'application.
+ */
+
+CMainWindow::~CMainWindow()
+{
+    m_timer.stop();
+    m_timerCDRomDrives.stop();
+
+    // Enregistrement des paramètres
+    m_mediaManager->getSettings()->setValue("Preferences/Repeat", m_repeatMode);
+
+    //dumpObjectTree();
+
+    delete m_listModel;
+    delete m_queue;
+
+    // Destruction des lecteurs de CD-ROM
+    for (QList<CCDRomDrive *>::ConstIterator drive = m_cdRomDrives.begin(); drive != m_cdRomDrives.end(); ++drive)
+    {
+        delete *drive;
+    }
+
+    m_cdRomDrives.clear();
+
+    // Destruction de la médiathèque
+    if (m_library)
+    {
+        m_library->updateDatabase();
+        m_library->deleteSongs();
+        delete m_library;
+    }
+
+    delete m_uiWidget;
+}
+
+
+/**
+ * Initialise l'interface graphique et charge les données.
+ */
+
+bool CMainWindow::initWindow()
+{
+    static bool init = false;
+
+    if (init)
+    {
+        m_mediaManager->logError(tr("the application has already been initialized"), __FUNCTION__, __FILE__, __LINE__);
+        return true;
+    }
+
+
+    // Pour organiser les docks sur plusieurs lignes ou colonnes
+    setDockNestingEnabled(true);
 
     // Initialisation de l'interface graphique
     m_uiWidget->setupUi(this);
     m_uiWidget->actionTogglePlay->setShortcut(Qt::Key_Space);
-
-    connect(m_mediaManager, SIGNAL(informationNotified(const QString&)), this, SLOT(notifyInformation2(const QString&)));
 
     // Barre d'état
     QTime duration(0, 0);
@@ -231,135 +288,6 @@ m_lastFmState                (NoScrobble)
     repeatActionGroup->addAction(m_uiWidget->actionNoRepeat);
     repeatActionGroup->addAction(m_uiWidget->actionRepeatList);
     repeatActionGroup->addAction(m_uiWidget->actionRepeatSong);
-
-    // Timers
-    connect(&m_timer, SIGNAL(timeout()), this, SLOT(updateTimer()));
-    connect(&m_timerCDRomDrives, SIGNAL(timeout()), this, SLOT(updateCDRomDrives()));
-}
-
-
-/**
- * Libère les ressources utilisées par l'application.
- */
-
-CMainWindow::~CMainWindow()
-{
-    m_timer.stop();
-    m_timerCDRomDrives.stop();
-
-    // Enregistrement des paramètres
-    m_mediaManager->getSettings()->setValue("Preferences/Shuffle", m_isShuffle);
-    m_mediaManager->getSettings()->setValue("Preferences/Repeat", m_repeatMode);
-
-    //dumpObjectTree();
-
-    delete m_listModel;
-    delete m_queue;
-
-    // Destruction des lecteurs de CD-ROM
-    for (QList<CCDRomDrive *>::ConstIterator drive = m_cdRomDrives.begin(); drive != m_cdRomDrives.end(); ++drive)
-    {
-        delete *drive;
-    }
-
-    m_cdRomDrives.clear();
-
-    // Destruction de la médiathèque
-    if (m_library)
-    {
-        m_library->updateDatabase();
-        m_library->deleteSongs();
-        delete m_library;
-    }
-
-    delete m_uiWidget;
-}
-
-
-/**
- * Initialise l'interface graphique et charge les données.
- */
-
-bool CMainWindow::initWindow()
-{
-    static bool init = false;
-
-    if (init)
-    {
-        m_mediaManager->logError(tr("the application has already been initialized"), __FUNCTION__, __FILE__, __LINE__);
-        return true;
-    }
-
-
-    // Last.fm
-    if (m_lastFmEnableScrobble)
-    {
-        QSqlDatabase dataBase = QSqlDatabase::addDatabase("QSQLITE", "lastfm");
-        dataBase.setDatabaseName(m_mediaManager->getApplicationPath() + "lastfm.sqlite");
-
-        if (!dataBase.open())
-        {
-            m_mediaManager->logError(tr("Erreur d'ouverture de la base lastfm.sqlite"), __FUNCTION__, __FILE__, __LINE__);
-        }
-        else
-        {
-            QSqlQuery query(dataBase);
-            QStringList tables = dataBase.tables(QSql::Tables);
-
-            if (!tables.contains("scrobbles"))
-            {
-                if (!query.exec("CREATE TABLE scrobbles ("
-                                    "time TIMESTAMP NOT NULL,"
-                                    "title VARCHAR(512) NOT NULL,"
-                                    "artist VARCHAR(512) NOT NULL,"
-                                    "album VARCHAR(512),"
-                                    "albumArtist VARCHAR(512),"
-                                    "duration INTEGER,"
-                                    "trackNumber INTEGER"
-                                ")"))
-                {
-                    m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-                }
-            }
-
-            if (!query.exec("SELECT time, title, artist, album, albumArtist, duration, trackNumber FROM scrobbles ORDER BY time"))
-            {
-                m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
-            }
-            else
-            {
-                QSqlQuery query2(dataBase);
-                query2.prepare("DELETE FROM scrobbles WHERE time = ?");
-
-                // Liste des scrobbles
-                while (query.next())
-                {
-                    CScrobble::TScrobbleInfos scrobble;
-
-                    scrobble.timestamp   = query.value(0).toInt();
-                    scrobble.title       = query.value(1).toString();
-                    scrobble.artist      = query.value(2).toString();
-                    scrobble.album       = query.value(3).toString();
-                    scrobble.albumArtist = query.value(4).toString();
-                    scrobble.duration    = query.value(5).toInt();
-                    scrobble.trackNumber = query.value(6).toInt();
-
-                    // Suppression de l'enregistrement
-                    query2.bindValue(0, scrobble.timestamp);
-
-                    if (!query2.exec())
-                    {
-                        m_mediaManager->logDatabaseError(query2.lastError().text(), query2.lastQuery(), __FILE__, __LINE__);
-                    }
-
-                    // Tentative de scrobble
-                    /*CScrobble * queryScrobble =*/ new CScrobble(this, m_lastFmKey, scrobble);
-                }
-            }
-
-            dataBase.close();
-        }
-    }
 
 
     // Barre de contrôle
@@ -847,7 +775,7 @@ void CMainWindow::notifyInformation2(const QString& message)
 
 void CMainWindow::connectToLastFm()
 {
-    new CAuthentication(this);
+    new CAuthentication(m_mediaManager);
 }
 
 
@@ -948,7 +876,7 @@ void CMainWindow::play()
         // Recherche du morceau sélectionné
         m_currentSongItem = m_currentSongTable->getSelectedSongItem();
         
-        if (m_isShuffle)
+        if (m_mediaManager->isShuffle())
         {
             m_currentSongTable->initShuffle(m_currentSongItem);
         }
@@ -956,7 +884,7 @@ void CMainWindow::play()
         if (m_currentSongItem == nullptr)
         {
             // Lecture du premier morceau de la liste
-            m_currentSongItem = m_currentSongTable->getNextSong(nullptr, m_isShuffle);
+            m_currentSongItem = m_currentSongTable->getNextSong(nullptr, m_mediaManager->isShuffle());
 
             if (m_currentSongItem && !m_currentSongItem->getSong()->isEnabled())
             {
@@ -1071,14 +999,14 @@ void CMainWindow::previousSong()
 
         setState(Stopped);
 
-        CMediaTableItem * songItem = m_currentSongTable->getPreviousSong(m_currentSongItem, m_isShuffle);
+        CMediaTableItem * songItem = m_currentSongTable->getPreviousSong(m_currentSongItem, m_mediaManager->isShuffle());
 
         // Premier morceau de la liste
         if (!songItem)
         {
             if (m_repeatMode == RepeatList)
             {
-                songItem = m_currentSongTable->getLastSong(m_isShuffle);
+                songItem = m_currentSongTable->getLastSong(m_mediaManager->isShuffle());
 
                 if (!songItem)
                 {
@@ -1161,7 +1089,7 @@ void CMainWindow::nextSong()
 
         if (m_repeatMode != RepeatSong)
         {
-            m_currentSongItem = m_currentSongTable->getNextSong(m_currentSongItem, m_isShuffle);
+            m_currentSongItem = m_currentSongTable->getNextSong(m_currentSongItem, m_mediaManager->isShuffle());
         }
 
         if (m_currentSongItem && !m_currentSongItem->getSong()->isEnabled())
@@ -1173,7 +1101,7 @@ void CMainWindow::nextSong()
         // Fin de la liste et répétition de la liste activée
         if (!m_currentSongItem && m_repeatMode == RepeatList)
         {
-            m_currentSongItem = m_currentSongTable->getNextSong(nullptr, m_isShuffle);
+            m_currentSongItem = m_currentSongTable->getNextSong(nullptr, m_mediaManager->isShuffle());
         }
 
         if (!m_currentSongItem)
@@ -1264,7 +1192,7 @@ void CMainWindow::playSong(CMediaTableItem * songItem)
 
     m_currentSongItem = songItem;
 
-    if (m_isShuffle && (m_state == Stopped || m_currentSongTable != m_displayedSongTable))
+    if (m_mediaManager->isShuffle() && (m_state == Stopped || m_currentSongTable != m_displayedSongTable))
     {
         m_displayedSongTable->initShuffle(m_currentSongItem);
     }
@@ -1341,7 +1269,7 @@ void CMainWindow::setRepeatMode(TRepeatMode repeatMode)
 
 void CMainWindow::setShuffle()
 {
-    setShuffle(!m_isShuffle);
+    setShuffle(!m_mediaManager->isShuffle());
 }
 
 #endif
@@ -1354,17 +1282,16 @@ void CMainWindow::setShuffle()
 
 void CMainWindow::setShuffle(bool shuffle)
 {
-    if (shuffle != m_isShuffle)
-    {
-        m_isShuffle = shuffle;
-        m_uiControl->btnShuffle->setIcon(QPixmap(m_isShuffle ? ":/icons/shuffle_on" : ":/icons/shuffle_off"));
-        m_uiWidget->actionShuffle->setChecked(shuffle);
+    m_mediaManager->setShuffle(shuffle);
+    bool isShuffle = m_mediaManager->isShuffle();
 
-        // Mélange de la liste en cours de lecture
-        if (m_isShuffle && m_currentSongItem != nullptr)
-        {
-            m_currentSongTable->initShuffle(m_currentSongItem);
-        }
+    m_uiControl->btnShuffle->setIcon(QPixmap(isShuffle ? ":/icons/shuffle_on" : ":/icons/shuffle_off"));
+    m_uiWidget->actionShuffle->setChecked(isShuffle);
+
+    // Mélange de la liste en cours de lecture
+    if (isShuffle && m_currentSongItem != nullptr)
+    {
+        m_currentSongTable->initShuffle(m_currentSongItem);
     }
 }
 
@@ -1389,22 +1316,6 @@ void CMainWindow::setMute(bool mute)
 
     m_uiWidget->actionMute->setIcon(QPixmap(isMute ? ":/icons/muet" : ":/icons/volume"));
     m_uiControl->btnMute->setIcon(QPixmap(isMute ? ":/icons/muet" : ":/icons/volume"));
-/*
-    if (mute != m_isMute)
-    {
-        m_isMute = mute;
-
-        if (m_currentSongItem)
-        {
-            m_currentSongItem->getSong()->setMute(m_isMute);
-        }
-
-        m_uiWidget->actionMute->setChecked(m_isMute);
-
-        m_uiWidget->actionMute->setIcon(QPixmap(m_isMute ? ":/icons/muet" : ":/icons/volume"));
-        m_uiControl->btnMute->setIcon(QPixmap(m_isMute ? ":/icons/muet" : ":/icons/volume"));
-    }
-*/
 }
 
 
@@ -1850,7 +1761,7 @@ void CMainWindow::relocateSong()
         if (newSongId >= 0)
         {
             QMessageBox dialog(QMessageBox::Question, QString(), tr("This file is already in the library. Do you want to merge the two songs?"), QMessageBox::NoButton, this);
-            QPushButton * buttonYes = dialog.addButton(tr("Yes"), QMessageBox::YesRole);
+            /*QPushButton * buttonYes =*/ dialog.addButton(tr("Yes"), QMessageBox::YesRole);
             QPushButton * buttonNo = dialog.addButton(tr("No"), QMessageBox::NoRole);
 
             dialog.exec();
@@ -2223,7 +2134,7 @@ void CMainWindow::removeSelectedItem()
     {
         // Confirmation
         QMessageBox dialog(QMessageBox::Question, QString(), tr("Are you sure you want to delete this playlist?"), QMessageBox::NoButton, this);
-        QPushButton * buttonYes = dialog.addButton(tr("Yes"), QMessageBox::YesRole);
+        /*QPushButton * buttonYes =*/ dialog.addButton(tr("Yes"), QMessageBox::YesRole);
         QPushButton * buttonNo = dialog.addButton(tr("No"), QMessageBox::NoRole);
 
         dialog.exec();
@@ -2443,7 +2354,7 @@ void CMainWindow::updateTimer()
             {
                 if (m_lastFmTimeListened > m_delayBeforeNotification)
                 {
-                    CUpdateNowPlaying * query = new CUpdateNowPlaying(this, m_lastFmKey, m_currentSongItem->getSong());
+                    /*CUpdateNowPlaying * query =*/ new CUpdateNowPlaying(m_mediaManager, m_lastFmKey, m_currentSongItem->getSong());
                     m_lastFmState = Notified;
                 }
             }
@@ -2451,7 +2362,7 @@ void CMainWindow::updateTimer()
             {
                 if (m_lastFmTimeListened > 4 * 60000 || m_lastFmTimeListened > m_currentSongItem->getSong()->getDuration() * m_percentageBeforeScrobbling / 100)
                 {
-                    CScrobble * query = new CScrobble(this, m_lastFmKey, m_currentSongItem->getSong());
+                    /*CScrobble * query =*/ new CScrobble(m_mediaManager, m_lastFmKey, m_currentSongItem->getSong());
                     m_lastFmState = Scrobbled;
                 }
             }
@@ -2554,6 +2465,8 @@ void CMainWindow::displaySongTable(CMediaTableView * songTable)
 
 /**
  * Initialise FMOD.
+ *
+ * \todo Déplacer le contenu vers CMediaManager::initSoundSystem, puis supprimer cette méthode.
  */
 
 void CMainWindow::initSoundSystem()
@@ -2764,7 +2677,7 @@ void CMainWindow::closeEvent(QCloseEvent * event)
     if (m_currentSongItem)
     {
         QMessageBox dialog(QMessageBox::Question, QString(), tr("A song is being played. Are you sure you want to quit the application?"), QMessageBox::NoButton, this);
-        QPushButton * buttonYes = dialog.addButton(tr("Yes"), QMessageBox::YesRole);
+        /*QPushButton * buttonYes =*/ dialog.addButton(tr("Yes"), QMessageBox::YesRole);
         QPushButton * buttonNo = dialog.addButton(tr("No"), QMessageBox::NoRole);
 
         dialog.exec();

@@ -19,9 +19,9 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CScrobble.hpp"
 #include "../CSong.hpp"
-#include "../CMainWindow.hpp"
 #include "../CMediaManager.hpp"
 
+#include <QFile>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -37,13 +37,13 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * Construit la requête avec un morceau.
  * La date de lecture est la date actuelle.
  *
- * \param application Pointeur sur la classe principale de l'application.
- * \param sessionKey  Clé d'identification pour la session.
- * \param song        Pointeur sur le morceau écouté.
+ * \param mediaManager Pointeur sur le gestionnaire de médias.
+ * \param sessionKey   Clé d'identification pour la session.
+ * \param song         Pointeur sur le morceau écouté.
  */
 
-CScrobble::CScrobble(CMainWindow * mainWindow, const QByteArray& sessionKey, CSong * song) :
-ILastFmService (mainWindow, sessionKey)
+CScrobble::CScrobble(CMediaManager * mediaManager, const QByteArray& sessionKey, CSong * song) :
+ILastFmService (mediaManager, sessionKey)
 {
     Q_CHECK_PTR(song);
 
@@ -64,13 +64,13 @@ ILastFmService (mainWindow, sessionKey)
  * Construit la requête avec des informations déjà définie.
  * Permet de scrobbler un morceau anciennement écouté.
  *
- * \param mainWindow Pointeur sur la fenêtre principale de l'application.
- * \param sessionKey Clé d'identification pour la session.
- * \param song       Informations sur le scrobble.
+ * \param mediaManager Pointeur sur le gestionnaire de médias.
+ * \param sessionKey   Clé d'identification pour la session.
+ * \param song         Informations sur le scrobble.
  */
 
-CScrobble::CScrobble(CMainWindow * mainWindow, const QByteArray& sessionKey, const TScrobbleInfos& song) :
-ILastFmService (mainWindow, sessionKey),
+CScrobble::CScrobble(CMediaManager * mediaManager, const QByteArray& sessionKey, const TScrobbleInfos& song) :
+ILastFmService (mediaManager, sessionKey),
 m_song         (song)
 {
     sendRequest();
@@ -121,7 +121,7 @@ void CScrobble::sendRequest()
     QByteArray content = getLastFmQuery(args);
 
     // Log
-    QFile * logFile = m_mainWindow->getMediaManager()->getLogFile("lastFm");
+    QFile * logFile = m_mediaManager->getLogFile("lastFm");
     QTextStream stream(logFile);
     stream.setFieldAlignment(QTextStream::AlignLeft);
 
@@ -149,7 +149,7 @@ void CScrobble::sendRequest()
 void CScrobble::logError()
 {
     QSqlDatabase dataBase = QSqlDatabase::addDatabase("QSQLITE", "lastfm");
-    dataBase.setDatabaseName(m_mainWindow->getMediaManager()->getApplicationPath() + "lastfm.sqlite");
+    dataBase.setDatabaseName(m_mediaManager->getApplicationPath() + "lastfm.sqlite");
 
     if (!dataBase.open())
     {
@@ -172,7 +172,7 @@ void CScrobble::logError()
                             "trackNumber INTEGER"
                         ")"))
         {
-            m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+            m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
             dataBase.close();
             return;
         }
@@ -190,7 +190,7 @@ void CScrobble::logError()
 
     if (!query.exec())
     {
-        m_mainWindow->getMediaManager()->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
+        m_mediaManager->logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         dataBase.close();
         return;
     }
@@ -214,7 +214,7 @@ void CScrobble::replyFinished(QNetworkReply * reply)
     QByteArray data = reply->readAll();
 
     // Log
-    QFile * logFile = m_mainWindow->getMediaManager()->getLogFile("lastFm");
+    QFile * logFile = m_mediaManager->getLogFile("lastFm");
     QTextStream stream(logFile);
     stream.setFieldAlignment(QTextStream::AlignLeft);
 
@@ -266,11 +266,11 @@ void CScrobble::replyFinished(QNetworkReply * reply)
 
     if (status)
     {
-        m_mainWindow->getMediaManager()->notifyInformation(tr("Song scrobbled to Last.fm (%1 by %2)").arg(m_song.title).arg(m_song.artist));
+        m_mediaManager->notifyInformation(tr("Song scrobbled to Last.fm (%1 by %2)").arg(m_song.title).arg(m_song.artist));
     }
     else
     {
-        m_mainWindow->getMediaManager()->notifyInformation(tr("Can't scrobble the song to Last.fm (%1 by %2)").arg(m_song.title).arg(m_song.artist));
+        m_mediaManager->notifyInformation(tr("Can't scrobble the song to Last.fm (%1 by %2)").arg(m_song.title).arg(m_song.artist));
     }
 
     reply->deleteLater();

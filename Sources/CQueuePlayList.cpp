@@ -23,7 +23,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CStaticList.hpp"
 #include "CDynamicList.hpp"
 #include "CLibrary.hpp"
-#include "CDialogEditSong.hpp"
+#include "Dialog/CDialogEditSong.hpp"
 #include "Utils.hpp"
 
 #include <QKeyEvent>

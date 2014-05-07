@@ -18,7 +18,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "CDialogEditXiphComment.hpp"
-#include "CMainWindow.hpp"
+#include "../CMainWindow.hpp"
 
 #include <QPushButton>
 #include <QMessageBox>
