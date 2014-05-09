@@ -51,7 +51,7 @@ public:
 
 signals:
 
-    void closed(); ///< Signal émis lorsque la boite de dialogue est fermée.
+    void closed(); ///< Signal Ã©mis lorsque la boite de dialogue est fermÃ©e.
 
 protected:
 

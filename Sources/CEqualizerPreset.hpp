@@ -28,14 +28,14 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 class CMediaManager;
 
 
-/// Class contenant un préréglage d'égaliseur.
+/// Class contenant un prÃ©rÃ©glage d'Ã©galiseur.
 class CEqualizerPreset : public QObject
 {
     Q_OBJECT
 
 public:
 
-    /// Liste des fréquences prédéfinies.
+    /// Liste des frÃ©quences prÃ©dÃ©finies.
     enum TFrequency
     {
         Frequency32  = 0, ///< 32 Hz.
@@ -70,9 +70,9 @@ public:
 private:
 
     CMediaManager * m_mediaManager; ///< Pointeur sur la classe principale de l'application.
-    int m_id;                       ///< Identifiant du préréglage en base de données.
-    QString m_name;                 ///< Nom du préréglage.
-    double m_value[10];             ///< Valeurs de gain de l'égaliseur.
+    int m_id;                       ///< Identifiant du prÃ©rÃ©glage en base de donnÃ©es.
+    QString m_name;                 ///< Nom du prÃ©rÃ©glage.
+    double m_value[10];             ///< Valeurs de gain de l'Ã©galiseur.
 };
 
 

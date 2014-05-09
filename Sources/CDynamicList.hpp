@@ -56,6 +56,7 @@ public:
 public slots:
 
     void tryUpdateList();
+    void updateList();
 
 signals:
 
@@ -63,8 +64,7 @@ signals:
     void listUpdated();  ///< Signal émis lorsque la liste a été mise à jour.
 
 protected:
-    
-    void updateList();
+
     virtual bool updateDatabase();
     virtual void removeFromDatabase();
     void loadFromDatabase();

@@ -49,13 +49,14 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  */
 
 CLibraryView::CLibraryView(CMainWindow * mainWindow) :
-QTreeView        (mainWindow),
-m_mainWindow     (mainWindow),
-m_model          (nullptr),
-m_menuPlaylist   (nullptr),
-m_menuFolder     (nullptr),
-m_menuCDRomDrive (nullptr),
-m_menuDefault    (nullptr)
+QTreeView             (mainWindow),
+m_mainWindow          (mainWindow),
+m_model               (nullptr),
+m_menuPlaylist        (nullptr),
+m_menuDynamicPlaylist (nullptr),
+m_menuFolder          (nullptr),
+m_menuCDRomDrive      (nullptr),
+m_menuDefault         (nullptr)
 {
     Q_CHECK_PTR(m_mainWindow);
 
@@ -79,6 +80,12 @@ m_menuDefault    (nullptr)
     m_menuPlaylist = new QMenu(this);
     m_menuPlaylist->addAction(tr("Edit..."), m_mainWindow, SLOT(editSelectedItem()));
     m_menuPlaylist->addAction(tr("Remove"), m_mainWindow, SLOT(removeSelectedItem()));
+
+    m_menuDynamicPlaylist = new QMenu(this);
+    m_menuDynamicPlaylist->addAction(tr("Update"), this, SLOT(updateSelectedList()));
+    m_menuDynamicPlaylist->addSeparator();
+    m_menuDynamicPlaylist->addAction(tr("Edit..."), m_mainWindow, SLOT(editSelectedItem()));
+    m_menuDynamicPlaylist->addAction(tr("Remove"), m_mainWindow, SLOT(removeSelectedItem()));
 
     m_menuFolder = new QMenu(this);
     m_menuFolder->addAction(tr("Edit..."), m_mainWindow, SLOT(editSelectedItem()));
@@ -462,8 +469,13 @@ void CLibraryView::openCustomMenuProject(const QPoint& point)
 
             if (songTable)
             {
+                // Menu pour une liste de lecture dynamique
+                if (qobject_cast<CDynamicList *>(songTable))
+                {
+                    menu = m_menuDynamicPlaylist;
+                }
                 // Menu pour une liste de lecture
-                if (qobject_cast<IPlayList *>(songTable))
+                else if (qobject_cast<IPlayList *>(songTable))
                 {
                     menu = m_menuPlaylist;
                 }
@@ -563,5 +575,20 @@ void CLibraryView::informationsAboutCDRomDrive()
     {
         CDialogCDRomDriveInfos * dialog = new CDialogCDRomDriveInfos(cdRomDrive, m_mainWindow);
         dialog->show();
+    }
+}
+
+
+/**
+ * Force la mise à jour de la liste dynamique sélectionnée.
+ */
+
+void CLibraryView::updateSelectedList()
+{
+    CDynamicList * dynamicList = qobject_cast<CDynamicList *>(getSelectedSongTable());
+
+    if (dynamicList)
+    {
+        dynamicList->updateList();
     }
 }

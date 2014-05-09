@@ -74,7 +74,7 @@ public:
     void notifyInformation(const QString& message);
 
 
-    // Dossiers de la médiathèque
+    // Dossiers de la mÃ©diathÃ¨que
     inline QList<CLibraryFolder *> getLibraryFolders() const;
     CLibraryFolder * getLibraryFolder(int folderId) const;
     int getLibraryFolderId(const QString& fileName) const;
@@ -82,7 +82,7 @@ public:
     void removeLibraryFolder(CLibraryFolder * folder);
 
 
-    // Égaliseur
+    // Ã‰galiseur
     void setEqualizerGain(CEqualizerPreset::TFrequency frequency, double gain);
     double getEqualizerGain(CEqualizerPreset::TFrequency frequency) const;
     void resetEqualizer();
@@ -126,7 +126,7 @@ public slots:
 signals:
 
     void informationNotified(const QString& message);
-    void songModified(CSong * song); ///< Signal émis lorsque les informations d'un morceau sont modifiées.
+    void songModified(CSong * song); ///< Signal Ã©mis lorsque les informations d'un morceau sont modifiÃ©es.
 
 private:
 
@@ -134,23 +134,23 @@ private:
     void createDatabaseMySQL();
     void createDatabasePostgreSQL();
 
-    QString m_applicationPath;                ///< Répertoire contenant l'application.
-    QSqlDatabase m_dataBase;                  ///< Base de données.
-    QTranslator m_translator;                 ///< Objet utilisé pour la traduction de l'application.
-    QSettings * m_settings;                   ///< Paramètres de l'application.
-    FMOD::System * m_soundSystem;             ///< Système de son de FMOD.
+    QString m_applicationPath;                ///< RÃ©pertoire contenant l'application.
+    QSqlDatabase m_dataBase;                  ///< Base de donnÃ©es.
+    QTranslator m_translator;                 ///< Objet utilisÃ© pour la traduction de l'application.
+    QSettings * m_settings;                   ///< ParamÃ¨tres de l'application.
+    FMOD::System * m_soundSystem;             ///< SystÃ¨me de son de FMOD.
     QMap<QString, QFile *> m_logList;         ///< Liste des fichiers de log ouverts.
     QList<TNotification> m_infosNotified;     ///< Liste des notifications.
-    QList<CLibraryFolder *> m_libraryFolders; ///< Liste des répertoires de la médiathèque.
-    bool m_isMute;                            ///< Indique si le son est coupé.
+    QList<CLibraryFolder *> m_libraryFolders; ///< Liste des rÃ©pertoires de la mÃ©diathÃ¨que.
+    bool m_isMute;                            ///< Indique si le son est coupÃ©.
     int m_volume;                             ///< Volume sonore (entre 0 et 100).
-    bool m_isShuffle;                         ///< Indique si la lecture aléatoire est activée.
+    bool m_isShuffle;                         ///< Indique si la lecture alÃ©atoire est activÃ©e.
 
-    // Égaliseur
-    double m_equalizerGains[10];                  ///< Gains de l'égaliseur.
-    FMOD::DSP * m_dsp[10];                        ///< Gains de l'égaliseur pour FMOD.
-    QList<CEqualizerPreset *> m_equalizerPresets; ///< Liste des préréglages d'égaliseur.
-    CEqualizerPreset * m_currentEqualizerPreset;  ///< Préréglage de l'égaliseur actuel.
+    // Ã‰galiseur
+    double m_equalizerGains[10];                  ///< Gains de l'Ã©galiseur.
+    FMOD::DSP * m_dsp[10];                        ///< Gains de l'Ã©galiseur pour FMOD.
+    QList<CEqualizerPreset *> m_equalizerPresets; ///< Liste des prÃ©rÃ©glages d'Ã©galiseur.
+    CEqualizerPreset * m_currentEqualizerPreset;  ///< PrÃ©rÃ©glage de l'Ã©galiseur actuel.
 };
 
 
@@ -179,9 +179,9 @@ inline CEqualizerPreset * CMediaManager::getCurrentEqualizerPreset() const
 
 
 /**
- * Indique si le son est coupé.
+ * Indique si le son est coupÃ©.
  *
- * \return Booléen.
+ * \return BoolÃ©en.
  */
 
 inline bool CMediaManager::isMute() const
@@ -203,9 +203,9 @@ inline int CMediaManager::getVolume() const
 
 
 /**
- * Indique si la lecture aléatoire est active.
+ * Indique si la lecture alÃ©atoire est active.
  *
- * \return Booléen.
+ * \return BoolÃ©en.
  */
 
 inline bool CMediaManager::isShuffle() const

@@ -36,7 +36,7 @@ CMediaTableView (mainWindow)
 {
     m_model->setCanDrop(true);
 
-    // Glisser-déposer
+    // Glisser-dÃ©poser
     setDropIndicatorShown(false);
     setAcceptDrops(true);
 
@@ -51,14 +51,14 @@ CQueuePlayList::~CQueuePlayList()
 
 
 /**
- * Indique si la liste de morceaux a été modifiée.
+ * Indique si la liste de morceaux a Ã©tÃ© modifiÃ©e.
  *
- * \return Booléen (toujours false).
+ * \return BoolÃ©en (toujours false).
  */
 
 bool CQueuePlayList::isModified() const
 {
-    // La file d'attente n'est pas enregistrée en base de données
+    // La file d'attente n'est pas enregistrÃ©e en base de donnÃ©es
     return false;
 }
 
@@ -66,7 +66,7 @@ bool CQueuePlayList::isModified() const
 /**
  * Ajoute plusieurs morceaux.
  *
- * \param songs    Liste de morceaux à ajouter.
+ * \param songs    Liste de morceaux Ã  ajouter.
  * \param position Position dans la liste.
  */
 
@@ -94,23 +94,23 @@ void CQueuePlayList::addSongs(const QList<CSong *>& songs, int position)
 
 
 /**
- * Met à jour la base de données avec les informations de la table.
- * La file d'attente n'est pas enregistrée en base de données, donc cette méthode ne fait rien.
+ * Met Ã  jour la base de donnÃ©es avec les informations de la table.
+ * La file d'attente n'est pas enregistrÃ©e en base de donnÃ©es, donc cette mÃ©thode ne fait rien.
  *
- * \return Booléen indiquant le succès de l'opération (toujours false).
+ * \return BoolÃ©en indiquant le succÃ¨s de l'opÃ©ration (toujours false).
  */
 
 bool CQueuePlayList::updateDatabase()
 {
-    // La file d'attente n'est pas enregistrée en base de données
+    // La file d'attente n'est pas enregistrÃ©e en base de donnÃ©es
     return false;
 }
 
 
 /**
- * Enlève une liste de morceaux de la liste de lecture.
+ * EnlÃ¨ve une liste de morceaux de la liste de lecture.
  *
- * \param songItemList Liste des morceaux à enlever.
+ * \param songItemList Liste des morceaux Ã  enlever.
  */
 
 void CQueuePlayList::removeSongs(const QList<CMediaTableItem *>& songItemList)
@@ -145,22 +145,22 @@ void CQueuePlayList::removeSongs(const QList<CMediaTableItem *>& songItemList)
 
 
 /**
- * Retire les morceaux sélectionnés de la liste.
+ * Retire les morceaux sÃ©lectionnÃ©s de la liste.
  * Affiche une confirmation.
  *
- * \todo Si la liste est en cours de lecture, il faut mettre à jour le pointeur sur le morceau en cours.
+ * \todo Si la liste est en cours de lecture, il faut mettre Ã  jour le pointeur sur le morceau en cours.
  */
 
 void CQueuePlayList::removeSelectedSongs()
 {
-    // Liste des morceaux sélectionnés
+    // Liste des morceaux sÃ©lectionnÃ©s
     const QModelIndexList indexList = selectionModel()->selectedRows();
 
-    // Aucun morceau à supprimer
+    // Aucun morceau Ã  supprimer
     if (indexList.isEmpty())
         return;
 
-    // Si on est en train de lire un morceau de la liste, il faut mettre à jour les informations sur le morceau courant
+    // Si on est en train de lire un morceau de la liste, il faut mettre Ã  jour les informations sur le morceau courant
     CMediaTableItem * currentItem = m_model->getCurrentSongItem();
     CSong * currentSong = (currentItem ? currentItem->getSong() : nullptr);
 
@@ -177,7 +177,7 @@ void CQueuePlayList::removeSelectedSongs()
 
     QList<CMediaTableItem *> songItemList;
 
-    // On parcourt la liste des morceaux sélectionnés
+    // On parcourt la liste des morceaux sÃ©lectionnÃ©s
     for (QModelIndexList::ConstIterator it = indexList.begin(); it != indexList.end(); ++it)
     {
         CMediaTableItem * songItem = m_model->getSongItem(*it);
@@ -196,7 +196,7 @@ void CQueuePlayList::removeSelectedSongs()
 
     selectionModel()->clearSelection();
 
-    // On change le morceau courant affiché dans la liste
+    // On change le morceau courant affichÃ© dans la liste
     if (currentSong)
     {
         CMediaTableItem * currentItemAfter = getFirstSongItem(currentSong);
@@ -219,9 +219,9 @@ void CQueuePlayList::removeSelectedSongs()
 
 /**
  * Gestion des touches du clavier.
- * Les touches Entrée et Supprimer sont gérées.
+ * Les touches EntrÃ©e et Supprimer sont gÃ©rÃ©es.
  *
- * \param event Évènement du clavier.
+ * \param event Ã‰vÃ¨nement du clavier.
  */
 
 void CQueuePlayList::keyPressEvent(QKeyEvent * event)
@@ -240,10 +240,10 @@ void CQueuePlayList::keyPressEvent(QKeyEvent * event)
 
 
 /**
- * Gestion du glisser-déposer.
+ * Gestion du glisser-dÃ©poser.
  * S'occupe d'afficher la ligne indiquant la nouvelle position des items.
  *
- * \param event Évènement de déplacement.
+ * \param event Ã‰vÃ¨nement de dÃ©placement.
  */
 
 void CQueuePlayList::dragMoveEvent(QDragMoveEvent * event)
@@ -322,7 +322,7 @@ void CQueuePlayList::dropEvent(QDropEvent * event)
         removeAllSongsFromTable();
         addSongs(songs, false);
 
-        // Modification de la sélection
+        // Modification de la sÃ©lection
         QItemSelection selection;
         selection.select(m_model->index(row - numRowsBeforeDest, 0), m_model->index(row - numRowsBeforeDest + numSongs - 1, 0));
         selectionModel()->select(selection, QItemSelectionModel::Current | QItemSelectionModel::Select | QItemSelectionModel::Rows);

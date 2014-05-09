@@ -27,7 +27,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 /**
  * Construit la boite de dialogue.
  *
- * \param mainWindow Pointeur sur la fenêtre principale de l'application.
+ * \param mainWindow Pointeur sur la fenÃªtre principale de l'application.
  */
 
 CDialogEditXiphComment::CDialogEditXiphComment(CMainWindow * mainWindow, const QString& tag, const QString& value) :
@@ -45,7 +45,7 @@ m_mainWindow (mainWindow)
     connect(btnOK, SIGNAL(clicked()), this, SLOT(accept()));
     connect(btnCancel, SIGNAL(clicked()), this, SLOT(reject()));
 
-    // Tags prédéfinis
+    // Tags prÃ©dÃ©finis
     QStringList tags;
     
     tags.append(tag);
@@ -83,7 +83,7 @@ m_mainWindow (mainWindow)
 
 
 /**
- * Détruit la boite de dialogue.
+ * DÃ©truit la boite de dialogue.
  */
 
 CDialogEditXiphComment::~CDialogEditXiphComment()

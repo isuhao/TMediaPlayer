@@ -27,7 +27,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
  * Constructeur de la boite de dialogue.
  *
  * \param cdRomDrive Pointeur sur le lecteur de CD-ROM.
- * \param mainWindow Pointeur sur la fenêtre principale de l'application.
+ * \param mainWindow Pointeur sur la fenÃªtre principale de l'application.
  */
 
 CDialogCDRomDriveInfos::CDialogCDRomDriveInfos(CCDRomDrive * cdRomDrive, CMainWindow * mainWindow) :

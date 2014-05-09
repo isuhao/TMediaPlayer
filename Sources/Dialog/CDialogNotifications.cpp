@@ -26,7 +26,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 /**
  * Constructeur de la boite de dialogue.
  *
- * \param mainWindow Pointeur sur la fenêtre principale de l'application.
+ * \param mainWindow Pointeur sur la fenÃªtre principale de l'application.
  */
 
 CDialogNotifications::CDialogNotifications(CMainWindow * mainWindow) :
@@ -66,7 +66,7 @@ m_mainWindow (mainWindow)
 
 
 /**
- * Détruit la boite de dialogue.
+ * DÃ©truit la boite de dialogue.
  */
 
 CDialogNotifications::~CDialogNotifications()

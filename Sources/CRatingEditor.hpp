@@ -68,8 +68,8 @@ private:
 
      CRating m_rating;
      CRating m_saveRating;
-     bool m_delegate;              ///< Indique si le widget a été crée par un délégué dans une vue.
-     CRating::EditMode m_editMode; ///< Mode d'édition.
+     bool m_delegate;              ///< Indique si le widget a Ã©tÃ© crÃ©e par un dÃ©lÃ©guÃ© dans une vue.
+     CRating::EditMode m_editMode; ///< Mode d'Ã©dition.
 };
 
 

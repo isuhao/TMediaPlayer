@@ -28,9 +28,9 @@ class CMainWindow;
 
 
 /**
- * Boite de dialogue de l'égaliseur.
- * Permet de modifier les valeurs de gain de l'égaliseur graphiquement,
- * de sélectionner un préréglage, et d'ajouter ou modifier un préréglage.
+ * Boite de dialogue de l'Ã©galiseur.
+ * Permet de modifier les valeurs de gain de l'Ã©galiseur graphiquement,
+ * de sÃ©lectionner un prÃ©rÃ©glage, et d'ajouter ou modifier un prÃ©rÃ©glage.
  */
 
 class CDialogEqualizer : public QDialog
@@ -74,7 +74,7 @@ protected slots:
 private:
 
     Ui::DialogEqualizer * m_uiWidget; ///< Pointeur sur le widget de la boite de dialogue.
-    CMainWindow * m_mainWindow;       ///< Pointeur sur la fenêtre principale de l'application.
+    CMainWindow * m_mainWindow;       ///< Pointeur sur la fenÃªtre principale de l'application.
 };
 
 #endif // FILE_C_DIALOG_EQUALIZER

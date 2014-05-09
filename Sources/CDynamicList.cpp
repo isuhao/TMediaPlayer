@@ -366,9 +366,9 @@ bool CDynamicList::updateDatabase()
         query.prepare("UPDATE dynamic_list SET criteria_id = ?, auto_update = ?, only_checked = ? WHERE dynamic_list_id = ?");
 
         query.bindValue(0, 0);
-        query.bindValue(1, m_id);
-        query.bindValue(2, m_autoUpdate ? 1 : 0);
-        query.bindValue(3, m_onlyChecked ? 1 : 0);
+        query.bindValue(1, m_autoUpdate ? 1 : 0);
+        query.bindValue(2, m_onlyChecked ? 1 : 0);
+        query.bindValue(3, m_id);
 
         if (!query.exec())
         {

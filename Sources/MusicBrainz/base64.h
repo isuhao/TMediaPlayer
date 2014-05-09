@@ -85,6 +85,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #ifndef BASE64_H
 #define BASE64_H
 
-unsigned char *rfc822_binary (void *src,unsigned long srcl,unsigned long *len);
+unsigned char * rfc822_binary(void * src, unsigned long srcl, unsigned long * len);
 
 #endif
+

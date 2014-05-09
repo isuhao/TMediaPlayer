@@ -140,7 +140,7 @@ void CWidgetLyrics::onLyricsFound(const QString& lyrics)
 
     if (query)
     {
-        // On vérifie que le morceau n'a pas changé entre temps
+        // On vÃ©rifie que le morceau n'a pas changÃ© entre temps
         if (query->getSong() == m_song)
         {
             m_song->setLyrics(lyrics);

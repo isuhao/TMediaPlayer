@@ -34,9 +34,9 @@ namespace FMOD
 
 
 /**
- * Classe utilisée pour gérer un lecteur de CD-ROM.
+ * Classe utilisÃ©e pour gÃ©rer un lecteur de CD-ROM.
  * Les pistes du lecteur sont vues par l'application comme des morceaux normaux, mais
- * sont gérées différement par FMOD.
+ * sont gÃ©rÃ©es diffÃ©rement par FMOD.
  */
 
 class CCDRomDrive : public CMediaTableView
@@ -85,7 +85,7 @@ private:
 
     QString m_driveName;     ///< Nom du lecteur.
     QString m_SCSIName;
-    QString m_deviceName;    ///< Nom du périphérique.
+    QString m_deviceName;    ///< Nom du pÃ©riphÃ©rique.
     quint32 m_discId;        ///< DiscId.
     QString m_musicBrainzId; ///< Identifiant du disque pour MusicBrainz.
     FMOD::Sound * m_sound;   ///< Pointeur sur la structure de FMOD.
@@ -113,9 +113,9 @@ inline QString CCDRomDrive::getSCSIName() const
 
 
 /**
- * Retourne le nom du périphérique.
+ * Retourne le nom du pÃ©riphÃ©rique.
  *
- * \return Nom du périphérique.
+ * \return Nom du pÃ©riphÃ©rique.
  */
 
 inline QString CCDRomDrive::getDeviceName() const
@@ -149,9 +149,9 @@ inline QString CCDRomDrive::getMusicBrainzDiscId() const
 
 
 /**
- * Retourne le morceau correspondant à un numéro de piste.
+ * Retourne le morceau correspondant Ã  un numÃ©ro de piste.
  *
- * \param trackNumber Numéro de piste (entre 0 et 99).
+ * \param trackNumber NumÃ©ro de piste (entre 0 et 99).
  * \return Pointeur sur le morceau, ou nullptr.
  */
 

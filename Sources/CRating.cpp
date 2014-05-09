@@ -80,9 +80,9 @@ QSize CRating::minimumSizeHint() const
 
 
 /**
- * Dessine la note sous forme d'étoiles.
+ * Dessine la note sous forme d'Ã©toiles.
  *
- * \todo Gérer correctement la couleur de fond.
+ * \todo GÃ©rer correctement la couleur de fond.
  */
 
 void CRating::paint(QPainter * painter, const QRect& rect, const QPalette& palette, EditMode mode) const

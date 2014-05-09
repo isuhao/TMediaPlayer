@@ -31,7 +31,7 @@ class CFolder;
 
 
 /**
- * Boite de dialogue pour créer ou modifier une liste de lecture dynamique.
+ * Boite de dialogue pour crÃ©er ou modifier une liste de lecture dynamique.
  */
 
 class CDialogEditDynamicList : public QDialog

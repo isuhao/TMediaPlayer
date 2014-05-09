@@ -28,7 +28,7 @@ class CMainWindow;
 
 
 /**
- * Boite de dialogue "À propos".
+ * Boite de dialogue "Ã€ propos".
  */
 
 class CDialogAbout : public QDialog

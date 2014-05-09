@@ -31,7 +31,7 @@ class CSong;
 
 
 /**
- * Boite de dialogue permettant la création ou la modification d'une liste de lecture statique.
+ * Boite de dialogue permettant la crÃ©ation ou la modification d'une liste de lecture statique.
  */
 
 class CDialogEditStaticPlayList : public QDialog
@@ -51,9 +51,9 @@ private:
 
     Ui::DialogEditStaticPlayList * m_uiWidget;
     CStaticList * m_playList;     ///< Pointeur sur la liste de lecture.
-    CMainWindow * m_mainWindow;   ///< Pointeur sur la fenêtre principale de l'application.
+    CMainWindow * m_mainWindow;   ///< Pointeur sur la fenÃªtre principale de l'application.
     CFolder * m_folder;           ///< Pointeur sur le dossier contenant la liste de lecture.
-    QList<CSong *> m_songs;       ///< Liste de morceaux à ajouter à la liste.
+    QList<CSong *> m_songs;       ///< Liste de morceaux Ã  ajouter Ã  la liste.
 };
 
 #endif // FILE_C_DIALOG_EDIT_STATIC_PLAYLIST

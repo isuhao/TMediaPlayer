@@ -28,7 +28,7 @@ class CMainWindow;
 
 
 /**
- * Boite de dialogue pour créer ou modifier un tag XiphComment.
+ * Boite de dialogue pour crÃ©er ou modifier un tag XiphComment.
  */
 
 class CDialogEditXiphComment : public QDialog
@@ -50,7 +50,7 @@ public slots:
 private:
 
     Ui::DialogEditXiphComment * m_uiWidget;
-    CMainWindow * m_mainWindow; ///< Pointeur sur la fenêtre principale de l'application.
+    CMainWindow * m_mainWindow; ///< Pointeur sur la fenÃªtre principale de l'application.
 };
 
 #endif // FILE_C_DIALOG_EDIT_XIPHCOMMENT

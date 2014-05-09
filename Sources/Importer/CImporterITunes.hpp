@@ -156,9 +156,9 @@ public:
         int id;               ///< Identifiant du morceau.
         QString fileName;     ///< Adresse du fichier.
         int playCount;        ///< Nombre de lectures.
-        QDateTime lastPlayed; ///< Date de la dernière lecture.
+        QDateTime lastPlayed; ///< Date de la derniÃ¨re lecture.
         int rating;           ///< Note du morceau.
-        bool enabled;         ///< Indique si le morceau est coché ou pas.
+        bool enabled;         ///< Indique si le morceau est cochÃ© ou pas.
         bool compilation;     ///< Indique si le morceau fait partie d'une compilation.
 
         inline TSong() : id(0), playCount(0), rating(0), enabled(true), compilation(false) { }
@@ -198,11 +198,11 @@ private:
         QList<TStaticList> staticLists;
     };
 
-    bool m_isLoaded;                    ///< Indique si la médiathèque a été chargée.
+    bool m_isLoaded;                    ///< Indique si la mÃ©diathÃ¨que a Ã©tÃ© chargÃ©e.
     CMainWindow * m_mainWindow;
-    QString m_fileName;                 ///< Fichier contenant la médiathèque.
+    QString m_fileName;                 ///< Fichier contenant la mÃ©diathÃ¨que.
     QDomDocument m_document;            ///< Document XML.
-    QMap<int, TSong> m_songs;           ///< Liste des morceaux de la médiathèque.
+    QMap<int, TSong> m_songs;           ///< Liste des morceaux de la mÃ©diathÃ¨que.
     QList<TFolder> m_folders;           ///< Liste des dossiers.
     QList<TDynamicList> m_dynamicLists; ///< Liste des listes de lecture dynamiques.
     QList<TStaticList> m_staticLists;   ///< Liste des listes de lecture statiques.

@@ -53,7 +53,7 @@ private:
 
 
 /**
- * Constructeur par défaut.
+ * Constructeur par dÃ©faut.
  */
 
 inline CMediaTableItem::CMediaTableItem() :
@@ -123,7 +123,7 @@ inline bool CMediaTableItem::operator!=(const CMediaTableItem& other) const
 
 
 /**
- * Opérateur d'affectation.
+ * OpÃ©rateur d'affectation.
  */
 
 inline CMediaTableItem& CMediaTableItem::operator=(const CMediaTableItem& other)

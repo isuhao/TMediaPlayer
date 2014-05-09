@@ -91,7 +91,7 @@ int AddressToSectors(UCHAR address[4])
 }
 
 
-/// \todo Utiliser les méthodes de QString
+/// \todo Utiliser les mÃ©thodes de QString
 CDiscInfos::CDiscInfos(const QString& deviceName) :
 m_device (INVALID_HANDLE_VALUE)
 {

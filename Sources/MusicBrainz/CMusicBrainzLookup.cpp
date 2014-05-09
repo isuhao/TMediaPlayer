@@ -78,7 +78,7 @@ void CMusicBrainzLookup::replyFinished(QNetworkReply * reply)
 
     if (node.tagName() != "metadata")
     {
-        m_mainWindow->getMediaManager()->logError(tr("Réponse XML incorrecte (élément 'metadata' attendu)"), __FUNCTION__, __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logError(tr("RÃ©ponse XML incorrecte (Ã©lÃ©ment 'metadata' attendu)"), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
@@ -86,7 +86,7 @@ void CMusicBrainzLookup::replyFinished(QNetworkReply * reply)
 
     if (node.tagName() != "disc")
     {
-        m_mainWindow->getMediaManager()->logError(tr("Réponse XML incorrecte (élément 'disc' attendu)"), __FUNCTION__, __FILE__, __LINE__);
+        m_mainWindow->getMediaManager()->logError(tr("RÃ©ponse XML incorrecte (Ã©lÃ©ment 'disc' attendu)"), __FUNCTION__, __FILE__, __LINE__);
         return;
     }
 
@@ -107,7 +107,7 @@ void CMusicBrainzLookup::replyFinished(QNetworkReply * reply)
 
         if (node.tagName() != "release")
         {
-            m_mainWindow->getMediaManager()->logError(tr("Réponse XML incorrecte (élément 'release' attendu)"), __FUNCTION__, __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logError(tr("RÃ©ponse XML incorrecte (Ã©lÃ©ment 'release' attendu)"), __FUNCTION__, __FILE__, __LINE__);
             return;
         }
 
@@ -116,14 +116,14 @@ void CMusicBrainzLookup::replyFinished(QNetworkReply * reply)
         // Informations sur l'album
         QString albumTitle;  ///< Titre de l'album.
         QString albumArtist; ///< Artiste de l'album.
-        int albumYear = 0;   ///< Année de sortie de l'album.
+        int albumYear = 0;   ///< AnnÃ©e de sortie de l'album.
 
         // Informations sur les pistes
         struct TTrackInfos
         {
             QString title;  ///< Titre de la piste.
             QString artist; ///< Nom de l'artiste.
-            int duration;   ///< Durée de la piste, en millisecondes.
+            int duration;   ///< DurÃ©e de la piste, en millisecondes.
 
             inline TTrackInfos() : duration(0) { }
         };
@@ -143,12 +143,12 @@ void CMusicBrainzLookup::replyFinished(QNetworkReply * reply)
             {
                 albumArtist = getArtistName(nodeList);
             }
-            // Année
+            // AnnÃ©e
             else if (nodeList.tagName() == "date")
             {
                 albumYear = nodeList.text().toInt();
             }
-            // Liste des médias
+            // Liste des mÃ©dias
             else if (nodeList.tagName() == "medium-list")
             {
                 if (nodeList.attribute("count", "1") != "1")
@@ -165,7 +165,7 @@ void CMusicBrainzLookup::replyFinished(QNetworkReply * reply)
                     return;
                 }
 
-                // Parcours de la liste des informations du média
+                // Parcours de la liste des informations du mÃ©dia
                 for (QDomElement nodeMedium = nodeList.firstChildElement(); !nodeMedium.isNull(); nodeMedium = nodeMedium.nextSibling().toElement())
                 {
                     if (nodeMedium.tagName() == "track-list")
@@ -195,7 +195,7 @@ void CMusicBrainzLookup::replyFinished(QNetworkReply * reply)
                                 {
                                     trackNumber = nodeTrackInfos.text().toInt();
                                 }
-                                // Durée de la piste
+                                // DurÃ©e de la piste
                                 else if (nodeTrackInfos.tagName() == "length")
                                 {
                                     trackInfos[trackNumber].duration = nodeTrackInfos.text().toInt();
@@ -224,7 +224,7 @@ void CMusicBrainzLookup::replyFinished(QNetworkReply * reply)
             }
         }
 
-        // On vérifie que le disque dans le lecteur n'a pas changé
+        // On vÃ©rifie que le disque dans le lecteur n'a pas changÃ©
         if (m_musicBrainzId == m_cdRomDrive->getMusicBrainzDiscId())
         {
             // Modification des informations de chaque piste du disque
@@ -252,7 +252,7 @@ void CMusicBrainzLookup::replyFinished(QNetworkReply * reply)
 
 
 /**
- * Extrait un nom d'artiste depuis un nœud XML.
+ * Extrait un nom d'artiste depuis un nÂœud XML.
  *
  * \return Nom de l'artiste.
  */
@@ -265,7 +265,7 @@ QString CMusicBrainzLookup::getArtistName(const QDomElement& node) const
 
     QString artist;
 
-    // Parcours de la liste des éléments enfants
+    // Parcours de la liste des Ã©lÃ©ments enfants
     for (QDomElement nodeName = node.firstChildElement(); !nodeName.isNull(); nodeName = nodeName.nextSibling().toElement())
     {
         if (nodeName.tagName() != "name-credit")

@@ -55,11 +55,11 @@ int main(int argc, char * argv[])
     QStringList args = app.arguments();
 
     // Numéro de version
-    if (args.contains("-v") || args.contains("--version"))
+    if (args.contains("-V") || args.contains("--version"))
     {
         QTextStream(stdout) << QString("TMediaPlayer %1").arg(CMediaManager::getAppVersion()) << endl;
         QTextStream(stdout) << QString("Copyright (C) 2012-2014 Teddy Michel") << endl;
-        QTextStream(stdout) << QString("License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html") << endl;
+        QTextStream(stdout) << QString("License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>") << endl;
         return EXIT_SUCCESS;
     }
 
@@ -69,7 +69,7 @@ int main(int argc, char * argv[])
     QLocalSocket socket;
     socket.connectToServer("tmediaplayer-" + CMediaManager::getAppVersion());
 
-    if (socket.waitForConnected(250))
+    if (socket.waitForConnected(100))
     {
         // L'application est déjà lancée
         //TODO: si il y a une liste de morceaux, on doit les transmettre à l'application lancée

@@ -32,7 +32,7 @@ enum TLanguage
     LangMultiple     =  2, ///< Plusieurs langues.
     LangFictive      =  3, ///< Langue fictive.
     LangEnglish      = 10, ///< Anglais.
-    LangFrench       = 11, ///< Français.
+    LangFrench       = 11, ///< FranÃ§ais.
     LangGerman       = 12, ///< Allemand.
     LangItalian      = 13, ///< Italien.
     LangRussian      = 14, ///< Russe.
@@ -76,7 +76,7 @@ inline TLanguage getLanguageFromInteger(int language)
 
 
 /**
- * Retourne le nom correspondant à une langue.
+ * Retourne le nom correspondant Ã  une langue.
  *
  * \param language Langue.
  * \return Nom de la langue.
@@ -169,7 +169,7 @@ inline void fillComboBoxLanguage(QComboBox * comboBox)
 
 
 /**
- * Retourne langue correspondant à un code ISO 639-1.
+ * Retourne la langue correspondant Ã  un code ISO 639-1.
  *
  * \param code Code ISO 639-1.
  * \return Identifiant de la langue.
@@ -179,7 +179,7 @@ inline TLanguage getLanguageForISO2Code(const QString& code)
 {
     const QString codeLower = code.toLower();
 
-    // Valeurs spéciales
+    // Valeurs spÃ©ciales
     if (codeLower == "xx") return LangUnknown;
     if (codeLower == "x0") return LangInstrumental;
     if (codeLower == "x1") return LangMultiple;
@@ -201,7 +201,7 @@ inline TLanguage getLanguageForISO2Code(const QString& code)
 
 
 /**
- * Retourne langue correspondant à un code ISO 639-2.
+ * Retourne la langue correspondant Ã  un code ISO 639-2.
  *
  * \param code Code ISO 639-2.
  * \return Identifiant de la langue.
@@ -211,7 +211,7 @@ inline TLanguage getLanguageForISO3Code(const QString& code)
 {
     const QString codeLower = code.toLower();
 
-    // Valeurs spéciales
+    // Valeurs spÃ©ciales
     if (codeLower == "xxx" || codeLower == "und") return LangUnknown;
     if (codeLower == "zxx") return LangInstrumental;
     if (codeLower == "mul") return LangMultiple;
@@ -233,7 +233,7 @@ inline TLanguage getLanguageForISO3Code(const QString& code)
 
 
 /**
- * Retourne le code ISO 639-1 correspondant à une langue.
+ * Retourne le code ISO 639-1 correspondant Ã  une langue.
  *
  * \param language Identifiant de la langue.
  */
@@ -262,7 +262,7 @@ inline QString getISO2CodeForLanguage(TLanguage language)
 
 
 /**
- * Retourne le code ISO 639-2 correspondant à une langue.
+ * Retourne le code ISO 639-2 correspondant Ã  une langue.
  *
  * \param language Identifiant de la langue.
  */

@@ -29,7 +29,7 @@ class QStandardItemModel;
 
 
 /**
- * Boite de dialogue affichant la liste des dernières lectures.
+ * Boite de dialogue affichant la liste des derniÃ¨res lectures.
  */
 
 class CDialogLastPlays : public QDialog

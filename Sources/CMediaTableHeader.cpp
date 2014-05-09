@@ -54,7 +54,7 @@ m_menuReplayGain (nullptr)
     m_menuProperties = new QMenu(tr("Properties"), this);
     m_menuReplayGain = new QMenu(tr("Replay Gain"), this);
 
-    // Remarque : la hauteur d'un menu est limitée à 600px, soit 27 items
+    // Remarque : la hauteur d'un menu est limitÃ©e Ã  600px, soit 27 items
 
     // Informations
     T_CREATE_ACTION(m_menuInfos, Title          , CMediaTableView::ColTitle          );
@@ -81,7 +81,7 @@ m_menuReplayGain (nullptr)
     T_CREATE_ACTION(m_menuInfos, AlbumArtistSort, CMediaTableView::ColAlbumArtistSort);
     T_CREATE_ACTION(m_menuInfos, ComposerSort   , CMediaTableView::ColComposerSort   );
 
-    // Propriétés
+    // PropriÃ©tÃ©s
     T_CREATE_ACTION(m_menuProperties, PlayCount       , CMediaTableView::ColPlayCount       );
     T_CREATE_ACTION(m_menuProperties, LastPlayTime    , CMediaTableView::ColLastPlayTime    );
     T_CREATE_ACTION(m_menuProperties, PathName        , CMediaTableView::ColPathName        );
@@ -108,7 +108,7 @@ m_menuReplayGain (nullptr)
 
 
 /**
- * Détruit l'en-tête du tableau.
+ * DÃ©truit l'en-tÃªte du tableau.
  */
 
 CMediaTableHeader::~CMediaTableHeader()
@@ -120,7 +120,7 @@ CMediaTableHeader::~CMediaTableHeader()
 /**
  * Affiche le menu contextuel.
  *
- * \param event Évènement d'affichage du menu contextuel.
+ * \param event Ã‰vÃ¨nement d'affichage du menu contextuel.
  */
 
 void CMediaTableHeader::contextMenuEvent(QContextMenuEvent * event)

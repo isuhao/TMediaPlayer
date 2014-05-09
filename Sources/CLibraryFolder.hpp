@@ -36,9 +36,9 @@ public:
     QString convertFormatItemsToString() const;
     void convertStringToFormatItems(const QString& formatItems);
 
-    int id;                  ///< Identifiant du répertoire en base de données.
-    QString pathName;        ///< Localisation du répertoire.
-    bool keepOrganized;      ///< Indique si le répertoire est automatiquement organisé.
+    int id;                  ///< Identifiant du rÃ©pertoire en base de donnÃ©es.
+    QString pathName;        ///< Localisation du rÃ©pertoire.
+    bool keepOrganized;      ///< Indique si le rÃ©pertoire est automatiquement organisÃ©.
     QString format;          ///< Format des noms de fichier.
 
     QString titleDefault;    ///< Titre du morceau.
@@ -49,14 +49,14 @@ public:
     QString artistEmpty;
     QString genreDefault;    ///< Genre.
     QString genreEmpty;
-    QString yearDefault;     ///< Année.
+    QString yearDefault;     ///< AnnÃ©e.
     QString yearEmpty;
-    QString trackDefault;    ///< Numéro de piste.
+    QString trackDefault;    ///< NumÃ©ro de piste.
     QString trackEmpty;
-    QString discDefault;     ///< Numéro de disque.
+    QString discDefault;     ///< NumÃ©ro de disque.
     QString discEmpty;
 
-    QString compilationName; ///< Nom du répertoire pour stocker les compilations.
+    QString compilationName; ///< Nom du rÃ©pertoire pour stocker les compilations.
 };
 
 #endif // FILE_C_LIBRARY_FOLDER

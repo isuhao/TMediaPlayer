@@ -30,11 +30,11 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 
 /**
- * Construit la boite de dialogue des préférences.
+ * Construit la boite de dialogue des prÃ©fÃ©rences.
  *
- * \param mainWindow Pointeur sur la fenêtre principale de l'application.
+ * \param mainWindow Pointeur sur la fenÃªtre principale de l'application.
  * \param parent     Pointeur sur le widget parent.
- * \param folder     Pointeur sur le dossier à modifier.
+ * \param folder     Pointeur sur le dossier Ã  modifier.
  */
 
 CDialogPreferencesFolder::CDialogPreferencesFolder(CMainWindow * mainWindow, QWidget * parent, CLibraryFolder * folder) :
@@ -95,7 +95,7 @@ m_needDeleteFolder (false)
 
 
 /**
- * Détruit la boite de dialogue.
+ * DÃ©truit la boite de dialogue.
  */
 
 CDialogPreferencesFolder::~CDialogPreferencesFolder()
@@ -165,7 +165,7 @@ void CDialogPreferencesFolder::save()
 
     m_folder->compilationName = m_uiWidget->editOrgCompilation  ->text();
 
-    // Mise à jour de la base de données
+    // Mise Ã  jour de la base de donnÃ©es
     QSqlQuery query(m_mainWindow->getMediaManager()->getDataBase());
     const QString str = m_folder->convertFormatItemsToString();
 

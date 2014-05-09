@@ -39,14 +39,14 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QtDebug>
 
 
-const QString appVersion = "1.0.63";     ///< Numéro de version de l'application.
-const QString appDate    = "07/05/2014"; ///< Date de sortie de cette version.
+const QString appVersion = "1.0.64";     ///< NumÃ©ro de version de l'application.
+const QString appDate    = "09/05/2014"; ///< Date de sortie de cette version.
 
 
 /**
- * Retourne le numéro de version de l'application.
+ * Retourne le numÃ©ro de version de l'application.
  *
- * \return Numéro de version.
+ * \return NumÃ©ro de version.
  */
 
 QString CMediaManager::getAppVersion()
@@ -68,7 +68,7 @@ QString CMediaManager::getAppDate()
 
 
 /**
- * Construit le gestionnaire de médias.
+ * Construit le gestionnaire de mÃ©dias.
  *
  * \param parent Pointeur sur l'objet parent.
  */
@@ -87,10 +87,10 @@ m_isShuffle   (false)
     m_applicationPath = QDesktopServices::storageLocation(QDesktopServices::DataLocation) + QDir::separator();
 #endif
 
-    // Création du répertoire si nécessaire
+    // CrÃ©ation du rÃ©pertoire si nÃ©cessaire
     QDir(m_applicationPath).mkpath(".");
 
-    // Chargement des paramètres de l'application
+    // Chargement des paramÃ¨tres de l'application
     m_settings = new QSettings(this);
 
     // Internationnalisation
@@ -177,7 +177,7 @@ m_isShuffle   (false)
 
 
 /**
- * Détruit le gestionnaire de médias et le système de son de FMOD, et ferme la connexion à la base de données.
+ * DÃ©truit le gestionnaire de mÃ©dias et le systÃ¨me de son de FMOD, et ferme la connexion Ã  la base de donnÃ©es.
  */
 
 CMediaManager::~CMediaManager()
@@ -197,7 +197,7 @@ CMediaManager::~CMediaManager()
 /**
  * Initialise FMOD.
  *
- * \return Booléen indiquant le succès ou l'échec du chargement.
+ * \return BoolÃ©en indiquant le succÃ¨s ou l'Ã©chec du chargement.
  */
 
 bool CMediaManager::initSoundSystem()
@@ -272,7 +272,7 @@ bool CMediaManager::initSoundSystem()
         res = m_soundSystem->init(2, FMOD_INIT_NORMAL, 0);
     }
 
-    // Paramètres de lecture
+    // ParamÃ¨tres de lecture
     setVolume(m_settings->value("Preferences/Volume", 50).toInt());
 
     return (res == FMOD_OK);
@@ -280,14 +280,14 @@ bool CMediaManager::initSoundSystem()
 
 
 /**
- * Charge la base de données de la médiathèque.
+ * Charge la base de donnÃ©es de la mÃ©diathÃ¨que.
  *
- * \return True si le chargement s'est bien passé, false sinon.
+ * \return True si le chargement s'est bien passÃ©, false sinon.
  */
 
 bool CMediaManager::loadDatabase()
 {
-    // Chargement de la base de données
+    // Chargement de la base de donnÃ©es
     QString dbType = m_settings->value("Database/Type", QString("QSQLITE")).toString();
     m_settings->setValue("Database/Type", dbType);
     m_dataBase = QSqlDatabase::addDatabase(dbType, "library");
@@ -324,7 +324,7 @@ bool CMediaManager::loadDatabase()
 
     QSqlQuery query(m_dataBase);
 
-    // Création des relations
+    // CrÃ©ation des relations
     if (m_dataBase.driverName() == "QSQLITE")
     {
         createDatabaseSQLite();
@@ -338,7 +338,7 @@ bool CMediaManager::loadDatabase()
         createDatabasePostgreSQL();
     }
 
-    // Création des vues
+    // CrÃ©ation des vues
     QStringList tables = m_dataBase.tables(QSql::Views);
 
     if (!tables.contains("albums"))
@@ -365,7 +365,7 @@ bool CMediaManager::loadDatabase()
         }
     }
 
-    // Liste des répertoires
+    // Liste des rÃ©pertoires
     if (!query.exec("SELECT path_id, path_location, path_keep_organized, path_format, path_format_items FROM libpath"))
     {
         logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
@@ -387,10 +387,10 @@ bool CMediaManager::loadDatabase()
         }
     }
 
-    // Préréglages d'égaliseur
+    // PrÃ©rÃ©glages d'Ã©galiseur
     m_equalizerPresets = CEqualizerPreset::loadFromDatabase(this);
 
-    // Égaliseur
+    // Ã‰galiseur
     const float eqFrequencies[10] = {32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000};
 
     for (int i = 0; i < 10; ++i)
@@ -455,7 +455,7 @@ bool CMediaManager::loadDatabase()
  * Retourne le pointeur sur un fichier de log.
  *
  * \param logName Nom du fichier de log.
- * \return Pointeur sur le fichier ouvert en écriture.
+ * \return Pointeur sur le fichier ouvert en Ã©criture.
  */
 
 QFile * CMediaManager::getLogFile(const QString& logName)
@@ -484,7 +484,7 @@ QFile * CMediaManager::getLogFile(const QString& logName)
  * Gestion des messages d'erreur.
  *
  * \param message  Message d'erreur.
- * \param function Nom de la fonction où l'erreur est survenue.
+ * \param function Nom de la fonction oÃ¹ l'erreur est survenue.
  * \param file     Nom du fichier source contenant la fonction.
  * \param line     Ligne dans le fichier source.
  */
@@ -494,7 +494,7 @@ void CMediaManager::logError(const QString& message, const char * function, cons
     static QFile * logFile = nullptr;
     static bool fileOpened = false;
 
-    // L'ouverture du fichier n'est tentée qu'une seule fois pour éviter des appels récursifs infinis entre getLogFile et logError.
+    // L'ouverture du fichier n'est tentÃ©e qu'une seule fois pour Ã©viter des appels rÃ©cursifs infinis entre getLogFile et logError.
     if (!fileOpened || !logFile)
     {
         logFile = getLogFile("errors");
@@ -519,10 +519,10 @@ void CMediaManager::logDatabaseError(const QString& msg, const QString& query, c
 
 
 /**
- * Affiche un message dans la barre d'état.
- * Le message est affiché pendant 5 secondes.
+ * Affiche un message dans la barre d'Ã©tat.
+ * Le message est affichÃ© pendant 5 secondes.
  *
- * \param message Message à afficher.
+ * \param message Message Ã  afficher.
  */
 
 void CMediaManager::notifyInformation(const QString& message)
@@ -566,9 +566,9 @@ void CMediaManager::addLibraryFolder(CLibraryFolder * folder)
 
 
 /**
- * Supprime un répertoire de la médiathèque.
+ * Supprime un rÃ©pertoire de la mÃ©diathÃ¨que.
  *
- * \param folder Pointeur sur le répertoire à supprimer.
+ * \param folder Pointeur sur le rÃ©pertoire Ã  supprimer.
  */
 
 void CMediaManager::removeLibraryFolder(CLibraryFolder * folder)
@@ -595,9 +595,9 @@ void CMediaManager::removeLibraryFolder(CLibraryFolder * folder)
 
 
 /**
- * Modifie le gain de l'égaliseur pour une bande de fréquence.
+ * Modifie le gain de l'Ã©galiseur pour une bande de frÃ©quence.
  *
- * \param frequency Bande de fréquence.
+ * \param frequency Bande de frÃ©quence.
  * \param gain      Valeur du gain (entre 0.05 et 3).
  */
 
@@ -613,9 +613,9 @@ void CMediaManager::setEqualizerGain(CEqualizerPreset::TFrequency frequency, dou
 
 
 /**
- * Récupère le gain de l'égaliseur pour une bande de fréquence.
+ * RÃ©cupÃ¨re le gain de l'Ã©galiseur pour une bande de frÃ©quence.
  *
- * \param frequency Bande de fréquence.
+ * \param frequency Bande de frÃ©quence.
  * \return Valeur du gain (entre 0.05 et 3).
  */
 
@@ -626,8 +626,8 @@ double CMediaManager::getEqualizerGain(CEqualizerPreset::TFrequency frequency) c
 
 
 /**
- * Réinitialise les gains de l'égaliseur.
- * Tous les gains sont définis à 1.
+ * RÃ©initialise les gains de l'Ã©galiseur.
+ * Tous les gains sont dÃ©finis Ã  1.
  */
 
 void CMediaManager::resetEqualizer()
@@ -646,9 +646,9 @@ void CMediaManager::resetEqualizer()
 
 
 /**
- * Active ou désactive l'égaliseur.
+ * Active ou dÃ©sactive l'Ã©galiseur.
  *
- * \param enabled Booléen.
+ * \param enabled BoolÃ©en.
  */
 
 void CMediaManager::setEqualizerEnabled(bool enabled)
@@ -668,9 +668,9 @@ void CMediaManager::setEqualizerEnabled(bool enabled)
 
 
 /**
- * Indique si l'égaliseur est activé.
+ * Indique si l'Ã©galiseur est activÃ©.
  *
- * \return Booléen.
+ * \return BoolÃ©en.
  */
 
 bool CMediaManager::isEqualizerEnabled() const
@@ -710,10 +710,10 @@ void CMediaManager::deleteEqualizerPreset(CEqualizerPreset * preset)
 
 
 /**
- * Retourne le préréglage d'égaliseur correspondant à un identifiant.
+ * Retourne le prÃ©rÃ©glage d'Ã©galiseur correspondant Ã  un identifiant.
  *
- * \param id Identifiant du préréglage.
- * \return Pointeur sur le préréglage, ou nullptr.
+ * \param id Identifiant du prÃ©rÃ©glage.
+ * \return Pointeur sur le prÃ©rÃ©glage, ou nullptr.
  */
 
 CEqualizerPreset * CMediaManager::getEqualizerPresetFromId(int id) const
@@ -729,10 +729,10 @@ CEqualizerPreset * CMediaManager::getEqualizerPresetFromId(int id) const
 
 
 /**
- * Retourne le préréglage d'égaliseur correspondant à un nom.
+ * Retourne le prÃ©rÃ©glage d'Ã©galiseur correspondant Ã  un nom.
  *
- * \param name Nom du préréglage.
- * \return Pointeur sur le préréglage, ou nullptr.
+ * \param name Nom du prÃ©rÃ©glage.
+ * \return Pointeur sur le prÃ©rÃ©glage, ou nullptr.
  */
 
 CEqualizerPreset * CMediaManager::getEqualizerPresetFromName(const QString& name) const
@@ -773,7 +773,7 @@ void CMediaManager::setCurrentEqualizerPreset(CEqualizerPreset * equalizer)
 
 
 /**
- * Récupère l'identifiant d'un artiste en base de données.
+ * RÃ©cupÃ¨re l'identifiant d'un artiste en base de donnÃ©es.
  *
  * \param name     Nom de l'artiste.
  * \param nameSort Nom de l'artiste pour le tri.
@@ -839,7 +839,7 @@ int CMediaManager::getArtistId(const QString& name, const QString& nameSort)
 
 
 /**
- * Récupère l'identifiant d'un album en base de données.
+ * RÃ©cupÃ¨re l'identifiant d'un album en base de donnÃ©es.
  *
  * \param title     Titre de l'album.
  * \param titleSort Titre de l'album pour le tri.
@@ -905,7 +905,7 @@ int CMediaManager::getAlbumId(const QString& title, const QString& titleSort)
 
 
 /**
- * Récupère l'identifiant d'un genre en base de données.
+ * RÃ©cupÃ¨re l'identifiant d'un genre en base de donnÃ©es.
  *
  * \param name Nom du genre.
  * \return Identifiant du genre, ou -1 en cas d'erreur.
@@ -967,19 +967,19 @@ int CMediaManager::getGenreId(const QString& name)
 
 
 /**
- * Retourne la liste des genres classée par nom.
+ * Retourne la liste des genres classÃ©e par nom.
  *
- * \todo Compléter la liste des genres prédéfinis.
+ * \todo ComplÃ©ter la liste des genres prÃ©dÃ©finis.
  *
- * \return Liste des genres, qui contient l'ensemble des genres utilisés
- *         par les morceaux, en plus de certains genres prédéfinis.
+ * \return Liste des genres, qui contient l'ensemble des genres utilisÃ©s
+ *         par les morceaux, en plus de certains genres prÃ©dÃ©finis.
  */
 
 QStringList CMediaManager::getGenreList()
 {
     QStringList genres;
 
-    // Genres prédéfinis
+    // Genres prÃ©dÃ©finis
     genres.append("Blues");
     genres.append("Classical");
     genres.append("Country");
@@ -992,7 +992,7 @@ QStringList CMediaManager::getGenreList()
     genres.append("Reggae");
     genres.append("Rock");
 
-    // Liste des genres utilisés
+    // Liste des genres utilisÃ©s
     QSqlQuery query(m_dataBase);
 
     if (query.exec("SELECT genre_name FROM genres"))
@@ -1014,7 +1014,7 @@ QStringList CMediaManager::getGenreList()
 
 
 /**
- * Active ou désactive le son.
+ * Active ou dÃ©sactive le son.
  *
  * \param mute True pour couper le son, false pour le remettre.
  */
@@ -1042,16 +1042,16 @@ void CMediaManager::setVolume(int volume)
     {
         m_volume = volume;
 
-        // Enregistrement des paramètres
+        // Enregistrement des paramÃ¨tres
         m_settings->setValue("Preferences/Volume", m_volume);
     }
 }
 
 
 /**
- * Active ou désactive la lecture aléatoire.
+ * Active ou dÃ©sactive la lecture alÃ©atoire.
  *
- * \param shuffle Indique si la lecture aléatoire doit être activée.
+ * \param shuffle Indique si la lecture alÃ©atoire doit Ãªtre activÃ©e.
  */
 
 void CMediaManager::setShuffle(bool shuffle)
@@ -1060,15 +1060,15 @@ void CMediaManager::setShuffle(bool shuffle)
     {
         m_isShuffle = shuffle;
 
-        // Enregistrement des paramètres
+        // Enregistrement des paramÃ¨tres
         m_settings->setValue("Preferences/Shuffle", m_isShuffle);
     }
 }
 
 
 /**
- * Méthode appelée lorsqu'un morceau est modifié.
- * Le signal songModified est émis.
+ * MÃ©thode appelÃ©e lorsqu'un morceau est modifiÃ©.
+ * Le signal songModified est Ã©mis.
  */
 
 void CMediaManager::onSongModified()
@@ -1083,7 +1083,7 @@ void CMediaManager::onSongModified()
 
 
 /**
- * Crée la structure de la base de données pour SQLite.
+ * CrÃ©e la structure de la base de donnÃ©es pour SQLite.
  */
 
 void CMediaManager::createDatabaseSQLite()
@@ -1343,7 +1343,7 @@ void CMediaManager::createDatabaseSQLite()
 
 
 /**
- * Crée la structure de la base de données pour MySQL.
+ * CrÃ©e la structure de la base de donnÃ©es pour MySQL.
  */
 
 void CMediaManager::createDatabaseMySQL()
@@ -1603,7 +1603,7 @@ void CMediaManager::createDatabaseMySQL()
 
 
 /**
- * Crée la structure de la base de données pour PostgreSQL.
+ * CrÃ©e la structure de la base de donnÃ©es pour PostgreSQL.
  */
 
 void CMediaManager::createDatabasePostgreSQL()
@@ -1625,7 +1625,7 @@ void CMediaManager::createDatabasePostgreSQL()
             logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         }
 
-        // Renommage de la séquence
+        // Renommage de la sÃ©quence
         if (!query.exec("ALTER TABLE folder_folder_id_seq RENAME TO folder_seq"))
         {
             logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
@@ -1672,7 +1672,7 @@ void CMediaManager::createDatabasePostgreSQL()
             logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         }
 
-        // Renommage de la séquence
+        // Renommage de la sÃ©quence
         if (!query.exec("ALTER TABLE dynamic_list_dynamic_list_id_seq RENAME TO dynamic_list_seq"))
         {
             logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
@@ -1696,7 +1696,7 @@ void CMediaManager::createDatabasePostgreSQL()
             logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         }
 
-        // Renommage de la séquence
+        // Renommage de la sÃ©quence
         if (!query.exec("ALTER TABLE criteria_criteria_id_seq RENAME TO criteria_seq"))
         {
             logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
@@ -1714,7 +1714,7 @@ void CMediaManager::createDatabasePostgreSQL()
             logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         }
 
-        // Renommage de la séquence
+        // Renommage de la sÃ©quence
         if (!query.exec("ALTER TABLE static_list_static_list_id_seq RENAME TO static_list_seq"))
         {
             logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
@@ -1796,7 +1796,7 @@ void CMediaManager::createDatabasePostgreSQL()
             logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         }
 
-        // Renommage de la séquence
+        // Renommage de la sÃ©quence
         if (!query.exec("ALTER TABLE album_album_id_seq RENAME TO album_seq"))
         {
             logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
@@ -1820,7 +1820,7 @@ void CMediaManager::createDatabasePostgreSQL()
             logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         }
 
-        // Renommage de la séquence
+        // Renommage de la sÃ©quence
         if (!query.exec("ALTER TABLE artist_artist_id_seq RENAME TO artist_seq"))
         {
             logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
@@ -1842,7 +1842,7 @@ void CMediaManager::createDatabasePostgreSQL()
             logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         }
 
-        // Renommage de la séquence
+        // Renommage de la sÃ©quence
         if (!query.exec("ALTER TABLE genre_genre_id_seq RENAME TO genre_seq"))
         {
             logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
@@ -1880,7 +1880,7 @@ void CMediaManager::createDatabasePostgreSQL()
             logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         }
 
-        // Renommage de la séquence
+        // Renommage de la sÃ©quence
         if (!query.exec("ALTER TABLE libpath_path_id_seq RENAME TO libpath_seq"))
         {
             logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
@@ -1907,7 +1907,7 @@ void CMediaManager::createDatabasePostgreSQL()
             logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);
         }
 
-        // Renommage de la séquence
+        // Renommage de la sÃ©quence
         if (!query.exec("ALTER TABLE equalizer_equalizer_id_seq RENAME TO equalizer_seq"))
         {
             logDatabaseError(query.lastError().text(), query.lastQuery(), __FILE__, __LINE__);

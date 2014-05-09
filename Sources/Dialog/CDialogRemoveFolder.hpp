@@ -49,16 +49,16 @@ protected slots:
 private:
 
     Ui::DialogRemoveFolder * m_uiWidget;
-    CMainWindow * m_mainWindow;   ///< Pointeur sur la fenêtre principale de l'application.
-    CFolder * m_folder;           ///< Pointeur sur le dossier à supprimer.
-    bool m_recursive;             ///< Indique si le contenu du dossier doit être supprimé récursivement.
+    CMainWindow * m_mainWindow;   ///< Pointeur sur la fenÃªtre principale de l'application.
+    CFolder * m_folder;           ///< Pointeur sur le dossier Ã  supprimer.
+    bool m_recursive;             ///< Indique si le contenu du dossier doit Ãªtre supprimÃ© rÃ©cursivement.
 };
 
 
 /**
- * Indique si le contenu du dossier doit être supprimé récursivement.
+ * Indique si le contenu du dossier doit Ãªtre supprimÃ© rÃ©cursivement.
  *
- * \return Booléen.
+ * \return BoolÃ©en.
  */
 
 inline bool CDialogRemoveFolder::isResursive() const

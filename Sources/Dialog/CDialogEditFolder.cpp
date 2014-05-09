@@ -27,7 +27,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 /**
  * Constructeur de la boite de dialogue.
  *
- * \param folder       Pointeur sur le dossier à modifier, ou nullptr pour créer un dossier.
+ * \param folder       Pointeur sur le dossier Ã  modifier, ou nullptr pour crÃ©er un dossier.
  * \param mainWindow   Pointeur sur l'application.
  * \param folderParent Pointeur sur le dossier parent.
  */
@@ -63,7 +63,7 @@ m_folderParent (folderParent)
 
 
 /**
- * Détruit le widget.
+ * DÃ©truit le widget.
  */
 
 CDialogEditFolder::~CDialogEditFolder()

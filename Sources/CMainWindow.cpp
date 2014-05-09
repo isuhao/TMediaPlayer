@@ -2081,6 +2081,8 @@ void CMainWindow::openSongInExplorer()
 
 /**
  * Ouvre la boite de dialogue pour modifier la liste de lecture ou le dossier selectionné dans la vue.
+ *
+ * \todo Déplacer vers la classe CLibraryView ?
  */
 
 void CMainWindow::editSelectedItem()
@@ -2104,16 +2106,15 @@ void CMainWindow::editSelectedItem()
                 openDialogEditDynamicList(dynamicList);
             }
         }
-
-        return;
     }
-
-    CFolder * folder = qobject_cast<CFolder *>(m_playListView->getSelectedFolder());
-
-    if (folder)
+    else
     {
-        openDialogEditFolder(folder);
-        return;
+        CFolder * folder = qobject_cast<CFolder *>(m_playListView->getSelectedFolder());
+
+        if (folder)
+        {
+            openDialogEditFolder(folder);
+        }
     }
 }
 
@@ -2121,6 +2122,8 @@ void CMainWindow::editSelectedItem()
 /**
  * Supprime la liste de lecture ou le dossier sélectionné dans la vue CLibraryView.
  * Affiche une boite de dialogue de confirmation.
+ *
+ * \todo Déplacer vers la classe CLibraryView ?
  *
  * \todo Gérer les dossiers.
  * \todo Gérer le cas où la liste est utilisée dans un critère d'une liste dynamique.

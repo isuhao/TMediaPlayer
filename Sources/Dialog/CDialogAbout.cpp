@@ -28,7 +28,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 /**
  * Constructeur de la boite de dialogue.
  *
- * \param mainWindow Pointeur sur la fenêtre principale de l'application.
+ * \param mainWindow Pointeur sur la fenÃªtre principale de l'application.
  */
 
 CDialogAbout::CDialogAbout(CMainWindow * mainWindow) :
@@ -44,18 +44,18 @@ m_mainWindow (mainWindow)
     m_uiWidget->setupUi(this);
 
     // Versions
-    const QString appVersion    = CMediaManager::getAppVersion();
-    const QString appDate       = CMediaManager::getAppDate();
+    const QString appVersion = CMediaManager::getAppVersion();
+    const QString appDate = CMediaManager::getAppDate();
 
     QString fmodMajorVersion = QString::number((FMOD_VERSION & 0xFFFF0000) >> 16, 16);
     QString fmodMinorVersion = QString::number((FMOD_VERSION & 0x0000FF00) >> 8, 16);
     QString fmodPatchVersion = QString::number(FMOD_VERSION & 0x000000FF, 16);
     const QString FMODVersion = QString("FMOD Ex %1.%2.%3").arg(fmodMajorVersion)
-                                                             .arg(fmodMinorVersion)
-                                                             .arg(fmodPatchVersion);
+                                                           .arg(fmodMinorVersion)
+                                                           .arg(fmodPatchVersion);
 
-    const QString FMODCopyright = QString::fromUtf8("FMOD Ex SoundSystem Copyright © 2005-2012 Firelight Technologies Pty, Ltd.");
-    const QString musicBrainz   = tr("MusicBrainzId computation:\n%1\n%2").arg("Copyright (C) 2000 Robert Kaye")
+    const QString FMODCopyright = QString::fromUtf8("FMOD Ex SoundSystem Copyright Â© 2005-2012 Firelight Technologies Pty, Ltd.");
+    const QString musicBrainz = tr("MusicBrainzId computation:\n%1\n%2").arg("Copyright (C) 2000 Robert Kaye")
                                                                           .arg("Copyright (C) 2007 Lukas Lalinsky");
     const QString tagLibVersion = QString("TagLib %1.%2.%3 (license LGPL 2.1)").arg(TAGLIB_MAJOR_VERSION)
                                                                                .arg(TAGLIB_MINOR_VERSION)

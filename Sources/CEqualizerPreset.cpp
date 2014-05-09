@@ -26,7 +26,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 
 /**
- * Constructeur par défaut.
+ * Constructeur par dÃ©faut.
  *
  * \param mediaManager Pointeurs sur la classe principale de l'application.
  */

@@ -1300,47 +1300,54 @@
 <context>
     <name>CLibraryView</name>
     <message>
-        <location filename="../Sources/CLibraryView.cpp" line="80"/>
-        <location filename="../Sources/CLibraryView.cpp" line="84"/>
+        <location filename="../Sources/CLibraryView.cpp" line="81"/>
+        <location filename="../Sources/CLibraryView.cpp" line="87"/>
+        <location filename="../Sources/CLibraryView.cpp" line="91"/>
         <source>Edit...</source>
         <translation>Edit...</translation>
     </message>
     <message>
-        <location filename="../Sources/CLibraryView.cpp" line="81"/>
-        <location filename="../Sources/CLibraryView.cpp" line="85"/>
+        <location filename="../Sources/CLibraryView.cpp" line="82"/>
+        <location filename="../Sources/CLibraryView.cpp" line="88"/>
+        <location filename="../Sources/CLibraryView.cpp" line="92"/>
         <source>Remove</source>
         <translation>Remove</translation>
     </message>
     <message>
-        <location filename="../Sources/CLibraryView.cpp" line="87"/>
-        <location filename="../Sources/CLibraryView.cpp" line="92"/>
+        <location filename="../Sources/CLibraryView.cpp" line="85"/>
+        <source>Update</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/CLibraryView.cpp" line="94"/>
+        <location filename="../Sources/CLibraryView.cpp" line="99"/>
         <source>New playlist...</source>
         <translation>New playlist...</translation>
     </message>
     <message>
-        <location filename="../Sources/CLibraryView.cpp" line="88"/>
-        <location filename="../Sources/CLibraryView.cpp" line="93"/>
+        <location filename="../Sources/CLibraryView.cpp" line="95"/>
+        <location filename="../Sources/CLibraryView.cpp" line="100"/>
         <source>New dynamic playlist...</source>
         <translation>New dynamic playlist...</translation>
     </message>
     <message>
-        <location filename="../Sources/CLibraryView.cpp" line="89"/>
-        <location filename="../Sources/CLibraryView.cpp" line="94"/>
+        <location filename="../Sources/CLibraryView.cpp" line="96"/>
+        <location filename="../Sources/CLibraryView.cpp" line="101"/>
         <source>New folder...</source>
         <translation>New folder...</translation>
     </message>
     <message>
-        <location filename="../Sources/CLibraryView.cpp" line="97"/>
+        <location filename="../Sources/CLibraryView.cpp" line="104"/>
         <source>Eject</source>
         <translation>Eject</translation>
     </message>
     <message>
-        <location filename="../Sources/CLibraryView.cpp" line="98"/>
+        <location filename="../Sources/CLibraryView.cpp" line="105"/>
         <source>Informations...</source>
         <translation>Informations...</translation>
     </message>
     <message>
-        <location filename="../Sources/CLibraryView.cpp" line="483"/>
+        <location filename="../Sources/CLibraryView.cpp" line="495"/>
         <source>the item isn&apos;t a playlist or a folder</source>
         <translation>the item isn&apos;t a playlist or a folder</translation>
     </message>
@@ -1375,7 +1382,7 @@
     <name>CMainWindow</name>
     <message numerus="yes">
         <location filename="../Sources/CMainWindow.cpp" line="206"/>
-        <location filename="../Sources/CMainWindow.cpp" line="2319"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2322"/>
         <source>%n song(s), %1</source>
         <translation>
             <numerusform>%n song, %1</numerusform>
@@ -1403,7 +1410,7 @@
         <translation>Failed to load database.</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="2476"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2479"/>
         <source>Failed to init sound system with FMOD.</source>
         <translation>Failed to init sound system with FMOD.</translation>
     </message>
@@ -1470,7 +1477,7 @@ Error: %4</translation>
         <translation>unknown format</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="2679"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2682"/>
         <source>A song is being played. Are you sure you want to quit the application?</source>
         <translation>A song is being played. Are you sure you want to quit the application?</translation>
     </message>
@@ -1486,7 +1493,7 @@ Error: %4</translation>
         <location filename="../Sources/CMainWindow.cpp" line="1969"/>
         <location filename="../Sources/CMainWindow.cpp" line="1984"/>
         <location filename="../Sources/CMainWindow.cpp" line="2033"/>
-        <location filename="../Sources/CMainWindow.cpp" line="2310"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2313"/>
         <source>invalid pointer</source>
         <translation>invalid pointer</translation>
     </message>
@@ -1525,21 +1532,21 @@ Error: %4</translation>
         <translation>This file is already in the library. Do you want to merge the two songs?</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="2136"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2139"/>
         <source>Are you sure you want to delete this playlist?</source>
         <translation>Are you sure you want to delete this playlist?</translation>
     </message>
     <message>
         <location filename="../Sources/CMainWindow.cpp" line="1764"/>
-        <location filename="../Sources/CMainWindow.cpp" line="2137"/>
-        <location filename="../Sources/CMainWindow.cpp" line="2680"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2140"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2683"/>
         <source>Yes</source>
         <translation>Yes</translation>
     </message>
     <message>
         <location filename="../Sources/CMainWindow.cpp" line="1765"/>
-        <location filename="../Sources/CMainWindow.cpp" line="2138"/>
-        <location filename="../Sources/CMainWindow.cpp" line="2681"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2141"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2684"/>
         <source>No</source>
         <translation>No</translation>
     </message>
@@ -1556,23 +1563,23 @@ Error: %4</translation>
         <translation type="obsolete">This program requires FMOD %1 or superior.</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="2487"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2490"/>
         <source>can&apos;t get number of CD-ROM drives</source>
         <translation>can&apos;t get number of CD-ROM drives</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="2501"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2504"/>
         <source>can&apos;t get name of drive #%1</source>
         <translation>can&apos;t get name of drive #%1</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="2641"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2644"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../Sources/CMainWindow.cpp" line="2650"/>
-        <location filename="../Sources/CMainWindow.cpp" line="2659"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2653"/>
+        <location filename="../Sources/CMainWindow.cpp" line="2662"/>
         <source>Play</source>
         <translation>Play</translation>
     </message>
@@ -2082,23 +2089,23 @@ The files will not be deleted.</translation>
         <translation>Invalid XML document (%1)</translation>
     </message>
     <message>
-        <location filename="../Sources/MusicBrainz/CMusicBrainzLookup.cpp" line="81"/>
-        <source>Réponse XML incorrecte (élément &apos;metadata&apos; attendu)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Sources/MusicBrainz/CMusicBrainzLookup.cpp" line="89"/>
-        <source>Réponse XML incorrecte (élément &apos;disc&apos; attendu)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../Sources/MusicBrainz/CMusicBrainzLookup.cpp" line="102"/>
         <source>MusicBrainz: invalid response (release-list count != 1)</source>
         <translation>MusicBrainz: invalid response (release-list count != 1)</translation>
     </message>
     <message>
+        <location filename="../Sources/MusicBrainz/CMusicBrainzLookup.cpp" line="81"/>
+        <source>RÃ©ponse XML incorrecte (Ã©lÃ©ment &apos;metadata&apos; attendu)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/MusicBrainz/CMusicBrainzLookup.cpp" line="89"/>
+        <source>RÃ©ponse XML incorrecte (Ã©lÃ©ment &apos;disc&apos; attendu)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../Sources/MusicBrainz/CMusicBrainzLookup.cpp" line="110"/>
-        <source>Réponse XML incorrecte (élément &apos;release&apos; attendu)</source>
+        <source>RÃ©ponse XML incorrecte (Ã©lÃ©ment &apos;release&apos; attendu)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

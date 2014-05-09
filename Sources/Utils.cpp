@@ -28,11 +28,11 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 
 /**
- * Détermine la position correcte pour un menu contextuel.
+ * DÃ©termine la position correcte pour un menu contextuel.
  *
- * \param menu         Pointeur sur le menu à positionner.
- * \param menuPosition Position du menu (par rapport à l'écran).
- * \return Position corrigée du menu, pour éviter qu'il ne sorte de l'écran.
+ * \param menu         Pointeur sur le menu Ã  positionner.
+ * \param menuPosition Position du menu (par rapport Ã  l'Ã©cran).
+ * \return Position corrigÃ©e du menu, pour Ã©viter qu'il ne sorte de l'Ã©cran.
  */
 
 QPoint getCorrectMenuPosition(QMenu * menu, const QPoint& menuPosition)
@@ -57,7 +57,7 @@ QPoint getCorrectMenuPosition(QMenu * menu, const QPoint& menuPosition)
         if (menuHeight <= screenHeight)
             menuCorrectPos.setY(screenHeight - menuHeight);
         else
-            menuCorrectPos.setY(0); // Le menu est plus haut que l'écran !
+            menuCorrectPos.setY(0); // Le menu est plus haut que l'Ã©cran !
     }
 
     // Correction en largeur
@@ -69,7 +69,7 @@ QPoint getCorrectMenuPosition(QMenu * menu, const QPoint& menuPosition)
         if (menuWidth <= screenWidth)
             menuCorrectPos.setX(screenWidth - menuWidth);
         else
-            menuCorrectPos.setX(0); // Le menu est plus large que l'écran !
+            menuCorrectPos.setX(0); // Le menu est plus large que l'Ã©cran !
     }
 
     return menuCorrectPos;
@@ -77,9 +77,9 @@ QPoint getCorrectMenuPosition(QMenu * menu, const QPoint& menuPosition)
 
 
 /**
- * Convertit une durée en millisecondes en un texte affichable.
+ * Convertit une durÃ©e en millisecondes en un texte affichable.
  *
- * \param durationMS Durée en millisecondes.
+ * \param durationMS DurÃ©e en millisecondes.
  * \return Texte.
  */
 
@@ -101,10 +101,10 @@ QString durationToString(qlonglong durationMS)
 
 
 /**
- * Convertit un nombre d'octets en chaine de caractères plus compréhensible.
+ * Convertit un nombre d'octets en chaine de caractÃ¨res plus comprÃ©hensible.
  *
  * \param fileSize Nombre d'octets.
- * \return Chaine de caractère utilisant les préfixes binaires (Kio, Mio, Gio, pour
+ * \return Chaine de caractÃ¨re utilisant les prÃ©fixes binaires (Kio, Mio, Gio, pour
  *         respectivement 1024, 1024*1024, et 1024*1024*1024 octets).
  */
 
@@ -145,10 +145,10 @@ QString getFileSize(qlonglong fileSize)
 
 
 /**
- * Liste les morceaux contenus dans un répertoire.
+ * Liste les morceaux contenus dans un rÃ©pertoire.
  *
- * \param pathName Nom du répertoire à parcourir récursivement.
- * \return Liste des fichiers du répertoire.
+ * \param pathName Nom du rÃ©pertoire Ã  parcourir rÃ©cursivement.
+ * \return Liste des fichiers du rÃ©pertoire.
  */
 
 QStringList listFilesInFolder(const QString& pathName)

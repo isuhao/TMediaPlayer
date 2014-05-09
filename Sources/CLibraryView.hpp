@@ -67,15 +67,17 @@ protected slots:
     void createFolder();
     void ejectCDRom();
     void informationsAboutCDRomDrive();
+    void updateSelectedList();
 
 private:
 
-    CMainWindow * m_mainWindow; ///< Pointeur sur la fenêtre principale de l'application.
-    CLibraryModel * m_model;    ///< Modèle utilisé pour afficher les listes de lecture.
-    QMenu * m_menuPlaylist;     ///< Menu contextuel pour les listes de lecture.
-    QMenu * m_menuFolder;       ///< Menu contextuel pour les dossiers.
-    QMenu * m_menuCDRomDrive;   ///< Menu contextuel pour les lecteurs de CD-ROM.
-    QMenu * m_menuDefault;      ///< Menu contextuel par défaut.
+    CMainWindow * m_mainWindow;    ///< Pointeur sur la fenêtre principale de l'application.
+    CLibraryModel * m_model;       ///< Modèle utilisé pour afficher les listes de lecture.
+    QMenu * m_menuPlaylist;        ///< Menu contextuel pour les listes de lecture.
+    QMenu * m_menuDynamicPlaylist; ///< Menu contextuel pour les listes de lecture dynamiques.
+    QMenu * m_menuFolder;          ///< Menu contextuel pour les dossiers.
+    QMenu * m_menuCDRomDrive;      ///< Menu contextuel pour les lecteurs de CD-ROM.
+    QMenu * m_menuDefault;         ///< Menu contextuel par défaut.
 };
 
 #endif // FILE_C_PLAYLIST_VIEW
