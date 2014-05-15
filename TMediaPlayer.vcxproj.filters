@@ -1259,6 +1259,9 @@
     <None Include="Resources\icon_repeat_song.png">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="Resources\loading.gif">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TMediaPlayer.rc">

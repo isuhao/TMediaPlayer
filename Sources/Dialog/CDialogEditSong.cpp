@@ -299,7 +299,7 @@ void CDialogEditSong::resetSummary()
         }
         else
         {
-            m_mainWindow->getMediaManager()->logError(tr("impossible de lire le fichier MP3 \"%1\"").arg(song->getFileName()), __FUNCTION__, __FILE__, __LINE__);
+            m_mainWindow->getMediaManager()->logError(tr("can't read the MP3 file \"%1\"").arg(song->getFileName()), __FUNCTION__, __FILE__, __LINE__);
             m_uiWidget->valueCover->setPixmap(QPixmap::fromImage(song->getCoverImage()));
         }
     }
@@ -318,6 +318,10 @@ void CDialogEditSong::findLyrics()
     {
         CLyricWiki * query = new CLyricWiki(m_mainWindow->getMediaManager(), m_songItem->getSong());
         connect(query, SIGNAL(lyricsFound(const QString&)), this, SLOT(onLyricsFound(const QString&)));
+        connect(query, SIGNAL(lyricsNotFound()), this, SLOT(onLyricsNotFound()));
+
+        m_uiWidget->buttonFindLyrics->setText(tr("Finding lyrics..."));
+        m_uiWidget->buttonFindLyrics->setEnabled(false);
     }
 }
 
@@ -333,6 +337,27 @@ void CDialogEditSong::onLyricsFound(const QString& lyrics)
         {
             m_songItem->getSong()->setLyrics(lyrics);
             m_uiWidget->editLyrics->setText(lyrics);
+
+            m_uiWidget->buttonFindLyrics->setText(tr("Find lyrics"));
+            m_uiWidget->buttonFindLyrics->setEnabled(true);
+        }
+
+        query->deleteLater();
+    }
+}
+
+
+void CDialogEditSong::onLyricsNotFound()
+{
+    CLyricWiki * query = qobject_cast<CLyricWiki *>(sender());
+
+    if (query)
+    {
+        // On vérifie que le morceau n'a pas changé entre temps
+        if (query->getSong() == m_songItem->getSong())
+        {
+            m_uiWidget->buttonFindLyrics->setText(tr("Find lyrics"));
+            m_uiWidget->buttonFindLyrics->setEnabled(true);
         }
 
         query->deleteLater();
@@ -446,6 +471,9 @@ void CDialogEditSong::updateInfos()
     {
         return;
     }
+
+    m_uiWidget->buttonFindLyrics->setText(tr("Find lyrics"));
+    m_uiWidget->buttonFindLyrics->setEnabled(true);
 
     CSong * song = m_songItem->getSong();
 

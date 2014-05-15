@@ -63,6 +63,7 @@ protected slots:
 
     void findLyrics();
     void onLyricsFound(const QString& lyrics);
+    void onLyricsNotFound();
     void previousSong();
     void nextSong();
     void apply();

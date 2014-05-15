@@ -24,7 +24,6 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
-#include <QNetworkReply>
 #include <QDomDocument>
 #include <QUrl>
 #include <QWebFrame>
@@ -47,13 +46,21 @@ m_song         (song)
     QUrl url(QString("http://lyrics.wikia.com/api.php?action=lyrics&artist=%1&song=%2&albumName=%3&fmt=xml&func=getSong").arg(m_song->getArtistName()).arg(m_song->getTitle()).arg(m_song->getAlbumTitle()));
     QNetworkRequest request(url);
     //request.setRawHeader("Content-Type", "application/x-www-form-urlencoded");
-    networkManager->get(request);
+    QNetworkReply * reply = networkManager->get(request);
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(onError(QNetworkReply::NetworkError)));
 }
 
 
 CLyricWiki::~CLyricWiki()
 {
 
+}
+
+
+void CLyricWiki::onError(QNetworkReply::NetworkError code)
+{
+    Q_UNUSED(code);
+    emit lyricsNotFound();
 }
 
 
@@ -73,6 +80,7 @@ void CLyricWiki::replyFinished(QNetworkReply * reply)
     if (!doc.setContent(data, &error))
     {
         m_mediaManager->logError(tr("invalid XML document (%1)").arg(error), __FUNCTION__, __FILE__, __LINE__);
+        emit lyricsNotFound();
         return;
     }
 
@@ -81,6 +89,7 @@ void CLyricWiki::replyFinished(QNetworkReply * reply)
     if (racine.tagName() != "LyricsResult")
     {
         m_mediaManager->logError(tr("invalid XML response (expected element '%1')").arg("LyricsResult"), __FUNCTION__, __FILE__, __LINE__);
+        emit lyricsNotFound();
         return;
     }
 
@@ -89,6 +98,7 @@ void CLyricWiki::replyFinished(QNetworkReply * reply)
     if (elemURL.isNull())
     {
         m_mediaManager->logError(tr("invalid XML response (expected element '%1')").arg("url"), __FUNCTION__, __FILE__, __LINE__);
+        emit lyricsNotFound();
         return;
     }
 
@@ -99,23 +109,25 @@ void CLyricWiki::replyFinished(QNetworkReply * reply)
     if (elemPageId.isNull())
     {
         m_mediaManager->logError(tr("invalid XML response (expected element '%1')").arg("page_id"), __FUNCTION__, __FILE__, __LINE__);
+        emit lyricsNotFound();
         return;
     }
 
     if (elemPageId.text().toInt() <= 0)
     {
         m_mediaManager->logError(tr("invalid XML response (invalid element '%1')").arg("page_id"), __FUNCTION__, __FILE__, __LINE__);
+        emit lyricsNotFound();
         return;
     }
 
     m_frame = page.mainFrame();
     m_frame->load(QUrl::fromPercentEncoding(qPrintable(url)));
-    connect(m_frame, SIGNAL(loadFinished(bool)), this, SLOT(onPageFinished()));
+    connect(m_frame, SIGNAL(loadFinished(bool)), this, SLOT(onPageFinished(bool)));
 
     reply->deleteLater();
 }
 
-
+/*
 void CLyricWiki::replyFinished2(QNetworkReply * reply)
 {
     Q_CHECK_PTR(reply);
@@ -136,12 +148,17 @@ void CLyricWiki::replyFinished2(QNetworkReply * reply)
     }
 
     reply->deleteLater();
-    deleteLater();
 }
+*/
 
-
-void CLyricWiki::onPageFinished()
+void CLyricWiki::onPageFinished(bool ok)
 {
+    if (!ok)
+    {
+        emit lyricsNotFound();
+        return;
+    }
+
     QString lyrics;
 
     QWebElementCollection elements = m_frame->findAllElements(".lyricbox");
@@ -155,6 +172,4 @@ void CLyricWiki::onPageFinished()
     }
 
     emit lyricsFound(lyrics);
-
-    deleteLater();
 }

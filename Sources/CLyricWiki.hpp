@@ -25,6 +25,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QByteArray>
 #include <QString>
 #include <QWebPage>
+#include <QNetworkReply>
 
 class CMediaManager;
 class CSong;
@@ -48,18 +49,20 @@ public:
 
 signals:
 
+    void lyricsNotFound();
     void lyricsFound(const QString& lyrics);
 
 protected slots:
 
+    void onError(QNetworkReply::NetworkError code);
     void replyFinished(QNetworkReply * reply);
-    void replyFinished2(QNetworkReply * reply);
-    void onPageFinished();
+    //void replyFinished2(QNetworkReply * reply);
+    void onPageFinished(bool ok);
 
 protected:
 
     CMediaManager * m_mediaManager;
-    CSong * m_song;
+    CSong * m_song; ///< Pointeur sur le morceau dont on recherche les paroles.
     QWebPage page;
     QWebFrame * m_frame;
 };

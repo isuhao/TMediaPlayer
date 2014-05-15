@@ -525,40 +525,52 @@
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="302"/>
-        <source>impossible de lire le fichier MP3 &quot;%1&quot;</source>
-        <translation type="unfinished"></translation>
+        <source>can&apos;t read the MP3 file &quot;%1&quot;</source>
+        <translation>can&apos;t read the MP3 file &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="551"/>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="563"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="323"/>
+        <source>Finding lyrics...</source>
+        <translation>Finding lyrics...</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="341"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="359"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="475"/>
+        <source>Find lyrics</source>
+        <translation>Find lyrics</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="579"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="591"/>
         <source>%1 dB</source>
         <translation>%1 dB</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="578"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="606"/>
         <source>Local time</source>
         <translation>Local time</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="578"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="606"/>
         <source>UTC</source>
         <translation>UTC</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="584"/>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="585"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="612"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="613"/>
         <source>dd/MM/yyyy HH:mm:ss</source>
         <translation>dd/MM/yyyy HH:mm:ss</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="598"/>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="602"/>
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="606"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="626"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="630"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="634"/>
         <source>Total duration: %1</source>
         <translation>Total duration: %1</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="598"/>
+        <location filename="../Sources/Dialog/CDialogEditSong.cpp" line="626"/>
         <source>%n day(s) %1</source>
         <translation>
             <numerusform>%n day %1</numerusform>
@@ -1316,7 +1328,7 @@
     <message>
         <location filename="../Sources/CLibraryView.cpp" line="85"/>
         <source>Update</source>
-        <translation type="unfinished"></translation>
+        <translation>Update</translation>
     </message>
     <message>
         <location filename="../Sources/CLibraryView.cpp" line="94"/>
@@ -1355,25 +1367,24 @@
 <context>
     <name>CLyricWiki</name>
     <message>
-        <location filename="../Sources/CLyricWiki.cpp" line="66"/>
-        <location filename="../Sources/CLyricWiki.cpp" line="125"/>
+        <location filename="../Sources/CLyricWiki.cpp" line="73"/>
         <source>HTTP error: %1</source>
         <translation>HTTP error: %1</translation>
     </message>
     <message>
-        <location filename="../Sources/CLyricWiki.cpp" line="75"/>
+        <location filename="../Sources/CLyricWiki.cpp" line="82"/>
         <source>invalid XML document (%1)</source>
         <translation>invalid XML document (%1)</translation>
     </message>
     <message>
-        <location filename="../Sources/CLyricWiki.cpp" line="83"/>
         <location filename="../Sources/CLyricWiki.cpp" line="91"/>
-        <location filename="../Sources/CLyricWiki.cpp" line="101"/>
+        <location filename="../Sources/CLyricWiki.cpp" line="100"/>
+        <location filename="../Sources/CLyricWiki.cpp" line="111"/>
         <source>invalid XML response (expected element &apos;%1&apos;)</source>
         <translation>invalid XML response (expected element &apos;%1&apos;)</translation>
     </message>
     <message>
-        <location filename="../Sources/CLyricWiki.cpp" line="107"/>
+        <location filename="../Sources/CLyricWiki.cpp" line="118"/>
         <source>invalid XML response (invalid element &apos;%1&apos;)</source>
         <translation>invalid XML response (invalid element &apos;%1&apos;)</translation>
     </message>
@@ -3335,208 +3346,208 @@ Would you like to add them?</translation>
         <translation>Informations</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="458"/>
-        <location filename="../Form/DialogEditSong.ui" line="465"/>
+        <location filename="../Form/DialogEditSong.ui" line="464"/>
+        <location filename="../Form/DialogEditSong.ui" line="477"/>
         <source>/</source>
         <translation>/</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="511"/>
+        <location filename="../Form/DialogEditSong.ui" line="523"/>
         <source>Track number</source>
         <translation>Track number</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="528"/>
-        <location filename="../Form/DialogEditSong.ui" line="889"/>
+        <location filename="../Form/DialogEditSong.ui" line="540"/>
+        <location filename="../Form/DialogEditSong.ui" line="901"/>
         <source>Artist</source>
         <translation>Artist</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="545"/>
-        <location filename="../Form/DialogEditSong.ui" line="940"/>
+        <location filename="../Form/DialogEditSong.ui" line="557"/>
+        <location filename="../Form/DialogEditSong.ui" line="952"/>
         <source>Album</source>
         <translation>Album</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="562"/>
-        <location filename="../Form/DialogEditSong.ui" line="872"/>
+        <location filename="../Form/DialogEditSong.ui" line="574"/>
+        <location filename="../Form/DialogEditSong.ui" line="884"/>
         <source>Album artist</source>
         <translation>Album artist</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="608"/>
+        <location filename="../Form/DialogEditSong.ui" line="620"/>
         <source>Year</source>
         <translation>Year</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="660"/>
+        <location filename="../Form/DialogEditSong.ui" line="672"/>
         <source>Disc number</source>
         <translation>Disc number</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="680"/>
-        <location filename="../Form/DialogEditSong.ui" line="977"/>
+        <location filename="../Form/DialogEditSong.ui" line="692"/>
+        <location filename="../Form/DialogEditSong.ui" line="989"/>
         <source>Composer</source>
         <translation>Composer</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="697"/>
+        <location filename="../Form/DialogEditSong.ui" line="709"/>
         <source>Genre</source>
         <translation>Genre</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="717"/>
+        <location filename="../Form/DialogEditSong.ui" line="729"/>
         <source>Comments</source>
         <translation>Comments</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="734"/>
+        <location filename="../Form/DialogEditSong.ui" line="746"/>
         <source>Rating</source>
         <translation>Rating</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="756"/>
+        <location filename="../Form/DialogEditSong.ui" line="768"/>
         <source>Subtitle</source>
         <translation>Subtitle</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="776"/>
-        <location filename="../Form/DialogEditSong.ui" line="923"/>
+        <location filename="../Form/DialogEditSong.ui" line="788"/>
+        <location filename="../Form/DialogEditSong.ui" line="935"/>
         <source>Title</source>
         <translation>Title</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="798"/>
+        <location filename="../Form/DialogEditSong.ui" line="810"/>
         <source>Beats per minute</source>
         <translation>Beats per minute</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="801"/>
+        <location filename="../Form/DialogEditSong.ui" line="813"/>
         <source>BPM</source>
         <translation>BPM</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="815"/>
+        <location filename="../Form/DialogEditSong.ui" line="827"/>
         <source>Grouping</source>
         <translation>Grouping</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="829"/>
+        <location filename="../Form/DialogEditSong.ui" line="841"/>
         <source>Sorting</source>
         <translation>Sorting</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="906"/>
+        <location filename="../Form/DialogEditSong.ui" line="918"/>
         <source>Sort Composer</source>
         <translation>Sort Composer</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="957"/>
+        <location filename="../Form/DialogEditSong.ui" line="969"/>
         <source>Sort Album artist</source>
         <translation>Sort Album artist</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="994"/>
+        <location filename="../Form/DialogEditSong.ui" line="1006"/>
         <source>Sort Title</source>
         <translation>Sort Title</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1011"/>
+        <location filename="../Form/DialogEditSong.ui" line="1023"/>
         <source>Sort Artist</source>
         <translation>Sort Artist</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1028"/>
+        <location filename="../Form/DialogEditSong.ui" line="1040"/>
         <source>Sort Album</source>
         <translation>Sort Album</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1052"/>
+        <location filename="../Form/DialogEditSong.ui" line="1064"/>
         <source>Options</source>
         <translation>Options</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1065"/>
+        <location filename="../Form/DialogEditSong.ui" line="1077"/>
         <source>Volume adjustment:</source>
         <translation>Volume adjustment:</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1075"/>
+        <location filename="../Form/DialogEditSong.ui" line="1087"/>
         <source>%</source>
         <translation>%</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1112"/>
+        <location filename="../Form/DialogEditSong.ui" line="1124"/>
         <source>Song is enabled.</source>
         <translation>Song is enabled.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1098"/>
+        <location filename="../Form/DialogEditSong.ui" line="1110"/>
         <source>Skip when shuffling.</source>
         <translation>Skip when shuffling.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1126"/>
+        <location filename="../Form/DialogEditSong.ui" line="1138"/>
         <source>Part of a compilation.</source>
         <translation>Part of a compilation.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1156"/>
+        <location filename="../Form/DialogEditSong.ui" line="1168"/>
         <source>Replay Gain</source>
         <translation>Replay Gain</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1169"/>
+        <location filename="../Form/DialogEditSong.ui" line="1181"/>
         <source>Track gain:</source>
         <translation>Track gain:</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1190"/>
+        <location filename="../Form/DialogEditSong.ui" line="1202"/>
         <source>Album gain:</source>
         <translation>Album gain:</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1261"/>
+        <location filename="../Form/DialogEditSong.ui" line="1273"/>
         <source>Track peak:</source>
         <translation>Track peak:</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1211"/>
+        <location filename="../Form/DialogEditSong.ui" line="1223"/>
         <source>Album peak:</source>
         <translation>Album peak:</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1247"/>
+        <location filename="../Form/DialogEditSong.ui" line="1259"/>
         <source>Compute</source>
         <translation>Compute</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1292"/>
+        <location filename="../Form/DialogEditSong.ui" line="1304"/>
         <source>Lyrics</source>
         <translation>Lyrics</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1308"/>
+        <location filename="../Form/DialogEditSong.ui" line="1320"/>
         <source>Language:</source>
         <translation>Language:</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1338"/>
+        <location filename="../Form/DialogEditSong.ui" line="1350"/>
         <source>Find lyrics</source>
         <translation>Find lyrics</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1352"/>
+        <location filename="../Form/DialogEditSong.ui" line="1364"/>
         <source>Author:</source>
         <translation>Author:</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1369"/>
+        <location filename="../Form/DialogEditSong.ui" line="1381"/>
         <source>Covers</source>
         <translation>Covers</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSong.ui" line="1386"/>
+        <location filename="../Form/DialogEditSong.ui" line="1398"/>
         <source>Plays</source>
         <translation>Plays</translation>
     </message>
@@ -3615,19 +3626,19 @@ Would you like to add them?</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="344"/>
-        <location filename="../Form/DialogEditSongs.ui" line="770"/>
+        <location filename="../Form/DialogEditSongs.ui" line="782"/>
         <source>Artist</source>
         <translation>Artist</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="358"/>
-        <location filename="../Form/DialogEditSongs.ui" line="812"/>
+        <location filename="../Form/DialogEditSongs.ui" line="824"/>
         <source>Album</source>
         <translation>Album</translation>
     </message>
     <message>
         <location filename="../Form/DialogEditSongs.ui" line="372"/>
-        <location filename="../Form/DialogEditSongs.ui" line="756"/>
+        <location filename="../Form/DialogEditSongs.ui" line="768"/>
         <source>Album artist</source>
         <translation>Album artist</translation>
     </message>
@@ -3637,135 +3648,135 @@ Would you like to add them?</translation>
         <translation>Year</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="441"/>
-        <location filename="../Form/DialogEditSongs.ui" line="448"/>
+        <location filename="../Form/DialogEditSongs.ui" line="447"/>
+        <location filename="../Form/DialogEditSongs.ui" line="460"/>
         <source>/</source>
         <translation>/</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="488"/>
+        <location filename="../Form/DialogEditSongs.ui" line="500"/>
         <source>Disc number</source>
         <translation>Disc number</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="505"/>
-        <location filename="../Form/DialogEditSongs.ui" line="840"/>
+        <location filename="../Form/DialogEditSongs.ui" line="517"/>
+        <location filename="../Form/DialogEditSongs.ui" line="852"/>
         <source>Composer</source>
         <translation>Composer</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="519"/>
+        <location filename="../Form/DialogEditSongs.ui" line="531"/>
         <source>Genre</source>
         <translation>Genre</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="539"/>
+        <location filename="../Form/DialogEditSongs.ui" line="551"/>
         <source>Comments</source>
         <translation>Comments</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="556"/>
+        <location filename="../Form/DialogEditSongs.ui" line="568"/>
         <source>Rating</source>
         <translation>Rating</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="648"/>
-        <location filename="../Form/DialogEditSongs.ui" line="798"/>
+        <location filename="../Form/DialogEditSongs.ui" line="660"/>
+        <location filename="../Form/DialogEditSongs.ui" line="810"/>
         <source>Title</source>
         <translation>Title</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="679"/>
+        <location filename="../Form/DialogEditSongs.ui" line="691"/>
         <source>Subtitle</source>
         <translation>Subtitle</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="698"/>
+        <location filename="../Form/DialogEditSongs.ui" line="710"/>
         <source>Grouping</source>
         <translation>Grouping</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="712"/>
+        <location filename="../Form/DialogEditSongs.ui" line="724"/>
         <source>BPM</source>
         <translation>BPM</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="740"/>
+        <location filename="../Form/DialogEditSongs.ui" line="752"/>
         <source>Sorting</source>
         <translation>Sorting</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="784"/>
+        <location filename="../Form/DialogEditSongs.ui" line="796"/>
         <source>Sort Composer</source>
         <translation>Sort Composer</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="826"/>
+        <location filename="../Form/DialogEditSongs.ui" line="838"/>
         <source>Sort Album artist</source>
         <translation>Sort Album artist</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="854"/>
+        <location filename="../Form/DialogEditSongs.ui" line="866"/>
         <source>Sort Title</source>
         <translation>Sort Title</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="868"/>
+        <location filename="../Form/DialogEditSongs.ui" line="880"/>
         <source>Sort Artist</source>
         <translation>Sort Artist</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="882"/>
+        <location filename="../Form/DialogEditSongs.ui" line="894"/>
         <source>Sort Album</source>
         <translation>Sort Album</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="1033"/>
+        <location filename="../Form/DialogEditSongs.ui" line="1045"/>
         <source>Options</source>
         <translation>Options</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="1059"/>
+        <location filename="../Form/DialogEditSongs.ui" line="1071"/>
         <source>Volume adjustment:</source>
         <translation>Volume adjustment:</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="1069"/>
+        <location filename="../Form/DialogEditSongs.ui" line="1081"/>
         <source>%</source>
         <translation>%</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="1092"/>
+        <location filename="../Form/DialogEditSongs.ui" line="1104"/>
         <source>Songs are enabled.</source>
         <translation>Songs are enabled.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="1109"/>
+        <location filename="../Form/DialogEditSongs.ui" line="1121"/>
         <source>Skip when shuffling.</source>
         <translation>Skip when shuffling.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="1126"/>
+        <location filename="../Form/DialogEditSongs.ui" line="1138"/>
         <source>Part of a compilation.</source>
         <translation>Part of a compilation.</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="1150"/>
+        <location filename="../Form/DialogEditSongs.ui" line="1162"/>
         <source>Lyrics</source>
         <translation>Lyrics</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="1192"/>
+        <location filename="../Form/DialogEditSongs.ui" line="1204"/>
         <source>Language:</source>
         <translation>Language:</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="1229"/>
+        <location filename="../Form/DialogEditSongs.ui" line="1241"/>
         <source>Author:</source>
         <translation>Lyricist:</translation>
     </message>
     <message>
-        <location filename="../Form/DialogEditSongs.ui" line="1243"/>
+        <location filename="../Form/DialogEditSongs.ui" line="1255"/>
         <source>Plays</source>
         <translation>Plays</translation>
     </message>
