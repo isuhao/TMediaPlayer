@@ -148,6 +148,9 @@
    </item>
    <item>
     <widget class="QToolButton" name="btnRepeat">
+     <property name="toolTip">
+      <string>Repeat song or playlist.</string>
+     </property>
      <property name="text">
       <string>Repeat</string>
      </property>
@@ -168,6 +171,9 @@
    </item>
    <item>
     <widget class="QToolButton" name="btnShuffle">
+     <property name="toolTip">
+      <string>Enable or disable shuffle.</string>
+     </property>
      <property name="text">
       <string>Shuffle</string>
      </property>

@@ -95,12 +95,20 @@ public:
     inline CEqualizerPreset * getCurrentEqualizerPreset() const;
     void setCurrentEqualizerPreset(CEqualizerPreset * equalizer);
 
+    // Effets
+    void setEchoDelay(int delay);
+    int getEchoDelay() const;
+    void setMinFilter(int frequency);
+    int getMinFilter() const;
+    void setMaxFilter(int frequency);
+    int getMaxFilter() const;
+
 
     int getArtistId(const QString& name, const QString& nameSort);
     int getAlbumId(const QString& title, const QString& titleSort);
     int getGenreId(const QString& name);
     QStringList getGenreList();
-    
+
     inline bool isMute() const;
     inline int getVolume() const;
     inline bool isShuffle() const;
@@ -151,6 +159,14 @@ private:
     FMOD::DSP * m_dsp[10];                        ///< Gains de l'égaliseur pour FMOD.
     QList<CEqualizerPreset *> m_equalizerPresets; ///< Liste des préréglages d'égaliseur.
     CEqualizerPreset * m_currentEqualizerPreset;  ///< Préréglage de l'égaliseur actuel.
+
+    // Effets sonores
+    FMOD::DSP * m_dspEcho;     ///< Effet d'écho.
+    int m_echoDelay;
+    FMOD::DSP * m_dspLowPass;  ///< Filtre passe-bas.
+    int m_freqLowPass;
+    FMOD::DSP * m_dspHighPass; ///< Filtre passe-haut.
+    int m_freqHighPass;
 };
 
 

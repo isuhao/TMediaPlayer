@@ -3,6 +3,8 @@
   Importance élevée
 --------------------------------------------------
 
+- Utiliser un fichier INI pour enregistrer les préférences sous Windows.
+
 - Bug : si on modifie une liste dynamique en cours de lecture, ben y'a un blem...
 - Bug : si une liste ne contient que des morceaux introuvables (ou décochés, ou non lisible en lecture aléatoire) et que la répétition de liste est activée, la lecture entraine une boucle infinie.
 
@@ -58,7 +60,7 @@
   Importance faible
 --------------------------------------------------
 
-- Utiliser des effets sonores : écho, filtrage.
+- Utiliser des effets sonores : vitesse de lecture.
 - Transitions entre les morceaux.
 
 - Récupérer les informations de Last.fm (titre corrigé, artistes similaires, etc.).

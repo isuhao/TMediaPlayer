@@ -109,16 +109,19 @@ void CDynamicList::tryUpdateList()
 
     m_needUpdate = true;
 
-    if (m_mainWindow->getCurrentSongTable() == this ||
-        m_mainWindow->getDisplayedSongTable() == this)
+    if (m_autoUpdate)
     {
-        updateList();
-    }
-    else
-    {
-        //TODO: vérifier que les listes dynamiques qui utilisent (directement ou indirectement) cette liste ne sont pas affichée ou lue
-        // Plus simplement : si la liste dynamique est utilisée par une autre, on met à jour
-        //...
+        if (m_mainWindow->getCurrentSongTable() == this ||
+            m_mainWindow->getDisplayedSongTable() == this)
+        {
+            updateList();
+        }
+        else
+        {
+            //TODO: vérifier que les listes dynamiques qui utilisent (directement ou indirectement) cette liste ne sont pas affichées ou lues
+            // Plus simplement : si la liste dynamique est utilisée par une autre, on met à jour
+            //...
+        }
     }
 }
 
@@ -134,16 +137,10 @@ void CDynamicList::tryUpdateList()
 
 void CDynamicList::updateList()
 {
-    qDebug() << "CDynamicList::updateList " << m_name;
-
     if (!m_needUpdate)
     {
-        qDebug() << "CDynamicList::updateList not needed";
         return;
     }
-
-    QTime timeProf;
-    timeProf.start();
 
     // Si on est en train de lire un morceau de la liste, il faut mettre à jour les informations sur le morceau courant
     CMediaTableItem * currentItem = m_model->getCurrentSongItem();
@@ -226,8 +223,6 @@ void CDynamicList::updateList()
     
     m_needUpdate = false;
     emit listUpdated();
-
-    qDebug() << "  updateList end : " << timeProf.elapsed();
 }
 
 
@@ -565,7 +560,7 @@ void CDynamicList::loadFromDatabase()
     }
 
     // Conditions de mise à jour
-    if (m_autoUpdate)
+    //if (m_autoUpdate)
     {
         ICriterion::TUpdateConditions conditions = m_mainCriterion->getUpdateConditions();
 
@@ -608,7 +603,7 @@ void CDynamicList::setCriterion(ICriterion * criteria)
     m_isDynamicListModified = true;
 
     // Conditions de mise à jour
-    if (m_autoUpdate)
+    //if (m_autoUpdate)
     {
         disconnect(m_mainWindow, SIGNAL(songsAdded()             ), this, SLOT(tryUpdateList()));
         disconnect(m_mainWindow, SIGNAL(songRemoved(CSong *)     ), this, SLOT(tryUpdateList()));
@@ -655,7 +650,7 @@ void CDynamicList::setAutoUpdate(bool autoUpdate)
         m_autoUpdate = autoUpdate;
         m_isDynamicListModified = true;
         emit listModified();
-
+/*
         if (m_autoUpdate)
         {
             // Conditions de mise à jour
@@ -690,6 +685,7 @@ void CDynamicList::setAutoUpdate(bool autoUpdate)
             disconnect(m_mainWindow, SIGNAL(songPlayEnd(CSong *)     ), this, SLOT(tryUpdateList()));
           //disconnect(m_mainWindow, SIGNAL(listModified(IPlayList *)), this, SLOT(tryUpdateList()));
         }
+*/
     }
 }
 

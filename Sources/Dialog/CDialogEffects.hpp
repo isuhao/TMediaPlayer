@@ -17,50 +17,41 @@ You should have received a copy of the GNU General Public License
 along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef FILE_C_WIDGET_LYRICS
-#define FILE_C_WIDGET_LYRICS
+#ifndef FILE_C_DIALOG_EFFECTS
+#define FILE_C_DIALOG_EFFECTS
 
-
-#include <QWidget>
+#include <QDialog>
+#include "ui_DialogEffects.h"
 
 
 class CMainWindow;
-class CSong;
-class QTextEdit;
-class QPushButton;
-class QGridLayout;
 
 
-class CWidgetLyrics : public QWidget
+/**
+ * Boite de dialogue des effets sonores.
+ */
+
+class CDialogEffects : public QDialog
 {
     Q_OBJECT
 
 public:
 
-    explicit CWidgetLyrics(CMainWindow * mainWindow);
-    ~CWidgetLyrics();
-
-    void setSong(CSong * song);
+    explicit CDialogEffects(CMainWindow * mainWindow);
+    virtual ~CDialogEffects();
 
 protected slots:
 
-    void findLyrics();
-    void editLyrics();
-    void saveLyrics();
-    void cancelEdit();
-    void onLyricsFound(const QString& lyrics);
-    void onLyricsNotFound();
+    void enableEcho(bool enable);
+    void echoDelayChanged(int delay);
+    void enableFilter(bool enable);
+    void minFreqChanged(int frequency);
+    void maxFreqChanged(int frequency);
 
 private:
 
-    CMainWindow * m_mainWindow;
-    CSong * m_song;
-    QGridLayout * m_layout;
-    QTextEdit * m_textEdit;
-    QPushButton * m_buttonFind;
-    QPushButton * m_buttonEdit;
-    QPushButton * m_buttonSave;
-    QPushButton * m_buttonCancel;
+    Ui::DialogEffects * m_uiWidget; ///< Pointeur sur le widget de la boite de dialogue.
+    CMainWindow * m_mainWindow;     ///< Pointeur sur la fenêtre principale de l'application.
 };
 
-#endif // FILE_C_WIDGET_LYRICS
+#endif // FILE_C_DIALOG_EFFECTS

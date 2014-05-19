@@ -311,6 +311,9 @@ void CDialogEditSong::resetSummary()
     //TagLib::ID3v2::AttachedPictureFrame
 }
 
+/**
+ * Recherche les paroles du morceau sur Internet.
+ */
 
 void CDialogEditSong::findLyrics()
 {

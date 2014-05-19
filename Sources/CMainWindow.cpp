@@ -34,6 +34,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "Dialog/CDialogEditStaticPlayList.hpp"
 #include "Dialog/CDialogPreferences.hpp"
 #include "Dialog/CDialogEqualizer.hpp"
+#include "Dialog/CDialogEffects.hpp"
 #include "Dialog/CDialogNotifications.hpp"
 #include "Dialog/CDialogLastPlays.hpp"
 #include "Dialog/CDialogRemoveFolder.hpp"
@@ -242,6 +243,7 @@ bool CMainWindow::initWindow()
     connect(m_uiWidget->actionShuffle           , &QAction::triggered, this, &CMainWindow::setShuffle                 );
     connect(m_uiWidget->actionMute              , &QAction::triggered, this, &CMainWindow::setMute                    );
     connect(m_uiWidget->actionEqualizer         , &QAction::triggered, this, &CMainWindow::openDialogEqualizer        );
+    connect(m_uiWidget->actionEffects           , &QAction::triggered, this, &CMainWindow::openDialogEffects          );
 
     //connect(m_uiWidget->actionAboutQt           , &QAction::triggered, qApp, &QApplication::aboutQt                    );
     connect(m_uiWidget->actionAboutQt           , SIGNAL(triggered(    )), qApp, SLOT(aboutQt                    ()));
@@ -276,6 +278,7 @@ bool CMainWindow::initWindow()
     connect(m_uiWidget->actionShuffle           , SIGNAL(triggered(bool)), this, SLOT(setShuffle             (bool)));
     connect(m_uiWidget->actionMute              , SIGNAL(triggered(bool)), this, SLOT(setMute                (bool)));
     connect(m_uiWidget->actionEqualizer         , SIGNAL(triggered(    )), this, SLOT(openDialogEqualizer        ()));
+    connect(m_uiWidget->actionEffects           , SIGNAL(triggered(    )), this, SLOT(openDialogEffects          ()));
 
     connect(m_uiWidget->actionAboutQt           , SIGNAL(triggered(    )), qApp, SLOT(aboutQt                    ()));
     connect(m_uiWidget->actionAbout             , SIGNAL(triggered(    )), this, SLOT(openDialogAbout            ()));
@@ -1460,6 +1463,17 @@ void CMainWindow::onDialogLastPlaysClosed()
 void CMainWindow::openDialogEqualizer()
 {
     CDialogEqualizer * dialog = new CDialogEqualizer(this);
+    dialog->show();
+}
+
+
+/**
+ * Affiche la boite de dialogue pour modifier les effects sonores.
+ */
+
+void CMainWindow::openDialogEffects()
+{
+    CDialogEffects * dialog = new CDialogEffects(this);
     dialog->show();
 }
 

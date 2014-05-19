@@ -34,7 +34,7 @@ m_song       (nullptr)
 {
     Q_CHECK_PTR(m_mainWindow);
 
-    m_textEdit = new QTextEdit();
+    m_textEdit = new QTextEdit(this);
 
     m_buttonFind = new QPushButton(tr("Find"));
     m_buttonEdit = new QPushButton(tr("Edit"));
@@ -46,7 +46,7 @@ m_song       (nullptr)
     connect(m_buttonSave, SIGNAL(clicked()), this, SLOT(saveLyrics()));
     connect(m_buttonCancel, SIGNAL(clicked()), this, SLOT(cancelEdit()));
 
-    m_layout = new QGridLayout();
+    m_layout = new QGridLayout(this);
     setLayout(m_layout);
     m_layout->setMargin(0);
 
@@ -60,25 +60,43 @@ m_song       (nullptr)
 }
 
 
+CWidgetLyrics::~CWidgetLyrics()
+{
+    delete m_buttonFind;
+    delete m_buttonEdit;
+    delete m_buttonSave;
+    delete m_buttonCancel;
+}
+
+
 void CWidgetLyrics::setSong(CSong * song)
 {
-    m_song = song;
-    cancelEdit();
+    if (m_song != song)
+    {
+        m_song = song;
+        cancelEdit();
 
-    if (m_song)
-    {
-        m_textEdit->setDisabled(false);
-        m_buttonFind->setDisabled(false);
-        m_buttonEdit->setDisabled(false);
-    }
-    else
-    {
-        m_textEdit->setDisabled(true);
-        m_buttonFind->setDisabled(true);
-        m_buttonEdit->setDisabled(true);
+        m_buttonFind->setText(tr("Find"));
+
+        if (m_song)
+        {
+            m_textEdit->setDisabled(false);
+            m_buttonFind->setDisabled(false);
+            m_buttonEdit->setDisabled(false);
+        }
+        else
+        {
+            m_textEdit->setDisabled(true);
+            m_buttonFind->setDisabled(true);
+            m_buttonEdit->setDisabled(true);
+        }
     }
 }
 
+
+/**
+ * Recherche les paroles du morceau sur Internet.
+ */
 
 void CWidgetLyrics::findLyrics()
 {
@@ -86,6 +104,10 @@ void CWidgetLyrics::findLyrics()
     {
         CLyricWiki * query = new CLyricWiki(m_mainWindow->getMediaManager(), m_song);
         connect(query, SIGNAL(lyricsFound(const QString&)), this, SLOT(onLyricsFound(const QString&)));
+        connect(query, SIGNAL(lyricsNotFound()), this, SLOT(onLyricsNotFound()));
+
+        m_buttonFind->setText(tr("Finding lyrics..."));
+        m_buttonFind->setEnabled(false);
     }
 }
 
@@ -148,6 +170,27 @@ void CWidgetLyrics::onLyricsFound(const QString& lyrics)
 
             m_song->writeTags();
             m_song->updateDatabase();
+
+            m_buttonFind->setText(tr("Find"));
+            m_buttonFind->setEnabled(true);
+        }
+
+        query->deleteLater();
+    }
+}
+
+
+void CWidgetLyrics::onLyricsNotFound()
+{
+    CLyricWiki * query = qobject_cast<CLyricWiki *>(sender());
+
+    if (query)
+    {
+        // On vérifie que le morceau n'a pas changé entre temps
+        if (query->getSong() == m_song)
+        {
+            m_buttonFind->setText(tr("Find"));
+            m_buttonFind->setEnabled(true);
         }
 
         query->deleteLater();

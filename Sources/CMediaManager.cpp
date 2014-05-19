@@ -39,8 +39,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QtDebug>
 
 
-const QString appVersion = "1.0.65";     ///< Numéro de version de l'application.
-const QString appDate    = "15/05/2014"; ///< Date de sortie de cette version.
+const QString appVersion = "1.0.66";     ///< Numéro de version de l'application.
+const QString appDate    = "19/05/2014"; ///< Date de sortie de cette version.
 
 
 /**
@@ -74,12 +74,18 @@ QString CMediaManager::getAppDate()
  */
 
 CMediaManager::CMediaManager(QObject * parent) :
-QObject       (parent),
-m_settings    (nullptr),
-m_soundSystem (nullptr),
-m_isMute      (false),
-m_volume      (50),
-m_isShuffle   (false)
+QObject        (parent),
+m_settings     (nullptr),
+m_soundSystem  (nullptr),
+m_isMute       (false),
+m_volume       (50),
+m_isShuffle    (false),
+m_dspEcho      (nullptr),
+m_echoDelay    (0),
+m_dspLowPass   (nullptr),
+m_freqLowPass  (0),
+m_dspHighPass  (nullptr),
+m_freqHighPass (0)
 {
 #if QT_VERSION >= 0x050000
     m_applicationPath = QStandardPaths::writableLocation(QStandardPaths::DataLocation) + QDir::separator();
@@ -400,8 +406,11 @@ bool CMediaManager::loadDatabase()
 
         res = m_soundSystem->createDSPByType(FMOD_DSP_TYPE_PARAMEQ, &m_dsp[i]);
 
-        if (res != FMOD_OK)
+        if (res != FMOD_OK || m_dsp[i] == nullptr)
+        {
             logError(tr("createDSPByType #%1").arg(i), __FUNCTION__, __FILE__, __LINE__);
+            continue;
+        }
 
         res = m_dsp[i]->setParameter(FMOD_DSP_PARAMEQ_CENTER, eqFrequencies[i]);
 
@@ -447,7 +456,181 @@ bool CMediaManager::loadDatabase()
         }
     }
 
+    // Création des effets
+    FMOD_RESULT res = m_soundSystem->createDSPByType(FMOD_DSP_TYPE_ECHO, &m_dspEcho);
+
+    if (res != FMOD_OK || m_dspEcho == nullptr)
+    {
+        logError(tr("createDSPByType FMOD_DSP_TYPE_ECHO"), __FUNCTION__, __FILE__, __LINE__);
+    }
+
+    res = m_soundSystem->createDSPByType(FMOD_DSP_TYPE_LOWPASS, &m_dspLowPass);
+
+    if (res != FMOD_OK || m_dspLowPass == nullptr)
+    {
+        logError(tr("createDSPByType FMOD_DSP_TYPE_LOWPASS"), __FUNCTION__, __FILE__, __LINE__);
+    }
+
+    res = m_soundSystem->createDSPByType(FMOD_DSP_TYPE_HIGHPASS, &m_dspHighPass);
+
+    if (res != FMOD_OK || m_dspHighPass == nullptr)
+    {
+        logError(tr("createDSPByType FMOD_DSP_TYPE_HIGHPASS"), __FUNCTION__, __FILE__, __LINE__);
+    }
+
     return true;
+}
+
+
+void CMediaManager::setEchoDelay(int delay)
+{
+    if (m_dspEcho == nullptr)
+    {
+        return;
+    }
+
+    delay = qBound(0, delay, 1000);
+
+    if (m_echoDelay != delay)
+    {
+        FMOD_RESULT res = m_dspEcho->setParameter(FMOD_DSP_ECHO_DELAY, delay);
+
+        if (res != FMOD_OK)
+        {
+            logError(tr("dspEcho->setParameter(FMOD_DSP_ECHO_DELAY)"), __FUNCTION__, __FILE__, __LINE__);
+        }
+
+        if (m_echoDelay == 0 && delay > 0)
+        {
+            res = m_soundSystem->addDSP(m_dspEcho, nullptr);
+
+            if (res != FMOD_OK)
+                logError(tr("addDSP echo"), __FUNCTION__, __FILE__, __LINE__);
+        }
+        else if (m_echoDelay > 0 && delay == 0)
+        {
+            res = m_dspEcho->remove();
+
+            if (res != FMOD_OK)
+                logError(tr("removeDSP echo"), __FUNCTION__, __FILE__, __LINE__);
+        }
+
+        m_echoDelay = delay;
+    }
+}
+
+
+int CMediaManager::getEchoDelay() const
+{
+    return m_echoDelay;
+}
+
+
+void CMediaManager::setMinFilter(int frequency)
+{
+    if (m_dspHighPass == nullptr)
+    {
+        return;
+    }
+
+    if (frequency <= 0)
+    {
+        frequency = 0;
+    }
+
+    if (m_freqHighPass == frequency)
+    {
+        return;
+    }
+
+    if (frequency > 0)
+    {
+        FMOD_RESULT res = m_dspHighPass->setParameter(FMOD_DSP_HIGHPASS_CUTOFF, frequency);
+
+        if (res != FMOD_OK)
+        {
+            logError(tr("dspEcho->setParameter(FMOD_DSP_HIGHPASS_CUTOFF)"), __FUNCTION__, __FILE__, __LINE__);
+        }
+
+        // Activation du filtre
+        if (m_freqHighPass == 0)
+        {
+            res = m_soundSystem->addDSP(m_dspHighPass, nullptr);
+
+            if (res != FMOD_OK)
+                logError(tr("addDSP high pass"), __FUNCTION__, __FILE__, __LINE__);
+        }
+    }
+    else
+    {
+        // Désactivation du filtre
+        FMOD_RESULT res = m_dspHighPass->remove();
+
+        if (res != FMOD_OK)
+            logError(tr("removeDSP echo"), __FUNCTION__, __FILE__, __LINE__);
+    }
+
+    m_freqHighPass = frequency;
+}
+
+
+int CMediaManager::getMinFilter() const
+{
+    return m_freqHighPass;
+}
+
+
+void CMediaManager::setMaxFilter(int frequency)
+{
+    if (m_dspLowPass == nullptr)
+    {
+        return;
+    }
+
+    if (frequency <= 0)
+    {
+        frequency = 0;
+    }
+
+    if (m_freqLowPass == frequency)
+    {
+        return;
+    }
+
+    if (frequency > 0)
+    {
+        FMOD_RESULT res = m_dspLowPass->setParameter(FMOD_DSP_LOWPASS_CUTOFF, frequency);
+
+        if (res != FMOD_OK)
+        {
+            logError(tr("dspEcho->setParameter(FMOD_DSP_LOWPASS_CUTOFF)"), __FUNCTION__, __FILE__, __LINE__);
+        }
+
+        // Activation du filtre
+        if (m_freqLowPass == 0)
+        {
+            res = m_soundSystem->addDSP(m_dspLowPass, nullptr);
+
+            if (res != FMOD_OK)
+                logError(tr("addDSP low pass"), __FUNCTION__, __FILE__, __LINE__);
+        }
+    }
+    else
+    {
+        // Désactivation du filtre
+        FMOD_RESULT res = m_dspLowPass->remove();
+
+        if (res != FMOD_OK)
+            logError(tr("removeDSP echo"), __FUNCTION__, __FILE__, __LINE__);
+    }
+
+    m_freqLowPass = frequency;
+}
+
+
+int CMediaManager::getMaxFilter() const
+{
+    return m_freqLowPass;
 }
 
 

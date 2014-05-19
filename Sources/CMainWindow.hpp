@@ -192,6 +192,7 @@ public slots:
     void openDialogNotifications();
     void openDialogLastPlays();
     void openDialogEqualizer();
+    void openDialogEffects();
     void openDialogEditMetadata();
     void openDialogAddSongs();
     void openDialogAddFolder();

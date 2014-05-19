@@ -118,6 +118,7 @@
     <addaction name="actionMute"/>
     <addaction name="separator"/>
     <addaction name="actionEqualizer"/>
+    <addaction name="actionEffects"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -413,6 +414,11 @@
    </property>
    <property name="iconVisibleInMenu">
     <bool>false</bool>
+   </property>
+  </action>
+  <action name="actionEffects">
+   <property name="text">
+    <string>Effects...</string>
    </property>
   </action>
  </widget>

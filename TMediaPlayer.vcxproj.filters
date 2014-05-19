@@ -863,6 +863,21 @@
     <ClCompile Include="Sources\Dialog\CDialogEditXiphComment.cpp">
       <Filter>Source Files\Dialog</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Win32\Debug\moc_CDialogEffects.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\x64\Debug\moc_CDialogEffects.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Win32\Release\moc_CDialogEffects.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\x64\Release\moc_CDialogEffects.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Dialog\CDialogEffects.cpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Sources\CSong.hpp">
@@ -1084,6 +1099,12 @@
     <CustomBuild Include="Sources\Dialog\CDialogEditXiphComment.hpp">
       <Filter>Header Files\Dialog</Filter>
     </CustomBuild>
+    <CustomBuild Include="Form\DialogEffects.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Sources\Dialog\CDialogEffects.hpp">
+      <Filter>Header Files\Dialog</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\CRating.hpp">
@@ -1171,6 +1192,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_DialogEditMetadataXiph.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_DialogEffects.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
