@@ -35,6 +35,8 @@ m_song       (nullptr)
     Q_CHECK_PTR(m_mainWindow);
 
     m_textEdit = new QTextEdit(this);
+    m_textEdit->setReadOnly(true);
+    m_textEdit->setDisabled(true);
 
     m_buttonFind = new QPushButton(tr("Find"));
     m_buttonEdit = new QPushButton(tr("Edit"));
@@ -57,6 +59,15 @@ m_song       (nullptr)
 
     m_layout->addWidget(m_buttonSave, 2, 0);
     m_layout->addWidget(m_buttonCancel, 2, 1);
+
+    m_buttonSave->hide();
+    m_buttonCancel->hide();
+
+    m_buttonFind->show();
+    m_buttonEdit->show();
+
+    m_buttonFind->setDisabled(true);
+    m_buttonEdit->setDisabled(true);
 }
 
 

@@ -853,36 +853,36 @@
     <message>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="86"/>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="87"/>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="178"/>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="212"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="172"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="206"/>
         <source>SQLite version 2</source>
         <translation>SQLite version 2</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="91"/>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="92"/>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="180"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="174"/>
         <source>PostgreSQL</source>
         <translation>PostgreSQL</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="96"/>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="97"/>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="182"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="176"/>
         <source>MySQL</source>
         <translation>MySQL</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="101"/>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="102"/>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="184"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="178"/>
         <source>ODBC</source>
         <translation>ODBC</translation>
     </message>
     <message>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="106"/>
         <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="107"/>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="212"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="206"/>
         <source>SQLite version 3 or above</source>
         <translation>SQLite version 3 ou supérieure</translation>
     </message>
@@ -903,12 +903,12 @@
         <translation type="obsolete">Genre inconnu</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="140"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="134"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="141"/>
+        <location filename="../Sources/Dialog/CDialogPreferences.cpp" line="135"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
@@ -1606,111 +1606,111 @@ Erreur : %4</translation>
 <context>
     <name>CMediaManager</name>
     <message>
-        <location filename="../Sources/CMediaManager.cpp" line="121"/>
+        <location filename="../Sources/CMediaManager.cpp" line="122"/>
         <source>Erreur d&apos;ouverture de la base lastfm.sqlite</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaManager.cpp" line="327"/>
+        <location filename="../Sources/CMediaManager.cpp" line="322"/>
         <source>Failed to load database: %1.</source>
         <translation>Erreur lors du chargement de la base de données : %1.</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaManager.cpp" line="411"/>
+        <location filename="../Sources/CMediaManager.cpp" line="406"/>
         <source>createDSPByType #%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaManager.cpp" line="418"/>
+        <location filename="../Sources/CMediaManager.cpp" line="413"/>
         <source>dsp-&gt;setParameter(FMOD_DSP_PARAMEQ_CENTER) #%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaManager.cpp" line="423"/>
+        <location filename="../Sources/CMediaManager.cpp" line="418"/>
         <source>dsp-&gt;setParameter(FMOD_DSP_PARAMEQ_BANDWIDTH) #%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaManager.cpp" line="428"/>
-        <location filename="../Sources/CMediaManager.cpp" line="794"/>
-        <location filename="../Sources/CMediaManager.cpp" line="848"/>
+        <location filename="../Sources/CMediaManager.cpp" line="423"/>
+        <location filename="../Sources/CMediaManager.cpp" line="789"/>
+        <location filename="../Sources/CMediaManager.cpp" line="843"/>
         <source>dsp-&gt;setParameter(FMOD_DSP_PARAMEQ_GAIN) #%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaManager.cpp" line="433"/>
+        <location filename="../Sources/CMediaManager.cpp" line="428"/>
         <source>addDSP #%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaManager.cpp" line="464"/>
+        <location filename="../Sources/CMediaManager.cpp" line="459"/>
         <source>createDSPByType FMOD_DSP_TYPE_ECHO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaManager.cpp" line="471"/>
+        <location filename="../Sources/CMediaManager.cpp" line="466"/>
         <source>createDSPByType FMOD_DSP_TYPE_LOWPASS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaManager.cpp" line="478"/>
+        <location filename="../Sources/CMediaManager.cpp" line="473"/>
         <source>createDSPByType FMOD_DSP_TYPE_HIGHPASS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaManager.cpp" line="500"/>
+        <location filename="../Sources/CMediaManager.cpp" line="495"/>
         <source>dspEcho-&gt;setParameter(FMOD_DSP_ECHO_DELAY)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaManager.cpp" line="508"/>
+        <location filename="../Sources/CMediaManager.cpp" line="503"/>
         <source>addDSP echo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaManager.cpp" line="515"/>
-        <location filename="../Sources/CMediaManager.cpp" line="570"/>
-        <location filename="../Sources/CMediaManager.cpp" line="624"/>
+        <location filename="../Sources/CMediaManager.cpp" line="510"/>
+        <location filename="../Sources/CMediaManager.cpp" line="565"/>
+        <location filename="../Sources/CMediaManager.cpp" line="619"/>
         <source>removeDSP echo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaManager.cpp" line="606"/>
+        <location filename="../Sources/CMediaManager.cpp" line="601"/>
         <source>dspEcho-&gt;setParameter(FMOD_DSP_LOWPASS_CUTOFF)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaManager.cpp" line="615"/>
+        <location filename="../Sources/CMediaManager.cpp" line="610"/>
         <source>addDSP low pass</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaManager.cpp" line="552"/>
+        <location filename="../Sources/CMediaManager.cpp" line="547"/>
         <source>dspEcho-&gt;setParameter(FMOD_DSP_HIGHPASS_CUTOFF)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaManager.cpp" line="561"/>
+        <location filename="../Sources/CMediaManager.cpp" line="556"/>
         <source>addDSP high pass</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaManager.cpp" line="655"/>
+        <location filename="../Sources/CMediaManager.cpp" line="650"/>
         <source>can&apos;t open the log file &quot;%1&quot;</source>
         <translation>impossible d&apos;ouvrir le fichier de log &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaManager.cpp" line="687"/>
+        <location filename="../Sources/CMediaManager.cpp" line="682"/>
         <source>%2 (%3 line %4): %1</source>
         <translation>%2 (%3 ligne %4) : %1</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaManager.cpp" line="700"/>
+        <location filename="../Sources/CMediaManager.cpp" line="695"/>
         <source>Query: </source>
         <translation>Requête : </translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaManager.cpp" line="224"/>
+        <location filename="../Sources/CMediaManager.cpp" line="225"/>
         <source>This program requires FMOD %1 or superior.</source>
         <translation>Ce programme nécessite FMOD %1 ou supérieur.</translation>
     </message>
@@ -2985,30 +2985,30 @@ Voulez-vous les ajouter ?</translation>
 <context>
     <name>CWidgetLyrics</name>
     <message>
-        <location filename="../Sources/CWidgetLyrics.cpp" line="39"/>
-        <location filename="../Sources/CWidgetLyrics.cpp" line="79"/>
-        <location filename="../Sources/CWidgetLyrics.cpp" line="174"/>
-        <location filename="../Sources/CWidgetLyrics.cpp" line="192"/>
+        <location filename="../Sources/CWidgetLyrics.cpp" line="41"/>
+        <location filename="../Sources/CWidgetLyrics.cpp" line="90"/>
+        <location filename="../Sources/CWidgetLyrics.cpp" line="185"/>
+        <location filename="../Sources/CWidgetLyrics.cpp" line="203"/>
         <source>Find</source>
         <translation>Chercher</translation>
     </message>
     <message>
-        <location filename="../Sources/CWidgetLyrics.cpp" line="40"/>
+        <location filename="../Sources/CWidgetLyrics.cpp" line="42"/>
         <source>Edit</source>
         <translation>Modifier</translation>
     </message>
     <message>
-        <location filename="../Sources/CWidgetLyrics.cpp" line="41"/>
+        <location filename="../Sources/CWidgetLyrics.cpp" line="43"/>
         <source>Save</source>
         <translation>Enregistrer</translation>
     </message>
     <message>
-        <location filename="../Sources/CWidgetLyrics.cpp" line="42"/>
+        <location filename="../Sources/CWidgetLyrics.cpp" line="44"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../Sources/CWidgetLyrics.cpp" line="109"/>
+        <location filename="../Sources/CWidgetLyrics.cpp" line="120"/>
         <source>Finding lyrics...</source>
         <translation>Recherche des paroles...</translation>
     </message>

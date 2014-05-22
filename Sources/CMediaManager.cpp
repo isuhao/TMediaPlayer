@@ -39,8 +39,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QtDebug>
 
 
-const QString appVersion = "1.0.66";     ///< Numéro de version de l'application.
-const QString appDate    = "19/05/2014"; ///< Date de sortie de cette version.
+const QString appVersion = "1.0.67";     ///< Numéro de version de l'application.
+const QString appDate    = "22/05/2014"; ///< Date de sortie de cette version.
 
 
 /**
@@ -97,7 +97,8 @@ m_freqHighPass (0)
     QDir(m_applicationPath).mkpath(".");
 
     // Chargement des paramètres de l'application
-    m_settings = new QSettings(this);
+    m_settings = new QSettings(getApplicationPath() + "config.ini", QSettings::IniFormat, this);
+
 
     // Internationnalisation
     QString lang = m_settings->value("Preferences/Language", QLocale::system().name()).toString();
@@ -300,13 +301,7 @@ bool CMediaManager::loadDatabase()
 
     QString dbHostName = m_settings->value("Database/Host", QString("localhost")).toString();
     int dbPort = m_settings->value("Database/Port", 0).toInt();
-
-#if QT_VERSION >= 0x050000
-    QString dbBaseName = m_settings->value("Database/Base", QStandardPaths::writableLocation(QStandardPaths::DataLocation) + QDir::separator() + "library.sqlite").toString();
-#else
-    QString dbBaseName = m_settings->value("Database/Base", QDesktopServices::storageLocation(QDesktopServices::DataLocation) + QDir::separator() + "library.sqlite").toString();
-#endif
-
+    QString dbBaseName = m_settings->value("Database/Base", getApplicationPath() + "library.sqlite").toString();
     QString dbUserName = m_settings->value("Database/UserName", QString("root")).toString();
     QString dbPassword = m_settings->value("Database/Password", QString("")).toString();
 
