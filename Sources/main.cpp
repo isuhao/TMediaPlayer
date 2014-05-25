@@ -53,6 +53,7 @@ int main(int argc, char * argv[])
 
     // Arguments du programme
     QStringList args = app.arguments();
+    args.removeFirst();
 
     // Numéro de version
     if (args.contains("-V") || args.contains("--version"))
@@ -63,16 +64,24 @@ int main(int argc, char * argv[])
         return EXIT_SUCCESS;
     }
 
-    //TODO: analyser les arguments pour récupérer la liste des morceaux à lire
-
 #ifndef T_NO_SINGLE_APP
     QLocalSocket socket;
     socket.connectToServer("tmediaplayer-" + CMediaManager::getAppVersion());
 
+    // L'application est déjà lancée
     if (socket.waitForConnected(100))
     {
-        // L'application est déjà lancée
-        //TODO: si il y a une liste de morceaux, on doit les transmettre à l'application lancée
+        // Transmission des arguments
+        if (!args.isEmpty())
+        {
+            QByteArray data;
+            QDataStream out(&data, QIODevice::WriteOnly);
+            out << args;
+
+            socket.write(data);
+            socket.waitForBytesWritten(100);
+        }
+
         return 0;
     }
 #endif // T_NO_SINGLE_APP
@@ -88,9 +97,11 @@ int main(int argc, char * argv[])
 
     window.show();
 
-    //TODO: parcourir la liste des morceaux à lire
-    //TODO: ajouter le morceau à la médiathèque si nécessaire
-    //TODO: lire le dernier morceau de la liste
+    // Liste des morceaux à ajouter
+    if (!args.isEmpty())
+    {
+        window.loadFiles(args);
+    }
 
     return app.exec();
 }

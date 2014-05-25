@@ -69,6 +69,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef T_NO_SINGLE_APP
 #  include <QLocalServer>
+#  include <QLocalSocket>
 #endif
 
 // FMOD
@@ -92,6 +93,11 @@ const int timerCDRomDrivesPeriod = 5000; ///< Intervalle entre chaque mise-à-jo
 CMainWindow::CMainWindow(CMediaManager * mediaManager) :
 QMainWindow            (nullptr),
 m_mediaManager         (mediaManager),
+
+#ifndef T_NO_SINGLE_APP
+m_localServer          (nullptr),
+#endif
+
 m_uiWidget             (new Ui::TMediaPlayer()),
 m_uiControl            (new Ui::WidgetControl()),
 m_queue                (nullptr),
@@ -124,9 +130,9 @@ m_lastFmState                (NoScrobble)
     Q_CHECK_PTR(m_mediaManager);
 
 #ifndef T_NO_SINGLE_APP
-    QLocalServer * server = new QLocalServer(this);
-    connect(server, SIGNAL(newConnection()), this, SLOT(activateThisWindow()));
-    server->listen("tmediaplayer-" + CMediaManager::getAppVersion());
+    m_localServer = new QLocalServer(this);
+    connect(m_localServer, SIGNAL(newConnection()), this, SLOT(activateThisWindow()));
+    m_localServer->listen("tmediaplayer-" + CMediaManager::getAppVersion());
 #endif // T_NO_SINGLE_APP
 
     connect(m_mediaManager, SIGNAL(informationNotified(const QString&)), this, SLOT(notifyInformation2(const QString&)));
@@ -1547,11 +1553,11 @@ void CMainWindow::openDialogAddFolder()
  * \param fileList Liste des fichiers à ajouter.
  */
 
-void CMainWindow::importSongs(const QStringList& fileList)
+QList<CSong *> CMainWindow::importSongs(const QStringList& fileList)
 {
     if (fileList.isEmpty())
     {
-        return;
+        return QList<CSong *>();
     }
 
     QList<CSong *> songs;
@@ -1591,6 +1597,8 @@ void CMainWindow::importSongs(const QStringList& fileList)
 
     m_mediaManager->notifyInformation(tr("%n song(s) added to the library.", "", songs.size()));
     updateListInformations();
+
+    return songs;
 }
 
 
@@ -2192,16 +2200,105 @@ void CMainWindow::removeSelectedItem()
     }
 }
 
+
 #ifndef T_NO_SINGLE_APP
+
+/**
+ * Cette méthode est appellée si on essaye de lancer une autre instance de l'application.
+ */
 
 void CMainWindow::activateThisWindow()
 {
+    QLocalSocket * socket = m_localServer->nextPendingConnection();
+
+    if (socket != nullptr)
+    {
+        connect(socket, SIGNAL(readyRead()), this, SLOT(receiveDataFromOtherInstance()));
+    }
+
     setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
     raise();
     activateWindow();
 }
 
+
+void CMainWindow::receiveDataFromOtherInstance()
+{
+    QLocalSocket * socket = qobject_cast<QLocalSocket *>(sender());
+
+    if (socket == nullptr)
+    {
+        return;
+    }
+
+    QStringList fileList;
+    QByteArray data = socket->readAll();
+    QDataStream in(&data, QIODevice::ReadOnly);
+    in >> fileList;
+
+    loadFiles(fileList);
+
+    socket->deleteLater();
+}
+
 #endif // T_NO_SINGLE_APP
+
+
+void CMainWindow::loadFiles(const QStringList& fileList)
+{
+    QList<CSong *> songs;
+    QList<CSong *> newSongs;
+
+    // Ajout des morceaux
+    for (QStringList::ConstIterator it = fileList.begin(); it != fileList.end(); ++it)
+    {
+        QString fileName = *it;
+        fileName.replace('\\', '/');
+
+        CSong * song = CSong::loadFromFile(m_mediaManager, fileName);
+
+        if (song == nullptr)
+        {
+            int songId = CSong::getId(m_mediaManager, fileName);
+
+            if (songId >= 0)
+            {
+                song = getSongFromId(songId);
+            }
+        }
+        else
+        {
+            newSongs.append(song);
+        }
+
+        if (song != nullptr)
+        {
+            songs.append(song);
+        }
+    }
+
+    if (!newSongs.isEmpty())
+    {
+        m_library->addSongs(newSongs);
+        emit songsAdded();
+
+        m_mediaManager->notifyInformation(tr("%n song(s) added to the library.", "", newSongs.size()));
+        updateListInformations();
+    }
+
+    // Lecture du dernier morceau
+    if (!songs.isEmpty())
+    {
+        CSong * song = songs.last();
+        CMediaTableItem * songItem = m_library->getFirstSongItem(song);
+
+        if (songItem != nullptr)
+        {
+            playSong(songItem);
+        }
+    }
+}
+
 
 /**
  * Méthode appelée quand la lecture d'un morceau se termine.

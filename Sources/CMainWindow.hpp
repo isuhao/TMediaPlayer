@@ -53,6 +53,10 @@ class QStandardItemModel;
 class QTextEdit;
 class QNetworkReply;
 
+#ifndef T_NO_SINGLE_APP
+class QLocalServer;
+#endif
+
 
 /**
  * Fenêtre principale de l'application.
@@ -121,12 +125,16 @@ public:
     inline CMediaTableView * getDisplayedSongTable() const;
     void setDisplayedSongTable(CMediaTableView * songTable);
     void setCurrentSongItem(CMediaTableItem * songItem, CMediaTableView * songTable);
+
     CSong * getSongFromId(int id) const;
     CFolder * getFolderFromId(int id) const;
     IPlayList * getPlayListFromId(int id) const;
+
     QList<IPlayList *> getPlayListsWithSong(CSong * song) const;
     QList<IPlayList *> getAllPlayLists() const;
+
     CSong * addSong(const QString& fileName);
+    void loadFiles(const QStringList& fileList);
     void removeSongs(const QList<CSong *> songs);
     inline CDialogEditSong * getDialogEditSong() const;
     void setSelectionInformations(int numSongs, qlonglong durationMS);
@@ -265,7 +273,7 @@ protected:
 
     void addPlayList(IPlayList * playList);
     void addFolder(CFolder * folder);
-    void importSongs(const QStringList& fileList);
+    QList<CSong *> importSongs(const QStringList& fileList);
     void initSoundSystem();
     void displaySongTable(CMediaTableView * songTable);
     void loadDatabase();
@@ -278,10 +286,19 @@ private slots:
 
     void onDialogNotificationsClosed();
     void onDialogLastPlaysClosed();
+   
+#ifndef T_NO_SINGLE_APP
+    void receiveDataFromOtherInstance();
+#endif
 
 private:
 
     CMediaManager * m_mediaManager;         ///< Pointeur sur le gestionnaire de médias.
+
+#ifndef T_NO_SINGLE_APP
+    QLocalServer * m_localServer;
+#endif
+
     Ui::TMediaPlayer * m_uiWidget;          ///< Widget représentant la fenêtre principale.
     Ui::WidgetControl * m_uiControl;        ///< Widget représentant la barre de contrôle.
     QList<CCDRomDrive *> m_cdRomDrives;     ///< Liste des lecteurs de CD-ROM.

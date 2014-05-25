@@ -3,16 +3,12 @@
   Importance élevée
 --------------------------------------------------
 
-- Utiliser un fichier INI pour enregistrer les préférences sous Windows.
-
 - Bug : si on modifie une liste dynamique en cours de lecture, ben y'a un blem...
 - Bug : si une liste ne contient que des morceaux introuvables (ou décochés, ou non lisible en lecture aléatoire) et que la répétition de liste est activée, la lecture entraine une boucle infinie.
 
 - Problème graphique : si on modifie les informations d'un morceau, il faut mettre à jour la vue courante.
 - Problème graphique : lorsqu'on sélectionne une liste de lecture, il faut donner le focus à la vue.
 - Problème graphique : si on modifie le filtre de recherche, les lignes restent sélectionnées et ne correspondent plus aux morceaux sélectionnés.
-
-- Pouvoir ouvrir un ou plusieurs fichiers depuis l'explorateur.
 
 --------------------------------------------------
   Importance moyenne

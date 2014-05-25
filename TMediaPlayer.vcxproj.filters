@@ -1283,7 +1283,16 @@
     <None Include="Resources\icon_repeat_song.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\loading.gif">
+    <None Include="Resources\format_flac.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\format_mp3.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\format_wav.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\format_wma.ico">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

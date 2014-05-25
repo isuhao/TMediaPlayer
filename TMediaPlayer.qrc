@@ -25,6 +25,5 @@
         <file alias="cd">Resources/icon_cd.png</file>
         <file alias="clear">Resources/clear.png</file>
         <file alias="repeatSong">Resources/icon_repeat_song.png</file>
-        <file alias="loading">Resources/loading.gif</file>
     </qresource>
 </RCC>
