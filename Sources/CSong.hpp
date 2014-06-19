@@ -65,6 +65,7 @@ public:
         FormatMP3     = 1,  ///< Format MPEG Layer 3.
         FormatOGG     = 2,  ///< Format Ogg Vorbis.
         FormatFLAC    = 3,  ///< Format FLAC.
+        FormatWAV     = 4,  ///< Format WAV.
 
         FormatCDAudio = 100 ///< CD-ROM audio.
     };
@@ -385,6 +386,7 @@ inline CSong::TFormat CSong::getFormatFromInteger(int format)
         case   1: return FormatMP3    ;
         case   2: return FormatOGG    ;
         case   3: return FormatFLAC   ;
+        case   4: return FormatWAV    ;
         case 100: return FormatCDAudio;
     }
 }
@@ -399,6 +401,7 @@ inline QString CSong::getFormatName(CSong::TFormat format)
         case FormatMP3    : return tr("MP3"                      );
         case FormatOGG    : return tr("Ogg Vorbis"               );
         case FormatFLAC   : return tr("FLAC"                     );
+        case FormatWAV    : return tr("WAV"                      );
         case FormatCDAudio: return tr("CD audio"                 );
     }
 }
@@ -412,6 +415,7 @@ inline QStringList CSong::getFormatList()
     formatList << getFormatName(FormatMP3    );
     formatList << getFormatName(FormatOGG    );
     formatList << getFormatName(FormatFLAC   );
+    formatList << getFormatName(FormatWAV    );
     formatList << getFormatName(FormatCDAudio);
 
     return formatList;

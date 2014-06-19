@@ -33,6 +33,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <flacfile.h>
 #include <mpegfile.h>
 #include <vorbisfile.h>
+#include <wavpackfile.h>
 #include <tmap.h>
 #include <id3v1tag.h>
 #include <id3v1genres.h>
@@ -156,6 +157,11 @@ m_song       (song)
         case CSong::FormatFLAC:
             m_uiWidget->tabWidget->removeTab(2);
             break;
+
+        case CSong::FormatWAV:
+            m_uiWidget->tabWidget->removeTab(1);
+            m_uiWidget->tabWidget->removeTab(3);
+            break;
     }
 
     reset();
@@ -233,14 +239,7 @@ void CDialogEditMetadata::reset()
         case CSong::FormatMP3:
         {
 #ifdef Q_OS_WIN32
-
-#if QT_VERSION >= 0x050000
-            TagLib::MPEG::File file(reinterpret_cast<const wchar_t *>(m_song->getFileName().constData()));
-#else
-            std::wstring fileNameWString = m_song->getFileName().toStdWString();
-            TagLib::MPEG::File file(fileNameWString.c_str(), false);
-#endif
-
+            TagLib::MPEG::File file(reinterpret_cast<const wchar_t *>(m_song->getFileName().constData()), false);
 #else
             TagLib::MPEG::File file(qPrintable(m_song->getFileName()), false);
 #endif
@@ -264,14 +263,7 @@ void CDialogEditMetadata::reset()
         case CSong::FormatOGG:
         {
 #ifdef Q_OS_WIN32
-
-#if QT_VERSION >= 0x050000
-            TagLib::Ogg::Vorbis::File file(reinterpret_cast<const wchar_t *>(m_song->getFileName().constData()));
-#else
-            std::wstring fileNameWString = m_song->getFileName().toStdWString();
-            TagLib::Ogg::Vorbis::File file(fileNameWString.c_str(), false);
-#endif
-
+            TagLib::Ogg::Vorbis::File file(reinterpret_cast<const wchar_t *>(m_song->getFileName().constData()), false);
 #else
             TagLib::Ogg::Vorbis::File file(qPrintable(m_song->getFileName()), false);
 #endif
@@ -295,14 +287,7 @@ void CDialogEditMetadata::reset()
         case CSong::FormatFLAC:
         {
 #ifdef Q_OS_WIN32
-
-#if QT_VERSION >= 0x050000
-            TagLib::FLAC::File file(reinterpret_cast<const wchar_t *>(m_song->getFileName().constData()));
-#else
-            std::wstring fileNameWString = m_song->getFileName().toStdWString();
-            TagLib::FLAC::File file(fileNameWString.c_str(), false);
-#endif
-
+            TagLib::FLAC::File file(reinterpret_cast<const wchar_t *>(m_song->getFileName().constData()), false);
 #else
             TagLib::FLAC::File file(qPrintable(m_song->getFileName()), false);
 #endif
@@ -319,6 +304,30 @@ void CDialogEditMetadata::reset()
             initTagID3v2(file.ID3v2Tag(false));
             initTagAPE(nullptr);
             initTagXiphComment(file.xiphComment(true));
+
+            break;
+        }
+
+        case CSong::FormatWAV:
+        {
+#ifdef Q_OS_WIN32
+            TagLib::WavPack::File file(reinterpret_cast<const wchar_t *>(m_song->getFileName().constData()), false);
+#else
+            TagLib::WavPack::File file(qPrintable(m_song->getFileName()), false);
+#endif
+
+            if (!file.isValid())
+            {
+                m_mainWindow->getMediaManager()->logError(tr("can't read the WAV file \"%1\"").arg(m_song->getFileName()), __FUNCTION__, __FILE__, __LINE__);
+                QMessageBox::warning(m_mainWindow, QString(), tr("Error while loading tags."), QMessageBox::Ok);
+                close();
+                return;
+            }
+
+            initTagID3v1(file.ID3v1Tag(true));
+            initTagID3v2(nullptr);
+            initTagAPE(file.APETag(false));
+            initTagXiphComment(nullptr);
 
             break;
         }

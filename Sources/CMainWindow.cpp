@@ -1517,7 +1517,7 @@ void CMainWindow::openDialogEditMetadata()
 
 void CMainWindow::openDialogAddSongs()
 {
-    QStringList fileList = QFileDialog::getOpenFileNames(this, QString(), m_mediaManager->getSettings()->value("Preferences/LastDirectory", QString()).toString(), tr("Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)"));
+    QStringList fileList = QFileDialog::getOpenFileNames(this, QString(), m_mediaManager->getSettings()->value("Preferences/LastDirectory", QString()).toString(), tr("Media files (*.flac *.ogg *.mp3 *wav);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;WAV (*.wav);;All files (*.*)"));
 
     if (fileList.isEmpty())
         return;
@@ -1770,7 +1770,7 @@ void CMainWindow::relocateSong()
 
     if (song)
     {
-        QString fileName = QFileDialog::getOpenFileName(this, QString(), QString(), tr("Media files (*.flac *.ogg *.mp3);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;All files (*.*)"));
+        QString fileName = QFileDialog::getOpenFileName(this, QString(), QString(), tr("Media files (*.flac *.ogg *.mp3 *.wav);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;WAV (*.wav);;All files (*.*)"));
 
         if (fileName.isEmpty())
             return;
@@ -1935,6 +1935,10 @@ void CMainWindow::relocateSong()
 
                 case FMOD_SOUND_TYPE_FLAC:
                     song->m_properties.format = CSong::FormatFLAC;
+                    break;
+
+                case FMOD_SOUND_TYPE_WAV:
+                    song->m_properties.format = CSong::FormatWAV;
                     break;
             }
         }

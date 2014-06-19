@@ -490,7 +490,8 @@ IWidgetCriterion * CCriterion::getWidget() const
 
         if (m_type == ICriterion::TypeLanguage)
         {
-            widget->m_uiWidget->listLanguage->setCurrentIndex(getLanguageForISO2Code(m_value1.toString()));
+            //widget->m_uiWidget->listLanguage->setCurrentIndex(getLanguageForISO2Code(m_value1.toString()));
+            widget->m_uiWidget->listLanguage->setCurrentIndex(widget->m_uiWidget->listLanguage->findData(getLanguageForISO2Code(m_value1.toString())));
         }
         else if (m_type == ICriterion::TypePlayList)
         {

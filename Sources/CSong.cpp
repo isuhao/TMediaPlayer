@@ -35,6 +35,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <flacfile.h>
 #include <mpegfile.h>
 #include <vorbisfile.h>
+#include <wavpackfile.h>
 #include <tmap.h>
 #include <id3v1tag.h>
 #include <id3v2tag.h>
@@ -359,14 +360,7 @@ bool CSong::loadTags(bool readProperties)
         case CSong::FormatMP3:
         {
 #ifdef Q_OS_WIN32
-
-#if QT_VERSION >= 0x050000
             TagLib::MPEG::File file(reinterpret_cast<const wchar_t *>(m_properties.fileName.constData()), readProperties);
-#else
-            std::wstring fileNameWString = m_properties.fileName.toStdWString();
-            TagLib::MPEG::File file(fileNameWString.c_str(), readProperties);
-#endif
-
 #else
             TagLib::MPEG::File file(qPrintable(m_properties.fileName), readProperties);
 #endif
@@ -414,14 +408,7 @@ bool CSong::loadTags(bool readProperties)
         case CSong::FormatOGG:
         {
 #ifdef Q_OS_WIN32
-
-#if QT_VERSION >= 0x050000
             TagLib::Ogg::Vorbis::File file(reinterpret_cast<const wchar_t *>(m_properties.fileName.constData()), readProperties);
-#else
-            std::wstring fileNameWString = m_properties.fileName.toStdWString();
-            TagLib::Ogg::Vorbis::File file(fileNameWString.c_str(), readProperties);
-#endif
-
 #else
             TagLib::Ogg::Vorbis::File file(qPrintable(m_properties.fileName), readProperties);
 #endif
@@ -465,14 +452,7 @@ bool CSong::loadTags(bool readProperties)
         case CSong::FormatFLAC:
         {
 #ifdef Q_OS_WIN32
-
-#if QT_VERSION >= 0x050000
             TagLib::FLAC::File file(reinterpret_cast<const wchar_t *>(m_properties.fileName.constData()), readProperties);
-#else
-            std::wstring fileNameWString = m_properties.fileName.toStdWString();
-            TagLib::FLAC::File file(fileNameWString.c_str(), readProperties);
-#endif
-
 #else
             TagLib::FLAC::File file(qPrintable(m_properties.fileName), readProperties);
 #endif
@@ -511,6 +491,52 @@ bool CSong::loadTags(bool readProperties)
             loadTags(file.ID3v1Tag(true));
             loadTags(file.ID3v2Tag(true));
             loadTags(file.xiphComment(true));
+
+            break;
+        }
+
+        case CSong::FormatWAV:
+        {
+#ifdef Q_OS_WIN32
+            TagLib::WavPack::File file(reinterpret_cast<const wchar_t *>(m_properties.fileName.constData()), readProperties);
+#else
+            TagLib::WavPack::File file(qPrintable(m_properties.fileName), readProperties);
+#endif
+
+            if (!file.isValid())
+            {
+                m_fileStatus = false;
+                m_mediaManager->logError(tr("can't read the WAV file \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                return false;
+            }
+
+            m_fileStatus = true;
+            setFileSize(file.length());
+
+            // Propriétés du morceau
+            if (readProperties)
+            {
+                if (file.audioProperties())
+                {
+                    //TODO: Récupérer la version de WavPack : file.audioProperties()->version();
+                    setBitRate(file.audioProperties()->bitrate());
+                    setSampleRate(file.audioProperties()->sampleRate());
+                    setNumChannels(file.audioProperties()->channels());
+                }
+                else
+                {
+                    m_mediaManager->logError(tr("can't get properties of the file \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                }
+            }
+
+            // Réinitialisation de Replay Gain
+            setTrackGain(std::numeric_limits<float>::infinity());
+            setTrackPeak(std::numeric_limits<float>::infinity());
+            setAlbumGain(std::numeric_limits<float>::infinity());
+            setAlbumPeak(std::numeric_limits<float>::infinity());
+
+            loadTags(file.APETag(false));
+            loadTags(file.ID3v1Tag(true));
 
             break;
         }
@@ -560,14 +586,7 @@ bool CSong::writeTags()
         case CSong::FormatMP3:
         {
 #ifdef Q_OS_WIN32
-
-#if QT_VERSION >= 0x050000
             TagLib::MPEG::File file(reinterpret_cast<const wchar_t *>(m_properties.fileName.constData()));
-#else
-            std::wstring fileNameWString = m_properties.fileName.toStdWString();
-            TagLib::MPEG::File file(fileNameWString.c_str(), false);
-#endif
-
 #else
             TagLib::MPEG::File file(qPrintable(m_properties.fileName), false);
 #endif
@@ -604,14 +623,7 @@ bool CSong::writeTags()
         case CSong::FormatOGG:
         {
 #ifdef Q_OS_WIN32
-
-#if QT_VERSION >= 0x050000
             TagLib::Ogg::Vorbis::File file(reinterpret_cast<const wchar_t *>(m_properties.fileName.constData()));
-#else
-            std::wstring fileNameWString = m_properties.fileName.toStdWString();
-            TagLib::Ogg::Vorbis::File file(fileNameWString.c_str(), false);
-#endif
-
 #else
             TagLib::Ogg::Vorbis::File file(qPrintable(m_properties.fileName), false);
 #endif
@@ -644,14 +656,7 @@ bool CSong::writeTags()
         case CSong::FormatFLAC:
         {
 #ifdef Q_OS_WIN32
-
-#if QT_VERSION >= 0x050000
             TagLib::FLAC::File file(reinterpret_cast<const wchar_t *>(m_properties.fileName.constData()));
-#else
-            std::wstring fileNameWString = m_properties.fileName.toStdWString();
-            TagLib::FLAC::File file(fileNameWString.c_str(), false);
-#endif
-
 #else
             TagLib::FLAC::File file(qPrintable(m_properties.fileName), false);
 #endif
@@ -678,6 +683,42 @@ bool CSong::writeTags()
             writeTags(file.ID3v1Tag(false), m_infos, logFile, m_properties.fileName);
             writeTags(file.ID3v2Tag(false), m_infos, logFile, m_properties.fileName);
             writeTags(file.xiphComment(true), m_infos, logFile, m_properties.fileName);
+
+            file.save();
+            setFileSize(file.length());
+
+            break;
+        }
+
+        case CSong::FormatWAV:
+        {
+#ifdef Q_OS_WIN32
+            TagLib::WavPack::File file(reinterpret_cast<const wchar_t *>(m_properties.fileName.constData()));
+#else
+            TagLib::WavPack::File file(qPrintable(m_properties.fileName), false);
+#endif
+
+            if (!file.isValid())
+            {
+                m_fileStatus = false;
+                m_mediaManager->logError(tr("can't read the WAV file \"%1\"").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                m_needWriteTags = true;
+                return false;
+            }
+
+            m_fileStatus = true;
+
+            if (file.readOnly())
+            {
+                m_mediaManager->logError(tr("the file \"%1\" is open in read-only").arg(m_properties.fileName), __FUNCTION__, __FILE__, __LINE__);
+                m_needWriteTags = true;
+                return false;
+            }
+
+            QFile * logFile = m_mediaManager->getLogFile("metadata");
+
+            writeTags(file.ID3v1Tag(true), m_infos, logFile, m_properties.fileName);
+            //writeTags(file.APETag(false), m_infos, logFile, m_properties.fileName);
 
             file.save();
             setFileSize(file.length());
@@ -841,6 +882,7 @@ bool CSong::moveFile()
         case FormatMP3:  extension = ".mp3";  break;
         case FormatOGG:  extension = ".ogg";  break;
         case FormatFLAC: extension = ".flac"; break;
+        case FormatWAV:  extension = ".wav"; break;
     }
 
     // Comparaison entre l'ancien nom et le nouveau nom
@@ -1173,6 +1215,10 @@ CSong * CSong::loadFromFile(CMediaManager * mediaManager, const QString& fileNam
 
             case FMOD_SOUND_TYPE_FLAC:
                 song->m_properties.format = CSong::FormatFLAC;
+                break;
+
+            case FMOD_SOUND_TYPE_WAV:
+                song->m_properties.format = CSong::FormatWAV;
                 break;
         }
     }

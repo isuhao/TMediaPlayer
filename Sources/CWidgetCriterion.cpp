@@ -46,7 +46,8 @@ m_uiWidget       (new Ui::WidgetCriterion())
     //TODO: remplir la liste de types ici !
 
     // Remplissage des listes
-    m_uiWidget->listLanguage->addItems(getLanguageList());
+    //m_uiWidget->listLanguage->addItems(getLanguageList());
+    fillComboBoxLanguage(m_uiWidget->listLanguage);
     m_uiWidget->listFormat->addItems(CSong::getFormatList());
 
     QList<IPlayList *> playLists = m_mainWindow->getAllPlayLists();
@@ -72,7 +73,7 @@ m_uiWidget       (new Ui::WidgetCriterion())
     // Initialisation
     changeType(0);
 
-    connect(m_uiWidget->listType, SIGNAL(currentIndexChanged(int)), this, SLOT(changeType(int)));
+    connect(m_uiWidget->listType,             SIGNAL(currentIndexChanged(int)), this, SLOT(changeType(int)));
     connect(m_uiWidget->listConditionBoolean, SIGNAL(currentIndexChanged(int)), this, SLOT(changeConditionBoolean(int)));
     connect(m_uiWidget->listConditionString,  SIGNAL(currentIndexChanged(int)), this, SLOT(changeConditionString(int)));
     connect(m_uiWidget->listConditionNumber,  SIGNAL(currentIndexChanged(int)), this, SLOT(changeConditionNumber(int)));
@@ -109,7 +110,8 @@ ICriterion * CWidgetCriterion::getCriterion()
     {
         if (m_type == ICriterion::TypeLanguage)
         {
-            criteria->m_value1 = getISO2CodeForLanguage(getLanguageFromInteger(m_uiWidget->listLanguage->currentIndex()));
+            //criteria->m_value1 = getISO2CodeForLanguage(getLanguageFromInteger(m_uiWidget->listLanguage->currentIndex()));
+            criteria->m_value1 = getISO2CodeForLanguage(getLanguageFromInteger(m_uiWidget->listLanguage->itemData(m_uiWidget->listLanguage->currentIndex()).toInt()));
         }
         else if (m_type == ICriterion::TypePlayList)
         {

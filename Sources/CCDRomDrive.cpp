@@ -331,6 +331,10 @@ bool CCDRomDrive::hasCDInDrive()
                         case FMOD_SOUND_TYPE_FLAC:
                             song->m_properties.format = CSong::FormatFLAC;
                             break;
+
+                        case FMOD_SOUND_TYPE_WAV:
+                            song->m_properties.format = CSong::FormatWAV;
+                            break;
                     }
                 }
 
