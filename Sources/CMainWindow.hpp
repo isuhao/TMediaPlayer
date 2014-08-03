@@ -26,6 +26,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QFile>
 #include <QTimer>
 
+#include "CLibraryModel.hpp"
 #include "ui_TMediaPlayer.h"
 #include "ui_WidgetControl.h"
 
@@ -132,6 +133,7 @@ public:
 
     QList<IPlayList *> getPlayListsWithSong(CSong * song) const;
     QList<IPlayList *> getAllPlayLists() const;
+    inline CFolder * getRootFolder() const;
 
     CSong * addSong(const QString& fileName);
     void loadFiles(const QStringList& fileList);
@@ -385,6 +387,12 @@ inline CLibrary * CMainWindow::getLibrary() const
 inline CMediaTableView * CMainWindow::getDisplayedSongTable() const
 {
     return m_displayedSongTable;
+}
+
+
+inline CFolder * CMainWindow::getRootFolder() const
+{
+    return m_listModel->getRootFolder();
 }
 
 

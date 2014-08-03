@@ -52,13 +52,17 @@ m_song       (nullptr)
     setLayout(m_layout);
     m_layout->setMargin(0);
 
-    m_layout->addWidget(m_textEdit, 0, 0, 1, 2);
+    m_layout->addWidget(m_textEdit, 0, 0, 1, 3);
 
-    m_layout->addWidget(m_buttonFind, 1, 0);
-    m_layout->addWidget(m_buttonEdit, 1, 1);
+    m_layout->addWidget(m_buttonFind, 1, 1);
+    m_layout->addWidget(m_buttonEdit, 1, 2);
 
-    m_layout->addWidget(m_buttonSave, 2, 0);
-    m_layout->addWidget(m_buttonCancel, 2, 1);
+    m_layout->addWidget(m_buttonSave, 2, 1);
+    m_layout->addWidget(m_buttonCancel, 2, 2);
+
+    m_layout->setColumnStretch(0, 0);
+    m_layout->setColumnStretch(1, 1);
+    m_layout->setColumnStretch(2, 1);
 
     m_buttonSave->hide();
     m_buttonCancel->hide();

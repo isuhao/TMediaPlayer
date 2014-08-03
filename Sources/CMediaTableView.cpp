@@ -23,6 +23,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CMainWindow.hpp"
 #include "CMediaManager.hpp"
 #include "IPlayList.hpp"
+#include "CFolder.hpp"
 #include "CMediaTableHeader.hpp"
 #include "CStaticList.hpp"
 #include "CDynamicList.hpp"
@@ -1659,6 +1660,9 @@ void CMediaTableView::contextMenuEvent(QContextMenuEvent * event)
             }
             else
             {
+                CFolder * rootFolder = m_mainWindow->getRootFolder();
+                buildMenuAddToPlaylists(menuAddToPlayList, rootFolder);
+/*
                 for (QList<IPlayList *>::ConstIterator it = playLists.begin(); it != playLists.end(); ++it)
                 {
                     CStaticList * staticList = qobject_cast<CStaticList *>(*it);
@@ -1668,6 +1672,7 @@ void CMediaTableView::contextMenuEvent(QContextMenuEvent * event)
                         connect(m_actionAddToPlayList[staticList], SIGNAL(triggered()), this, SLOT(addToPlayList()));
                     }
                 }
+*/
             }
         }
 
@@ -1680,6 +1685,49 @@ void CMediaTableView::contextMenuEvent(QContextMenuEvent * event)
         m_menu.move(getCorrectMenuPosition(&m_menu, event->globalPos()));
         m_menu.show();
     }
+}
+
+
+bool CMediaTableView::buildMenuAddToPlaylists(QMenu * menu, CFolder * folder)
+{
+    if (menu == nullptr || folder == nullptr)
+    {
+        return false;
+    }
+
+    bool nonEmptyFolder = false;
+
+    QList<CFolder *> folders = folder->getFolders();
+
+    foreach (CFolder * subFolder, folders)
+    {
+        QMenu * subMenu = menu->addMenu(QPixmap(":/icons/folder_close"), subFolder->getName());
+
+        if (!buildMenuAddToPlaylists(subMenu, subFolder))
+        {
+            delete subMenu;
+        }
+        else
+        {
+            nonEmptyFolder = true;
+        }
+    }
+
+    QList<IPlayList *> playlists = folder->getPlayLists();
+
+    foreach (IPlayList * playlist, playlists)
+    {
+        CStaticList * staticList = qobject_cast<CStaticList *>(playlist);
+
+        if (staticList)
+        {
+            nonEmptyFolder = true;
+            m_actionAddToPlayList[staticList] = menu->addAction(QPixmap(":/icons/playlist"), playlist->getName());
+            connect(m_actionAddToPlayList[staticList], SIGNAL(triggered()), this, SLOT(addToPlayList()));
+        }
+    }
+
+    return nonEmptyFolder;
 }
 
 

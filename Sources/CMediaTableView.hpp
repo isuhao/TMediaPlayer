@@ -230,6 +230,8 @@ protected:
 
 private:
 
+    bool buildMenuAddToPlaylists(QMenu * menu, CFolder * folder);
+
     virtual bool canImportSongs() const
     {
         return false;

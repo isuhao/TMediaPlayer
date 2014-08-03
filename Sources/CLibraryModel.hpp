@@ -47,7 +47,6 @@ public:
     virtual void clear();
     void updateCDRomDrives();
 
-    //inline CFolder * getRootFolder() const;
     inline QList<CFolder *> getFolders() const;
     inline QList<IPlayList *> getPlayLists() const;
     inline CFolder * getRootFolder() const;

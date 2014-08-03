@@ -1795,68 +1795,68 @@ Erreur : %4</translation>
 <context>
     <name>CMediaTableView</name>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="317"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="319"/>
         <source>Title</source>
         <translation>Titre</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="318"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="320"/>
         <source>Artist</source>
         <translation>Artiste</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="319"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="321"/>
         <source>Album</source>
         <translation>Album</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="320"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="322"/>
         <source>Album artist</source>
         <translation>Artiste de l&apos;album</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="321"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="323"/>
         <source>Composer</source>
         <translation>Compositeur</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="322"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="324"/>
         <source>Year</source>
         <translation>Année</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="323"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="325"/>
         <source>Track</source>
         <translation>Piste</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="324"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="326"/>
         <source>Disc</source>
         <translation>Disque</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="325"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="327"/>
         <source>Genre</source>
         <translation>Genre</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="326"/>
-        <location filename="../Sources/CMediaTableView.cpp" line="1504"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="328"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="1505"/>
         <source>Rating</source>
         <translation>Note</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="327"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="329"/>
         <source>Comments</source>
         <translation>Commentaires</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="328"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="330"/>
         <source>Plays</source>
         <translation>Lectures</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="329"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="331"/>
         <source>Last played</source>
         <translation>Dernière lecture</translation>
     </message>
@@ -1865,215 +1865,215 @@ Erreur : %4</translation>
         <translation type="obsolete">Fichier</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="330"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="332"/>
         <source>Pathname</source>
         <translation>Localisation</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="331"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="333"/>
         <source>Bit rate</source>
         <translation>Débit</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="332"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="334"/>
         <source>Format</source>
         <translation>Format</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="333"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="335"/>
         <source>Duration</source>
         <translation>Durée</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="334"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="336"/>
         <source>Sample rate</source>
         <translation>Fréquence</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="335"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="337"/>
         <source>Creation date</source>
         <translation>Date de création</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="336"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="338"/>
         <source>Modification date</source>
         <translation>Date de modification</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="337"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="339"/>
         <source>Channels</source>
         <translation>Canaux</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="338"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="340"/>
         <source>File size</source>
         <translation>Taille du fichier</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="339"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="341"/>
         <source>Lyrics</source>
         <translation>Paroles</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="340"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="342"/>
         <source>Language</source>
         <translation>Langue</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="341"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="343"/>
         <source>Lyricist</source>
         <translation>Parolier</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="342"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="344"/>
         <source>Grouping</source>
         <translation>Regroupement</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="343"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="345"/>
         <source>Subtitle</source>
         <translation>Sous-titre</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="344"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="346"/>
         <source>Track gain</source>
         <translation>Gain de la piste</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="345"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="347"/>
         <source>Track peak</source>
         <translation>Pic de la piste</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="346"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="348"/>
         <source>Album gain</source>
         <translation>Gain de l&apos;album</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="347"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="349"/>
         <source>Album peak</source>
         <translation>Pic de l&apos;album</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="348"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="350"/>
         <source>BPM</source>
         <translation>BPM</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="349"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="351"/>
         <source>Sort Title</source>
         <translation>Titre pour le tri</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="350"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="352"/>
         <source>Sort Artist</source>
         <translation>Artiste pour le tri</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="351"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="353"/>
         <source>Sort Album</source>
         <translation>Album pour le tri</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="352"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="354"/>
         <source>Sort Album artist</source>
         <translation>Artiste de l&apos;album pour le tri</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="353"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="355"/>
         <source>Sort Composer</source>
         <translation>Compositeur pour le tri</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.hpp" line="354"/>
+        <location filename="../Sources/CMediaTableView.hpp" line="356"/>
         <source>Filename</source>
         <translation>Fichier</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="863"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="864"/>
         <source>Are you sure you want to remove the selected songs from the library?
 The files will not be deleted.</source>
         <translation>Êtes-vous sur de vouloir supprimer les morceaux sélectionnés de la médiathèque ?
 Les fichiers ne seront pas supprimés.</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="863"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="864"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="1273"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="1274"/>
         <source>invalid identifier (%1)</source>
         <translation>identifiant invalide (%1)</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="1478"/>
-        <location filename="../Sources/CMediaTableView.cpp" line="1492"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="1479"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="1493"/>
         <source>Play</source>
         <translation>Lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="1499"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="1500"/>
         <source>Informations...</source>
         <translation>Informations...</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="387"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="388"/>
         <source>invalid pointer</source>
         <translation>pointeur invalide</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="422"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="423"/>
         <source>invalid argument</source>
         <translation>argument invalide</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="939"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="940"/>
         <source>Analysis files...</source>
         <translation>Analyse des fichiers...</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="939"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="940"/>
         <source>Abort</source>
         <translation>Interrompre</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="1482"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="1483"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="1488"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="1489"/>
         <source>Play in this playlist</source>
         <translation>Lecture dans cette liste</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="1541"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="1542"/>
         <source>Import...</source>
         <translation>Importer...</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="1549"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="1550"/>
         <source>Edit metadata...</source>
         <translation>Éditer les métadonnées...</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="1552"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="1553"/>
         <source>Show in explorer</source>
         <translation>Afficher dans l&apos;explorateur</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="1556"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="1557"/>
         <source>Relocate</source>
         <translation>Relocaliser</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="1564"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="1565"/>
         <source>Remove from playlist</source>
         <translation>Enlever de la liste de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="1569"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="1570"/>
         <source>Remove from library</source>
         <translation>Enlever de la médiathèque</translation>
     </message>
@@ -2086,7 +2086,7 @@ Les fichiers ne seront pas supprimés.</translation>
         <translation type="obsolete">Renommer le fichier</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CMediaTableView.cpp" line="1570"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="1571"/>
         <source>Rename file(s) automatically</source>
         <translation type="unfinished">
             <numerusform>Renommer le fichier automatiquement</numerusform>
@@ -2094,7 +2094,7 @@ Les fichiers ne seront pas supprimés.</translation>
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../Sources/CMediaTableView.cpp" line="1571"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="1572"/>
         <source>Analyze file(s)</source>
         <translation type="unfinished">
             <numerusform>Analyser le fichier</numerusform>
@@ -2102,67 +2102,67 @@ Les fichiers ne seront pas supprimés.</translation>
         </translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="1589"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="1590"/>
         <source>Check song</source>
         <translation>Cocher le morceau</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="1590"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="1591"/>
         <source>Uncheck song</source>
         <translation>Décocher le morceau</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="1605"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="1606"/>
         <source>Check selection</source>
         <translation>Cocher la sélection</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="1606"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="1607"/>
         <source>Uncheck selection</source>
         <translation>Décocher la sélection</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="1616"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="1617"/>
         <source>Queue</source>
         <translation>File d&apos;attente</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="1617"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="1618"/>
         <source>Add at the beginning</source>
         <translation>Ajouter au début</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="1618"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="1619"/>
         <source>Add at the end</source>
         <translation>Ajouter à la fin</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="1622"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="1623"/>
         <source>Playlists</source>
         <translation>Listes de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="1624"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="1625"/>
         <source>Library</source>
         <translation>Médiathèque</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="1652"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="1653"/>
         <source>Add to playlist</source>
         <translation>Ajouter à la liste de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="1657"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="1658"/>
         <source>There are no playlist</source>
         <translation>Il n&apos;y a pas de listes de lecture</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="1677"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="1682"/>
         <source>Remove duplicates</source>
         <translation>Supprimer les doublons</translation>
     </message>
     <message>
-        <location filename="../Sources/CMediaTableView.cpp" line="863"/>
+        <location filename="../Sources/CMediaTableView.cpp" line="864"/>
         <source>Remove</source>
         <translation>Supprimer</translation>
     </message>
@@ -3014,9 +3014,9 @@ Voulez-vous les ajouter ?</translation>
     <name>CWidgetLyrics</name>
     <message>
         <location filename="../Sources/CWidgetLyrics.cpp" line="41"/>
-        <location filename="../Sources/CWidgetLyrics.cpp" line="90"/>
-        <location filename="../Sources/CWidgetLyrics.cpp" line="185"/>
-        <location filename="../Sources/CWidgetLyrics.cpp" line="203"/>
+        <location filename="../Sources/CWidgetLyrics.cpp" line="94"/>
+        <location filename="../Sources/CWidgetLyrics.cpp" line="189"/>
+        <location filename="../Sources/CWidgetLyrics.cpp" line="207"/>
         <source>Find</source>
         <translation>Chercher</translation>
     </message>
@@ -3036,7 +3036,7 @@ Voulez-vous les ajouter ?</translation>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../Sources/CWidgetLyrics.cpp" line="120"/>
+        <location filename="../Sources/CWidgetLyrics.cpp" line="124"/>
         <source>Finding lyrics...</source>
         <translation>Recherche des paroles...</translation>
     </message>
