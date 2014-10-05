@@ -996,24 +996,60 @@ bool CSong::matchFilter(const QString& filter, bool split) const
         foreach (QString filterPart, filterParts)
         {
             filterPart = filterPart.trimmed();
+/*
+            // Recherche de filtres spécifiques
+            QRegExp rx("^{(lang|title):(\S+)}$");
 
-            if (!m_properties.fileName   .contains(filterPart, Qt::CaseInsensitive) &&
-                !m_infos.title           .contains(filterPart, Qt::CaseInsensitive) &&
-                !m_infos.artistName      .contains(filterPart, Qt::CaseInsensitive) &&
-                !m_infos.albumTitle      .contains(filterPart, Qt::CaseInsensitive) &&
-                !m_infos.albumArtist     .contains(filterPart, Qt::CaseInsensitive) &&
-                !m_infos.genre           .contains(filterPart, Qt::CaseInsensitive) &&
-                !m_infos.comments        .contains(filterPart, Qt::CaseInsensitive) &&
-                !m_infos.lyrics          .contains(filterPart, Qt::CaseInsensitive) &&
-                !m_infos.composer        .contains(filterPart, Qt::CaseInsensitive) &&
-                !m_infos.titleSort       .contains(filterPart, Qt::CaseInsensitive) &&
-                !m_infos.artistNameSort  .contains(filterPart, Qt::CaseInsensitive) &&
-                !m_infos.albumTitleSort  .contains(filterPart, Qt::CaseInsensitive) &&
-                !m_infos.albumArtistSort .contains(filterPart, Qt::CaseInsensitive) &&
-                !m_infos.composerSort    .contains(filterPart, Qt::CaseInsensitive) &&
-                !m_infos.lyricist        .contains(filterPart, Qt::CaseInsensitive) &&
-                !m_infos.grouping        .contains(filterPart, Qt::CaseInsensitive) &&
-                !m_infos.subTitle        .contains(filterPart, Qt::CaseInsensitive))
+            if (rx.pos(1) != 1 && rx.pos(2) != 1)
+            {
+                if (rx.cap(1) == "lang")
+                {
+                    if (rx.cap(2).size() == 2)
+                    {
+                        if (m_infos.language != getLanguageForISO2Code(rx.cap(2)))
+                        {
+                            return false;
+                        }
+                    }
+                    else if (rx.cap(2).size() == 3)
+                    {
+                        if (m_infos.language != getLanguageForISO3Code(rx.cap(2)))
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else if (rx.cap(1) == "title")
+                {
+                    if (!m_infos.title.contains(rx.cap(2), Qt::CaseInsensitive))
+                    {
+                        return false;
+                    }
+                }
+            }
+            else
+*/
+            if (!m_properties.fileName  .contains(filterPart, Qt::CaseInsensitive) &&
+                !m_infos.title          .contains(filterPart, Qt::CaseInsensitive) &&
+                !m_infos.artistName     .contains(filterPart, Qt::CaseInsensitive) &&
+                !m_infos.albumTitle     .contains(filterPart, Qt::CaseInsensitive) &&
+                !m_infos.albumArtist    .contains(filterPart, Qt::CaseInsensitive) &&
+                !m_infos.genre          .contains(filterPart, Qt::CaseInsensitive) &&
+                !m_infos.comments       .contains(filterPart, Qt::CaseInsensitive) &&
+                !m_infos.lyrics         .contains(filterPart, Qt::CaseInsensitive) &&
+                !m_infos.composer       .contains(filterPart, Qt::CaseInsensitive) &&
+                !m_infos.titleSort      .contains(filterPart, Qt::CaseInsensitive) &&
+                !m_infos.artistNameSort .contains(filterPart, Qt::CaseInsensitive) &&
+                !m_infos.albumTitleSort .contains(filterPart, Qt::CaseInsensitive) &&
+                !m_infos.albumArtistSort.contains(filterPart, Qt::CaseInsensitive) &&
+                !m_infos.composerSort   .contains(filterPart, Qt::CaseInsensitive) &&
+                !m_infos.lyricist       .contains(filterPart, Qt::CaseInsensitive) &&
+                !m_infos.grouping       .contains(filterPart, Qt::CaseInsensitive) &&
+                !m_infos.subTitle       .contains(filterPart, Qt::CaseInsensitive))
             {
                 return false;
             }
@@ -1024,23 +1060,23 @@ bool CSong::matchFilter(const QString& filter, bool split) const
     else
     {
         // Recherche exacte
-        return (m_properties.fileName   .contains(filter, Qt::CaseInsensitive) ||
-                m_infos.title           .contains(filter, Qt::CaseInsensitive) ||
-                m_infos.artistName      .contains(filter, Qt::CaseInsensitive) ||
-                m_infos.albumTitle      .contains(filter, Qt::CaseInsensitive) ||
-                m_infos.albumArtist     .contains(filter, Qt::CaseInsensitive) ||
-                m_infos.genre           .contains(filter, Qt::CaseInsensitive) ||
-                m_infos.comments        .contains(filter, Qt::CaseInsensitive) ||
-                m_infos.lyrics          .contains(filter, Qt::CaseInsensitive) ||
-                m_infos.composer        .contains(filter, Qt::CaseInsensitive) ||
-                m_infos.titleSort       .contains(filter, Qt::CaseInsensitive) ||
-                m_infos.artistNameSort  .contains(filter, Qt::CaseInsensitive) ||
-                m_infos.albumTitleSort  .contains(filter, Qt::CaseInsensitive) ||
-                m_infos.albumArtistSort .contains(filter, Qt::CaseInsensitive) ||
-                m_infos.composerSort    .contains(filter, Qt::CaseInsensitive) ||
-                m_infos.lyricist        .contains(filter, Qt::CaseInsensitive) ||
-                m_infos.grouping        .contains(filter, Qt::CaseInsensitive) ||
-                m_infos.subTitle        .contains(filter, Qt::CaseInsensitive));
+        return (m_properties.fileName  .contains(filter, Qt::CaseInsensitive) ||
+                m_infos.title          .contains(filter, Qt::CaseInsensitive) ||
+                m_infos.artistName     .contains(filter, Qt::CaseInsensitive) ||
+                m_infos.albumTitle     .contains(filter, Qt::CaseInsensitive) ||
+                m_infos.albumArtist    .contains(filter, Qt::CaseInsensitive) ||
+                m_infos.genre          .contains(filter, Qt::CaseInsensitive) ||
+                m_infos.comments       .contains(filter, Qt::CaseInsensitive) ||
+                m_infos.lyrics         .contains(filter, Qt::CaseInsensitive) ||
+                m_infos.composer       .contains(filter, Qt::CaseInsensitive) ||
+                m_infos.titleSort      .contains(filter, Qt::CaseInsensitive) ||
+                m_infos.artistNameSort .contains(filter, Qt::CaseInsensitive) ||
+                m_infos.albumTitleSort .contains(filter, Qt::CaseInsensitive) ||
+                m_infos.albumArtistSort.contains(filter, Qt::CaseInsensitive) ||
+                m_infos.composerSort   .contains(filter, Qt::CaseInsensitive) ||
+                m_infos.lyricist       .contains(filter, Qt::CaseInsensitive) ||
+                m_infos.grouping       .contains(filter, Qt::CaseInsensitive) ||
+                m_infos.subTitle       .contains(filter, Qt::CaseInsensitive));
     }
 }
 

@@ -816,9 +816,17 @@ void CMainWindow::onFilterChange(const QString& filter)
     updateListInformations();
 
     if (filter.isEmpty())
+    {
         m_uiControl->btnClearFilter->setEnabled(false);
+        m_uiControl->editFilter->setPalette(QPalette());
+    }
     else
+    {
         m_uiControl->btnClearFilter->setEnabled(true);
+        QPalette palette = m_uiControl->editFilter->palette();
+        palette.setColor(QPalette::Base, Qt::green);
+        m_uiControl->editFilter->setPalette(palette);
+    }
 }
 
 
