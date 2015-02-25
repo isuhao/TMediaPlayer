@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2012-2014 Teddy Michel
+Copyright (C) 2012-2015 Teddy Michel
 
 This file is part of TMediaPlayer.
 
@@ -26,6 +26,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QString>
 #include <QWebPage>
 #include <QNetworkReply>
+
 
 class CMediaManager;
 class CSong;
@@ -56,14 +57,13 @@ protected slots:
 
     void onError(QNetworkReply::NetworkError code);
     void replyFinished(QNetworkReply * reply);
-    //void replyFinished2(QNetworkReply * reply);
     void onPageFinished(bool ok);
 
 protected:
 
     CMediaManager * m_mediaManager;
     CSong * m_song; ///< Pointeur sur le morceau dont on recherche les paroles.
-    QWebPage page;
+    QWebPage m_page;
     QWebFrame * m_frame;
 };
 

@@ -4,7 +4,6 @@
 --------------------------------------------------
 
 - Bug : si on modifie une liste dynamique en cours de lecture, ben y'a un blem...
-- Bug : si une liste ne contient que des morceaux introuvables (ou décochés, ou non lisible en lecture aléatoire) et que la répétition de liste est activée, la lecture entraine une boucle infinie.
 
 - Problème graphique : si on éjecte un CD alors que son contenu est affiché, on se retrouve avec une liste vide.
 - Problème graphique : si on modifie les informations d'un morceau, il faut mettre à jour la vue courante.

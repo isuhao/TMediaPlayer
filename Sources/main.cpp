@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2012-2014 Teddy Michel
+Copyright (C) 2012-2015 Teddy Michel
 
 This file is part of TMediaPlayer.
 
@@ -59,7 +59,7 @@ int main(int argc, char * argv[])
     if (args.contains("-V") || args.contains("--version"))
     {
         QTextStream(stdout) << QString("TMediaPlayer %1").arg(CMediaManager::getAppVersion()) << endl;
-        QTextStream(stdout) << QString("Copyright (C) 2012-2014 Teddy Michel") << endl;
+        QTextStream(stdout) << QString("Copyright (C) 2012-2015 Teddy Michel") << endl;
         QTextStream(stdout) << QString("License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>") << endl;
         return EXIT_SUCCESS;
     }

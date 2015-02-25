@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2012-2014 Teddy Michel
+Copyright (C) 2012-2015 Teddy Michel
 
 This file is part of TMediaPlayer.
 
@@ -1098,56 +1098,66 @@ void CMainWindow::nextSong()
     {
         Q_CHECK_PTR(m_currentSongTable);
 
-        m_currentSongItem->getSong()->stop();
-        updateSongDescription(nullptr);
-        m_currentSongTable->m_model->setCurrentSong(nullptr);
+        CMediaTableItem * firstSongToPlay = m_currentSongItem;
 
-        setState(Stopped);
-
-        if (m_repeatMode != RepeatSong)
+        forever
         {
-            m_currentSongItem = m_currentSongTable->getNextSong(m_currentSongItem, m_mediaManager->isShuffle());
-        }
+            m_currentSongItem->getSong()->stop();
+            updateSongDescription(nullptr);
+            m_currentSongTable->m_model->setCurrentSong(nullptr);
 
-        if (m_currentSongItem && !m_currentSongItem->getSong()->isEnabled())
-        {
-            nextSong();
-            return;
-        }
+            setState(Stopped);
 
-        // Fin de la liste et répétition de la liste activée
-        if (!m_currentSongItem && m_repeatMode == RepeatList)
-        {
-            m_currentSongItem = m_currentSongTable->getNextSong(nullptr, m_mediaManager->isShuffle());
-        }
-
-        if (!m_currentSongItem)
-        {
-            m_currentSongTable = nullptr;
-            m_state = Stopped;
-            return;
-        }
-
-        if (m_currentSongTable == m_displayedSongTable)
-        {
-            selectCurrentSong();
-        }
-
-        if (m_currentSongItem->getSong()->loadSound())
-        {
-            if (m_state == Paused)
+            if (m_repeatMode != RepeatSong)
             {
-                startPlay();
-                pause();
+                m_currentSongItem = m_currentSongTable->getNextSong(m_currentSongItem, m_mediaManager->isShuffle());
             }
-            else
+
+            if (m_currentSongItem && !m_currentSongItem->getSong()->isEnabled())
             {
-                startPlay();
+                continue;
             }
-        }
-        else
-        {
-            nextSong();
+
+            // Fin de la liste et répétition de la liste activée
+            if (!m_currentSongItem && m_repeatMode == RepeatList)
+            {
+                m_currentSongItem = m_currentSongTable->getNextSong(nullptr, m_mediaManager->isShuffle());
+            }
+
+            if (!m_currentSongItem)
+            {
+                m_currentSongTable = nullptr;
+                m_state = Stopped;
+                return;
+            }
+
+            if (m_currentSongTable == m_displayedSongTable)
+            {
+                selectCurrentSong();
+            }
+
+            // Chargement du morceau
+            if (m_currentSongItem->getSong()->loadSound())
+            {
+                if (m_state == Paused)
+                {
+                    startPlay();
+                    pause();
+                }
+                else
+                {
+                    startPlay();
+                }
+
+                break;
+            }
+
+            // On a fait le tour de la liste et aucun morceau ne peut être joué
+            if (firstSongToPlay == m_currentSongItem)
+            {
+                stop();
+                break;
+            }
         }
     }
     else

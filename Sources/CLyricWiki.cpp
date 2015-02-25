@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2012-2014 Teddy Michel
+Copyright (C) 2012-2015 Teddy Michel
 
 This file is part of TMediaPlayer.
 
@@ -28,6 +28,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QUrl>
 #include <QWebFrame>
 #include <QWebElementCollection>
+#include <QWebSettings>
 
 #include <QtDebug>
 
@@ -42,6 +43,9 @@ m_song         (song)
 
     QNetworkAccessManager * networkManager = new QNetworkAccessManager(this);
     connect(networkManager, SIGNAL(finished(QNetworkReply *)), this, SLOT(replyFinished(QNetworkReply *)));
+
+    // On désactive JavaScript
+    m_page.settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
 
     QUrl url(QString("http://lyrics.wikia.com/api.php?action=lyrics&artist=%1&song=%2&albumName=%3&fmt=xml&func=getSong").arg(m_song->getArtistName()).arg(m_song->getTitle()).arg(m_song->getAlbumTitle()));
     QNetworkRequest request(url);
@@ -120,7 +124,7 @@ void CLyricWiki::replyFinished(QNetworkReply * reply)
         return;
     }
 
-    m_frame = page.mainFrame();
+    m_frame = m_page.mainFrame();
     m_frame->load(QUrl::fromPercentEncoding(qPrintable(url)));
     connect(m_frame, SIGNAL(loadFinished(bool)), this, SLOT(onPageFinished(bool)));
 

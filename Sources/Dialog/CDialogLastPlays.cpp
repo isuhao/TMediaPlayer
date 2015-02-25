@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2012-2014 Teddy Michel
+Copyright (C) 2012-2015 Teddy Michel
 
 This file is part of TMediaPlayer.
 
@@ -50,7 +50,7 @@ m_model      (nullptr)
     connect(btnClose, SIGNAL(clicked()), this, SLOT(close()));
 
     m_model = new QStandardItemModel(this);
-    m_model->setHorizontalHeaderLabels(QStringList() << tr("Time") << tr("Title") << tr("Artist") << tr("Album"));
+    m_model->setHorizontalHeaderLabels(QStringList() << /*tr("Num") <<*/ tr("Time") << tr("Title") << tr("Artist") << tr("Album"));
 
     QSortFilterProxyModel * proxyModel = new QSortFilterProxyModel(this);
     proxyModel->setSourceModel(m_model);
@@ -61,6 +61,8 @@ m_model      (nullptr)
 
     resetList();
     m_uiWidget->table->resizeColumnsToContents();
+    m_uiWidget->table->setAlternatingRowColors(true);
+    m_uiWidget->table->setShowGrid(false);
 
     connect(m_uiWidget->editMaxPlays, SIGNAL(valueChanged(int)), this, SLOT(changeMaxPlays(int)));
     connect(m_mainWindow, SIGNAL(songPlayEnd(CSong *)), this, SLOT(resetList()));
@@ -90,6 +92,7 @@ void CDialogLastPlays::resetList()
     int colWidth1 = m_uiWidget->table->columnWidth(1);
     int colWidth2 = m_uiWidget->table->columnWidth(2);
     int colWidth3 = m_uiWidget->table->columnWidth(3);
+    //int colWidth4 = m_uiWidget->table->columnWidth(4);
 
     m_model->removeRows(0, m_model->rowCount());
 
@@ -118,21 +121,25 @@ void CDialogLastPlays::resetList()
 
             QList<QStandardItem *> itemList;
 
+            //QStandardItem * itemNum = new QStandardItem(row + 1);
             QStandardItem * itemTime = new QStandardItem(playTimeUTC.toLocalTime().toString("dd/MM/yyyy HH:mm:ss"));
             QStandardItem * itemTitle = new QStandardItem(song->getTitle());
             QStandardItem * itemArtist = new QStandardItem(song->getArtistName());
             QStandardItem * itemAlbum = new QStandardItem(song->getAlbumTitle());
 
+            //itemNum->setData(playId, Qt::UserRole + 1);
             itemTime->setData(playId, Qt::UserRole + 1);
             itemTitle->setData(playId, Qt::UserRole + 1);
             itemArtist->setData(playId, Qt::UserRole + 1);
             itemAlbum->setData(playId, Qt::UserRole + 1);
 
+            //itemNum->setData(row, Qt::UserRole + 2);
             itemTime->setData(playTimeUTC, Qt::UserRole + 2);
             itemTitle->setData(song->getTitleSort(false), Qt::UserRole + 2);
             itemArtist->setData(song->getArtistNameSort(false), Qt::UserRole + 2);
             itemAlbum->setData(song->getAlbumTitleSort(false), Qt::UserRole + 2);
 
+            //itemList.append(itemNum);
             itemList.append(itemTime);
             itemList.append(itemTitle);
             itemList.append(itemArtist);
@@ -146,6 +153,7 @@ void CDialogLastPlays::resetList()
     m_uiWidget->table->setColumnWidth(1, colWidth1 > 20 ? colWidth1 : 20);
     m_uiWidget->table->setColumnWidth(2, colWidth2 > 20 ? colWidth2 : 20);
     m_uiWidget->table->setColumnWidth(3, colWidth3 > 20 ? colWidth3 : 20);
+    //m_uiWidget->table->setColumnWidth(4, colWidth4 > 20 ? colWidth4 : 20);
 }
 
 
