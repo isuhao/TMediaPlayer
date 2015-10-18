@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef FILE_C_RATING_DELEGATE
-#define FILE_C_RATING_DELEGATE
+#ifndef FILE_C_MEDIA_TABLE_ITEM_DELEGATE
+#define FILE_C_MEDIA_TABLE_ITEM_DELEGATE
 
 #include <QStyledItemDelegate>
 
@@ -49,4 +49,4 @@ inline CRatingDelegate::CRatingDelegate(QWidget * parent) :
 
 }
 
-#endif // FILE_C_RATING_DELEGATE
+#endif // FILE_C_MEDIA_TABLE_ITEM_DELEGATE

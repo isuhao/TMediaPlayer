@@ -29,6 +29,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QKeyEvent>
 #include <QDragMoveEvent>
 #include <QPainter>
+#include <QMimeData>
 
 
 CQueuePlayList::CQueuePlayList(CMainWindow * mainWindow) :

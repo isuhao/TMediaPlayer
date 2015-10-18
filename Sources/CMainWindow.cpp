@@ -1535,7 +1535,7 @@ void CMainWindow::openDialogEditMetadata()
 
 void CMainWindow::openDialogAddSongs()
 {
-    QStringList fileList = QFileDialog::getOpenFileNames(this, QString(), m_mediaManager->getSettings()->value("Preferences/LastDirectory", QString()).toString(), tr("Media files (*.flac *.ogg *.mp3 *wav);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;WAV (*.wav);;All files (*.*)"));
+    QStringList fileList = QFileDialog::getOpenFileNames(this, QString(), m_mediaManager->getSettings()->value("Preferences/LastDirectory", QString()).toString(), tr("Media files (*.flac *.ogg *.mp3 *.wav);;MP3 (*.mp3);;FLAC (*.flac);;OGG (*.ogg);;WAV (*.wav);;All files (*.*)"));
 
     if (fileList.isEmpty())
         return;
@@ -2326,6 +2326,7 @@ void CMainWindow::loadFiles(const QStringList& fileList)
  * Méthode appelée quand la lecture d'un morceau se termine.
  *
  * \todo Pouvoir arrêter la lecture ou fermer l'application à la fin d'un morceau.
+ * \todo Supprimer la connection entre le signal playEnd et cette méthode ?
  */
 
 void CMainWindow::onPlayEnd()

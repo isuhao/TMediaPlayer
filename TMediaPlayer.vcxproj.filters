@@ -878,6 +878,9 @@
     <ClCompile Include="Sources\Dialog\CDialogEffects.cpp">
       <Filter>Source Files\Dialog</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\CSongTitle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Sources\CSong.hpp">
@@ -1196,6 +1199,9 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\$(PlatformName)\ui_DialogEffects.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\CSongTitle.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

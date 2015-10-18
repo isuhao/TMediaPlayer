@@ -22,6 +22,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CMainWindow.hpp"
 #include "CMediaManager.hpp"
 #include "CRating.hpp"
+//#include "CSongTitle.hpp"
 #include "Utils.hpp"
 
 #include <QMouseEvent>
@@ -230,6 +231,7 @@ QVariant CMediaTableModel::data(const QModelIndex& index, int role) const
     }
 
     QList<CMediaTableItem *> data = m_dataFiltered;
+    CSong * song = data.at(index.row())->getSong();
 
     // Image
     if (role == Qt::DecorationRole)
@@ -267,28 +269,29 @@ QVariant CMediaTableModel::data(const QModelIndex& index, int role) const
 
           //case CMediaTableView::ColShufflePos : return m_dataShuffleFiltered.indexOf(data.at(index.row()));
 
-            case CMediaTableView::ColTitle      : return data.at(index.row())->getSong()->getTitle();
-            case CMediaTableView::ColArtist     : return data.at(index.row())->getSong()->getArtistName();
-            case CMediaTableView::ColAlbum      : return data.at(index.row())->getSong()->getAlbumTitle();
-            case CMediaTableView::ColAlbumArtist: return data.at(index.row())->getSong()->getAlbumArtist();
-            case CMediaTableView::ColComposer   : return data.at(index.row())->getSong()->getComposer();
+            case CMediaTableView::ColTitle      : return song->getTitle();
+            //case CMediaTableView::ColTitle      : return QVariant::fromValue<CSongTitle>(CSongTitle(song->getTitle(), song->getSubTitle()));
+            case CMediaTableView::ColArtist     : return song->getArtistName();
+            case CMediaTableView::ColAlbum      : return song->getAlbumTitle();
+            case CMediaTableView::ColAlbumArtist: return song->getAlbumArtist();
+            case CMediaTableView::ColComposer   : return song->getComposer();
 
             // Année
             case CMediaTableView::ColYear:
             {
-                int year = data.at(index.row())->getSong()->getYear();
+                int year = song->getYear();
                 return (year > 0 ? year : QVariant(QString()));
             }
 
             // Numéro de piste
             case CMediaTableView::ColTrackNumber:
             {
-                const int trackNumber = data.at(index.row())->getSong()->getTrackNumber();
+                const int trackNumber = song->getTrackNumber();
 
                 if (trackNumber <= 0)
                     return QString();
 
-                const int trackCount = data.at(index.row())->getSong()->getTrackCount();
+                const int trackCount = song->getTrackCount();
 
                 if (trackCount >= trackNumber)
                     return QString("%1/%2").arg(trackNumber).arg(trackCount);
@@ -299,12 +302,12 @@ QVariant CMediaTableModel::data(const QModelIndex& index, int role) const
             // Numéro de disque
             case CMediaTableView::ColDiscNumber:
             {
-                const int discNumber = data.at(index.row())->getSong()->getDiscNumber();
+                const int discNumber = song->getDiscNumber();
 
                 if (discNumber <= 0)
                     return QString();
 
-                const int discCount = data.at(index.row())->getSong()->getDiscCount();
+                const int discCount = song->getDiscCount();
 
                 if (discCount >= discNumber)
                     return QString("%1/%2").arg(discNumber).arg(discCount);
@@ -312,31 +315,31 @@ QVariant CMediaTableModel::data(const QModelIndex& index, int role) const
                     return discNumber;
             }
 
-            case CMediaTableView::ColGenre       : return data.at(index.row())->getSong()->getGenre();
-            case CMediaTableView::ColRating      : return QVariant::fromValue<CRating>(data.at(index.row())->getSong()->getRating());
-            case CMediaTableView::ColComments    : return data.at(index.row())->getSong()->getComments();
-            case CMediaTableView::ColPlayCount   : return data.at(index.row())->getSong()->getNumPlays();
-            case CMediaTableView::ColLastPlayTime: return data.at(index.row())->getSong()->getLastPlay().toLocalTime();
-            case CMediaTableView::ColPathName    : return data.at(index.row())->getSong()->getFileName();
+            case CMediaTableView::ColGenre       : return song->getGenre();
+            case CMediaTableView::ColRating      : return QVariant::fromValue<CRating>(song->getRating());
+            case CMediaTableView::ColComments    : return song->getComments();
+            case CMediaTableView::ColPlayCount   : return song->getNumPlays();
+            case CMediaTableView::ColLastPlayTime: return song->getLastPlay().toLocalTime();
+            case CMediaTableView::ColPathName    : return song->getFileName();
 
             case CMediaTableView::ColFileName:
             {
-                const QString fileName = data.at(index.row())->getSong()->getFileName();
+                const QString fileName = song->getFileName();
                 return fileName.mid(fileName.lastIndexOf('/') + 1);
             }
 
             // Débit
             case CMediaTableView::ColBitRate:
-                return tr("%1 kbit/s").arg(data.at(index.row())->getSong()->getBitRate());
+                return tr("%1 kbit/s").arg(song->getBitRate());
 
             // Format
             case CMediaTableView::ColFormat:
-                return CSong::getFormatName(data.at(index.row())->getSong()->getFormat());
+                return CSong::getFormatName(song->getFormat());
 
             // Durée
             case CMediaTableView::ColDuration:
             {
-                int duration = data.at(index.row())->getSong()->getDuration();
+                int duration = song->getDuration();
 
                 QTime durationTime(0, 0);
                 durationTime = durationTime.addMSecs(duration);
@@ -345,52 +348,52 @@ QVariant CMediaTableModel::data(const QModelIndex& index, int role) const
 
             // Fréquence d'échantillonnage
             case CMediaTableView::ColSampleRate:
-                return tr("%1 Hz").arg(data.at(index.row())->getSong()->getSampleRate());
+                return tr("%1 Hz").arg(song->getSampleRate());
 
             // Date de création
             case CMediaTableView::ColCreationDate:
-                return data.at(index.row())->getSong()->getCreationDate();
+                return song->getCreationDate();
 
             // Date de modification
             case CMediaTableView::ColModificationDate:
-                return data.at(index.row())->getSong()->getModificationDate();
+                return song->getModificationDate();
 
             // Nombre de canaux
             case CMediaTableView::ColChannels:
-                return data.at(index.row())->getSong()->getNumChannels();
+                return song->getNumChannels();
 
             // Taille du fichier
             case CMediaTableView::ColFileSize:
-                return getFileSize(data.at(index.row())->getSong()->getFileSize());
+                return getFileSize(song->getFileSize());
 
             // Paroles
             case CMediaTableView::ColLyrics:
-                return data.at(index.row())->getSong()->getLyrics();
+                return song->getLyrics();
 
             // Langue
             case CMediaTableView::ColLanguage:
-                return getLanguageName(data.at(index.row())->getSong()->getLanguage());
+                return getLanguageName(song->getLanguage());
 
             // Parolier
             case CMediaTableView::ColLyricist:
-                return data.at(index.row())->getSong()->getLyricist();
+                return song->getLyricist();
 
             // Regroupement
             case CMediaTableView::ColGrouping:
-                return data.at(index.row())->getSong()->getGrouping();
+                return song->getGrouping();
 
             // Sous-titre
             case CMediaTableView::ColSubTitle:
-                return data.at(index.row())->getSong()->getSubTitle();
+                return song->getSubTitle();
 
             // BPM
             case CMediaTableView::ColBPM:
-                return data.at(index.row())->getSong()->getBPM();
+                return song->getBPM();
 
             // Replay Gain
             case CMediaTableView::ColTrackGain:
             {
-                float gain = data.at(index.row())->getSong()->getTrackGain();
+                float gain = song->getTrackGain();
 
                 if (gain == std::numeric_limits<float>::infinity())
                     return QVariant::Invalid;
@@ -400,7 +403,7 @@ QVariant CMediaTableModel::data(const QModelIndex& index, int role) const
 
             case CMediaTableView::ColTrackPeak:
             {
-                float peak = data.at(index.row())->getSong()->getTrackPeak();
+                float peak = song->getTrackPeak();
 
                 if (peak == std::numeric_limits<float>::infinity())
                     return QVariant::Invalid;
@@ -410,7 +413,7 @@ QVariant CMediaTableModel::data(const QModelIndex& index, int role) const
 
             case CMediaTableView::ColAlbumGain:
             {
-                float gain = data.at(index.row())->getSong()->getAlbumGain();
+                float gain = song->getAlbumGain();
 
                 if (gain == std::numeric_limits<float>::infinity())
                     return QVariant::Invalid;
@@ -420,7 +423,7 @@ QVariant CMediaTableModel::data(const QModelIndex& index, int role) const
 
             case CMediaTableView::ColAlbumPeak:
             {
-                float peak = data.at(index.row())->getSong()->getAlbumPeak();
+                float peak = song->getAlbumPeak();
 
                 if (peak == std::numeric_limits<float>::infinity())
                     return QVariant::Invalid;
@@ -428,11 +431,11 @@ QVariant CMediaTableModel::data(const QModelIndex& index, int role) const
                     return peak;
             }
 
-            case CMediaTableView::ColTitleSort      : return data.at(index.row())->getSong()->getTitleSort();
-            case CMediaTableView::ColArtistSort     : return data.at(index.row())->getSong()->getArtistNameSort();
-            case CMediaTableView::ColAlbumSort      : return data.at(index.row())->getSong()->getAlbumTitleSort();
-            case CMediaTableView::ColAlbumArtistSort: return data.at(index.row())->getSong()->getAlbumArtistSort();
-            case CMediaTableView::ColComposerSort   : return data.at(index.row())->getSong()->getComposerSort();
+            case CMediaTableView::ColTitleSort      : return song->getTitleSort();
+            case CMediaTableView::ColArtistSort     : return song->getArtistNameSort();
+            case CMediaTableView::ColAlbumSort      : return song->getAlbumTitleSort();
+            case CMediaTableView::ColAlbumArtistSort: return song->getAlbumArtistSort();
+            case CMediaTableView::ColComposerSort   : return song->getComposerSort();
         }
     }
     else if (role == Qt::TextAlignmentRole)
@@ -461,13 +464,13 @@ QVariant CMediaTableModel::data(const QModelIndex& index, int role) const
     {
         if (index.column() == CMediaTableView::ColTitle)
         {
-            return (data.at(index.row())->getSong()->isEnabled() ? Qt::Checked : Qt::Unchecked);
+            return (song->isEnabled() ? Qt::Checked : Qt::Unchecked);
         }
     }
     // Couleur du texte
     else if (role == Qt::ForegroundRole)
     {
-        if (data.at(index.row())->getSong()->getFileStatus() == false)
+        if (song->getFileStatus() == false)
         {
             return QBrush(Qt::darkGray);
         }

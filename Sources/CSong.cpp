@@ -45,6 +45,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <unsynchronizedlyricsframe.h>
 #include <textidentificationframe.h>
 
+
 // Debug
 #include <QtDebug>
 

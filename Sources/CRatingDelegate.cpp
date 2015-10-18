@@ -19,6 +19,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include "CRatingDelegate.hpp"
 #include "CRatingEditor.hpp"
+//#include "CSongTitle.hpp"
 #include <QtGui>
 
 
@@ -42,6 +43,16 @@ void CRatingDelegate::paint(QPainter * painter, const QStyleOptionViewItem& opti
 
         starRating.paint(painter, option.rect, option.palette, CRating::ReadOnly);
     }
+/*
+    else if (index.data().canConvert<CSongTitle>())
+    {
+        QStyleOptionViewItemV4 optionV4 = option;
+        initStyleOption(&optionV4, index);
+
+        CSongTitle songTitle = qvariant_cast<CSongTitle>(index.data());
+        songTitle.paint(painter, optionV4);
+    }
+*/
     else
     {
         QStyledItemDelegate::paint(painter, option, index);
@@ -58,10 +69,17 @@ QSize CRatingDelegate::sizeHint(const QStyleOptionViewItem& option, const QModel
         CRating starRating = qvariant_cast<CRating>(index.data());
         return starRating.sizeHint();
     }
-    else
+/*
+    if (index.data().canConvert<CSongTitle>())
     {
-        return QStyledItemDelegate::sizeHint(option, index);
+        QStyleOptionViewItemV4 optionV4 = option;
+        initStyleOption(&optionV4, index);
+
+        CSongTitle songTitle = qvariant_cast<CSongTitle>(index.data());
+        return songTitle.sizeHint(optionV4);
     }
+*/
+    return QStyledItemDelegate::sizeHint(option, index);
 }
 
 
@@ -73,10 +91,8 @@ QWidget * CRatingDelegate::createEditor(QWidget * parent, const QStyleOptionView
         connect(editor, SIGNAL(editingFinished()), this, SLOT(commitAndCloseEditor()));
         return editor;
     }
-    else
-    {
-        return QStyledItemDelegate::createEditor(parent, option, index);
-    }
+
+    return QStyledItemDelegate::createEditor(parent, option, index);
 }
 
 
@@ -87,11 +103,10 @@ void CRatingDelegate::setEditorData(QWidget * editor, const QModelIndex& index) 
         CRating starRating = qvariant_cast<CRating>(index.data());
         CRatingEditor * ratingEditor = qobject_cast<CRatingEditor *>(editor);
         ratingEditor->setRating(starRating);
+        return;
     }
-    else
-    {
-        QStyledItemDelegate::setEditorData(editor, index);
-    }
+
+    QStyledItemDelegate::setEditorData(editor, index);
 }
 
 
@@ -101,17 +116,20 @@ void CRatingDelegate::setModelData(QWidget * editor, QAbstractItemModel * model,
     {
         CRatingEditor * ratingEditor = qobject_cast<CRatingEditor *>(editor);
         model->setData(index, QVariant::fromValue(ratingEditor->getRating()));
+        return;
     }
-    else
-    {
-        QStyledItemDelegate::setModelData(editor, model, index);
-    }
+
+    QStyledItemDelegate::setModelData(editor, model, index);
 }
 
 
 void CRatingDelegate::commitAndCloseEditor()
 {
     CRatingEditor * editor = qobject_cast<CRatingEditor *>(sender());
-    emit commitData(editor);
-    emit closeEditor(editor);
+
+    if (editor != nullptr)
+    {
+        emit commitData(editor);
+        emit closeEditor(editor);
+    }
 }

@@ -573,8 +573,8 @@ void CDynamicList::loadFromDatabase()
         if (conditions.testFlag(ICriterion::UpdateOnSongModified))
             connect(m_mainWindow->getMediaManager(), SIGNAL(songModified(CSong *)), this, SLOT(tryUpdateList()), Qt::UniqueConnection);
 
-        if (conditions.testFlag(ICriterion::UpdateOnSongMoved))
-            connect(m_mainWindow, SIGNAL(songMoved(CSong *)), this, SLOT(tryUpdateList()), Qt::UniqueConnection);
+        //if (conditions.testFlag(ICriterion::UpdateOnSongMoved))
+            //connect(m_mainWindow, SIGNAL(songMoved(CSong *)), this, SLOT(tryUpdateList()), Qt::UniqueConnection);
 
         if (conditions.testFlag(ICriterion::UpdateOnSongPlayEnd))
             connect(m_mainWindow, SIGNAL(songPlayEnd(CSong *)), this, SLOT(tryUpdateList()), Qt::UniqueConnection);
@@ -608,7 +608,7 @@ void CDynamicList::setCriterion(ICriterion * criteria)
         disconnect(m_mainWindow, SIGNAL(songsAdded()             ), this, SLOT(tryUpdateList()));
         disconnect(m_mainWindow, SIGNAL(songRemoved(CSong *)     ), this, SLOT(tryUpdateList()));
         disconnect(m_mainWindow->getMediaManager(), SIGNAL(songModified(CSong *)), this, SLOT(tryUpdateList()));
-        disconnect(m_mainWindow, SIGNAL(songMoved(CSong *)       ), this, SLOT(tryUpdateList()));
+      //disconnect(m_mainWindow, SIGNAL(songMoved(CSong *)       ), this, SLOT(tryUpdateList()));
         disconnect(m_mainWindow, SIGNAL(songPlayEnd(CSong *)     ), this, SLOT(tryUpdateList()));
       //disconnect(m_mainWindow, SIGNAL(listModified(IPlayList *)), this, SLOT(tryUpdateList()));
 
@@ -623,8 +623,8 @@ void CDynamicList::setCriterion(ICriterion * criteria)
         if (conditions.testFlag(ICriterion::UpdateOnSongModified))
             connect(m_mainWindow->getMediaManager(), SIGNAL(songModified(CSong *)), this, SLOT(tryUpdateList()), Qt::UniqueConnection);
 
-        if (conditions.testFlag(ICriterion::UpdateOnSongMoved))
-            connect(m_mainWindow, SIGNAL(songMoved(CSong *)), this, SLOT(tryUpdateList()), Qt::UniqueConnection);
+        //if (conditions.testFlag(ICriterion::UpdateOnSongMoved))
+            //connect(m_mainWindow, SIGNAL(songMoved(CSong *)), this, SLOT(tryUpdateList()), Qt::UniqueConnection);
 
         if (conditions.testFlag(ICriterion::UpdateOnSongPlayEnd))
             connect(m_mainWindow, SIGNAL(songPlayEnd(CSong *)), this, SLOT(tryUpdateList()), Qt::UniqueConnection);

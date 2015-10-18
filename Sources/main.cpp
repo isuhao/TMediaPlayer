@@ -26,20 +26,31 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "CMainWindow.hpp"
 
 
+#if QT_VERSION >= 0x050000
+void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString& msg)
+#else
 void myMessageOutput(QtMsgType type, const char * msg)
+#endif
+
 {
     const char symbols[] = { 'I', 'E', '!', 'X' };
     QString output = QString("%3 [%1] %2\r\n").arg(symbols[type]).arg(msg).arg(QDateTime::currentDateTimeUtc().toString("dd/MM/yyyy hh:mm:ss"));
 
     QFile file("TMediaPlayer.log");
     file.open(QIODevice::WriteOnly | QIODevice::Append);
-    file.write(output.toAscii());
+    file.write(output.toLatin1());
 }
 
 
 int main(int argc, char * argv[])
 {
+
+#if QT_VERSION >= 0x050000
+    qInstallMessageHandler(myMessageOutput);
+#else
     qInstallMsgHandler(myMessageOutput);
+#endif
+
     srand(time(nullptr));
 
     QApplication app(argc, argv);
@@ -47,6 +58,7 @@ int main(int argc, char * argv[])
 
     QCoreApplication::setOrganizationName("Ted");
     QCoreApplication::setApplicationName("TMediaPlayer");
+    QCoreApplication::addLibraryPath(QCoreApplication::applicationDirPath() + "/plugins");
 
     QTextCodec * codec = QTextCodec::codecForName("UTF-8");
     QTextCodec::setCodecForLocale(codec);
