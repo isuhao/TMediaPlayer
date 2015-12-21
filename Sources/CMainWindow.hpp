@@ -188,11 +188,8 @@ public slots:
     void setNextRepeatMode();
     void setRepeatMode(TRepeatMode repeatMode);
 
-#if QT_VERSION < 0x050000
-    void setShuffle();
-#endif
-
     void setShuffle(bool shuffle);
+    void toggleShuffle();
     void setMute(bool mute);
     void toggleMute();
     void setVolume(int volume);

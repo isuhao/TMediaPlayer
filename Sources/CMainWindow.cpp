@@ -327,7 +327,7 @@ bool CMainWindow::initWindow()
     connect(m_uiControl->btnNext    , &QToolButton::clicked, this, &CMainWindow::nextSong         );
 
     connect(m_uiControl->btnRepeat  , &QToolButton::clicked, this, &CMainWindow::setNextRepeatMode);
-    connect(m_uiControl->btnShuffle , &QToolButton::clicked, this, &CMainWindow::setShuffle       );
+    connect(m_uiControl->btnShuffle , &QToolButton::clicked, this, &CMainWindow::toggleShuffle    );
     connect(m_uiControl->btnMute    , &QToolButton::clicked, this, &CMainWindow::toggleMute       );
 #endif
 
@@ -1288,18 +1288,6 @@ void CMainWindow::setRepeatMode(TRepeatMode repeatMode)
     }
 }
 
-#if QT_VERSION < 0x050000
-
-/**
- * Inverse l'état de la lecture aléatoire.
- */
-
-void CMainWindow::setShuffle()
-{
-    setShuffle(!m_mediaManager->isShuffle());
-}
-
-#endif
 
 /**
  * Active ou désactive la lecture aléatoire.
@@ -1312,14 +1300,25 @@ void CMainWindow::setShuffle(bool shuffle)
     m_mediaManager->setShuffle(shuffle);
     bool isShuffle = m_mediaManager->isShuffle();
 
-    m_uiControl->btnShuffle->setIcon(QPixmap(isShuffle ? ":/icons/shuffle_on" : ":/icons/shuffle_off"));
     m_uiWidget->actionShuffle->setChecked(isShuffle);
+    m_uiWidget->actionShuffle->setIcon(QPixmap(isShuffle ? ":/icons/shuffle_on" : ":/icons/shuffle_off"));
+    m_uiControl->btnShuffle->setIcon(QPixmap(isShuffle ? ":/icons/shuffle_on" : ":/icons/shuffle_off"));
 
     // Mélange de la liste en cours de lecture
     if (isShuffle && m_currentSongItem != nullptr)
     {
         m_currentSongTable->initShuffle(m_currentSongItem);
     }
+}
+
+
+/**
+ * Inverse l'état de la lecture aléatoire.
+ */
+
+void CMainWindow::toggleShuffle()
+{
+    setShuffle(!m_mediaManager->isShuffle());
 }
 
 
@@ -1340,7 +1339,6 @@ void CMainWindow::setMute(bool mute)
     }
 
     m_uiWidget->actionMute->setChecked(isMute);
-
     m_uiWidget->actionMute->setIcon(QPixmap(isMute ? ":/icons/muet" : ":/icons/volume"));
     m_uiControl->btnMute->setIcon(QPixmap(isMute ? ":/icons/muet" : ":/icons/volume"));
 }

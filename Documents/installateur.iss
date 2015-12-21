@@ -2,7 +2,7 @@
 [Setup]
 AppId={{636B2DBF-C6E8-448D-A78E-7894B72281E3}
 AppName=TMediaPlayer
-AppVersion=1.0.73
+AppVersion=1.0.74
 AppPublisher=Ted
 DefaultDirName={pf}\TMediaPlayer
 DefaultGroupName=TMediaPlayer
