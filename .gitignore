@@ -1,8 +1,8 @@
 
 TMediaPlayer.sdf
-TMediaPlayer.suo
 TMediaPlayer.vcxproj.user
 TMediaPlayer.opensdf
+*.suo
 
 *.log
 

@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2012-2015 Teddy Michel
+Copyright (C) 2012-2016 Teddy Michel
 
 This file is part of TMediaPlayer.
 
@@ -20,6 +20,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QApplication>
 #include <QTextCodec>
 #include <QLocalSocket>
+#include <QDesktopServices>
+#include <QDir>
 #include <ctime>
 
 #include "CMediaManager.hpp"
@@ -36,7 +38,7 @@ void myMessageOutput(QtMsgType type, const char * msg)
     const char symbols[] = { 'I', 'E', '!', 'X' };
     QString output = QString("%3 [%1] %2\r\n").arg(symbols[type]).arg(msg).arg(QDateTime::currentDateTimeUtc().toString("dd/MM/yyyy hh:mm:ss"));
 
-    QFile file("TMediaPlayer.log");
+	QFile file(QStandardPaths::writableLocation(QStandardPaths::DataLocation) + QDir::separator() + "TMediaPlayer.log");
     file.open(QIODevice::WriteOnly | QIODevice::Append);
     file.write(output.toLatin1());
 }
@@ -53,12 +55,11 @@ int main(int argc, char * argv[])
 
     srand(time(nullptr));
 
-    QApplication app(argc, argv);
+	QApplication app(argc, argv);
     app.setWindowIcon(QPixmap(":/icons/TMediaPlayer"));
 
     QCoreApplication::setOrganizationName("Ted");
     QCoreApplication::setApplicationName("TMediaPlayer");
-    QCoreApplication::addLibraryPath(QCoreApplication::applicationDirPath() + "/plugins");
 
     QTextCodec * codec = QTextCodec::codecForName("UTF-8");
     QTextCodec::setCodecForLocale(codec);
@@ -71,7 +72,7 @@ int main(int argc, char * argv[])
     if (args.contains("-V") || args.contains("--version"))
     {
         QTextStream(stdout) << QString("TMediaPlayer %1").arg(CMediaManager::getAppVersion()) << endl;
-        QTextStream(stdout) << QString("Copyright (C) 2012-2015 Teddy Michel") << endl;
+        QTextStream(stdout) << QString("Copyright (C) 2012-2016 Teddy Michel") << endl;
         QTextStream(stdout) << QString("License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>") << endl;
         return EXIT_SUCCESS;
     }

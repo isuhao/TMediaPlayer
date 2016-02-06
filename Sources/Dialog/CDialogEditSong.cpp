@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2012-2015 Teddy Michel
+Copyright (C) 2012-2016 Teddy Michel
 
 This file is part of TMediaPlayer.
 
@@ -32,8 +32,8 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include <QSettings>
 
 // FMOD
-#include <mpegfile.h>
-#include <id3v2tag.h>
+#include <mpeg/mpegfile.h>
+#include <mpeg/id3v2/id3v2tag.h>
 
 #include <QtDebug>
 
@@ -266,7 +266,8 @@ void CDialogEditSong::resetSummary()
     if (song->getFormat() == CSong::FormatMP3)
     {
 #ifdef Q_OS_WIN32
-        TagLib::MPEG::File file(reinterpret_cast<const wchar_t *>(song->getFileName().constData()), false);
+		TagLib::MPEG::File file(qPrintable(song->getFileName()), false);
+        //TagLib::MPEG::File file(reinterpret_cast<const wchar_t *>(song->getFileName().constData()), false);
 #else
         TagLib::MPEG::File file(qPrintable(song->getFileName()), false);
 #endif

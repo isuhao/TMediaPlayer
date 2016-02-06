@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2012-2015 Teddy Michel
+Copyright (C) 2012-2016 Teddy Michel
 
 This file is part of TMediaPlayer.
 
@@ -22,7 +22,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 
 #include <QDialog>
 #include "ui_DialogEditMetadata.h"
-#include <attachedpictureframe.h>
+#include <mpeg/id3v2/frames/attachedpictureframe.h>
 
 
 class CSong;

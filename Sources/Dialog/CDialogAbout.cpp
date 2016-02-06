@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2012-2015 Teddy Michel
+Copyright (C) 2012-2016 Teddy Michel
 
 This file is part of TMediaPlayer.
 
@@ -21,7 +21,7 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 #include "../CMainWindow.hpp"
 #include "../CMediaManager.hpp"
 #include <QPushButton>
-#include <taglib.h>
+#include <tag.h>
 #include <fmod/fmod.hpp>
 
 
@@ -73,7 +73,7 @@ m_mainWindow (mainWindow)
                                     .arg(musicBrainz));
 
     // Licence
-    m_uiWidget->textLicense->setPlainText("Copyright (C) 2012-2015 Teddy Michel\n"
+    m_uiWidget->textLicense->setPlainText("Copyright (C) 2012-2016 Teddy Michel\n"
                                           "\n"
                                           "TMediaPlayer is free software: you can redistribute it and/or modify\n"
                                           "it under the terms of the GNU General Public License as published by\n"

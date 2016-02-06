@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2012-2015 Teddy Michel
+Copyright (C) 2012-2016 Teddy Michel
 
 This file is part of TMediaPlayer.
 
@@ -30,20 +30,20 @@ along with TMediaPlayer. If not, see <http://www.gnu.org/licenses/>.
 // TagLib
 #include <fileref.h>
 #include <tag.h>
-#include <flacfile.h>
-#include <mpegfile.h>
-#include <vorbisfile.h>
-#include <wavpackfile.h>
-#include <tmap.h>
-#include <id3v1tag.h>
-#include <id3v1genres.h>
-#include <id3v2tag.h>
-#include <apetag.h>
-#include <xiphcomment.h>
-#include <textidentificationframe.h>
-#include <urllinkframe.h>
-#include <unsynchronizedlyricsframe.h>
-#include <commentsframe.h>
+#include <flac/flacfile.h>
+#include <mpeg/mpegfile.h>
+#include <ogg/vorbis/vorbisfile.h>
+#include <wavpack/wavpackfile.h>
+#include <toolkit/tmap.h>
+#include <mpeg/id3v1/id3v1tag.h>
+#include <mpeg/id3v1/id3v1genres.h>
+#include <mpeg/id3v2/id3v2tag.h>
+#include <ape/apetag.h>
+#include <ogg/xiphcomment.h>
+#include <mpeg/id3v2/frames/textidentificationframe.h>
+#include <mpeg/id3v2/frames/urllinkframe.h>
+#include <mpeg/id3v2/frames/unsynchronizedlyricsframe.h>
+#include <mpeg/id3v2/frames/commentsframe.h>
 
 #include <QtDebug>
 
@@ -239,7 +239,8 @@ void CDialogEditMetadata::reset()
         case CSong::FormatMP3:
         {
 #ifdef Q_OS_WIN32
-            TagLib::MPEG::File file(reinterpret_cast<const wchar_t *>(m_song->getFileName().constData()), false);
+			TagLib::MPEG::File file(qPrintable(m_song->getFileName()), false);
+            //TagLib::MPEG::File file(reinterpret_cast<const wchar_t *>(m_song->getFileName().constData()), false);
 #else
             TagLib::MPEG::File file(qPrintable(m_song->getFileName()), false);
 #endif
@@ -263,7 +264,8 @@ void CDialogEditMetadata::reset()
         case CSong::FormatOGG:
         {
 #ifdef Q_OS_WIN32
-            TagLib::Ogg::Vorbis::File file(reinterpret_cast<const wchar_t *>(m_song->getFileName().constData()), false);
+			TagLib::Ogg::Vorbis::File file(qPrintable(m_song->getFileName()), false);
+            //TagLib::Ogg::Vorbis::File file(reinterpret_cast<const wchar_t *>(m_song->getFileName().constData()), false);
 #else
             TagLib::Ogg::Vorbis::File file(qPrintable(m_song->getFileName()), false);
 #endif
@@ -287,7 +289,8 @@ void CDialogEditMetadata::reset()
         case CSong::FormatFLAC:
         {
 #ifdef Q_OS_WIN32
-            TagLib::FLAC::File file(reinterpret_cast<const wchar_t *>(m_song->getFileName().constData()), false);
+			TagLib::FLAC::File file(qPrintable(m_song->getFileName()), false);
+            //TagLib::FLAC::File file(reinterpret_cast<const wchar_t *>(m_song->getFileName().constData()), false);
 #else
             TagLib::FLAC::File file(qPrintable(m_song->getFileName()), false);
 #endif
@@ -311,7 +314,8 @@ void CDialogEditMetadata::reset()
         case CSong::FormatWAV:
         {
 #ifdef Q_OS_WIN32
-            TagLib::WavPack::File file(reinterpret_cast<const wchar_t *>(m_song->getFileName().constData()), false);
+			TagLib::WavPack::File file(qPrintable(m_song->getFileName()), false);
+            //TagLib::WavPack::File file(reinterpret_cast<const wchar_t *>(m_song->getFileName().constData()), false);
 #else
             TagLib::WavPack::File file(qPrintable(m_song->getFileName()), false);
 #endif

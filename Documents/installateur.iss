@@ -2,7 +2,7 @@
 [Setup]
 AppId={{636B2DBF-C6E8-448D-A78E-7894B72281E3}
 AppName=TMediaPlayer
-AppVersion=1.0.74
+AppVersion=1.0.75
 AppPublisher=Ted
 DefaultDirName={pf}\TMediaPlayer
 DefaultGroupName=TMediaPlayer
@@ -21,10 +21,11 @@ Name: "french"; MessagesFile: "compiler:Languages\French.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
-Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
+Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
 Source: "..\Bin\Win32\Release\TMediaPlayer.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Bin\Win32\Release\msvcp120.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\Bin\Win32\Release\fmodex.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\Bin\Win32\Release\tag.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\Bin\Win32\Release\icudt54.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -47,6 +48,11 @@ Source: "..\Bin\Win32\Release\Qt5WebKit.dll"; DestDir: "{app}"; Flags: ignorever
 Source: "..\Bin\Win32\Release\Qt5WebKitWidgets.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\Bin\Win32\Release\Qt5Widgets.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\Bin\Win32\Release\Qt5Xml.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Bin\Win32\Release\libeay32.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Bin\Win32\Release\libiconv-2.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Bin\Win32\Release\libintl-8.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Bin\Win32\Release\libpq.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Bin\Win32\Release\ssleay32.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\Bin\Win32\Release\plugins\*.dll"; DestDir: "{app}\plugins"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\Lang\*.qm"; DestDir: "{app}\Lang"; Flags: ignoreversion recursesubdirs createallsubdirs
 
