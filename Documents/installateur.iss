@@ -2,7 +2,7 @@
 [Setup]
 AppId={{636B2DBF-C6E8-448D-A78E-7894B72281E3}
 AppName=TMediaPlayer
-AppVersion=1.0.75
+AppVersion=1.0.76
 AppPublisher=Ted
 DefaultDirName={pf}\TMediaPlayer
 DefaultGroupName=TMediaPlayer
@@ -25,35 +25,7 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 
 [Files]
 Source: "..\Bin\Win32\Release\TMediaPlayer.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\Win32\Release\msvcp120.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\Win32\Release\fmodex.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\Win32\Release\tag.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\Win32\Release\icudt54.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\Win32\Release\icuin54.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\Win32\Release\icuuc54.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\Win32\Release\Qt5Core.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\Win32\Release\Qt5Gui.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\Win32\Release\Qt5Multimedia.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\Win32\Release\Qt5MultimediaWidgets.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\Win32\Release\Qt5Network.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\Win32\Release\Qt5OpenGL.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\Win32\Release\Qt5Positioning.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\Win32\Release\Qt5PrintSupport.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\Win32\Release\Qt5Qml.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\Win32\Release\Qt5Quick.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\Win32\Release\Qt5Sensors.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\Win32\Release\Qt5Sql.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\Win32\Release\Qt5WebChannel.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\Win32\Release\Qt5WebKit.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\Win32\Release\Qt5WebKitWidgets.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\Win32\Release\Qt5Widgets.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\Win32\Release\Qt5Xml.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\Win32\Release\libeay32.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\Win32\Release\libiconv-2.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\Win32\Release\libintl-8.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\Win32\Release\libpq.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\Win32\Release\ssleay32.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Bin\Win32\Release\plugins\*.dll"; DestDir: "{app}\plugins"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\Bin\Win32\Release\*.dll"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\Lang\*.qm"; DestDir: "{app}\Lang"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]

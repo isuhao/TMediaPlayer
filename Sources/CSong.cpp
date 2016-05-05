@@ -361,8 +361,8 @@ bool CSong::loadTags(bool readProperties)
         case CSong::FormatMP3:
         {
 #ifdef Q_OS_WIN32
-			TagLib::MPEG::File file(qPrintable(m_properties.fileName), readProperties);
-            //TagLib::MPEG::File file(reinterpret_cast<const wchar_t *>(m_properties.fileName.constData()), readProperties);
+			TagLib::MPEG::File file(reinterpret_cast<const wchar_t *>(m_properties.fileName.constData()), readProperties);
+            //TagLib::MPEG::File file(qPrintable(m_properties.fileName), readProperties);
 #else
             TagLib::MPEG::File file(qPrintable(m_properties.fileName), readProperties);
 #endif
@@ -410,8 +410,8 @@ bool CSong::loadTags(bool readProperties)
         case CSong::FormatOGG:
         {
 #ifdef Q_OS_WIN32
-			TagLib::Ogg::Vorbis::File file(qPrintable(m_properties.fileName), readProperties);
-            //TagLib::Ogg::Vorbis::File file(reinterpret_cast<const wchar_t *>(m_properties.fileName.constData()), readProperties);
+			TagLib::Ogg::Vorbis::File file(reinterpret_cast<const wchar_t *>(m_properties.fileName.constData()), readProperties);
+            //TagLib::Ogg::Vorbis::File file(qPrintable(m_properties.fileName), readProperties);
 #else
             TagLib::Ogg::Vorbis::File file(qPrintable(m_properties.fileName), readProperties);
 #endif
@@ -455,8 +455,8 @@ bool CSong::loadTags(bool readProperties)
         case CSong::FormatFLAC:
         {
 #ifdef Q_OS_WIN32
-			TagLib::FLAC::File file(qPrintable(m_properties.fileName), readProperties);
-            //TagLib::FLAC::File file(reinterpret_cast<const wchar_t *>(m_properties.fileName.constData()), readProperties);
+			TagLib::FLAC::File file(reinterpret_cast<const wchar_t *>(m_properties.fileName.constData()), readProperties);
+            //TagLib::FLAC::File file(qPrintable(m_properties.fileName), readProperties);
 #else
             TagLib::FLAC::File file(qPrintable(m_properties.fileName), readProperties);
 #endif
@@ -502,8 +502,8 @@ bool CSong::loadTags(bool readProperties)
         case CSong::FormatWAV:
         {
 #ifdef Q_OS_WIN32
-			TagLib::WavPack::File file(qPrintable(m_properties.fileName), readProperties);
-            //TagLib::WavPack::File file(reinterpret_cast<const wchar_t *>(m_properties.fileName.constData()), readProperties);
+			TagLib::WavPack::File file(reinterpret_cast<const wchar_t *>(m_properties.fileName.constData()), readProperties);
+            //TagLib::WavPack::File file(qPrintable(m_properties.fileName), readProperties);
 #else
             TagLib::WavPack::File file(qPrintable(m_properties.fileName), readProperties);
 #endif
@@ -591,8 +591,8 @@ bool CSong::writeTags()
         case CSong::FormatMP3:
         {
 #ifdef Q_OS_WIN32
-			TagLib::MPEG::File file(qPrintable(m_properties.fileName));
-            //TagLib::MPEG::File file(reinterpret_cast<const wchar_t *>(m_properties.fileName.constData()));
+            TagLib::MPEG::File file(reinterpret_cast<const wchar_t *>(m_properties.fileName.constData()), false);
+			//TagLib::MPEG::File file(qPrintable(m_properties.fileName), false);
 #else
             TagLib::MPEG::File file(qPrintable(m_properties.fileName), false);
 #endif
@@ -629,8 +629,8 @@ bool CSong::writeTags()
         case CSong::FormatOGG:
         {
 #ifdef Q_OS_WIN32
-			TagLib::Ogg::Vorbis::File file(qPrintable(m_properties.fileName));
-            //TagLib::Ogg::Vorbis::File file(reinterpret_cast<const wchar_t *>(m_properties.fileName.constData()));
+			TagLib::Ogg::Vorbis::File file(reinterpret_cast<const wchar_t *>(m_properties.fileName.constData()), false);
+			//TagLib::Ogg::Vorbis::File file(qPrintable(m_properties.fileName), false);
 #else
             TagLib::Ogg::Vorbis::File file(qPrintable(m_properties.fileName), false);
 #endif
@@ -663,8 +663,8 @@ bool CSong::writeTags()
         case CSong::FormatFLAC:
         {
 #ifdef Q_OS_WIN32
-			TagLib::FLAC::File file(qPrintable(m_properties.fileName));
-            //TagLib::FLAC::File file(reinterpret_cast<const wchar_t *>(m_properties.fileName.constData()));
+			TagLib::FLAC::File file(reinterpret_cast<const wchar_t *>(m_properties.fileName.constData()), false);
+			//TagLib::FLAC::File file(qPrintable(m_properties.fileName), false);
 #else
             TagLib::FLAC::File file(qPrintable(m_properties.fileName), false);
 #endif
@@ -701,8 +701,8 @@ bool CSong::writeTags()
         case CSong::FormatWAV:
         {
 #ifdef Q_OS_WIN32
-			TagLib::WavPack::File file(qPrintable(m_properties.fileName));
-            //TagLib::WavPack::File file(reinterpret_cast<const wchar_t *>(m_properties.fileName.constData()));
+            TagLib::WavPack::File file(reinterpret_cast<const wchar_t *>(m_properties.fileName.constData()), false);
+			//TagLib::WavPack::File file(qPrintable(m_properties.fileName), false);
 #else
             TagLib::WavPack::File file(qPrintable(m_properties.fileName), false);
 #endif

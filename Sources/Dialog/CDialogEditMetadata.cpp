@@ -239,8 +239,8 @@ void CDialogEditMetadata::reset()
         case CSong::FormatMP3:
         {
 #ifdef Q_OS_WIN32
-			TagLib::MPEG::File file(qPrintable(m_song->getFileName()), false);
-            //TagLib::MPEG::File file(reinterpret_cast<const wchar_t *>(m_song->getFileName().constData()), false);
+			//TagLib::MPEG::File file(qPrintable(m_song->getFileName()), false);
+            TagLib::MPEG::File file(reinterpret_cast<const wchar_t *>(m_song->getFileName().constData()), false);
 #else
             TagLib::MPEG::File file(qPrintable(m_song->getFileName()), false);
 #endif
@@ -264,8 +264,8 @@ void CDialogEditMetadata::reset()
         case CSong::FormatOGG:
         {
 #ifdef Q_OS_WIN32
-			TagLib::Ogg::Vorbis::File file(qPrintable(m_song->getFileName()), false);
-            //TagLib::Ogg::Vorbis::File file(reinterpret_cast<const wchar_t *>(m_song->getFileName().constData()), false);
+			//TagLib::Ogg::Vorbis::File file(qPrintable(m_song->getFileName()), false);
+            TagLib::Ogg::Vorbis::File file(reinterpret_cast<const wchar_t *>(m_song->getFileName().constData()), false);
 #else
             TagLib::Ogg::Vorbis::File file(qPrintable(m_song->getFileName()), false);
 #endif
@@ -289,8 +289,8 @@ void CDialogEditMetadata::reset()
         case CSong::FormatFLAC:
         {
 #ifdef Q_OS_WIN32
-			TagLib::FLAC::File file(qPrintable(m_song->getFileName()), false);
-            //TagLib::FLAC::File file(reinterpret_cast<const wchar_t *>(m_song->getFileName().constData()), false);
+			//TagLib::FLAC::File file(qPrintable(m_song->getFileName()), false);
+            TagLib::FLAC::File file(reinterpret_cast<const wchar_t *>(m_song->getFileName().constData()), false);
 #else
             TagLib::FLAC::File file(qPrintable(m_song->getFileName()), false);
 #endif
@@ -314,8 +314,8 @@ void CDialogEditMetadata::reset()
         case CSong::FormatWAV:
         {
 #ifdef Q_OS_WIN32
-			TagLib::WavPack::File file(qPrintable(m_song->getFileName()), false);
-            //TagLib::WavPack::File file(reinterpret_cast<const wchar_t *>(m_song->getFileName().constData()), false);
+			//TagLib::WavPack::File file(qPrintable(m_song->getFileName()), false);
+            TagLib::WavPack::File file(reinterpret_cast<const wchar_t *>(m_song->getFileName().constData()), false);
 #else
             TagLib::WavPack::File file(qPrintable(m_song->getFileName()), false);
 #endif
